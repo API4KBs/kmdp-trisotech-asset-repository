@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:trisofeed="http://trisotech.com/feed" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                      xmlns:include1="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f"
+                      xmlns="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068"
+                      id="_5682fa26-b064-43c8-9475-1e4281e74068"
+                      namespace="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068"
+                      exporter="DMN Modeler" exporterVersion="6.2.0.1" name="Weaver Test 1" triso:logoChoice="Default">
+    <semantic:extensionElements/>
+    <semantic:import namespace="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f"
+                     name="Test Dictionary"
+                     triso:fileId="eyJmIjp7InNrdSI6IjMzY2FiMDBkLWQ3MmQtNDAyMS1iNjgwLWU4MzUwYTAxNThmMSIsIm5hbWUiOiJUZXN0IERpY3Rpb25hcnkifSwiciI6eyJhcGlrZXkiOiIyOTIwMDNmNjk4NDBlNzEyIn19"
+                     triso:fileName="MEA-Test/Test Dictionary" importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                     xmlns:drools="http://www.drools.org/kie/dmn/1.1" drools:modelName="Test Dictionary"/>
+    <semantic:decisionService id="_5682fa26-b064-43c8-9475-1e4281e74068_DS" name="Whole Model Decision Service"
+                              triso:dynamicDecisionService="true">
+        <semantic:variable name="Whole Model Decision Service" id="_2ad09400-67ad-48ab-9ebb-f2fb33d3f6de"
+                           typeRef="Any"/>
+        <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+        <semantic:inputData
+                href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
+        <semantic:inputData
+                href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
+    </semantic:decisionService>
+    <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="Diagram Page 1"
+                              triso:dynamicDecisionService="true">
+        <semantic:variable name="Diagram Page 1" id="_388763ad-f39f-419e-aa2f-966782a8b004" typeRef="Any"/>
+        <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+        <semantic:inputData
+                href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
+        <semantic:inputData
+                href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
+    </semantic:decisionService>
+    <semantic:decision id="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf" name="Test Decision">
+        <semantic:extensionElements>
+            <triso:semanticLink id="e63052a5-1203-4967-8f7f-abf05c63cdf0" name="Test Entity Set - My Test Entity 1"
+                                modelURI="http://foo.mayo.edu/test#EntitySet" uri="http://foo.mayo.edu/test#Entity1"/>
+        </semantic:extensionElements>
+        <semantic:variable name="Test Decision" id="_aeba48e7-a5e2-4a2f-a591-f5ddd5dc41cc" typeRef="Any"/>
+        <semantic:informationRequirement id="_08ec80f6-9032-4d91-8d39-fd28cfbba734">
+            <semantic:requiredInput
+                    href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
+        </semantic:informationRequirement>
+        <semantic:informationRequirement id="_c17fd570-09f2-48d8-8d8a-50cb3893b689">
+            <semantic:requiredInput
+                    href="_c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
+        </semantic:informationRequirement>
+    </semantic:decision>
+    <semantic:inputData id="_c037dd05-6ace-4c38-89f6-4f613cf7f671" name="Sex">
+        <semantic:extensionElements>
+            <triso:semanticLink id="_2977d349-8e18-4d6f-871d-33db666019fe"
+                                name="propositionalconceptvocabulary_Scheme - Sex"
+                                modelURI="https://ontology.mayo.edu/propositionalconceptvocabulary/"
+                                uri="https://ontology.mayo.edu/propositionalconceptvocabulary/a3f4a8d-cd06-4e92-bc2a-de859ed922bd"/>
+        </semantic:extensionElements>
+        <semantic:variable name="Sex" id="_cc1b10e1-1ab0-4fb3-adc8-c1a5a1f58189" typeRef="kind"/>
+    </semantic:inputData>
+    <semantic:inputData id="_3def24f5-3f86-4c56-99a2-bc3ffce1ead1" name="Race">
+        <semantic:extensionElements>
+            <triso:semanticLink id="_da75f1e8-ff41-4b26-b90b-f802b0432bab"
+                                name="propositionalconceptvocabulary_Scheme - Race"
+                                modelURI="https://ontology.mayo.edu/propositionalconceptvocabulary/"
+                                uri="https://ontology.mayo.edu/propositionalconceptvocabulary/de1bc5df-36f3-4028-8e53-dbad4eb97a14"/>
+        </semantic:extensionElements>
+        <semantic:variable name="Race" id="_bd7dad52-bc28-43f3-8cae-235d9f0fd34c" typeRef="string"/>
+    </semantic:inputData>
+</semantic:definitions>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:trisofeed="http://trisotech.com/feed" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                      xmlns="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f"
+                      id="_1b718a90-e60a-4989-be5f-c0db247c1a3f"
+                      namespace="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f"
+                      exporter="DMN Modeler" exporterVersion="6.2.0.1" name="Test Dictionary"
+                      triso:logoChoice="Default">
+    <semantic:extensionElements/>
+    <semantic:itemDefinition name="Sex_DT" label="Sex DT">
+        <semantic:typeRef>string</semantic:typeRef>
+        <semantic:allowedValues triso:constraintsType="enumeration">
+            <semantic:text>"Male","Female","Other"</semantic:text>
+        </semantic:allowedValues>
+    </semantic:itemDefinition>
+    <semantic:itemDefinition name="kind" label="kind">
+        <semantic:typeRef>Sex_DT</semantic:typeRef>
+    </semantic:itemDefinition>
+    <semantic:decisionService id="_1b718a90-e60a-4989-be5f-c0db247c1a3f_DS" name="Whole Model Decision Service"
+                              triso:dynamicDecisionService="true">
+        <semantic:variable name="Whole Model Decision Service" id="_ba73cca4-5b0a-41f6-87d2-a2b1b47c4ae7"
+                           typeRef="Any"/>
+    </semantic:decisionService>
+    <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="Diagram Page 1"
+                              triso:dynamicDecisionService="true">
+        <semantic:variable name="Diagram Page 1" id="_b7291e7c-12ab-4487-86f6-ac383da780ee" typeRef="Any"/>
+    </semantic:decisionService>
+    <semantic:inputData id="_c037dd05-6ace-4c38-89f6-4f613cf7f671" name="Sex">
+        <semantic:extensionElements>
+            <triso:semanticLink id="_2977d349-8e18-4d6f-871d-33db666019fe"
+                                name="propositionalconceptvocabulary_Scheme - Sex"
+                                modelURI="https://ontology.mayo.edu/propositionalconceptvocabulary/"
+                                uri="https://ontology.mayo.edu/propositionalconceptvocabulary/a3f4a8d-cd06-4e92-bc2a-de859ed922bd"/>
+        </semantic:extensionElements>
+        <semantic:variable name="Sex" id="_cc1b10e1-1ab0-4fb3-adc8-c1a5a1f58189" typeRef="kind"/>
+    </semantic:inputData>
+    <semantic:inputData id="_3def24f5-3f86-4c56-99a2-bc3ffce1ead1" name="Race">
+        <semantic:extensionElements>
+            <triso:semanticLink id="_da75f1e8-ff41-4b26-b90b-f802b0432bab"
+                                name="propositionalconceptvocabulary_Scheme - Race"
+                                modelURI="https://ontology.mayo.edu/propositionalconceptvocabulary/"
+                                uri="https://ontology.mayo.edu/propositionalconceptvocabulary/de1bc5df-36f3-4028-8e53-dbad4eb97a14"/>
+        </semantic:extensionElements>
+        <semantic:variable name="Race" id="_bd7dad52-bc28-43f3-8cae-235d9f0fd34c" typeRef="string"/>
+    </semantic:inputData>
+    <dmndi:DMNDI>
+        <dmndi:DMNDiagram id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe" name="Page 1">
+            <dmndi:Size height="1050" width="1485"/>
+            <dmndi:DMNShape id="_0f1ab114-ddb9-4c8d-90a9-faef09f9dfb7"
+                            dmnElementRef="_c037dd05-6ace-4c38-89f6-4f613cf7f671">
+                <dc:Bounds x="407.54454340253557" y="305.99999618530273" width="152.99999999999994" height="60"/>
+                <dmndi:DMNLabel sharedStyle="LS_1b718a90-e60a-4989-be5f-c0db247c1a3f_0"
+                                xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn" trisodmn:defaultBounds="true">
+                    <dc:Bounds height="12" width="111.51765441894531" x="426.5881563013378" y="328.9999924977625"/>
+                </dmndi:DMNLabel>
+            </dmndi:DMNShape>
+            <dmndi:DMNShape id="_951a3c60-2063-4e43-b638-5351e3b16167"
+                            dmnElementRef="_3def24f5-3f86-4c56-99a2-bc3ffce1ead1">
+                <dc:Bounds x="657.5445434025355" y="275.99999618530273" width="153" height="60"/>
+                <dmndi:DMNLabel sharedStyle="LS_1b718a90-e60a-4989-be5f-c0db247c1a3f_0"
+                                xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn" trisodmn:defaultBounds="true">
+                    <dc:Bounds height="12" width="111.51765441894531" x="676.5881563013378" y="298.9999924977625"/>
+                </dmndi:DMNLabel>
+            </dmndi:DMNShape>
+        </dmndi:DMNDiagram>
+        <dmndi:DMNStyle id="LS_1b718a90-e60a-4989-be5f-c0db247c1a3f_0" fontFamily="arial,helvetica,sans-serif"
+                        fontSize="11" fontBold="false" fontItalic="false" fontUnderline="false"
+                        fontStrikeThrough="false"/>
+    </dmndi:DMNDI>
+</semantic:definitions>

@@ -1,0 +1,199 @@
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      name="Prior Management of Atrial Fibrillation"
+                      xmlns="http://www.trisotech.com/definitions/_593f49ec-4e1d-44f0-b599-e480a7f885be"
+                      id="_593f49ec-4e1d-44f0-b599-e480a7f885be"
+                      xmlns:include1="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195"
+                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:drools="http://www.drools.org/kie/dmn/1.1"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rss="http://purl.org/rss/2.0/"
+                      namespace="http://www.trisotech.com/definitions/_593f49ec-4e1d-44f0-b599-e480a7f885be"
+                      exporter="DMN Modeler" exporterVersion="6.2.2.3" triso:logoChoice="Default">
+  <semantic:extensionElements/>
+  <semantic:import name="ClinicalSituations"
+                   namespace="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195"
+                   triso:fileId="eyJmIjp7InNrdSI6ImU3Y2Q2MDY1LTg1OGEtNGM1Ny04NGJkLTcwN2QxYTZlMjM2NCIsIm5hbWUiOiJjcyJ9LCJyIjp7ImFwaWtleSI6IjI5MjAwM2Y2OTg0MGU3MTIifX0="
+                   triso:fileName="MEA/cs" importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                   drools:modelName="ClinicalSituations"/>
+  <semantic:decisionService name="Whole Model Decision Service" id="_593f49ec-4e1d-44f0-b599-e480a7f885be_DS"
+                            triso:dynamicDecisionService="true">
+    <semantic:variable name="Whole Model Decision Service" id="_e7b47903-38e8-4ce6-9535-ecf69dd09e42" typeRef="Any"/>
+    <semantic:outputDecision href="#_cd02833b-5523-4a30-afd6-26826c34f772"/>
+    <semantic:inputData href="#_b4a011d7-a388-4d0e-a58f-9c4970f6fbd6"/>
+    <semantic:inputData
+            href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_f6536057-19f0-32b6-9e08-3e17b4a00158"/>
+    <semantic:inputData
+            href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_a3b49707-6c0f-34d6-876e-a66f6eff5c81"/>
+    <semantic:inputData
+            href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_398107f8-af91-38cc-be33-2591a9753fce"/>
+    <semantic:inputData href="#_cc22f793-5171-4305-b675-805d5c2bc111"/>
+    <semantic:inputData href="#_194fc536-6a2e-4447-9d21-a00b90e2a892"/>
+    <semantic:inputData
+            href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_93cbaa61-fc4a-327d-807c-eba5ebb1262e"/>
+  </semantic:decisionService>
+  <semantic:decisionService name="Diagram Page 1" id="_f2103071-994e-4154-ba66-d34ff853c5c3_DS"
+                            triso:dynamicDecisionService="true">
+    <semantic:variable name="Diagram Page 1" id="_531be337-5dbd-41b9-99f9-0a84426c44ac" typeRef="Any"/>
+    <semantic:outputDecision href="#_cd02833b-5523-4a30-afd6-26826c34f772"/>
+    <semantic:inputData href="#_b4a011d7-a388-4d0e-a58f-9c4970f6fbd6"/>
+    <semantic:inputData
+            href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_f6536057-19f0-32b6-9e08-3e17b4a00158"/>
+    <semantic:inputData
+            href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_a3b49707-6c0f-34d6-876e-a66f6eff5c81"/>
+    <semantic:inputData
+            href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_398107f8-af91-38cc-be33-2591a9753fce"/>
+    <semantic:inputData href="#_cc22f793-5171-4305-b675-805d5c2bc111"/>
+    <semantic:inputData href="#_194fc536-6a2e-4447-9d21-a00b90e2a892"/>
+    <semantic:inputData
+            href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_93cbaa61-fc4a-327d-807c-eba5ebb1262e"/>
+  </semantic:decisionService>
+  <semantic:decision name="Prior Management of Atrial Fibrillation" id="_cd02833b-5523-4a30-afd6-26826c34f772">
+    <semantic:variable name="Prior Management of Atrial Fibrillation" id="_c1e9c67b-6ea9-4b46-9310-370d4ecfe04a"
+                       typeRef="Any"/>
+    <semantic:informationRequirement id="_cb6f5aa2-28b0-45f9-8b6f-7192edddf4f3">
+      <semantic:requiredInput href="#_b4a011d7-a388-4d0e-a58f-9c4970f6fbd6"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_81568747-e0e4-4186-be01-e157b20420f0">
+      <semantic:requiredInput
+              href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_f6536057-19f0-32b6-9e08-3e17b4a00158"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_3c14a2e0-71d6-44b0-ab68-9929e4f77898">
+      <semantic:requiredInput
+              href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_a3b49707-6c0f-34d6-876e-a66f6eff5c81"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_15b5ca30-b549-4f88-a305-77db8bbc524f">
+      <semantic:requiredInput
+              href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_398107f8-af91-38cc-be33-2591a9753fce"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_712a2726-c630-408e-a2af-2171ffffc1ca">
+      <semantic:requiredInput href="#_cc22f793-5171-4305-b675-805d5c2bc111"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_4fb79971-d415-4cbe-8bf3-8187c8137aa9">
+      <semantic:requiredInput href="#_194fc536-6a2e-4447-9d21-a00b90e2a892"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_83d98ec5-9dba-4cd5-94fe-860b95a7050a">
+      <semantic:requiredInput
+              href="http://www.trisotech.com/definitions/_3d4f05c0-7f56-3c15-a926-df8aa3276195#_93cbaa61-fc4a-327d-807c-eba5ebb1262e"/>
+    </semantic:informationRequirement>
+  </semantic:decision>
+  <semantic:inputData name="HISTORY OF ANTIARRHYTHMIC DRUG THERAPY" id="_b4a011d7-a388-4d0e-a58f-9c4970f6fbd6">
+    <semantic:variable name="HISTORY OF ANTIARRHYTHMIC DRUG THERAPY" id="_d1bd2c22-4d8a-49b4-a2db-37ba954e1281"
+                       typeRef="string"/>
+  </semantic:inputData>
+  <semantic:inputData name="HISTORY OF NEGATIVE DROMOTROPIC THERAPY" id="_194fc536-6a2e-4447-9d21-a00b90e2a892">
+    <semantic:variable name="HISTORY OF NEGATIVE DROMOTROPIC THERAPY" id="_98b7e6a7-2c71-40f4-bf0a-76354c1676d3"
+                       typeRef="string"/>
+  </semantic:inputData>
+  <semantic:inputData name="HISTORY OF LONG-TERM ANTICOAGULATION THERAPY" id="_cc22f793-5171-4305-b675-805d5c2bc111">
+    <semantic:variable name="HISTORY OF LONG-TERM ANTICOAGULATION THERAPY" id="_f3d965ce-17d4-4ed7-9026-c3f9c02df581"
+                       typeRef="string"/>
+  </semantic:inputData>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram name="Page 1" id="_f2103071-994e-4154-ba66-d34ff853c5c3"
+                      triso:modelElementRef="_954fb800-490b-4518-a5ca-788ee33c3de4">
+      <di:extension>
+        <triso:customAttribute type="string" id="_436982a1-e1f3-452c-82db-7252c7be382f" key="knowledgeAssetId"
+                               value="http://ontology.mayo.edu/ontologies/SituationalConceptOntology/f2a7dbf7-263f-44f0-a1ee-ee58599e97eb"/>
+        <triso:semanticLink name="KnowledgeAssetType_Scheme - Semantic Decision Modelin 'KnowledgeAssetType_Scheme'"
+                            id="b25af67b-f8a1-4512-bcd7-0f615a95827c"
+                            modelURI="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType#"
+                            uri="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType#af76c6c0ed31415aa9fa0f5d7e08bad8"/>
+      </di:extension>
+      <dmndi:Size width="1485" height="1050"/>
+      <dmndi:DMNShape id="_2c94b5eb-6307-4a70-bef5-b84e5cc69abb" dmnElementRef="_cd02833b-5523-4a30-afd6-26826c34f772">
+        <dc:Bounds y="54" x="590" width="153" height="60"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0" trisodmn:defaultBounds="true">
+          <dc:Bounds y="71" x="593" width="146" height="26"/>
+        </dmndi:DMNLabel>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_2519ef6d-4bea-46f8-b458-218cb44aaef8"
+                      dmnElementRef="include1:_f6536057-19f0-32b6-9e08-3e17b4a00158">
+        <dc:Bounds y="242.99999618530273" x="398.2588291168213" width="135.48234176635742" height="60.00000762939453"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0" trisodmn:defaultBounds="true">
+          <dc:Bounds y="251.99999618530273" x="417.4968013763428" width="94" height="40"/>
+        </dmndi:DMNLabel>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_c273d565-7ef0-4859-8ec4-4628dbeeb034"
+                      dmnElementRef="include1:_a3b49707-6c0f-34d6-876e-a66f6eff5c81">
+        <dc:Bounds y="309.99999618530273" x="455.2588291168213" width="135.48234176635742" height="60.00000762939453"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0" trisodmn:defaultBounds="true">
+          <dc:Bounds y="318.99999618530273" x="474.4968013763428" width="94" height="40"/>
+        </dmndi:DMNLabel>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_7988b62a-8dff-492d-a562-14adcf90d70d"
+                      dmnElementRef="include1:_398107f8-af91-38cc-be33-2591a9753fce">
+        <dc:Bounds y="325.99999618530273" x="598.7588291168213" width="135.48234176635742" height="60.00000762939453"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0" trisodmn:defaultBounds="true">
+          <dc:Bounds y="327.99999618530273" x="617.9968013763428" width="94" height="54"/>
+        </dmndi:DMNLabel>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_381b39f3-4a03-4713-ab16-5493e7418654" dmnElementRef="_b4a011d7-a388-4d0e-a58f-9c4970f6fbd6">
+        <dc:Bounds y="161.99999618530273" x="341.2588291168213" width="135.48234176635742" height="60.00000762939453"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0" trisodmn:defaultBounds="true">
+          <dc:Bounds y="163.99999618530273" x="360.4968013763428" width="94" height="54"/>
+        </dmndi:DMNLabel>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_ebdb992d-cfa7-4cf3-834c-47c07e2a0e31"
+                      dmnElementRef="include1:_93cbaa61-fc4a-327d-807c-eba5ebb1262e">
+        <dc:Bounds y="309.99999618530273" x="746.2588291168213" width="135.48234176635742" height="60.00000762939453"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0" trisodmn:defaultBounds="true">
+          <dc:Bounds y="318.99999618530273" x="765.4968013763428" width="94" height="40"/>
+        </dmndi:DMNLabel>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_6e99ea9a-34a2-45aa-a4b7-077b4615cece" dmnElementRef="_194fc536-6a2e-4447-9d21-a00b90e2a892">
+        <dc:Bounds y="231.99999618530273" x="786.2588291168213" width="135.48234176635742" height="60.00000762939453"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0" trisodmn:defaultBounds="true">
+          <dc:Bounds y="233.99999618530273" x="805.4968013763428" width="94" height="54"/>
+        </dmndi:DMNLabel>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_1a814f33-e143-40f2-a014-7ca5629f2ad2" dmnElementRef="_cc22f793-5171-4305-b675-805d5c2bc111">
+        <dc:Bounds y="161.99999618530273" x="844.2588291168213" width="135.48234176635742" height="60.00000762939453"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0" trisodmn:defaultBounds="true">
+          <dc:Bounds y="163.99999618530273" x="863.4968013763428" width="94" height="54"/>
+        </dmndi:DMNLabel>
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="_f9cbf41b-26e2-4a05-90c9-8727c03805b3" dmnElementRef="_cb6f5aa2-28b0-45f9-8b6f-7192edddf4f3">
+        <di:waypoint y="161.99999618530273" x="398.9968013763428"/>
+        <di:waypoint y="84" x="590"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_13d3e0f2-c4db-424e-a9a0-a51501ddc73f" dmnElementRef="_81568747-e0e4-4186-be01-e157b20420f0">
+        <di:waypoint y="242.99999618530273" x="465.9968013763428"/>
+        <di:waypoint y="114" x="616.5"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_cd83222c-9a53-4d35-abb9-ec0d09ff8af2" dmnElementRef="_3c14a2e0-71d6-44b0-ab68-9929e4f77898">
+        <di:waypoint y="369.99999618530273" x="522.9968013763428"/>
+        <di:waypoint y="54" x="666.5"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_a50512fb-c8f5-4902-9d32-80ec1a1500da" dmnElementRef="_15b5ca30-b549-4f88-a305-77db8bbc524f">
+        <di:waypoint y="385.99999618530273" x="666.4968013763428"/>
+        <di:waypoint y="54" x="666.5"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_8519f7b1-2d6d-45ae-817a-1707bc99bbdf" dmnElementRef="_712a2726-c630-408e-a2af-2171ffffc1ca">
+        <di:waypoint y="161.99999618530273" x="901.9968013763428"/>
+        <di:waypoint y="84" x="743"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_8c1918c4-52ac-4ac6-99f7-04f9cd1edded" dmnElementRef="_4fb79971-d415-4cbe-8bf3-8187c8137aa9">
+        <di:waypoint y="231.99999618530273" x="843.9968013763428"/>
+        <di:waypoint y="114" x="726.5"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_ac63e0fe-12b4-4cbd-84d1-32c6bf3ec6d5" dmnElementRef="_83d98ec5-9dba-4cd5-94fe-860b95a7050a">
+        <di:waypoint y="309.99999618530273" x="773.9968013763428"/>
+        <di:waypoint y="114" x="686.5"/>
+        <dmndi:DMNLabel sharedStyle="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0"/>
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+    <dmndi:DMNStyle id="LS_593f49ec-4e1d-44f0-b599-e480a7f885be_0" fontFamily="arial,helvetica,sans-serif" fontSize="11"
+                    fontBold="false" fontItalic="false" fontUnderline="false" fontStrikeThrough="false"/>
+  </dmndi:DMNDI>
+</semantic:definitions>

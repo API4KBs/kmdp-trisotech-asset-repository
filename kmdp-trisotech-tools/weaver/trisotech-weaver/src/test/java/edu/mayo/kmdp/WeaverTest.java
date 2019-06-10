@@ -18,10 +18,10 @@ package edu.mayo.kmdp;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.meta.KnownAttributes;
+import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
 import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.meta.Weaver;
+import edu.mayo.kmdp.preprocess.meta.Weaver;
 //import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -101,7 +101,6 @@ class WeaverTest {
 	}
 
 
-
 	// TODO: Needed? CAO
 	@Disabled
 	@Test
@@ -148,9 +147,11 @@ class WeaverTest {
 			assertNotNull( dox );
 
 			BasicAnnotation id = loadAnnotations( dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class ).iterator().next();
+			// TODO: Why does this pass? CAO
 			assertEquals( "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT",
 			              id.getExpr().toString() );
 
+			// TODO: is any of the following still needed? relevant to Trisotech data? CAO
 //			SimpleAnnotation type = loadAnnotations( dox, KnownAttributes.TYPE, SimpleAnnotation.class ).iterator().next();
 //			assertEquals( KnowledgeAssetType.Semantic_Decision_Model.getLabel(),
 //			              type.getExpr().getLabel() );
@@ -198,12 +199,14 @@ class WeaverTest {
 //			assertEquals( 1, ids.size() );
       System.out.println("registry getValidationSchema for CMMN KRLanguage ref: " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()).get());
 
+      // TODO: This is failing - why? CAO
 			assertTrue( validate( dox, URI.create((Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()) ).get()))); //Registry.Languages.CMMN ) );
 
 // CAO
 //			assertEquals( "http://test.ckm.mock.edu/190a29b8-9bbd-4759-9046-6837196da93a",
 //			              ids.get( 0 ).getExpr().toString() );
 
+			System.out.println("xNode(dox, cmmn:documentation): " + xNode(dox, "//cmmn:documentation"));
 			assertNotNull( xNode( dox, "//cmmn:documentation" ) );
 		} catch ( IllegalStateException ie ) {
 			ie.printStackTrace();
@@ -212,6 +215,7 @@ class WeaverTest {
 	}
 
 
+	// TODO: FIXME CAO
 	private <T extends Annotation> List<T> loadAnnotations( Document dox, KnownAttributes att, Class<T> type ) {
 		System.out.println("***** loadAnnotations for knownAttributes: " + att.name() + " and type: " + type.getName());
 		return XMLUtil.asElementStream( dox.getElementsByTagName( "*" ) )
@@ -219,9 +223,9 @@ class WeaverTest {
 		              .map( Element::getChildNodes )
 		              .flatMap( XMLUtil::asElementStream )
 		              .map( SurrogateHelper::unmarshallAnnotation )
-						.peek(System.out::println)
-//		              .filter( (a) -> a.getRel().equals( att.asConcept() ) ) TODO: NEEDED? CAO
-//									.peek(System.out::println)
+						      .peek(System.out::println)
+		              .filter( (a) -> att.asConcept().equals( a.getRel() ) ) // TODO: NEEDED? CAO
+									.peek(System.out::println)
 		              .map( type::cast )
 		              .collect( Collectors.toList() );
 	}

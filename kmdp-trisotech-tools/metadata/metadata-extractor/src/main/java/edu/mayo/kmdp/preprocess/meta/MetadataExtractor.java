@@ -1,5 +1,5 @@
 /**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ * Copyright © 2019 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,12 @@ import static edu.mayo.kmdp.util.JaxbUtil.marshall;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 import static edu.mayo.kmdp.util.ZipUtil.readZipEntry;
 
-// TODO: rework for Trisotech data
+// TODO: rework for Trisotech data CAO
+// TODO: What does this class do? What is its purpose in life? CAO
+/**
+ * MetadataExtractor takes the output of the Weaver and the information of the file to create
+ * a KnowledgeAsset surrogate.
+ */
 public class MetadataExtractor {
 
 	public enum Format {

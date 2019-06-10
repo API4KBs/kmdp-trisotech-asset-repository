@@ -1,5 +1,5 @@
 /**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ * Copyright © 2019 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -40,8 +41,8 @@ import java.util.UUID;
 
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 
-// TODO: Rework for Trisotech data
-// What is the purpose of this class?
+// TODO: Rework for Trisotech data CAO
+// What is the purpose of this class? CAO
 public class IdentityMapper {
 
 	private Map<String,URIIdentifier> innerToPublicIDMap = new HashMap<>();
@@ -51,9 +52,11 @@ public class IdentityMapper {
 
 	public IdentityMapper() {
 		this.graph = ModelFactory.createDefaultModel();
-//		URI baseRel = Lexicon..getRef();
-//		this.graph.setNsPrefix( Registry.getPrefixforNamespace( baseRel ).orElseThrow( IllegalStateException::new ),
-//		                        baseRel.toString() );
+		// TODO: use graph from trisotech here?? CAO
+		URI baseRel = Lexicon.Parsing_Level.getRef(); // TODO: is this right? Previously API4KP_Rel_Jun18 CAO
+		System.out.println("Registry.getPrefixforNamespace( baseRel ): " + Registry.getPrefixforNamespace( baseRel ));
+		this.graph.setNsPrefix( Registry.getPrefixforNamespace( baseRel ).orElseThrow( IllegalStateException::new ),
+		                        baseRel.toString() );
 	}
 
 	@Deprecated( )

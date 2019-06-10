@@ -1,5 +1,5 @@
 /**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ * Copyright © 2019 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public interface ExtractionStrategy {
 	String getMetadataEntryNameForID( String id );
 
 	default KnowledgeAsset newSurrogate() {
-		KnowledgeAsset surr = new KnowledgeAsset();
+		KnowledgeAsset surr = new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset();
 		return surr;
 	}
 

@@ -1,12 +1,12 @@
 /**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * Copyright © 2019 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,6 @@ import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.*;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.terms.AssetVocabulary;
-import edu.mayo.kmdp.meta.KnownAttributes;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
@@ -53,7 +52,6 @@ import static edu.mayo.kmdp.util.XPathUtil.*;
 
 
 // TODO: FIXME CAO
-//  What is the purpose of this class? If it is for the extraction of metaData, what is the dox for?
 
 /**
  * Extract the data from the woven (by the Weaver) document to create KnowledgeAsset from model data.
@@ -99,7 +97,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     System.out.println("resId: " + resId.get().toString());
     resId.ifPresent(surr::setResourceId);
 
-    // TODO: Needed?
+    // TODO: Needed? CAO
 //    getRepLanguage(dox, false)
 //            .ifPresent((rep) -> trackRepresentationInfo(surr, rep, annotations));
 

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ * Copyright © 2019 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,12 @@
 package edu.mayo.kmdp;
 
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-//import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.meta.Weaver;
+import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.transform.stream.StreamSource;
@@ -32,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Optional;
 
+import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.JSON;
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.XML;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,12 +40,10 @@ class MetadataTest {
 
 	private static MetadataExtractor extractor = new MetadataExtractor();
 
-//	private static String dmnPath = "/R2R.dmn";
-//	private static String metaPath = "/R2R_Info.json";
 	private static String dmnPath = "/WeaverTest1.dmn";
 	private static String metaPath = "/WeaverTest1Meta.json";
-//	private static String cmnPath = "/CCPM.cmmn";
-//	private static String cmnMetaPath = "/CCPM_Info.json";
+	private static String cmnPath = "/WeaveTest1.cmmn";
+	private static String cmnMetaPath = "/WeaveTest1Meta.json";
 
 	private static Weaver dmnWeaver;
 	private static Weaver cmmnWeaver;
@@ -57,22 +53,10 @@ class MetadataTest {
 
 	@BeforeAll
 	public static void init() {
-		// TODO: Update to DMN_1_2 when available CAO
-		// TODO: What is TestDictionary.xlsx (export of Signavio Dictionary) and
-		//  how does it correspond to what Trisotech offers? good question CAO
-		// it doesn't; in Trisotech it is the accelerator; don't need a 'dictionary' weaver; rename/re-architect this code to represent that
-		dmnWeaver = new Weaver(
-//		        false,
-//						Weaver.getWeaverProperties( KnowledgeRepresentationLanguage.DMN_1_2 )
-		);
-		System.out.println("dmnWeaver: " + dmnWeaver.toString());
 
-		cmmnWeaver = new Weaver(
-//		        false,
-//		                         Weaver.getWeaverProperties( KnowledgeRepresentationLanguage.CMMN_1_1 )
-		);
+		dmnWeaver = new Weaver(	);
 
-		System.out.println("cmmnWeaver: " + cmmnWeaver.toString());
+		cmmnWeaver = new Weaver( );
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( MetadataTest.class.getResourceAsStream( dmnPath ) )
 		                              .map( dmnWeaver::weave )
@@ -82,21 +66,18 @@ class MetadataTest {
 
 		System.out.println(new String ( annotatedDMN ));
 
-// CAO
-//		Optional<byte[]> cmmn = XMLUtil.loadXMLDocument( MetadataTest.class.getResourceAsStream( cmnPath ) )
-//		                              .map( cmmnWeaver::weave )
-//		                              .map( XMLUtil::toByteArray );
-//		assertTrue( cmmn.isPresent() );
-//		annotatedCMMN = cmmn.get();
+		Optional<byte[]> cmmn = XMLUtil.loadXMLDocument( MetadataTest.class.getResourceAsStream( cmnPath ) )
+		                              .map( cmmnWeaver::weave )
+		                              .map( XMLUtil::toByteArray );
+		assertTrue( cmmn.isPresent() );
+		annotatedCMMN = cmmn.get();
 
-//		System.out.println( new String( annotatedCMMN ) );
+		System.out.println( new String( annotatedCMMN ) );
 
 	}
 
 
-
-
-//	@Disabled("Fix this")
+// TODO: This passes, but not entirely sure the data is correct CAO
 	@Test
 	void testExtraction() {
 		try {
@@ -121,7 +102,6 @@ class MetadataTest {
 //
 //			assertEquals( "draft", surr.getCurrentPublicationStatus().getLabel() );
 
-
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			fail( e.getMessage() );
@@ -129,8 +109,6 @@ class MetadataTest {
 	}
 
 
-
-	@Disabled("fix testXMLValidate for Trisotech")
 	@Test
 	void testXMLValidate() {
 		Optional<ByteArrayOutputStream> baos = extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
@@ -151,7 +129,6 @@ class MetadataTest {
 	}
 
 
-	@Disabled("Fix testToXML for Trisotech")
 	@Test
 	void testToXML() {
 		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
@@ -159,28 +136,26 @@ class MetadataTest {
 		                                 XML,
 		                                 JaxbUtil.defaultProperties() )
 		                     .map( Util::printOut ).isPresent() );
-//		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
-//		                                 MetadataTest.class.getResourceAsStream( cmnMetaPath ),
-//		                                 XML,
-//		                                 JaxbUtil.defaultProperties() )
-//		                     .map( Util::printOut ).isPresent() );
+		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
+		                                 MetadataTest.class.getResourceAsStream( cmnMetaPath ),
+		                                 XML,
+		                                 JaxbUtil.defaultProperties() )
+		                     .map( Util::printOut ).isPresent() );
 
 	}
 
-  @Disabled("Fix testToJson for Trisotech")
 	@Test
 	void testToJson() {
 		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
 		                                 MetadataTest.class.getResourceAsStream( metaPath ),
-		                                 XML,
+		                                 JSON,
 		                                 JaxbUtil.defaultProperties() )
 		                     .map( Util::printOut ).isPresent() );
-//		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
-//		                                 MetadataTest.class.getResourceAsStream( cmnMetaPath ),
-//		                                 XML,
-//		                                 JaxbUtil.defaultProperties() )
-//		                     .map( Util::printOut ).isPresent() );
-
+		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
+		                                 MetadataTest.class.getResourceAsStream( cmnMetaPath ),
+		                                 JSON,
+		                                 JaxbUtil.defaultProperties() )
+		                     .map( Util::printOut ).isPresent() );
 	}
 
 

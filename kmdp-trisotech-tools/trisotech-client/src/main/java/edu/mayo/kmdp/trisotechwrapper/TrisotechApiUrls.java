@@ -1,5 +1,5 @@
 /**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ * Copyright © 2019 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package edu.mayo.kmdp.trisotechwrapper;
 public class TrisotechApiUrls {
     public static String BASE_URL = "https://mc.trisotech.com/publicapi/";
 
-//    TODO: Needed? Only returns user that is signed in. Needed to confirm API user?
+//    TODO: Needed? Only returns user that is signed in. Needed to confirm API user? CAO
 //    public static String LOGIN_PATH = "login/";
   // List of repositories
     public static String REPOSITORY_PATH = "repository";
@@ -28,15 +28,15 @@ public class TrisotechApiUrls {
     public static String VERSIONS_PATH = "repositoryfileversion?repository=%s&id=%s";
 
     // id to MEA-Test repository
-    // TODO: Need to do same for MEA? Or just 'find' each time?
+    // TODO: Need to do same for MEA? Or just 'find' each time? CAO -- this might be better in the environment so can set this one for development/Test? and set the other one for prod/int?
     public static String MEA_TEST = "d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf";
 
-  // TODO: Do we have a need to ever get the JSON?
+  // TODO: Do we have a need to ever get the JSON? CAO
     // return DMN files in XML format
     public static String DMN_XML_MIMETYPE = "application/dmn-1-2+xml";
     // return CMMN files in XML format
     public static String CMMN_XML_MIMETYPE = "application/cmmn-1-1+xml";
 
-    // TODO: better way?
+    // TODO: better way? CAO
     public static String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiIxNGY4YmVhMy1jMTNhLTQ1NDYtOWQ5Ni03ZjgwODhlYzEwMzMiLCJzdWIiOiJkbHJzdG1lYTMwQGV4Y2hhbmdlLm1heW8uZWR1IiwiaXNzIjoibWMudHJpc290ZWNoLmNvbSIsImlhdCI6MTU1OTEzODMyNH0.zZoqSOc6tjOi6ZFoHOmTlq_8zJU0KQz2R58z6ygrULs";
 }

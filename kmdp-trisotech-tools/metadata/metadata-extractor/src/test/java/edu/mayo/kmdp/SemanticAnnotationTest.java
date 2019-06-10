@@ -1,5 +1,5 @@
 /**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ * Copyright © 2019 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.terms.AssetVocabulary;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.meta.Weaver;
+import edu.mayo.kmdp.preprocess.meta.Weaver;
 //import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituation;

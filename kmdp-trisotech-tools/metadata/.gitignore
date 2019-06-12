@@ -10,11 +10,6 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-
-# Eclipse files #
-*.project
-*.classpath
-
 # Package Files #
 *.jar
 *.war
@@ -22,6 +17,10 @@
 *.zip
 *.tar.gz
 *.rar
+
+# Eclipse files #
+*.project
+*.classpath
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -33,3 +32,6 @@ hs_err_pid*
 .settings/
 build/
 *.iml
+
+*/target
+*/out

@@ -32,3 +32,6 @@ hs_err_pid*
 .settings/
 build/
 *.iml
+
+*/target
+*/out

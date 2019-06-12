@@ -1,5 +1,5 @@
 /**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ * Copyright © 2019 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.meta;
+package edu.mayo.kmdp.preprocess.meta;
 
 // TODO: Needed?
 //import edu.mayo.kmdp.trisotechwrapper.dictionary.TrisotechDictionaryEntry;
@@ -21,8 +21,6 @@ package edu.mayo.kmdp.meta;
 //import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituation;
 
 import java.util.regex.Pattern;
-
-        import static edu.mayo.kmdp.meta.ReaderOptions.URL_PATTERN_ST;
 
 public class ModelReader implements TrisotechReader {
 
@@ -33,7 +31,7 @@ public class ModelReader implements TrisotechReader {
   public ModelReader(ReaderConfig config) {
     this.config = config;
 
-    this.URL_PATTERN = Pattern.compile( config.getTyped( URL_PATTERN_ST ) );
+    this.URL_PATTERN = Pattern.compile( config.getTyped( ReaderOptions.URL_PATTERN_ST ) );
   }
 
   public Pattern getURLPattern() {

@@ -242,10 +242,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   private List<Annotation> extractAnnotations(Document dox) {
     List<Annotation> annos = new LinkedList<>();
 
-    asElementStream(dox.getDocumentElement().getChildNodes())
-            .forEach(
-                    (el) -> System.out.println("child element for dox: " + el)
-            );
+//    asElementStream(dox.getDocumentElement().getChildNodes())
+//            .forEach(
+//                    (el) -> System.out.println("child element for dox: " + el)
+//            );
 
     // TODO: Maybe extract more annotations, other than the 'document' level ones?
     annos.addAll(XMLUtil.asElementStream(dox.getDocumentElement().getChildNodes())

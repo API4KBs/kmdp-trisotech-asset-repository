@@ -96,7 +96,6 @@ public class MetadataExtractor {
 		Optional<JsonNode> surrJson = JSonUtil.readJson(meta);
 
 		return dox.map(document -> extract(document, surrJson.get()));
-//						loadDescriptor(document, meta).orElse(null)));
 	}
 
 	public Optional<ByteArrayOutputStream> doExtract( String resPath, String metaPath, Format f, Properties p ) {

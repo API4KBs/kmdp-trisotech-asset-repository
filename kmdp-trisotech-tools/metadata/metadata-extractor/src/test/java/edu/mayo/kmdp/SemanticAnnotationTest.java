@@ -55,7 +55,7 @@ class SemanticAnnotationTest {
 
 
 
-	@Disabled("Current_Chronological_Age no longer exists...")
+	@Disabled("testExtraction: Current_Chronological_Age no longer exists...need input files updated to Trisotech")
 	@Test
 	void testExtraction() {
 //		String dmnPath = "/ComputableDM.dmn";
@@ -115,7 +115,7 @@ class SemanticAnnotationTest {
 
 
 	// TODO: Need to update with Trisotech model CAO
-  @Disabled("need to update input files to Trisotech")
+  @Disabled("testExtractionFull: need to update input files to Trisotech")
 	@Test
 	void testExtractionFull() {
 		String dmnPath = "/BLED.dmn";
@@ -153,8 +153,8 @@ class SemanticAnnotationTest {
 	@Disabled("testExtractionFull2 can't be tested until input files are created/updated to Trisotech")
 	@Test
 	void testExtractionFull2() {
-		String dmnPath = "/CHADS.dmn";
-		String metaPath = "/CHADS_Info.json";
+		String dmnPath = "/Coagulation Status.dmn";
+		String metaPath = "/CoagulationStatus_Info.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
 		                              .map( dmnWeaver::weave )

@@ -1,18 +1,3 @@
-/**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package edu.mayo.kmdp.trisotechwrapper;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,11 +15,9 @@ import org.w3c.dom.Document;
 /**
  * Tests for TrisotechWrapper.
  *
- * These tests are really integration tests as they will communicate with the server.
- * Better place for these?
- * Unit tests also desired?
+ * Named as an integration test because as they will communicate with the Trisotech server.
  */
-class TrisotechWrapperTest {
+class TrisotechWrapperTestInt {
 
   @BeforeAll
   static void setUpBeforeClass() throws Exception {

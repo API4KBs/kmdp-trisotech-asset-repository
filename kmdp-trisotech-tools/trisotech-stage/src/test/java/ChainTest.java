@@ -45,7 +45,7 @@ class ChainTest {
 		return m;
 	}
 
-	@Disabled("Fix this")
+	@Disabled("testChainDMN - Fix this")
 	@Test
 	void testChainDMN() {
 		try {
@@ -75,7 +75,7 @@ class ChainTest {
 	}
 
 
-	@Disabled("Fix this")
+	@Disabled("testChainCMMN Fix this")
 	@Test
 	void testChainCMMN() {
 		try {

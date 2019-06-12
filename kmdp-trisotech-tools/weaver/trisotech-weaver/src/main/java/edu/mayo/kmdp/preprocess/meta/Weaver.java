@@ -1,5 +1,5 @@
 /**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ * Copyright © 2019 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.meta;
+package edu.mayo.kmdp.preprocess.meta;
 
 import edu.mayo.kmdp.metadata.annotations.*;
 import edu.mayo.kmdp.registry.Registry;
@@ -37,7 +37,6 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
-import static edu.mayo.kmdp.meta.ReaderOptions.*;
 
 public class Weaver {
 
@@ -79,15 +78,15 @@ public class Weaver {
     this.config = p;
     this.reader = new ModelReader(this.config);
 
-    METADATA_NS = config.getTyped( p_METADATA_NS );
-    METADATA_EL = config.getTyped( p_EL_ANNOTATION );
-    METADATA_EXT = config.getTyped(p_EL_MODEL_EXT);
-    METADATA_ID = config.getTyped(p_EL_ANNOTATION_ID);
-    DIAGRAM_NS = config.getTyped( p_DIAGRAM_NS );
-    DIAGRAM_EXT = config.getTyped(p_EL_DIAGRAM_EXT);
+    METADATA_NS = config.getTyped( ReaderOptions.p_METADATA_NS );
+    METADATA_EL = config.getTyped( ReaderOptions.p_EL_ANNOTATION );
+    METADATA_EXT = config.getTyped(ReaderOptions.p_EL_MODEL_EXT);
+    METADATA_ID = config.getTyped(ReaderOptions.p_EL_ANNOTATION_ID);
+    DIAGRAM_NS = config.getTyped( ReaderOptions.p_DIAGRAM_NS );
+    DIAGRAM_EXT = config.getTyped(ReaderOptions.p_EL_DIAGRAM_EXT);
 
 //		TODO: Needed? CAO [maybe]
-		ANNOTATED_ITEM = config.getTyped( p_EL_ANNOTATED_ITEM );
+		ANNOTATED_ITEM = config.getTyped( ReaderOptions.p_EL_ANNOTATED_ITEM );
 
 		System.out.println("METADATA_EL: " + METADATA_EL);
     handlers.put( METADATA_EL, new MetadataAnnotationHandler( config ) );
@@ -234,18 +233,18 @@ public class Weaver {
   }
 
   private List<ConceptIdentifier> getConceptIdentifiers(Element el) {
-		System.out.println("el in getConceptIdentifiers: " + el);
-		System.out.println("\tid: " + el.getAttribute("id"));
-		System.out.println("\tname: " + el.getAttribute("name"));
-		System.out.println("\tmodelURI: " + el.getAttribute("modelURI"));
-		System.out.println("\turi: " + el.getAttribute("uri"));
-
-		// TODO: How to handle CMMN data?
-		System.out.println("\tis CMMN?");
-    System.out.println("\tfileId: " + el.getAttribute("fileId"));
-    System.out.println("\telementId: " + el.getAttribute("elementId"));
-    System.out.println("\tmodelId: " + el.getAttribute("modelId"));
-    System.out.println("\tmimeType: " + el.getAttribute("mimeType"));
+//		System.out.println("el in getConceptIdentifiers: " + el);
+//		System.out.println("\tid: " + el.getAttribute("id"));
+//		System.out.println("\tname: " + el.getAttribute("name"));
+//		System.out.println("\tmodelURI: " + el.getAttribute("modelURI"));
+//		System.out.println("\turi: " + el.getAttribute("uri"));
+//
+//		// TODO: How to handle CMMN data?
+//		System.out.println("\tis CMMN?");
+//    System.out.println("\tfileId: " + el.getAttribute("fileId"));
+//    System.out.println("\telementId: " + el.getAttribute("elementId"));
+//    System.out.println("\tmodelId: " + el.getAttribute("modelId"));
+//    System.out.println("\tmimeType: " + el.getAttribute("mimeType"));
 
     // TODO: would there ever be more than one? CAO maybe
     List conceptIdentifiers = new ArrayList<ConceptIdentifier>();

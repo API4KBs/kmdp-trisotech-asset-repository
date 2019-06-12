@@ -33,17 +33,20 @@
 
   <dependencies>
 
+    <!-- project dependencies -->
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>trisotech-client</artifactId>
-      <version>1.0.0</version>
+      <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>trisotech-weaver</artifactId>
-      <version>1.0.0</version>
+      <version>${project.version}</version>
     </dependency>
 
+    <!-- mayo dependencies -->
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-asset-metadata</artifactId>
@@ -56,15 +59,21 @@
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-lang-utils</artifactId>
+      <artifactId>mea-terminology-content</artifactId>
       <version>${kmdp.version}</version>
+      <scope>compile</scope>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>edu.mayo.kmdp</groupId>-->
+<!--      <artifactId>kmdp-lang-utils</artifactId>-->
+<!--      <version>${kmdp.version}</version>-->
+<!--    </dependency>-->
 
+    <!-- external dependencies -->
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-core</artifactId>
     </dependency>
-
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -73,16 +82,14 @@
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-terminology-content</artifactId>
-      <version>1.0.2</version>
+      <artifactId>kmdp-asset-metadata</artifactId>
+      <version>${kmdp.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>mea-terminology-content</artifactId>
-      <version>1.0.2</version>
-      <scope>compile</scope>
+      <artifactId>kmdp-datatype</artifactId>
+      <version>${kmdp.version}</version>
     </dependency>
-
 
   </dependencies>
 

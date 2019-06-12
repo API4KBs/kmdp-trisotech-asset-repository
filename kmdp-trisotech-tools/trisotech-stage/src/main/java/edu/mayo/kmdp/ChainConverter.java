@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.meta.Weaver;
+import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import org.w3c.dom.Document;
 

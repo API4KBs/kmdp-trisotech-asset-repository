@@ -42,7 +42,7 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>trisotech-metadata-extractor</artifactId>
-      <version>1.0.0</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -50,21 +50,15 @@
       <version>2.9.8</version>
     </dependency>
 
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-lang-utils</artifactId>
-      <version>${kmdp.version}</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>edu.mayo.kmdp</groupId>-->
+<!--      <artifactId>kmdp-lang-utils</artifactId>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-terminology-content</artifactId>
-      <version>1.0.2</version>
     </dependency>
 
 

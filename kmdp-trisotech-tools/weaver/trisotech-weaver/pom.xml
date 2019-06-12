@@ -45,49 +45,29 @@
       <scope>test</scope>
     </dependency>
 
+<!--    <dependency>-->
+<!--      <groupId>edu.mayo.kmdp</groupId>-->
+<!--      <artifactId>kmdp-lang-utils</artifactId>-->
+<!--      <version>${kmdp.version}</version>-->
+<!--    </dependency>-->
+
+
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-lang-utils</artifactId>
+      <artifactId>omg-dmn-12</artifactId>
       <version>${kmdp.version}</version>
     </dependency>
 
-
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>omg-dmn</artifactId>
-      <version>${kmdp.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>omg-cmmn</artifactId>
+      <artifactId>omg-cmmn-11</artifactId>
       <version>${kmdp.version}</version>
     </dependency>
       <dependency>
           <groupId>edu.mayo.kmdp</groupId>
           <artifactId>kmdp-terminology-content</artifactId>
-          <version>1.0.2</version>
+          <version>${kmdp.version}</version>
       </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-datatype</artifactId>
-      <version>1.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-property-utils</artifactId>
-      <version>1.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-environment</artifactId>
-      <version>1.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-languages</artifactId>
-      <version>1.0.2</version>
-    </dependency>
 
   </dependencies>
 

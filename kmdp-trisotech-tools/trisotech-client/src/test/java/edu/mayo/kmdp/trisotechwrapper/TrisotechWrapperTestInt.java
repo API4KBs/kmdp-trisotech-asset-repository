@@ -15,7 +15,8 @@ import org.w3c.dom.Document;
 /**
  * Tests for TrisotechWrapper.
  *
- * Named as an integration test because as they will communicate with the Trisotech server.
+ * Named as an integration test even though not starting SpringBoot, but
+ * because communicating with the Trisotech server.
  */
 class TrisotechWrapperTestInt {
 

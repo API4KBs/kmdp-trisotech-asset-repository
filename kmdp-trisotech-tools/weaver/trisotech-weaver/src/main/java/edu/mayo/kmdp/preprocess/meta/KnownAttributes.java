@@ -1,5 +1,5 @@
 /**
- * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ * Copyright © 2019 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import edu.mayo.kmdp.terms.AssetVocabulary;
 import edu.mayo.kmdp.util.URIUtil;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20180601.AnnotationRelType;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
@@ -33,9 +33,9 @@ import java.util.Optional;
 public enum KnownAttributes {
 
 	// on models
-	ASSET_IDENTIFIER( AssetVocabulary.HAS_ID.getLabel(),
+	ASSET_IDENTIFIER( AnnotationRelType.Has_ID.getLabel(),
 	                  "knowledgeAssetId",
-	                  AssetVocabulary.HAS_ID.getRef(),
+	                  AnnotationRelType.Has_ID.getRef(),
 	                  false,
 	                  false ),
 

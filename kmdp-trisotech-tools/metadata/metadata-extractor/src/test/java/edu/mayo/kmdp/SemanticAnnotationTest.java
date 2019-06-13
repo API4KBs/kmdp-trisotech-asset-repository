@@ -18,7 +18,7 @@ package edu.mayo.kmdp;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.terms.AssetVocabulary;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20180601.AnnotationRelType;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 //import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
@@ -75,7 +75,7 @@ class SemanticAnnotationTest {
 //			}
 //			KnowledgeAsset surr = res.get();
 //			assertEquals( 1, surr.getSubject().size() );
-//			assertEquals(AssetVocabulary.IN_TERMS_OF.asConcept(), surr.getSubject().get(0).getRel() );
+//			assertEquals(AnnotationRelType.In_Terms_Of.asConcept(), surr.getSubject().get(0).getRel() );
 //			assertEquals(ClinicalSituation.Current_Chronological_Age.asConcept(), ((edu.mayo.kmdp.metadata.annotations.SimpleAnnotation) surr.getSubject().get(0)).getExpr() );
 //
 //
@@ -135,7 +135,7 @@ class SemanticAnnotationTest {
 			List<ClinicalSituation> inputs = surr.getSubject().stream()
 			                       .filter(SimpleAnnotation.class::isInstance)
 			                       .map( SimpleAnnotation.class::cast)
-			                       .filter( (a) -> a.getRel().equals( AssetVocabulary.IN_TERMS_OF.asConcept() ) )
+			                       .filter( (a) -> a.getRel().equals( AnnotationRelType.In_Terms_Of.asConcept() ) )
 			                       .map( (a) -> ClinicalSituation.resolve( a.getExpr() ) )
 			                       .map( Optional::get )
 			                       .collect(Collectors.toList());
@@ -170,7 +170,7 @@ class SemanticAnnotationTest {
 			List<ClinicalSituation> inputs = surr.getSubject().stream()
 			                       .filter(SimpleAnnotation.class::isInstance)
 			                       .map( SimpleAnnotation.class::cast)
-			                       .filter( (a) -> a.getRel().equals( AssetVocabulary.IN_TERMS_OF.asConcept() ) )
+			                       .filter( (a) -> a.getRel().equals( AnnotationRelType.In_Terms_Of.asConcept() ) )
 			                       .map( (a) -> ClinicalSituation.resolve( a.getExpr() ) )
 			                       .map( Optional::get )
 			                       .collect(Collectors.toList());
@@ -181,7 +181,7 @@ class SemanticAnnotationTest {
 //			assertTrue( inputs.contains( ClinicalSituation.History_Of_Vascular_Disease ) );
 
 			Set<ConceptIdentifier> defines  = surr.getSubject().stream()
-			                                      .filter( (ann) -> ann.getRel().equals( AssetVocabulary.DEFINES.asConcept() ) )
+			                                      .filter( (ann) -> ann.getRel().equals( AnnotationRelType.Defines.asConcept() ) )
 			                                      .map( (ann) -> ((SimpleAnnotation) ann).getExpr() )
 			                                      .collect(Collectors.toSet());
 			assertEquals( 3, defines.size() );

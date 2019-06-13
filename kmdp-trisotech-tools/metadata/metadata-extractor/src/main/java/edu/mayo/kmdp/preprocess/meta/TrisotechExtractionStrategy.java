@@ -26,7 +26,7 @@ import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.*;
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.terms.AssetVocabulary;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20180601.AnnotationRelType;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
@@ -95,7 +95,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
             docId.orElseThrow(IllegalStateException::new),
             versionTag);
     System.out.println("resId: " + resId.get().toString());
-    resId.ifPresent(surr::setResourceId);
+    // TODO: is setAssetId the correct replacement for setResourceId? CAO
+    resId.ifPresent(surr::setAssetId);
+//    resId.ifPresent(surr::setResourceId);
 
     // TODO: Needed? CAO
 //    getRepLanguage(dox, false)
@@ -209,7 +211,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     surr.withCarriers(doc);
 
     String enterpriseId = StringUtils.substringBefore(StringUtils.substringAfterLast(docId, "/"), ".");
-    doc.setResourceId(uri(Registry.MAYO_ASSETS_BASE_URI + enterpriseId, versionTag));
+    // TODO: is setArtifactId the correct replacement for setResourceId? CAO
+    doc.setArtifactId(uri( Registry.MAYO_ASSETS_BASE_URI + enterpriseId, versionTag));
+//    doc.setResourceId(uri(Registry.MAYO_ASSETS_BASE_URI + enterpriseId, versionTag));
 
     //doc.set(MediaType.APPLICATION);
   }
@@ -228,9 +232,13 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
               mapper.getResourceId(artifactId)
                       .ifPresent((resourceId) -> {
                         KnowledgeAsset ka = new KnowledgeAsset();
-                        ka.setResourceId(mapper.associate(surr.getResourceId(),
+                        // TODO: is setAssetId the correct replacement for setResourceId? CAO
+                        ka.setAssetId(mapper.associate(surr.getAssetId(),
                                 artifactId,
                                 DependencyType.Depends_On));
+//                        ka.setResourceId(mapper.associate(surr.getResourceId(),
+//                                artifactId,
+//                                DependencyType.Depends_On));
 
                         surr.getRelated().add(
                                 new Dependency().withRel(DependencyType.Depends_On)
@@ -279,7 +287,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         SimpleAnnotation inputAnno = inputAnnos.stream()
 //                .filter((ann) -> KnownAttributes.CAPTURES.asConcept().equals(ann.getRel()))
                 .map(SimpleAnnotation.class::cast)
-                .map((sa) -> new SimpleAnnotation().withRel(AssetVocabulary.IN_TERMS_OF.asConcept())
+                .map((sa) -> new SimpleAnnotation().withRel(AnnotationRelType.In_Terms_Of.asConcept())
                         .withExpr(sa.getExpr()))
                 .collect(Collectors.toList()).get(0);
         annos.add(inputAnno);

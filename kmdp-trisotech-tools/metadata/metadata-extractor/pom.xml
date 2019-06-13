@@ -31,6 +31,10 @@
 
   <name>Trisotech Metadata Extractor</name>
 
+  <properties>
+    <jackson.version>2.9.8</jackson.version>
+  </properties>
+
   <dependencies>
 
     <!-- project dependencies -->
@@ -46,7 +50,7 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!-- mayo dependencies -->
+    <!-- internal dependencies -->
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-asset-metadata</artifactId>
@@ -59,15 +63,25 @@
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>mea-terminology-content</artifactId>
+      <artifactId>kmdp-terminology-content</artifactId>
       <version>${kmdp.version}</version>
       <scope>compile</scope>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>edu.mayo.kmdp</groupId>-->
-<!--      <artifactId>kmdp-lang-utils</artifactId>-->
-<!--      <version>${kmdp.version}</version>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-datatype</artifactId>
+      <version>${kmdp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-utils</artifactId>
+      <version>${kmdp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-ext-terminology-content</artifactId>
+      <version>${kmdp.version}</version>
+    </dependency>
 
     <!-- external dependencies -->
     <dependency>
@@ -80,16 +94,28 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-asset-metadata</artifactId>
-      <version>${kmdp.version}</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
     <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-datatype</artifactId>
-      <version>${kmdp.version}</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
 
   </dependencies>
 

@@ -62,7 +62,7 @@ class ChainTest {
 			                                                  JaxbUtil.defaultProperties() );
 			assertTrue( s.isPresent() );
 			assertEquals( "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT",
-			              s.get().getResourceId().getUri().toString() );
+			              s.get().getAssetId().getUri().toString() ); //TODO: Correct replacement? CAO .getResourceId().getUri().toString() );
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			XMLUtil.streamXMLDocument( m.getModel(), baos );
@@ -94,7 +94,7 @@ class ChainTest {
 			                                                  JaxbUtil.defaultProperties() );
 			assertTrue( s.isPresent() );
 			assertEquals( "http://test.ckm.mock.edu/190a29b8-9bbd-4759-9046-6837196da93a",
-			              s.get().getResourceId().getUri().toString() );
+			              s.get().getAssetId().getUri().toString() ); // TODO: Correct replacement? CAO .getResourceId().getUri().toString() );
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			XMLUtil.streamXMLDocument( m.getModel(), baos );

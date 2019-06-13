@@ -33,41 +33,39 @@
 
   <dependencies>
 
+    <!-- internal dependencies -->
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>omg-dmn-12</artifactId>
+      <version>${kmdp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>omg-cmmn-11</artifactId>
+      <version>${kmdp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-terminology-content</artifactId>
+      <version>${kmdp.version}</version>
+    </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-asset-metadata</artifactId>
       <version>${kmdp.version}</version>
     </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-utils</artifactId>
+      <version>${kmdp.version}</version>
+    </dependency>
+    <!-- external dependencies -->
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
-
-<!--    <dependency>-->
-<!--      <groupId>edu.mayo.kmdp</groupId>-->
-<!--      <artifactId>kmdp-lang-utils</artifactId>-->
-<!--      <version>${kmdp.version}</version>-->
-<!--    </dependency>-->
-
-
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>omg-dmn-12</artifactId>
-      <version>${kmdp.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>omg-cmmn-11</artifactId>
-      <version>${kmdp.version}</version>
-    </dependency>
-      <dependency>
-          <groupId>edu.mayo.kmdp</groupId>
-          <artifactId>kmdp-terminology-content</artifactId>
-          <version>${kmdp.version}</version>
-      </dependency>
 
   </dependencies>
 

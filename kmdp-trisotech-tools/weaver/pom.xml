@@ -16,6 +16,10 @@
 
   <name>Weaver</name>
 
+  <properties>
+    <kmdp.version>(2.0.1,2.0.2]</kmdp.version>
+  </properties>
+
   <modules>
     <module>trisotech-weaver</module>
   </modules>

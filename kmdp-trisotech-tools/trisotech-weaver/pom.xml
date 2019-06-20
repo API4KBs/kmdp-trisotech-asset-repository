@@ -29,11 +29,6 @@
       <artifactId>omg-cmmn-11</artifactId>
       <version>${kmdp.version}</version>
     </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-terminology-content</artifactId>
-      <version>${kmdp.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>

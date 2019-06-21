@@ -49,18 +49,18 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 
 public class Weaver {
 
-  private String METADATA_NS;
-  private String METADATA_EL;
-  private String METADATA_EXT;
-  private String METADATA_ID;
-  private String DIAGRAM_NS;
-  private String DIAGRAM_EXT;
-  private String ANNOTATED_ITEM;
-  private String SURROGATE_SCHEMA = "http://kmdp.mayo.edu/metadata/surrogate";
-  private String ANNOTATIONS_SCHEMA = "http://kmdp.mayo.edu/metadata/annotations";
+  private static String METADATA_NS;
+  private static String METADATA_EL;
+  private static String METADATA_EXT;
+  private static String METADATA_ID;
+  private static String DIAGRAM_NS;
+  private static String DIAGRAM_EXT;
+  private static String ANNOTATED_ITEM;
+  private static String SURROGATE_SCHEMA = "http://kmdp.mayo.edu/metadata/surrogate";
+  private static String ANNOTATIONS_SCHEMA = "http://kmdp.mayo.edu/metadata/annotations";
 
 
-  private ReaderConfig        config;
+  private ReaderConfig config;
   private ModelReader reader;
 
   private ObjectFactory of = new ObjectFactory();
@@ -103,8 +103,50 @@ public class Weaver {
 		handlers.put( ANNOTATED_ITEM, new AnnotatedFragmentHandler( config ) );
   }
 
+  public static String getMETADATA_NS() {
+    return METADATA_NS;
+  }
+
+  public static String getMETADATA_EL() {
+    return METADATA_EL;
+  }
+
+  public static String getMETADATA_EXT() {
+    return METADATA_EXT;
+  }
+
+  public static String getMETADATA_ID() {
+    return METADATA_ID;
+  }
+
+  public static String getDIAGRAM_NS() {
+    return DIAGRAM_NS;
+  }
+
+  public static String getDIAGRAM_EXT() {
+    return DIAGRAM_EXT;
+  }
+
+  public static String getANNOTATED_ITEM() {
+    return ANNOTATED_ITEM;
+  }
+
+  public static String getSURROGATE_SCHEMA() {
+    return SURROGATE_SCHEMA;
+  }
+
+  public static String getANNOTATIONS_SCHEMA() {
+    return ANNOTATIONS_SCHEMA;
+  }
+
+  public ReaderConfig getConfig() {
+    return config;
+  }
+
+
   //DocumentCarrier input = new DocumentCarrier().withStructuredExpression(dox).withRepresentation(rep(DMN_1_2, XML_1_1));
 
+  // CAO: TODO: This is how it should be done with the updated classes 06/20 review w/Davide
   public ResponseEntity<? extends KnowledgeCarrier> weave( KnowledgeCarrier toBeWovenInto, KnowledgeCarrier toBeWovenIn) {
     DocumentCarrier input = (DocumentCarrier) toBeWovenInto;
     if ( input.getRepresentation().getFormat() != XML_1_1) {
@@ -113,6 +155,7 @@ public class Weaver {
     Document out = weave((Document) input.getStructuredExpression());
 
 
+    // ResponseHelper will handle all the error handling for the response
     return ResponseHelper.attempt(AbstractCarrier.of(out).withRepresentation(rep(DMN_1_2,XML_1_1)));
   }
 

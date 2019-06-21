@@ -29,9 +29,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TrisotechExtractionStrategyTest {
   TrisotechExtractionStrategy tes;
-  String dmnPath = "/src/test/resources/WeaverTest1.dmn";
-  String cmmnPath = "/src/test/resources/WeaveTest1.cmmn";
-  String badPath  = "/src/test/resources/R2R.dmn";
+  String dmnPath = "/WeaverTest1.dmn";
+  String cmmnPath = "/WeaveTest1.cmmn";
+  String badPath  = "/R2R.dmn";
   Document dmnDox;
   Document cmmnDox;
   Document badDox;

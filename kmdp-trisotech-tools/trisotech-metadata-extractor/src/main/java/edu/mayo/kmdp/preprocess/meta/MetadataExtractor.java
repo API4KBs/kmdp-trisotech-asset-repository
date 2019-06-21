@@ -46,125 +46,125 @@ import static edu.mayo.kmdp.util.ZipUtil.readZipEntry;
  */
 public class MetadataExtractor {
 
-	public enum Format {
-		JSON( ".json" ),
-		XML( ".xml" );
+  public enum Format {
+    JSON( ".json" ),
+    XML( ".xml" );
 
-		private String ext;
+    private String ext;
 
-		Format( String ext ) {
-			this.ext = ext;
-		}
+    Format( String ext ) {
+      this.ext = ext;
+    }
 
-		public String ext() {
-			return ext;
-		}
-	}
-
-
-	private ExtractionStrategy strategy;
-
-	private IdentityMapper mapper;
-
-	public MetadataExtractor() {
-		this( new IdentityMapper() );
-	}
+    public String ext() {
+      return ext;
+    }
+  }
 
 
-	public MetadataExtractor( IdentityMapper mapper ) {
-		strategy = new TrisotechExtractionStrategy();
-		strategy.setMapper( mapper );
-		this.mapper = mapper;
-	}
+  private ExtractionStrategy strategy;
 
-	public MetadataExtractor( IdentityMapper mapper, Map<String,URIIdentifier> idMap ) {
-		strategy = new TrisotechExtractionStrategy();
-		strategy.setMapper( mapper );
-		this.mapper = mapper;
-	}
+  private IdentityMapper mapper;
 
-	public IdentityMapper getMapper() {
-		return mapper;
-	}
-
-	public void init( Map<String,URIIdentifier> idMap ) {
-		idMap.forEach( mapper::map );
-	}
-
-	public Optional<KnowledgeAsset> extract(InputStream resource, InputStream meta ) {
-		Optional<Document> dox = loadXMLDocument( resource );
-		Optional<JsonNode> surrJson = JSonUtil.readJson(meta);
-
-		return dox.map(document -> extract(document, surrJson.get()));
-	}
-
-	public Optional<ByteArrayOutputStream> doExtract( String resPath, String metaPath, Format f, Properties p ) {
-		InputStream res = MetadataExtractor.class.getResourceAsStream( resPath );
-		InputStream met = MetadataExtractor.class.getResourceAsStream( metaPath );
-
-		return doExtract( res, met, f, p );
-	}
+  public MetadataExtractor() {
+    this( new IdentityMapper() );
+  }
 
 
-	public Optional<ByteArrayOutputStream> doExtract( InputStream resource, InputStream meta, Format f, Properties p ) {
-		return extract( resource, meta ).flatMap( (surr) -> {
-			switch ( f ) {
-				case JSON :
-					Optional<ByteArrayOutputStream> jsonExtract = JSonUtil.writeJson(surr, p);
-					ByteArrayOutputStream baos = jsonExtract.get();
-					System.out.println("JSON output from doExtract: " + new String( baos.toByteArray()));
-					return JSonUtil.writeJson( surr, p );
-				case XML :
-				default:
-					return marshall( Arrays.asList( surr.getClass() ),
-					                 surr,
-					                 SurrogateHelper.getSchema().orElseThrow( UnsupportedOperationException::new ),
-					                 new JaxbConfig().from( p ) );
-			}
-		} );
-	}
+  public MetadataExtractor( IdentityMapper mapper ) {
+    strategy = new TrisotechExtractionStrategy();
+    strategy.setMapper( mapper );
+    this.mapper = mapper;
+  }
 
-	public Optional<Document> doExtract( Document dox, JsonNode meta ) {
-		KnowledgeAsset surr = extract( dox, meta );
+  public MetadataExtractor( IdentityMapper mapper, Map<String,URIIdentifier> idMap ) {
+    strategy = new TrisotechExtractionStrategy();
+    strategy.setMapper( mapper );
+    this.mapper = mapper;
+  }
 
-		return JaxbUtil.marshallDox( Collections.singleton( surr.getClass() ),
-		                             surr,
-		                             JaxbUtil.defaultProperties() );
-	}
+  public IdentityMapper getMapper() {
+    return mapper;
+  }
 
-	public KnowledgeAsset extract( Document dox, JsonNode meta ) {
-		return strategy.extractXML( dox, meta );
-	}
+  public void init( Map<String,URIIdentifier> idMap ) {
+    idMap.forEach( mapper::map );
+  }
 
-	public KnowledgeAsset extract( Document dox, TrisotechFileInfo meta ) {
-		return strategy.extractXML( dox, meta );
-	}
+  public Optional<KnowledgeAsset> extract(InputStream resource, InputStream meta ) {
+    Optional<Document> dox = loadXMLDocument( resource );
+    Optional<JsonNode> surrJson = JSonUtil.readJson(meta);
 
-	private Optional<JsonNode> loadDescriptor( Document document, InputStream meta ) {
-		Optional<String> innId = strategy.getArtifactID( document );
+    return dox.map(document -> extract(document, surrJson.get()));
+  }
 
-		if ( innId.isPresent() ) {
-			return readZipEntry( strategy.getMetadataEntryNameForID( innId.get() ), meta )
-					.flatMap( JSonUtil::readJson );
-		} else {
-			return Optional.empty();
-		}
-	}
+  public Optional<ByteArrayOutputStream> doExtract( String resPath, String metaPath, Format f, Properties p ) {
+    InputStream res = MetadataExtractor.class.getResourceAsStream( resPath );
+    InputStream met = MetadataExtractor.class.getResourceAsStream( metaPath );
 
-	public URIIdentifier getAssetId( Document dox, TrisotechFileInfo info ) {
-		return strategy.extractAssetID( dox, info );
-	}
-
-	public URIIdentifier resolveEnterpriseAssetID( String internalId ) {
-		return strategy.getMapper().getResourceId( internalId )
-				.orElseThrow( () -> new IllegalStateException( "Defensive: Unable to resolve internal ID" + internalId + " to a known Enterprise ID" ) );
-	}
+    return doExtract( res, met, f, p );
+  }
 
 
-	public String resolveInternalArtifactID(String assetId, String versionTag) {
-		URIIdentifier id = DatatypeHelper.uri(assetId, versionTag);
-		return this.mapper.getInternalId(id)
-		                  .orElseThrow(() -> new IllegalStateException( "Defensive: Unable to resolve external ID" + assetId + " to a known internal ID" ));
-	}
+  public Optional<ByteArrayOutputStream> doExtract( InputStream resource, InputStream meta, Format f, Properties p ) {
+    return extract( resource, meta ).flatMap( (surr) -> {
+      switch ( f ) {
+        case JSON :
+          Optional<ByteArrayOutputStream> jsonExtract = JSonUtil.writeJson(surr, p);
+          ByteArrayOutputStream baos = jsonExtract.get();
+          System.out.println("JSON output from doExtract: " + new String( baos.toByteArray()));
+          return JSonUtil.writeJson( surr, p );
+        case XML :
+        default:
+          return marshall( Arrays.asList( surr.getClass() ),
+                  surr,
+                  SurrogateHelper.getSchema().orElseThrow( UnsupportedOperationException::new ),
+                  new JaxbConfig().from( p ) );
+      }
+    } );
+  }
+
+  public Optional<Document> doExtract( Document dox, JsonNode meta ) {
+    KnowledgeAsset surr = extract( dox, meta );
+
+    return JaxbUtil.marshallDox( Collections.singleton( surr.getClass() ),
+            surr,
+            JaxbUtil.defaultProperties() );
+  }
+
+  public KnowledgeAsset extract( Document dox, JsonNode meta ) {
+    return strategy.extractXML( dox, meta );
+  }
+
+  public KnowledgeAsset extract( Document dox, TrisotechFileInfo meta ) {
+    return strategy.extractXML( dox, meta );
+  }
+
+  private Optional<JsonNode> loadDescriptor( Document document, InputStream meta ) {
+    Optional<String> innId = strategy.getArtifactID( document );
+
+    if ( innId.isPresent() ) {
+      return readZipEntry( strategy.getMetadataEntryNameForID( innId.get() ), meta )
+              .flatMap( JSonUtil::readJson );
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  public URIIdentifier getAssetId( Document dox, TrisotechFileInfo info ) {
+    return strategy.extractAssetID( dox, info );
+  }
+
+  public URIIdentifier resolveEnterpriseAssetID( String internalId ) {
+    return strategy.getMapper().getResourceId( internalId )
+            .orElseThrow( () -> new IllegalStateException( "Defensive: Unable to resolve internal ID" + internalId + " to a known Enterprise ID" ) );
+  }
+
+
+  public String resolveInternalArtifactID(String assetId, String versionTag) {
+    URIIdentifier id = DatatypeHelper.uri(assetId, versionTag);
+    return this.mapper.getInternalId(id)
+            .orElseThrow(() -> new IllegalStateException( "Defensive: Unable to resolve external ID" + assetId + " to a known internal ID" ));
+  }
 
 }

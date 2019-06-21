@@ -226,7 +226,7 @@ public class TrisotechWrapper {
   /**
    * Retrieve all the models based on the mimetype provided
    * @param modelsArray
-   * @param dmnXmlMimetype
+   * @param xmlMimetype
    */
   private static void getModels(List<TrisotechFileInfo> modelsArray, String xmlMimetype) {
     try {

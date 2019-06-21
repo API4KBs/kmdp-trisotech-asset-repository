@@ -26,7 +26,7 @@ import java.util.Optional;
  * @JsonIgnoreProperties will ignore any property not configured here
  * @Data will generate getters and setters
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties( ignoreUnknown = true )
 @Data
 public class TrisotechFileInfo {
     private String id;

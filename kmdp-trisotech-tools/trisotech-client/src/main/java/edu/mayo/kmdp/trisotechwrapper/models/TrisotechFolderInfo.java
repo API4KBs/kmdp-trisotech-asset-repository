@@ -21,7 +21,7 @@ import lombok.Data;
 /**
  * 'folder' of the Trisotech repository data entry
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties( ignoreUnknown = true )
 @Data
 public class TrisotechFolderInfo {
 

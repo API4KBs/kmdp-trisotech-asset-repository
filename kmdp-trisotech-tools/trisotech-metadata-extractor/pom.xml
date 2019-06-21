@@ -29,8 +29,6 @@
 
   <artifactId>trisotech-metadata-extractor</artifactId>
 
-  <packaging>pom</packaging>
-
   <name>Trisotech Metadata Extractor</name>
 
   <dependencies>
@@ -48,6 +46,20 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-ext-terminology-content</artifactId>
+      <version>(2.0.2-b20190620000000,)</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-datatype</artifactId>
+      <version>${kmdp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-utils</artifactId>
       <version>${kmdp.version}</version>
     </dependency>
 
@@ -57,9 +69,235 @@
       <scope>test</scope>
     </dependency>
 
-
-
   </dependencies>
 
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.5.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <!-- replace Signavio annotations with Mayo/KMDP metadata elements-->
+      <!--      <plugin>-->
+      <!--        <groupId>edu.mayo.kmdp</groupId>-->
+      <!--        <artifactId>signavio-dictionary-mvn-plugin</artifactId>-->
+      <!--        <version>1.0-SNAPSHOT</version>-->
+      <!--        <executions>-->
+      <!--          <execution>-->
+      <!--            <phase>generate-resources</phase>-->
+      <!--            <id>weave-DMN</id>-->
+      <!--            <goals>-->
+      <!--              <goal>dictionary-weave</goal>-->
+      <!--            </goals>-->
+      <!--            <configuration>-->
+      <!--              <folders>-->
+      <!--                <folder>${project.basedir}/src/main/resources/DMN</folder>-->
+      <!--              </folders>-->
+      <!--              <targetFolder>${project.build.directory}/models/DMN</targetFolder>-->
+      <!--              <dictionary>${project.basedir}/src/main/resources/DICT/Dictionary.xlsx</dictionary>-->
+      <!--            </configuration>-->
+      <!--          </execution>-->
+      <!--          <execution>-->
+      <!--            <phase>generate-resources</phase>-->
+      <!--            <id>weave-cmmn</id>-->
+      <!--            <goals>-->
+      <!--              <goal>dictionary-weave</goal>-->
+      <!--            </goals>-->
+      <!--            <configuration>-->
+      <!--              <folders>-->
+      <!--                <folder>${project.build.directory}/models/CMMN</folder>-->
+      <!--              </folders>-->
+      <!--              <targetFolder>${project.build.directory}/models/CMMN</targetFolder>-->
+      <!--              <dictionary>${project.basedir}/src/main/resources/DICT/Dictionary.xlsx</dictionary>-->
+      <!--              <properties>-->
+      <!--                <METADATA_NS>http://www.signavio.com/schema/cmmn/1.1/</METADATA_NS>-->
+      <!--              </properties>-->
+      <!--            </configuration>-->
+      <!--          </execution>-->
+      <!--        </executions>-->
+      <!--      </plugin>-->
+      <!-- generate inferred metadata Surrogates from Artifacts and Signavio Packages -->
+      <!--      <plugin>-->
+      <!--        <groupId>edu.mayo.kmdp</groupId>-->
+      <!--        <artifactId>signavio-metadata-mvn-plugin</artifactId>-->
+      <!--        <version>1.0-SNAPSHOT</version>-->
+      <!--        <executions>-->
+      <!--          <execution>-->
+      <!--            <phase>generate-resources</phase>-->
+      <!--            <goals>-->
+      <!--              <goal>metadata-extract</goal>-->
+      <!--            </goals>-->
+      <!--            <configuration>-->
+      <!--              <modelFolders>-->
+      <!--                <modelFolder>${project.build.directory}/models</modelFolder>-->
+      <!--              </modelFolders>-->
+      <!--              <metaFolders>-->
+      <!--                <metaFolder>${project.basedir}/src/main/resources</metaFolder>-->
+      <!--              </metaFolders>-->
+      <!--              <targetFolder>${project.build.directory}/models</targetFolder>-->
+      <!--              <graphFile>${project.build.directory}/models/deps.rdf</graphFile>-->
+      <!--            </configuration>-->
+      <!--          </execution>-->
+      <!--        </executions>-->
+      <!--      </plugin>-->
+      <!-- Ensure schemas are available for validation -->
+      <!--      TODO: NEEDED? -->
+      <!--      <plugin>-->
+      <!--        <groupId>org.apache.maven.plugins</groupId>-->
+      <!--        <artifactId>maven-dependency-plugin</artifactId>-->
+      <!--        <version>3.0.2</version>-->
+      <!--        <executions>-->
+      <!--          <execution>-->
+      <!--            <id>unpack</id>-->
+      <!--            <phase>process-resources</phase>-->
+      <!--            <goals>-->
+      <!--              <goal>unpack</goal>-->
+      <!--            </goals>-->
+      <!--            <configuration>-->
+      <!--              <artifactItems>-->
+      <!--                <artifactItem>-->
+      <!--                  <groupId>edu.mayo.kmdp</groupId>-->
+      <!--                  <artifactId>kmdp-model-metadata</artifactId>-->
+      <!--                  <version>1.0</version>-->
+      <!--                  <type>jar</type>-->
+      <!--                </artifactItem>-->
+      <!--                <artifactItem>-->
+      <!--                  <groupId>edu.mayo.kmdp</groupId>-->
+      <!--                  <artifactId>omg-dmn</artifactId>-->
+      <!--                  <version>1.0-SNAPSHOT</version>-->
+      <!--                  <type>jar</type>-->
+      <!--                </artifactItem>-->
+      <!--                <artifactItem>-->
+      <!--                  <groupId>edu.mayo.kmdp</groupId>-->
+      <!--                  <artifactId>omg-cmmn</artifactId>-->
+      <!--                  <version>1.0-SNAPSHOT</version>-->
+      <!--                  <type>jar</type>-->
+      <!--                </artifactItem>-->
+      <!--              </artifactItems>-->
+      <!--              <includes>**/*.xsd,**/*catalog.xml</includes>-->
+      <!--              <outputDirectory>${project.build.outputDirectory}</outputDirectory>-->
+      <!--            </configuration>-->
+      <!--          </execution>-->
+      <!--        </executions>-->
+      <!--      </plugin>-->
+      <!--  TODO: NEEDED? -->
+      <!--      <plugin>-->
+      <!--        <groupId>org.codehaus.mojo</groupId>-->
+      <!--        <artifactId>xml-maven-plugin</artifactId>-->
+      <!--        <version>1.0.1</version>-->
+      <!--        <executions>-->
+      <!--          <execution>-->
+      <!--            <goals>-->
+      <!--              <goal>validate</goal>-->
+      <!--            </goals>-->
+      <!--            <phase>process-resources</phase>-->
+      <!--          </execution>-->
+      <!--        </executions>-->
+      <!--        <configuration>-->
+      <!--          <catalogs>-->
+      <!--            <catalog>${project.build.outputDirectory}/xsd/cmmn-catalog.xml</catalog>-->
+      <!--            <catalog>${project.build.outputDirectory}/xsd/dmn-catalog.xml</catalog>-->
+      <!--            <catalog>${project.build.outputDirectory}/xsd/km-metadata-catalog.xml</catalog>-->
+      <!--            <catalog>${project.build.outputDirectory}/xsd/terms-catalog.xml</catalog>-->
+      <!--          </catalogs>-->
+      <!--          <validationSets>-->
+      <!--            <validationSet>-->
+      <!--              <dir>${project.build.directory}/models/DMN/CLIN/afib</dir>-->
+      <!--              <publicId>http://www.omg.org/spec/DMN/20151101/dmn.xsd</publicId>-->
+      <!--              <validating>true</validating>-->
+      <!--              <includes>-->
+      <!--                <include>*.dmn</include>-->
+      <!--              </includes>-->
+      <!--            </validationSet>-->
+      <!--            <validationSet>-->
+      <!--              <dir>${project.build.directory}/models/DMN/CLIN/afib</dir>-->
+      <!--              <systemId>http://kmdp.mayo.edu/metadata/surrogate</systemId>-->
+      <!--              <validating>true</validating>-->
+      <!--              <includes>-->
+      <!--                <include>*.surr.xml</include>-->
+      <!--              </includes>-->
+      <!--            </validationSet>-->
+      <!--            <validationSet>-->
+      <!--              <dir>${project.build.directory}/models/DMN/CLIN/afib/meta</dir>-->
+      <!--              <publicId>http://www.omg.org/spec/DMN/20151101/dmn.xsd</publicId>-->
+      <!--              <validating>true</validating>-->
+      <!--              <includes>-->
+      <!--                <include>*.dmn</include>-->
+      <!--              </includes>-->
+      <!--            </validationSet>-->
+      <!--            <validationSet>-->
+      <!--              <dir>${project.build.directory}/models/DMN/CLIN/afib/meta</dir>-->
+      <!--              <systemId>http://kmdp.mayo.edu/metadata/surrogate</systemId>-->
+      <!--              <validating>true</validating>-->
+      <!--              <includes>-->
+      <!--                <include>*.surr.xml</include>-->
+      <!--              </includes>-->
+      <!--            </validationSet>-->
+      <!--            <validationSet>-->
+      <!--              <dir>${project.build.directory}/models/DMN/CCG</dir>-->
+      <!--              <publicId>http://www.omg.org/spec/DMN/20151101/dmn.xsd</publicId>-->
+      <!--              <validating>true</validating>-->
+      <!--              <includes>-->
+      <!--                <include>*.dmn</include>-->
+      <!--              </includes>-->
+      <!--            </validationSet>-->
+      <!--            <validationSet>-->
+      <!--              <dir>${project.build.directory}/models/DMN/CCG</dir>-->
+      <!--              <systemId>http://kmdp.mayo.edu/metadata/surrogate</systemId>-->
+      <!--              <validating>true</validating>-->
+      <!--              <includes>-->
+      <!--                <include>*.surr.xml</include>-->
+      <!--              </includes>-->
+      <!--            </validationSet>-->
+      <!--            <validationSet>-->
+      <!--              <dir>${project.build.directory}/models/DMN/KED</dir>-->
+      <!--              <publicId>http://www.omg.org/spec/DMN/20151101/dmn.xsd</publicId>-->
+      <!--              <validating>true</validating>-->
+      <!--              <includes>-->
+      <!--                <include>*.dmn</include>-->
+      <!--              </includes>-->
+      <!--            </validationSet>-->
+      <!--            <validationSet>-->
+      <!--              <dir>${project.build.directory}/models/DMN/KED</dir>-->
+      <!--              <publicId>http://kmdp.mayo.edu/metadata/surrogate</publicId>-->
+      <!--              <validating>true</validating>-->
+      <!--              <includes>-->
+      <!--                <include>*.surr.xml</include>-->
+      <!--              </includes>-->
+      <!--            </validationSet>-->
+      <!--            <validationSet>-->
+      <!--              <dir>${project.build.directory}/models/CMMN/afib</dir>-->
+      <!--              <publicId>http://www.omg.org/spec/CMMN/20151109/MODEL</publicId>-->
+      <!--              <validating>true</validating>-->
+      <!--              <includes>-->
+      <!--                <include>*.cmmn</include>-->
+      <!--              </includes>-->
+      <!--            </validationSet>-->
+      <!--            <validationSet>-->
+      <!--              <dir>${project.build.directory}/models/CMMN/afib</dir>-->
+      <!--              <validating>true</validating>-->
+      <!--              <systemId>http://kmdp.mayo.edu/metadata/surrogate</systemId>-->
+      <!--              <includes>-->
+      <!--                <include>*.surr.xml</include>-->
+      <!--              </includes>-->
+      <!--            </validationSet>-->
+      <!--          </validationSets>-->
+      <!--        </configuration>-->
+      <!--        <dependencies>-->
+      <!--          <dependency>-->
+      <!--            <groupId>net.sf.saxon</groupId>-->
+      <!--            <artifactId>Saxon-HE</artifactId>-->
+      <!--            <version>9.8.0-8</version>-->
+      <!--          </dependency>-->
+      <!--        </dependencies>-->
+      <!--      </plugin>-->
+    </plugins>
+  </build>
 
 </project>

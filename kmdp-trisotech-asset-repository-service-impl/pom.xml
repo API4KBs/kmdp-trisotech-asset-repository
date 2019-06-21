@@ -16,7 +16,6 @@
     <version>1.0.0</version>
   </parent>
 
-  <groupId>edu.mayo.kmdp</groupId>
   <artifactId>kmdp-trisotech-asset-repository-service-impl</artifactId>
 
 </project>

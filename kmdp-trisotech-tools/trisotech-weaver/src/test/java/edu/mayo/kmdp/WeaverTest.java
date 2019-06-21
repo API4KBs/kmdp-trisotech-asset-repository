@@ -59,7 +59,7 @@ class WeaverTest {
 
 	@Test
 	void testWeave() {
-		String path = "/src/test/resources/WeaverTest1.dmn";
+		String path = "/WeaverTest1.dmn";
 //		String path = "/Choice of Atrial Fibrillation Treatment Strategy.dmn";
 //		String path = "/Prior Management of Atrial Fibrillation.dmn";
 
@@ -83,7 +83,7 @@ class WeaverTest {
 	// TODO: How is 'default' different than test above? What is considered 'default'? CAO
 	@Test
 	void testWeaveDefault() {
-		String path = "/src/test/resources/WeaverTest1.dmn";
+		String path = "/WeaverTest1.dmn";
 		Document dox = loadXMLDocument( resolveResource( path ) ).orElseGet( () -> fail( "Unable to load document " + path ) );
 
 		try {
@@ -131,7 +131,7 @@ class WeaverTest {
 	@Disabled
 	@Test
 	void testVariousMetadata() {
-		String path = "/src/test/resources/WeaverTest1.dmn";
+		String path = "/WeaverTest1.dmn";
 		Document dox = loadXMLDocument( resolveResource( path ) ).orElseGet( () -> fail( "Unable to load document " + path ) );
 
 
@@ -147,7 +147,6 @@ class WeaverTest {
 			assertNotNull( dox );
 
 			BasicAnnotation id = loadAnnotations( dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class ).iterator().next();
-			// TODO: Why does this pass? CAO
 			assertEquals( "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT",
 			              id.getExpr().toString() );
 
@@ -177,10 +176,10 @@ class WeaverTest {
 	}
 
 
-//	@Disabled("Not ready for CMMN yet")
+	@Disabled("Not ready for CMMN yet")
 	@Test
 	void testVariousMetadataOnCMMN() {
-		String path = "/src/test/resources/WeaveTest1.cmmn";
+		String path = "/WeaveTest1.cmmn";
 		Document dox = loadXMLDocument( resolveResource( path ) ).orElseGet( () -> fail( "Unable to load document " + path ) );
 
 		try {

@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
+import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
 //import ca.uhn.fhir.model.dstu2.resource.DataElement;
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.SurrogateHelper;

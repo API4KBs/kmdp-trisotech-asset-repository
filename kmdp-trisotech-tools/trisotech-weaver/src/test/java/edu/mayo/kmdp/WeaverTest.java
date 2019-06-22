@@ -205,39 +205,18 @@ class WeaverTest {
 //			assertEquals( "http://test.ckm.mock.edu/190a29b8-9bbd-4759-9046-6837196da93a",
 //			              ids.get( 0 ).getExpr().toString() );
 
-			System.out.println("dox documentElement: " + dox.getDocumentElement());
-			System.out.println("dox.getParentNode() " + dox.getParentNode());
-			System.out.println("dox.getElementById(semantic:case) " + dox.getElementById("semantic:case"));
-
-			System.out.println("dox.getXmlEncoding() " + dox.getXmlEncoding());
-			System.out.println("xNode(dox, case): " + xNode(dox, "case"));
-			System.out.println("xNode(dox, definitions/case): " + xNode(dox, "definitions/case"));
-			System.out.println("xNode(dox, definitions/case[1]): " + xNode(dox, "definitions/case[1]"));
-
-
-			System.out.println("xNode(dox, //definitions): " + xNode(dox, "//definitions"));
-			System.out.println("xNode(dox, //definitions/@*): " + xNode(dox, "//definitions/@*"));
-			System.out.println("xNode(dox, //definitions/*): " + xNode(dox, "//definitions/*"));
-
-			System.out.println("xNode(dox, //definitions/case[1]/@*): " + xNode(dox, "//definitions/case[1]/@*"));
-//			System.out.println("xNode(dox, //definitions/*:case): " + xNode(dox, "//definitions/*:case"));
-//			System.out.println("xNode(dox, //meta/[@*[local-name() = 'case']]): " + xNode(dox, "//meta/[@*[local-name() = 'case']]"));
-
-
-			System.out.println("xNode(dox, definitions/case): " + xNode(dox, "definitions/case"));
-			System.out.println("xNode(dox, definitions/case[@id]): " + xNode(dox, "definitions/case[@id]"));
-			System.out.println("xNode(dox, definitions/case[@id]): " + xNode(dox, "definitions/case[@id]"));
-			System.out.println("xNode(dox, //*[@name]): " + xNode(dox, "//*[@name]"));
-			System.out.println("xNode(dox, case/*[@name]): " + xNode(dox, "case/*[@name]"));
-			System.out.println("xList(dox, /definitions).getLength(): " + xList(dox, "/definitions").getLength());
 
 			NodeList metas = dox.getElementsByTagNameNS( Weaver.getMETADATA_NS(), Weaver.getMETADATA_EL() );
-			String expression = "//*/triso:*"; // all tags w/'triso:' TODO: FIXME: this works in a xpath tester, but fails here with "Prefix must resolve to a namespace: triso" CAO
-// 			System.out.println("metas length (expect 0): " + metas.getLength());
+ 			System.out.println("metas length (expect 0): " + metas.getLength());
+ 			assertEquals(0, metas.getLength());
+ 			NodeList relations = dox.getElementsByTagNameNS( Weaver.getMETADATA_NS(), Weaver.getMETADATA_RS());
 
-			NodeList nodes = xList(dox, expression);
-			System.out.println("nodes length: " + nodes.getLength()); // expect 0, but right now should be more because weave not complete 6/21 CAO
-			assertNotNull( xNode( dox, "definitions/case" ) );
+ 			System.out.println("relations length (expect 0): " + relations.getLength());
+ 			assertEquals(0, relations.getLength());
+
+ 			// TODO: assert other data is as expected CAO
+//			NodeList nodes = xList(dox, expression);
+//			System.out.println("nodes length: " + nodes.getLength()); // expect 0, but right now should be more because weave not complete 6/21 CAO
 		} catch ( IllegalStateException ie ) {
 			ie.printStackTrace();
 			fail( ie.getMessage() );

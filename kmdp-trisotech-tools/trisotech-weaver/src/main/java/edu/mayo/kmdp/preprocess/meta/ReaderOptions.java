@@ -43,6 +43,7 @@ public enum ReaderOptions implements Option<ReaderOptions> {
 	p_DIAGRAM_NS( Opt.of( "DIAGRAM_NS", "http://www.omg.org/spec/DMN/20180521/DI/", String.class, false ) ),
 	p_EL_DIAGRAM_EXT( Opt.of( "EL_DIAGRAM_EXTENSION", "extension", String.class, false)),
 	p_EL_ANNOTATION( Opt.of( "EL_ANNOTATION", "semanticLink", String.class, false ) ),
+	p_EL_RELATIONSHIP( Opt.of( "EL_RELATIONSHIP", "interrelationship", String.class, false ) ),
 	p_EL_ANNOTATION_ID( Opt.of( "EL_ANNOTATION_ID", "customAttribute", String.class, false)),
 	p_EL_ANNOTATED_ITEM( Opt.of( "EL_ANNOTATED_ITEM", "itemDefinition", String.class, false ) );
 

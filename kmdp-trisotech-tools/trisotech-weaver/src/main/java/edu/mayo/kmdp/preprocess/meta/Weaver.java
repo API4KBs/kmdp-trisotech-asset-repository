@@ -49,6 +49,7 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 
 public class Weaver {
 
+  private static String METADATA_RS;
   private static String METADATA_NS;
   private static String METADATA_EL;
   private static String METADATA_EXT;
@@ -89,6 +90,7 @@ public class Weaver {
 
     METADATA_NS = config.getTyped( ReaderOptions.p_METADATA_NS );
     METADATA_EL = config.getTyped( ReaderOptions.p_EL_ANNOTATION );
+    METADATA_RS = config.getTyped( ReaderOptions.p_EL_RELATIONSHIP );
     METADATA_EXT = config.getTyped(ReaderOptions.p_EL_MODEL_EXT);
     METADATA_ID = config.getTyped(ReaderOptions.p_EL_ANNOTATION_ID);
     DIAGRAM_NS = config.getTyped( ReaderOptions.p_DIAGRAM_NS );
@@ -138,6 +140,11 @@ public class Weaver {
   public static String getANNOTATIONS_SCHEMA() {
     return ANNOTATIONS_SCHEMA;
   }
+
+  public static String getMETADATA_RS() {
+    return METADATA_RS;
+  }
+
 
   public ReaderConfig getConfig() {
     return config;
@@ -194,6 +201,10 @@ public class Weaver {
     // get metas after the move so the moved elements are captured
     NodeList metas = dox.getElementsByTagNameNS( METADATA_NS, METADATA_EL );
 
+    // relationships can be in CMMN
+    NodeList relations = dox.getElementsByTagNameNS( METADATA_NS, METADATA_RS );
+    weaveRelations( relations );
+
     NodeList ids = dox.getElementsByTagNameNS( METADATA_NS, METADATA_ID);
 
     // Find the Asset ID, if present
@@ -208,6 +219,7 @@ public class Weaver {
 
     return dox;
   }
+
 
   /**
    * weaveDiagramExtension will take data from the diagram section of the DMN that are needed and move them
@@ -242,6 +254,12 @@ public class Weaver {
     asElementStream(children)
             .forEach( (child) -> newElement.appendChild(child) );
     dox.getDocumentElement().appendChild(newElement);
+  }
+
+
+  private void weaveRelations(NodeList relations) {
+    System.out.println("weaveRelations.... relations size: " + relations.getLength());
+    // TODO: pick up here -- how to rewrite the relationship... CAO
   }
 
   private void weaveIdentifier( NodeList metas ) {

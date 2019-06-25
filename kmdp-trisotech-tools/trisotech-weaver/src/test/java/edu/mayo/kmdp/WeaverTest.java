@@ -55,8 +55,8 @@ class WeaverTest {
 
   @Test
   void testWeave() {
-    String path = "/WeaverTest1.dmn";
-//		String path = "/Choice of Atrial Fibrillation Treatment Strategy.dmn";
+//    String path = "/WeaverTest1.dmn";
+		String path = "/Choice of Atrial Fibrillation Treatment Strategy.dmn";
 //		String path = "/Prior Management of Atrial Fibrillation.dmn";
 
     Document dox = loadXMLDocument( resolveResource( path ) ).orElseGet( () -> fail( "Unable to load document " + path ) );
@@ -86,7 +86,7 @@ class WeaverTest {
       new Weaver( ).weave( dox );
 
       assertTrue(true); // dummy
-      // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support
+      // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
 //			assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
 
       streamXMLDocument( dox, System.out );
@@ -123,11 +123,11 @@ class WeaverTest {
   }
 
 
-  // TODO: Update to Trisotech? CAO
-  @Disabled
   @Test
   void testVariousMetadataOnDMN() {
     String path = "/WeaverTest1.dmn";
+//    String path = "/Choice of Atrial Fibrillation Treatment Strategy.dmn";
+//		String path = "/Prior Management of Atrial Fibrillation.dmn
     Document dox = loadXMLDocument( resolveResource( path ) ).orElseGet( () -> fail( "Unable to load document " + path ) );
 
 
@@ -152,8 +152,7 @@ class WeaverTest {
               id.getExpr().toString() );
 
       assertTrue(confirmNoTrisoNameSpace(dox, Weaver.getMETADATA_NS()));
-      assertTrue(confirmNoTrisoNameSpace(dox, Weaver.getMETADATA_DIAGRAM_NS()));
-
+      assertTrue(confirmNoTrisoNameSpace(dox, Weaver.getMETADATA_DIAGRAM_DMN_NS()));
 
 
       // TODO: is any of the following still needed? relevant to Trisotech data? CAO
@@ -204,7 +203,7 @@ class WeaverTest {
 
 
       assertTrue( confirmNoTrisoNameSpace(dox, Weaver.getMETADATA_NS()) );
-      assertTrue( confirmNoTrisoNameSpace(dox, Weaver.getMETADATA_DIAGRAM_NS()) );
+      assertTrue( confirmNoTrisoNameSpace(dox, Weaver.getMETADATA_DIAGRAM_CMMN_NS()) );
 // CAO
 //			assertEquals( "http://test.ckm.mock.edu/190a29b8-9bbd-4759-9046-6837196da93a",
 //			              ids.get( 0 ).getExpr().toString() );

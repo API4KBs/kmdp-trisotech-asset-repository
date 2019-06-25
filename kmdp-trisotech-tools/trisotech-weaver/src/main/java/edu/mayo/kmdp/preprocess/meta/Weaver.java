@@ -52,7 +52,8 @@ public class Weaver {
   private static String METADATA_EXT;
   private static String METADATA_ID;
   private static String DIAGRAM_NS;
-  private static String METADATA_DIAGRAM_NS;
+  private static String METADATA_DIAGRAM_DMN_NS;
+  private static String METADATA_DIAGRAM_CMMN_NS;
   private static String DIAGRAM_EXT;
   private static String ANNOTATED_ITEM;
   private static String SURROGATE_SCHEMA = "http://kmdp.mayo.edu/metadata/surrogate";
@@ -87,7 +88,8 @@ public class Weaver {
     this.reader = new ModelReader(this.config);
 
     METADATA_NS = config.getTyped( ReaderOptions.p_METADATA_NS );
-    METADATA_DIAGRAM_NS = config.getTyped( ReaderOptions.p_METADATA_DIAGRAM_NS );
+    METADATA_DIAGRAM_DMN_NS = config.getTyped( ReaderOptions.p_METADATA_DIAGRAM_DMN_NS);
+    METADATA_DIAGRAM_CMMN_NS = config.getTyped( ReaderOptions.p_METADATA_DIAGRAM_DMN_NS );
     METADATA_EL = config.getTyped( ReaderOptions.p_EL_ANNOTATION );
     METADATA_RS = config.getTyped( ReaderOptions.p_EL_RELATIONSHIP );
     METADATA_EXT = config.getTyped(ReaderOptions.p_EL_MODEL_EXT);
@@ -144,8 +146,12 @@ public class Weaver {
     return METADATA_RS;
   }
 
-  public static String getMETADATA_DIAGRAM_NS() {
-    return METADATA_DIAGRAM_NS;
+  public static String getMETADATA_DIAGRAM_DMN_NS() {
+    return METADATA_DIAGRAM_DMN_NS;
+  }
+
+  public static String getMETADATA_DIAGRAM_CMMN_NS() {
+    return METADATA_DIAGRAM_CMMN_NS;
   }
 
   public ReaderConfig getConfig() {
@@ -203,7 +209,7 @@ public class Weaver {
     // get metas after the move so the moved elements are captured
     NodeList metas = dox.getElementsByTagNameNS( METADATA_NS, METADATA_EL );
 
-    // relationships can be in CMMN
+    // relationships can be in CMMN TODO: Can tell if DMN or CMMNN so don't try to process items only in one? CAO
     NodeList relations = dox.getElementsByTagNameNS( METADATA_NS, METADATA_RS );
     weaveRelations( relations );
 
@@ -217,19 +223,22 @@ public class Weaver {
 //		NodeList dicts = dox.getElementsByTagName( ANNOTATED_ITEM );
     // Remove traces of Trisotech
     // remove the namespace attributes
-    removeAttributesByNS( dox, METADATA_NS );
-    removeAttributesByNS( dox, METADATA_DIAGRAM_NS );
+    removeAttributesByNS( dox );
 
     // remove the namespaces TODO CAO
 
+    // rename namespace TODO CAO
+
     // remove any use of 'trisotech' in URI TODO CAO
+
+
     // This should go away eventually..
 //		fixBugs( dox ); CAO
 
     return dox;
   }
 
-  private void removeAttributesByNS(Document dox, String ns) {
+  private void removeAttributesByNS(Document dox) {
     NodeList elements = dox.getElementsByTagNameNS("*", "*");
     asElementStream(elements).forEach(
             (el) -> {
@@ -237,7 +246,10 @@ public class Weaver {
               int attrSize = attributes.getLength() - 1;
               for (int i = attrSize; i >= 0; i--) {
                 Attr attr = (Attr) attributes.item(i);
-                if (ns.equals(attr.getNamespaceURI())) {
+                if (( attr != null ) &&
+                        ( METADATA_NS.equals(attr.getNamespaceURI() ) ||
+                                METADATA_DIAGRAM_DMN_NS.equals(attr.getNamespaceURI()) ||
+                                METADATA_DIAGRAM_CMMN_NS.equals(attr.getNamespaceURI() ))) {
                   el.removeAttributeNode(attr);
                 }
               }
@@ -298,7 +310,8 @@ public class Weaver {
               String elementId = el.getAttribute("elementId");
               // TODO: pick up here -- how to rewrite the relationship... CAO
               DatatypeAnnotation dta = new DatatypeAnnotation();
-              dta.setValue(Registry.MAYO_ASSETS_BASE_URI + modelId + "#" + elementId);
+              dta.setValue(Registry.MAYO_ASSETS_BASE_URI + "/artifacts/" + modelId + "#" + elementId);
+              // TODO: Confer w/Davide what is needed here CAO
               dta.setRel(new ConceptIdentifier().withLabel("pointsTo?").withTag("tag???").withRef(URI.create("someURIValue???")));
               System.out.println("dta: value: " + dta.getValue() + " rel: tag: " + dta.getRel().getTag() + " rel: label: "
                       +  dta.getRel().getLabel() + " rel: ref: " + dta.getRel().getRef() );

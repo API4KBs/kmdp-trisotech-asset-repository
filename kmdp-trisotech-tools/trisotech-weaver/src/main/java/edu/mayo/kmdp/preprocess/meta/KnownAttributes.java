@@ -28,7 +28,7 @@ import java.util.Optional;
  Trisotech ... explain yourself
 
  This class ensures that the names used in the 'published' artifacts
- are up to date.
+ are up to date. [original description ... what does it mean?]
 */
 public enum KnownAttributes {
 

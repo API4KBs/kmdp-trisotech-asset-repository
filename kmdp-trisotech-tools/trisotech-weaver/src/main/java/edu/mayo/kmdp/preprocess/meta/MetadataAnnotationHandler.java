@@ -23,7 +23,7 @@ import java.util.List;
 
 
 /**
- * Rewrites dictionary explicitly
+ * Rewrites proprietary tags explicitly
  */
 public class MetadataAnnotationHandler extends BaseAnnotationHandler {
 

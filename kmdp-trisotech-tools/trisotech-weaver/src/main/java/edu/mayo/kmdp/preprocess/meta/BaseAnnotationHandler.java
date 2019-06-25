@@ -49,15 +49,15 @@ public abstract class BaseAnnotationHandler {
 //				: Collections.singletonList( newAnnotation( rel, rol, rows ) );
 //	}
 
-//	public List<Annotation> getDataAnnotation( String name,
-//	                                           KnownAttributes defaultRel,
-//	                                           String value ) {
-//
-//		KnownAttributes rel = KnownAttributes.resolve( name ).orElse( defaultRel );
-//
-//		return Collections.singletonList( new DatatypeAnnotation().withRel( rel.asConcept() )
-//		                                                          .withValue( value ) );
-//	}
+	public List<Annotation> getDataAnnotation( String name,
+	                                           KnownAttributes defaultRel,
+	                                           String value ) {
+
+		KnownAttributes rel = KnownAttributes.resolve( name ).orElse( defaultRel );
+
+		return Collections.singletonList( new DatatypeAnnotation().withRel( rel.asConcept() )
+		                                                          .withValue( value ) );
+	}
 
 	protected Annotation newAnnotation(List<ConceptIdentifier> rows) {
 		Annotation anno;

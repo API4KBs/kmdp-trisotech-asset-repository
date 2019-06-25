@@ -18,7 +18,6 @@ package edu.mayo.kmdp.preprocess.meta;
 import edu.mayo.kmdp.metadata.annotations.*;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.ws.ResponseHelper;
-import edu.mayo.ontology.taxonomies.krformat._2018._08.SerializationFormat;
 import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -27,9 +26,7 @@ import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.springframework.http.ResponseEntity;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 import javax.xml.bind.JAXBElement;
 import java.io.ByteArrayInputStream;
@@ -55,6 +52,7 @@ public class Weaver {
   private static String METADATA_EXT;
   private static String METADATA_ID;
   private static String DIAGRAM_NS;
+  private static String METADATA_DIAGRAM_NS;
   private static String DIAGRAM_EXT;
   private static String ANNOTATED_ITEM;
   private static String SURROGATE_SCHEMA = "http://kmdp.mayo.edu/metadata/surrogate";
@@ -89,6 +87,7 @@ public class Weaver {
     this.reader = new ModelReader(this.config);
 
     METADATA_NS = config.getTyped( ReaderOptions.p_METADATA_NS );
+    METADATA_DIAGRAM_NS = config.getTyped( ReaderOptions.p_METADATA_DIAGRAM_NS );
     METADATA_EL = config.getTyped( ReaderOptions.p_EL_ANNOTATION );
     METADATA_RS = config.getTyped( ReaderOptions.p_EL_RELATIONSHIP );
     METADATA_EXT = config.getTyped(ReaderOptions.p_EL_MODEL_EXT);
@@ -145,6 +144,9 @@ public class Weaver {
     return METADATA_RS;
   }
 
+  public static String getMETADATA_DIAGRAM_NS() {
+    return METADATA_DIAGRAM_NS;
+  }
 
   public ReaderConfig getConfig() {
     return config;
@@ -213,11 +215,34 @@ public class Weaver {
     // CAO
     weaveMetadata(metas);
 //		NodeList dicts = dox.getElementsByTagName( ANNOTATED_ITEM );
+    // Remove traces of Trisotech
+    // remove the namespace attributes
+    removeAttributesByNS( dox, METADATA_NS );
+    removeAttributesByNS( dox, METADATA_DIAGRAM_NS );
 
+    // remove the namespaces TODO CAO
+
+    // remove any use of 'trisotech' in URI TODO CAO
     // This should go away eventually..
 //		fixBugs( dox ); CAO
 
     return dox;
+  }
+
+  private void removeAttributesByNS(Document dox, String ns) {
+    NodeList elements = dox.getElementsByTagNameNS("*", "*");
+    asElementStream(elements).forEach(
+            (el) -> {
+              NamedNodeMap attributes = el.getAttributes();
+              int attrSize = attributes.getLength() - 1;
+              for (int i = attrSize; i >= 0; i--) {
+                Attr attr = (Attr) attributes.item(i);
+                if (ns.equals(attr.getNamespaceURI())) {
+                  el.removeAttributeNode(attr);
+                }
+              }
+            }
+    );
   }
 
 
@@ -225,7 +250,8 @@ public class Weaver {
    * weaveDiagramExtension will take data from the diagram section of the DMN that are needed and move them
    * to be parented by the root.
    * Specifically:
-   * Extract the <di:extension></di:extension> fragment and rename to <semantic:extension></semantic:extension>
+   * Extract the <di:extension></di:extension> fragment and rename to
+   * <semantic:extensionElements></semantic:extensionElements>
    * Move as a child of the root of the document
    *
    * @param diagramExtension
@@ -249,7 +275,7 @@ public class Weaver {
    */
   private void reparentDiagramElement(Element el, Document dox) {
     NodeList children = el.getChildNodes();
-    Element newElement = dox.createElementNS(dox.getDocumentElement().getNamespaceURI(), DIAGRAM_EXT);
+    Element newElement = dox.createElementNS(dox.getDocumentElement().getNamespaceURI(), METADATA_EXT);
     newElement.setPrefix("semantic");
     asElementStream(children)
             .forEach( (child) -> newElement.appendChild(child) );
@@ -259,7 +285,31 @@ public class Weaver {
 
   private void weaveRelations(NodeList relations) {
     System.out.println("weaveRelations.... relations size: " + relations.getLength());
-    // TODO: pick up here -- how to rewrite the relationship... CAO
+    //
+//		// TODO: How to handle CMMN data? [interrelationship should be DatatypeAnnotation]
+    asElementStream(relations).forEach(
+            (el) -> {
+              System.out.println("\tis CMMN?");
+              System.out.println("\tfileId: " + el.getAttribute("fileId"));
+              System.out.println("\telementId: " + el.getAttribute("elementId"));
+              System.out.println("\tmodelId: " + el.getAttribute("modelId"));
+              System.out.println("\tmimeType: " + el.getAttribute("mimeType"));
+              String modelId = el.getAttribute("modelId").substring(1);
+              String elementId = el.getAttribute("elementId");
+              // TODO: pick up here -- how to rewrite the relationship... CAO
+              DatatypeAnnotation dta = new DatatypeAnnotation();
+              dta.setValue(Registry.MAYO_ASSETS_BASE_URI + modelId + "#" + elementId);
+              dta.setRel(new ConceptIdentifier().withLabel("pointsTo?").withTag("tag???").withRef(URI.create("someURIValue???")));
+              System.out.println("dta: value: " + dta.getValue() + " rel: tag: " + dta.getRel().getTag() + " rel: label: "
+                      +  dta.getRel().getLabel() + " rel: ref: " + dta.getRel().getRef() );
+
+
+//              ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(modelId).orElseThrow(IllegalArgumentException::new).asConcept(); // this fails CAO
+//              System.out.println("cid for CMMN modelId " + modelId + " is: " + cid.toString());
+              }
+    );
+
+
   }
 
   private void weaveIdentifier( NodeList metas ) {
@@ -320,13 +370,7 @@ public class Weaver {
 //		System.out.println("\tname: " + el.getAttribute("name"));
 //		System.out.println("\tmodelURI: " + el.getAttribute("modelURI"));
 //		System.out.println("\turi: " + el.getAttribute("uri"));
-//
-//		// TODO: How to handle CMMN data?
-//		System.out.println("\tis CMMN?");
-//    System.out.println("\tfileId: " + el.getAttribute("fileId"));
-//    System.out.println("\telementId: " + el.getAttribute("elementId"));
-//    System.out.println("\tmodelId: " + el.getAttribute("modelId"));
-//    System.out.println("\tmimeType: " + el.getAttribute("mimeType"));
+
 
     // TODO: would there ever be more than one? CAO maybe
     List conceptIdentifiers = new ArrayList<ConceptIdentifier>();
@@ -343,9 +387,9 @@ public class Weaver {
 
 
     String tag = el.getAttribute("id").substring(1);
-//    ClinicalSituation.resolve(tag).orElseThrow(IllegalStateException::new).; CAO -- for now: TODO: fix this
+//    ClinicalSituation.resolve(tag).orElseThrow(IllegalStateException::new).; // CAO -- for now: TODO: fix this -- there will be more support coming
 
-    // TODO: fix this CAO -- this replaces the new ConceptIdentifer code above
+    // TODO: fix this CAO -- this replaces the 'new ConceptIdentifer' code above (need the above statement working first???)
 //    ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(tag).orElseThrow().asConcept();
 
 

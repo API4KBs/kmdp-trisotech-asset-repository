@@ -235,9 +235,15 @@ class WeaverTest {
               for(int i=0; i< attrSize; i++) {
                 Attr attr = (Attr)attributes.item(i);
                 if( ( Weaver.getMETADATA_NS().equals(attr.getNamespaceURI( ) ) )
+                        || ( Weaver.getMETADATA_NS().equals(attr.getValue() ) )
                         || ( Weaver.getMETADATA_DIAGRAM_DMN_NS().equals(attr.getNamespaceURI( ) ) )
+                        || ( Weaver.getMETADATA_DIAGRAM_DMN_NS().equals(attr.getValue( ) ) )
                         || ( Weaver.getMETADATA_DIAGRAM_CMMN_NS().equals(attr.getNamespaceURI( ) ) )
-                        || ( Weaver.getDROOLS_NS().equals(attr.getNamespaceURI( ) ) ) ) {
+                        || ( Weaver.getMETADATA_DIAGRAM_CMMN_NS().equals(attr.getValue( ) ) )
+                        || ( Weaver.getDROOLS_NS().equals(attr.getNamespaceURI( ) ) )
+                        || ( Weaver.getDROOLS_NS().equals(attr.getValue( ) ) )
+                )
+                {
                   fail("Should not have '" + attr.getPrefix() + "' attributes anymore. Have: " +
                           attr.getLocalName() + " on parent: " + el.getNodeName() );
                 }

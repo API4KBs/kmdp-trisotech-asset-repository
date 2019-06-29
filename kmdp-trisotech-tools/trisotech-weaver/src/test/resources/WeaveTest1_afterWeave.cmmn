@@ -9,7 +9,6 @@
                       xmlns:ns1="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068"
                       xmlns:ns2="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21"
                       xmlns:rss="http://purl.org/rss/2.0/" xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
-                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
                       xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       exporter="Trisotech DES API Repository Conversion" exporterVersion="6.2.4"

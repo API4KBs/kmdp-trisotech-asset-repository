@@ -231,9 +231,7 @@ public class Weaver {
 
     /****** Remove traces of Trisotech  ******/
     // remove the namespace attributes
-    removeAttributesByNS( dox );
-
-    // remove the namespaces TODO CAO
+    removeProprietaryAttributesAndNS( dox );
 
     // rename namespace TODO CAO
 
@@ -246,7 +244,12 @@ public class Weaver {
     return dox;
   }
 
-  private void removeAttributesByNS(Document dox) {
+  /**
+   * remove the proprietary attributes and the associated namespace
+   *
+   * @param dox
+   */
+  private void removeProprietaryAttributesAndNS(Document dox) {
     NodeList elements = dox.getElementsByTagNameNS("*", "*");
     asElementStream(elements).forEach(
             (el) -> {
@@ -257,9 +260,13 @@ public class Weaver {
                 if ( ( attr != null ) &&
                         // remove any of the Trisotech namespace attributes, and drools
                         ( METADATA_NS.equals(attr.getNamespaceURI() )
-                                || METADATA_DIAGRAM_DMN_NS.equals(attr.getNamespaceURI())
+                                || METADATA_NS.equals(attr.getValue() )
+                                || METADATA_DIAGRAM_DMN_NS.equals(attr.getNamespaceURI() )
+                                || METADATA_DIAGRAM_DMN_NS.equals(attr.getValue() )
                                 || METADATA_DIAGRAM_CMMN_NS.equals(attr.getNamespaceURI() )
+                                || METADATA_DIAGRAM_CMMN_NS.equals(attr.getValue() )
                                 || DROOLS_NS.equals(attr.getNamespaceURI() )
+                                || DROOLS_NS.equals(attr.getValue() )
                         )
                 )
                 {

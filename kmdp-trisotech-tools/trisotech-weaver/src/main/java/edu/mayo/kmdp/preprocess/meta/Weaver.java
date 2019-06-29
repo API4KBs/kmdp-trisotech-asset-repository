@@ -106,6 +106,7 @@ public class Weaver {
     handlers.put( METADATA_EL, new MetadataAnnotationHandler( config ) );
     handlers.put( METADATA_ID, new MetadataAnnotationHandler( config ) );
 		handlers.put( ANNOTATED_ITEM, new AnnotatedFragmentHandler( config ) );
+		handlers.put( METADATA_RS, new MetadataAnnotationHandler(config) );
   }
 
   public static String getMETADATA_NS() {
@@ -313,25 +314,7 @@ public class Weaver {
 //		// TODO: How to handle CMMN data? [interrelationship should be DatatypeAnnotation]
     asElementStream(relations).forEach(
             (el) -> {
-              System.out.println("\tis CMMN?");
-              System.out.println("\tfileId: " + el.getAttribute("fileId"));
-              System.out.println("\telementId: " + el.getAttribute("elementId"));
-              System.out.println("\tmodelId: " + el.getAttribute("modelId"));
-              System.out.println("\tmimeType: " + el.getAttribute("mimeType"));
-              String modelId = el.getAttribute("modelId").substring(1);
-              String elementId = el.getAttribute("elementId");
-              // TODO: pick up here -- how to rewrite the relationship... CAO
-              DatatypeAnnotation dta = new DatatypeAnnotation();
-              // TODO: This should be MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
-              dta.setValue(Registry.MAYO_ASSETS_BASE_URI + "/artifacts/" + modelId + "#" + elementId);
-              // TODO: Confer w/Davide what is needed here CAO
-              dta.setRel(new ConceptIdentifier().withLabel("pointsTo?").withTag("tag???").withRef(URI.create("someURIValue???")));
-              System.out.println("dta: value: " + dta.getValue() + " rel: tag: " + dta.getRel().getTag() + " rel: label: "
-                      +  dta.getRel().getLabel() + " rel: ref: " + dta.getRel().getRef() );
-
-
-//              ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(modelId).orElseThrow(IllegalArgumentException::new).asConcept(); // this fails CAO
-//              System.out.println("cid for CMMN modelId " + modelId + " is: " + cid.toString());
+              doRewriteRelations( el );
               }
     );
 
@@ -347,6 +330,29 @@ public class Weaver {
                     (el) -> doRewriteId( el ) );
   }
 
+  private void doRewriteRelations( Element el ) {
+    System.out.println("\tis CMMN?");
+    System.out.println("\tfileId: " + el.getAttribute("fileId"));
+    System.out.println("\telementId: " + el.getAttribute("elementId"));
+    System.out.println("\tmodelId: " + el.getAttribute("modelId"));
+    System.out.println("\tmimeType: " + el.getAttribute("mimeType"));
+    String modelId = el.getAttribute("modelId").substring(1);
+    String elementId = el.getAttribute("elementId");
+    // TODO: pick up here -- how to rewrite the relationship... CAO
+    BaseAnnotationHandler handler = handler( el );
+    DatatypeAnnotation dta = new DatatypeAnnotation();
+    // TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
+    dta.setValue("https://clinicalknowlegemanagement.mayo.edu/artifacts/" + modelId + "#" + elementId);
+    // TODO: Confer w/Davide what is needed here CAO
+    dta.setRel(new ConceptIdentifier().withLabel("pointsTo?").withTag("tag???").withRef(URI.create("someURIValue???")));
+    System.out.println("dta: value: " + dta.getValue() + " rel: tag: " + dta.getRel().getTag() + " rel: label: "
+            + dta.getRel().getLabel() + " rel: ref: " + dta.getRel().getRef());
+
+    handler.replaceProprietaryElement( el, toChildElement( dta, el));
+//              ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(modelId).orElseThrow(IllegalArgumentException::new).asConcept(); // this fails CAO
+//              System.out.println("cid for CMMN modelId " + modelId + " is: " + cid.toString());
+
+  }
   private void doRewriteId( Element el ) {
     System.out.println("doRewriteId for element: el: tagName " + el.getTagName() +
                     " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
@@ -373,7 +379,7 @@ public class Weaver {
 
 
   private void weaveNonDictionaryMetadata( NodeList metas ) {
-    // rewire dictionary-bound attributes
+    // rewire attributes
     asElementStream( metas )
 //				.filter( (x) -> ! isDictionaryElement( x ) )
 //				.filter( (x) -> ! isIdentifier( x ) )

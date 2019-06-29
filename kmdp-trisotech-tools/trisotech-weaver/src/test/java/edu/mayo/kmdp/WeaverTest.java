@@ -176,7 +176,6 @@ class WeaverTest {
     }
   }
 
-  @Disabled("Not ready for CMMN yet")
   @Test
   void testVariousMetadataOnCMMN() {
     String path = "/WeaveTest1.cmmn";

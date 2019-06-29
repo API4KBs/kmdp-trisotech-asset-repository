@@ -42,11 +42,10 @@
       <semantic:decisionTask decisionRef="_a920d72fbb4c526d0e62641893cc09c7"
                              id="PID__0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2" name="Weaver Test 1 Decision">
         <semantic:extensionElements>
-          <triso:interrelationship elementId="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
-                                   fileId="eyJmIjp7InNrdSI6IjEyMzcyMGE2LTk3NTgtNDVhMy04YzVjLTVmZmZhYjEyYzQ5NCIsIm5hbWUiOiJXZWF2ZXIgVGVzdCAxIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifSwiciI6eyJhcGlrZXkiOiIyOTIwMDNmNjk4NDBlNzEyIn19"
-                                   mimeType="application/vnd.triso-dmn+json"
-                                   modelId="_5682fa26-b064-43c8-9475-1e4281e74068" name="Weaver Test 1 Decision"
-                                   uri="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+          <ann:datatypeAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers"
+                                  value="https://clinicalknowlegemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf">
+            <ann:rel label="pointsTo?" ref="someURIValue???" tag="tag???"/>
+          </ann:datatypeAnnotation>
           <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
             <ann:expr
                     conceptId="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
@@ -59,11 +58,10 @@
       <semantic:decisionTask decisionRef="_65c08bb65562d6e6923dcb5e1d44ede2"
                              id="PID__6088d90d-bc64-40e0-93ca-950552bd4f98" name="Test Decision 2">
         <semantic:extensionElements>
-          <triso:interrelationship elementId="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
-                                   fileId="eyJmIjp7InNrdSI6ImZmYTUzMjYyLTRkMzYtNDY1Ni04OTBiLTRlNDhlZDFjYjljMyIsIm5hbWUiOiJXZWF2ZXIgVGVzdCAyIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifSwiciI6eyJhcGlrZXkiOiIyOTIwMDNmNjk4NDBlNzEyIn19"
-                                   mimeType="application/vnd.triso-dmn+json"
-                                   modelId="_ede3b331-7b10-4580-98be-66ebff344c21" name="Test Decision 2"
-                                   uri="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+          <ann:datatypeAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers"
+                                  value="https://clinicalknowlegemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf">
+            <ann:rel label="pointsTo?" ref="someURIValue???" tag="tag???"/>
+          </ann:datatypeAnnotation>
           <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
             <ann:expr
                     conceptId="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"

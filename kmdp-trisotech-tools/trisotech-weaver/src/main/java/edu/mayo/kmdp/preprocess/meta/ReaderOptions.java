@@ -42,7 +42,7 @@ public enum ReaderOptions implements Option<ReaderOptions> {
 	p_METADATA_NS( Opt.of( "METADATA_NS", "http://www.trisotech.com/2015/triso/modeling", String.class, false ) ),
 	p_DIAGRAM_NS( Opt.of( "DIAGRAM_NS", "http://www.omg.org/spec/DMN/20180521/DI/", String.class, false ) ),
 	p_METADATA_DIAGRAM_DMN_NS( Opt.of( "METADATA_DIAGRAM_DMN_NS", "http://www.trisotech.com/2016/triso/dmn", String.class, false)),
-	p_METADATA_DIAGRAM_CMMN_NS( Opt.of( "METADATA_DIAGRAM_CMMN_NS", "http://www.trisotech.com/2016/triso/cmmn", String.class, false)),
+	p_METADATA_DIAGRAM_CMMN_NS( Opt.of( "METADATA_DIAGRAM_CMMN_NS", "http://www.trisotech.com/2014/triso/cmmn", String.class, false)),
 	p_DROOLS_NS( Opt.of( "DROOLS_NS", "http://www.drools.org/kie/dmn/1.1", String.class,  false)),
 	p_EL_DIAGRAM_EXT( Opt.of( "EL_DIAGRAM_EXTENSION", "extension", String.class, false)),
 	p_EL_ANNOTATION( Opt.of( "EL_ANNOTATION", "semanticLink", String.class, false ) ),

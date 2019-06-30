@@ -1,12 +1,12 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,6 +46,7 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 
 public class Weaver {
 
+  public static final String CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowlegemanagement.mayo.edu/artifacts/";
   private static String METADATA_RS;
   private static String METADATA_NS;
   private static String METADATA_EL;
@@ -65,48 +66,48 @@ public class Weaver {
   private ModelReader reader;
 
   private ObjectFactory of = new ObjectFactory();
-  private Map<String,BaseAnnotationHandler> handlers = new HashMap<>();
+  private Map<String, BaseAnnotationHandler> handlers = new HashMap<>();
 
 
   public Weaver() {
-    this( false );
+    this(false);
   }
 
-  public Weaver( boolean strict ) {
-    this( null, strict );
+  public Weaver(boolean strict) {
+    this(null, strict);
   }
 
-	public Weaver( boolean strict, ReaderConfig p ) {
-		this( null, strict, p );
-	}
+  public Weaver(boolean strict, ReaderConfig p) {
+    this(null, strict, p);
+  }
 
-	public Weaver( InputStream dict, boolean strict ) {
-		this( dict, strict, new ReaderConfig() );
-}
+  public Weaver(InputStream dict, boolean strict) {
+    this(dict, strict, new ReaderConfig());
+  }
 
-  public Weaver( InputStream dict, boolean strict, ReaderConfig p ) {
+  public Weaver(InputStream dict, boolean strict, ReaderConfig p) {
     this.config = p;
     this.reader = new ModelReader(this.config);
 
-    METADATA_NS = config.getTyped( ReaderOptions.p_METADATA_NS );
-    METADATA_DIAGRAM_DMN_NS = config.getTyped( ReaderOptions.p_METADATA_DIAGRAM_DMN_NS);
-    METADATA_DIAGRAM_CMMN_NS = config.getTyped( ReaderOptions.p_METADATA_DIAGRAM_DMN_NS );
-    DROOLS_NS = config.getTyped( ReaderOptions.p_DROOLS_NS );
-    METADATA_EL = config.getTyped( ReaderOptions.p_EL_ANNOTATION );
-    METADATA_RS = config.getTyped( ReaderOptions.p_EL_RELATIONSHIP );
+    METADATA_NS = config.getTyped(ReaderOptions.p_METADATA_NS);
+    METADATA_DIAGRAM_DMN_NS = config.getTyped(ReaderOptions.p_METADATA_DIAGRAM_DMN_NS);
+    METADATA_DIAGRAM_CMMN_NS = config.getTyped(ReaderOptions.p_METADATA_DIAGRAM_CMMN_NS);
+    DROOLS_NS = config.getTyped(ReaderOptions.p_DROOLS_NS);
+    METADATA_EL = config.getTyped(ReaderOptions.p_EL_ANNOTATION);
+    METADATA_RS = config.getTyped(ReaderOptions.p_EL_RELATIONSHIP);
     METADATA_EXT = config.getTyped(ReaderOptions.p_EL_MODEL_EXT);
     METADATA_ID = config.getTyped(ReaderOptions.p_EL_ANNOTATION_ID);
-    DIAGRAM_NS = config.getTyped( ReaderOptions.p_DIAGRAM_NS );
+    DIAGRAM_NS = config.getTyped(ReaderOptions.p_DIAGRAM_NS);
     DIAGRAM_EXT = config.getTyped(ReaderOptions.p_EL_DIAGRAM_EXT);
 
 //		TODO: Needed? CAO [maybe]
-		ANNOTATED_ITEM = config.getTyped( ReaderOptions.p_EL_ANNOTATED_ITEM );
+    ANNOTATED_ITEM = config.getTyped(ReaderOptions.p_EL_ANNOTATED_ITEM);
 
-		System.out.println("METADATA_EL: " + METADATA_EL);
-    handlers.put( METADATA_EL, new MetadataAnnotationHandler( config ) );
-    handlers.put( METADATA_ID, new MetadataAnnotationHandler( config ) );
-		handlers.put( ANNOTATED_ITEM, new AnnotatedFragmentHandler( config ) );
-		handlers.put( METADATA_RS, new MetadataAnnotationHandler(config) );
+    System.out.println("METADATA_EL: " + METADATA_EL);
+    handlers.put(METADATA_EL, new MetadataAnnotationHandler(config));
+    handlers.put(METADATA_ID, new MetadataAnnotationHandler(config));
+    handlers.put(ANNOTATED_ITEM, new AnnotatedFragmentHandler(config));
+    handlers.put(METADATA_RS, new MetadataAnnotationHandler(config));
   }
 
   public static String getMETADATA_NS() {
@@ -169,61 +170,61 @@ public class Weaver {
   //DocumentCarrier input = new DocumentCarrier().withStructuredExpression(dox).withRepresentation(rep(DMN_1_2, XML_1_1));
 
   // CAO: TODO: This is how it should be done with the updated classes 06/20 review w/Davide
-  public ResponseEntity<? extends KnowledgeCarrier> weave( KnowledgeCarrier toBeWovenInto, KnowledgeCarrier toBeWovenIn) {
+  public ResponseEntity<? extends KnowledgeCarrier> weave(KnowledgeCarrier toBeWovenInto, KnowledgeCarrier toBeWovenIn) {
     DocumentCarrier input = (DocumentCarrier) toBeWovenInto;
-    if ( input.getRepresentation().getFormat() != XML_1_1) {
+    if (input.getRepresentation().getFormat() != XML_1_1) {
       // exception
     }
     Document out = weave((Document) input.getStructuredExpression());
 
 
     // ResponseHelper will handle all the error handling for the response
-    return ResponseHelper.attempt(AbstractCarrier.of(out).withRepresentation(rep(DMN_1_2,XML_1_1)));
+    return ResponseHelper.attempt(AbstractCarrier.of(out).withRepresentation(rep(DMN_1_2, XML_1_1)));
   }
 
   // What exactly is the purpose of this method? Is it weaving in KMDP attributes in place of <Signavio> (to be Trisotech)
   // attributes?
-  public Document weave( Document dox ) {
+  public Document weave(Document dox) {
     Element e = dox.getDocumentElement();
     System.out.println("documentElement: tagName " + e.getTagName() +
-            " nodeName: " + e.getNodeName() + " localname: " + e.getLocalName() +
-            " baseURI: " + e.getBaseURI() + " NamespaceURI: " + e.getNamespaceURI() +
-            " nodeValue: " + e.getNodeValue() );
-    dox.getDocumentElement().setAttributeNS( "http://www.w3.org/2000/xmlns/",
-            "xmlns:" + "xsi",
-            "http://www.w3.org/2001/XMLSchema-instance" );
+        " nodeName: " + e.getNodeName() + " localname: " + e.getLocalName() +
+        " baseURI: " + e.getBaseURI() + " NamespaceURI: " + e.getNamespaceURI() +
+        " nodeValue: " + e.getNodeValue());
+    dox.getDocumentElement().setAttributeNS("http://www.w3.org/2000/xmlns/",
+        "xmlns:" + "xsi",
+        "http://www.w3.org/2001/XMLSchema-instance");
 
     // TODO: remove hardcoded values? CAO
-    dox.getDocumentElement().setAttributeNS( "http://www.w3.org/2000/xmlns/",
-            "xmlns:surr",
-            SURROGATE_SCHEMA );
+    dox.getDocumentElement().setAttributeNS("http://www.w3.org/2000/xmlns/",
+        "xmlns:surr",
+        SURROGATE_SCHEMA);
     // TODO: remove hardcoded values? CAO
-    dox.getDocumentElement().setAttributeNS( "http://www.w3.org/2000/xmlns/",
-            "xmlns:ann",
-            ANNOTATIONS_SCHEMA );
+    dox.getDocumentElement().setAttributeNS("http://www.w3.org/2000/xmlns/",
+        "xmlns:ann",
+        ANNOTATIONS_SCHEMA);
 
-    dox.getDocumentElement().setAttributeNS( "http://www.w3.org/2001/XMLSchema-instance",
-            "xsi:" + "schemaLocation",
-            getSchemaLocations( dox ) );
+    dox.getDocumentElement().setAttributeNS("http://www.w3.org/2001/XMLSchema-instance",
+        "xsi:" + "schemaLocation",
+        getSchemaLocations(dox));
 
 //    System.out.println("What is validation Schema for the NS? " + Registry.getValidationSchema(URI.create(METADATA_NS)).get());
 
     // first rename and move elements needed out of diagram element and into root element
-		NodeList diagramExtension = dox.getElementsByTagNameNS(DIAGRAM_NS, DIAGRAM_EXT);
+    NodeList diagramExtension = dox.getElementsByTagNameNS(DIAGRAM_NS, DIAGRAM_EXT);
 
     weaveDiagramExtension(diagramExtension, dox);
 
     // get metas after the move so the moved elements are captured
-    NodeList metas = dox.getElementsByTagNameNS( METADATA_NS, METADATA_EL );
+    NodeList metas = dox.getElementsByTagNameNS(METADATA_NS, METADATA_EL);
 
     // relationships can be in CMMN TODO: Can tell if DMN or CMMNN so don't try to process items only in one? CAO
-    NodeList relations = dox.getElementsByTagNameNS( METADATA_NS, METADATA_RS );
-    weaveRelations( relations );
+    NodeList relations = dox.getElementsByTagNameNS(METADATA_NS, METADATA_RS);
+    weaveRelations(relations);
 
-    NodeList ids = dox.getElementsByTagNameNS( METADATA_NS, METADATA_ID);
+    NodeList ids = dox.getElementsByTagNameNS(METADATA_NS, METADATA_ID);
 
     // Find the Asset ID, if present
-    weaveIdentifier( ids );
+    weaveIdentifier(ids);
 
     // CAO
     weaveMetadata(metas);
@@ -231,9 +232,10 @@ public class Weaver {
 
     /****** Remove traces of Trisotech  ******/
     // remove the namespace attributes
-    removeProprietaryAttributesAndNS( dox );
+    removeProprietaryAttributesAndNS(dox);
 
-    // rename namespace TODO CAO
+    // rewrite namespaces
+    rewriteNamespaces(dox);
 
     // remove any use of 'trisotech' in URI TODO CAO
 
@@ -244,6 +246,25 @@ public class Weaver {
     return dox;
   }
 
+  private void rewriteNamespaces(Document dox) {
+    NamedNodeMap attributes = dox.getDocumentElement().getAttributes();
+
+    int attrSize = attributes.getLength();
+    for (int i = 0; i < attrSize; i++) {
+      Attr attr = (Attr) attributes.item(i);
+      String localName = attr.getLocalName();
+      if (localName.equals("xmlns")
+          || (localName.equals("namespace"))
+          || (localName.equals("targetNamespace"))
+          || (localName.contains("include"))
+          || (localName.contains("ns"))
+      ) {
+        rewriteValue(attr);
+      }
+
+    }
+  }
+
   /**
    * remove the proprietary attributes and the associated namespace
    *
@@ -252,28 +273,27 @@ public class Weaver {
   private void removeProprietaryAttributesAndNS(Document dox) {
     NodeList elements = dox.getElementsByTagNameNS("*", "*");
     asElementStream(elements).forEach(
-            (el) -> {
-              NamedNodeMap attributes = el.getAttributes();
-              int attrSize = attributes.getLength() - 1;
-              for (int i = attrSize; i >= 0; i--) {
-                Attr attr = (Attr) attributes.item(i);
-                if ( ( attr != null ) &&
-                        // remove any of the Trisotech namespace attributes, and drools
-                        ( METADATA_NS.equals(attr.getNamespaceURI() )
-                                || METADATA_NS.equals(attr.getValue() )
-                                || METADATA_DIAGRAM_DMN_NS.equals(attr.getNamespaceURI() )
-                                || METADATA_DIAGRAM_DMN_NS.equals(attr.getValue() )
-                                || METADATA_DIAGRAM_CMMN_NS.equals(attr.getNamespaceURI() )
-                                || METADATA_DIAGRAM_CMMN_NS.equals(attr.getValue() )
-                                || DROOLS_NS.equals(attr.getNamespaceURI() )
-                                || DROOLS_NS.equals(attr.getValue() )
-                        )
+        (el) -> {
+          NamedNodeMap attributes = el.getAttributes();
+          int attrSize = attributes.getLength() - 1;
+          for (int i = attrSize; i >= 0; i--) {
+            Attr attr = (Attr) attributes.item(i);
+            if ((attr != null) &&
+                // remove any of the Trisotech namespace attributes, and drools
+                (METADATA_NS.equals(attr.getNamespaceURI())
+                    || METADATA_NS.equals(attr.getValue())
+                    || METADATA_DIAGRAM_DMN_NS.equals(attr.getNamespaceURI())
+                    || METADATA_DIAGRAM_DMN_NS.equals(attr.getValue())
+                    || METADATA_DIAGRAM_CMMN_NS.equals(attr.getNamespaceURI())
+                    || METADATA_DIAGRAM_CMMN_NS.equals(attr.getValue())
+                    || DROOLS_NS.equals(attr.getNamespaceURI())
+                    || DROOLS_NS.equals(attr.getValue())
                 )
-                {
-                  el.removeAttributeNode(attr);
-                }
-              }
+            ) {
+              el.removeAttributeNode(attr);
             }
+          }
+        }
     );
   }
 
@@ -291,12 +311,14 @@ public class Weaver {
    */
   private void weaveDiagramExtension(NodeList diagramExtension, Document dox) {
     System.out.println("weaveDiagramExtension size: " + diagramExtension.getLength());
-    asElementStream( diagramExtension )
-            .forEach( (el) -> { System.out.println("el: tagName " + el.getTagName() +
-    " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
-            " baseURI: " + el.getBaseURI() + " NamespaceURI: " + el.getNamespaceURI() +
-            " nodeValue: " + el.getNodeValue());
-            reparentDiagramElement(el, dox); } );
+    asElementStream(diagramExtension)
+        .forEach((el) -> {
+          System.out.println("el: tagName " + el.getTagName() +
+              " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
+              " baseURI: " + el.getBaseURI() + " NamespaceURI: " + el.getNamespaceURI() +
+              " nodeValue: " + el.getNodeValue());
+          reparentDiagramElement(el, dox);
+        });
   }
 
   /**
@@ -310,7 +332,7 @@ public class Weaver {
     Element newElement = dox.createElementNS(dox.getDocumentElement().getNamespaceURI(), METADATA_EXT);
     newElement.setPrefix("semantic");
     asElementStream(children)
-            .forEach( (child) -> newElement.appendChild(child) );
+        .forEach((child) -> newElement.appendChild(child));
     dox.getDocumentElement().appendChild(newElement);
   }
 
@@ -320,24 +342,35 @@ public class Weaver {
     //
 //		// TODO: How to handle CMMN data? [interrelationship should be DatatypeAnnotation]
     asElementStream(relations).forEach(
-            (el) -> {
-              doRewriteRelations( el );
-              }
+        (el) -> {
+          doRewriteRelations(el);
+        }
     );
 
 
   }
 
-  private void weaveIdentifier( NodeList metas ) {
+  private void weaveIdentifier(NodeList metas) {
     System.out.println("weaveIdentifier.... metas size: " + metas.getLength());
     // rewire dictionary-bound attributes
-    asElementStream( metas )
-            .filter( this::isIdentifier )
-            .forEach(
-                    (el) -> doRewriteId( el ) );
+    asElementStream(metas)
+        .filter(this::isIdentifier)
+        .forEach(
+            (el) -> doRewriteId(el));
   }
 
-  private void doRewriteRelations( Element el ) {
+
+  private void rewriteValue(Attr attr) {
+    String value = attr.getValue();
+    String id = value.substring(value.lastIndexOf('/') + 2);
+//      href.substring(href.lastIndexOf('/') + 1)
+//      String modelId = el.getAttribute("modelId").substring(1);
+    attr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
+
+  }
+
+
+  private void doRewriteRelations(Element el) {
     System.out.println("\tis CMMN?");
     System.out.println("\tfileId: " + el.getAttribute("fileId"));
     System.out.println("\telementId: " + el.getAttribute("elementId"));
@@ -346,61 +379,62 @@ public class Weaver {
     String modelId = el.getAttribute("modelId").substring(1);
     String elementId = el.getAttribute("elementId");
     // TODO: pick up here -- how to rewrite the relationship... CAO
-    BaseAnnotationHandler handler = handler( el );
+    BaseAnnotationHandler handler = handler(el);
     DatatypeAnnotation dta = new DatatypeAnnotation();
     // TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
-    dta.setValue("https://clinicalknowlegemanagement.mayo.edu/artifacts/" + modelId + "#" + elementId);
+    dta.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId);
     // TODO: Confer w/Davide what is needed here CAO
     dta.setRel(new ConceptIdentifier().withLabel("pointsTo?").withTag("tag???").withRef(URI.create("someURIValue???")));
     System.out.println("dta: value: " + dta.getValue() + " rel: tag: " + dta.getRel().getTag() + " rel: label: "
-            + dta.getRel().getLabel() + " rel: ref: " + dta.getRel().getRef());
+        + dta.getRel().getLabel() + " rel: ref: " + dta.getRel().getRef());
 
-    handler.replaceProprietaryElement( el, toChildElement( dta, el));
+    handler.replaceProprietaryElement(el, toChildElement(dta, el));
 //              ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(modelId).orElseThrow(IllegalArgumentException::new).asConcept(); // this fails CAO
 //              System.out.println("cid for CMMN modelId " + modelId + " is: " + cid.toString());
 
   }
-  private void doRewriteId( Element el ) {
+
+  private void doRewriteId(Element el) {
     System.out.println("doRewriteId for element: el: tagName " + el.getTagName() +
-                    " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
-                    " baseURI: " + el.getBaseURI() + " NamespaceURI: " + el.getNamespaceURI() +
-                    " nodeValue: " + el.getNodeValue());
-    BaseAnnotationHandler handler = handler( el );
-    if ( KnownAttributes.resolve( el.getAttribute( "key" ) ).orElse( null ) != KnownAttributes.ASSET_IDENTIFIER ) {
-      throw new IllegalStateException( "This method should be called only on ID annotations" );
+        " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
+        " baseURI: " + el.getBaseURI() + " NamespaceURI: " + el.getNamespaceURI() +
+        " nodeValue: " + el.getNodeValue());
+    BaseAnnotationHandler handler = handler(el);
+    if (KnownAttributes.resolve(el.getAttribute("key")).orElse(null) != KnownAttributes.ASSET_IDENTIFIER) {
+      throw new IllegalStateException("This method should be called only on ID annotations");
     }
-    Map<String, String> ids = extractKeyValuePairs( el.getAttribute( "value" ) );
-    switch ( ids.size() ) {
+    Map<String, String> ids = extractKeyValuePairs(el.getAttribute("value"));
+    switch (ids.size()) {
       case 0:
         return;
       case 1:
-        Annotation idAnn = handler.getBasicAnnotation( KnownAttributes.ASSET_IDENTIFIER,
-                ids.values().iterator().next() );
-        handler.replaceProprietaryElement( el,
-                toChildElement( idAnn, el ) );
+        Annotation idAnn = handler.getBasicAnnotation(KnownAttributes.ASSET_IDENTIFIER,
+            ids.values().iterator().next());
+        handler.replaceProprietaryElement(el,
+            toChildElement(idAnn, el));
         return;
       default:
-        throw new IllegalStateException( "More than 1 ID annotations are not supported - found " + ids.size() );
+        throw new IllegalStateException("More than 1 ID annotations are not supported - found " + ids.size());
     }
   }
 
 
-  private void weaveNonDictionaryMetadata( NodeList metas ) {
+  private void weaveNonDictionaryMetadata(NodeList metas) {
     // rewire attributes
-    asElementStream( metas )
+    asElementStream(metas)
 //				.filter( (x) -> ! isDictionaryElement( x ) )
 //				.filter( (x) -> ! isIdentifier( x ) )
-            .forEach(
-                    (el) -> doRewrite( el ) );
+        .forEach(
+            (el) -> doRewrite(el));
   }
 
   // CAO
-  private void weaveMetadata( NodeList metas ) {
-    asElementStream( metas )
-            .forEach(
-                    (el) -> doInjectTerm( el,
-                            getConceptIdentifiers(el) )
-            );
+  private void weaveMetadata(NodeList metas) {
+    asElementStream(metas)
+        .forEach(
+            (el) -> doInjectTerm(el,
+                getConceptIdentifiers(el))
+        );
   }
 
   private List<ConceptIdentifier> getConceptIdentifiers(Element el) {
@@ -415,10 +449,10 @@ public class Weaver {
     List conceptIdentifiers = new ArrayList<ConceptIdentifier>();
     ConceptIdentifier concept = null;
     try {
-      concept = new ConceptIdentifier().withLabel(el.getAttribute("name") )
-              .withTag(el.getAttribute("id") )
-              .withRef(new URI(el.getAttribute("modelURI")) )
-              .withConceptId( new URI (el.getAttribute("uri") ));
+      concept = new ConceptIdentifier().withLabel(el.getAttribute("name"))
+          .withTag(el.getAttribute("id"))
+          .withRef(new URI(el.getAttribute("modelURI")))
+          .withConceptId(new URI(el.getAttribute("uri")));
     } catch (URISyntaxException e) {
       e.printStackTrace();
     }
@@ -436,11 +470,11 @@ public class Weaver {
   }
 
 
-  private BaseAnnotationHandler handler( Element el ) {
-    if ( ! handlers.containsKey( el.getLocalName() ) ) {
-      throw new UnsupportedOperationException( "Unable to find handler for annotation " + el.getLocalName() );
+  private BaseAnnotationHandler handler(Element el) {
+    if (!handlers.containsKey(el.getLocalName())) {
+      throw new UnsupportedOperationException("Unable to find handler for annotation " + el.getLocalName());
     }
-    return handlers.get( el.getLocalName() );
+    return handlers.get(el.getLocalName());
   }
 
 
@@ -448,15 +482,15 @@ public class Weaver {
 //		doInjectTerm( el, rows );
 //	}
 
-  private void doInjectTerm( Element el,
+  private void doInjectTerm(Element el,
 //	                           KnownAttributes defaultRel,
-                             List<ConceptIdentifier> rows ) {
-    BaseAnnotationHandler handler = handler( el );
+                            List<ConceptIdentifier> rows) {
+    BaseAnnotationHandler handler = handler(el);
 
-    if ( ! rows.isEmpty() ) {
-      List<Annotation> annos = handler.getAnnotation( rows );
-      handler.replaceProprietaryElement( el,
-              handler.wrap( toChildElements( annos, el ) ) );
+    if (!rows.isEmpty()) {
+      List<Annotation> annos = handler.getAnnotation(rows);
+      handler.replaceProprietaryElement(el,
+          handler.wrap(toChildElements(annos, el)));
     }
   }
 
@@ -472,8 +506,8 @@ public class Weaver {
 //	}
 
 
-  private void doRewrite( final Element el ) {
-    extractKeyValuePairs( el.getAttribute( "value" ) );
+  private void doRewrite(final Element el) {
+    extractKeyValuePairs(el.getAttribute("value"));
 //						.forEach( (k,v) -> {
 //			KnownAttributes.resolve( el.getAttribute( "name" ) )
 //			               .ifPresent( (attr) -> {
@@ -486,84 +520,83 @@ public class Weaver {
 //		} );
   }
 
-  private Map<String, String> extractKeyValuePairs( String value ) {
-    HashMap<String,String> map = new HashMap<>();
-    Matcher m = reader.getURLPattern().matcher( value );
-    if ( m.find() ) {
-      map.put( getUrlKey( m.group( 1 ) ), m.group( 2 ) );
+  private Map<String, String> extractKeyValuePairs(String value) {
+    HashMap<String, String> map = new HashMap<>();
+    Matcher m = reader.getURLPattern().matcher(value);
+    if (m.find()) {
+      map.put(getUrlKey(m.group(1)), m.group(2));
     } else {
-      map.put( "value", value );
+      map.put("value", value);
     }
     return map;
   }
 
 
-  private boolean isEmptyAttribute( Element el ) {
-    String value = el.getAttribute( "value" );
-    return value.isEmpty() || "[]".equals( value );
+  private boolean isEmptyAttribute(Element el) {
+    String value = el.getAttribute("value");
+    return value.isEmpty() || "[]".equals(value);
   }
 
 
-  private boolean isIdentifier( Element el ) {
+  private boolean isIdentifier(Element el) {
     System.out.println("isIdentifier key: " + el.getAttribute("key") +
-            " ASSET_IDENTIFIER: " + KnownAttributes.ASSET_IDENTIFIER);
+        " ASSET_IDENTIFIER: " + KnownAttributes.ASSET_IDENTIFIER);
     System.out.println("isIdentifier for element: el: tagName " + el.getTagName() +
-            " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
-            " baseURI: " + el.getBaseURI() + " NamespaceURI: " + el.getNamespaceURI() +
-            " nodeValue: " + el.getNodeValue());
-    return KnownAttributes.resolve( el.getAttribute( "key" ) )
-            .filter( (x) -> x == KnownAttributes.ASSET_IDENTIFIER )
-            .isPresent();
+        " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
+        " baseURI: " + el.getBaseURI() + " NamespaceURI: " + el.getNamespaceURI() +
+        " nodeValue: " + el.getNodeValue());
+    return KnownAttributes.resolve(el.getAttribute("key"))
+        .filter((x) -> x == KnownAttributes.ASSET_IDENTIFIER)
+        .isPresent();
   }
 
-  private String getUrlKey( String value ) {
+  private String getUrlKey(String value) {
     return value;
   }
 
 
-
-  private List<Element> toChildElements( List<Annotation> annos, Element parent ) {
+  private List<Element> toChildElements(List<Annotation> annos, Element parent) {
     return annos.stream()
-            .map( (ann) -> toChildElement( ann, parent ) )
-            .collect( Collectors.toList() );
+        .map((ann) -> toChildElement(ann, parent))
+        .collect(Collectors.toList());
   }
 
-  private Element toChildElement( Annotation ann, Element parent ) {
+  private Element toChildElement(Annotation ann, Element parent) {
     Element el;
-    if ( ann instanceof MultiwordAnnotation ) {
-      el = toElement( of,
-              ( MultiwordAnnotation ) ann,
-              of::createMultiwordAnnotation
-              // CAO: The following 2 lines were for validation of schema, and used to not have hard-coded values in the call
+    if (ann instanceof MultiwordAnnotation) {
+      el = toElement(of,
+          (MultiwordAnnotation) ann,
+          of::createMultiwordAnnotation
+          // CAO: The following 2 lines were for validation of schema, and used to not have hard-coded values in the call
 //			                         XMLUtil.getSchemas( "http://kmdp.mayo.edu/metadata/surrogate" )
 //			                                .orElseThrow( IllegalStateException::new )
       );
-    } else if ( ann instanceof SimpleAnnotation ) {
-      el = toElement( of,
-              ( SimpleAnnotation ) ann,
-              of::createSimpleAnnotation
+    } else if (ann instanceof SimpleAnnotation) {
+      el = toElement(of,
+          (SimpleAnnotation) ann,
+          of::createSimpleAnnotation
 //			                         XMLUtil.getSchemas( "http://kmdp.mayo.edu/metadata/surrogate" )
 //			                                .orElseThrow( IllegalStateException::new )
       );
-    } else if ( ann instanceof BasicAnnotation ) {
-      el = toElement( of,
-              ( BasicAnnotation ) ann,
-              of::createBasicAnnotation
+    } else if (ann instanceof BasicAnnotation) {
+      el = toElement(of,
+          (BasicAnnotation) ann,
+          of::createBasicAnnotation
 //			                         XMLUtil.getSchemas( "http://kmdp.mayo.edu/metadata/surrogate" )
 //			                                .orElseThrow( IllegalStateException::new )
       );
-    } else if ( ann instanceof DatatypeAnnotation) {
-      el = toElement( of,
-              ( DatatypeAnnotation ) ann,
-              of::createDatatypeAnnotation
+    } else if (ann instanceof DatatypeAnnotation) {
+      el = toElement(of,
+          (DatatypeAnnotation) ann,
+          of::createDatatypeAnnotation
 //			                         XMLUtil.getSchemas( "http://kmdp.mayo.edu/metadata/surrogate" )
 //			                                .orElseThrow( IllegalStateException::new )
       );
     } else {
-      throw new IllegalStateException( "Unmanaged annotation type" + ann.getClass().getName() );
+      throw new IllegalStateException("Unmanaged annotation type" + ann.getClass().getName());
     }
-    parent.getOwnerDocument().adoptNode( el );
-    parent.appendChild( el );
+    parent.getOwnerDocument().adoptNode(el);
+    parent.appendChild(el);
     return el;
   }
 
@@ -572,14 +605,14 @@ public class Weaver {
                                       T root,
                                       final Function<T, JAXBElement<? super T>> mapper) {
     return JaxbUtil.marshall(Collections.singleton(ctx.getClass()),
-            root,
-            mapper,
-            JaxbUtil.defaultProperties())
-            .map(ByteArrayOutputStream::toByteArray)
-            .map(ByteArrayInputStream::new)
-            .flatMap(XMLUtil::loadXMLDocument)
-            .map(Document::getDocumentElement)
-            .orElseThrow(IllegalStateException::new);
+        root,
+        mapper,
+        JaxbUtil.defaultProperties())
+        .map(ByteArrayOutputStream::toByteArray)
+        .map(ByteArrayInputStream::new)
+        .flatMap(XMLUtil::loadXMLDocument)
+        .map(Document::getDocumentElement)
+        .orElseThrow(IllegalStateException::new);
   }
 
   //FIXME This should eventually go away
@@ -589,28 +622,27 @@ public class Weaver {
 //	} CAO
 
 
-
-  private String getSchemaLocations( Document dox ) {
+  private String getSchemaLocations(Document dox) {
     StringBuilder sb = new StringBuilder();
 
     System.out.println("KnowledgeRepresentationLanguage.DMN_1_2.getRef(): " + DMN_1_2.getRef());
-    System.out.println("Registry.getValidationSchema( KnowledgeRepresentationLanguage.CMMN_1_1.getRef() ): " + Registry.getValidationSchema( KnowledgeRepresentationLanguage.CMMN_1_1.getRef() ));
-    sb.append( SURROGATE_SCHEMA )
-            .append( " " ).append( "xsd/metadata/surrogate/surrogate.xsd" );
-    sb.append( " " );
-    sb.append( ANNOTATIONS_SCHEMA)
-            .append( " " ).append( "xsd/metadata/annotations/annotations.xsd" );
+    System.out.println("Registry.getValidationSchema( KnowledgeRepresentationLanguage.CMMN_1_1.getRef() ): " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
+    sb.append(SURROGATE_SCHEMA)
+        .append(" ").append("xsd/metadata/surrogate/surrogate.xsd");
+    sb.append(" ");
+    sb.append(ANNOTATIONS_SCHEMA)
+        .append(" ").append("xsd/metadata/annotations/annotations.xsd");
 
     String baseNS = dox.getDocumentElement().getNamespaceURI();
-    if ( baseNS.contains( "DMN" ) ) {
-      sb.append( " " )
-              .append( DMN_1_2.getRef() )
-              .append( " " ).append( Registry.getValidationSchema( DMN_1_2.getRef() )
-              .orElseThrow( IllegalStateException::new ) );
-    } else if ( baseNS.contains( "CMMN" ) ) {
-      sb.append( " " ).append( KnowledgeRepresentationLanguage.CMMN_1_1 )
-              .append( " " ).append( Registry.getValidationSchema( KnowledgeRepresentationLanguage.CMMN_1_1.getRef() )
-              .orElseThrow( IllegalStateException::new ) );
+    if (baseNS.contains("DMN")) {
+      sb.append(" ")
+          .append(DMN_1_2.getRef())
+          .append(" ").append(Registry.getValidationSchema(DMN_1_2.getRef())
+          .orElseThrow(IllegalStateException::new));
+    } else if (baseNS.contains("CMMN")) {
+      sb.append(" ").append(KnowledgeRepresentationLanguage.CMMN_1_1)
+          .append(" ").append(Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef())
+          .orElseThrow(IllegalStateException::new));
     }
 
     return sb.toString();

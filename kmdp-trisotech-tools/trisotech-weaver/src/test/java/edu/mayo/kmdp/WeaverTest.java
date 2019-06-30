@@ -142,7 +142,6 @@ class WeaverTest {
 
       assertNotNull( dox );
 
-      // TODO: This is failing now -- WHY? CAO
       BasicAnnotation id = loadAnnotations( dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class ).iterator().next();
       assertEquals( "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT",
               id.getExpr().toString() );
@@ -150,6 +149,7 @@ class WeaverTest {
 
       assertTrue(confirmNoTrisoNameSpace( dox ) );
 
+      assertTrue( verifyNamespaces(dox) );
 
       // TODO: is any of the following still needed? relevant to Trisotech data? CAO
 //			SimpleAnnotation type = loadAnnotations( dox, KnownAttributes.TYPE, SimpleAnnotation.class ).iterator().next();
@@ -197,6 +197,8 @@ class WeaverTest {
       assertTrue( validate( dox, KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
 
       assertTrue( confirmNoTrisoNameSpace(dox) );
+
+      assertTrue( verifyNamespaces(dox) );
 // CAO
 //			assertEquals( "http://test.ckm.mock.edu/190a29b8-9bbd-4759-9046-6837196da93a",
 //			              ids.get( 0 ).getExpr().toString() );
@@ -217,6 +219,67 @@ class WeaverTest {
       ie.printStackTrace();
       fail( ie.getMessage() );
     }
+  }
+
+  /**
+   * verify namespaces no longer contain 'trisotech.com' and are KMDP namespaces
+   *
+   * @param dox
+   * @return
+   */
+  private boolean verifyNamespaces(Document dox) {
+    // get attributes of the first element -- where the namespaces are set
+    NamedNodeMap attributes = dox.getDocumentElement().getAttributes();
+
+    int attrSize = attributes.getLength();
+    for(int i = 0; i < attrSize; i++) {
+      Attr attr = (Attr)attributes.item(i);
+
+      System.out.println("attr value: " + attr.getValue()
+              + " attr prefix: " + attr.getPrefix()
+              + " attr localName: " + attr.getLocalName()
+              + " attr namespaceURI: " + attr.getNamespaceURI()
+      );
+
+
+      if (!checkAttribute(attr, "xmlns")) return false;
+      if (!checkAttribute(attr, "namespace")) return false;
+      if (!checkAttribute(attr, "targetNamespace")) return false;
+      if (!checkAttribute(attr, "import")) return false;
+
+      if (attr.getLocalName().contains("include")
+              && attr.getValue().contains("trisotech.com")) {
+        fail("should not contain 'trisotech.com' in value: " + attr.getValue() + " for attribute: " + attr.getLocalName());
+        return false;
+      }
+
+      if (attr.getLocalName().contains("ns")
+          && attr.getValue().contains("trisotech.com")) {
+        fail("should not contain 'trisotech.com' in value: " + attr.getValue() + " for attribute: " + attr.getLocalName());
+        return false;
+      }
+       // confirm KMDP namespaces
+      confirmKMDPnamespace(attr);
+
+    }
+    return true;
+  }
+
+  private boolean confirmKMDPnamespace(Attr attr) {
+    if(attr.getValue().contains(Weaver.CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI)) {
+      return true;
+    }
+    return false;
+  }
+
+
+  private boolean checkAttribute(Attr attr, String namespace) {
+    if (attr.getLocalName().equals(namespace)
+            && attr.getValue().contains("trisotech.com")) {
+      fail("should not contain 'trisotech' in value: " + attr.getValue() + " for attribute: " + attr.getLocalName());
+      return false;
+    }
+    return true;
   }
 
   /**

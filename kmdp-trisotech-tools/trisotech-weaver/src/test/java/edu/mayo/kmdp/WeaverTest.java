@@ -50,8 +50,7 @@ class WeaverTest {
     }
   }
 
-  // using XMLUtil loadXMLDocument to load the XML Document properly
-  // sets up the document for conversion by setting namespaceaware
+
 
   @Test
   void testWeave() {
@@ -59,6 +58,8 @@ class WeaverTest {
 		String path = "/Choice of Atrial Fibrillation Treatment Strategy.dmn";
 //		String path = "/Prior Management of Atrial Fibrillation.dmn";
 
+    // using XMLUtil loadXMLDocument to load the XML Document properly
+    // sets up the document for conversion by setting namespaceaware
     Document dox = loadXMLDocument( resolveResource( path ) ).orElseGet( () -> fail( "Unable to load document " + path ) );
     try {
       new Weaver().weave(dox);
@@ -149,7 +150,9 @@ class WeaverTest {
 
       assertTrue(confirmNoTrisoNameSpace( dox ) );
 
-      assertTrue( verifyNamespaces(dox) );
+      assertTrue( verifyRootNamespaces(dox) );
+
+      assertTrue( verifyImportNamespace( dox ));
 
       // TODO: is any of the following still needed? relevant to Trisotech data? CAO
 //			SimpleAnnotation type = loadAnnotations( dox, KnownAttributes.TYPE, SimpleAnnotation.class ).iterator().next();
@@ -179,42 +182,32 @@ class WeaverTest {
   @Test
   void testVariousMetadataOnCMMN() {
     String path = "/WeaveTest1.cmmn";
+
     // loadXMLDocument set setNamespaceAware
     Document dox = loadXMLDocument( resolveResource( path ) ).orElseGet( () -> fail( "Unable to load document " + path ) );
 
     try {
 
       new Weaver( )
-//							true,
-//							Weaver.getWeaverProperties(KnowledgeRepresentationLanguage.CMMN_1_1))
               .weave(dox);
 
       System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument( dox, System.out );
 
-      System.out.println("registry getValidationSchema for CMMN KRLanguage ref: " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()).get());
+//      System.out.println("registry getValidationSchema for CMMN KRLanguage ref: " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()).get());
 
       assertTrue( validate( dox, KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
 
       assertTrue( confirmNoTrisoNameSpace(dox) );
 
-      assertTrue( verifyNamespaces(dox) );
-// CAO
-//			assertEquals( "http://test.ckm.mock.edu/190a29b8-9bbd-4759-9046-6837196da93a",
-//			              ids.get( 0 ).getExpr().toString() );
-
+      assertTrue( verifyRootNamespaces(dox) );
 
       NodeList metas = dox.getElementsByTagNameNS( Weaver.getMETADATA_NS(), Weaver.getMETADATA_EL() );
-      System.out.println("metas length (expect 0): " + metas.getLength());
       assertEquals(0, metas.getLength());
       NodeList relations = dox.getElementsByTagNameNS( Weaver.getMETADATA_NS(), Weaver.getMETADATA_RS());
 
-      System.out.println("relations length (expect 0): " + relations.getLength());
       assertEquals(0, relations.getLength());
 
-      // TODO: assert other data is as expected CAO
-//			NodeList nodes = xList(dox, expression);
-//			System.out.println("nodes length: " + nodes.getLength()); // expect 0, but right now should be more because weave not complete 6/21 CAO
     } catch ( IllegalStateException ie ) {
       ie.printStackTrace();
       fail( ie.getMessage() );
@@ -222,12 +215,12 @@ class WeaverTest {
   }
 
   /**
-   * verify namespaces no longer contain 'trisotech.com' and are KMDP namespaces
+   * verify namespaces on the document root no longer contain 'trisotech.com' and are KMDP namespaces
    *
    * @param dox
    * @return
    */
-  private boolean verifyNamespaces(Document dox) {
+  private boolean verifyRootNamespaces(Document dox) {
     // get attributes of the first element -- where the namespaces are set
     NamedNodeMap attributes = dox.getDocumentElement().getAttributes();
 
@@ -235,32 +228,31 @@ class WeaverTest {
     for(int i = 0; i < attrSize; i++) {
       Attr attr = (Attr)attributes.item(i);
 
-      System.out.println("attr value: " + attr.getValue()
-              + " attr prefix: " + attr.getPrefix()
-              + " attr localName: " + attr.getLocalName()
-              + " attr namespaceURI: " + attr.getNamespaceURI()
-      );
-
-
+//      System.out.println("attr value: " + attr.getValue()
+//              + " attr prefix: " + attr.getPrefix()
+//              + " attr localName: " + attr.getLocalName()
+//              + " attr namespaceURI: " + attr.getNamespaceURI()
+//      );
+//
       if (!checkAttribute(attr, "xmlns")) return false;
       if (!checkAttribute(attr, "namespace")) return false;
       if (!checkAttribute(attr, "targetNamespace")) return false;
       if (!checkAttribute(attr, "import")) return false;
 
-      if (attr.getLocalName().contains("include")
-              && attr.getValue().contains("trisotech.com")) {
-        fail("should not contain 'trisotech.com' in value: " + attr.getValue() + " for attribute: " + attr.getLocalName());
-        return false;
-      }
-
-      if (attr.getLocalName().contains("ns")
-          && attr.getValue().contains("trisotech.com")) {
-        fail("should not contain 'trisotech.com' in value: " + attr.getValue() + " for attribute: " + attr.getLocalName());
-        return false;
-      }
-       // confirm KMDP namespaces
+      if (!checkContainsAttribute(attr, "include")) return false;
+      if (!checkContainsAttribute(attr, "ns")) return false;
+      // confirm KMDP namespaces
       confirmKMDPnamespace(attr);
 
+    }
+    return true;
+  }
+
+  private boolean checkContainsAttribute(Attr attr, String include) {
+    if (attr.getLocalName().contains(include)
+        && attr.getValue().contains("trisotech.com")) {
+      fail("should not contain 'trisotech.com' in value: " + " for attribute: " + attr.getLocalName());
+      return false;
     }
     return true;
   }
@@ -281,6 +273,27 @@ class WeaverTest {
     }
     return true;
   }
+
+
+  private boolean verifyImportNamespace(Document dox) {
+    NodeList elements = dox.getElementsByTagName("*");
+    asElementStream(elements).filter((el) -> el.getLocalName().equals("import"))
+        .forEach((el) -> {
+              NamedNodeMap attributes = el.getAttributes();
+              int attrSize = attributes.getLength();
+              for (int i = 0; i < attrSize; i++) {
+                Attr attr = (Attr) attributes.item(i);
+                if (attr.getLocalName().equals("namespace")) {
+                  if (attr.getValue().contains("trisotech.com")) {
+                    fail("should not have " + attr.getValue() + " in attribute: " + attr.getLocalName() + " on parent: " + el.getNodeName());
+                  }
+                }
+              }
+            }
+        );
+    return true;
+  }
+
 
   /**
    * Confirm the Trisotech namespaces and namespace attributes have been removed.

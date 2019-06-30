@@ -15,7 +15,7 @@
                       xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
   <semantic:extensionElements/>
   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/" name="Test Dictionary"
-                   namespace="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f"/>
+                   namespace="https://clinicalknowlegemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"/>
   <semantic:decisionService id="_5682fa26-b064-43c8-9475-1e4281e74068_DS" name="Whole Model Decision Service">
     <semantic:variable id="_d88a3041-e565-4e86-9e70-63d23ad1ffe8" name="Whole Model Decision Service" typeRef="Any"/>
     <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>

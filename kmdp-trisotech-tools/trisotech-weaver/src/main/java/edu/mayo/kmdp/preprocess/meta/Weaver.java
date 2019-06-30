@@ -169,6 +169,7 @@ public class Weaver {
   public static String getEXPORTER() {
     return EL_EXPORTER;
   }
+
   public static String getEXPORTER_VERSION() {
     return EL_EXPORTER_VERSION;
   }
@@ -246,9 +247,10 @@ public class Weaver {
     removeProprietaryAttributesAndNS(dox);
 
     // rewrite namespaces
-    rewriteNamespaces(dox);
+    weaveNamespaces(dox);
 
-    // remove any use of 'trisotech' in URI TODO CAO
+    // rewrite namespace for 'import' tags
+    weaveImport(dox);
 
 
     // This should go away eventually..
@@ -257,7 +259,23 @@ public class Weaver {
     return dox;
   }
 
-  private void rewriteNamespaces(Document dox) {
+  private void weaveImport(Document dox) {
+    NodeList elements = dox.getElementsByTagName("*");
+    asElementStream(elements).filter((el) -> el.getLocalName().equals("import"))
+        .forEach((el) -> {
+              NamedNodeMap attributes = el.getAttributes();
+              int attrSize = attributes.getLength();
+              for (int i = 0; i < attrSize; i++) {
+                Attr attr = (Attr) attributes.item(i);
+                if (attr.getLocalName().equals("namespace")) {
+                  rewriteValue(attr);
+                }
+              }
+            }
+        );
+  }
+
+  private void weaveNamespaces(Document dox) {
     NamedNodeMap attributes = dox.getDocumentElement().getAttributes();
 
     int attrSize = attributes.getLength();
@@ -379,7 +397,6 @@ public class Weaver {
 //      href.substring(href.lastIndexOf('/') + 1)
 //      String modelId = el.getAttribute("modelId").substring(1);
     attr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
-
   }
 
 

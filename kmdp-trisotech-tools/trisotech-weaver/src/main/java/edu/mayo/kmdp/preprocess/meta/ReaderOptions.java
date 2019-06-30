@@ -45,6 +45,8 @@ public enum ReaderOptions implements Option<ReaderOptions> {
 	p_METADATA_DIAGRAM_CMMN_NS( Opt.of( "METADATA_DIAGRAM_CMMN_NS", "http://www.trisotech.com/2014/triso/cmmn", String.class, false)),
 	p_DROOLS_NS( Opt.of( "DROOLS_NS", "http://www.drools.org/kie/dmn/1.1", String.class,  false)),
 	p_EL_DIAGRAM_EXT( Opt.of( "EL_DIAGRAM_EXTENSION", "extension", String.class, false)),
+	p_EL_EXPORTER( Opt.of( "EL_EXPORTER", "exporter", String.class, false ) ),
+	p_EL_EXPORTER_VERSION( Opt.of( "EL_EXPORTER_VERSION", "exporterVersion", String.class, false ) ),
 	p_EL_ANNOTATION( Opt.of( "EL_ANNOTATION", "semanticLink", String.class, false ) ),
 	p_EL_RELATIONSHIP( Opt.of( "EL_RELATIONSHIP", "interrelationship", String.class, false ) ),
 	p_EL_ANNOTATION_ID( Opt.of( "EL_ANNOTATION_ID", "customAttribute", String.class, false)),

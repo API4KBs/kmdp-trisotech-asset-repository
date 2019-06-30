@@ -9,8 +9,8 @@
                       xmlns:include1="https://clinicalknowlegemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"
                       xmlns:rss="http://purl.org/rss/2.0/" xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
                       xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="DMN Modeler"
-                      exporterVersion="6.2.3" id="_5682fa26-b064-43c8-9475-1e4281e74068" name="Weaver Test 1"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="_5682fa26-b064-43c8-9475-1e4281e74068"
+                      name="Weaver Test 1"
                       namespace="https://clinicalknowlegemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
                       xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
   <semantic:extensionElements/>

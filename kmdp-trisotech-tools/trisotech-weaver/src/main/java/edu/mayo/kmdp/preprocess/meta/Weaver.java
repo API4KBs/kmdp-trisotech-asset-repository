@@ -47,6 +47,8 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 public class Weaver {
 
   public static final String CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowlegemanagement.mayo.edu/artifacts/";
+  private static String EL_EXPORTER;
+  private static String EL_EXPORTER_VERSION;
   private static String METADATA_RS;
   private static String METADATA_NS;
   private static String METADATA_EL;
@@ -99,6 +101,8 @@ public class Weaver {
     METADATA_ID = config.getTyped(ReaderOptions.p_EL_ANNOTATION_ID);
     DIAGRAM_NS = config.getTyped(ReaderOptions.p_DIAGRAM_NS);
     DIAGRAM_EXT = config.getTyped(ReaderOptions.p_EL_DIAGRAM_EXT);
+    EL_EXPORTER = config.getTyped(ReaderOptions.p_EL_EXPORTER);
+    EL_EXPORTER_VERSION = config.getTyped(ReaderOptions.p_EL_EXPORTER_VERSION);
 
 //		TODO: Needed? CAO [maybe]
     ANNOTATED_ITEM = config.getTyped(ReaderOptions.p_EL_ANNOTATED_ITEM);
@@ -160,6 +164,13 @@ public class Weaver {
 
   public static String getDROOLS_NS() {
     return DROOLS_NS;
+  }
+
+  public static String getEXPORTER() {
+    return EL_EXPORTER;
+  }
+  public static String getEXPORTER_VERSION() {
+    return EL_EXPORTER_VERSION;
   }
 
   public ReaderConfig getConfig() {
@@ -288,6 +299,8 @@ public class Weaver {
                     || METADATA_DIAGRAM_CMMN_NS.equals(attr.getValue())
                     || DROOLS_NS.equals(attr.getNamespaceURI())
                     || DROOLS_NS.equals(attr.getValue())
+                    || EL_EXPORTER.equals(attr.getLocalName())
+                    || EL_EXPORTER_VERSION.equals(attr.getLocalName())
                 )
             ) {
               el.removeAttributeNode(attr);

@@ -10,7 +10,6 @@
                       xmlns:ns2="https://clinicalknowlegemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"
                       xmlns:rss="http://purl.org/rss/2.0/" xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      exporter="Trisotech DES API Repository Conversion" exporterVersion="6.2.4"
                       expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
                       id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9" name="Weave Test 1"
                       targetNamespace="https://clinicalknowlegemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9"

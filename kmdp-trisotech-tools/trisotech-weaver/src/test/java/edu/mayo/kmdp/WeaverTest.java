@@ -305,6 +305,8 @@ class WeaverTest {
                         || ( Weaver.getMETADATA_DIAGRAM_CMMN_NS().equals(attr.getValue( ) ) )
                         || ( Weaver.getDROOLS_NS().equals(attr.getNamespaceURI( ) ) )
                         || ( Weaver.getDROOLS_NS().equals(attr.getValue( ) ) )
+                        || ( Weaver.getEXPORTER().equals(attr.getLocalName()))
+                        || ( Weaver.getEXPORTER_VERSION().equals(attr.getLocalName()))
                 )
                 {
                   fail("Should not have '" + attr.getPrefix() + "' attributes anymore. Have: " +

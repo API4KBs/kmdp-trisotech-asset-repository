@@ -53,6 +53,12 @@
       <artifactId>jackson-databind</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-datatype</artifactId>
       <version>${kmdp.version}</version>

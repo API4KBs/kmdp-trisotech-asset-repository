@@ -77,9 +77,6 @@ class MetadataTest {
 
 	}
 
-
-// TODO: This passes, but not entirely sure the data is correct CAO
-	@Disabled ("testExtraction: issue wih JacksonXmlModule in MetadataExtractor -- come back to this and FIXME")
 	@Test
 	void testExtraction() {
 		try {
@@ -92,7 +89,7 @@ class MetadataTest {
 			assertNotNull( surr );
 			assertNotNull( surr.getCarriers() );
 
-			assertNotNull( surr.getAssetId() ); // TODO: correct replacement? CAO .getResourceId() );
+			assertNotNull( surr.getAssetId() );
 			assertNotNull( surr.getAssetId().getUri() ); // .getResourceId().getUri() );
 			assertNotNull( surr.getAssetId().getVersionId() ); // getResourceId().getVersionId() );
 			assertNotNull( surr.getName() );
@@ -147,7 +144,6 @@ class MetadataTest {
 
 	}
 
-	@Disabled ("testToJson: issue wih JacksonXmlModule in MetadataExtractor -- come back to this and FIXME")
 	@Test
 	void testToJson() {
 		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),

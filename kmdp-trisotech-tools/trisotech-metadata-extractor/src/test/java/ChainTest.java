@@ -45,7 +45,6 @@ class ChainTest {
 		return m;
 	}
 
-	@Disabled("testChainDMN - Fix this")
 	@Test
 	void testChainDMN() {
 		try {
@@ -80,9 +79,9 @@ class ChainTest {
 	void testChainCMMN() {
 		try {
 
-			String cmmnPath = "/Atrial Fibrillation.cmmn"; // cao: The xml for the CMMN
+			String cmmnPath = "/WeaveTest1.cmmn"; // cao: The xml for the CMMN
 			InputStream cmmn = ChainTest.class.getResourceAsStream(cmmnPath);
-			String modelInfoPath = "/AFModel.json";
+			String modelInfoPath = "/WeaveTest1Meta.json";
 
 			InputStream modelInfo = ChainTest.class.getResourceAsStream(modelInfoPath);
 

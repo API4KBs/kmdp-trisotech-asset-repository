@@ -20,18 +20,18 @@
     <semantic:variable id="_d88a3041-e565-4e86-9e70-63d23ad1ffe8" name="Whole Model Decision Service" typeRef="Any"/>
     <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
     <semantic:inputData
-            href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
     <semantic:inputData
-            href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#_c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
     <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
   </semantic:decisionService>
   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="Diagram Page 1">
     <semantic:variable id="_d5752921-c2ec-4b31-92d6-89fd567cd6fc" name="Diagram Page 1" typeRef="Any"/>
     <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
     <semantic:inputData
-            href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
     <semantic:inputData
-            href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#_c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
     <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
   </semantic:decisionService>
   <semantic:decision id="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf" name="Weaver Test 1 Decision">
@@ -44,11 +44,11 @@
     <semantic:variable id="_aeba48e7-a5e2-4a2f-a591-f5ddd5dc41cc" name="Weaver Test 1 Decision" typeRef="string"/>
     <semantic:informationRequirement id="_08ec80f6-9032-4d91-8d39-fd28cfbba734">
       <semantic:requiredInput
-              href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
+              href="https://clinicalknowlegemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
     </semantic:informationRequirement>
     <semantic:informationRequirement id="_c17fd570-09f2-48d8-8d8a-50cb3893b689">
       <semantic:requiredInput
-              href="http://www.trisotech.com/definitions/_1b718a90-e60a-4989-be5f-c0db247c1a3f#_c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
+              href="https://clinicalknowlegemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#_c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
     </semantic:informationRequirement>
     <semantic:informationRequirement id="_4c4342d3-72a2-4786-b776-b24e6f1a274c">
       <semantic:requiredInput href="#_12873790-73be-4484-bec7-72cb8a6af004"/>

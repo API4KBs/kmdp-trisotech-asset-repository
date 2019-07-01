@@ -252,6 +252,8 @@ public class Weaver {
     // rewrite namespace for 'import' tags
     weaveImport(dox);
 
+    // rewrite href for 'inputData' and 'requiredInput' tags
+    weaveInputs(dox);
 
     // This should go away eventually..
 //		fixBugs( dox ); CAO
@@ -259,18 +261,23 @@ public class Weaver {
     return dox;
   }
 
+  private void weaveInputs(Document dox) {
+    XMLUtil.asElementStream(dox.getElementsByTagName("*"))
+        .filter((el) -> (el.getLocalName().equals("inputData")
+            || el.getLocalName().equals("requiredInput"))
+            && el.hasAttribute("href"))
+        .forEach(element -> {
+          Attr attr = element.getAttributeNode("href");
+          rewriteValue(attr);
+        });
+  }
+
   private void weaveImport(Document dox) {
-    NodeList elements = dox.getElementsByTagName("*");
-    asElementStream(elements).filter((el) -> el.getLocalName().equals("import"))
+    asElementStream(dox.getElementsByTagName("*"))
+        .filter((el) -> el.getLocalName().equals("import"))
         .forEach((el) -> {
-              NamedNodeMap attributes = el.getAttributes();
-              int attrSize = attributes.getLength();
-              for (int i = 0; i < attrSize; i++) {
-                Attr attr = (Attr) attributes.item(i);
-                if (attr.getLocalName().equals("namespace")) {
-                  rewriteValue(attr);
-                }
-              }
+              Attr attr = el.getAttributeNode("namespace");
+              rewriteValue(attr);
             }
         );
   }
@@ -393,10 +400,10 @@ public class Weaver {
 
   private void rewriteValue(Attr attr) {
     String value = attr.getValue();
-    String id = value.substring(value.lastIndexOf('/') + 2);
-//      href.substring(href.lastIndexOf('/') + 1)
-//      String modelId = el.getAttribute("modelId").substring(1);
-    attr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
+    if(value.lastIndexOf('/') != -1) {
+      String id = value.substring(value.lastIndexOf('/') + 2);
+      attr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
+    }
   }
 
 

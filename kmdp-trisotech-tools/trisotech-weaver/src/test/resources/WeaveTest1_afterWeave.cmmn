@@ -14,13 +14,13 @@
                       id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9" name="Weave Test 1"
                       targetNamespace="https://clinicalknowlegemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9"
                       xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd CMMN_1_1 http://www.omg.org/spec/CMMN/20151109/MODEL">
-  <semantic:caseFileItemDefinition definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+  <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
                                    id="_e9044eea-5a77-4700-b39a-c078eb9cb964" name="Current Weight"
                                    structureRef="string"/>
-  <semantic:caseFileItemDefinition definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+  <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
                                    id="_16bd5d00-1584-466b-8a08-bef483fb9f7e" name="My Test Entity 1"
                                    structureRef="string"/>
-  <semantic:caseFileItemDefinition definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+  <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
                                    id="_7ea3470c-076e-4156-8715-ad45aa803b01" name="Age" structureRef="string"/>
   <semantic:case id="Case_40e952e9-9c4c-4f19-bb14-a8a9681d782d" name="Test">
     <semantic:caseFileModel>

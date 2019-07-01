@@ -255,10 +255,24 @@ public class Weaver {
     // rewrite href for 'inputData' and 'requiredInput' tags
     weaveInputs(dox);
 
-    // This should go away eventually..
-//		fixBugs( dox ); CAO
+    // verify and remove any invalid caseFileItemDefinition items
+    verifyAndRemoveInvalidCaseFileItemDefinition(dox);
 
     return dox;
+  }
+
+  private void verifyAndRemoveInvalidCaseFileItemDefinition(Document dox) {
+    XMLUtil.asElementStream(dox.getElementsByTagName("*"))
+        .filter((el) -> (el.getLocalName().equals("caseFileItemDefinition")))
+        .forEach(element -> {
+          Attr attr = element.getAttributeNode("definitionType");
+          if(attr.getValue().contains("trisotech.com")) {
+            System.out.println("WARNING: Should not have trisotech.com in caseFileItemDefinition. Rewriting to default value of Unspecified." +
+                "Found for " + element.getAttributeNode("name").getValue());
+            // TODO: a way to do this using the XSD? CAO
+            attr.setValue("http://www.omg.org/spec/CMMN/DefinitionType/Unspecified");
+          }
+        });
   }
 
   private void weaveInputs(Document dox) {
@@ -652,11 +666,6 @@ public class Weaver {
         .orElseThrow(IllegalStateException::new);
   }
 
-  //FIXME This should eventually go away
-//	private void fixBugs( Document dox ) {
-//		asElementStream( dox.getElementsByTagName( "decisionService" ) )
-//				.forEach( (el) -> el.getParentNode().removeChild( el ) );
-//	} CAO
 
 
   private String getSchemaLocations(Document dox) {

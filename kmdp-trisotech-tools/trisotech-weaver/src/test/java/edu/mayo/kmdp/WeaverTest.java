@@ -203,6 +203,7 @@ class WeaverTest {
       assertTrue(confirmNoTrisoNameSpace(dox));
 
       assertTrue(verifyRootNamespaces(dox));
+      assertTrue(verifyCaseFileItemDefinition(dox));
 
       NodeList metas = dox.getElementsByTagNameNS(Weaver.getMETADATA_NS(), Weaver.getMETADATA_EL());
       assertEquals(0, metas.getLength());
@@ -215,6 +216,17 @@ class WeaverTest {
       fail(ie.getMessage());
     }
   }
+
+  private boolean verifyCaseFileItemDefinition(Document dox) {
+    XMLUtil.asElementStream(dox.getElementsByTagName("*"))
+        .filter(el -> el.getLocalName().equals("caseFileItemDefinition"))
+        .forEach(element -> {
+          Attr attr = element.getAttributeNode("definitionType");
+          checkAttribute(attr, "definitionType");
+        });
+    return true;
+  }
+
 
   /**
    * verify that inputData and requiredInput elements have the correct href values

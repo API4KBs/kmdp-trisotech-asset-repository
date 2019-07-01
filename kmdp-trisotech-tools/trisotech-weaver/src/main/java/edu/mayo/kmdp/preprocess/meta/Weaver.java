@@ -18,6 +18,7 @@ package edu.mayo.kmdp.preprocess.meta;
 import edu.mayo.kmdp.metadata.annotations.*;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.ws.ResponseHelper;
+import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituation;
 import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -422,11 +423,11 @@ public class Weaver {
 
 
   private void doRewriteRelations(Element el) {
-    System.out.println("\tis CMMN?");
-    System.out.println("\tfileId: " + el.getAttribute("fileId"));
-    System.out.println("\telementId: " + el.getAttribute("elementId"));
-    System.out.println("\tmodelId: " + el.getAttribute("modelId"));
-    System.out.println("\tmimeType: " + el.getAttribute("mimeType"));
+//    System.out.println("\tis CMMN?");
+//    System.out.println("\tfileId: " + el.getAttribute("fileId"));
+//    System.out.println("\telementId: " + el.getAttribute("elementId"));
+//    System.out.println("\tmodelId: " + el.getAttribute("modelId"));
+//    System.out.println("\tmimeType: " + el.getAttribute("mimeType"));
     String modelId = el.getAttribute("modelId").substring(1);
     String elementId = el.getAttribute("elementId");
     // TODO: pick up here -- how to rewrite the relationship... CAO
@@ -470,14 +471,14 @@ public class Weaver {
   }
 
 
-  private void weaveNonDictionaryMetadata(NodeList metas) {
-    // rewire attributes
-    asElementStream(metas)
-//				.filter( (x) -> ! isDictionaryElement( x ) )
-//				.filter( (x) -> ! isIdentifier( x ) )
-        .forEach(
-            (el) -> doRewrite(el));
-  }
+//  private void weaveNonDictionaryMetadata(NodeList metas) {
+//    // rewire attributes
+//    asElementStream(metas)
+////				.filter( (x) -> ! isDictionaryElement( x ) )
+////				.filter( (x) -> ! isIdentifier( x ) )
+//        .forEach(
+//            (el) -> doRewrite(el));
+//  }
 
   // CAO
   private void weaveMetadata(NodeList metas) {
@@ -489,12 +490,22 @@ public class Weaver {
   }
 
   private List<ConceptIdentifier> getConceptIdentifiers(Element el) {
-//		System.out.println("el in getConceptIdentifiers: " + el);
-//		System.out.println("\tid: " + el.getAttribute("id"));
-//		System.out.println("\tname: " + el.getAttribute("name"));
-//		System.out.println("\tmodelURI: " + el.getAttribute("modelURI"));
-//		System.out.println("\turi: " + el.getAttribute("uri"));
+		System.out.println("el in getConceptIdentifiers: " + el);
+		System.out.println("\tid: " + el.getAttribute("id"));
+		System.out.println("\tname: " + el.getAttribute("name"));
+		System.out.println("\tmodelURI: " + el.getAttribute("modelURI"));
+		System.out.println("\turi: " + el.getAttribute("uri"));
 
+		// need to verify andy URI values are valid -- no trisotech
+
+    Attr modelUriAttr = el.getAttributeNode("modelURI");
+    Attr uriAttr = el.getAttributeNode("uri");
+    if(modelUriAttr.getValue().contains("trisotech.com")) {
+      rewriteValue(modelUriAttr);
+    }
+    if(uriAttr.getValue().contains("trisotech.com")) {
+      rewriteValue(uriAttr);
+    }
 
     // TODO: would there ever be more than one? CAO maybe
     List conceptIdentifiers = new ArrayList<ConceptIdentifier>();
@@ -509,13 +520,14 @@ public class Weaver {
     }
     conceptIdentifiers.add(concept);
 
-
+    // TODO: shouldn't assume here? id might not have leading '_'? or is that just because of test file? CAO
     String tag = el.getAttribute("id").substring(1);
-//    ClinicalSituation.resolve(tag).orElseThrow(IllegalStateException::new).; // CAO -- for now: TODO: fix this -- there will be more support coming
+    // TODO: discuss with Davide -- which of the two examples given below are needed? both? for different reasons? How to tell? CAO
+    // TODO: This is failing -- should it work? CAO
+//    ConceptIdentifier ciFromCS = ClinicalSituation.resolve(tag).orElseThrow(IllegalStateException::new).??; // CAO -- for now: TODO: fix this -- there will be more support coming
 
-    // TODO: fix this CAO -- this replaces the 'new ConceptIdentifer' code above (need the above statement working first???)
-//    ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(tag).orElseThrow().asConcept();
-
+    // TODO: fix this CAO -- this replaces the 'new ConceptIdentifer' code above (need the above statement working first???) this currently FAILS
+//    ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(tag).orElseThrow(IllegalStateException::new).asConcept();
 
     return conceptIdentifiers;
   }

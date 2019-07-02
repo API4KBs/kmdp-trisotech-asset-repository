@@ -143,8 +143,9 @@ public class MetadataExtractor {
   private Optional<JsonNode> loadDescriptor( Document document, InputStream meta ) {
     Optional<String> innId = strategy.getArtifactID( document );
 
+    // TODO: No zip file; is any of this needed, or was it all just zip file support? CAO
     if ( innId.isPresent() ) {
-      return readZipEntry( strategy.getMetadataEntryNameForID( innId.get() ), meta )
+      return readZipEntry(strategy.getMetadataEntryNameForID( innId.get() ), meta)
               .flatMap( JSonUtil::readJson );
     } else {
       return Optional.empty();

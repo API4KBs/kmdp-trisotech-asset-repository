@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      xmlns="https://clinicalknowlegemanagement.mayo.edu/artifacts/3b265cd2-431c-4beb-9a18-f7e644d897b2"
+                      xmlns:ann="http://kmdp.mayo.edu/metadata/annotations"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:include1="https://clinicalknowlegemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be"
+                      xmlns:include2="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195"
+                      xmlns:rss="http://purl.org/rss/2.0/"
+                      xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      id="_3b265cd2-431c-4beb-9a18-f7e644d897b2"
+                      name="Choice of Long-Term Management of Coagulation Status"
+                      namespace="https://clinicalknowlegemanagement.mayo.edu/artifacts/3b265cd2-431c-4beb-9a18-f7e644d897b2"
+                      xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+  <semantic:extensionElements/>
+  <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                   name="History of Management of Atrial Fibrillation"
+                   namespace="https://clinicalknowlegemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be"/>
+  <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                   name="ClinicalSituations"
+                   namespace="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195"/>
+  <semantic:decisionService id="_3b265cd2-431c-4beb-9a18-f7e644d897b2_DS"
+                            name="Whole Model Decision Service">
+    <semantic:variable id="_c2eb5d51-ce4f-4b9b-b7a4-efc43b5cf081"
+                       name="Whole Model Decision Service"
+                       typeRef="Any"/>
+    <semantic:outputDecision href="#_f2fcd947-6770-42a6-a78b-8fe45450404e"/>
+    <semantic:encapsulatedDecision href="#_753fbabe-1ba4-479d-a9a8-c1ea71ba487c"/>
+    <semantic:encapsulatedDecision href="#_439f6265-86e1-4b8b-a70c-cdc48fb36753"/>
+    <semantic:encapsulatedDecision href="#_2c89938f-697a-48df-841d-3499b51692e5"/>
+    <semantic:encapsulatedDecision href="#_9b529fb4-75f6-4ce0-86b7-beaad1616c01"/>
+    <semantic:encapsulatedDecision href="#_180db61c-80a7-40a0-a02c-f2541fe5ca64"/>
+    <semantic:encapsulatedDecision href="#_6f5c61a3-6378-4c79-a5bb-37f9af5b3321"/>
+    <semantic:encapsulatedDecision href="#_f9d68649-351e-4987-9a47-8f906ea08865"/>
+    <semantic:encapsulatedDecision
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be#_cd02833b-5523-4a30-afd6-26826c34f772"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_0964ddd7-f29f-3b46-bb82-10e78651750f"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_ca19ed88-ddcc-3545-8772-356070c07ad4"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_3272e195-3302-3baa-ad4c-2eeb43cb62d0"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_1f66867d-c67a-3e46-9e6c-4a57a7825e1f"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_8af6faf0-10c1-3694-9bdb-cdeca43a9ec7"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_c8550ab8-734c-3d67-8ad6-2815f497cfeb"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_d413d018-63e0-3f2b-87e3-d216af64689e"/>
+    <semantic:inputData href="#_2f34fc5e-9487-4867-9351-e20aeb9ebe95"/>
+    <semantic:inputData href="#_b23bd880-9231-42b1-8fba-40d5578348ba"/>
+    <semantic:inputData href="#_1281fa2d-df47-47df-ac1e-ea5291a864a0"/>
+    <semantic:inputData href="#_6f893438-9d92-471e-a2f8-5491292003d8"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be#_b4a011d7-a388-4d0e-a58f-9c4970f6fbd6"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_f6536057-19f0-32b6-9e08-3e17b4a00158"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_a3b49707-6c0f-34d6-876e-a66f6eff5c81"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_398107f8-af91-38cc-be33-2591a9753fce"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be#_cc22f793-5171-4305-b675-805d5c2bc111"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be#_194fc536-6a2e-4447-9d21-a00b90e2a892"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_93cbaa61-fc4a-327d-807c-eba5ebb1262e"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_0de3fbe4-827c-4835-a0a4-a8147d4114a9_DS" name="Diagram Page 1">
+    <semantic:variable id="_048643cf-a2e7-472c-8448-9da11ba05117"
+                       name="Diagram Page 1"
+                       typeRef="Any"/>
+    <semantic:outputDecision href="#_f2fcd947-6770-42a6-a78b-8fe45450404e"/>
+    <semantic:encapsulatedDecision href="#_753fbabe-1ba4-479d-a9a8-c1ea71ba487c"/>
+    <semantic:encapsulatedDecision href="#_439f6265-86e1-4b8b-a70c-cdc48fb36753"/>
+    <semantic:encapsulatedDecision href="#_2c89938f-697a-48df-841d-3499b51692e5"/>
+    <semantic:encapsulatedDecision href="#_9b529fb4-75f6-4ce0-86b7-beaad1616c01"/>
+    <semantic:encapsulatedDecision href="#_180db61c-80a7-40a0-a02c-f2541fe5ca64"/>
+    <semantic:encapsulatedDecision href="#_6f5c61a3-6378-4c79-a5bb-37f9af5b3321"/>
+    <semantic:encapsulatedDecision href="#_f9d68649-351e-4987-9a47-8f906ea08865"/>
+    <semantic:inputDecision
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be#_cd02833b-5523-4a30-afd6-26826c34f772"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_0964ddd7-f29f-3b46-bb82-10e78651750f"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_ca19ed88-ddcc-3545-8772-356070c07ad4"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_3272e195-3302-3baa-ad4c-2eeb43cb62d0"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_1f66867d-c67a-3e46-9e6c-4a57a7825e1f"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_8af6faf0-10c1-3694-9bdb-cdeca43a9ec7"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_c8550ab8-734c-3d67-8ad6-2815f497cfeb"/>
+    <semantic:inputData
+            href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_d413d018-63e0-3f2b-87e3-d216af64689e"/>
+    <semantic:inputData href="#_2f34fc5e-9487-4867-9351-e20aeb9ebe95"/>
+    <semantic:inputData href="#_b23bd880-9231-42b1-8fba-40d5578348ba"/>
+    <semantic:inputData href="#_1281fa2d-df47-47df-ac1e-ea5291a864a0"/>
+    <semantic:inputData href="#_6f893438-9d92-471e-a2f8-5491292003d8"/>
+  </semantic:decisionService>
+  <semantic:decision id="_f2fcd947-6770-42a6-a78b-8fe45450404e"
+                     name="Choice of Long-term Management of Anticoagulation Status">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#31f8227b-2b19-388e-b707-b69cb553d1d4"
+                label="ClinicalSituations - Anticoagulation for Stroke Preventionin 'ClinicalSituations'"
+                ref="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                tag="_9c241396-d248-49cf-856f-c1af9f2cc188"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#28d541e1-bd08-3afc-a3f0-3780601576c6"
+                  label="DecisionTypes - Actionable Decision"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="deb94c86-c2db-4f3d-ac8e-2df74266fe62"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"
+                  label="DecisionTypes - Choice Decision"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="_4f83e56c-7442-4c8b-ab99-4ae0f5da94a8"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_cc256b83-ce7b-4ee0-8f7c-5e817c818622"
+                       name="Choice of Long-term Management of Anticoagulation Status"
+                       typeRef="Any"/>
+    <semantic:informationRequirement id="_3c56ada9-aeb2-4a99-b5f3-a5ae54390617">
+      <semantic:requiredDecision
+              href="https://clinicalknowlegemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be#_cd02833b-5523-4a30-afd6-26826c34f772"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_339112b7-e411-4bdb-be99-033fe10282a2">
+      <semantic:requiredDecision href="#_753fbabe-1ba4-479d-a9a8-c1ea71ba487c"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_9e235270-9df4-4594-816e-7276dbe1215b">
+      <semantic:requiredDecision href="#_439f6265-86e1-4b8b-a70c-cdc48fb36753"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_16c7e5cc-57e1-4ed1-88d3-008a8a4010dd">
+      <semantic:requiredDecision href="#_2c89938f-697a-48df-841d-3499b51692e5"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_300f9700-0ba2-449c-ba25-9e6bbb64463f">
+      <semantic:requiredDecision href="#_f9d68649-351e-4987-9a47-8f906ea08865"/>
+    </semantic:informationRequirement>
+  </semantic:decision>
+  <semantic:decision id="_753fbabe-1ba4-479d-a9a8-c1ea71ba487c"
+                     name="Long-term Anticoagulation for Stroke Prevention">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#31f8227b-2b19-388e-b707-b69cb553d1d4"
+                label="ClinicalSituations - Anticoagulation for Stroke Preventionin 'ClinicalSituations'"
+                ref="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                tag="_37d53c07-8544-4ba8-bfbc-1d76f49870f3"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"
+                  label="DecisionTypes - Choice Decisionin 'DecisionTypes'"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="_461c36f6-f6f1-49c2-801e-23935bab2c0b"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_712be285-ab25-4205-9222-59ce813a6bf1"
+                       name="Long-term Anticoagulation for Stroke Prevention"
+                       typeRef="Any"/>
+    <semantic:informationRequirement id="_b02b7369-5c90-4d59-a3dd-85ba40b06bb3">
+      <semantic:requiredInput
+              href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_0964ddd7-f29f-3b46-bb82-10e78651750f"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_cbbe723d-d7c4-4cd6-9413-76d430c71da2">
+      <semantic:requiredInput
+              href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_ca19ed88-ddcc-3545-8772-356070c07ad4"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_a6adec5c-09f2-4d2f-8ac2-5dd8defc32bf">
+      <semantic:requiredDecision href="#_6f5c61a3-6378-4c79-a5bb-37f9af5b3321"/>
+    </semantic:informationRequirement>
+  </semantic:decision>
+  <semantic:decision id="_439f6265-86e1-4b8b-a70c-cdc48fb36753"
+                     name="Prefers Anticoagulation">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#9f16a88d-cb31-35c9-becc-779d16822bce"
+                label="ClinicalSituations - Prefers Anticoagulationin 'ClinicalSituations'"
+                ref="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                tag="_4282f213-08a7-4485-b3f7-decfb5ab3128"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#bd53d56d-e2c7-3ec2-ae91-5af122027498"
+                  label="DecisionTypes - Shared Decision"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="ff20f6f1-63ca-4dd1-8484-741f1074ec97"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7c76cd04-06af-39e3-9510-432336716f7e"
+                  label="DecisionTypes - Binary Decision"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="_88d6fb82-88ce-4e8b-857e-9e0d279cf4e6"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_a15dd698-2c72-48b9-9e90-6bfc4af3600c"
+                       name="Prefers Anticoagulation"
+                       typeRef="Any"/>
+  </semantic:decision>
+  <semantic:decision id="_2c89938f-697a-48df-841d-3499b51692e5"
+                     name="Anticoagulation Indicated for Stroke Prevention">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#17bc5143-a574-3f20-9f0e-55a6d71a8631"
+                label="ClinicalSituations - Anticoagulation Indicated for Stroke Prevention"
+                ref="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                tag="_4121e1b7-4efb-417f-83af-f852951f9a52"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
+                  label="DecisionTypes - Assessment Decisionin 'DecisionTypes'"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="b657c62e-abf2-46a9-bc28-0326c70f84e2"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_49ba733c-d5d2-44c7-a4cf-8420208a074b"
+                       name="Anticoagulation Indicated for Stroke Prevention"
+                       typeRef="Any"/>
+    <semantic:informationRequirement id="_463f719c-5add-4f70-b5a9-e8ba3abadd6f">
+      <semantic:requiredInput
+              href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_3272e195-3302-3baa-ad4c-2eeb43cb62d0"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_f1d97e1c-e822-44f9-bea0-885d59616599">
+      <semantic:requiredInput
+              href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_1f66867d-c67a-3e46-9e6c-4a57a7825e1f"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_26eb6f24-42ec-4e76-adce-7a7cae17beb4">
+      <semantic:requiredDecision href="#_9b529fb4-75f6-4ce0-86b7-beaad1616c01"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_331f4209-90ea-43d0-8c26-a290b0b1a732">
+      <semantic:requiredDecision href="#_180db61c-80a7-40a0-a02c-f2541fe5ca64"/>
+    </semantic:informationRequirement>
+  </semantic:decision>
+  <semantic:decision id="_9b529fb4-75f6-4ce0-86b7-beaad1616c01"
+                     name="Risk of Embolic Stroke (CHA2DS2Vasc)">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#f3eb77ed-cd3d-3ce8-b20b-ca700806b118"
+                label="ClinicalSituations - Risk of Embolic Stroke (CHA2DS2-VASc)in 'ClinicalSituations'"
+                ref="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                tag="a8755469-312f-448f-878a-74c61635bfc7"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
+                  label="DecisionTypes - Assessment Decisionin 'DecisionTypes'"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="a7c5acf7-e815-4124-bfce-dcffd0ef733d"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_96a7eec6-8d09-4993-bfb4-74c4779cbb33"
+                       name="Risk of Embolic Stroke (CHA2DS2Vasc)"
+                       typeRef="Any"/>
+  </semantic:decision>
+  <semantic:decision id="_180db61c-80a7-40a0-a02c-f2541fe5ca64"
+                     name="Risk of Major Bleeding within 1 Year (HAS-BLED)">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#29f80c07-ae77-3db2-8ce0-82bbdcff3644"
+                label="ClinicalSituations - Risk of Major Bleeding within 1 Year (HAS-BLED)"
+                ref="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                tag="d9f27b03-c848-4f61-adec-2240d4b903ee"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
+                  label="DecisionTypes - Assessment Decisionin 'DecisionTypes'"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="_644c91d5-a1b6-45da-bebc-07553c81e7be"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_39488cd4-ae6e-411c-873e-529cf6288488"
+                       name="Risk of Major Bleeding within 1 Year (HAS-BLED)"
+                       typeRef="Any"/>
+  </semantic:decision>
+  <semantic:decision id="_6f5c61a3-6378-4c79-a5bb-37f9af5b3321"
+                     name="Most Recent Liver Function Tests">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#22bce750-5134-3653-a27c-0d7ff8bc29b5"
+                label="ClinicalSituations - Most Recent Liver Function Tests"
+                ref="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                tag="_4b4268d6-a8dc-4853-8cc0-d3214f842867"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"
+                  label="DecisionTypes - Aggregation Decision"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="fec42391-d7eb-45b3-b613-4e601eff888c"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_8037c1c1-8118-4f29-b17e-fe445386267f"
+                       name="Most Recent Liver Function Tests"
+                       typeRef="Any"/>
+    <semantic:informationRequirement id="_b3745371-356e-460f-bf10-a786fe45d44c">
+      <semantic:requiredInput
+              href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_8af6faf0-10c1-3694-9bdb-cdeca43a9ec7"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_f0ac8f17-7bc9-444d-8b6d-70da21a1a7da">
+      <semantic:requiredInput
+              href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_c8550ab8-734c-3d67-8ad6-2815f497cfeb"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_1b443254-c40e-4ce1-b126-e10fcc31de59">
+      <semantic:requiredInput
+              href="https://clinicalknowlegemanagement.mayo.edu/artifacts/3d4f05c0-7f56-3c15-a926-df8aa3276195#_d413d018-63e0-3f2b-87e3-d216af64689e"/>
+    </semantic:informationRequirement>
+  </semantic:decision>
+  <semantic:inputData id="_b23bd880-9231-42b1-8fba-40d5578348ba"
+                      name="History of Stroke Within Last 30 Days">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/3f5d0000-d410-4e28-9421-265527896e25"
+                label="History of Stroke Within Last 30 Days"
+                ref="http://ontology.mayo.edu/ontologies/clinicalsituationontology/"
+                tag="_7bfbaf11-e172-4851-aced-c48249539ab4"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_8eca78d2-b6b6-4546-9335-b69a3a8cfd83"
+                       name="History of Stroke Within Last 30 Days"
+                       typeRef="Any"/>
+  </semantic:inputData>
+  <semantic:inputData id="_1281fa2d-df47-47df-ac1e-ea5291a864a0"
+                      name="Current CHA2DS2-VASc Score">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/c49fc926-01c9-435d-bd0a-570b6c14588e"
+                label="Current CHA2DS2-VASc Score"
+                ref="http://ontology.mayo.edu/ontologies/clinicalsituationontology/"
+                tag="_51a256f5-86ee-4558-88aa-b9988dc7cdd6"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_3fdf5c0e-7298-4a14-b88b-672315667f36"
+                       name="Current CHA2DS2-VASc Score"
+                       typeRef="Any"/>
+  </semantic:inputData>
+  <semantic:inputData id="_6f893438-9d92-471e-a2f8-5491292003d8"
+                      name="Current HAS-BLED Score">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/349040f8-3fac-4038-8827-aea382bd8476"
+                label="Current HAS-BLED Score"
+                ref="http://ontology.mayo.edu/ontologies/clinicalsituationontology/"
+                tag="_cb6798b4-6c82-484b-96a6-e92058704839"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_95a266f6-66ed-4749-8b75-b00bbc31d9d1"
+                       name="Current HAS-BLED Score"
+                       typeRef="Any"/>
+  </semantic:inputData>
+  <semantic:inputData id="_2f34fc5e-9487-4867-9351-e20aeb9ebe95"
+                      name="Has Left Atrial Appendage Thrombus">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/3715ea47-137e-419f-9cf9-eef91b6c6177"
+                label="Has Left Atrial Appendage Thrombus"
+                ref="http://ontology.mayo.edu/ontologies/clinicalsituationontology/"
+                tag="_1b0956ee-1f9c-440e-878e-3b5aa0f1851d"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_d84a2bbb-01f5-4608-9baf-fcbf391bdea1"
+                       name="Has Left Atrial Appendage Thrombus"
+                       typeRef="Any"/>
+  </semantic:inputData>
+  <semantic:decision id="_f9d68649-351e-4987-9a47-8f906ea08865"
+                     name="Left Atrial Appendage Closure Device Indicated">
+    <semantic:extensionElements>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr
+                conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#23e52336-9fde-3fb8-ae23-ba511113ac4e"
+                label="ClinicalSituations - Left Atrial Appendage Closure Device Indicatedin 'ClinicalSituations'"
+                ref="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                tag="_3fd14cb5-4d8e-4957-8200-635118420aa1"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
+                  label="DecisionTypes - Assessment Decisionin 'DecisionTypes'"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="_86c51dbf-7866-4520-9962-f06045e4acfa"/>
+      </ann:simpleAnnotation>
+      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"
+                  label="DecisionTypes - Aggregation Decisionin 'DecisionTypes'"
+                  ref="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                  tag="_398a3da8-4aa1-4799-b06e-20400285c9ce"/>
+      </ann:simpleAnnotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_c920b823-f277-448e-8bce-5f891f948d68"
+                       name="Left Atrial Appendage Closure Device Indicated"
+                       typeRef="Any"/>
+    <semantic:informationRequirement id="_b2c17e70-5cfa-4b44-b8df-954400e46827">
+      <semantic:requiredInput href="#_2f34fc5e-9487-4867-9351-e20aeb9ebe95"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_e887ac5d-677f-415c-89d3-cae0ea9d4fb3">
+      <semantic:requiredInput href="#_b23bd880-9231-42b1-8fba-40d5578348ba"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_5ef956a6-1c27-4e20-9d04-47d39e20469b">
+      <semantic:requiredInput href="#_1281fa2d-df47-47df-ac1e-ea5291a864a0"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_47987241-aece-4e88-97d1-92361fce4072">
+      <semantic:requiredInput href="#_6f893438-9d92-471e-a2f8-5491292003d8"/>
+    </semantic:informationRequirement>
+  </semantic:decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="_0de3fbe4-827c-4835-a0a4-a8147d4114a9" name="Page 1">
+      <di:extension/>
+      <dmndi:Size height="1050" width="1659.9470252990723"/>
+      <dmndi:DMNShape dmnElementRef="_f2fcd947-6770-42a6-a78b-8fe45450404e"
+                      id="_c777723a-e39a-4a7c-87e4-256bd306ec97">
+        <dc:Bounds height="60" width="153" x="703.9646835327148" y="67"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include1:_cd02833b-5523-4a30-afd6-26826c34f772"
+                      id="_a6a72adb-8b50-4e00-8d6a-b74561b58189">
+        <dc:Bounds height="60" width="153" x="437.5" y="67"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_753fbabe-1ba4-479d-a9a8-c1ea71ba487c"
+                      id="_3d53d095-263e-4e86-bf89-6d3687f01710">
+        <dc:Bounds height="60" width="153" x="422.5" y="198"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_439f6265-86e1-4b8b-a70c-cdc48fb36753"
+                      id="_f1816219-4e1a-4ade-a535-40e238aef81a">
+        <dc:Bounds height="60" width="153" x="795.4470252990723" y="198"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_0964ddd7-f29f-3b46-bb82-10e78651750f"
+                      id="_b9168f73-3fd3-4ff7-943e-200a671705ee">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="220.2588291168213"
+                   y="97.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_ca19ed88-ddcc-3545-8772-356070c07ad4"
+                      id="_22e33ac8-2053-4fef-99b8-1b970bd31cf4">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="220.2588291168213"
+                   y="170.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_2c89938f-697a-48df-841d-3499b51692e5"
+                      id="_4bd889ee-8c5d-4f22-a1a1-4b8aad5f3343">
+        <dc:Bounds height="60" width="153" x="625.7058544158936" y="198"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_349c1054-8d3c-3360-9931-dac4f768da48"
+                      id="_c87bfa6d-f693-47bf-bed3-74c8f8e27a57">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="402.2588291168213"
+                   y="627.9999961853027"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_f04211ee-b405-3c9d-b020-8bc878cfd6fa"
+                      id="_dbd05d89-95fa-4721-aae4-8b27fdf49142">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="643.2235126495361"
+                   y="627.9999961853027"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_0b39382d-d8bc-3266-a7e8-c3b734d7291f"
+                      id="_75cd3807-50ab-4670-ba3e-c1212ead5372">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="712.7235126495361"
+                   y="489.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_3272e195-3302-3baa-ad4c-2eeb43cb62d0"
+                      id="_e514fde5-a214-4916-8a26-d77e64b70370">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="783.7058544158936"
+                   y="335.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_1f66867d-c67a-3e46-9e6c-4a57a7825e1f"
+                      id="_26372fce-b4bb-4373-9f0c-fd15e5a6a5b9">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="634.4646835327148"
+                   y="335.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_9b529fb4-75f6-4ce0-86b7-beaad1616c01"
+                      id="_96766aaa-9d1e-46b3-90dc-4f398f84e54a">
+        <dc:Bounds height="60" width="153" x="437.5" y="336"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_180db61c-80a7-40a0-a02c-f2541fe5ca64"
+                      id="_256b7b66-ea2a-4b9d-9ea4-8fe6f93638ea">
+        <dc:Bounds height="60" width="153" x="437.5" y="415"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_bfda56fa-3867-323b-86ab-af83e5469bf5"
+                      id="_43142866-a87e-4a66-b245-e1b037f85e97">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="546.2235126495361"
+                   y="489.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_6f5c61a3-6378-4c79-a5bb-37f9af5b3321"
+                      id="_8fb087ea-1bec-4fdb-985f-beb910cb4e0d">
+        <dc:Bounds height="60" width="153" x="211.5" y="246"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_8af6faf0-10c1-3694-9bdb-cdeca43a9ec7"
+                      id="_2d43a579-a6cc-4709-9466-1064e1366418">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="147.51765823364258"
+                   y="354.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_c8550ab8-734c-3d67-8ad6-2815f497cfeb"
+                      id="_4638db80-15a9-4b39-a1cb-fdfb08b2e789">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="218.51765823364258"
+                   y="421.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include2:_d413d018-63e0-3f2b-87e3-d216af64689e"
+                      id="_190ca616-620c-4ef2-ac0d-73ad8451052e">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="293"
+                   y="354.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_f9d68649-351e-4987-9a47-8f906ea08865"
+                      id="_e575dbc8-ef42-44c5-bbf5-e055429f8eb8">
+        <dc:Bounds height="60" width="153" x="970.3587341308594" y="198"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_2f34fc5e-9487-4867-9351-e20aeb9ebe95"
+                      id="_6627bb76-3738-49ee-a9e6-76150f922fcb">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="927.1175632476807"
+                   y="335.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_6f893438-9d92-471e-a2f8-5491292003d8"
+                      id="_04cd2f37-6c35-41cc-ba47-7fa85deececf">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="1189.599905014038"
+                   y="274.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_1281fa2d-df47-47df-ac1e-ea5291a864a0"
+                      id="_d443599e-7e86-4aeb-883d-b426826faaf6">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="1078.1175632476807"
+                   y="335.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_b23bd880-9231-42b1-8fba-40d5578348ba"
+                      id="_f8636bf7-d918-49ad-a77b-d7aec16d6303">
+        <dc:Bounds height="60.00000762939453"
+                   width="135.48234176635742"
+                   x="1000.1175632476807"
+                   y="414.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge dmnElementRef="_3c56ada9-aeb2-4a99-b5f3-a5ae54390617"
+                     id="_ce9028f8-5089-44dc-b035-f9110eef3db4">
+        <di:waypoint x="590.5" y="97"/>
+        <di:waypoint x="703.9646835327148" y="97"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_339112b7-e411-4bdb-be99-033fe10282a2"
+                     id="_e887cffb-5abf-4eec-8e5d-89e020953994">
+        <di:waypoint x="575.5" y="218"/>
+        <di:waypoint x="750.4646835327148" y="127"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_9e235270-9df4-4594-816e-7276dbe1215b"
+                     id="_962b6fc7-b94f-4510-ae2f-a3e7a4f8cc3b">
+        <di:waypoint x="861.9470252990723" y="198"/>
+        <di:waypoint x="820.4646835327148" y="127"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_b02b7369-5c90-4d59-a3dd-85ba40b06bb3"
+                     id="_0d80bee0-acee-4a73-af9d-6b4fc631947d">
+        <di:waypoint x="355.7411708831787" y="127.99999618530273"/>
+        <di:waypoint x="422.5" y="208"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_cbbe723d-d7c4-4cd6-9413-76d430c71da2"
+                     id="_9ae2fdc0-feca-4faa-8624-bbf42a4e563c">
+        <di:waypoint x="355.7411708831787" y="200.99999618530273"/>
+        <di:waypoint x="422.5" y="228"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_16c7e5cc-57e1-4ed1-88d3-008a8a4010dd"
+                     id="_afd07e91-4e94-4fa9-bbf4-43620267a7f3">
+        <di:waypoint x="702.2058544158936" y="198"/>
+        <di:waypoint x="780.4646835327148" y="127"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_463f719c-5add-4f70-b5a9-e8ba3abadd6f"
+                     id="_c4c86585-2cca-4f9c-88a1-d5479723e924">
+        <di:waypoint x="851.443826675415" y="395.99999618530273"/>
+        <di:waypoint x="702.2058544158936" y="198"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_f1d97e1c-e822-44f9-bea0-885d59616599"
+                     id="_a2b96ce6-f75a-4961-a99e-d4557f2f2184">
+        <di:waypoint x="702.2026557922363" y="395.99999618530273"/>
+        <di:waypoint x="702.2058544158936" y="198"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_26eb6f24-42ec-4e76-adce-7a7cae17beb4"
+                     id="_b279f204-c98a-470b-8129-2514385da571">
+        <di:waypoint x="504" y="336"/>
+        <di:waypoint x="625.7058544158936" y="238"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_331f4209-90ea-43d0-8c26-a290b0b1a732"
+                     id="_6b949736-b45e-42ac-91cd-4246148e9fc8">
+        <di:waypoint x="590.5" y="445"/>
+        <di:waypoint x="642.2058544158936" y="258"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_b3745371-356e-460f-bf10-a786fe45d44c"
+                     id="_c16a3fad-099e-4cb7-ae91-df717a65edb1">
+        <di:waypoint x="215.25563049316406" y="414.99999618530273"/>
+        <di:waypoint x="288" y="246"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_f0ac8f17-7bc9-444d-8b6d-70da21a1a7da"
+                     id="_7b4a78dc-888c-42be-8f39-d7e04eec2bc9">
+        <di:waypoint x="286.25563049316406" y="481.99999618530273"/>
+        <di:waypoint x="288" y="246"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_1b443254-c40e-4ce1-b126-e10fcc31de59"
+                     id="_a1924213-213a-4ee3-9cd1-f1492c797bde">
+        <di:waypoint x="360.7379722595215" y="414.99999618530273"/>
+        <di:waypoint x="288" y="246"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_a6adec5c-09f2-4d2f-8ac2-5dd8defc32bf"
+                     id="_16dacf9f-74bc-439d-8d65-6dc2882e6c4b">
+        <di:waypoint x="288" y="246"/>
+        <di:waypoint x="422.5" y="238"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_47987241-aece-4e88-97d1-92361fce4072"
+                     id="_bca8b95c-dcc7-429d-bb9d-6f7723de3a2b">
+        <di:waypoint x="1189.8378772735596" y="304.99999618530273"/>
+        <di:waypoint x="1123.3587341308594" y="228"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_5ef956a6-1c27-4e20-9d04-47d39e20469b"
+                     id="_c63f7b6d-f9d8-42c7-b0db-4ccf8733c374">
+        <di:waypoint x="1135.8555355072021" y="335.99999618530273"/>
+        <di:waypoint x="1086.8587341308594" y="258"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_e887ac5d-677f-415c-89d3-cae0ea9d4fb3"
+                     id="_4675cd6f-f29f-41bd-b2ef-1b89b4e49b18">
+        <di:waypoint x="1067.8555355072021" y="474.99999618530273"/>
+        <di:waypoint x="1046.8587341308594" y="198"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_b2c17e70-5cfa-4b44-b8df-954400e46827"
+                     id="_ed135747-30ff-441c-b8f4-7585f82e900a">
+        <di:waypoint x="994.8555355072021" y="335.99999618530273"/>
+        <di:waypoint x="1046.8587341308594" y="198"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_300f9700-0ba2-449c-ba25-9e6bbb64463f"
+                     id="_700f2372-2186-41cc-b134-db45c733ffe9">
+        <di:waypoint x="1046.8587341308594" y="198"/>
+        <di:waypoint x="856.9646835327148" y="117"/>
+        <dmndi:DMNLabel sharedStyle="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+    <dmndi:DMNStyle fontBold="false"
+                    fontFamily="arial,helvetica,sans-serif"
+                    fontItalic="false"
+                    fontSize="11"
+                    fontStrikeThrough="false"
+                    fontUnderline="false"
+                    id="LS_3b265cd2-431c-4beb-9a18-f7e644d897b2_0"/>
+  </dmndi:DMNDI>
+  <semantic:extensionElements>
+    <ann:basicAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers"
+                         expr="http://ontology.mayo.edu/ontologies/SituationalConceptOntology/59bf3a01-9318-4a4a-a2eb-290a5c6ec5e3">
+      <ann:rel label="has ID"
+               ref="https://www.omg.org/spec/API4KP/api4kp/identified-by"
+               tag="identified-by">
+        <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
+      </ann:rel>
+    </ann:basicAnnotation>
+    <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+      <ann:expr conceptId="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType#af76c6c0ed31415aa9fa0f5d7e08bad8"
+                label="KnowledgeAssetType_Scheme - Semantic Decision Modelin 'KnowledgeAssetType_Scheme'"
+                ref="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType#"
+                tag="a8e842f8-fe55-4420-a6a9-cf1568301ff0"/>
+    </ann:simpleAnnotation>
+    <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+      <ann:expr conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#31f8227b-2b19-388e-b707-b69cb553d1d4"
+                label="ClinicalSituations - Anticoagulation for Stroke Preventionin 'ClinicalSituations'"
+                ref="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                tag="a3997f3b-38f2-4c93-8b46-f9cc01264263"/>
+    </ann:simpleAnnotation>
+  </semantic:extensionElements>
+</semantic:definitions>

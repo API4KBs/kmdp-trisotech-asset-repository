@@ -114,12 +114,11 @@ class SemanticAnnotationTest {
 	}
 
 
-	// TODO: Need to update with Trisotech model CAO
-  @Disabled("testExtractionFull: need to update input files to Trisotech")
+  @Disabled("testExtractionFull: FIX")
 	@Test
 	void testExtractionFull() {
-		String dmnPath = "/BLED.dmn";
-		String metaPath = "/BLED_Info.json";
+		String dmnPath = "/Coagulation Status.dmn";
+		String metaPath = "/CoagulationStatus_Info.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
 		                              .map( dmnWeaver::weave )
@@ -132,6 +131,22 @@ class SemanticAnnotationTest {
 				fail( "Unable to instantiate metadata object" );
 			}
 			KnowledgeAsset surr = res.get();
+			// long form
+			List<Annotation> annotations = surr.getSubject();
+			for (Annotation anno: annotations
+					 ) {
+				System.out.println("anno is : " + anno.getClass() + " annotation");
+				System.out.println("anno rel: " + anno.getRel().toString());
+				System.out.println("AnnotationRelType.In_Terms_Of.asConcept(): " + AnnotationRelType.In_Terms_Of.asConcept());
+				System.out.println("((SimpleAnnotation)anno).getExpr()" + ((SimpleAnnotation)anno).getExpr());
+				System.out.println("ClinicalSituation.resolve(anno.getExpr()): " + ClinicalSituation.resolve(((SimpleAnnotation)anno).getExpr()));
+				System.out.println("ClinicalSituation name: " + ClinicalSituation.resolve(((SimpleAnnotation)anno).getExpr()).get().name());
+
+				if(anno.getClass().isInstance(SimpleAnnotation.class)) {
+					System.out.println("anno is SimpleAnnotation: " + anno.toString());
+					System.out.println("anno rel: " + anno.getRel().toString());
+				}
+			}
 			List<ClinicalSituation> inputs = surr.getSubject().stream()
 			                       .filter(SimpleAnnotation.class::isInstance)
 			                       .map( SimpleAnnotation.class::cast)
@@ -140,6 +155,7 @@ class SemanticAnnotationTest {
 			                       .map( Optional::get )
 			                       .collect(Collectors.toList());
 
+			// TODO: update per model CAO
 			assertEquals( 19, inputs.size() );
 			assertTrue( inputs.contains( ClinicalSituation.History_Of_GI_Bleeding ) ); // was .Has_Bleeding_Disorder CAO
 //			assertTrue( inputs.contains( ClinicalSituation.Has_Cirrhosis ) );

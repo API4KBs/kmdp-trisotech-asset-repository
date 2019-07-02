@@ -143,6 +143,7 @@ class WeaverTest {
       assertNotNull(dox);
 
       BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class).iterator().next();
+      // this test is for WeaverTest1.dmn; disable for any other file
       assertEquals("https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT",
           id.getExpr().toString());
 
@@ -153,7 +154,7 @@ class WeaverTest {
 
       assertTrue(verifyImportNamespace(dox));
 
-      assertTrue(verifyInputs(dox));
+      assertTrue(verifyHrefs(dox));
 
       // TODO: is any of the following still needed? relevant to Trisotech data? CAO
 //			SimpleAnnotation type = loadAnnotations( dox, KnownAttributes.TYPE, SimpleAnnotation.class ).iterator().next();
@@ -235,9 +236,14 @@ class WeaverTest {
    * @param dox
    * @return
    */
-  private boolean verifyInputs(Document dox) {
+  private boolean verifyHrefs(Document dox) {
+    // TODO: check each tag, or just get all href attributes and modify?  use KnownAttributes? CAO
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
-        .filter((el) -> (el.getLocalName().equals("inputData") || el.getLocalName().equals("requiredInput"))
+        .filter((el) -> (el.getLocalName().equals("inputData")
+            || el.getLocalName().equals("requiredInput")
+            || el.getLocalName().equals("encapsulatedDecision")
+            || el.getLocalName().equals("inputDecision")
+            || el.getLocalName().equals("requiredDecision"))
             && (el.hasAttribute("href")))
         .forEach(element -> {
           Attr attr = element.getAttributeNode("href");

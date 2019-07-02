@@ -45,6 +45,7 @@ import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
 import org.apache.commons.lang3.StringUtils;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -112,6 +113,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     System.out.println("resId: " + resId.get().toString());
     // TODO: is setAssetId the correct replacement for setResourceId? CAO
     resId.ifPresent(surr::setAssetId);
+    System.out.println("assetId: " + surr.getAssetId());
 //    resId.ifPresent(surr::setResourceId);
 
     // TODO: Needed? CAO
@@ -122,64 +124,67 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     // Descriptive Info
     surr.setName(meta.getName());
 
-
+    // TODO: Needed? CAO
     // Manifestation
     trackArtifact(surr, docId.get(), versionTag);
 
+    // TODO: Needed? CAO
     // Annotations
 //    addSemanticAnnotations(surr, annotations);
 
+    // TODO: Needed? CAO
     // Dependencies
     resolveDependencies(surr, dox);
 
     return surr;
   }
 
-//  // this is the ideal
+//  // this is the ideal -- don't recall exactly from the conversation a couple of weeks ago, BUT I believe the following is meant to replace the extractXML() code
 //  public KnowledgeAsset metadata() {
 //    return new KnowledgeAsset()
-//            // from the metadata / explicit manually set id
-//            // these come from the modelInfo
-//            .withAssetId( assetId )
-//            .withName( modelName )
-//            .withTitle( modelName )
-//            .withDescription( maybe? )
-//            // these come from the annotations
-//            .withFormalCategory(Assessment_Predictive_And_Inferential_Models or Plans_Processes_Pathways_And_Protocol_Definitions)
-//            .withFormalType(Semantic_Decision_Model or Cognitive_Care_Process_Model)
-//            // plug in all the annotations - only the ones of type Simple/MultiWord Annotations, i.e. the ones whose 'expr' is a ClinicalSituation
-//            // or a 'focal concept'
-//            .withSubject( annotationList )
-//            // May still evolve
-//            .withLifecycle( new Publication().withPublicationStatus( publicationStatus ) )
-//            // Some work needed to infer the dependencies
-//            .withRelated( new Dependency()
-//                    .withRel(DependencyType.Depends_On)
-//                    .withTgt( new KnowledgeAsset().withAssetId( theTargetAssetId ) ) // nothing else
-//            )
-//            .withCarriers( new ComputableKnowledgeArtifact()
-//                    .withArtifactId( artifactId ) // from the document targetNamespace, minus rewriting
-//                    .withLocalization(Language.English)
-//                    .withExpressionCategory(KnowledgeArtifactCategory.Software)
+//        // from the metadata / explicit manually set id
+//        // these come from the modelInfo
+//        .withAssetId(assetId)
+//        .withName(modelName)
+//        .withTitle(modelName)
+//        .withDescription(maybe ?)
+//        // these come from the annotations
+//        .withFormalCategory(Assessment_Predictive_And_Inferential_Models or Plans_Processes_Pathways_And_Protocol_Definitions)
+//        .withFormalType(Semantic_Decision_Model or Cognitive_Care_Process_Model)
+//        // plug in all the annotations - only the ones of type Simple/MultiWord Annotations, i.e. the ones whose 'expr' is a ClinicalSituation
+//        // or a 'focal concept'
+//        .withSubject(annotationList)
+//        // May still evolve
+//        .withLifecycle(new Publication().withPublicationStatus(publicationStatus))
+//        // Some work needed to infer the dependencies
+//        .withRelated(new Dependency()
+//            .withRel(DependencyType.Depends_On)
+//            .withTgt(new KnowledgeAsset().withAssetId(theTargetAssetId)) // nothing else
+//        )
+//        .withCarriers(new ComputableKnowledgeArtifact()
+//                .withArtifactId(artifactId) // from the document targetNamespace, minus rewriting TODO: Does 'minus rewriting' mean to add back in the '_'? CAO
+//                .withLocalization(Language.English)
+//                .withExpressionCategory(KnowledgeArtifactCategory.Software)
 //
 ////                    .withInlined( (serialize the woven document) ) // NOT really at least for now
-//                    // the final URL/API call in either the KAssR or the KArtR where to get the artifact
-//                    // either 'assetRepo.getDefaultCarrier(ids..)' or artifactRepo.getArtifact(ids..)'
-//                    // may leave it out for now
-//                    //.withLocator( url )
-//                    .withRepresentation(new Representation()
-//                            .withLanguage(DMN_1_2 or CMMN_1_1)
-//                            .withFormat(SerializationFormat.XML_1_1)
-//                            .withLexicon(Lexicon.PCV)
-//                            .withSerialization(DMN_1_2_XML_Syntax or CMMN_1_1_XML_Syntax)
-//                    )
-//                    .withRelated(
-//                            new Dependency().withRel(DependencyType.Imports)
-//                            .withTgt( theTargtArtifactId )
-//                    )
+//                // the final URL/API call in either the KAssR or the KArtR where to get the artifact
+//                // either 'assetRepo.getDefaultCarrier(ids..)' or artifactRepo.getArtifact(ids..)'
+//                // may leave it out for now
+//                //.withLocator( url )
+//                .withRepresentation(new Representation()
+//                    .withLanguage(DMN_1_2 or CMMN_1_1)
+//                    .withFormat(SerializationFormat.XML_1_1)
+//                    .withLexicon(Lexicon.PCV)
+//                    .withSerialization(DMN_1_2_XML_Syntax or CMMN_1_1_XML_Syntax)
+//                )
+//                .withRelated(
+//                    new Dependency().withRel(DependencyType.Imports)
+//                        .withTgt(theTargtArtifactId)
+//                )
 //
 //
-//            )
+//        );
+//
 //  }
 
 
@@ -269,12 +274,14 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //                            .withMasterLocation(URI.create("http://www.hl7.org/fhir/DSTU2/datatypes.html#" + dataType))));
 //  }
 
+  // TODO: Needed? CAO What is purpose?
   protected void trackArtifact(KnowledgeAsset surr, String docId, String versionTag) {
     KnowledgeArtifact doc = new KnowledgeArtifact();
     surr.withCarriers(doc);
 
     String enterpriseId = StringUtils.substringBefore(StringUtils.substringAfterLast(docId, "/"), ".");
     // TODO: is setArtifactId the correct replacement for setResourceId? CAO
+    // TODO: Should this be MAYO_ARTIFACTS_BASE_URI? CAO
     doc.setArtifactId(uri( Registry.MAYO_ASSETS_BASE_URI + enterpriseId, versionTag));
 //    doc.setResourceId(uri(Registry.MAYO_ASSETS_BASE_URI + enterpriseId, versionTag));
 
@@ -285,6 +292,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return StringUtils.substringBefore(StringUtils.substringAfterLast(uri, "/"), ".");
   }
 
+  // TODO: What is this doing? is it needed anymore? CAO
   private void resolveDependencies(KnowledgeAsset surr, Document dox) {
     NodeList refs = xList(dox, "//*[@externalRef]");
     asElementStream(refs).filter((n) -> n.hasAttribute("xmlns"))
@@ -295,13 +303,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
               mapper.getResourceId(artifactId)
                       .ifPresent((resourceId) -> {
                         KnowledgeAsset ka = new KnowledgeAsset();
-                        // TODO: is setAssetId the correct replacement for setResourceId? CAO
                         ka.setAssetId(mapper.associate(surr.getAssetId(),
                                 artifactId,
                                 DependencyType.Depends_On));
-//                        ka.setResourceId(mapper.associate(surr.getResourceId(),
-//                                artifactId,
-//                                DependencyType.Depends_On));
 
                         surr.getRelated().add(
                                 new Dependency().withRel(DependencyType.Depends_On)
@@ -310,14 +314,49 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
             });
   }
 
+  // TODO: Needed? Purpose? CAO
   private List<Annotation> extractAnnotations(Document dox) {
     List<Annotation> annos = new LinkedList<>();
 
-//    asElementStream(dox.getDocumentElement().getChildNodes())
-//            .forEach(
-//                    (el) -> System.out.println("child element for dox: " + el)
-//            );
+    asElementStream(dox.getDocumentElement().getChildNodes())
+            .forEach(
+                    (el) -> System.out.println("child element for dox: " + el)
+            );
 
+
+    // This one from WeaverTest works, but not quite the same...
+//    return XMLUtil.asElementStream(dox.getElementsByTagName("*"))
+//        .filter((el) -> el.getLocalName().equals("extensionElements"))
+//        .map(Element::getChildNodes)
+//        .flatMap(XMLUtil::asElementStream)
+//        .map(SurrogateHelper::unmarshallAnnotation)
+//        .filter((a) -> att.asConcept().equals(a.getRel()))
+//        .map(type::cast)
+//        .collect(Collectors.toList());
+
+
+    // long form
+//    NodeList nodeList = dox.getDocumentElement().getChildNodes();
+//    for (int i = 0; i < nodeList.getLength(); i++
+//         ) {
+//      Node node = nodeList.item(i);
+//      System.out.println("node localName: " + node.getLocalName());
+//      if("extensionElements".equals(node.getLocalName())) {
+//        System.out.println("have extensionelements, get children");
+//        NodeList children = node.getChildNodes();
+//        for (int j = 0; j < children.getLength(); j++
+//             ) {
+//          Node child = children.item(j);
+//          System.out.println("child localName: " + child.getLocalName());
+//          if(child.getLocalName() != null) {
+//            Annotation childAnno = SurrogateHelper.unmarshallAnnotation(child);
+//            Annotation annoFrag = SurrogateHelper.rootToFragment(childAnno);
+//            annos.add(annoFrag);
+//          }
+//        }
+//      }
+//
+//    }
     // TODO: Maybe extract more annotations, other than the 'document' level ones?
     annos.addAll(XMLUtil.asElementStream(dox.getDocumentElement().getChildNodes())
             .filter(Objects::nonNull)
@@ -327,6 +366,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
             .map(SurrogateHelper::rootToFragment)
             .collect(Collectors.toList()));
 
+    // TODO: Needed? CAO
     if (annos.stream()
             .filter(SimpleAnnotation.class::isInstance)
             .map(SimpleAnnotation.class::cast)
@@ -348,7 +388,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
         // TODO: Needed? CAO
         SimpleAnnotation inputAnno = inputAnnos.stream()
-//                .filter((ann) -> KnownAttributes.CAPTURES.asConcept().equals(ann.getRel()))
+//                .filter((ann) -> KnownAttributes.CAPTURES.asConcept().equals(ann.getRel())) // TODO: Needed? removed CAO
                 .map(SimpleAnnotation.class::cast)
                 .map((sa) -> new SimpleAnnotation().withRel(AnnotationRelType.In_Terms_Of.asConcept())
                         .withExpr(sa.getExpr()))
@@ -432,6 +472,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   // TODO: Needed? CAO
   @Override
   public String getMetadataEntryNameForID(String id) {
+    System.out.println("getMetadataentryNameForID will return: " +
+        "Trisotech Export/model_" +
+        id.substring(id.lastIndexOf('/') + 1, id.lastIndexOf('.')) +
+        "/model_meta.json");
     return "Trisotech Export/model_" +
             id.substring(id.lastIndexOf('/') + 1, id.lastIndexOf('.')) +
             "/model_meta.json";

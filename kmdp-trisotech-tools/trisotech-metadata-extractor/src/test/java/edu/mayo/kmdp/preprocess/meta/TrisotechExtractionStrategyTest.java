@@ -31,6 +31,7 @@ class TrisotechExtractionStrategyTest {
   TrisotechExtractionStrategy tes;
   String dmnPath = "/WeaverTest1.dmn";
   String cmmnPath = "/WeaveTest1.cmmn";
+  // file for testing the negative -- old file in Signavio format
   String badPath  = "/R2R.dmn";
   Document dmnDox;
   Document cmmnDox;

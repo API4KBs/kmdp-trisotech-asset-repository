@@ -199,10 +199,10 @@ public class Weaver {
   // attributes?
   public Document weave(Document dox) {
     Element e = dox.getDocumentElement();
-    System.out.println("documentElement: tagName " + e.getTagName() +
-        " nodeName: " + e.getNodeName() + " localname: " + e.getLocalName() +
-        " baseURI: " + e.getBaseURI() + " NamespaceURI: " + e.getNamespaceURI() +
-        " nodeValue: " + e.getNodeValue());
+//    System.out.println("documentElement: tagName " + e.getTagName() +
+//        " nodeName: " + e.getNodeName() + " localname: " + e.getLocalName() +
+//        " baseURI: " + e.getBaseURI() + " NamespaceURI: " + e.getNamespaceURI() +
+//        " nodeValue: " + e.getNodeValue());
     dox.getDocumentElement().setAttributeNS("http://www.w3.org/2000/xmlns/",
         "xmlns:" + "xsi",
         "http://www.w3.org/2001/XMLSchema-instance");
@@ -278,8 +278,12 @@ public class Weaver {
 
   private void weaveInputs(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
+        // TODO: code review -- need to know which tags, or just check all hrefs? CAO
         .filter((el) -> (el.getLocalName().equals("inputData")
-            || el.getLocalName().equals("requiredInput"))
+            || el.getLocalName().equals("requiredInput")
+            || el.getLocalName().equals("encapsulatedDecision")
+            || el.getLocalName().equals("inputDecision")
+            || el.getLocalName().equals("requiredDecision"))
             && el.hasAttribute("href"))
         .forEach(element -> {
           Attr attr = element.getAttributeNode("href");
@@ -447,10 +451,10 @@ public class Weaver {
   }
 
   private void doRewriteId(Element el) {
-    System.out.println("doRewriteId for element: el: tagName " + el.getTagName() +
-        " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
-        " baseURI: " + el.getBaseURI() + " NamespaceURI: " + el.getNamespaceURI() +
-        " nodeValue: " + el.getNodeValue());
+//    System.out.println("doRewriteId for element: el: tagName " + el.getTagName() +
+//        " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
+//        " baseURI: " + el.getBaseURI() + " NamespaceURI: " + el.getNamespaceURI() +
+//        " nodeValue: " + el.getNodeValue());
     BaseAnnotationHandler handler = handler(el);
     if (KnownAttributes.resolve(el.getAttribute("key")).orElse(null) != KnownAttributes.ASSET_IDENTIFIER) {
       throw new IllegalStateException("This method should be called only on ID annotations");
@@ -490,14 +494,13 @@ public class Weaver {
   }
 
   private List<ConceptIdentifier> getConceptIdentifiers(Element el) {
-		System.out.println("el in getConceptIdentifiers: " + el);
-		System.out.println("\tid: " + el.getAttribute("id"));
-		System.out.println("\tname: " + el.getAttribute("name"));
-		System.out.println("\tmodelURI: " + el.getAttribute("modelURI"));
-		System.out.println("\turi: " + el.getAttribute("uri"));
+//		System.out.println("el in getConceptIdentifiers: " + el);
+//		System.out.println("\tid: " + el.getAttribute("id"));
+//		System.out.println("\tname: " + el.getAttribute("name"));
+//		System.out.println("\tmodelURI: " + el.getAttribute("modelURI"));
+//		System.out.println("\turi: " + el.getAttribute("uri"));
 
-		// need to verify andy URI values are valid -- no trisotech
-
+		// need to verify any URI values are valid -- no trisotech
     Attr modelUriAttr = el.getAttributeNode("modelURI");
     Attr uriAttr = el.getAttributeNode("uri");
     if(modelUriAttr.getValue().contains("trisotech.com")) {

@@ -90,7 +90,7 @@
       </semantic:decisionTask>
     </semantic:casePlanModel>
   </semantic:case>
-  <semantic:decision externalRef="http://ckm.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+  <semantic:decision externalRef="https://ckm.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
                      id="_a920d72fbb4c526d0e62641893cc09c7"
                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
                      name="Weaver Test 1 Decision"

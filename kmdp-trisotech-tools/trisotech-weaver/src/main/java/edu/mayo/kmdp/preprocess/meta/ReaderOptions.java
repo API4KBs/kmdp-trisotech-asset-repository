@@ -24,7 +24,7 @@ import edu.mayo.kmdp.Option;
  */
 public enum ReaderOptions implements Option<ReaderOptions> {
 
-	// TODO: reexamine required boolean values; currently set to 'false' until know more of what it does
+	// TODO: reexamine required boolean values; currently set to 'false' until know more of what it does CAO
 	URL_PATTERN_ST( Opt.of( "URL_PATTERN_ST","\\\"(.*)\\\"", String.class, false ) ),
 
 	// Dictionary Information
@@ -50,6 +50,7 @@ public enum ReaderOptions implements Option<ReaderOptions> {
 	p_EL_ANNOTATION( Opt.of( "EL_ANNOTATION", "semanticLink", String.class, false ) ),
 	p_EL_RELATIONSHIP( Opt.of( "EL_RELATIONSHIP", "interrelationship", String.class, false ) ),
 	p_EL_ANNOTATION_ID( Opt.of( "EL_ANNOTATION_ID", "customAttribute", String.class, false)),
+	p_EL_DECISION( Opt.of( "EL_DECISION", "decision", String.class, false)),
 	p_EL_ANNOTATED_ITEM( Opt.of( "EL_ANNOTATED_ITEM", "itemDefinition", String.class, false ) );
 
 

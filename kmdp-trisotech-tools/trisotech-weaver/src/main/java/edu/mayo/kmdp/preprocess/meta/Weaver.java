@@ -48,6 +48,7 @@ import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 public class Weaver {
 
   public static final String CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowlegemanagement.mayo.edu/artifacts/";
+  private static String DECISION_EL;
   private static String EL_EXPORTER;
   private static String EL_EXPORTER_VERSION;
   private static String METADATA_RS;
@@ -104,6 +105,7 @@ public class Weaver {
     DIAGRAM_EXT = config.getTyped(ReaderOptions.p_EL_DIAGRAM_EXT);
     EL_EXPORTER = config.getTyped(ReaderOptions.p_EL_EXPORTER);
     EL_EXPORTER_VERSION = config.getTyped(ReaderOptions.p_EL_EXPORTER_VERSION);
+    DECISION_EL = config.getTyped(ReaderOptions.p_EL_DECISION);
 
 //		TODO: Needed? CAO [maybe]
     ANNOTATED_ITEM = config.getTyped(ReaderOptions.p_EL_ANNOTATED_ITEM);
@@ -175,6 +177,8 @@ public class Weaver {
     return EL_EXPORTER_VERSION;
   }
 
+  public static String getDecisionEl() { return DECISION_EL;   }
+
   public ReaderConfig getConfig() {
     return config;
   }
@@ -224,23 +228,24 @@ public class Weaver {
 
     // first rename and move elements needed out of diagram element and into root element
     NodeList diagramExtension = dox.getElementsByTagNameNS(DIAGRAM_NS, DIAGRAM_EXT);
-
     weaveDiagramExtension(diagramExtension, dox);
-
-    // get metas after the move so the moved elements are captured
-    NodeList metas = dox.getElementsByTagNameNS(METADATA_NS, METADATA_EL);
 
     // relationships can be in CMMN TODO: Can tell if DMN or CMMNN so don't try to process items only in one? CAO
     NodeList relations = dox.getElementsByTagNameNS(METADATA_NS, METADATA_RS);
     weaveRelations(relations);
 
-    NodeList ids = dox.getElementsByTagNameNS(METADATA_NS, METADATA_ID);
-
     // Find the Asset ID, if present
+    NodeList ids = dox.getElementsByTagNameNS(METADATA_NS, METADATA_ID);
     weaveIdentifier(ids);
 
-    // CAO
+    // get metas after the move so the moved elements are captured
+    NodeList metas = dox.getElementsByTagNameNS(METADATA_NS, METADATA_EL);
     weaveMetadata(metas);
+
+    // fix decisions before removing traces of Trisotech as some triso values are needed
+    // TODO: only for CMMN? CAO
+    weaveDecisions(dox);
+
 //		NodeList dicts = dox.getElementsByTagName( ANNOTATED_ITEM );
 
     /****** Remove traces of Trisotech  ******/
@@ -262,12 +267,33 @@ public class Weaver {
     return dox;
   }
 
+  /**
+   * Rewrite the decisions externalRef information before the triso tags disappear.
+   * TODO: Discuss with Davide. Made change per his notes in the CMMN file. Tests now fail with a SAXParseException:
+   * org.xml.sax.SAXParseException; cvc-datatype-valid.1.2.1: 'https://clinicalknowlegemanagement.mayo.edu/artifacts/a57a0349-d0d9-4381-8c14-bb4ecb0a61cf#5682fa26-b064-43c8-9475-1e4281e74068' is not a valid value for 'QName'.
+   *
+   * @param dox
+   */
+  private void weaveDecisions(Document dox) {
+    XMLUtil.asElementStream(dox.getElementsByTagName("*"))
+        .filter(el -> el.getLocalName().equals(Weaver.getDecisionEl()))
+        .forEach(element -> {
+          Attr modelIdAttr = element.getAttributeNodeNS(Weaver.getMETADATA_NS(), "modelId"); //.getAttributeNode("triso:modelId");
+          Attr refAttr = element.getAttributeNode("externalRef");
+          if ((modelIdAttr != null) && (refAttr != null)) {
+            String refId = refAttr.getValue().substring(refAttr.getValue().lastIndexOf('_') + 1);
+            String modelId = modelIdAttr.getValue().substring(1);
+            refAttr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + refId + "#" + modelId);
+          }
+        });
+  }
+
   private void verifyAndRemoveInvalidCaseFileItemDefinition(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         .filter((el) -> (el.getLocalName().equals("caseFileItemDefinition")))
         .forEach(element -> {
           Attr attr = element.getAttributeNode("definitionType");
-          if(attr.getValue().contains("trisotech.com")) {
+          if (attr.getValue().contains("trisotech.com")) {
             System.out.println("WARNING: Should not have trisotech.com in caseFileItemDefinition. Rewriting to default value of Unspecified." +
                 "Found for " + element.getAttributeNode("name").getValue());
             // TODO: a way to do this using the XSD? CAO
@@ -419,7 +445,7 @@ public class Weaver {
 
   private void rewriteValue(Attr attr) {
     String value = attr.getValue();
-    if(value.lastIndexOf('/') != -1) {
+    if (value.lastIndexOf('/') != -1) {
       String id = value.substring(value.lastIndexOf('/') + 2);
       attr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
     }
@@ -500,13 +526,13 @@ public class Weaver {
 //		System.out.println("\tmodelURI: " + el.getAttribute("modelURI"));
 //		System.out.println("\turi: " + el.getAttribute("uri"));
 
-		// need to verify any URI values are valid -- no trisotech
+    // need to verify any URI values are valid -- no trisotech
     Attr modelUriAttr = el.getAttributeNode("modelURI");
     Attr uriAttr = el.getAttributeNode("uri");
-    if(modelUriAttr.getValue().contains("trisotech.com")) {
+    if (modelUriAttr.getValue().contains("trisotech.com")) {
       rewriteValue(modelUriAttr);
     }
-    if(uriAttr.getValue().contains("trisotech.com")) {
+    if (uriAttr.getValue().contains("trisotech.com")) {
       rewriteValue(uriAttr);
     }
 
@@ -605,12 +631,12 @@ public class Weaver {
 
 
   private boolean isIdentifier(Element el) {
-    System.out.println("isIdentifier key: " + el.getAttribute("key") +
-        " ASSET_IDENTIFIER: " + KnownAttributes.ASSET_IDENTIFIER);
-    System.out.println("isIdentifier for element: el: tagName " + el.getTagName() +
-        " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
-        " baseURI: " + el.getBaseURI() + " NamespaceURI: " + el.getNamespaceURI() +
-        " nodeValue: " + el.getNodeValue());
+//    System.out.println("isIdentifier key: " + el.getAttribute("key") +
+//        " ASSET_IDENTIFIER: " + KnownAttributes.ASSET_IDENTIFIER);
+//    System.out.println("isIdentifier for element: el: tagName " + el.getTagName() +
+//        " nodeName: " + el.getNodeName() + " localname: " + el.getLocalName() +
+//        " baseURI: " + el.getBaseURI() + " NamespaceURI: " + el.getNamespaceURI() +
+//        " nodeValue: " + el.getNodeValue());
     return KnownAttributes.resolve(el.getAttribute("key"))
         .filter((x) -> x == KnownAttributes.ASSET_IDENTIFIER)
         .isPresent();
@@ -680,7 +706,6 @@ public class Weaver {
         .map(Document::getDocumentElement)
         .orElseThrow(IllegalStateException::new);
   }
-
 
 
   private String getSchemaLocations(Document dox) {

@@ -81,14 +81,16 @@
       </semantic:decisionTask>
     </semantic:casePlanModel>
   </semantic:case>
-  <semantic:decision externalRef="ns1:_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
-                     id="_a920d72fbb4c526d0e62641893cc09c7"
-                     implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                     name="Weaver Test 1 Decision"/>
-  <semantic:decision externalRef="ns2:_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
-                     id="_65c08bb65562d6e6923dcb5e1d44ede2"
-                     implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                     name="Test Decision 2"/>
+  <semantic:decision
+          externalRef="https://clinicalknowlegemanagement.mayo.edu/artifacts/a57a0349-d0d9-4381-8c14-bb4ecb0a61cf#5682fa26-b064-43c8-9475-1e4281e74068"
+          id="_a920d72fbb4c526d0e62641893cc09c7"
+          implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+          name="Weaver Test 1 Decision"/>
+  <semantic:decision
+          externalRef="https://clinicalknowlegemanagement.mayo.edu/artifacts/a57a0349-d0d9-4381-8c14-bb4ecb0a61cf#ede3b331-7b10-4580-98be-66ebff344c21"
+          id="_65c08bb65562d6e6923dcb5e1d44ede2"
+          implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+          name="Test Decision 2"/>
   <cmmndi:CMMNDI>
     <cmmndi:CMMNDiagram cmmnElementRef="_fe3937b5-4ddf-4b72-9e2a-81a8f5400ae7"
                         id="_58464e33-4c5a-4c60-b0c3-3433c94d8f08"

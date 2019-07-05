@@ -90,8 +90,8 @@ class MetadataTest {
 			assertNotNull( surr.getCarriers() );
 
 			assertNotNull( surr.getAssetId() );
-			assertNotNull( surr.getAssetId().getUri() ); // .getResourceId().getUri() );
-			assertNotNull( surr.getAssetId().getVersionId() ); // getResourceId().getVersionId() );
+			assertNotNull( surr.getAssetId().getUri() );
+			assertNotNull( surr.getAssetId().getVersionId() ); 
 			assertNotNull( surr.getName() );
 
 			// TODO: These surr methods do not exist. Replacement? needed? Appears were commented out in old code as well CAO
@@ -131,11 +131,11 @@ class MetadataTest {
 	@Disabled ("testToXML failing after upgrade to 2.0.2; FIX")
 	@Test
 	void testToXML() {
-//		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
-//		                                 MetadataTest.class.getResourceAsStream( metaPath ),
-//		                                 XML,
-//		                                 JaxbUtil.defaultProperties() )
-//		                     .map( Util::printOut ).isPresent() );
+		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
+		                                 MetadataTest.class.getResourceAsStream( metaPath ),
+		                                 XML,
+		                                 JaxbUtil.defaultProperties() )
+		                     .map( Util::printOut ).isPresent() );
 		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
 		                                 MetadataTest.class.getResourceAsStream( cmnMetaPath ),
 		                                 XML,

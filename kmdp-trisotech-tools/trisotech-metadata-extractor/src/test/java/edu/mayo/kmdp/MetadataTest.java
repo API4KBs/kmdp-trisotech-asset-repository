@@ -91,7 +91,7 @@ class MetadataTest {
 
 			assertNotNull( surr.getAssetId() );
 			assertNotNull( surr.getAssetId().getUri() );
-			assertNotNull( surr.getAssetId().getVersionId() ); 
+			assertNotNull( surr.getAssetId().getVersionId() );
 			assertNotNull( surr.getName() );
 
 			// TODO: These surr methods do not exist. Replacement? needed? Appears were commented out in old code as well CAO

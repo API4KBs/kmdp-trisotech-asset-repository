@@ -1,12 +1,12 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@ import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.*;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituation;
-import edu.mayo.ontology.taxonomies.iso639_1_languagecodes._20170801.Language;
+import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
 import edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.KnowledgeArtifactCategory;
 import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
 import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20180601.AnnotationRelType;

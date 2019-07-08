@@ -48,6 +48,11 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-rest-ws-utils</artifactId>
+      <version>2.5.1-b20190706020615</version>
+    </dependency>
 
   </dependencies>
 

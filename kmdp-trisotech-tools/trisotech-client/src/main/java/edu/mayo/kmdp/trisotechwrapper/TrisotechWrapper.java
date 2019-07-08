@@ -38,7 +38,7 @@ public class TrisotechWrapper {
   private static final String ROOT_DIRECTORY = "MEA-Test";
 
 
-  // TODO: Where to put bearer token so protected?
+  // TODO: Where to put bearer token so protected? CAO
 //  private static TrisotechApiToken token;
 
 
@@ -91,8 +91,15 @@ public class TrisotechWrapper {
    * @return DMN XML Document
    */
   public static Optional<Document> getDmnModelById( String modelId ) {
+    return getDmnModelById(modelId, null);
+  }
+
+
+  public static Optional<Document> getDmnModelById(String modelId, TrisotechFileInfo trisotechFileInfo) {
     try {
-      TrisotechFileInfo trisotechFileInfo = getDmnModel(modelId);
+      if(null == trisotechFileInfo) {
+        trisotechFileInfo = getDmnModel(modelId);
+      }
       if ( publishedModel( trisotechFileInfo ) ) {
         return Optional.of( downloadXmlModel( trisotechFileInfo.getUrl() ) );
       }
@@ -367,7 +374,7 @@ public class TrisotechWrapper {
     return null;
   }
 
-  // TODO: How to handle bearer token?
+  // TODO: How to handle bearer token? CAO
   private static HttpHeaders getHttpHeaders() {
     final HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.add("Accept", "application/json");

@@ -65,6 +65,14 @@ class TrisotechWrapperTestInt {
   }
 
   @Test
+  final void testGetDMNModelByIdWithFileInfo() {
+    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getModelInfo("123720a6-9758-45a3-8c5c-5fffab12c494");
+    Optional<Document> dox = TrisotechWrapper.getDmnModelById("123720a6-9758-45a3-8c5c-5fffab12c494", trisotechFileInfo);
+    assertNotEquals(Optional.empty(), dox);
+    assertNotNull(dox.get());
+  }
+
+  @Test
   final void testGetDmnModels() {
     List<TrisotechFileInfo> dmnModels = TrisotechWrapper.getDmnModels();
     assertNotNull(dmnModels);

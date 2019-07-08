@@ -1,12 +1,12 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -293,13 +293,25 @@ class WeaverTest {
 //              + " attr namespaceURI: " + attr.getNamespaceURI()
 //      );
 
-      if (!checkAttribute(attr, "xmlns")) return false;
-      if (!checkAttribute(attr, "namespace")) return false;
-      if (!checkAttribute(attr, "targetNamespace")) return false;
-      if (!checkAttribute(attr, "import")) return false;
+      if (!checkAttribute(attr, "xmlns")) {
+        return false;
+      }
+      if (!checkAttribute(attr, "namespace")) {
+        return false;
+      }
+      if (!checkAttribute(attr, "targetNamespace")) {
+        return false;
+      }
+      if (!checkAttribute(attr, "import")) {
+        return false;
+      }
 
-      if (!checkContainsAttribute(attr, "include")) return false;
-      if (!checkContainsAttribute(attr, "ns")) return false;
+      if (!checkContainsAttribute(attr, "include")) {
+        return false;
+      }
+      if (!checkContainsAttribute(attr, "ns")) {
+        return false;
+      }
       // confirm KMDP namespaces
       // TODO: fix this .. not all namespaces have KMDP CAO
       confirmKMDPnamespace(attr);

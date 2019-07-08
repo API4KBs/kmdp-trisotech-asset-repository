@@ -15,6 +15,7 @@
  */
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
+import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
@@ -95,12 +96,11 @@ class ChainTest {
 			// TODO: Should be checking ArtifactId, not AssetId? Not sure where AssetId comes from [IdentityMapper] CAO
 //			assertEquals( "http://test.ckm.mock.edu/190a29b8-9bbd-4759-9046-6837196da93a",
 //			              s.get().getAssetId().getUri().toString() );
-
 			// TODO: this doesn't seem right -- not a URI, just a ID value CAO
 			assertEquals("50e19e36-6746-322f-9dd0-5c4ee4f370ce", s.get().getAssetId().getUri().toString());
 
 			// TODO: Is this right? CAO
-			assertEquals( Registry.MAYO_ASSETS_BASE_URI +"f59708b6-96c0-4aa3-be4a-31e075d76ec9", s.get().getCarriers().get(0).getArtifactId().getUri().toString() );
+			assertEquals(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI +"f59708b6-96c0-4aa3-be4a-31e075d76ec9", s.get().getCarriers().get(0).getArtifactId().getUri().toString() );
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			XMLUtil.streamXMLDocument( m.getModel(), baos );
 			assertTrue( new String( baos.toByteArray() ).contains( "Weave Test 1" ) );

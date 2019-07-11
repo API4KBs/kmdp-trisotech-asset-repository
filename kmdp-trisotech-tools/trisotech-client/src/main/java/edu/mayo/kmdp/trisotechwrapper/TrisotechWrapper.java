@@ -44,6 +44,12 @@ public class TrisotechWrapper {
 //  private static TrisotechApiToken token;
 
 
+  /**
+   * Retrieves the LATEST version of the model for the modelId provided.
+   *
+   * @param modelId
+   * @return
+   */
   public static Optional<Document> getModelById(String modelId) {
     return getModelById(modelId, null);
   }
@@ -62,6 +68,7 @@ public class TrisotechWrapper {
 
   /**
    * Retrieve the PUBLISHED Model given the model ID
+   * Will only return if the model has been published, else empty.
    * TODO: Needed? CAO
    *
    * @param modelId
@@ -161,6 +168,56 @@ public class TrisotechWrapper {
 
 
   /*** version support ***/
+
+  /**
+   * Gets the modelInfo for the version requested.
+   * NOTE: Until updates from Trisotech, the URL will not be correct to retrieve XML document
+   * TODO: may need updates to code once have updates from Trisotech CAO
+   *
+   * @param modelId
+   * @param version
+   * @return
+   */
+  public static TrisotechFileInfo getModelInfoByIdAndVersion(String modelId, String version) {
+    // TODO: figure this out CAO
+//    return getModelVersions(modelId).stream()
+//        .filter((f) -> f.getVersion().equals(version)).findAny().get();
+
+    // long form
+    List<TrisotechFileInfo> fileInfos = getModelVersions(modelId);
+    for (TrisotechFileInfo fileInfo : fileInfos) {
+      if(version.equals(fileInfo.getVersion())) {
+        return fileInfo;
+      }
+    }
+    return null;
+  }
+
+
+  /**
+   * get the model for the modelId and version specified
+   * TODO: may need to update once have updates from Trisotech to return XML CAO
+   *
+   * @param modelId
+   * @param version
+   * @return
+   */
+  public static Optional<Document> getModelByIdAndVersion(String modelId, String version) {
+    // TODO: Figure this out - failing on findAny CAO
+//    TrisotechFileInfo fileInfo =  getModelVersions(modelId).stream()
+//        .filter((f) -> f.getVersion().equals(version))
+//        .findAny().orElse(null);
+    // long form
+    List<TrisotechFileInfo> fileInfos = getModelVersions(modelId);
+    for (TrisotechFileInfo fileInfo : fileInfos
+         ) {
+      if(version.equals(fileInfo.getVersion())) {
+        // TODO: this will fail until Trisotech updates to return by XML CAO
+        return Optional.of(downloadXmlModel(fileInfo.getUrl()));
+      }
+    }
+    return Optional.empty();
+  }
 
   /**
    * returns all the file info for all the versions of the model for the default repository
@@ -264,6 +321,7 @@ public class TrisotechWrapper {
   private static Map<String, TrisotechFileInfo> getPublishedModels(List<TrisotechFileInfo> models) {
     Map<String, TrisotechFileInfo> publishedModels = new HashMap<>();
 
+    // TODO: convert to stream() CAO
     for (TrisotechFileInfo trisotechFileInfo : models) {
       if (publishedModel(trisotechFileInfo)) {
         publishedModels.put(trisotechFileInfo.getId(), trisotechFileInfo);
@@ -387,6 +445,7 @@ public class TrisotechWrapper {
 
   /**
    * Download the actual model in its XML form.
+   * Does NOT care if model is published or not
    *
    * @param fromUrl String representing an ENCODED URI
    * @return
@@ -432,6 +491,7 @@ public class TrisotechWrapper {
     }
     return conn;
   }
+
 
 
 }

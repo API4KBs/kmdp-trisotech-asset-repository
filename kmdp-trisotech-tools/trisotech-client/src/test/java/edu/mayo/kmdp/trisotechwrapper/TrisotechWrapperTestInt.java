@@ -52,6 +52,96 @@ class TrisotechWrapperTestInt {
   void tearDown() throws Exception {
   }
 
+  @Disabled("enable when Trisotech is updated")
+  @Test
+  final void testGetModelByIdAndVersionDMN() {
+    String expectedVersion = "1.4";
+    String expectedVersion_2 = "0.2";
+    // TODO: This test will currently fail until Trisotech updates to allow XML for versions
+    Optional<Document> dox = TrisotechWrapper.getModelByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion);
+    assertNotEquals(Optional.empty(), dox);
+    assertTrue(dox.isPresent());
+    assertNotNull(dox.get());
+
+    // TODO: This test will currently fail until Trisotech updates to allow XML for versions
+    dox = TrisotechWrapper.getModelByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
+    assertNotEquals(Optional.empty(), dox);
+    assertTrue(dox.isPresent());
+    assertNotNull(dox.get());
+  }
+
+  @Test
+  final void testGetModelByIdAndVersionDMNInvalidVersion() {
+    String expectedVersion = "2.6";
+    String expectedVersion_2 = "0.0";
+    Optional<Document> dox = TrisotechWrapper.getModelByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion);
+    assertEquals(Optional.empty(), dox);
+
+    dox = TrisotechWrapper.getModelByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
+    assertEquals(Optional.empty(), dox);
+
+  }
+
+  @Disabled("enable when Trisotech is updated")
+  @Test
+  final void testGetModelByIdAndVersionCMMN() {
+    String expectedVersion = "2.0";
+    String expectedVersion_2 = "1.0";
+    // TODO: This test will currently fail until Trisotech updates to allow XML for versions
+    Optional<Document> dox = TrisotechWrapper.getModelByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion);
+    assertNotEquals(Optional.empty(), dox);
+    assertTrue(dox.isPresent());
+    assertNotNull(dox.get());
+    // what else to test here??
+
+    dox = TrisotechWrapper.getModelByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2);
+    assertEquals(Optional.empty(), dox);
+    assertFalse(dox.isPresent());
+    assertNull(dox.get());
+
+  }
+
+  @Test
+  final void testGetModelByIdAndVersionCMMNInvalidVersion() {
+    String expectedVersion = "6.5";
+    String expectedVersion_2 = "1.0";
+    Optional<Document> dox = TrisotechWrapper.getModelByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion);
+    assertEquals(Optional.empty(), dox);
+    assertFalse(dox.isPresent());
+
+    dox = TrisotechWrapper.getModelByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2);
+    assertEquals(Optional.empty(), dox);
+    assertFalse(dox.isPresent());
+
+  }
+
+  @Test
+  final void testGetModelInfoByIdAndVersionDMN() {
+    String expectedVersion = "1.2";
+    String expectedVersion_2 = "0.1";
+    TrisotechFileInfo fileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion);
+    assertNotNull(fileInfo);
+    assertTrue(expectedVersion.equals(fileInfo.getVersion()));
+    assertTrue(WEAVER_TEST_1_ID.equals(fileInfo.getId()));
+
+    fileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
+    assertTrue(expectedVersion_2.equals(fileInfo.getVersion()));
+    assertTrue(WEAVER_TEST_2_ID.equals(fileInfo.getId()));
+  }
+  @Test
+  final void testGetModelInfoByIdAndVersionCMMN() {
+    String expectedVersion = "2.0";
+    String expectedVersion_2 = "1.0";
+    TrisotechFileInfo fileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion);
+    assertNotNull(fileInfo);
+    assertTrue(expectedVersion.equals(fileInfo.getVersion()));
+    assertTrue(WEAVE_TEST_1_ID.equals(fileInfo.getId()));
+
+    fileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2);
+    assertNull(fileInfo);
+
+  }
+
   @Test
   final void testGetModelVersionsDMN() {
     List<TrisotechFileInfo> fileVersions = TrisotechWrapper.getModelVersions(WEAVER_TEST_1_ID); // 7/9/2019 -- should be at least 15
@@ -189,7 +279,7 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetPublishedModelByIdDMN_Null() {
-    // getModelById returns empty if model is not published
+    // getPublishedModelById returns empty if model is not published
     Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVER_TEST_2_ID);
     assertEquals(Optional.empty(), dox);
   }

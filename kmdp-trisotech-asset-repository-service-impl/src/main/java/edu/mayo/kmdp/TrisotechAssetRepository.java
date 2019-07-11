@@ -48,6 +48,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
 
+// TODO: questions for Davide:
+//  Do we need an internal 'cache'? (previously done as 'resolvedModels')
 @Component
 public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegate, KnowledgeAssetRepositoryApiDelegate, KnowledgeAssetRetrievalApiDelegate {
   Logger log = LoggerFactory.getLogger(TrisotechAssetRepository.class);
@@ -77,7 +79,11 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   @Override
   public ResponseEntity<KnowledgeAsset> getKnowledgeAsset(UUID assetId) {
-    return null; // TODO: fix this CAO per Davide: ResponseHelper.succeed();
+    // TODO: need to get latest version, or just use TrisotechWrapper.getModelById which will return the Document? CAO
+    // TODO: then modelInfo can be
+    String versionTag = TrisotechWrapper.getLatestVersionTag(assetId.toString());
+    return getVersionedKnowledgeAsset(assetId, versionTag);
+//    return null; // TODO: fix this CAO per Davide: ResponseHelper.succeed();
   }
 
   /**
@@ -95,11 +101,22 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     return null;
   }
 
+
   @Override
-  public ResponseEntity<KnowledgeAsset> getVersionedKnowledgeAsset(UUID uuid, String s) {
+  public ResponseEntity<KnowledgeAsset> getVersionedKnowledgeAsset(UUID uuid, String versionTag) {
+    // TODO: confirm extractor behavior and data here w/Davide CAA
+    //  what is the UUID value passed in?
+    //  is internalId internal to enterprise or internal to Trisotech? Maybe better naming?
+    //  from Signavio code, appears to be from the editor, why not just get it from the model using the version?
+    //  does the UUID not tell me which model?
+//    String internalId = extractor.resolveInternalArtifactID(uuid.toString(), versionTag);
+
+    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.
     return null;
   }
 
+  // TODO: What is the appropriate response for these? returning null? throwing unsupported? or returning super?
+  //  Does it vary depending on the method? Discuss w/Davide. CAO
   @Override
   public ResponseEntity<UUID> initKnowledgeAsset() {
     throw new UnsupportedOperationException();

@@ -314,7 +314,6 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   /**
    * TODO: Move this/refactor.
-   * @param dataType
    * @return
    */
 //  private static edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset buildFhir2Datatype(String dataType) {

@@ -17,21 +17,29 @@ package edu.mayo.kmdp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetCatalogApiDelegate;
 import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRepositoryApiDelegate;
+import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRetrievalApiDelegate;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
-import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+
+import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,8 +49,10 @@ import org.slf4j.Logger;
 import org.w3c.dom.Document;
 
 @Component
-public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegate, KnowledgeAssetRepositoryApiDelegate {
+public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegate, KnowledgeAssetRepositoryApiDelegate, KnowledgeAssetRetrievalApiDelegate {
   Logger log = LoggerFactory.getLogger(TrisotechAssetRepository.class);
+  private Weaver weaver;
+  private MetadataExtractor extractor;
 
 //  @Override
 //  public Optional<ObjectMapper> getObjectMapper() {
@@ -62,16 +72,26 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   @Override
   public ResponseEntity<KnowledgeAssetCatalog> getAssetCatalog() {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public ResponseEntity<KnowledgeAsset> getKnowledgeAsset(UUID assetId) {
-    return null; // TODO: fix this CAO ResponseHelper.succeed();
+    return null; // TODO: fix this CAO per Davide: ResponseHelper.succeed();
   }
 
+  /**
+   *
+   * @param uuid
+   * @param offset
+   * @param limit
+   * @param beforeTag
+   * @param afterTag
+   * @param sort
+   * @return
+   */
   @Override
-  public ResponseEntity<List<Pointer>> getKnowledgeAssetVersions(UUID uuid, Integer integer, Integer integer1, String s, String s1, String s2) {
+  public ResponseEntity<List<Pointer>> getKnowledgeAssetVersions(UUID uuid, Integer offset, Integer limit, String beforeTag, String afterTag, String sort) {
     return null;
   }
 
@@ -82,12 +102,13 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   @Override
   public ResponseEntity<UUID> initKnowledgeAsset() {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
    * list of the assets;
-   * @param assetType: "CMMN" or "DMN" // TODO: allow for both?
+   *
+   * @param assetType:      "CMMN" or "DMN" // TODO: allow for both?
    * @param assetAnnotation // TODO: what do to with this?
    * @param offset
    * @param limit
@@ -97,34 +118,42 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   public ResponseEntity<List<Pointer>> listKnowledgeAssets(String assetType, String assetAnnotation, Integer offset, Integer limit) {
     List<Pointer> assetList = new ArrayList<>();
     Pointer modelPointer = new Pointer();
+    List<TrisotechFileInfo> trisotechFileInfoList;
 
-    if ("CMMN".equals(assetType)) {
+    if ("CMMN".equalsIgnoreCase(assetType)) {
       // get CMMN assets
+      trisotechFileInfoList = TrisotechWrapper.getCmmnModels();
     } else {
       // DMN
-      TrisotechWrapper.getPublishedDmnModels().forEach((modelId, model) ->  {
-        Optional<Document> dmnDox = TrisotechWrapper.getDmnModelById(modelId, model);
-      });
-    }
-//    try {
-//      return (ResponseEntity<List<Pointer>>) new ResponseEntity(((ObjectMapper) this.getObjectMapper()
-//          .get()).readValue("application/json", List.class), HttpStatus.ACCEPTED);
-//    } catch (IOException var4) {
-//      log.error("Couldn't serialize response for content type application/xml", var4);
-//      return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+      trisotechFileInfoList = TrisotechWrapper.getDmnModels();
+    } // TODO: ? ability to get both? NOTE: way to retrieve in XML format is specific to each type;
+    // TODO cont: Url for the fileInfo is returned for XML retrieval CAO
 
-    return null; // TBD
+    trisotechFileInfoList.stream().skip(offset).limit(limit).forEach((trisotechFileInfo -> {
+      modelPointer.withEntityRef(new URIIdentifier().withUri(URI.create(trisotechFileInfo.getId()))) // TODO: fileID (123720a6-9758-45a3-8c5c-5fffab12c494) or URL? CAO
+          .withHref(URI.create(trisotechFileInfo.getUrl()))
+          .withType(isDMNModel(trisotechFileInfo)
+              ? KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models.getRef()
+              : KnowledgeAssetCategory.Rules_Policies_And_Guidelines.getRef())
+          .withName(trisotechFileInfo.getName());
+      assetList.add(modelPointer);
+    }));
+
+    return new ResponseEntity<>(assetList,
+        new HttpHeaders(),
+        HttpStatus.OK);
+
   }
+
 
   @Override
   public ResponseEntity<Void> setVersionedKnowledgeAsset(UUID uuid, String s, KnowledgeAsset knowledgeAsset) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public ResponseEntity<Void> addKnowledgeAssetCarrier(UUID uuid, String s, byte[] bytes) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -134,20 +163,51 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   @Override
   public ResponseEntity<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(UUID uuid, String s, UUID uuid1, String s1) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public ResponseEntity<List<Pointer>> getKnowledgeAssetCarriers(UUID uuid, String s) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
-
-  // to upload the "dictionary" DMN model
-  // TODO: Discuss w/Davide: how is "dictionary" handled differently? Not published? CAO
+  // to upload the "dictionary" DMN model (Davide's note)
+  // TODO: Discuss w/Davide: how is "dictionary" handled differently? CAO
   @Override
   public ResponseEntity<Void> setKnowledgeAssetCarrierVersion(UUID assetId, String versionTag, UUID artifactId, String artifactVersionTag, byte[] exemplar) {
     return null;
   }
 
+  private boolean isDMNModel(TrisotechFileInfo fileInfo) {
+    return fileInfo.getMimetype().contains("dmn");
+  }
+
+  private boolean isCMMNModel(TrisotechFileInfo fileInfo) {
+    return fileInfo.getMimetype().contains("cmmn");
+  }
+
+  @Override
+  public ResponseEntity<List<KnowledgeCarrier>> getCompositeKnowledgeAsset(UUID uuid, String s, Boolean aBoolean, String s1) {
+    return null;
+  }
+
+  @Override
+  public ResponseEntity<KnowledgeCarrier> getCompositeKnowledgeAssetStructure(UUID uuid, String s) {
+    return null;
+  }
+
+  @Override
+  public ResponseEntity<List<KnowledgeCarrier>> getKnowledgeArtifactBundle(UUID uuid, String s, String s1, Integer integer, String s2) {
+    return null;
+  }
+
+  @Override
+  public ResponseEntity<List<KnowledgeAsset>> getKnowledgeAssetBundle(UUID uuid, String s, String s1, Integer integer) {
+    return null;
+  }
+
+  @Override
+  public ResponseEntity<Void> queryKnowledgeAssets(String s) {
+    return null;
+  }
 }

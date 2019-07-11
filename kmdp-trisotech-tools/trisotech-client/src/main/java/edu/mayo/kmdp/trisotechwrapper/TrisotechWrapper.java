@@ -1,12 +1,12 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,6 @@ import edu.mayo.kmdp.trisotechwrapper.models.*;
 import edu.mayo.kmdp.util.XMLUtil;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.springframework.http.*;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
@@ -27,6 +26,9 @@ import org.w3c.dom.Document;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
+
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.*;
+import static org.springframework.http.MediaType.*;
 
 /**
  * Class to wrap the calls to Trisotech in meaningful ways.
@@ -42,66 +44,41 @@ public class TrisotechWrapper {
 //  private static TrisotechApiToken token;
 
 
-  /**
-   * Retrieve the versions for the requested model.
-   *
-   * @param repositoryId - id of the repository holding the model
-   * @param modelId
-   * @return list of modelFileInfo
-   */
-  // TODO: Needed? CAO If versions needed, discuss with Davide how they get returned from Trisotech and how to handle
-//  public static List<String> getModelVersions( String repositoryId, String modelId ) {
-//    System.out.println("getModelVersions for model: " + modelId + " in repository: " + repositoryId);
-//    String urlString = TrisotechApiUrls.BASE_URL + String.format(TrisotechApiUrls.VERSIONS_PATH, repositoryId, modelId);
-//    List<TrisotechFileInfo> versions = new ArrayList<TrisotechFileInfo>();
-//    HttpEntity<?> requestEntity = getHttpEntity();
-//
-//    RestTemplate restTemplate = new RestTemplate();
-//
-//    JsonNode jsonNode =
-//            restTemplate.exchange(urlString, HttpMethod.GET,
-//                    requestEntity, JsonNode.class).getBody();
-//    System.out.println("jsonNode from server: " + jsonNode.toString());
-//
-////    TODO: figure this out CAO
-//    // TODO: do anything about the ones that don't have versions? What about multiple same versions? Take latest only? CAO
-//    // Do we want the url? or just the list of versions?
-//    for (Iterator<JsonNode> it = jsonNode.elements(); it.hasNext(); ) {
-//      JsonNode node = it.next();
-//      System.out.println("node: " + node.toString());
-//      if ((node.get("version").textValue()).equals("version")) {
-//        // TODO: get version here?
-//        String versionID = node.get("version").textValue();
-//        String url = node.get("url").textValue();
-//
-//        versions.add(versionID);
-//      }
-////      }
-//    }
-//    return versions;
-//  }
+  public static Optional<Document> getModelById(String modelId) {
+    return getModelById(modelId, null);
+  }
 
-  //
+  public static Optional<Document> getModelById(String modelId, TrisotechFileInfo trisotechFileInfo) {
+    try {
+      if (null == trisotechFileInfo) {
+        trisotechFileInfo = getModelInfo(modelId);
+      }
+      return Optional.of(downloadXmlModel(trisotechFileInfo.getUrl()));
+    } catch (Exception e) { // TODO: Better exception handling. Do we have a preferred process? CAO
+      e.printStackTrace();
+    }
+    return Optional.empty();
+  }
 
   /**
-   * Retrieve the PUBLISHED DMN Model given the model ID
+   * Retrieve the PUBLISHED Model given the model ID
    * TODO: Needed? CAO
    *
    * @param modelId
    * @return DMN XML Document
    */
-  public static Optional<Document> getDmnModelById( String modelId ) {
-    return getDmnModelById(modelId, null);
+  public static Optional<Document> getPublishedModelById(String modelId) {
+    return getPublishedModelById(modelId, null);
   }
 
 
-  public static Optional<Document> getDmnModelById(String modelId, TrisotechFileInfo trisotechFileInfo) {
+  public static Optional<Document> getPublishedModelById(String modelId, TrisotechFileInfo trisotechFileInfo) {
     try {
-      if(null == trisotechFileInfo) {
-        trisotechFileInfo = getDmnModel(modelId);
+      if (null == trisotechFileInfo) {
+        trisotechFileInfo = getModelInfo(modelId);
       }
-      if ( publishedModel( trisotechFileInfo ) ) {
-        return Optional.of( downloadXmlModel( trisotechFileInfo.getUrl() ) );
+      if (publishedModel(trisotechFileInfo)) {
+        return Optional.of(downloadXmlModel(trisotechFileInfo.getUrl()));
       }
     } catch (Exception e) { // TODO: Better exception handling. Do we have a preferred process? CAO
       e.printStackTrace();
@@ -117,41 +94,27 @@ public class TrisotechWrapper {
   public static List<TrisotechFileInfo> getDmnModels() {
 
     List<TrisotechFileInfo> modelsArray = new ArrayList<>();
-    // TODO: search for this particular directory ('place') or just use the known ID of our known repository and skip the places call? CAO
 
-    getModels(modelsArray, TrisotechApiUrls.DMN_XML_MIMETYPE);
+    getModels(modelsArray, DMN_XML_MIMETYPE);
     return modelsArray;
+  }
+
+  /**
+   * 'valid' models are those with a state of 'Published'
+   * Retrieves all the published DMN models
+   *
+   * @return
+   */
+  public static Map<String, TrisotechFileInfo> getPublishedDmnModels() {
+
+    List<TrisotechFileInfo> dmnModels = getDmnModels();
+    return getPublishedModels(dmnModels);
   }
 
 
   /**
-   * Retrieve the CMMN Model given ID and version
-   *
-   * @param assetId
-   * @param versionId
-   * @return
-   */
-  // TODO: Need to be able to get by version? if so update to Trisotech APIs CAO
-  // TODO: If needed, discuss the version data w/Davide & how best to handle CAO
-//  public static JsonNode getCMMNModel( String assetId, String versionId ) {
-//    String urlString;
-//    if ( null != versionId ) {
-////      System.out.println("getModel for version: " + versionTag);
-//
-//      urlString = TrisotechApiUrls.BASE_URL + TrisotechApiUrls.VERSION_PATH + versionId + TrisotechApiUrls.JSON_PATH;
-//
-//      return getModel(urlString);
-//    } else {
-////      System.out.println("getModel for assetId: " + assetId);
-//
-//      urlString = TrisotechApiUrls.BASE_URL + TrisotechApiUrls.MODEL_PATH + assetId + TrisotechApiUrls.JSON_PATH;
-//      return getModel(urlString);
-//    }
-//  }
-
-
-  /**
    * 'valid' models are those with a state of 'Published'
+   * Retrieves all the published CMMN models
    * @return
    */
   public static Map<String, TrisotechFileInfo> getPublishedCMMNModels() {
@@ -162,72 +125,109 @@ public class TrisotechWrapper {
 
   /**
    * get all the CMMN models
+   *
    * @return
    */
   public static List<TrisotechFileInfo> getCmmnModels() {
     List<TrisotechFileInfo> modelsArray = new ArrayList<>();
 
-    getModels(modelsArray, TrisotechApiUrls.CMMN_XML_MIMETYPE);
+    getModels(modelsArray, CMMN_XML_MIMETYPE);
     return modelsArray;
   }
 
   /**
-   * 'valid' models are those with a state of 'Published'
-   * @return
-   */
-  public static Map<String, TrisotechFileInfo> getPublishedDmnModels() {
-
-    List<TrisotechFileInfo> dmnModels = getDmnModels();
-    return getPublishedModels(dmnModels);
-  }
-
-  /**
-   * used to remove /whatever/ from URL fragments provided from Trisotech
-   * allows to get at the values that are needed for API calls
-   * @param href
-   * @return
-   */
-  private static String getSubstring(String href) {
-    return href.substring(href.lastIndexOf('/') + 1);
-  }
-
-
-  /**
-   * TODO: Needed? Similar to getModelById, would still need the repository info; also for Trisotech, the returned
-   * data from the query of the repository IS the model info CAO
+   * data from the query of the repository IS the model info, HOWEVER, if don't know the model TYPE,
+   * then need to query again to get the appropriate XML url
    *
    * @param modelID
    * @return
    */
   public static TrisotechFileInfo getModelInfo(String modelID) {
-    return getDmnModel(modelID);
+    List<TrisotechFileInfo> fileInfos = new ArrayList<>();
+    // TODO: MEA_TEST for testing and MEA for production CAO
+    getModels(fileInfos, null);
+    TrisotechFileInfo file = fileInfos.stream()
+        .filter((f) -> f.getId().equals(modelID)).findAny().get();
+    fileInfos = new ArrayList<>(); // reset
+    if (file.getMimetype().contains("dmn")) {
+      getModels(fileInfos, DMN_XML_MIMETYPE);
+    } else {
+      getModels(fileInfos, CMMN_XML_MIMETYPE);
+    }
+
+    return fileInfos.stream()
+        .filter((f) -> f.getId().equals(modelID)).findAny().get();
+  }
+
+
+  /*** version support ***/
+
+  /**
+   * returns all the file info for all the versions of the model for the default repository
+   * EXCEPT latest version
+   * @param modelId
+   * @return
+   */
+  public static List<TrisotechFileInfo> getModelVersions(String modelId) {
+    // TODO: This needs to be MEA_TEST for testing and MEA for production CAO
+    return getModelVersions(MEA_TEST, modelId);
+  }
+
+  /**
+   * Will return all the file info for all the versions of the model in the specified repository requested
+   * EXCEPT latest version is not included.
+   *
+   * @param repositoryId - id of the repository holding the model
+   * @param modelId - id of the model requested
+   * @return list of modelFileInfo
+   */
+  public static List<TrisotechFileInfo> getModelVersions(String repositoryId, String modelId) {
+    System.out.println("getModelVersions for model: " + modelId + " in repository: " + repositoryId);
+    String urlString = BASE_URL + String.format(VERSIONS_PATH, repositoryId, modelId);
+    List<TrisotechFileInfo> versions = new ArrayList<>();
+    HttpEntity<?> requestEntity = getHttpEntity();
+    RestTemplate restTemplate = new RestTemplate();
+    // NOTE: MUST send URI here to avoid further encoding, otherwise it will be double-encoded and request
+    // will fail to return all the values expected
+    TrisotechFileData tfd =
+        restTemplate.exchange(urlString, HttpMethod.GET, requestEntity, TrisotechFileData.class).getBody();
+
+    // TODO: only unique versions? and then, only latest of each version? CAO
+    tfd.getData().stream().forEach((datum -> versions.add(datum.getFile())));
+
+    return versions;
   }
 
   /**
    * return the URL for the latest revision of the given model
+   * TODO: really return URL? Signavio only returned the id of the version, but for Trisotech the id doesn't change
+   * TODO cont: returning URL, address with Davide if that is desired CAO
    * <p>
    *
    * @param artifactId
    * @return
    */
-  // TODO: Update to Trisotech APIs
-//  public static String getLatestVersion( String artifactId ) {
-//    TrisotechModelRepInfo smri = getModelInfo(artifactId);
-//    // strip off /revision/
-//    return getLatestVersion( artifactId, smri );
-//  }
+  public static String getLatestVersion(String artifactId) {
+    TrisotechFileInfo trisotechFileInfo = getModelInfo(artifactId);
+    return getLatestVersion(trisotechFileInfo);
+  }
 
-  // TODO: Update to Trisotech APIs
-//  public static String getLatestVersionTag(String artifactId ) {
-//    TrisotechModelRepInfo smri = getModelInfo( artifactId );
-//    return "" + smri.getRev();
-//  }
+  public static String getLatestVersionTag(String artifactId) {
+    TrisotechFileInfo trisotechFileInfo = getModelInfo(artifactId);
+    return trisotechFileInfo.getVersion();
+  }
 
-//  public static String getLatestVersion( String artifactId, TrisotechModelRepInfo smri ) {
-//    // strip off /revision/
-//    String versionID = getSubstring( smri.getRevision() );
-//    return versionID;
-//  }
+
+  public static String getLatestVersion(TrisotechFileInfo tfi) {
+    TrisotechFileInfo trisotechFileInfo;
+    // want to get the XML URL for this file
+    if (tfi.getMimetype().contains("cmmn")) {
+      trisotechFileInfo = getCmmnModel(tfi.getId());
+    } else { // dmn
+      trisotechFileInfo = getDmnModel(tfi.getId());
+    }
+    return trisotechFileInfo.getUrl();
+  }
 
 
   /**
@@ -237,11 +237,13 @@ public class TrisotechWrapper {
    */
   private static void getModels(List<TrisotechFileInfo> modelsArray, String xmlMimetype) {
     try {
-      URL url = new URL(TrisotechApiUrls.BASE_URL +
-              TrisotechApiUrls.REPOSITORY_PATH);
+      URL url = new URL(BASE_URL +
+          REPOSITORY_PATH);
 
       TrisotechPlaceData data = getPlaces(url);
+
       for (TrisotechPlace tp : data.getData()) {
+        // TODO: search for this particular directory ('place') or just use the known ID of our known repository and skip the places call? CAO
         if (tp.getName().equals(ROOT_DIRECTORY)) {
           getRepositoryContent(tp.getId(), modelsArray, "/", xmlMimetype);
         }
@@ -254,6 +256,7 @@ public class TrisotechWrapper {
 
   /**
    * Files that have a 'Published' state are published and considered valid.
+   * TODO: Need a map, or is a list of the files enough? CAO
    *
    * @param models
    * @return
@@ -325,26 +328,18 @@ public class TrisotechWrapper {
       // double-encoded and request will fail to return all values expected
       // See: https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#web-uri-encoding for details
       uri = UriComponentsBuilder.fromHttpUrl(new StringBuilder()
-          .append(TrisotechApiUrls.BASE_URL)
-          .append(TrisotechApiUrls.CONTENT_PATH).toString())
+          .append(BASE_URL)
+          .append(CONTENT_PATH).toString())
           .build(directoryID, mimeType, path);
 
       TrisotechFileData fileData = getRepositoryContent(uri);
-      for(Datum datum : fileData.getData()) {
+      fileData.getData().stream().forEach((datum) -> {
         if (null != datum.getFile()) {
-          // have a file entry, process fileInfo
-          TrisotechFileInfo file = datum.getFile();
-//          if (Optional.ofNullable(file.getState()).isPresent() && file.getState().equals(PUBLISHED_STATE)) {
-//            System.out.println("file: " + file.getName() + " with Id: " + file.getId() + " is published");
-//          } else {
-//            System.out.println("file: " + file.getName() + " with id: " + file.getId() + " is not published");
-//          }
-          modelsArray.add(file);
-        } else { // folder -- assume folder?
-          TrisotechFolderInfo folder = datum.getFolder();
-          getRepositoryContent(directoryID, modelsArray, folder.getPath(), mimeType);
+          modelsArray.add(datum.getFile());
+        } else { // assume folder?
+          getRepositoryContent(directoryID, modelsArray, datum.getFolder().getPath(), mimeType);
         }
-      }
+      });
 
     } catch (Exception e) {
       // TODO Auto-generated catch block
@@ -353,33 +348,36 @@ public class TrisotechWrapper {
   }
 
   private static boolean publishedModel(TrisotechFileInfo trisotechFileInfo) {
-      return (Optional.ofNullable(trisotechFileInfo.getState()).isPresent() &&
-          trisotechFileInfo.getState().equals(PUBLISHED_STATE));
+    return (Optional.ofNullable(trisotechFileInfo.getState()).isPresent() &&
+        trisotechFileInfo.getState().equals(PUBLISHED_STATE));
   }
 
   /**
-   * TODO: NEEDED?  Not as direct in Trisotech. Would need repository ID (or default to MEA repo) and would need to query the repository
-   * TODO: cont: and find the model with the matching ID; alternatively could query repositoryVersions using the ID given, but would still need to know repository CAO
    * @param modelId
    * @return
    */
   private static TrisotechFileInfo getDmnModel(String modelId) {
-
     List<TrisotechFileInfo> trisotechFileInfos = getDmnModels();
-    for(TrisotechFileInfo fileInfo : trisotechFileInfos) {
-      if(fileInfo.getId().equals(modelId)) {
-        return fileInfo;
-      }
-    }
-    return null;
+    return trisotechFileInfos.stream()
+        .filter((f) -> f.getId().equals(modelId)).findFirst().get();
+  }
+
+  /**
+   * @param modelId
+   * @return
+   */
+  private static TrisotechFileInfo getCmmnModel(String modelId) {
+    List<TrisotechFileInfo> trisotechFileInfos = getCmmnModels();
+    return trisotechFileInfos.stream()
+        .filter((f) -> f.getId().equals(modelId)).findFirst().get();
   }
 
   // TODO: How to handle bearer token? CAO
   private static HttpHeaders getHttpHeaders() {
     final HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.add("Accept", "application/json");
-    requestHeaders.add("Authorization", "Bearer " + TrisotechApiUrls.TOKEN);
-    requestHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+    requestHeaders.add("Authorization", "Bearer " + TOKEN);
+    requestHeaders.setContentType(APPLICATION_JSON_UTF8);
     return requestHeaders;
   }
 
@@ -387,30 +385,13 @@ public class TrisotechWrapper {
     return new HttpEntity<>(getHttpHeaders());
   }
 
-  private static <T> HttpEntity<T> getHttpEntity( T body ) {
-    final HttpHeaders requestHeaders = getHttpHeaders();
-    if ( body instanceof MultiValueMap || body instanceof Map) {
-      requestHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-    } else {
-      requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-    }
-    return new HttpEntity<T>(body,requestHeaders);
-  }
-
-  private static <T> HttpEntity<T> getHttpEntity( T body, MediaType mime ) {
-    final HttpHeaders requestHeaders = getHttpHeaders();
-    requestHeaders.setContentType( mime );
-    return new HttpEntity<T>(body,requestHeaders);
-  }
-
-
   /**
    * Download the actual model in its XML form.
    *
-   * @param fromUri String representing an ENCODED URI
+   * @param fromUrl String representing an ENCODED URI
    * @return
    */
-  public static Document downloadXmlModel( String fromUrl ) {
+  public static Document downloadXmlModel(String fromUrl) {
     try {
 
       URL url = new URL(fromUrl);
@@ -422,7 +403,7 @@ public class TrisotechWrapper {
       conn.disconnect();
       return document.get();
 
-    } catch ( IOException e ) {
+    } catch (IOException e) {
 
       throw new RuntimeException(e);
 
@@ -430,15 +411,11 @@ public class TrisotechWrapper {
 
   }
 
-  private static HttpUriRequest getHttpURIConnection(URI uri) {
-    return null;
-  }
-
   private static HttpURLConnection getHttpURLConnection(URL url) throws IOException {
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
     conn.setRequestProperty("Content-Type", "application/json");
-    conn.setRequestProperty("Authorization", "Bearer " + TrisotechApiUrls.TOKEN);
+    conn.setRequestProperty("Authorization", "Bearer " + TOKEN);
 
     conn.setDoInput(true);
 
@@ -447,7 +424,7 @@ public class TrisotechWrapper {
       switch (conn.getResponseCode()) {
         case 401:
           throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()
-              + String.format("<Token>: %s  ", TrisotechApiUrls.TOKEN));
+              + String.format("<Token>: %s  ", TOKEN));
 
         default:
           throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());

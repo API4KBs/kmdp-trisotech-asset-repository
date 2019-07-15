@@ -1,12 +1,12 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,7 @@ import org.w3c.dom.Document;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.*;
 import static org.springframework.http.MediaType.*;
@@ -112,10 +113,11 @@ public class TrisotechWrapper {
    *
    * @return
    */
-  public static Map<String, TrisotechFileInfo> getPublishedDmnModels() {
+  public static List<TrisotechFileInfo> getPublishedDmnModels() {
 
-    List<TrisotechFileInfo> dmnModels = getDmnModels();
-    return getPublishedModels(dmnModels);
+    return getDmnModels().stream()
+        .filter((model) ->  publishedModel(model))
+        .collect(Collectors.toList());
   }
 
 
@@ -124,10 +126,11 @@ public class TrisotechWrapper {
    * Retrieves all the published CMMN models
    * @return
    */
-  public static Map<String, TrisotechFileInfo> getPublishedCMMNModels() {
+  public static List<TrisotechFileInfo> getPublishedCMMNModels() {
 
-    List<TrisotechFileInfo> cmmnModels = getCmmnModels();
-    return getPublishedModels(cmmnModels);
+    return getCmmnModels().stream()
+        .filter((model) -> publishedModel(model))
+        .collect(Collectors.toList());
   }
 
   /**
@@ -151,7 +154,6 @@ public class TrisotechWrapper {
    */
   public static TrisotechFileInfo getModelInfo(String modelID) {
     List<TrisotechFileInfo> fileInfos = new ArrayList<>();
-    // TODO: MEA_TEST for testing and MEA for production CAO
     getModels(fileInfos, null);
     TrisotechFileInfo file = fileInfos.stream()
         .filter((f) -> f.getId().equals(modelID)).findAny().get();
@@ -244,8 +246,8 @@ public class TrisotechWrapper {
     List<TrisotechFileInfo> versions = new ArrayList<>();
     HttpEntity<?> requestEntity = getHttpEntity();
     RestTemplate restTemplate = new RestTemplate();
-    // NOTE: MUST send URI here to avoid further encoding, otherwise it will be double-encoded and request
-    // will fail to return all the values expected
+    // ********* NOTE: MUST send URI here to avoid further encoding, otherwise it will be double-encoded and request
+    // will fail to return all the values expected **********
     TrisotechFileData tfd =
         restTemplate.exchange(urlString, HttpMethod.GET, requestEntity, TrisotechFileData.class).getBody();
 
@@ -264,6 +266,7 @@ public class TrisotechWrapper {
    * @param artifactId
    * @return
    */
+  // TODO: These 2 will go away when getLatestVersion updated to return VersionedIdentifier CAO
   public static String getLatestVersion(String artifactId) {
     TrisotechFileInfo trisotechFileInfo = getModelInfo(artifactId);
     return getLatestVersion(trisotechFileInfo);
@@ -275,6 +278,7 @@ public class TrisotechWrapper {
   }
 
 
+  //return VersionedIdentifier uid, versiontag (1.0) , create .withEstablishedOn for timestamp TODO: CAO
   public static String getLatestVersion(TrisotechFileInfo tfi) {
     TrisotechFileInfo trisotechFileInfo;
     // want to get the XML URL for this file
@@ -299,8 +303,9 @@ public class TrisotechWrapper {
 
       TrisotechPlaceData data = getPlaces(url);
 
+      // search for the 'place' as that is what modelers will know
       for (TrisotechPlace tp : data.getData()) {
-        // TODO: search for this particular directory ('place') or just use the known ID of our known repository and skip the places call? CAO
+        // TODO: MEA_TEST for testing and MEA for production - put in environment/config CAO
         if (tp.getName().equals(ROOT_DIRECTORY)) {
           getRepositoryContent(tp.getId(), modelsArray, "/", xmlMimetype);
         }
@@ -313,24 +318,24 @@ public class TrisotechWrapper {
 
   /**
    * Files that have a 'Published' state are published and considered valid.
-   * TODO: Need a map, or is a list of the files enough? CAO
    *
-   * @param models
    * @return
    */
-  private static Map<String, TrisotechFileInfo> getPublishedModels(List<TrisotechFileInfo> models) {
-    Map<String, TrisotechFileInfo> publishedModels = new HashMap<>();
+  public static List<TrisotechFileInfo> getPublishedModels() {
+    List<TrisotechFileInfo> publishedModels = new ArrayList<>();
 
-    // TODO: convert to stream() CAO
-    for (TrisotechFileInfo trisotechFileInfo : models) {
-      if (publishedModel(trisotechFileInfo)) {
-        publishedModels.put(trisotechFileInfo.getId(), trisotechFileInfo);
-      } else {
-        // TODO: does this make sense? why throw an error; turning off for now CAO
-//        throw new IllegalStateException( "ERROR : Model " + trisotechFileInfo.getName() + " is not published" );
-      }
-    }
-    return publishedModels;
+    // TODO: can do better streaming here -- direct from getModels... CAO
+    getModels(publishedModels, null);
+    return publishedModels.stream()
+        .filter((model) -> publishedModel(model))
+        .collect(Collectors.toList());
+
+//    for (TrisotechFileInfo trisotechFileInfo : models) {
+//      if (publishedModel(trisotechFileInfo)) {
+//        publishedModels.add(trisotechFileInfo);
+//      }
+//    }
+//    return publishedModels;
   }
 
   /**
@@ -362,8 +367,8 @@ public class TrisotechWrapper {
 
     HttpEntity<?> requestEntity = getHttpEntity();
     RestTemplate restTemplate = new RestTemplate();
-    // NOTE: MUST send URI here to avoid further encoding, otherwise it will be double-encoded and request
-    // will fail to return all the values expected
+    // ******* NOTE: MUST send URI here to avoid further encoding, otherwise it will be double-encoded and request
+    // will fail to return all the values expected ********
     TrisotechFileData tfd =
         restTemplate.exchange(uri, HttpMethod.GET, requestEntity, TrisotechFileData.class).getBody();
     return tfd;

@@ -28,11 +28,7 @@ import org.w3c.dom.Document;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 import static edu.mayo.kmdp.util.JaxbUtil.marshall;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
@@ -116,6 +112,10 @@ public class MetadataExtractor {
           return JSonUtil.writeJson( surr, p );
         case XML :
         default:
+          List<? extends Class<? extends KnowledgeAsset>> surrKA = Collections.singletonList(surr.getClass());
+          System.out.println("surrKA: " + surrKA.stream().toString());
+          List<? extends Class<? extends KnowledgeAsset>> listSurrKA = Arrays.asList(surr.getClass());
+          System.out.println("listSurrKA: " + listSurrKA.stream().toString());
           return marshall( Arrays.asList( surr.getClass() ),
                   surr,
                   SurrogateHelper.getSchema().orElseThrow( UnsupportedOperationException::new ),
@@ -140,17 +140,17 @@ public class MetadataExtractor {
     return strategy.extractXML( dox, meta );
   }
 
-  private Optional<JsonNode> loadDescriptor( Document document, InputStream meta ) {
-    Optional<String> innId = strategy.getArtifactID( document );
-
-    // TODO: No zip file; is any of this needed, or was it all just zip file support? CAO
-    if ( innId.isPresent() ) {
-      return readZipEntry(strategy.getMetadataEntryNameForID( innId.get() ), meta)
-              .flatMap( JSonUtil::readJson );
-    } else {
-      return Optional.empty();
-    }
-  }
+//  private Optional<JsonNode> loadDescriptor( Document document, InputStream meta ) {
+//    Optional<String> innId = strategy.getArtifactID( document );
+//
+//    // TODO: No zip file; is any of this needed, or was it all just zip file support? CAO
+//    if ( innId.isPresent() ) {
+//      return readZipEntry(strategy.getMetadataEntryNameForID( innId.get() ), meta)
+//              .flatMap( JSonUtil::readJson );
+//    } else {
+//      return Optional.empty();
+//    }
+//  }
 
   public URIIdentifier getAssetId( Document dox, TrisotechFileInfo info ) {
     return strategy.extractAssetID( dox, info );

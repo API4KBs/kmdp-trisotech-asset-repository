@@ -64,11 +64,12 @@ public class IdentityMapper {
 	public void scan( InputStream resource, InputStream meta, ExtractionStrategy strategy ) {
 		Optional<Document> dox = loadXMLDocument( resource );
 		if ( dox.isPresent() ) {
-			Optional<String> docId = strategy.getArtifactID( dox.get() );
-			Optional<URIIdentifier> resId = strategy.getResourceID( dox.get(),
-			                                                        docId.orElseThrow( IllegalStateException::new ),
-			                                                        strategy.getVersionTag( dox.get(), readMeta( meta )
-					                                                        .orElse( null ) ).orElse( null ) );
+			Optional<String> docId = strategy.getArtifactID( dox.get(), readMeta(meta).get() );
+			Optional<URIIdentifier> resId = strategy.getAssetID(dox.get()); // is this enough? CAO -- need to rework IDMapper anyway
+//			Optional<URIIdentifier> resId = strategy.getAssetID( dox.get(),
+//			                                                        docId.orElseThrow( IllegalStateException::new ),
+//			                                                        strategy.getArtifactVersionTag( dox.get(), readMeta( meta )
+//					                                                        .orElse( null ) ).orElse( null ) );
 
 			if ( resId.isPresent() && !  edu.mayo.kmdp.util.Util.isEmpty( docId.get() ) ) {
 				map( docId.get(), resId.get() );
@@ -129,17 +130,6 @@ public class IdentityMapper {
 		graph.write( os );
 	}
 
-	public URI ensureId( final String candidateId, String context ) {
-		String id = candidateId;
-		if ( Util.isEmpty( id ) ) {
-			System.out.println( "WARNING : Inferring Enterprise Asset ID for Artifact " + context );
-			id = UUID.nameUUIDFromBytes( context.getBytes() ).toString();
-		}
-		if ( ! id.startsWith( Registry.MAYO_ASSETS_BASE_URI) && ! URIUtil.isUri(id) ) {
-			id = Registry.MAYO_ASSETS_BASE_URI + id;
-		}
-		return URI.create( id );
-	}
 
 	public boolean isEmpty() {
 		return innerToPublicIDMap.isEmpty();

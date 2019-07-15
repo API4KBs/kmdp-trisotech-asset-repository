@@ -34,11 +34,11 @@ public interface ExtractionStrategy {
 
 	KnowledgeAsset extractXML( Document dox, TrisotechFileInfo meta );
 
-	Optional<URIIdentifier> getResourceID( Document dox, String artifactId, String versionTag );
+	Optional<URIIdentifier> getAssetID( Document dox );
 
-	Optional<String> getVersionTag( Document dox, TrisotechFileInfo meta );
+	Optional<String> getArtifactVersionTag( Document dox, TrisotechFileInfo meta );
 
-	Optional<String> getArtifactID( Document dox );
+	Optional<String> getArtifactID( Document dox, TrisotechFileInfo meta );
 
 	Optional<Representation> getRepLanguage( Document dox, boolean concrete );
 

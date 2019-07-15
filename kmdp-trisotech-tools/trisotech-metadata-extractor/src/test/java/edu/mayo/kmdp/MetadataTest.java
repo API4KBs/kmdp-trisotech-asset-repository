@@ -39,124 +39,118 @@ import static org.junit.jupiter.api.Assertions.fail;
 class MetadataTest {
 
 
-	private static MetadataExtractor extractor = new MetadataExtractor();
+  private static MetadataExtractor extractor = new MetadataExtractor();
 
-	private static String dmnPath = "/Coagulation Status.dmn";
-	private static String metaPath = "/WeaverTest1Meta.json";
-	private static String cmnPath = "/WeaveTest1.cmmn";
-	private static String cmnMetaPath = "/WeaveTest1Meta.json";
+  private static String dmnPath = "/WeaverTest1.dmn";
+  private static String metaPath = "/WeaverTest1Meta.json";
+  private static String cmmnPath = "/WeaveTest1.cmmn";
+  private static String cmmnMetaPath = "/WeaveTest1Meta.json";
 
-	private static Weaver dmnWeaver;
-	private static Weaver cmmnWeaver;
+  private static Weaver dmnWeaver;
+  private static Weaver cmmnWeaver;
 
-	private static byte[] annotatedDMN;
-	private static byte[] annotatedCMMN;
+  private static byte[] annotatedDMN;
+  private static byte[] annotatedCMMN;
 
-	@BeforeAll
-	public static void init() {
+  @BeforeAll
+  public static void init() {
 
-		dmnWeaver = new Weaver(	);
+    dmnWeaver = new Weaver(	);
 
-		cmmnWeaver = new Weaver( );
+    cmmnWeaver = new Weaver( );
 
-		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( MetadataTest.class.getResourceAsStream( dmnPath ) )
-		                              .map( dmnWeaver::weave )
-		                              .map( XMLUtil::toByteArray );
-		assertTrue( dmn.isPresent() );
-		annotatedDMN = dmn.get();
+    Optional<byte[]> dmn = XMLUtil.loadXMLDocument( MetadataTest.class.getResourceAsStream( dmnPath ) )
+        .map( dmnWeaver::weave )
+        .map( XMLUtil::toByteArray );
+    assertTrue( dmn.isPresent() );
+    annotatedDMN = dmn.get();
 
-		System.out.println(new String ( annotatedDMN ));
+    System.out.println(new String ( annotatedDMN ));
 
-		Optional<byte[]> cmmn = XMLUtil.loadXMLDocument( MetadataTest.class.getResourceAsStream( cmnPath ) )
-		                              .map( cmmnWeaver::weave )
-		                              .map( XMLUtil::toByteArray );
-		assertTrue( cmmn.isPresent() );
-		annotatedCMMN = cmmn.get();
+    Optional<byte[]> cmmn = XMLUtil.loadXMLDocument( MetadataTest.class.getResourceAsStream(cmmnPath) )
+        .map( cmmnWeaver::weave )
+        .map( XMLUtil::toByteArray );
+    assertTrue( cmmn.isPresent() );
+    annotatedCMMN = cmmn.get();
 
-		System.out.println( new String( annotatedCMMN ) );
+    System.out.println( new String( annotatedCMMN ) );
 
-	}
+  }
 
-	@Test
-	void testExtraction() {
-		try {
-			Optional<KnowledgeAsset> res = extractor.extract( new ByteArrayInputStream( annotatedDMN ),
-			                                                  MetadataTest.class.getResourceAsStream( metaPath ) );
-			if ( ! res.isPresent() ) {
-				fail( "Unable to instantiate metadata object" );
-			}
-			KnowledgeAsset surr = res.get();
-			assertNotNull( surr );
-			assertNotNull( surr.getCarriers() );
+  @Test
+  void testExtraction() {
+    try {
+      Optional<KnowledgeAsset> res = extractor.extract( new ByteArrayInputStream( annotatedDMN ),
+          MetadataTest.class.getResourceAsStream( metaPath ) );
+      if ( ! res.isPresent() ) {
+        fail( "Unable to instantiate metadata object" );
+      }
+      KnowledgeAsset surr = res.get();
+      assertNotNull( surr );
+      assertNotNull( surr.getCarriers() );
 
-			assertNotNull( surr.getAssetId() );
-			assertNotNull( surr.getAssetId().getUri() );
-			assertNotNull( surr.getAssetId().getVersionId() );
-			assertNotNull( surr.getName() );
+      assertNotNull( surr.getAssetId() );
+      assertNotNull( surr.getAssetId().getUri() );
+      assertNotNull( surr.getAssetId().getVersionId() );
+      assertNotNull( surr.getName() );
+      // TODO: anything else to validate? CAO
+    } catch ( Exception e ) {
+      e.printStackTrace();
+      fail( e.getMessage() );
+    }
+  }
 
-			// TODO: These surr methods do not exist. Replacement? needed? Appears were commented out in old code as well CAO
+  @Disabled ("testXMLValidate failing after upgrade to 2.0.2; FIX")
+  @Test
+  void testXMLValidate() {
+    Optional<ByteArrayOutputStream> baos = extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
+        MetadataTest.class.getResourceAsStream( metaPath ),
+        XML,
+        JaxbUtil.defaultProperties() );
 
-//			assertNotNull( surr.getCreationDate() );
-//			assertNotNull( surr.getLastChangeDate() );
-//
-//			assertEquals( "draft", surr.getCurrentPublicationStatus().getLabel() );
-
-		} catch ( Exception e ) {
-			e.printStackTrace();
-			fail( e.getMessage() );
-		}
-	}
-
-	@Disabled ("testXMLValidate failing after upgrade to 2.0.2; FIX")
-	@Test
-	void testXMLValidate() {
-		Optional<ByteArrayOutputStream> baos = extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
-		                                                            MetadataTest.class.getResourceAsStream( metaPath ),
-		                                                            XML,
-		                                                            JaxbUtil.defaultProperties() );
-
-		if ( ! baos.isPresent() ) {
-			fail( "Unable to create metadata" );
-		} else {
-			boolean ans = baos.map( ByteArrayOutputStream::toByteArray )
-			    .map( ByteArrayInputStream::new )
-			    .map( StreamSource::new )
-			    .map( (dox) -> XMLUtil.validate( dox, SurrogateHelper.getSchema().get() ) )
-			                  .orElse( false );
-			assertTrue( ans );
-		}
-	}
+    if ( ! baos.isPresent() ) {
+      fail( "Unable to create metadata" );
+    } else {
+      boolean ans = baos.map( ByteArrayOutputStream::toByteArray )
+          .map( ByteArrayInputStream::new )
+          .map( StreamSource::new )
+          .map( (dox) -> XMLUtil.validate( dox, SurrogateHelper.getSchema().get() ) )
+          .orElse( false );
+      assertTrue( ans );
+    }
+  }
 
 
-	@Disabled ("testToXML failing after upgrade to 2.0.2; FIX")
-	@Test
-	void testToXML() {
-		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
-		                                 MetadataTest.class.getResourceAsStream( metaPath ),
-		                                 XML,
-		                                 JaxbUtil.defaultProperties() )
-		                     .map( Util::printOut ).isPresent() );
-		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
-		                                 MetadataTest.class.getResourceAsStream( cmnMetaPath ),
-		                                 XML,
-		                                 JaxbUtil.defaultProperties() )
-		                     .map( Util::printOut ).isPresent() );
+  @Disabled ("testToXML failing after upgrade to 2.0.2; FIX")
+  @Test
+  void testToXML() {
+    assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
+        MetadataTest.class.getResourceAsStream( metaPath ),
+        XML,
+        JaxbUtil.defaultProperties() )
+        .map( Util::printOut ).isPresent() );
+    assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
+        MetadataTest.class.getResourceAsStream(cmmnMetaPath),
+        XML,
+        JaxbUtil.defaultProperties() )
+        .map( Util::printOut ).isPresent() );
 
-	}
+  }
 
-	@Test
-	void testToJson() {
-		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
-		                                 MetadataTest.class.getResourceAsStream( metaPath ),
-		                                 JSON,
-		                                 JaxbUtil.defaultProperties() )
-		                     .map( Util::printOut ).isPresent() );
-		assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
-		                                 MetadataTest.class.getResourceAsStream( cmnMetaPath ),
-		                                 JSON,
-		                                 JaxbUtil.defaultProperties() )
-		                     .map( Util::printOut ).isPresent() );
-	}
+  @Test
+  void testToJson() {
+    assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
+        MetadataTest.class.getResourceAsStream( metaPath ),
+        JSON,
+        JaxbUtil.defaultProperties() )
+        .map( Util::printOut ).isPresent() );
+    // TODO: fix this when have a valid CMMN file CAO
+//    assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
+//        MetadataTest.class.getResourceAsStream(cmmnMetaPath),
+//        JSON,
+//        JaxbUtil.defaultProperties() )
+//        .map( Util::printOut ).isPresent() );
+  }
 
 
 }

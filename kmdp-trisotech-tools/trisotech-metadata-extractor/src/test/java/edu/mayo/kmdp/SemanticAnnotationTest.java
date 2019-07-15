@@ -117,8 +117,8 @@ class SemanticAnnotationTest {
   @Disabled("testExtractionFull: FIX")
 	@Test
 	void testExtractionFull() {
-		String dmnPath = "/Coagulation Status.dmn";
-		String metaPath = "/CoagulationStatus_Info.json";
+		String dmnPath = "/WeaverTest1.dmn";
+		String metaPath = "/WeaverTest1Meta.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
 		                              .map( dmnWeaver::weave )
@@ -169,8 +169,8 @@ class SemanticAnnotationTest {
 	@Disabled("testExtractionFull2 can't be tested until input files are created/updated to Trisotech")
 	@Test
 	void testExtractionFull2() {
-		String dmnPath = "/src/test/resources/Coagulation Status.dmn";
-		String metaPath = "/src/test/resources/CoagulationStatus_Info.json";
+		String dmnPath = "/TBD.dmn";
+		String metaPath = "/TBD_Info.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
 		                              .map( dmnWeaver::weave )

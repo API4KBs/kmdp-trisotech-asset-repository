@@ -346,14 +346,14 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetPublishedCmmnModels() {
-    Map<String, TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedCMMNModels();
+    List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedCMMNModels();
     assertNotNull(publishedModels);
     assertEquals(1, publishedModels.size());
   }
 
   @Test
   final void testGetPublishedDmnModels() {
-    Map<String, TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedDmnModels();
+    List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedDmnModels();
     assertNotNull(publishedModels);
     assertEquals(1, publishedModels.size());
   }

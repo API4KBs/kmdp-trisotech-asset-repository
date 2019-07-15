@@ -23,7 +23,9 @@ import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRepositoryApiDelegate
 import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRetrievalApiDelegate;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.kmdp.util.ws.ResponseHelper;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
@@ -56,25 +58,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   private Weaver weaver;
   private MetadataExtractor extractor;
 
-//  @Override
-//  public Optional<ObjectMapper> getObjectMapper() {
-//    return KnowledgeAssetRepositoryApiDelegate.super.getObjectMapper();
-//  }
-//
-//  @Override
-//  public Optional<HttpServletRequest> getRequest() {
-//    return KnowledgeAssetRepositoryApiDelegate.super.getRequest();
-//  }
-//
-//  @Override
-//  public Optional<String> getAcceptHeader() {
-//    return KnowledgeAssetRepositoryApiDelegate.super.getAcceptHeader();
-//  }
-
 
   @Override
   public ResponseEntity<KnowledgeAssetCatalog> getAssetCatalog() {
-    throw new UnsupportedOperationException();
+    return ResponseHelper.notSupported();
   }
 
   @Override
@@ -98,37 +85,36 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
    */
   @Override
   public ResponseEntity<List<Pointer>> getKnowledgeAssetVersions(UUID uuid, Integer offset, Integer limit, String beforeTag, String afterTag, String sort) {
+    // all versions of given knowledge asset May make sense to implement
     return null;
   }
 
 
   @Override
   public ResponseEntity<KnowledgeAsset> getVersionedKnowledgeAsset(UUID uuid, String versionTag) {
-    // TODO: confirm extractor behavior and data here w/Davide CAA
-    //  what is the UUID value passed in?
-    //  is internalId internal to enterprise or internal to Trisotech? Maybe better naming?
-    //  from Signavio code, appears to be from the editor, why not just get it from the model using the version?
-    //  does the UUID not tell me which model?
+    // TODO: confirm extractor behavior and data here w/Davide CAO
+    //  what is the UUID value passed in? assetId -- the ASSETID is a Mayo-specific ID; it is in the trisotech model
+    //  is internalId internal to enterprise or internal to Trisotech? Maybe better naming? Yes, better naming; internal is enterprise
+    //  from Signavio code, appears to be from the editor, why not just get it from the model using the version? Signavio code had to do things no longer needed w/Trisotech models
+    //  does the UUID not tell me which model? Do I need the following line of code? the following is resolving the asset Id <-> artifact Id relationship; can maybe do w/triples now?
 //    String internalId = extractor.resolveInternalArtifactID(uuid.toString(), versionTag);
 
-    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.
+    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(uuid.toString(), versionTag);
     return null;
   }
 
-  // TODO: What is the appropriate response for these? returning null? throwing unsupported? or returning super?
-  //  Does it vary depending on the method? Discuss w/Davide. CAO
   @Override
   public ResponseEntity<UUID> initKnowledgeAsset() {
-    throw new UnsupportedOperationException();
+    return ResponseHelper.notSupported();
   }
 
   /**
-   * list of the assets;
+   * list of the all published assets
    *
-   * @param assetType:      "CMMN" or "DMN" // TODO: allow for both?
-   * @param assetAnnotation // TODO: what do to with this?
-   * @param offset
-   * @param limit
+   * @param assetType:      ignore;
+   * @param assetAnnotation ignore
+   * @param offset  ignore -- needed if we have pagination
+   * @param limit   ignore -- needed if we have pagination
    * @return
    */
   @Override
@@ -137,6 +123,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     Pointer modelPointer = new Pointer();
     List<TrisotechFileInfo> trisotechFileInfoList;
 
+    trisotechFileInfoList = TrisotechWrapper.getPublishedModels();
+    // Don't want to filter. Want ALL assets
     if ("CMMN".equalsIgnoreCase(assetType)) {
       // get CMMN assets
       trisotechFileInfoList = TrisotechWrapper.getCmmnModels();
@@ -146,15 +134,16 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     } // TODO: ? ability to get both? NOTE: way to retrieve in XML format is specific to each type;
     // TODO cont: Url for the fileInfo is returned for XML retrieval CAO
 
-    trisotechFileInfoList.stream().skip(offset).limit(limit).forEach((trisotechFileInfo -> {
-      modelPointer.withEntityRef(new URIIdentifier().withUri(URI.create(trisotechFileInfo.getId()))) // TODO: fileID (123720a6-9758-45a3-8c5c-5fffab12c494) or URL? CAO
-          .withHref(URI.create(trisotechFileInfo.getUrl()))
-          .withType(isDMNModel(trisotechFileInfo)
-              ? KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models.getRef()
-              : KnowledgeAssetCategory.Rules_Policies_And_Guidelines.getRef())
-          .withName(trisotechFileInfo.getName());
-      assetList.add(modelPointer);
-    }));
+    // TODO: this is all wrong; need ASSET information here too
+//    trisotechFileInfoList.stream().skip(offset).limit(limit).forEach((trisotechFileInfo -> {
+//      modelPointer.withEntityRef(/*enterprise assetId*/) // TODO: fileID (123720a6-9758-45a3-8c5c-5fffab12c494) or URL? CAO
+//          .withHref(/*URL used for getAsset w/UID & versionTag from assetId */)
+//          .withType(isDMNModel(trisotechFileInfo)
+//              ? KnowledgeAssetType.Decision_Model.getRef()
+//              : KnowledgeAssetType.Care_Process_Model.getRef())
+//          .withName(trisotechFileInfo.getName());
+//      assetList.add(modelPointer);
+//    }));
 
     return new ResponseEntity<>(assetList,
         new HttpHeaders(),
@@ -165,34 +154,37 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   @Override
   public ResponseEntity<Void> setVersionedKnowledgeAsset(UUID uuid, String s, KnowledgeAsset knowledgeAsset) {
-    throw new UnsupportedOperationException();
+    return ResponseHelper.notSupported(); // TODO:  USE THIS CAO
   }
 
   @Override
   public ResponseEntity<Void> addKnowledgeAssetCarrier(UUID uuid, String s, byte[] bytes) {
-    throw new UnsupportedOperationException();
+    return ResponseHelper.notSupported();
   }
 
   @Override
   public ResponseEntity<KnowledgeCarrier> getCanonicalKnowledgeAssetCarrier(UUID assetId, String versionTag, String xAccept) {
+    // get the model file -- always do get Canonical
     return null;
   }
 
   @Override
   public ResponseEntity<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(UUID uuid, String s, UUID uuid1, String s1) {
-    throw new UnsupportedOperationException();
+    // a specific version of knowledge asset carrier
+return null;
   }
 
   @Override
   public ResponseEntity<List<Pointer>> getKnowledgeAssetCarriers(UUID uuid, String s) {
+    // all the carriers (only one); Canonical will give XML, this part of the spec may be broken CAO
     throw new UnsupportedOperationException();
   }
 
   // to upload the "dictionary" DMN model (Davide's note)
-  // TODO: Discuss w/Davide: how is "dictionary" handled differently? CAO
+  // not needed/usable until can upload the accelerators/dictionary (no way to do via API as yet)
   @Override
   public ResponseEntity<Void> setKnowledgeAssetCarrierVersion(UUID assetId, String versionTag, UUID artifactId, String artifactVersionTag, byte[] exemplar) {
-    return null;
+    return ResponseHelper.notSupported(); // for now
   }
 
   private boolean isDMNModel(TrisotechFileInfo fileInfo) {
@@ -205,26 +197,26 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   @Override
   public ResponseEntity<List<KnowledgeCarrier>> getCompositeKnowledgeAsset(UUID uuid, String s, Boolean aBoolean, String s1) {
-    return null;
+    return ResponseHelper.notSupported();
   }
 
   @Override
   public ResponseEntity<KnowledgeCarrier> getCompositeKnowledgeAssetStructure(UUID uuid, String s) {
-    return null;
+    return ResponseHelper.notSupported();
   }
 
   @Override
   public ResponseEntity<List<KnowledgeCarrier>> getKnowledgeArtifactBundle(UUID uuid, String s, String s1, Integer integer, String s2) {
-    return null;
+    return ResponseHelper.notSupported();
   }
 
   @Override
   public ResponseEntity<List<KnowledgeAsset>> getKnowledgeAssetBundle(UUID uuid, String s, String s1, Integer integer) {
-    return null;
+    return ResponseHelper.notSupported();
   }
 
   @Override
   public ResponseEntity<Void> queryKnowledgeAssets(String s) {
-    return null;
+    return ResponseHelper.notSupported();
   }
 }

@@ -54,9 +54,7 @@ class WeaverTest {
 
   @Test
   void testWeave() {
-//    String path = "/WeaverTest1.dmn";
-    String path = "/Choice of Atrial Fibrillation Treatment Strategy.dmn";
-//		String path = "/Prior Management of Atrial Fibrillation.dmn";
+    String path = "/WeaverTest1.dmn";
 
     // using XMLUtil loadXMLDocument to load the XML Document properly
     // sets up the document for conversion by setting namespaceaware
@@ -127,8 +125,6 @@ class WeaverTest {
   @Test
   void testVariousMetadataOnDMN() {
     String path = "/WeaverTest1.dmn";
-//    String path = "/Choice of Atrial Fibrillation Treatment Strategy.dmn";
-//		String path = "/Prior Management of Atrial Fibrillation.dmn
     Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
 
 
@@ -200,7 +196,7 @@ class WeaverTest {
 
 //      System.out.println("registry getValidationSchema for CMMN KRLanguage ref: " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()).get());
 
-//      assertTrue(validate(dox, KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
+      assertTrue(validate(dox, KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
 
       assertTrue(confirmDecisionURI(dox));
 
@@ -221,14 +217,13 @@ class WeaverTest {
     }
   }
 
-  // TODO: pick up here
   private boolean confirmDecisionURI(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         .filter(el -> el.getLocalName().equals(Weaver.getDecisionEl()))
         .forEach(element -> {
           Attr attr = element.getAttributeNode("externalRef");
-          if (!confirmKMDPnamespace(attr)) {
-            fail("expect BASE_URI in attribute: " + attr.getName() + " : " + attr.getValue());
+          if (!attr.getValue().contains("ns") || attr.getValue().contains("_")) {
+            fail("expect 'ns' and no underscore in value: " + attr.getValue());
           }
         });
     return true;

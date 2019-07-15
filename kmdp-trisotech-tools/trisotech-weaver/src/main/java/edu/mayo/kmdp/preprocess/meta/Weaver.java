@@ -19,6 +19,7 @@ import edu.mayo.kmdp.metadata.annotations.*;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.ws.ResponseHelper;
 import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituation;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
 import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -106,8 +107,6 @@ public class Weaver {
     EL_EXPORTER = config.getTyped(ReaderOptions.p_EL_EXPORTER);
     EL_EXPORTER_VERSION = config.getTyped(ReaderOptions.p_EL_EXPORTER_VERSION);
     DECISION_EL = config.getTyped(ReaderOptions.p_EL_DECISION);
-
-//		TODO: Needed? CAO [maybe]
     ANNOTATED_ITEM = config.getTyped(ReaderOptions.p_EL_ANNOTATED_ITEM);
 
     System.out.println("METADATA_EL: " + METADATA_EL);
@@ -281,8 +280,10 @@ public class Weaver {
           Attr refAttr = element.getAttributeNode("externalRef");
           if ((modelIdAttr != null) && (refAttr != null)) {
             String refId = refAttr.getValue().substring(refAttr.getValue().lastIndexOf('_') + 1);
-            String modelId = modelIdAttr.getValue().substring(1);
-            refAttr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + refId + "#" + modelId);
+            String prefix = refAttr.getValue().substring(0, refAttr.getValue().lastIndexOf('_'));
+//            String modelId = modelIdAttr.getValue().substring(1);
+            refAttr.setValue(prefix+refId);
+//            refAttr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + refId + "#" + modelId);
           }
         });
   }
@@ -459,15 +460,13 @@ public class Weaver {
 //    System.out.println("\tmimeType: " + el.getAttribute("mimeType"));
     String modelId = el.getAttribute("modelId").substring(1);
     String elementId = el.getAttribute("elementId");
-    // TODO: pick up here -- how to rewrite the relationship... CAO
     BaseAnnotationHandler handler = handler(el);
     DatatypeAnnotation dta = new DatatypeAnnotation();
     // TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
     dta.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId);
-    // TODO: Confer w/Davide what is needed here CAO
-    dta.setRel(new ConceptIdentifier().withLabel("pointsTo?").withTag("tag???").withRef(URI.create("someURIValue???")));
-    System.out.println("dta: value: " + dta.getValue() + " rel: tag: " + dta.getRel().getTag() + " rel: label: "
-        + dta.getRel().getLabel() + " rel: ref: " + dta.getRel().getRef());
+    dta.setRel(DependencyType.Imports.asConcept());
+//    System.out.println("dta: value: " + dta.getValue() + " rel: tag: " + dta.getRel().getTag() + " rel: label: "
+//        + dta.getRel().getLabel() + " rel: ref: " + dta.getRel().getRef());
 
     handler.replaceProprietaryElement(el, toChildElement(dta, el));
 //              ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(modelId).orElseThrow(IllegalArgumentException::new).asConcept(); // this fails CAO
@@ -508,8 +507,8 @@ public class Weaver {
 //        .forEach(
 //            (el) -> doRewrite(el));
 //  }
-
   // CAO
+
   private void weaveMetadata(NodeList metas) {
     asElementStream(metas)
         .forEach(

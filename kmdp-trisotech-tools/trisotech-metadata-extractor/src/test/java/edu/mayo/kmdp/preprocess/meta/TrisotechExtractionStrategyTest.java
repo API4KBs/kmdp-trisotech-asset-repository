@@ -16,11 +16,14 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.kmdp.util.JSonUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
+import java.io.InputStream;
 import java.util.Optional;
 
 import static edu.mayo.kmdp.util.Util.resolveResource;
@@ -30,19 +33,35 @@ import static org.junit.jupiter.api.Assertions.*;
 class TrisotechExtractionStrategyTest {
   TrisotechExtractionStrategy tes;
   String dmnPath = "/WeaverTest1.dmn";
+  String dmnMeta = "/WeaverTest1Meta.json";
   String cmmnPath = "/WeaveTest1.cmmn";
+  String cmmnMeta = "/WeaveTest1Meta.json";
   // file for testing the negative -- old file in Signavio format
   String badPath  = "/R2R.dmn";
+  String badMeta = "/R2R_Info.json";
   Document dmnDox;
   Document cmmnDox;
   Document badDox;
+  TrisotechFileInfo dmnFile;
+  TrisotechFileInfo cmmnFile;
+  TrisotechFileInfo badFile;
 
   @BeforeEach
   void setUp() {
    this.tes = new TrisotechExtractionStrategy();
+    InputStream dmnStream = MetadataExtractor.class.getResourceAsStream( dmnMeta );
+    InputStream cmmnStream = MetadataExtractor.class.getResourceAsStream( cmmnMeta );
+    InputStream badStream = MetadataExtractor.class.getResourceAsStream( badMeta );
+
     dmnDox = loadXMLDocument( resolveResource( dmnPath ) ).orElseGet( () -> fail( "Unable to load document " + dmnPath ) );
     cmmnDox = loadXMLDocument( resolveResource( cmmnPath ) ).orElseGet( () -> fail( "Unable to load document " + cmmnPath ) );
     badDox = loadXMLDocument( resolveResource( badPath ) ).orElseGet( () -> fail( "Unable to load document " + badPath ) );
+    dmnFile = JSonUtil.readJson( dmnStream )
+        .flatMap((j) -> JSonUtil.parseJson(j, TrisotechFileInfo.class)).get();
+    cmmnFile = JSonUtil.readJson( cmmnStream )
+        .flatMap( (j) -> JSonUtil.parseJson( j, TrisotechFileInfo.class ) ).get();
+    badFile = JSonUtil.readJson( badStream )
+        .flatMap( (j) -> JSonUtil.parseJson( j, TrisotechFileInfo.class ) ).get();
   }
 
   @AfterEach
@@ -96,15 +115,15 @@ class TrisotechExtractionStrategyTest {
   @Test
   void getArtifactID() {
 
-    Optional<String> value = this.tes.getArtifactID(dmnDox);
+    Optional<String> value = this.tes.getArtifactID(dmnDox, dmnFile);
     System.out.println("value: " + value.get());
     assertNotNull(value.get());
 
-    value = this.tes.getArtifactID(cmmnDox);
+    value = this.tes.getArtifactID(cmmnDox, cmmnFile);
     System.out.println("value: " + value.get());
     assertNotNull(value.get());
 
-    value = this.tes.getArtifactID(badDox);
+    value = this.tes.getArtifactID(badDox, badFile );
     assertFalse(value.isPresent());
 
   }

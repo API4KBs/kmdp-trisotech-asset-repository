@@ -40,12 +40,6 @@ public class TrisotechFileInfo {
     private String version;
     private String state;
 
-    // TODO: Needed? CAO - no version ID in the info, just a version #
-//	public String getVersionId() {
-//		return Util.isEmpty( revision ) ? null : revision.substring( revision.lastIndexOf( '/' ) + 1 );
-//	}
-//
-
 	public String toString() {
 		return name;
 	}

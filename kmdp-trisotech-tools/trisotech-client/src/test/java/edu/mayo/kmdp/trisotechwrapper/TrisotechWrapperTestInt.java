@@ -23,6 +23,7 @@ import org.junit.jupiter.api.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.w3c.dom.Document;
@@ -379,11 +380,31 @@ class TrisotechWrapperTestInt {
   }
 
   @Test
-  final void testDownloadXmlModel() {
+  final void testDownloadXmlModelDMN() {
 
-    String repositoryFileUrl = " https://mc.trisotech.com/publicapi/repositoryfilecontent?repository="+ MEA_TEST+"&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku="+WEAVER_TEST_1_ID;
+    String repositoryFileUrl = " https://mc.trisotech.com/publicapi/repositoryfilecontent?repository="+ MEA_TEST_ID +"&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku="+WEAVER_TEST_1_ID;
     Document dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
     assertNotNull(dox);
   }
+
+  @Test
+  final void testDownloadXmlModelCMMN() {
+
+    String repositoryFileUrl = " https://mc.trisotech.com/publicapi/repositoryfilecontent?repository="+ MEA_TEST_ID +"&mimetype=application%2Fcmmn-1-1%2Bxml&path=/&sku="+WEAVE_TEST_1_ID;
+    Document dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
+    assertNotNull(dox);
+  }
+
+  @Test
+  final void testDownloadXmlModelErrors() {
+    // Any other exceptions to confirm?
+    final String repositoryFileUrl = " https://mc.trisotech.com/publicapi/repositoryfilecontent?repository="+ MEA_TEST_ID +"&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku="+WEAVE_TEST_1_ID;
+    assertThrows(NoSuchElementException.class, () -> TrisotechWrapper.downloadXmlModel(repositoryFileUrl));
+
+    final String repositoryFileUrl2 = " https://mc.trisotech.com/publicapi/repositoryfilecontent?repository="+ MEA_TEST +"&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku="+WEAVER_TEST_1_ID;
+    RuntimeException re = assertThrows(RuntimeException.class, () -> TrisotechWrapper.downloadXmlModel(repositoryFileUrl2));
+    assertEquals("Failed : HTTP error code : 404", re.getMessage());
+  }
+
 
 }

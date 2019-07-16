@@ -235,13 +235,15 @@ public class TrisotechWrapper {
   /**
    * Will return all the file info for all the versions of the model in the specified repository requested
    * EXCEPT latest version is not included.
+   * Don't expect users to know the ID of the repository, but should know the name.
    *
-   * @param repositoryId - id of the repository holding the model
+   * @param repositoryName - name of the repository holding the model
    * @param modelId - id of the model requested
    * @return list of modelFileInfo
    */
-  public static List<TrisotechFileInfo> getModelVersions(String repositoryId, String modelId) {
-    System.out.println("getModelVersions for model: " + modelId + " in repository: " + repositoryId);
+  public static List<TrisotechFileInfo> getModelVersions(String repositoryName, String modelId) {
+    System.out.println("getModelVersions for model: " + modelId + " in repository: " + repositoryName);
+    String repositoryId = getRepositoryId(repositoryName);
     String urlString = BASE_URL + String.format(VERSIONS_PATH, repositoryId, modelId);
     List<TrisotechFileInfo> versions = new ArrayList<>();
     HttpEntity<?> requestEntity = getHttpEntity();
@@ -298,10 +300,8 @@ public class TrisotechWrapper {
    */
   private static void getModels(List<TrisotechFileInfo> modelsArray, String xmlMimetype) {
     try {
-      URL url = new URL(BASE_URL +
-          REPOSITORY_PATH);
 
-      TrisotechPlaceData data = getPlaces(url);
+      TrisotechPlaceData data = getPlaces();
 
       // search for the 'place' as that is what modelers will know
       for (TrisotechPlace tp : data.getData()) {
@@ -314,6 +314,21 @@ public class TrisotechWrapper {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+
+  private static String getRepositoryId(String repositoryName) {
+    try {
+      TrisotechPlaceData data = getPlaces();
+      for(TrisotechPlace tp : data.getData()) {
+        if(tp.getName().equals(repositoryName)) {
+          return tp.getId();
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return null;
   }
 
   /**
@@ -341,19 +356,19 @@ public class TrisotechWrapper {
   /**
    * get the folders (places) the application has access to
    *
-   * @param url
    * @return
    * @throws IOException
    */
-  private static TrisotechPlaceData getPlaces(URL url) throws IOException {
+  private static TrisotechPlaceData getPlaces() throws IOException {
+    URL url = new URL(BASE_URL +
+        REPOSITORY_PATH);
 
     HttpEntity<?> requestEntity = getHttpEntity();
     RestTemplate restTemplate = new RestTemplate();
 
-    TrisotechPlaceData data =
+    return
         restTemplate.exchange(url.toString(), HttpMethod.GET, requestEntity, TrisotechPlaceData.class).getBody();
 
-    return data;
   }
 
   /**

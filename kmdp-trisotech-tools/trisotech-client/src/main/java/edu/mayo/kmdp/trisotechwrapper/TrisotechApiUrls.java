@@ -41,7 +41,8 @@ public class TrisotechApiUrls {
 
   // id to MEA-Test repository
   // TODO: Need to do same for MEA? Or just 'find' each time? CAO -- this might be better in the environment so can set this one for development/Test? and set the other one for prod/int?
-  public static String MEA_TEST = "d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf";
+  public static String MEA_TEST = "MEA-Test";
+  public static String MEA_TEST_ID = "d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf";
 
   // DMN Published
   public static final String WEAVER_TEST_1_ID = "123720a6-9758-45a3-8c5c-5fffab12c494";

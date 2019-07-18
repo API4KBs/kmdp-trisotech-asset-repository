@@ -50,6 +50,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
 
+import static edu.mayo.kmdp.util.ws.ResponseHelper.notSupported;
+
 // TODO: questions for Davide:
 //  Do we need an internal 'cache'? (previously done as 'resolvedModels')
 @Component
@@ -61,7 +63,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   @Override
   public ResponseEntity<KnowledgeAssetCatalog> getAssetCatalog() {
-    return ResponseHelper.notSupported();
+    return notSupported();
   }
 
   @Override
@@ -105,7 +107,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   @Override
   public ResponseEntity<UUID> initKnowledgeAsset() {
-    return ResponseHelper.notSupported();
+    return notSupported();
   }
 
   /**
@@ -154,12 +156,12 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   @Override
   public ResponseEntity<Void> setVersionedKnowledgeAsset(UUID uuid, String s, KnowledgeAsset knowledgeAsset) {
-    return ResponseHelper.notSupported(); // TODO:  USE THIS CAO
+    return notSupported(); // TODO:  USE THIS CAO
   }
 
   @Override
   public ResponseEntity<Void> addKnowledgeAssetCarrier(UUID uuid, String s, byte[] bytes) {
-    return ResponseHelper.notSupported();
+    return notSupported();
   }
 
   @Override
@@ -184,7 +186,7 @@ return null;
   // not needed/usable until can upload the accelerators/dictionary (no way to do via API as yet)
   @Override
   public ResponseEntity<Void> setKnowledgeAssetCarrierVersion(UUID assetId, String versionTag, UUID artifactId, String artifactVersionTag, byte[] exemplar) {
-    return ResponseHelper.notSupported(); // for now
+    return notSupported(); // for now
   }
 
   private boolean isDMNModel(TrisotechFileInfo fileInfo) {
@@ -197,26 +199,26 @@ return null;
 
   @Override
   public ResponseEntity<List<KnowledgeCarrier>> getCompositeKnowledgeAsset(UUID uuid, String s, Boolean aBoolean, String s1) {
-    return ResponseHelper.notSupported();
+    return notSupported();
   }
 
   @Override
   public ResponseEntity<KnowledgeCarrier> getCompositeKnowledgeAssetStructure(UUID uuid, String s) {
-    return ResponseHelper.notSupported();
+    return notSupported();
   }
 
   @Override
   public ResponseEntity<List<KnowledgeCarrier>> getKnowledgeArtifactBundle(UUID uuid, String s, String s1, Integer integer, String s2) {
-    return ResponseHelper.notSupported();
+    return notSupported();
   }
 
   @Override
   public ResponseEntity<List<KnowledgeAsset>> getKnowledgeAssetBundle(UUID uuid, String s, String s1, Integer integer) {
-    return ResponseHelper.notSupported();
+    return notSupported();
   }
 
   @Override
   public ResponseEntity<Void> queryKnowledgeAssets(String s) {
-    return ResponseHelper.notSupported();
+    return notSupported();
   }
 }

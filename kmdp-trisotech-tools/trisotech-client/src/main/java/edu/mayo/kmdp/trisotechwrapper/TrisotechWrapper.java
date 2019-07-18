@@ -29,6 +29,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.*;
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.*;
 
 /**
@@ -453,8 +455,8 @@ public class TrisotechWrapper {
   // TODO: How to handle bearer token? CAO
   private static HttpHeaders getHttpHeaders() {
     final HttpHeaders requestHeaders = new HttpHeaders();
-    requestHeaders.add("Accept", "application/json");
-    requestHeaders.add("Authorization", "Bearer " + TOKEN);
+    requestHeaders.add(ACCEPT, "application/json");
+    requestHeaders.add(AUTHORIZATION, "Bearer " + TOKEN);
     requestHeaders.setContentType(APPLICATION_JSON_UTF8);
     return requestHeaders;
   }
@@ -493,8 +495,8 @@ public class TrisotechWrapper {
   private static HttpURLConnection getHttpURLConnection(URL url) throws IOException {
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setRequestProperty("Authorization", "Bearer " + TOKEN);
+    conn.setRequestProperty(ACCEPT, "application/json");
+    conn.setRequestProperty(AUTHORIZATION, "Bearer " + TOKEN);
 
     conn.setDoInput(true);
 

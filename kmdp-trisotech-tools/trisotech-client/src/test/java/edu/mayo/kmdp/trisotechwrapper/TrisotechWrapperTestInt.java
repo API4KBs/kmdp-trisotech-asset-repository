@@ -143,9 +143,11 @@ class TrisotechWrapperTestInt {
 
   }
 
+  // TODO: add test w/bad repository name
+
   @Test
   final void testGetModelVersionsDMN() {
-    List<TrisotechFileInfo> fileVersions = TrisotechWrapper.getModelVersions(WEAVER_TEST_1_ID); // 7/9/2019 -- should be at least 15
+    List<TrisotechFileInfo> fileVersions = TrisotechWrapper.getModelVersions(WEAVER_TEST_1_ID, DMN_XML_MIMETYPE); // 7/9/2019 -- should be at least 15
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 10);
 
@@ -156,11 +158,26 @@ class TrisotechWrapperTestInt {
         .orElse(null);
 
     assertTrue(file.getVersion().equals("1.6"));
+
+    // expect same results with repository provided
+    fileVersions = TrisotechWrapper.getModelVersions(MEA_TEST, WEAVER_TEST_1_ID, DMN_XML_MIMETYPE); // 7/9/2019 -- should be at least 15
+    assertNotNull(fileVersions);
+    assertTrue(fileVersions.size() > 10);
+
+    file = fileVersions.stream()
+        .filter(f -> f.getVersion() != null)
+        .filter(f -> f.getVersion().equals("1.6"))
+        .findAny()
+        .orElse(null);
+
+    assertTrue(file.getVersion().equals("1.6"));
   }
+
+  // TODO: add test w/bad repository name
 
   @Test
   final void testGetModelVersionsWithRepositoryDMN() {
-    List<TrisotechFileInfo> fileVersions = TrisotechWrapper.getModelVersions(MEA_TEST, WEAVER_TEST_1_ID);
+    List<TrisotechFileInfo> fileVersions = TrisotechWrapper.getModelVersions(WEAVER_TEST_1_ID, DMN_XML_MIMETYPE);
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 10); // 7/9/2019 -- should be at least 15
 
@@ -171,11 +188,25 @@ class TrisotechWrapperTestInt {
         .orElse(null);
 
     assertTrue(file.getVersion().equals("1.6"));
+
+    // expect same results with repository provided
+    fileVersions = TrisotechWrapper.getModelVersions(MEA_TEST, WEAVER_TEST_1_ID, DMN_XML_MIMETYPE);
+    assertNotNull(fileVersions);
+    assertTrue(fileVersions.size() > 10); // 7/9/2019 -- should be at least 15
+
+    file = fileVersions.stream()
+        .filter(f -> f.getVersion() != null)
+        .filter(f -> f.getVersion().equals("1.6"))
+        .findAny()
+        .orElse(null);
+
+    assertTrue(file.getVersion().equals("1.6"));
   }
+
 
   @Test
   final void testGetModelVersionsCMMN() {
-    List<TrisotechFileInfo> fileVersions = TrisotechWrapper.getModelVersions(WEAVE_TEST_1_ID);
+    List<TrisotechFileInfo> fileVersions = TrisotechWrapper.getModelVersions(WEAVE_TEST_1_ID, CMMN_XML_MIMETYPE);
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 5);
 
@@ -190,7 +221,7 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetModelVersionsWithRepositoryCMMN() {
-    List<TrisotechFileInfo> fileVersions = TrisotechWrapper.getModelVersions(MEA_TEST, WEAVE_TEST_1_ID);
+    List<TrisotechFileInfo> fileVersions = TrisotechWrapper.getModelVersions(WEAVE_TEST_1_ID, CMMN_XML_MIMETYPE);
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 5);
 

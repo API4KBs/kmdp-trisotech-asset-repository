@@ -298,7 +298,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //        .filter(mapper::hasIdMapped)
 //        .forEach((artifactId) -> {
 //          mapper.getAssetId(artifactId)
-//              .ifPresent((resourceId) -> {
+//              .ifPresent((assetId) -> {
 //                KnowledgeAsset ka = new KnowledgeAsset();
 //                ka.setAssetId(mapper.associate(surr.getAssetId(),
 //                    artifactId,

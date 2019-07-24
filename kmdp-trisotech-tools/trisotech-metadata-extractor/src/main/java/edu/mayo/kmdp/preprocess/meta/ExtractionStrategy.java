@@ -47,7 +47,6 @@ public interface ExtractionStrategy {
 	default KnowledgeAsset newSurrogate() {
 		// surrogate.resources.KnowledgeAsset extends metadata.surrogate.KnowledgeAsset,
 		// but is XML-serializable, so need to create this way to get XML serializable object,
-		// per Davide 6/11/2019
 		KnowledgeAsset surr = new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset();
 		return surr;
 	}

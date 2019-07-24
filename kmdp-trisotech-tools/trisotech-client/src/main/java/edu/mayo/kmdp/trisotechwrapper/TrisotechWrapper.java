@@ -102,11 +102,7 @@ public class TrisotechWrapper {
    * @return List of all DMN model file info
    */
   public static List<TrisotechFileInfo> getDmnModels() {
-
-    List<TrisotechFileInfo> modelsArray = new ArrayList<>();
-
-    getModels(modelsArray, DMN_XML_MIMETYPE);
-    return modelsArray;
+    return getModels(DMN_XML_MIMETYPE);
   }
 
   /**
@@ -141,10 +137,7 @@ public class TrisotechWrapper {
    * @return
    */
   public static List<TrisotechFileInfo> getCmmnModels() {
-    List<TrisotechFileInfo> modelsArray = new ArrayList<>();
-
-    getModels(modelsArray, CMMN_XML_MIMETYPE);
-    return modelsArray;
+    return getModels(CMMN_XML_MIMETYPE);
   }
 
   /**
@@ -155,15 +148,14 @@ public class TrisotechWrapper {
    * @return
    */
   public static TrisotechFileInfo getModelInfo(String modelID) {
-    List<TrisotechFileInfo> fileInfos = new ArrayList<>();
-    getModels(fileInfos, null);
+    List<TrisotechFileInfo> fileInfos = getModels(null);
     TrisotechFileInfo file = fileInfos.stream()
         .filter((f) -> f.getId().equals(modelID)).findAny().get();
-    fileInfos = new ArrayList<>(); // reset
+    // fetch with the appropriate mimetype for XML download
     if (file.getMimetype().contains("dmn")) {
-      getModels(fileInfos, DMN_XML_MIMETYPE);
+      fileInfos = getModels(DMN_XML_MIMETYPE);
     } else {
-      getModels(fileInfos, CMMN_XML_MIMETYPE);
+      fileInfos = getModels(CMMN_XML_MIMETYPE);
     }
 
     return fileInfos.stream()
@@ -185,10 +177,10 @@ public class TrisotechWrapper {
   public static TrisotechFileInfo getModelInfoByIdAndVersion(String modelId, String version) {
     // TODO: figure this out CAO
 //    return getModelVersions(modelId).stream()
-//        .filter((f) -> f.getVersion().equals(version)).findAny().get();
+//        .filter((f) -> f.getVersion().equals(version)).map();
 
     // long form
-    List<TrisotechFileInfo> fileInfos = getModelVersions(modelId);
+    List<TrisotechFileInfo> fileInfos = getModelVersions(modelId, null);
     for (TrisotechFileInfo fileInfo : fileInfos) {
       if(version.equals(fileInfo.getVersion())) {
         return fileInfo;
@@ -211,8 +203,16 @@ public class TrisotechWrapper {
 //    TrisotechFileInfo fileInfo =  getModelVersions(modelId).stream()
 //        .filter((f) -> f.getVersion().equals(version))
 //        .findAny().orElse(null);
+    List<TrisotechFileInfo> fileInfos = new ArrayList<>();
+    // first get the modelInfo by modelId
+    // this provides the data needed to know what type of file it is
+    TrisotechFileInfo modelInfo = getModelInfo(modelId);
+    if(modelInfo.getMimetype().contains("dmn")) {
+      fileInfos = getModelVersions(modelId, DMN_XML_MIMETYPE);
+    } else { // CMMN
+      fileInfos = getModelVersions(modelId, CMMN_XML_MIMETYPE);
+    }
     // long form
-    List<TrisotechFileInfo> fileInfos = getModelVersions(modelId);
     for (TrisotechFileInfo fileInfo : fileInfos
          ) {
       if(version.equals(fileInfo.getVersion())) {
@@ -229,9 +229,9 @@ public class TrisotechWrapper {
    * @param modelId
    * @return
    */
-  public static List<TrisotechFileInfo> getModelVersions(String modelId) {
+  public static List<TrisotechFileInfo> getModelVersions(String modelId, String mimetype) {
     // TODO: This needs to be MEA_TEST for testing and MEA for production CAO
-    return getModelVersions(MEA_TEST, modelId);
+    return getModelVersions(MEA_TEST, modelId, mimetype);
   }
 
   /**
@@ -243,10 +243,11 @@ public class TrisotechWrapper {
    * @param modelId - id of the model requested
    * @return list of modelFileInfo
    */
-  public static List<TrisotechFileInfo> getModelVersions(String repositoryName, String modelId) {
-    System.out.println("getModelVersions for model: " + modelId + " in repository: " + repositoryName);
+  public static List<TrisotechFileInfo> getModelVersions(String repositoryName, String modelId, String mimetype) {
+    System.out.println("getModelVersions for model: " + modelId + " in repository: " + repositoryName + " with mimetype: " + mimetype);
     String repositoryId = getRepositoryId(repositoryName);
-    String urlString = BASE_URL + String.format(VERSIONS_PATH, repositoryId, modelId);
+    String urlString = BASE_URL + String.format(VERSIONS_PATH, repositoryId, modelId, mimetype);
+    System.out.println("url string: " + urlString);
     List<TrisotechFileInfo> versions = new ArrayList<>();
     HttpEntity<?> requestEntity = getHttpEntity();
     RestTemplate restTemplate = new RestTemplate();
@@ -297,16 +298,17 @@ public class TrisotechWrapper {
 
   /**
    * Retrieve all the models based on the mimetype provided
-   * @param modelsArray
    * @param xmlMimetype
    */
-  private static void getModels(List<TrisotechFileInfo> modelsArray, String xmlMimetype) {
+  private static List<TrisotechFileInfo> getModels( String xmlMimetype ) {
+    List<TrisotechFileInfo> modelsArray = new ArrayList<>();
     try {
 
       TrisotechPlaceData data = getPlaces();
 
       // search for the 'place' as that is what modelers will know
       for (TrisotechPlace tp : data.getData()) {
+        // pass in modelsArray as getRepositoryContent is recursive
         // TODO: MEA_TEST for testing and MEA for production - put in environment/config CAO
         if (tp.getName().equals(ROOT_DIRECTORY)) {
           getRepositoryContent(tp.getId(), modelsArray, "/", xmlMimetype);
@@ -316,6 +318,7 @@ public class TrisotechWrapper {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    return modelsArray;
   }
 
 
@@ -339,13 +342,15 @@ public class TrisotechWrapper {
    * @return
    */
   public static List<TrisotechFileInfo> getPublishedModels() {
-    List<TrisotechFileInfo> publishedModels = new ArrayList<>();
+//    List<TrisotechFileInfo> publishedModels = new ArrayList<>();
 
     // TODO: can do better streaming here -- direct from getModels... CAO
-    getModels(publishedModels, null);
-    return publishedModels.stream()
+    return getModels( null).stream()
         .filter((model) -> publishedModel(model))
         .collect(Collectors.toList());
+//    return publishedModels.stream()
+//        .filter((model) -> publishedModel(model))
+//        .collect(Collectors.toList());
 
 //    for (TrisotechFileInfo trisotechFileInfo : models) {
 //      if (publishedModel(trisotechFileInfo)) {

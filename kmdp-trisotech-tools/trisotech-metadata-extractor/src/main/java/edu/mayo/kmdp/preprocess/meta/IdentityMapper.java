@@ -43,6 +43,10 @@ import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 
 // TODO: Rework for Trisotech data CAO
 // What is the purpose of this class? CAO
+
+/**
+ * IdentityMapper is used to map dependencies between artifacts (and dependencies between assets?)
+ */
 public class IdentityMapper {
 
 	private Map<String,URIIdentifier> innerToPublicIDMap = new HashMap<>();

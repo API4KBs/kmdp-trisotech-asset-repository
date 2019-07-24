@@ -710,7 +710,7 @@ public class Weaver {
     StringBuilder sb = new StringBuilder();
 
     System.out.println("KnowledgeRepresentationLanguage.DMN_1_2.getRef(): " + DMN_1_2.getRef());
-    System.out.println("Registry.getValidationSchema( KnowledgeRepresentationLanguage.CMMN_1_1.getRef() ): " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
+//    System.out.println("Registry.getValidationSchema( KnowledgeRepresentationLanguage.CMMN_1_1.getRef() ): " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
     sb.append(SURROGATE_SCHEMA)
         .append(" ").append("xsd/metadata/surrogate/surrogate.xsd");
     sb.append(" ");

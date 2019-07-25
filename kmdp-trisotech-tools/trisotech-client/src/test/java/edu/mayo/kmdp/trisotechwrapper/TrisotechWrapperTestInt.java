@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.w3c.dom.Document;
 
 
@@ -236,10 +237,11 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetLatestVersionArtifactIdDMN() {
-    String url = TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID);
-    assertNotNull(url);
-    assertTrue(url.contains(WEAVER_TEST_1_ID));
-    assertFalse(url.contains("version"));
+    String expectedVersion = "1.7";
+    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID);
+    assertNotNull(versionIdentifier);
+    assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
+    assertEquals(expectedVersion, versionIdentifier.getVersion());
   }
   // latest version 7/9/2019:
   //             "file": {
@@ -257,49 +259,41 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {
+    String expectedVersion = "1.7";
     TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getModelInfo(WEAVER_TEST_1_ID);
-    String url = TrisotechWrapper.getLatestVersion(trisotechFileInfo);
-    assertNotNull(url);
-    assertTrue(url.contains(WEAVER_TEST_1_ID));
-    assertFalse(url.contains("version"));
-  }
-
-  @Test
-  final void testGetLatestVersionTagDMN() {
-    String version = TrisotechWrapper.getLatestVersionTag(WEAVER_TEST_1_ID);
-    assertNotNull(version);
-    assertEquals("1.7", version);
+    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo);
+    assertNotNull(versionIdentifier);
+    assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
+    assertEquals(expectedVersion, versionIdentifier.getVersion());
   }
 
   @Test
   final void testGetLatestVersionArtifactIdCMMN() {
-    String url = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID);
-    assertNotNull(url);
-    assertTrue(url.contains(WEAVE_TEST_1_ID));
-    assertFalse(url.contains("version"));
+    String expectedVersion = "2.1";
+    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID);
+    assertNotNull(versionIdentifier);
+    assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
+    assertEquals(expectedVersion, versionIdentifier.getVersion());
   }
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoCMMN() {
+    String expectedVersion = "2.1";
     TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getModelInfo(WEAVE_TEST_1_ID);
-    String url = TrisotechWrapper.getLatestVersion(trisotechFileInfo);
-    assertNotNull(url);
-    assertTrue(url.contains(WEAVE_TEST_1_ID));
-    assertFalse(url.contains("version"));
+    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo);
+    assertNotNull(versionIdentifier);
+    assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
+    assertEquals(expectedVersion, versionIdentifier.getVersion());
   }
 
-  @Test
-  final void testGetLatestVersionTagCMMN() {
-    String version = TrisotechWrapper.getLatestVersionTag(WEAVE_TEST_1_ID);
-    assertNotNull(version);
-    assertEquals("2.1", version);
-  }
 
   @Test
-  final void testGetLatestVersionTagCMMN_Null() {
+  final void testGetLatestVersionCMMN_Null() {
     // while a file may have multiple versions, no version tag is given to a file until it is published
-    String version = TrisotechWrapper.getLatestVersionTag(WEAVE_TEST_2_ID);
-    assertNull(version);
+    VersionIdentifier version = TrisotechWrapper.getLatestVersion(WEAVE_TEST_2_ID);
+    assertNotNull(version);
+    assertEquals(WEAVE_TEST_2_ID, version.getTag());
+    assertNull(version.getVersion());
   }
 
   @Test

@@ -19,10 +19,10 @@ import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 //import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
+import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.*;
@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.util.Util.resolveResource;
 import static edu.mayo.kmdp.util.XMLUtil.*;
+import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.DMN_1_2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -63,8 +64,9 @@ class WeaverTest {
       new Weaver().weave(dox);
 
       streamXMLDocument(dox, System.out);
-      System.out.println("KRLanguage DMN1.2 ref: " + KnowledgeRepresentationLanguage.DMN_1_2.getRef());
-      System.out.println("registry getValidationSchema for KRLanguage ref: " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.DMN_1_2.getRef()).get());
+      System.out.println("KRLanguage DMN1.2 ref: " + DMN_1_2.getRef());
+      System.out.println("registry getValidationSchema for KRLanguage ref: " + Registry.getValidationSchema(
+          DMN_1_2.getRef()).get());
 
       assertTrue(true); // dummy
       // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
@@ -107,7 +109,7 @@ class WeaverTest {
     try {
       new Weaver();
 
-      assertTrue(validate(dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef()));
+      assertTrue(validate(dox, DMN_1_2.getRef()));
       streamXMLDocument(dox, System.out);
 
 //			List<Annotation> props = loadAnnotations( dox, KnownAttributes.SALIENCE, Annotation.class );

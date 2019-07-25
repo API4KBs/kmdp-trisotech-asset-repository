@@ -15,36 +15,47 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import edu.mayo.kmdp.metadata.annotations.*;
+import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
+import static edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat.XML_1_1;
+import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.CMMN_1_1;
+import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.DMN_1_2;
+import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
+
+import edu.mayo.kmdp.metadata.annotations.Annotation;
+import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
+import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
+import edu.mayo.kmdp.metadata.annotations.MultiwordAnnotation;
+import edu.mayo.kmdp.metadata.annotations.ObjectFactory;
+import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.util.ws.ResponseHelper;
-import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituation;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import org.omg.spec.api4kp._1_0.AbstractCarrier;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
-import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
-import org.springframework.http.ResponseEntity;
-import org.w3c.dom.*;
-
-import javax.xml.bind.JAXBElement;
+import edu.mayo.kmdp.util.ws.ResponseHelper;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-
-import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
-import static edu.mayo.ontology.taxonomies.krformat._2018._08.SerializationFormat.XML_1_1;
-import static edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage.DMN_1_2;
-import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
+import javax.xml.bind.JAXBElement;
+import org.omg.spec.api4kp._1_0.AbstractCarrier;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
+import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
+import org.springframework.http.ResponseEntity;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
 
 public class Weaver {
 
@@ -267,8 +278,6 @@ public class Weaver {
 
   /**
    * Rewrite the decisions externalRef information before the triso tags disappear.
-   * TODO: Discuss with Davide. Made change per his notes in the CMMN file. Tests now fail with a SAXParseException:
-   * org.xml.sax.SAXParseException; cvc-datatype-valid.1.2.1: 'https://clinicalknowlegemanagement.mayo.edu/artifacts/a57a0349-d0d9-4381-8c14-bb4ecb0a61cf#5682fa26-b064-43c8-9475-1e4281e74068' is not a valid value for 'QName'.
    *
    * @param dox
    */
@@ -281,9 +290,7 @@ public class Weaver {
           if ((modelIdAttr != null) && (refAttr != null)) {
             String refId = refAttr.getValue().substring(refAttr.getValue().lastIndexOf('_') + 1);
             String prefix = refAttr.getValue().substring(0, refAttr.getValue().lastIndexOf('_'));
-//            String modelId = modelIdAttr.getValue().substring(1);
             refAttr.setValue(prefix+refId);
-//            refAttr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + refId + "#" + modelId);
           }
         });
   }
@@ -724,8 +731,8 @@ public class Weaver {
           .append(" ").append(Registry.getValidationSchema(DMN_1_2.getRef())
           .orElseThrow(IllegalStateException::new));
     } else if (baseNS.contains("CMMN")) {
-      sb.append(" ").append(KnowledgeRepresentationLanguage.CMMN_1_1)
-          .append(" ").append(Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef())
+      sb.append(" ").append(CMMN_1_1)
+          .append(" ").append(Registry.getValidationSchema(CMMN_1_1.getRef())
           .orElseThrow(IllegalStateException::new));
     }
 

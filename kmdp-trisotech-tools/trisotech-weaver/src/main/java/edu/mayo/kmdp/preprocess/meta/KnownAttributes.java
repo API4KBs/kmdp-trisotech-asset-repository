@@ -16,7 +16,7 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import edu.mayo.kmdp.util.URIUtil;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20180601.AnnotationRelType;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 

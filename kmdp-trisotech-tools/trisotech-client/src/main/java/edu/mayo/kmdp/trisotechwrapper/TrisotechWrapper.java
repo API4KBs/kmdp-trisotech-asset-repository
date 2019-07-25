@@ -15,9 +15,16 @@
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
+import com.fasterxml.jackson.core.Versioned;
+import edu.mayo.kmdp.id.VersionedIdentifier;
+import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.trisotechwrapper.models.*;
 import edu.mayo.kmdp.util.XMLUtil;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -263,36 +270,41 @@ public class TrisotechWrapper {
   }
 
   /**
-   * return the URL for the latest revision of the given model
-   * TODO: really return URL? Signavio only returned the id of the version, but for Trisotech the id doesn't change
-   * TODO cont: returning URL, address with Davide if that is desired CAO
-   * <p>
+   * Returns a VersionIdentifier of the model information for the artifactId provided.
+   * This versionIdentifier will be for the latest version of the model.
+   * TODO: Only return published versions? CAO
    *
    * @param artifactId
    * @return
    */
-  // TODO: These 2 will go away when getLatestVersion updated to return VersionedIdentifier CAO
-  public static String getLatestVersion(String artifactId) {
+  public static VersionIdentifier getLatestVersion(String artifactId) {
     TrisotechFileInfo trisotechFileInfo = getModelInfo(artifactId);
     return getLatestVersion(trisotechFileInfo);
   }
 
-  public static String getLatestVersionTag(String artifactId) {
-    TrisotechFileInfo trisotechFileInfo = getModelInfo(artifactId);
-    return trisotechFileInfo.getVersion();
-  }
-
-
-  //return VersionedIdentifier uid, versiontag (1.0) , create .withEstablishedOn for timestamp TODO: CAO
-  public static String getLatestVersion(TrisotechFileInfo tfi) {
-    TrisotechFileInfo trisotechFileInfo;
-    // want to get the XML URL for this file
-    if (tfi.getMimetype().contains("cmmn")) {
-      trisotechFileInfo = getCmmnModel(tfi.getId());
-    } else { // dmn
-      trisotechFileInfo = getDmnModel(tfi.getId());
+  /**
+   * Given a TrisotechFileInfo, return a versionIdentifier for the latest version of that file.
+   *
+   * @param tfi
+   * @return
+   */
+  //return VersionIdentifier uid, versiontag (1.0) , create .withEstablishedOn for timestamp
+  public static VersionIdentifier getLatestVersion(TrisotechFileInfo tfi) {
+//    TrisotechFileInfo trisotechFileInfo;
+//    // want to get the XML URL for this file -- shouldn't be needed.
+//    if (tfi.getMimetype().contains("cmmn")) {
+//      trisotechFileInfo = getCmmnModel(tfi.getId());
+//    } else { // dmn
+//      trisotechFileInfo = getDmnModel(tfi.getId());
+//    }
+    try {
+      return new VersionIdentifier().withTag(tfi.getId())
+          .withVersion(tfi.getVersion())
+          .withEstablishedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(tfi.getUpdated()));
+    } catch (DatatypeConfigurationException e) {
+      e.printStackTrace();
     }
-    return trisotechFileInfo.getUrl();
+    return null; // TODO: better default return value? CAO
   }
 
 

@@ -1,103 +1,101 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"
-                      xmlns="https://clinicalknowlegemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9"
-                      xmlns:ann="http://kmdp.mayo.edu/metadata/annotations"
-                      xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
-                      xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"
-                      xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
-                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
-                      xmlns:ns1="https://clinicalknowlegemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
-                      xmlns:ns2="https://clinicalknowlegemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"
-                      xmlns:rss="http://purl.org/rss/2.0/"
-                      xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
-                      id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9"
-                      name="Weave Test 1"
-                      targetNamespace="https://clinicalknowlegemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9"
-                      xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd CMMN_1_1 http://www.omg.org/spec/CMMN/20151109/MODEL">
-  <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
-                                   id="_e9044eea-5a77-4700-b39a-c078eb9cb964"
-                                   name="Current Weight"
-                                   structureRef="string"/>
-  <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
-                                   id="_16bd5d00-1584-466b-8a08-bef483fb9f7e"
-                                   name="My Test Entity 1"
-                                   structureRef="string"/>
-  <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
-                                   id="_7ea3470c-076e-4156-8715-ad45aa803b01"
-                                   name="Age"
-                                   structureRef="string"/>
+  xmlns="https://clinicalknowlegemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9"
+  xmlns:ann="http://kmdp.mayo.edu/metadata/annotations"
+  xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
+  xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"
+  xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
+  xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+  xmlns:ns1="https://clinicalknowlegemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
+  xmlns:ns2="https://clinicalknowlegemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"
+  xmlns:rss="http://purl.org/rss/2.0/" xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
+  id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9" name="Weave Test 1"
+  targetNamespace="https://clinicalknowlegemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9"
+  xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd CMMN_1_1 http://www.omg.org/spec/CMMN/20151109/MODEL">
+  <semantic:caseFileItemDefinition
+    definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
+    id="_e9044eea-5a77-4700-b39a-c078eb9cb964" name="Current Weight" structureRef="string"/>
+  <semantic:caseFileItemDefinition
+    definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
+    id="_16bd5d00-1584-466b-8a08-bef483fb9f7e" name="My Test Entity 1" structureRef="string"/>
+  <semantic:caseFileItemDefinition
+    definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
+    id="_7ea3470c-076e-4156-8715-ad45aa803b01" name="Age" structureRef="string"/>
   <semantic:case id="Case_40e952e9-9c4c-4f19-bb14-a8a9681d782d" name="Test">
     <semantic:caseFileModel>
       <semantic:caseFileItem definitionRef="_e9044eea-5a77-4700-b39a-c078eb9cb964"
-                             id="_8f3ba321-82f5-4523-81bd-3f89e4822e9c"
-                             name="Current Weight"/>
+        id="_8f3ba321-82f5-4523-81bd-3f89e4822e9c" name="Current Weight"/>
       <semantic:caseFileItem definitionRef="_16bd5d00-1584-466b-8a08-bef483fb9f7e"
-                             id="_edc3794c-d1c1-4c57-a28d-5c17ff8e07bf"
-                             name="My Test Entity 1"/>
+        id="_edc3794c-d1c1-4c57-a28d-5c17ff8e07bf" name="My Test Entity 1"/>
       <semantic:caseFileItem definitionRef="_7ea3470c-076e-4156-8715-ad45aa803b01"
-                             id="_192c45ea-2898-42a7-9141-1b637745a93d"
-                             name="Age"/>
+        id="_192c45ea-2898-42a7-9141-1b637745a93d" name="Age"/>
     </semantic:caseFileModel>
     <semantic:casePlanModel id="_40e952e9-9c4c-4f19-bb14-a8a9681d782d" name="Test">
       <semantic:planItem definitionRef="PID__0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2"
-                         id="_0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2"/>
+        id="_0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2"/>
       <semantic:planItem definitionRef="PID__6088d90d-bc64-40e0-93ca-950552bd4f98"
-                         id="_6088d90d-bc64-40e0-93ca-950552bd4f98"/>
+        id="_6088d90d-bc64-40e0-93ca-950552bd4f98"/>
       <semantic:decisionTask decisionRef="_a920d72fbb4c526d0e62641893cc09c7"
-                             id="PID__0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2"
-                             name="Weaver Test 1 Decision">
+        id="PID__0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2" name="Weaver Test 1 Decision">
         <semantic:extensionElements>
           <ann:datatypeAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers"
-                                  value="https://clinicalknowlegemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf">
-            <ann:rel label="pointsTo?" ref="someURIValue???" tag="tag???"/>
+            value="https://clinicalknowlegemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf">
+            <ann:rel
+              conceptId="https://ontology.mayo.edu/taxonomies/KAO/Rel/DependencyRelType#a6878bf5-d858-3676-83a1-ef2871d36f47"
+              label="imports" ref="https://www.omg.org/spec/API4KP/api4kp/imports" tag="imports">
+              <id:namespace
+                id="https://ontology.mayo.edu/taxonomies/KAO/Rel/DependencyRelType#a0813f70-fc74-3383-b01e-b7d9b00870ff"
+                label="DependencyTypes" tag="a0813f70-fc74-3383-b01e-b7d9b00870ff"/>
+            </ann:rel>
           </ann:datatypeAnnotation>
           <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
             <ann:expr
-                    conceptId="https://clinicalknowlegemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
-                    label="Weaver Test 1 - Weaver Test 1 Decision"
-                    ref="https://clinicalknowlegemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
-                    tag="_eb33ba86-04fa-40ea-a2f0-94beec8211af"/>
+              conceptId="https://clinicalknowlegemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+              label="Weaver Test 1 - Weaver Test 1 Decision"
+              ref="https://clinicalknowlegemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
+              tag="_eb33ba86-04fa-40ea-a2f0-94beec8211af"/>
           </ann:simpleAnnotation>
         </semantic:extensionElements>
       </semantic:decisionTask>
       <semantic:decisionTask decisionRef="_65c08bb65562d6e6923dcb5e1d44ede2"
-                             id="PID__6088d90d-bc64-40e0-93ca-950552bd4f98"
-                             name="Test Decision 2">
+        id="PID__6088d90d-bc64-40e0-93ca-950552bd4f98" name="Test Decision 2">
         <semantic:extensionElements>
           <ann:datatypeAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers"
-                                  value="https://clinicalknowlegemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf">
-            <ann:rel label="pointsTo?" ref="someURIValue???" tag="tag???"/>
+            value="https://clinicalknowlegemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf">
+            <ann:rel
+              conceptId="https://ontology.mayo.edu/taxonomies/KAO/Rel/DependencyRelType#a6878bf5-d858-3676-83a1-ef2871d36f47"
+              label="imports" ref="https://www.omg.org/spec/API4KP/api4kp/imports" tag="imports">
+              <id:namespace
+                id="https://ontology.mayo.edu/taxonomies/KAO/Rel/DependencyRelType#a0813f70-fc74-3383-b01e-b7d9b00870ff"
+                label="DependencyTypes" tag="a0813f70-fc74-3383-b01e-b7d9b00870ff"/>
+            </ann:rel>
           </ann:datatypeAnnotation>
           <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
             <ann:expr
-                    conceptId="https://clinicalknowlegemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
-                    label="Weaver Test 2 - Test Decision 2"
-                    ref="https://clinicalknowlegemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"
-                    tag="_e3bc6bcb-0adc-46bf-a617-8779d80de659"/>
+              conceptId="https://clinicalknowlegemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+              label="Weaver Test 2 - Test Decision 2"
+              ref="https://clinicalknowlegemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"
+              tag="_e3bc6bcb-0adc-46bf-a617-8779d80de659"/>
           </ann:simpleAnnotation>
         </semantic:extensionElements>
       </semantic:decisionTask>
     </semantic:casePlanModel>
   </semantic:case>
-  <semantic:decision
-          externalRef="https://clinicalknowlegemanagement.mayo.edu/artifacts/a57a0349-d0d9-4381-8c14-bb4ecb0a61cf#5682fa26-b064-43c8-9475-1e4281e74068"
-          id="_a920d72fbb4c526d0e62641893cc09c7"
-          implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-          name="Weaver Test 1 Decision"/>
-  <semantic:decision
-          externalRef="https://clinicalknowlegemanagement.mayo.edu/artifacts/a57a0349-d0d9-4381-8c14-bb4ecb0a61cf#ede3b331-7b10-4580-98be-66ebff344c21"
-          id="_65c08bb65562d6e6923dcb5e1d44ede2"
-          implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-          name="Test Decision 2"/>
+  <semantic:decision externalRef="ns1:a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+    id="_a920d72fbb4c526d0e62641893cc09c7"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Weaver Test 1 Decision"/>
+  <semantic:decision externalRef="ns2:a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+    id="_65c08bb65562d6e6923dcb5e1d44ede2"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1" name="Test Decision 2"/>
   <cmmndi:CMMNDI>
     <cmmndi:CMMNDiagram cmmnElementRef="_fe3937b5-4ddf-4b72-9e2a-81a8f5400ae7"
-                        id="_58464e33-4c5a-4c60-b0c3-3433c94d8f08"
-                        name="Page 1">
+      id="_58464e33-4c5a-4c60-b0c3-3433c94d8f08" name="Page 1">
       <cmmndi:Size height="1050" width="1485"/>
       <cmmndi:CMMNShape cmmnElementRef="_40e952e9-9c4c-4f19-bb14-a8a9681d782d"
-                        id="_fe3937b5-4ddf-4b72-9e2a-81a8f5400ae7">
+        id="_fe3937b5-4ddf-4b72-9e2a-81a8f5400ae7">
         <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
           <cmmndi:FillColor blue="255" green="255" red="255"/>
           <cmmndi:StrokeColor blue="0" green="0" red="0"/>
@@ -109,7 +107,7 @@
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape cmmnElementRef="_8f3ba321-82f5-4523-81bd-3f89e4822e9c"
-                        id="_0cd03ae0-0dda-4336-8320-676eecd91c80">
+        id="_0cd03ae0-0dda-4336-8320-676eecd91c80">
         <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
           <cmmndi:FillColor blue="255" green="255" red="255"/>
           <cmmndi:StrokeColor blue="0" green="0" red="0"/>
@@ -121,7 +119,7 @@
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape cmmnElementRef="_0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2"
-                        id="_af2b7308-dc1a-4180-a9ef-05dc6e88ac9f">
+        id="_af2b7308-dc1a-4180-a9ef-05dc6e88ac9f">
         <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
           <cmmndi:FillColor blue="255" green="255" red="255"/>
           <cmmndi:StrokeColor blue="0" green="0" red="0"/>
@@ -133,13 +131,13 @@
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape cmmnElementRef="_ee3bdc62-93ca-4934-897f-a92e0469eea5"
-                        id="_db01dffa-e603-46ac-b148-6bbc647ceb88">
+        id="_db01dffa-e603-46ac-b148-6bbc647ceb88">
         <cmmndi:CMMNStyle fontFamily=""/>
         <dc:Bounds height="28" width="20" x="337" y="194"/>
         <cmmndi:CMMNLabel/>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape cmmnElementRef="_edc3794c-d1c1-4c57-a28d-5c17ff8e07bf"
-                        id="_e7394aa6-2ded-45d8-b201-0f03354cb439">
+        id="_e7394aa6-2ded-45d8-b201-0f03354cb439">
         <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
           <cmmndi:FillColor blue="255" green="255" red="255"/>
           <cmmndi:StrokeColor blue="0" green="0" red="0"/>
@@ -151,7 +149,7 @@
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape cmmnElementRef="_192c45ea-2898-42a7-9141-1b637745a93d"
-                        id="_fa5c792c-aece-42b1-9ede-df560906ad04">
+        id="_fa5c792c-aece-42b1-9ede-df560906ad04">
         <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
           <cmmndi:FillColor blue="255" green="255" red="255"/>
           <cmmndi:StrokeColor blue="0" green="0" red="0"/>
@@ -163,7 +161,7 @@
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape cmmnElementRef="_6088d90d-bc64-40e0-93ca-950552bd4f98"
-                        id="_4e3bca76-09f5-443f-bd9a-384f93e64ca5">
+        id="_4e3bca76-09f5-443f-bd9a-384f93e64ca5">
         <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
           <cmmndi:FillColor blue="255" green="255" red="255"/>
           <cmmndi:StrokeColor blue="0" green="0" red="0"/>
@@ -175,14 +173,13 @@
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape cmmnElementRef="_8743162f-2d26-45c5-a874-b10ff8d81dee"
-                        id="_5a6f277d-bf57-4826-8e0b-4c867a44f5f0">
+        id="_5a6f277d-bf57-4826-8e0b-4c867a44f5f0">
         <cmmndi:CMMNStyle fontFamily=""/>
         <dc:Bounds height="28" width="20" x="521.8571428571429" y="179"/>
         <cmmndi:CMMNLabel/>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNEdge cmmnElementRef="_a8716c36-31cb-47ea-8084-d4045fd6f8d8"
-                       id="_a8365906-e611-4d6f-97c8-af1e7b4d99da"
-                       isStandardEventVisible="true">
+        id="_a8365906-e611-4d6f-97c8-af1e7b4d99da" isStandardEventVisible="true">
         <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
           <cmmndi:StrokeColor blue="0" green="0" red="0"/>
           <cmmndi:FontColor blue="0" green="0" red="0"/>
@@ -196,8 +193,7 @@
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNEdge>
       <cmmndi:CMMNEdge cmmnElementRef="_6d448f2b-81f8-4d80-b823-27f8a3fc4a30"
-                       id="_cf03fb8a-3a87-46d3-9994-b4446a90ba1c"
-                       isStandardEventVisible="true">
+        id="_cf03fb8a-3a87-46d3-9994-b4446a90ba1c" isStandardEventVisible="true">
         <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
           <cmmndi:StrokeColor blue="0" green="0" red="0"/>
           <cmmndi:FontColor blue="0" green="0" red="0"/>
@@ -211,8 +207,7 @@
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNEdge>
       <cmmndi:CMMNEdge cmmnElementRef="_93db8500-5250-4d61-9898-c0c6cbc940ce"
-                       id="_1aa10944-d60b-43e6-b2ce-e93eec37e0bc"
-                       isStandardEventVisible="true">
+        id="_1aa10944-d60b-43e6-b2ce-e93eec37e0bc" isStandardEventVisible="true">
         <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
           <cmmndi:StrokeColor blue="0" green="0" red="0"/>
           <cmmndi:FontColor blue="0" green="0" red="0"/>

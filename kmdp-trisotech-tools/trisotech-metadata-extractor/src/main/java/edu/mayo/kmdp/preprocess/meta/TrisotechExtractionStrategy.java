@@ -15,57 +15,59 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import edu.mayo.kmdp.SurrogateBuilder;
-import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
-//import ca.uhn.fhir.model.dstu2.resource.DataElement;
+import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
+import static edu.mayo.kmdp.util.XPathUtil.xList;
+import static edu.mayo.kmdp.util.XPathUtil.xNode;
+import static edu.mayo.kmdp.util.XPathUtil.xString;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Plans_Processes_Pathways_And_Protocol_Definitions;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType.Care_Process_Model;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType.Decision_Model;
+import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.CMMN_1_1;
+import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.DMN_1_2;
+import static edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization.CMMN_1_1_XML_Syntax;
+import static edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization.DMN_1_2_XML_Syntax;
+
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.mayo.kmdp.SurrogateBuilder;
 import edu.mayo.kmdp.SurrogateHelper;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-//import edu.mayo.kmdp.dataconcepts.FHIR2DataConceptGenerator;
+import edu.mayo.kmdp.id.adapter.URIId;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.metadata.surrogate.*;
-import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituation;
-import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
-import edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.KnowledgeArtifactCategory;
-import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20180601.AnnotationRelType;
+import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
+import edu.mayo.kmdp.metadata.surrogate.Dependency;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
+import edu.mayo.kmdp.metadata.surrogate.Publication;
+import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
-import edu.mayo.ontology.taxonomies.krformat._2018._08.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.krserialization._2018._08.KnowledgeRepresentationLanguageSerialization;
+import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
+import edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.KnowledgeArtifactCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
+import edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat;
+import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import java.net.URI;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static edu.mayo.kmdp.id.helper.DatatypeHelper.uri;
-import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
-import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
-import static edu.mayo.kmdp.util.XPathUtil.*;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory.Plans_Processes_Pathways_And_Protocol_Definitions;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType.*;
-import static edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage.CMMN_1_1;
-import static edu.mayo.ontology.taxonomies.krlanguage._2018._08.KnowledgeRepresentationLanguage.DMN_1_2;
-import static edu.mayo.ontology.taxonomies.krserialization._2018._08.KnowledgeRepresentationLanguageSerialization.CMMN_1_1_XML_Syntax;
-import static edu.mayo.ontology.taxonomies.krserialization._2018._08.KnowledgeRepresentationLanguageSerialization.DMN_1_2_XML_Syntax;
-import static edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon.PCV;
+//import ca.uhn.fhir.model.dstu2.resource.DataElement;
+//import edu.mayo.kmdp.dataconcepts.FHIR2DataConceptGenerator;
 
 
 
@@ -135,12 +137,13 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     System.out.println("docId: " + docId);
     URIIdentifier artifactId = new URIIdentifier().withUri(URI.create(docId.get()));
     Optional<URIIdentifier> assetID = getAssetID(dox);
-    System.out.println("resId: " + assetID.get().toString());
+    // TODO: should CMMN have assetID? currently does not, so this fails if don't check for present CAO
+    System.out.println("assetID: " + (assetID.isPresent() ? assetID.get() : Optional.empty()));
 
 
     // towards the ideal as below
     KnowledgeAsset surr = new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset()
-        .withAssetId(assetID.get())
+        .withAssetId((assetID.isPresent() ? assetID.get() : null)) // TODO: what to do if not present? CAO
         .withName(meta.getName())
         .withTitle(meta.getName())
         .withFormalCategory(formalCategory)
@@ -403,6 +406,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   @Override
   public Optional<Representation> getRepLanguage(Document dox, boolean concrete) {
+    System.out.println("xNode(dox, xpath //dmn:definitions: " + xNode(dox, "//dmn:definitions"));
+    System.out.println("xNode(dox, xpath //cmmn:definitions: " + xNode(dox, "//cmmn:definitions"));
+
     if (xNode(dox, "//cmmn:definitions") != null) {
       return Optional.of(new Representation()
           .withLanguage(CMMN_1_1)
@@ -417,6 +423,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
   public Optional<KnowledgeRepresentationLanguage> detectRepLanguage(Document dox) {
+    System.out.println("xNode(dox, xpath //cmmn:definitions: " + xNode(dox, "//cmmn:definitions"));
     if (xNode(dox, "//cmmn:definitions") != null) {
       return Optional.of(CMMN_1_1);
     }

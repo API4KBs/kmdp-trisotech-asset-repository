@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetCatalogApiDelegate;
@@ -23,10 +22,8 @@ import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRepositoryApiDelegate
 import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRetrievalApiDelegate;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
-import edu.mayo.kmdp.util.ws.ResponseHelper;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._1_0.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._1_0.KnowledgeAssetType;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
+import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
 import org.slf4j.LoggerFactory;
@@ -34,21 +31,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
 
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
-import org.w3c.dom.Document;
 
 import static edu.mayo.kmdp.util.ws.ResponseHelper.notSupported;
 
@@ -70,8 +61,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   public ResponseEntity<KnowledgeAsset> getKnowledgeAsset(UUID assetId) {
     // TODO: need to get latest version, or just use TrisotechWrapper.getModelById which will return the Document? CAO
     // TODO: then modelInfo can be
-    String versionTag = TrisotechWrapper.getLatestVersionTag(assetId.toString());
-    return getVersionedKnowledgeAsset(assetId, versionTag);
+    VersionIdentifier version = TrisotechWrapper.getLatestVersion(assetId.toString());
+    return getVersionedKnowledgeAsset(assetId, version.getVersion());
 //    return null; // TODO: fix this CAO per Davide: ResponseHelper.succeed();
   }
 

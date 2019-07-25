@@ -17,12 +17,9 @@ package edu.mayo.kmdp.preprocess.meta;
 
 import edu.mayo.kmdp.id.Term;
 import edu.mayo.kmdp.registry.Registry;
-//import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
 import edu.mayo.kmdp.util.JSonUtil;
-import edu.mayo.kmdp.util.URIUtil;
-import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
-import edu.mayo.ontology.taxonomies.lexicon._2018._08.Lexicon;
+import edu.mayo.ontology.taxonomies.lexicon._20190801.Lexicon;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -37,7 +34,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 

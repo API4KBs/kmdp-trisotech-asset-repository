@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
                       xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
                       xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"

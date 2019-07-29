@@ -51,12 +51,12 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-rest-ws-utils</artifactId>
-      <version>2.5.1-b20190706020615</version>
+      <version>${kmdp.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-ext-terminology-content</artifactId>
-      <version>2.5.1-b20190724214442</version>
+      <version>${kmdp.version}</version>
     </dependency>
 
   </dependencies>

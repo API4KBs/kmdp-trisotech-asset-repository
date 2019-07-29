@@ -9,50 +9,52 @@
     <version>1.0.0</version>
   </parent>
 
-  <artifactId>kmdp-trisotech-asset-repository-service-impl</artifactId>
+  <artifactId>kmdp-knowledge-asset-repository-trisotech</artifactId>
+  <packaging>war</packaging>
 
+  <!-- project -->
   <dependencies>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-trisotech-client</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-trisotech-weaver</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-trisotech-extractor</artifactId>
+      <version>1.0.0</version>
     </dependency>
 
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>trisotech-client</artifactId>
-      <version>1.0.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>5.4.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>trisotech-weaver</artifactId>
-      <version>1.0.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>trisotech-metadata-extractor</artifactId>
-      <version>1.0.0</version>
-      <scope>compile</scope>
-    </dependency>
+    <!-- internal -->
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-datatype</artifactId>
       <version>${kmdp.version}</version>
     </dependency>
     <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-rest-ws-utils</artifactId>
+    </dependency>
+
+    <!-- external -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-xml</artifactId>
     </dependency>
     <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-rest-ws-utils</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.4.0</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>

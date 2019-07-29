@@ -17,8 +17,9 @@
 
   <modules>
     <module>kmdp-trisotech-asset-repository-service-impl</module>
-    <module>kmdp-trisotech-asset-repository-service-test</module>
-    <module>kmdp-trisotech-tools</module>
+    <module>kmdp-trisotech-weaver</module>
+    <module>kmdp-trisotech-extractor</module>
+    <module>kmdp-trisotech-client</module>
   </modules>
 
   <properties>

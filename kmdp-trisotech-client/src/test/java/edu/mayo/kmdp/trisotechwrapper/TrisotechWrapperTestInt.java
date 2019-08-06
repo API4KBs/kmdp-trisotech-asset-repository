@@ -54,18 +54,15 @@ class TrisotechWrapperTestInt {
   void tearDown() throws Exception {
   }
 
-  @Disabled("enable when Trisotech is updated")
   @Test
   final void testGetModelByIdAndVersionDMN() {
     String expectedVersion = "1.4";
     String expectedVersion_2 = "0.2";
-    // TODO: This test will currently fail until Trisotech updates to allow XML for versions
     Optional<Document> dox = TrisotechWrapper.getModelByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion);
     assertNotEquals(Optional.empty(), dox);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
 
-    // TODO: This test will currently fail until Trisotech updates to allow XML for versions
     dox = TrisotechWrapper.getModelByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
     assertNotEquals(Optional.empty(), dox);
     assertTrue(dox.isPresent());
@@ -84,24 +81,16 @@ class TrisotechWrapperTestInt {
 
   }
 
-  @Disabled("enable when Trisotech is updated")
   @Test
   final void testGetModelByIdAndVersionCMMN() {
     String expectedVersion = "2.0";
     String expectedVersion_2 = "1.0";
-    // TODO: This test will currently fail until Trisotech updates to allow XML for versions
     Optional<Document> dox = TrisotechWrapper.getModelByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion);
     assertNotEquals(Optional.empty(), dox);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
     // what else to test here??
-
-    dox = TrisotechWrapper.getModelByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2);
-    assertEquals(Optional.empty(), dox);
-    assertFalse(dox.isPresent());
-    assertNull(dox.get());
-
-  }
+ }
 
   @Test
   final void testGetModelByIdAndVersionCMMNInvalidVersion() {
@@ -237,7 +226,7 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetLatestVersionArtifactIdDMN() {
-    String expectedVersion = "1.7";
+    String expectedVersion = "1.8";
     VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
@@ -250,16 +239,16 @@ class TrisotechWrapperTestInt {
   //                "name": "Weaver Test 1",
   //                "path": "/",
   //                "mimetype": "application/vnd.triso-dmn+json",
-  //                "updated": "2019-07-09T19:16:42Z",
+  //                "updated": "2019-08-06T20:21:53Z",
   //                "updater": "Cheryl Orcutt",
   //                "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&sku=123720a6-9758-45a3-8c5c-5fffab12c494",
-  //                "version": "1.7",
+  //                "version": "1.8",
   //                "state": "Published"
   //            }
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {
-    String expectedVersion = "1.7";
+    String expectedVersion = "1.8";
     TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getModelInfo(WEAVER_TEST_1_ID);
     VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo);
     assertNotNull(versionIdentifier);
@@ -269,7 +258,7 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetLatestVersionArtifactIdCMMN() {
-    String expectedVersion = "2.1";
+    String expectedVersion = "2.2";
     VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
@@ -278,7 +267,7 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoCMMN() {
-    String expectedVersion = "2.1";
+    String expectedVersion = "2.2";
     TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getModelInfo(WEAVE_TEST_1_ID);
     VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo);
     assertNotNull(versionIdentifier);

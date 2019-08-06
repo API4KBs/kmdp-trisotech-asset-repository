@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+  xmlns:include1="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89"
+  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+  xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+  xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
+  xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+  xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+  xmlns:drools="http://www.drools.org/kie/dmn/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rss="http://purl.org/rss/2.0/"
+  xmlns:openapi="https://openapis.org/omg/extension/1.0"
+  xmlns="http://www.trisotech.com/definitions/_a28abf7b-0a5e-4f17-bce4-328f7604dcbb"
+  id="_a28abf7b-0a5e-4f17-bce4-328f7604dcbb" name="Decision Subdecision"
+  namespace="http://www.trisotech.com/definitions/_a28abf7b-0a5e-4f17-bce4-328f7604dcbb"
+  exporter="DMN Modeler" exporterVersion="6.2.6.2" triso:logoChoice="Default">
+  <semantic:extensionElements/>
+  <semantic:import
+    namespace="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89"
+    name="Hyperlipidemia - ASCVD High Risk"
+    triso:fileId="eyJmIjp7InBhdGgiOiIvIiwic2t1IjoiMWRkMDUwNDAtMGJjOC00ZjNmLTg1YjItYTA2MDI2YzJjZGM2IiwibmFtZSI6Ikh5cGVybGlwaWRlbWlhIC0gQVNDVkQgSGlnaCBSaXNrIn0sInIiOnsiYXBpa2V5IjoiMjkyMDAzZjY5ODQwZTcxMiJ9fQ=="
+    triso:fileName="MEA-Test/Hyperlipidemia - ASCVD High Risk"
+    importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+    drools:modelName="Hyperlipidemia - ASCVD High Risk"/>
+  <semantic:decisionService id="_a28abf7b-0a5e-4f17-bce4-328f7604dcbb_DS"
+    name="Whole Model Decision Service" triso:dynamicDecisionService="true">
+    <semantic:variable name="Whole Model Decision Service"
+      id="_64f6486a-e8a9-40b0-b5c8-7dbebbfb0e5c" typeRef="Any"/>
+    <semantic:outputDecision href="#_454020e7-6b43-4d37-9011-b4fa6c8f04b2"/>
+    <semantic:outputDecision
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_6d85e981-662b-49a8-9467-d4ef5cd26714"/>
+    <semantic:encapsulatedDecision href="#_300c163b-7f82-4d8d-8836-1a851c531655"/>
+    <semantic:encapsulatedDecision
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_59942836-db4b-48c8-b8c4-620618411fe7"/>
+    <semantic:encapsulatedDecision
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_bfaa7461-e903-4ea9-ab7a-5585315cdd25"/>
+    <semantic:inputData href="#inputData__93644744-468b-4731-a094-244562f892ce"/>
+    <semantic:inputData href="#inputData__86da0a04-6edc-4c62-8f77-e336a4a95f27"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_77bb12b2-2572-4a83-b429-8107ad8eef91"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_9968a3e0-d17e-4e74-abe8-a945cc561d91"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_731d2467-dd43-45de-abf4-dbe5f69ebc61"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_4190bb45-6df2-48d9-a0ff-ea1ae6a9ba37"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_1d8d62ed-897a-4d34-b818-ce76564518cc"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_572da512-a442-4b1c-b452-0a43cd686a39"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_6059317e-7065-4025-88b0-cf3deb7ac577"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_5dba8ecc-18ac-40a1-942e-a3c6124ed650"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_b2cf1be7-026c-4301-a02f-e6b6bc41f3d5"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_002474d3-1199-4217-bec2-32e5676fdc85"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_caef9b6e-9188-455c-ba4b-01c9eb56f36f"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_5bc8ae7c-db0c-4c66-b140-fd230cbf78dc"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_98267a0f-2576-42cf-9edf-642eeff83015"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_eaed0ced-d4e8-4a99-86ec-97e20f61857a"/>
+    <semantic:inputData
+      href="http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89#_1e70bd45-0cb7-4941-8cd2-f3ffa4bccf20"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_2d1d9e4c-f7b8-46f9-9a6a-ce84f44bc7a7_DS" name="Diagram Page 1"
+    triso:dynamicDecisionService="true">
+    <semantic:variable name="Diagram Page 1" id="_52c47d7c-8657-4a14-ad9f-1a989da9de24"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_454020e7-6b43-4d37-9011-b4fa6c8f04b2"/>
+    <semantic:inputDecision href="#_300c163b-7f82-4d8d-8836-1a851c531655"/>
+  </semantic:decisionService>
+  <semantic:decision id="_454020e7-6b43-4d37-9011-b4fa6c8f04b2"
+    name="Anticoagulation Indicated for Stroke Prevention">
+    <semantic:extensionElements>
+      <triso:semanticLink id="_126dfa52-9b63-4e94-9943-7d1ca9cbbe22"
+        name="PropositionalConcepts - 20190801 - Anticoagulation Indicated for Stroke Prevention"
+        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#17bc5143-a574-3f20-9f0e-55a6d71a8631"/>
+      <triso:semanticLink id="_278ce944-9da2-4e4d-b475-d0b9025b067b"
+        name="DecisionTypes - 20190801 - Naturalistic Decision"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"/>
+    </semantic:extensionElements>
+    <semantic:variable name="Anticoagulation Indicated for Stroke Prevention"
+      id="_5cfa8e85-07d7-4171-acb7-73d8ba129bfc" typeRef="Any"/>
+    <semantic:informationRequirement id="_e51d2cbb-f201-41ab-95d3-c4c62859035c">
+      <semantic:requiredDecision href="#_300c163b-7f82-4d8d-8836-1a851c531655"/>
+    </semantic:informationRequirement>
+    <semantic:literalExpression id="_7df1b829-863a-42bf-b967-1eaa2f001b91" typeRef="Any"
+      triso:expressionId="_85e6e7f8-8ade-4e19-babd-3d5d2819c097">
+      <semantic:text>42</semantic:text>
+    </semantic:literalExpression>
+  </semantic:decision>
+  <semantic:decision id="_300c163b-7f82-4d8d-8836-1a851c531655"
+    name="Risk of Embolic Stroke CHA2DS2-VASc">
+    <semantic:extensionElements>
+      <triso:semanticLink id="ae4bae40-fa3d-4397-8c7a-4098c0188e3a"
+        name="ClinicalSituations - Risk of Embolic Stroke (CHA2DS2-VASc)in 'PropositionalConcepts - 20190801'"
+        modelURI="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#f3eb77ed-cd3d-3ce8-b20b-ca700806b118"/>
+      <triso:semanticLink id="d20a3154-be6a-446a-9016-561874181991"
+        name="DecisionTypes - 20190801 - Computable Decision"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a"/>
+      <triso:semanticLink id="_05e5c093-d118-4e9d-8ab9-a5142740c61a"
+        name="DecisionTypes - 20190801 - Assessment Decision"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"/>
+    </semantic:extensionElements>
+    <semantic:variable name="Risk of Embolic Stroke CHA2DS2-VASc"
+      id="_1c34b6ed-c938-46af-b9b9-3e82ba0ea4c1" typeRef="number"/>
+    <semantic:informationRequirement
+      id="inputData__93644744-468b-4731-a094-244562f892ce__300c163b-7f82-4d8d-8836-1a851c531655">
+      <semantic:requiredInput href="#inputData__93644744-468b-4731-a094-244562f892ce"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement
+      id="inputData__86da0a04-6edc-4c62-8f77-e336a4a95f27__300c163b-7f82-4d8d-8836-1a851c531655">
+      <semantic:requiredInput href="#inputData__86da0a04-6edc-4c62-8f77-e336a4a95f27"/>
+    </semantic:informationRequirement>
+    <semantic:decisionTable id="_860b4ba7-f730-4a22-acf7-90463336e677" hitPolicy="COLLECT"
+      outputLabel="Risk of Embolic Stroke CHA2DS2-VASc" aggregation="SUM" typeRef="number"
+      triso:expressionId="_d210554e-3196-4249-a99a-6f2eb5936dc1">
+      <semantic:input id="_93644744-468b-4731-a094-244562f892ce">
+        <semantic:inputExpression typeRef="string">
+          <semantic:text>cs.Sex</semantic:text>
+        </semantic:inputExpression>
+      </semantic:input>
+      <semantic:input id="_86da0a04-6edc-4c62-8f77-e336a4a95f27">
+        <semantic:inputExpression typeRef="number">
+          <semantic:text>cs.Age</semantic:text>
+        </semantic:inputExpression>
+      </semantic:input>
+      <semantic:output id="_605233eb-f550-44f4-8ab9-0cea5bbcd254" triso:allowNull="true"/>
+      <semantic:annotation name="Description"/>
+      <semantic:rule id="_ecc02ea2-78ab-4e4c-aba0-fd38f3ae3ba1">
+        <semantic:inputEntry id="_be9c2548-707c-4e25-9988-e291dec3459d">
+          <semantic:text>"female"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_f0a99c81-d10e-4a9f-a6d5-a448a51e6cdc">
+          <semantic:text>-</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_4765b4bb-ea67-4aa5-b741-bcef38680290">
+          <semantic:text>1</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text/>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_1e17a627-9040-416e-94c9-878ac38839f9">
+        <semantic:inputEntry id="_31758f28-39ef-45c5-992c-5c91fb431ecf">
+          <semantic:text>-</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_eb233f0b-163d-4e08-a22b-5647c7f6fb66">
+          <semantic:text>&gt;75</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_e8445c06-7ad7-45d1-9082-ff41b5bbd82f">
+          <semantic:text>1</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text/>
+        </semantic:annotationEntry>
+      </semantic:rule>
+    </semantic:decisionTable>
+  </semantic:decision>
+  <semantic:inputData id="inputData__93644744-468b-4731-a094-244562f892ce" name="cs.Sex">
+    <semantic:variable name="cs.Sex" id="_ba206a9e-7595-4315-992e-ee1167e26857" typeRef="string"/>
+  </semantic:inputData>
+  <semantic:inputData id="inputData__86da0a04-6edc-4c62-8f77-e336a4a95f27" name="cs.Age">
+    <semantic:variable name="cs.Age" id="_efd00f9f-1af9-413d-8c7a-74b2f2b956b0" typeRef="number"/>
+  </semantic:inputData>
+  <semantic:textAnnotation id="_c46ead29-644d-452e-931e-8f03a80d6027">
+    <semantic:text>Computable Assessment decisision</semantic:text>
+  </semantic:textAnnotation>
+  <semantic:association id="_a7b24103-8e47-463f-8b26-a26f477446da">
+    <semantic:sourceRef href="#_300c163b-7f82-4d8d-8836-1a851c531655"/>
+    <semantic:targetRef href="#_c46ead29-644d-452e-931e-8f03a80d6027"/>
+  </semantic:association>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="_2d1d9e4c-f7b8-46f9-9a6a-ce84f44bc7a7"
+      triso:modelElementRef="_b6f3f0d4-edd2-4ecd-b430-2041dfc6344c" name="Page 1">
+      <di:extension>
+        <triso:customAttribute key="knowledgeAssetId"
+          value="https://clinicalknowledgemanagement.mayo.edu/assets/8fd8c5c0-95e8-4957-9d1b-980b87b5677d"
+          type="string" id="_3e9cd461-57c9-4072-b7db-50b19bf6d157"/>
+        <triso:semanticLink id="_3999b476-f489-464d-acc0-4137e10edefc"
+          name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'Semantic Decision Model"
+          modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+          uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
+        <triso:semanticLink id="b47f0d19-03f6-45e1-9f85-29aeaba10af2"
+          name="ClinicalSituations - Anticoagulation Indicated for Stroke Preventionin 'PropositionalConcepts - 20190801'"
+          modelURI="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+          uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#17bc5143-a574-3f20-9f0e-55a6d71a8631"/>
+      </di:extension>
+      <dmndi:Size height="1050" width="1510.4823417663574"/>
+      <dmndi:DMNShape id="_d9c9b391-cd84-4549-aec4-c75571d4908c"
+        dmnElementRef="_454020e7-6b43-4d37-9011-b4fa6c8f04b2">
+        <dc:Bounds x="663.5" y="201" width="153" height="60"/>
+        <dmndi:DMNLabel sharedStyle="LS_a28abf7b-0a5e-4f17-bce4-328f7604dcbb_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_de1ae037-7119-4e47-accf-2e994fe28067"
+        dmnElementRef="_300c163b-7f82-4d8d-8836-1a851c531655">
+        <dc:Bounds x="826.5" y="318" width="153" height="60"/>
+        <dmndi:DMNLabel sharedStyle="LS_a28abf7b-0a5e-4f17-bce4-328f7604dcbb_0"
+          trisodmn:defaultBounds="true">
+          <dmndi:Text>Risk of Embolic Stroke (CHA2DS2-VASc)</dmndi:Text>
+        </dmndi:DMNLabel>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_31e35296-b108-45cf-b45e-9cacc847c437"
+        dmnElementRef="_c46ead29-644d-452e-931e-8f03a80d6027">
+        <dc:Bounds x="1054.4823417663574" y="218" width="100" height="51"/>
+        <dmndi:DMNLabel sharedStyle="LS_a28abf7b-0a5e-4f17-bce4-328f7604dcbb_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="_32044db3-eb41-4588-ad76-202ef4151496"
+        dmnElementRef="_e51d2cbb-f201-41ab-95d3-c4c62859035c">
+        <di:waypoint x="893" y="318"/>
+        <di:waypoint x="770" y="261"/>
+        <dmndi:DMNLabel sharedStyle="LS_a28abf7b-0a5e-4f17-bce4-328f7604dcbb_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_b15e3198-065a-42e4-a48d-c9740066c00b"
+        dmnElementRef="_a7b24103-8e47-463f-8b26-a26f477446da">
+        <di:waypoint x="979.5" y="348"/>
+        <di:waypoint x="1056.4823417663574" y="245.54"/>
+        <dmndi:DMNLabel sharedStyle="LS_a28abf7b-0a5e-4f17-bce4-328f7604dcbb_0"/>
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+    <dmndi:DMNStyle id="LS_a28abf7b-0a5e-4f17-bce4-328f7604dcbb_0"
+      fontFamily="arial,helvetica,sans-serif" fontSize="11" fontBold="false" fontItalic="false"
+      fontUnderline="false" fontStrikeThrough="false"/>
+  </dmndi:DMNDI>
+</semantic:definitions>

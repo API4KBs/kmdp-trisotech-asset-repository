@@ -25,7 +25,7 @@ public class TrisotechApiUrls {
   // content of specified repository; set up for URIComponentsBuilder; mimetype and path are optional
   public static String CONTENT_PATH = "repositorycontent?repository={repo}&mimetype={mime}&path={path}";
   // versions of specific file within specified repository
-  public static String VERSIONS_PATH = "repositoryfileversion?repository=%s&id=%s&mimetype=%s";
+  public static String VERSIONS_PATH = "repositoryfileversion?repository={repo}&id={fileId}&mimetype={mime}";
 
 
   // TODO: Do we have a need to ever get the JSON? CAO

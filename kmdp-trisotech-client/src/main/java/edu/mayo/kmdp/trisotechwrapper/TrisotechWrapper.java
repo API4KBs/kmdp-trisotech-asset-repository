@@ -15,30 +15,40 @@
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
-import com.fasterxml.jackson.core.Versioned;
-import edu.mayo.kmdp.id.VersionedIdentifier;
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
-import edu.mayo.kmdp.trisotechwrapper.models.*;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.BASE_URL;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_XML_MIMETYPE;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CONTENT_PATH;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.MEA_TEST;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.REPOSITORY_PATH;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.TOKEN;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.VERSIONS_PATH;
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+
+import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileData;
+import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
+import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
 import edu.mayo.kmdp.util.XMLUtil;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
-
-import java.io.IOException;
-import java.net.*;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.*;
-import static org.springframework.http.HttpHeaders.ACCEPT;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.MediaType.*;
 
 /**
  * Class to wrap the calls to Trisotech in meaningful ways.
@@ -253,18 +263,20 @@ public class TrisotechWrapper {
   public static List<TrisotechFileInfo> getModelVersions(String repositoryName, String modelId, String mimetype) {
     System.out.println("getModelVersions for model: " + modelId + " in repository: " + repositoryName + " with mimetype: " + mimetype);
     String repositoryId = getRepositoryId(repositoryName);
-    String urlString = BASE_URL + String.format(VERSIONS_PATH, repositoryId, modelId, mimetype);
-    System.out.println("url string: " + urlString);
-    List<TrisotechFileInfo> versions = new ArrayList<>();
-    HttpEntity<?> requestEntity = getHttpEntity();
-    RestTemplate restTemplate = new RestTemplate();
-    // ********* NOTE: MUST send URI here to avoid further encoding, otherwise it will be double-encoded and request
-    // will fail to return all the values expected **********
-    TrisotechFileData tfd =
-        restTemplate.exchange(urlString, HttpMethod.GET, requestEntity, TrisotechFileData.class).getBody();
+    URI uri;
+    uri = UriComponentsBuilder.fromHttpUrl(new StringBuilder()
+        .append(BASE_URL)
+        .append(VERSIONS_PATH).toString())
+        .build(repositoryId, modelId, mimetype);
 
-    // TODO: only unique versions? and then, only latest of each version? CAO
-    tfd.getData().stream().forEach((datum -> versions.add(datum.getFile())));
+    System.out.println("uri string: " + uri.toString());
+    List<TrisotechFileInfo> versions = new ArrayList<>();
+    try {
+      // TODO: only unique versions? and then, only latest of each version? CAO
+      getRepositoryContent(uri).getData().stream().forEach((datum -> versions.add(datum.getFile())));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     return versions;
   }
@@ -530,7 +542,5 @@ public class TrisotechWrapper {
     }
     return conn;
   }
-
-
 
 }

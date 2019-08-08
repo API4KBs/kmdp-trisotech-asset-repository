@@ -231,7 +231,7 @@ class WeaverTest {
 
   private boolean confirmDecisionURI(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
-        .filter(el -> el.getLocalName().equals(Weaver.getDecisionEl()))
+        .filter(el -> el.getLocalName().equals(weaver.getDecisionEl()))
         .forEach(element -> {
           Attr attr = element.getAttributeNode("externalRef");
           if (!attr.getValue().contains("ns") || attr.getValue().contains("_")) {

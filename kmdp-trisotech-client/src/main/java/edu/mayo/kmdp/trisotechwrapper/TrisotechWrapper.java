@@ -308,7 +308,7 @@ public class TrisotechWrapper {
             .withEstablishedOn(
                 DatatypeFactory.newInstance().newXMLGregorianCalendar(tfi.getUpdated()));
       } catch (DatatypeConfigurationException e) {
-        logger.error(e.getMessage(), e.getStackTrace());
+        logger.error(String.format("%s%s", e.getMessage(), e.getStackTrace()));
       }
     }
     return null; // TODO: better default return value? CAO

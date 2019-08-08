@@ -133,6 +133,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         default:
           throw new IllegalStateException("Invalid Language detected." + rep.get().getLanguage());
       }
+    } else {
+      throw new IllegalStateException("Invalid Language detected." + rep);
     }
     // Identifiers
     Optional<String> docId = getArtifactID(dox, meta);

@@ -18,7 +18,10 @@ package edu.mayo.kmdp.preprocess.meta;
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import java.net.URI;
+import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.w3c.dom.Document;
 
@@ -36,11 +39,25 @@ public interface ExtractionStrategy {
 
 	Optional<URIIdentifier> getAssetID( Document dox );
 
+	Optional<URIIdentifier> getAssetID(URIIdentifier artifactId, String versionTag)
+			throws NotLatestVersionException;
+
+	URIIdentifier getAssetID(URI artifact);
+
+	Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
+	Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag);
+
 	Optional<String> getArtifactVersionTag( Document dox, TrisotechFileInfo meta );
 
 	Optional<String> getArtifactID( Document dox, TrisotechFileInfo meta );
 
-	Optional<Representation> getRepLanguage( Document dox, boolean concrete );
+  String getArtifactID(URIIdentifier assetId, String versionTag) throws NotLatestVersionException;
+
+  Optional<Representation> getRepLanguage( Document dox, boolean concrete );
+
+  Optional<String> getMimetype(UUID assetId);
+
+	Optional<String> getArtifactVersion(UUID assetId);
 
 	String getMetadataEntryNameForID( String id );
 
@@ -50,6 +67,6 @@ public interface ExtractionStrategy {
 		return new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset();
 	}
 
-	URIIdentifier extractAssetID( Document dox, TrisotechFileInfo meta );
+	URIIdentifier extractAssetID( Document dox );
 
 }

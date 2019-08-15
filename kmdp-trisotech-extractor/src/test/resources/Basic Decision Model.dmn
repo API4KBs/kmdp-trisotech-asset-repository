@@ -19,14 +19,14 @@
   <semantic:decisionService id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356_DS"
     name="Whole Model Decision Service" triso:dynamicDecisionService="true">
     <semantic:variable name="Whole Model Decision Service"
-      id="_522c26b4-6978-4d9c-b605-8788de660a03" typeRef="Any"/>
+      id="_633cd1ef-699b-4956-9032-b7056e9f17e4" typeRef="Any"/>
     <semantic:outputDecision href="#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"/>
     <semantic:inputData href="#_c8828c20-d075-42bf-bc5e-ad5b4e52ef1d"/>
     <semantic:inputData href="#_ffc7572a-2d99-4721-8cf0-a0f2f0aa5f13"/>
   </semantic:decisionService>
   <semantic:decisionService id="_b1cbbae9-a4c0-4a85-bb26-4c10bf35a750_DS" name="Diagram Page 1"
     triso:dynamicDecisionService="true">
-    <semantic:variable name="Diagram Page 1" id="_74aaf4f3-c9f7-475b-a55b-09f084b44328"
+    <semantic:variable name="Diagram Page 1" id="_2844a891-0d16-4317-afb8-a58bfc0f07c3"
       typeRef="Any"/>
     <semantic:outputDecision href="#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"/>
     <semantic:inputData href="#_c8828c20-d075-42bf-bc5e-ad5b4e52ef1d"/>

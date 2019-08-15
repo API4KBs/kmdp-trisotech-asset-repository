@@ -49,6 +49,11 @@
       <version>${kmdp.version}</version>
     </dependency>
     <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>terms-generator</artifactId>
+      <version>${kmdp.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>

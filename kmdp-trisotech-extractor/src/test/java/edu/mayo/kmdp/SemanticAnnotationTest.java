@@ -58,6 +58,7 @@ class SemanticAnnotationTest {
 	@Disabled("testExtraction: Current_Chronological_Age no longer exists...need input files updated to Trisotech")
 	@Test
 	void testExtraction() {
+		// TODO: when have more annotations and examples CAO
 //		String dmnPath = "/ComputableDM.dmn";
 //		String metaPath = "/ComputableDM_Info.json";
 //
@@ -114,10 +115,9 @@ class SemanticAnnotationTest {
 	}
 
 
-  @Disabled("testExtractionFull: FIX")
 	@Test
 	void testExtractionFull() {
-		String dmnPath = "/WeaverTest1.dmn";
+		String dmnPath = "/Weaver Test 1.dmn";
 		String metaPath = "/WeaverTest1Meta.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))

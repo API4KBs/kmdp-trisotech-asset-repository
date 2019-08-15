@@ -41,9 +41,9 @@ class MetadataTest {
 
   private static MetadataExtractor extractor = new MetadataExtractor();
 
-  private static String dmnPath = "/WeaverTest1.dmn";
+  private static String dmnPath = "/Weaver Test 1.dmn";
   private static String metaPath = "/WeaverTest1Meta.json";
-  private static String cmmnPath = "/WeaveTest1.cmmn";
+  private static String cmmnPath = "/Weave Test 1.cmmn";
   private static String cmmnMetaPath = "/WeaveTest1Meta.json";
 
   private static Weaver dmnWeaver;
@@ -77,7 +77,6 @@ class MetadataTest {
 
   }
 
-  @Disabled("testExtraction failing for DMN 1.2")
   @Test
   void testExtraction() {
     try {
@@ -101,7 +100,6 @@ class MetadataTest {
     }
   }
 
-  @Disabled ("testXMLValidate failing after upgrade to 2.0.2; FIX")
   @Test
   void testXMLValidate() {
     Optional<ByteArrayOutputStream> baos = extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
@@ -121,8 +119,6 @@ class MetadataTest {
     }
   }
 
-
-  @Disabled ("testToXML failing after upgrade to 2.0.2; FIX")
   @Test
   void testToXML() {
     assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
@@ -138,7 +134,6 @@ class MetadataTest {
 
   }
 
-  @Disabled("testToJson failing for DMN 1.2")
   @Test
   void testToJson() {
     assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedDMN ),
@@ -146,12 +141,11 @@ class MetadataTest {
         JSON,
         JaxbUtil.defaultProperties() )
         .map( Util::printOut ).isPresent() );
-    // TODO: fix this when have a valid CMMN file CAO
-//    assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
-//        MetadataTest.class.getResourceAsStream(cmmnMetaPath),
-//        JSON,
-//        JaxbUtil.defaultProperties() )
-//        .map( Util::printOut ).isPresent() );
+    assertTrue( extractor.doExtract( new ByteArrayInputStream( annotatedCMMN ),
+        MetadataTest.class.getResourceAsStream(cmmnMetaPath),
+        JSON,
+        JaxbUtil.defaultProperties() )
+        .map( Util::printOut ).isPresent() );
   }
 
 

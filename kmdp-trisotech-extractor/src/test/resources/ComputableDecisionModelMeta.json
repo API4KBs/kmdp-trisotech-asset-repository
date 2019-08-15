@@ -1,0 +1,12 @@
+{
+  "file": {
+    "id": "36b96ca1-41e0-44d8-b3b1-24576833c15a",
+    "sku": "36b96ca1-41e0-44d8-b3b1-24576833c15a",
+    "name": "Computable Decision Model",
+    "path": "/jls test models",
+    "mimetype": "application/vnd.triso-dmn+json",
+    "updated": "2019-08-08T16:54:40Z",
+    "updater": "Shellum, Jane L., M.H.A.",
+    "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=/jls%20test%20models&sku=36b96ca1-41e0-44d8-b3b1-24576833c15a"
+  }
+}

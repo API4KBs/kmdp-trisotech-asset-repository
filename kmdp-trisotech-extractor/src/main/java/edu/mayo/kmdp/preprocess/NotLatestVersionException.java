@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.preprocess.meta;
+package edu.mayo.kmdp.preprocess;
 
-import java.util.regex.Pattern;
-
-public class ModelReader implements TrisotechReader {
-
-  protected Pattern urlPattern;
-
-  protected ReaderConfig        config;
-
-  public ModelReader(ReaderConfig config) {
-    this.config = config;
-
-    this.urlPattern = Pattern.compile( config.getTyped( ReaderOptions.URL_PATTERN_ST ) );
+/**
+ * Exception to handle when the asset version we're looking for doesn't exist for the artifact.
+ * Provide the model URI for the artifact as the errorMessage.
+ */
+public class NotLatestVersionException extends Exception {
+  public NotLatestVersionException(String errorMessage) {
+    super(errorMessage);
   }
-
-  public Pattern getURLPattern() {
-    return urlPattern;
-  }
-
 
 }

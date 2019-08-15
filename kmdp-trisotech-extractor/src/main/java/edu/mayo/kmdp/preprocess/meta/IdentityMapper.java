@@ -1,32 +1,29 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.TOKEN;
-import static org.apache.http.HttpHeaders.AUTHORIZATION;
-
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
-import edu.mayo.kmdp.preprocess.NotLatestVersionException;
+import edu.mayo.kmdp.preprocess.NoArtifactVersionException;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls;
-import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
@@ -44,21 +41,28 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.query.ResultSetRewindable;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.TOKEN;
+import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
+import static org.apache.http.HttpHeaders.AUTHORIZATION;
+
+// TODO: Rework for Trisotech data CAO
+// What is the purpose of this class? CAO
 
 /**
- * IdentityMapper is used to map dependencies between Trisotech artifacts. SPARQL is used to query
- * the triples from Trisotech for this information. Each artifact has its own assetID, which is also
- * accessible via triples, so asset-to-asset mapping can be handled here as well.
+ * IdentityMapper is used to map dependencies between Trisotech artifacts.
+ * SPARQL is used to query the triples from Trisotech for this information.
+ * Each artifact has its own assetID, which is also accessible via triples,
+ * so asset-to-asset mapping can be handled here as well.
+ *
  */
 public class IdentityMapper {
 
-  private static Logger logger = LogManager.getLogger(IdentityMapper.class);
-
-  // SPARQL Strings
   // PREFIX sets up the namespaces to be used in the query
   private static final String QUERYSTRINGPREFIX =
       "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
@@ -69,19 +73,14 @@ public class IdentityMapper {
           + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
           + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>";
   private static final String TRISOTECH_GRAPH = "<http://trisotech.com/graph/1.0/graph#";
-  private static final String ASSET_ID = "?assetId";
-  private static final String FILE_ID = "?fileId";
-  private static final String MODEL = "?model";
-  private static final String MIME_TYPE = "?mimeType";
-  private static final String VERSION = "?version";
+  public static final String ASSET_ID = "?assetId";
+  public static final String FILE_ID = "?fileId";
+  public static final String MODEL = "?model";
+  public static final String MIME_TYPE = "?mimeType";
 
-  // HierarchySorter will sort in reverse order of use, so an artifact imported by another will be at the top of the tree after the sort
   private HierarchySorter hierarchySorter = new HierarchySorter();
-  // map of artifact relations (artifact = model)
   private Map<Resource, Set<Resource>> artifactToArtifactIDMap = new HashMap<>();
-  // make the resultSet rewindable because will need to access it many times; if not rewindable, cannot get back to the beginning
   private ResultSetRewindable models;
-  // results of the hierarchySorter
   private List<Resource> orderedModels;
 
 
@@ -96,7 +95,6 @@ public class IdentityMapper {
     orderedModels = hierarchySorter.linearize(getModelList(models), artifactToArtifactIDMap);
   }
 
-  // TODO: not used. needed? CAO
   public List<Resource> getOrderedModels() {
     return orderedModels;
   }
@@ -114,6 +112,7 @@ public class IdentityMapper {
    * return the list of models from the triples
    *
    * @param modelResults the resultSet from a SPARQL query
+   * @return
    */
   private List<Resource> getModelList(ResultSet modelResults) {
     List<Resource> modelList = new ArrayList<>();
@@ -124,12 +123,6 @@ public class IdentityMapper {
     return modelList;
   }
 
-  /**
-   * Perform the query
-   *
-   * @param queryString the queryString to be executed
-   * @return The ResultSet with the results from the query
-   */
   private ResultSet query(String queryString) {
     Query query = QueryFactory.create(queryString);
 
@@ -147,13 +140,13 @@ public class IdentityMapper {
 
 
   /**
-   * Build the queryString needed to query the DMN->DMN and CMMN->DMN relations in the place
-   * requested. This is specific to Trisotech.
+   * Build the queryString needed to query the DMN->DMN and CMMN->DMN relations in the place requested.
+   * This is specific to Trisotech.
    *
    * TODO: only get those models that are Published? CAO
    *
-   * @param place the Trisotech 'place' (aka directory/folder) to query
-   * @return the query string to query the relations between models
+   * @param place
+   * @return
    */
   private String getQueryStringRelations(String place) {
     // value after # specifies the 'place/repository' in Trisotech we are querying
@@ -197,14 +190,12 @@ public class IdentityMapper {
 
 
   /**
-   * Build the queryString needed to query models with their fileId and assetId. This is specific to
-   * Trisotech. TODO: only return models that are Published? CAO By requesting version in the query,
-   * and not making it OPTIONAL, only models that have a version (i.e. are published) will be
-   * returned. HOWEVER, having a version does not mean they have a STATE of 'Published'. The State
-   * could be other values, such as 'Draft'.
+   * Build the queryString needed to query models with their fileId and assetId.
+   * This is specific to Trisotech.
+   * TODO: only return models that have a version (i.e. are published)? CAO
    *
    * @param place the location the query should use 'place/repository/directory'
-   * @return the query string needed to query the models
+   * @return
    */
   private String getQueryStringModels(String place) {
     // value after # specifies the 'place/repository' in Trisotech we are querying
@@ -218,7 +209,7 @@ public class IdentityMapper {
         // ?assetId is the enterprise ID that is associated with this artifact; can vary by version
         // ?version is the latest version of the model
         // ?mimeType helps with the ability to retrieve the correct filetype for the model
-        + "SELECT ?model ?fileId ?assetId ?version ?mimeType ?artifactName"
+        + "SELECT ?model ?fileId ?assetId ?version ?mimeType"
         // Trisotech requires a NAMED GRAPH be used or will fail
         + " FROM NAMED " + graph
         + "WHERE { "
@@ -227,8 +218,6 @@ public class IdentityMapper {
         + "    {"
         // gets the models that are of type DMNModel
         + "         ?model a tt:DMNModel."
-        // gets the name for the model
-        + "         ?model rdfs:label ?artifactName."
         // gets the fileId
         + "         ?model ttr:fileId ?fileId."
         // gets the version - only latest version is returned; there will only be a version if the model is published
@@ -243,14 +232,12 @@ public class IdentityMapper {
         // then get the assetId from the customAttribute
         // TODO: do we need to confirm the customAttributeKey to verify it is what we expect? and how would that happen? CAO
         + "         ?caElement ttr:customAttributeValue ?assetId."
-        // TODO: only return Published models? CAO
+        // TODO: only return published models? CAO
         + "    }"
         + " UNION "
         + "    {"
         // gets the models that are of type CMMNModel
         + "         ?model a tt:CMMNModel."
-        // gets the name for the model
-        + "         ?model rdfs:label ?artifactName."
         // gets the fileId
         + "         ?model ttr:fileId ?fileId."
         // gets the version
@@ -265,34 +252,41 @@ public class IdentityMapper {
         // then get the assetId from the customAttribute
         // TODO: do we need to confirm the customAttributeKey to verify it is what we expect? CAO
         + "         ?caElement ttr:customAttributeValue ?assetId."
-        // TODO: only return Published models? CAO
         + "    }"
         + "  }"
         + "}";
 
   }
 
+  public URI getVersionedAsset(UUID assetId, String versionTag) {
+    return null; // TODO: fix this CAO
+  }
+
   /**
-   * Get the asset for the artifact and version provided.
+   * Get the assetId for the artifact given
+   * TODO: is the artifactId the ID for the artifact per the triple, OR is it the FILE id?
+   * TODO cont: This code is assuming artifact per the triple;
+   * TODO cont: this code appears to be all internal, so I can decide which one it is and document as such. CAO
    *
-   * @param artifactId Id for an artifact in the Trisotech models
-   * @param versionTag the version of the artifact
-   * @return URIIdentifier for the asset
-   * @throws NotLatestVersionException thrown if this version is not the latest for the artifact It
-   * is possible the version exists, but is not the latest. Additional processing may be needed.
+   * @param artifactId Id for a artifact in the Trisotech models
+   * @return
    */
+  public Optional<URIIdentifier> getAssetId(URIIdentifier artifactId) {
+    return getAssetId(artifactId.getUri().toString());
+  }
+
   // input should be artifactId (from the triple); version is version of artifact
   public Optional<URIIdentifier> getAssetId(URIIdentifier artifactId, String versionTag)
-      throws NotLatestVersionException {
+      throws NoArtifactVersionException {
     models.reset();
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
 
       if (soln.getResource(MODEL).getURI().equals(artifactId.getUri().toString())) {
-        if (soln.getLiteral(VERSION).getString().equals(versionTag)) {
+        if (soln.getLiteral("?version").getString().equals(versionTag)) {
           return Optional.of(DatatypeHelper.uri(soln.getLiteral(ASSET_ID).toString()));
         } else { // have the artifact, but not version looking for; more work to see if the version exists
-          throw new NotLatestVersionException(soln.getResource(MODEL).getURI());
+          throw new NoArtifactVersionException(soln.getResource(MODEL).getURI());
         }
       }
 
@@ -301,14 +295,17 @@ public class IdentityMapper {
 
   }
 
+
   /**
-   * get the Asset that matches the model for the fileId provided Will return the asset that maps to
-   * the LATEST version of the model.
+   * get the Asset that matches the model for the fileId provided
+   * model ID is not the same as fileId, but fileInfo has fileid.
+   * Will return the asset that maps to the latest version of the model.
    *
-   * @param fileId the id for the file representing the model
+   * @param fileId the fileid for the model
+   * @return
    */
   public Optional<URIIdentifier> getAssetId(String fileId) {
-    logger.debug(String.format("getAssetId for fileId: %s", fileId));
+    System.out.println("getAssetId for fileId: " + fileId);
     models.reset();
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
@@ -320,86 +317,17 @@ public class IdentityMapper {
     return Optional.empty();
   }
 
-  /**
-   * Need to be able to retrieve the asset URIIdentifier given the assetId NOTE: This only checks
-   * the information for the latest version of the model, which is available in the models.
-   *
-   * @param assetId the assetId to get the URIIdentifier for
-   * @return URIIdentifier for the assetId or Empty
-   */
-  // TODO: should have the version passed in also to verify the asset requested is for the asset/version that is available? CAO
-  public Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId) {
-    models.reset();
-    while (models.hasNext()) {
-      QuerySolution soln = models.nextSolution();
-      System.out.println("soln model: " + soln.getResource(MODEL)
-          + " soln assetId: " + soln.getLiteral(IdentityMapper.ASSET_ID).getString()
-          + " soln fileId: " + soln.getLiteral(FILE_ID)
-          + " compared to assetId: " + assetId.toString());
-      String enterpriseAssetVersionId = soln.getLiteral(ASSET_ID).getString();
-
-      if (enterpriseAssetVersionId.contains(assetId.toString())) {
-        // want this to return the ASSETID, NOT the VersionID (which is what this value is)
-
-        System.out.println(
-            "enterpriseAssetId.substring(lastindexOf(/versions)) : " + enterpriseAssetVersionId
-                .substring(enterpriseAssetVersionId
-                    .lastIndexOf("/versions"))); // this gives the versions part: /versions/1.0.1
-        System.out.println(
-            "enterpriseAssetId.substring(0, lastindexOf(/versions)) : " + enterpriseAssetVersionId
-                .substring(0, enterpriseAssetVersionId.lastIndexOf("/versions")));
-
-        // return only the portion of the URI that is hte enterprise Asset ID (no version info)
-        return Optional.ofNullable(
-            // remove the /versions/... part of the URI; enterpriseAssetId is the part without the version
-            URI.create(enterpriseAssetVersionId
-                .substring(0, enterpriseAssetVersionId.lastIndexOf("/versions"))));
-      }
-    }
-    return Optional.empty();
-  }
-
-  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag) {
-    models.reset();
-    while (models.hasNext()) {
-      QuerySolution soln = models.nextSolution();
-      System.out.println("soln model: " + soln.getResource(MODEL)
-          + " soln assetId: " + soln.getLiteral(IdentityMapper.ASSET_ID).getString()
-          + " soln fileId: " + soln.getLiteral(FILE_ID)
-          + " compared to assetId: " + assetId.toString());
-      String enterpriseAssetVersionId = soln.getLiteral(ASSET_ID).getString();
-      if (enterpriseAssetVersionId.contains(assetId.toString())
-          && enterpriseAssetVersionId.contains(versionTag)) {
-
-        // return only the portion of the URI that is hte enterprise Asset ID (no version info)
-        return Optional.ofNullable(
-            URI.create(enterpriseAssetVersionId));
-      }
-    }
-    // TODO: return an error instead?  CAO
-    return Optional.empty();
-  }
-
-  /**
-   * get the artifactId for the asset
-   */
-  public String getArtifactId(URIIdentifier assetId) throws NotLatestVersionException {
+  public String getArtifactId(URIIdentifier assetId) throws NoArtifactVersionException {
     models.reset();
     // this will only match if the exact version of the asset is available on a latest model
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
-      // TODO: need to handle URIIdentifiers not properly created? CAO (ex: DatatypeHelper.uri("my/path/assetId/versions/1.0.0")  OR fix DatatypeHelper?
-      System.out.println("assetId.getUri().toString: " + assetId.getUri().toString());
-      System.out.println("assetId.getVersionId().toString: " + assetId.getVersionId().toString());
-      System.out.println("assetId.getTag(): " + assetId.getTag());
-
-      // versionId value has the UUID of the asset/versions/versionTag, so this will match id and version
-      if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getVersionId().toString())) {
+      if (soln.getLiteral(ASSET_ID).getString().equals(assetId.getUri().toString())) {
         return soln.getResource(MODEL).getURI();
         // the requested version of the asset doesn't exist on the latest model, check if the
         // asset is the right asset for the model and if so, throw error with fileId
       } else if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getTag())) {
-        throw new NotLatestVersionException(soln.getResource(MODEL).getURI());
+        throw new NoArtifactVersionException(soln.getResource(MODEL).getURI());
       }
     }
     return null;
@@ -419,6 +347,7 @@ public class IdentityMapper {
     }
     return Optional.empty();
   }
+
 
   public Optional<String> getMimetype(UUID assetId) {
     models.reset();
@@ -442,42 +371,6 @@ public class IdentityMapper {
       QuerySolution soln = models.nextSolution();
       if (soln.getResource(MODEL).getURI().equals(internalId)) {
         return Optional.ofNullable(soln.getLiteral(FILE_ID).getString());
-      }
-    }
-    return Optional.empty();
-  }
-
-  public Optional<String> getVersion(String internalIdURI) {
-    models.reset();
-    // get just the id, as the path may be different (Trisotech vs KMDP)
-    String internalId = internalIdURI.substring(internalIdURI.lastIndexOf('/') + 1);
-    while (models.hasNext()) {
-      QuerySolution soln = models.nextSolution();
-      if (soln.getResource(MODEL).getURI().contains(internalId)) {
-        return Optional.ofNullable(soln.getLiteral(VERSION).getString());
-      }
-    }
-    return Optional.empty();
-  }
-
-  public Optional<String> getArtifactIdVersion(UUID assetId) {
-    models.reset();
-    while (models.hasNext()) {
-      QuerySolution soln = models.nextSolution();
-      if (soln.getLiteral(ASSET_ID).getString().contains(assetId.toString())) {
-        return Optional.ofNullable(soln.getLiteral(VERSION).getString());
-      }
-    }
-    return Optional.empty();
-  }
-
-  public Optional<String> getArtifactName(String internalIdURI) {
-    models.reset();
-    String internalId = internalIdURI.substring(internalIdURI.lastIndexOf('/') + 1);
-    while (models.hasNext()) {
-      QuerySolution soln = models.nextSolution();
-      if (soln.getResource(MODEL).getURI().contains(internalId)) {
-        return Optional.ofNullable(soln.getLiteral("?artifactName").getString());
       }
     }
     return Optional.empty();
@@ -529,10 +422,12 @@ public class IdentityMapper {
         while (models.hasNext()) {
           QuerySolution soln = models.nextSolution();
           if (soln.getResource(MODEL).getURI().equals(k.getLocalName())) {
-            assets
-                .add(
-                    new URIIdentifier()
-                        .withUri(URI.create(soln.getLiteral(ASSET_ID).getString())));
+            try {
+              assets
+                  .add(new URIIdentifier().withUri(new URI(soln.getLiteral(ASSET_ID).getString())));
+            } catch (URISyntaxException e) {
+              e.printStackTrace();
+            }
           }
 
         }
@@ -540,6 +435,5 @@ public class IdentityMapper {
     });
     return assets;
   }
-
 
 }

@@ -25,6 +25,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -112,12 +113,12 @@ class TrisotechWrapperTestInt {
   final void testGetModelInfoByIdAndVersionDMN() {
     String expectedVersion = "1.2";
     String expectedVersion_2 = "0.1";
-    TrisotechFileInfo fileInfo = TrisotechWrapper.getFileInfoByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion);
+    TrisotechFileInfo fileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion);
     assertNotNull(fileInfo);
     assertTrue(expectedVersion.equals(fileInfo.getVersion()));
     assertTrue(WEAVER_TEST_1_ID.equals(fileInfo.getId()));
 
-    fileInfo = TrisotechWrapper.getFileInfoByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
+    fileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
     assertTrue(expectedVersion_2.equals(fileInfo.getVersion()));
     assertTrue(WEAVER_TEST_2_ID.equals(fileInfo.getId()));
   }
@@ -125,12 +126,12 @@ class TrisotechWrapperTestInt {
   final void testGetModelInfoByIdAndVersionCMMN() {
     String expectedVersion = "2.0";
     String expectedVersion_2 = "1.0";
-    TrisotechFileInfo fileInfo = TrisotechWrapper.getFileInfoByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion);
+    TrisotechFileInfo fileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion);
     assertNotNull(fileInfo);
     assertTrue(expectedVersion.equals(fileInfo.getVersion()));
     assertTrue(WEAVE_TEST_1_ID.equals(fileInfo.getId()));
 
-    fileInfo = TrisotechWrapper.getFileInfoByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2);
+    fileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2);
     assertNull(fileInfo);
 
   }
@@ -231,7 +232,7 @@ class TrisotechWrapperTestInt {
     String expectedVersion = "1.8";
     XMLGregorianCalendar expectedUpdated = null;
     try {
-      expectedUpdated = DatatypeFactory.newInstance().newXMLGregorianCalendar("2019-08-06T22:16:54Z");
+      expectedUpdated = DatatypeFactory.newInstance().newXMLGregorianCalendar("2019-08-06T20:21:53Z");
     } catch (DatatypeConfigurationException e) {
       e.printStackTrace();
     }
@@ -259,7 +260,7 @@ class TrisotechWrapperTestInt {
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {
     String expectedVersion = "1.8";
-    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID);
+    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getModelInfo(WEAVER_TEST_1_ID);
     VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
@@ -268,7 +269,7 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetLatestVersionArtifactIdCMMN() {
-    String expectedVersion = "2.2.1";
+    String expectedVersion = "2.2";
     VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
@@ -277,8 +278,8 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoCMMN() {
-    String expectedVersion = "2.2.1";
-    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID);
+    String expectedVersion = "2.2";
+    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getModelInfo(WEAVE_TEST_1_ID);
     VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
@@ -319,7 +320,7 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetPublishedModelByIdWithFileInfoDMN() {
-    List<TrisotechFileInfo> trisotechFileInfos = TrisotechWrapper.getDMNModelsFileInfo();
+    List<TrisotechFileInfo> trisotechFileInfos = TrisotechWrapper.getDmnModels();
     TrisotechFileInfo trisotechFileInfo = trisotechFileInfos.stream().filter((f) -> f.getId().equals(WEAVER_TEST_1_ID)).findAny().get();
     Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVER_TEST_1_ID, trisotechFileInfo);
     assertNotEquals(Optional.empty(), dox);
@@ -328,7 +329,7 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetDmnModels() {
-    List<TrisotechFileInfo> dmnModels = TrisotechWrapper.getDMNModelsFileInfo();
+    List<TrisotechFileInfo> dmnModels = TrisotechWrapper.getDmnModels();
     assertNotNull(dmnModels);
   }
 
@@ -355,7 +356,7 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetPublishedModelByIdWithFileInfoCMMN() {
-    List<TrisotechFileInfo> trisotechFileInfos = TrisotechWrapper.getCMMNModelsFileInfo();
+    List<TrisotechFileInfo> trisotechFileInfos = TrisotechWrapper.getCmmnModels();
     TrisotechFileInfo trisotechFileInfo = trisotechFileInfos.stream().filter((f) -> f.getId().equals(WEAVE_TEST_1_ID)).findAny().get();
     Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVE_TEST_1_ID, trisotechFileInfo);
     assertNotEquals(Optional.empty(), dox);
@@ -364,28 +365,28 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetCmmnModels() {
-    List<TrisotechFileInfo> cmmnModels = TrisotechWrapper.getCMMNModelsFileInfo();
+    List<TrisotechFileInfo> cmmnModels = TrisotechWrapper.getCmmnModels();
     assertNotNull(cmmnModels);
     assertEquals(3, cmmnModels.size());
   }
 
   @Test
   final void testGetPublishedCmmnModels() {
-    List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedCMMNModelsFileInfo();
+    List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedCMMNModels();
     assertNotNull(publishedModels);
     assertEquals(2, publishedModels.size());
   }
 
   @Test
   final void testGetPublishedDmnModels() {
-    List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedDMNModelsFileInfo();
+    List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedDmnModels();
     assertNotNull(publishedModels);
     assertEquals(3, publishedModels.size());
   }
 
   @Test
   final void testGetModelInfoDMN() {
-    TrisotechFileInfo fileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID);
+    TrisotechFileInfo fileInfo = TrisotechWrapper.getModelInfo(WEAVER_TEST_1_ID);
     assertNotNull(fileInfo);
     assertTrue("Weaver Test 1".equals(fileInfo.getName()));
     assertTrue(WEAVER_TEST_1_ID.equals(fileInfo.getId()));
@@ -395,7 +396,7 @@ class TrisotechWrapperTestInt {
 
   @Test
   final void testGetModelInfoCMMN() {
-    TrisotechFileInfo fileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID);
+    TrisotechFileInfo fileInfo = TrisotechWrapper.getModelInfo(WEAVE_TEST_1_ID);
     assertNotNull(fileInfo);
     assertTrue("Weave Test 1".equals(fileInfo.getName()));
     assertTrue(WEAVE_TEST_1_ID.equals(fileInfo.getId()));
@@ -419,7 +420,7 @@ class TrisotechWrapperTestInt {
     assertNotNull(dox);
   }
 
-  @Disabled("update when Trisotech provides support again; 404 will become 400")
+  @Disabled("these no longer fail, instead return a JSON file; change on Trisotech side?")
   @Test
   final void testDownloadXmlModelErrors() {
     // Any other exceptions to confirm?

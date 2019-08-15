@@ -35,6 +35,7 @@ import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.Dependen
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class Weaver {
   public static final String VALUE = "value";
   private static Logger logger = LogManager.getLogger(Weaver.class);
 
-  public static final String CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/artifacts/";
+  public static final String CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowlegemanagement.mayo.edu/artifacts/";
   public static final String WWW_W_3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
   private String decisionEl;
   private String elExporter;
@@ -157,6 +158,10 @@ public class Weaver {
 
   public String getDecisionEl() {
     return decisionEl;
+  }
+
+  public ReaderConfig getConfig() {
+    return config;
   }
 
   //DocumentCarrier input = new DocumentCarrier().withStructuredExpression(dox).withRepresentation(rep(DMN_1_2, XML_1_1));
@@ -382,8 +387,7 @@ public class Weaver {
       // and replace the '_' in the ids
       String id = value.substring(value.lastIndexOf('/') + 1).replaceAll("_", "");
       // reset the value to the KMDP URI
-      // TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
-      attr.setValue(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
+      attr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
     }
   }
 
@@ -396,7 +400,7 @@ public class Weaver {
     BaseAnnotationHandler handler = handler(el);
     DatatypeAnnotation dta = new DatatypeAnnotation();
     // TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
-    dta.setValue(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId);
+    dta.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId);
     dta.setRel(DependencyType.Imports.asConcept());
 
     handler.replaceProprietaryElement(el, toChildElement(dta, el));
@@ -448,11 +452,14 @@ public class Weaver {
     // TODO: would there ever be more than one? CAO maybe
     List conceptIdentifiers = new ArrayList<ConceptIdentifier>();
     ConceptIdentifier concept = null;
+    try {
       concept = new ConceptIdentifier().withLabel(el.getAttribute("name"))
           .withTag(el.getAttribute("id"))
-          .withRef(URI.create(el.getAttribute("modelURI")))
-          .withConceptId(URI.create(el.getAttribute("uri")));
-
+          .withRef(new URI(el.getAttribute("modelURI")))
+          .withConceptId(new URI(el.getAttribute("uri")));
+    } catch (URISyntaxException e) {
+      logger.error(String.format("%s%s", e.getMessage(), e.getStackTrace()));
+    }
     conceptIdentifiers.add(concept);
 
     // TODO: shouldn't assume here? id might not have leading '_'? or is that just because of test file? CAO

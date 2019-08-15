@@ -18,7 +18,9 @@ package edu.mayo.kmdp.preprocess.meta;
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.preprocess.NoArtifactVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.w3c.dom.Document;
 
@@ -36,13 +38,20 @@ public interface ExtractionStrategy {
 
 	Optional<URIIdentifier> getAssetID( Document dox );
 
+	Optional<URIIdentifier> getAssetID(URIIdentifier artifactId, String versionTag)
+			throws NoArtifactVersionException;
+
 	Optional<String> getArtifactVersionTag( Document dox, TrisotechFileInfo meta );
 
 	Optional<String> getArtifactID( Document dox, TrisotechFileInfo meta );
 
-	Optional<Representation> getRepLanguage( Document dox, boolean concrete );
+  String getArtifactID(URIIdentifier assetId, String versionTag) throws NoArtifactVersionException;
 
-	String getMetadataEntryNameForID( String id );
+  Optional<Representation> getRepLanguage( Document dox, boolean concrete );
+
+  Optional<String> getMimetype(UUID assetId);
+
+  String getMetadataEntryNameForID( String id );
 
 	default KnowledgeAsset newSurrogate() {
 		// surrogate.resources.KnowledgeAsset extends metadata.surrogate.KnowledgeAsset,

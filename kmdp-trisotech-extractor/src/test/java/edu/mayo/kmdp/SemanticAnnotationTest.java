@@ -117,7 +117,7 @@ class SemanticAnnotationTest {
   @Disabled("testExtractionFull: FIX")
 	@Test
 	void testExtractionFull() {
-		String dmnPath = "/WeaverTest1.dmn";
+		String dmnPath = "/Weaver Test 1.dmn";
 		String metaPath = "/WeaverTest1Meta.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.SurrogateHelper;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import edu.mayo.kmdp.preprocess.NoArtifactVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
@@ -32,7 +33,6 @@ import java.util.*;
 
 import static edu.mayo.kmdp.util.JaxbUtil.marshall;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
-import static edu.mayo.kmdp.util.ZipUtil.readZipEntry;
 
 // TODO: rework for Trisotech data CAO
 // TODO: What does this class do? What is its purpose in life? CAO
@@ -73,6 +73,7 @@ public class MetadataExtractor {
     this.mapper = mapper;
   }
 
+  // TODO: Needed? not used CAO
   public MetadataExtractor( IdentityMapper mapper, Map<String,URIIdentifier> idMap ) {
     strategy = new TrisotechExtractionStrategy();
     strategy.setMapper( mapper );
@@ -83,9 +84,9 @@ public class MetadataExtractor {
     return mapper;
   }
 
-  public void init( Map<String,URIIdentifier> idMap ) {
-    idMap.forEach( mapper::map );
-  }
+//  public void init( Map<String,URIIdentifier> idMap ) {
+//    idMap.forEach( mapper::map );
+//  }
 
   public Optional<KnowledgeAsset> extract(InputStream resource, InputStream meta ) {
     Optional<Document> dox = loadXMLDocument( resource );
@@ -103,7 +104,7 @@ public class MetadataExtractor {
 
 
   public Optional<ByteArrayOutputStream> doExtract( InputStream resource, InputStream meta, Format f, Properties p ) {
-    return extract( resource, meta ).flatMap( surr -> {
+    return extract( resource, meta ).flatMap( (surr) -> {
       switch ( f ) {
         case JSON :
           Optional<ByteArrayOutputStream> jsonExtract = JSonUtil.writeJson(surr, p);
@@ -140,20 +141,62 @@ public class MetadataExtractor {
     return strategy.extractXML( dox, meta );
   }
 
+
+  // TODO: need getAssetId w/dox & info when have mapping??  CAO
   public URIIdentifier getAssetId( Document dox, TrisotechFileInfo info ) {
     return strategy.extractAssetID( dox, info );
   }
 
-  public URIIdentifier resolveEnterpriseAssetID( String internalId ) {
-    return strategy.getMapper().getResourceId( internalId )
-            .orElseThrow( () -> new IllegalStateException( "Defensive: Unable to resolve internal ID" + internalId + " to a known Enterprise ID" ) );
+  public Optional<URIIdentifier> getAssetId(URIIdentifier artifactId, String versionTag)
+      throws NoArtifactVersionException {
+    return strategy.getAssetID(artifactId, versionTag);
+  }
+
+  public String getArtifactId(URIIdentifier assetId, String versionTag)
+      throws NoArtifactVersionException {
+    return strategy.getArtifactID(assetId, versionTag);
+  }
+
+  public Optional<String> getMimetype(UUID assetId) {
+    return strategy.getMimetype(assetId);
+  }
+
+  /**
+   * enterpriseAssetId is the assetId found in the Carrier/model/XML file from Trisotech
+   *
+   * @param fileId the carrier ID to resolve to an enterprise ID
+   * @return
+   */
+  public URIIdentifier resolveEnterpriseAssetID( String fileId ) {
+    return strategy.getMapper().getAssetId( fileId )
+            .orElseThrow( () -> new IllegalStateException( "Defensive: Unable to resolve internal ID" + fileId + " to a known Enterprise ID" ) );
   }
 
 
-  public String resolveInternalArtifactID(String assetId, String versionTag) {
+  /**
+   * internalArtifactID is the id of the Carrier/model in Trisotech
+   *
+   * @param assetId
+   * @param versionTag
+   * @return
+   */
+  public String resolveInternalArtifactID(String assetId, String versionTag)
+      throws NoArtifactVersionException {
+    // TODO: Query to Davide -- need to find specific version of artifactId for this version of assetId? yes CAO
     URIIdentifier id = DatatypeHelper.uri(assetId, versionTag);
-    return this.mapper.getInternalId(id)
-            .orElseThrow(() -> new IllegalStateException( "Defensive: Unable to resolve external ID" + assetId + " to a known internal ID" ));
+    try {
+      return strategy.getMapper().getArtifactId(id);
+    } catch (NoArtifactVersionException e) {
+      throw e;
+    }
   }
 
+
+  public Optional<String> getFileId(UUID assetId) {
+    return strategy.getMapper().getFileId(assetId);
+  }
+
+  public Optional<String> getFileId(String internalId) {
+    return strategy.getMapper().getFileId(internalId);
+  }
 }

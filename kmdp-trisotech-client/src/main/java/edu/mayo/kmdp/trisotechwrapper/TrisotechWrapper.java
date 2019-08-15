@@ -57,6 +57,7 @@ import org.apache.logging.log4j.Logger;
  * Class to wrap the calls to Trisotech in meaningful ways.
  */
 public class TrisotechWrapper {
+
   private static Logger logger = LogManager.getLogger(TrisotechWrapper.class);
   private static final String PUBLISHED_STATE = "Published";
   // TODO: search for this particular directory or just use the known ID of our known repository and skip the places call? CAO
@@ -77,16 +78,26 @@ public class TrisotechWrapper {
     return getModelById(modelId, null);
   }
 
-  public static Optional<Document> getModelById(String modelId, TrisotechFileInfo trisotechFileInfo) {
+  /**
+   * Retrieves the latest version of the model for the modelId provided.
+   * Assumes trisostechFileInfo has the appropriate XML file info
+   * TODO: make no assumptions about fileInfo? CAO
+   *
+   * @param modelId the id for the model file
+   * @param trisotechFileInfo the fileinfo for the model
+   * @return the XML document
+   */
+  public static Optional<Document> getModelById(String modelId,
+      TrisotechFileInfo trisotechFileInfo) {
     try {
       if (null == trisotechFileInfo) {
         trisotechFileInfo = getModelInfo(modelId);
       }
-      if(null != trisotechFileInfo) {
+      if (null != trisotechFileInfo) {
         return Optional.of(downloadXmlModel(trisotechFileInfo.getUrl()));
       }
     } catch (Exception e) { // TODO: Better exception handling. Do we have a preferred process? CAO
-      logger.error(String.format("%s%s", e.getMessage(), e.getStackTrace()));
+      logger.error(String.format("%s %s", e.getMessage(), e.getStackTrace()));
     }
     return Optional.empty();
   }
@@ -104,7 +115,8 @@ public class TrisotechWrapper {
   }
 
 
-  public static Optional<Document> getPublishedModelById(String modelId, TrisotechFileInfo trisotechFileInfo) {
+  public static Optional<Document> getPublishedModelById(String modelId,
+      TrisotechFileInfo trisotechFileInfo) {
     try {
       if (null == trisotechFileInfo) {
         trisotechFileInfo = getModelInfo(modelId);
@@ -163,53 +175,89 @@ public class TrisotechWrapper {
   }
 
   /**
-   * data from the query of the repository IS the model info, HOWEVER, if don't know the model TYPE,
-   * then need to query again to get the appropriate XML url
+   * data from the query of the repository IS the model info, HOWEVER, need to know the model TYPE,
+   * for the query to get the appropriate XML url
    *
    * @param modelID
    * @return
    */
   public static TrisotechFileInfo getModelInfo(String modelID) {
-    List<TrisotechFileInfo> fileInfos = getModels(null);
-    TrisotechFileInfo file = fileInfos.stream()
-        .filter(f -> f.getId().equals(modelID)
-        ).findAny().orElse(null); // TODO: better orElse value? CAO
-    // fetch with the appropriate mimetype for XML download
-    if(null != file) {
-      if (file.getMimetype().contains("dmn")) {
-        fileInfos = getModels(DMN_XML_MIMETYPE);
-      } else {
-        fileInfos = getModels(CMMN_XML_MIMETYPE);
-      }
-    }
-
-    return fileInfos.stream()
-        .filter(f -> f.getId().equals(modelID)).findAny().orElse(null); // TODO: what to return if doesn't exist? CAO
+    String mimeType = getModelInfoMimeType(modelID);
+    return getModelInfo(modelID, mimeType);
   }
 
+  public static TrisotechFileInfo getModelInfo(String modelID, String mimeType) {
+    List<TrisotechFileInfo> fileInfos = getModels(mimeType);
+    return fileInfos.stream()
+        .filter(f -> f.getId().equals(modelID)).findAny()
+        .orElse(null); // TODO: what to return if doesn't exist? CAO
+  }
 
   /*** version support ***/
 
   /**
    * Gets the modelInfo for the version requested.
-   * NOTE: Until updates from Trisotech, the URL will not be correct to retrieve XML document
-   * TODO: may need updates to code once have updates from Trisotech CAO
    *
    * @param modelId
    * @param version
    * @return
    */
   public static TrisotechFileInfo getModelInfoByIdAndVersion(String modelId, String version) {
-    // long form
-    List<TrisotechFileInfo> fileInfos = getModelVersions(modelId, null);
+    String mimeType = getModelInfoMimeType(modelId);
+    return getModelInfoByIdAndVersion(modelId, version, mimeType);
+  }
+
+  private static String getModelInfoMimeType(String modelId) {
+    List<TrisotechFileInfo> fileInfos = getModels(null);
+    TrisotechFileInfo fileInfo = fileInfos.stream()
+        .filter(f -> f.getId().equals(modelId)
+        ).findAny().orElse(null); // TODO: better orElse value? CAO
+    // fetch with the appropriate mimetype for XML download
+    if (null != fileInfo) {
+
+      // want to return the XML version of the file, so need the fileInfo based on mimetype
+      // this has to do with how Trisotech returns the data;
+      // we don't get the XML path unless we provide the correct mimetype in the query
+      if (fileInfo.getMimetype().contains("dmn")) {
+        return DMN_XML_MIMETYPE;
+      } else if (fileInfo.getMimetype().contains("cmmn")) {
+        return CMMN_XML_MIMETYPE;
+      } else {
+        return null; // TODO: error? undefined mimetype?? shouldn't ever happen CAO
+      }
+    }
+    return null; // TODO: error? undefined mimetype?? shouldn't ever happen CAO
+  }
+
+  /**
+   * Get the Trisotech fileInfo for the model and version provided. This will NOT return the latest.
+   * For the latest, use getLatestModelInfo.
+   *
+   * @param modelId id of the model
+   * @param version the version
+   * @param mimetype mimetype of the model
+   * @return TrisotechFileInfo object for the model/version requested
+   */
+  public static TrisotechFileInfo getModelInfoByIdAndVersion(String modelId, String version,
+      String mimetype) {
+    List<TrisotechFileInfo> fileInfos = getModelVersions(modelId, mimetype);
     for (TrisotechFileInfo fileInfo : fileInfos) {
-      if(version.equals(fileInfo.getVersion())) {
+      if (version.equals(fileInfo.getVersion())) {
         return fileInfo;
       }
     }
-    return null;
+    return null; // TODO: better return value? error? CAO
   }
 
+  /**
+   * Get the Trisotech file info for the latest version of a model.
+   *
+   * @param modelId id of the model interested in
+   * @return
+   */
+  public static TrisotechFileInfo getLatestModelInfo(String modelId) {
+    return getModelInfo(modelId);
+  }
 
   /**
    * get the model for the modelId and version specified
@@ -219,21 +267,12 @@ public class TrisotechWrapper {
    * @return
    */
   public static Optional<Document> getModelByIdAndVersion(String modelId, String version) {
+    String mimeType = getModelInfoMimeType(modelId);
+    List<TrisotechFileInfo> fileInfos = getModelVersions(modelId, mimeType);
 
-    List<TrisotechFileInfo> fileInfos = new ArrayList<>();
-    // first get the modelInfo by modelId
-    // this provides the data needed to know what type of file it is
-    TrisotechFileInfo modelInfo = getModelInfo(modelId);
-    if(null != modelInfo) {
-      if (modelInfo.getMimetype().contains("dmn")) {
-        fileInfos = getModelVersions(modelId, DMN_XML_MIMETYPE);
-      } else { // CMMN
-        fileInfos = getModelVersions(modelId, CMMN_XML_MIMETYPE);
-      }
-    }
     // long form
     for (TrisotechFileInfo fileInfo : fileInfos) {
-      if(version.equals(fileInfo.getVersion())) {
+      if (version.equals(fileInfo.getVersion())) {
         return Optional.ofNullable(downloadXmlModel(fileInfo.getUrl()));
       }
     }
@@ -260,8 +299,9 @@ public class TrisotechWrapper {
    * @param modelId - id of the model requested
    * @return list of modelFileInfo
    */
-  public static List<TrisotechFileInfo> getModelVersions(String repositoryName, String modelId, String mimetype) {
-    if(logger.isDebugEnabled()) {
+  public static List<TrisotechFileInfo> getModelVersions(String repositoryName, String modelId,
+      String mimetype) {
+    if (logger.isDebugEnabled()) {
       logger.debug(String
           .format("getModelVersions for model: %s in repository: %s with mimetype: %s", modelId,
               repositoryName, mimetype));
@@ -295,20 +335,21 @@ public class TrisotechWrapper {
 
   /**
    * Given a TrisotechFileInfo, return a versionIdentifier for the latest version of that file.
+   * TODO: only return published latest version? CAO
    *
    * @param tfi file info for Trisotech file
-   * @return
+   * @return VersionIdentifier
    */
   //return VersionIdentifier uid, versiontag (1.0) , create .withEstablishedOn for timestamp
   public static VersionIdentifier getLatestVersion(TrisotechFileInfo tfi) {
-    if(null != tfi) {
+    if (null != tfi) {
       try {
         return new VersionIdentifier().withTag(tfi.getId())
             .withVersion(tfi.getVersion())
             .withEstablishedOn(
                 DatatypeFactory.newInstance().newXMLGregorianCalendar(tfi.getUpdated()));
       } catch (DatatypeConfigurationException e) {
-        logger.error(String.format("%s%s", e.getMessage(), e.getStackTrace()));
+        logger.error(String.format("%s %s", e.getMessage(), e.getStackTrace()));
       }
     }
     return null; // TODO: better default return value? CAO
@@ -319,7 +360,7 @@ public class TrisotechWrapper {
    * Retrieve all the models based on the mimetype provided
    * @param xmlMimetype
    */
-  private static List<TrisotechFileInfo> getModels( String xmlMimetype ) {
+  private static List<TrisotechFileInfo> getModels(String xmlMimetype) {
     List<TrisotechFileInfo> modelsArray = new ArrayList<>();
     try {
 
@@ -344,8 +385,8 @@ public class TrisotechWrapper {
   private static String getRepositoryId(String repositoryName) {
     try {
       TrisotechPlaceData data = getPlaces();
-      for(TrisotechPlace tp : data.getData()) {
-        if(tp.getName().equals(repositoryName)) {
+      for (TrisotechPlace tp : data.getData()) {
+        if (tp.getName().equals(repositoryName)) {
           return tp.getId();
         }
       }
@@ -362,7 +403,7 @@ public class TrisotechWrapper {
    */
   public static List<TrisotechFileInfo> getPublishedModels() {
 
-    return getModels( null).stream()
+    return getModels(null).stream()
         .filter(TrisotechWrapper::publishedModel)
         .collect(Collectors.toList());
 
@@ -382,7 +423,9 @@ public class TrisotechWrapper {
     RestTemplate restTemplate = new RestTemplate();
 
     return
-        restTemplate.exchange(url.toString(), HttpMethod.GET, requestEntity, TrisotechPlaceData.class).getBody();
+        restTemplate
+            .exchange(url.toString(), HttpMethod.GET, requestEntity, TrisotechPlaceData.class)
+            .getBody();
 
   }
 
@@ -399,7 +442,8 @@ public class TrisotechWrapper {
     // ******* NOTE: MUST send URI here to avoid further encoding, otherwise it will be double-encoded and request
     // will fail to return all the values expected ********
     return
-        restTemplate.exchange(uri, HttpMethod.GET, requestEntity, TrisotechFileData.class).getBody();
+        restTemplate.exchange(uri, HttpMethod.GET, requestEntity, TrisotechFileData.class)
+            .getBody();
   }
 
   /**
@@ -415,7 +459,7 @@ public class TrisotechWrapper {
    * @param mimeType what type of files requesting from repository; no mimeType will retrieve all file types
    */
   private static void getRepositoryContent(String directoryID, List<TrisotechFileInfo> modelsArray,
-                                           String path, String mimeType) {
+      String path, String mimeType) {
     URI uri;
     try {
       // NOTE: MUST Use UriComponentBuilder to handle '+' in the MimeType, otherwise it will be

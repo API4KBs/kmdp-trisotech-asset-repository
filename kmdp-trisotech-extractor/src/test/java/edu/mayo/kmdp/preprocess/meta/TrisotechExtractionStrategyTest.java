@@ -33,9 +33,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TrisotechExtractionStrategyTest {
   TrisotechExtractionStrategy tes;
-  String dmnPath = "/WeaverTest1.dmn";
+  String dmnPath = "/Weaver Test 1.dmn";
   String dmnMeta = "/WeaverTest1Meta.json";
-  String cmmnPath = "/WeaveTest1.cmmn";
+  String cmmnPath = "/Weave Test 1.cmmn";
   String cmmnMeta = "/WeaveTest1Meta.json";
   // file for testing the negative -- old file in Signavio format
   String badPath  = "/R2R.dmn";

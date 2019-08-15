@@ -73,7 +73,7 @@ public class Weaver {
   private String decisionEl;
   private String elExporter;
   private String elExporterVersion;
-  private String metadataRs;
+  private String metadataRS;
   private String metadataNS;
   private String metadataEl;
   private String metadataExt;
@@ -107,7 +107,7 @@ public class Weaver {
     metadataDiagramCmmnNS = config.getTyped(ReaderOptions.P_METADATA_DIAGRAM_CMMN_NS);
     droolsNS = config.getTyped(ReaderOptions.P_DROOLS_NS);
     metadataEl = config.getTyped(ReaderOptions.P_EL_ANNOTATION);
-    metadataRs = config.getTyped(ReaderOptions.P_EL_RELATIONSHIP);
+    metadataRS = config.getTyped(ReaderOptions.P_EL_RELATIONSHIP);
     metadataExt = config.getTyped(ReaderOptions.P_EL_MODEL_EXT);
     metadataId = config.getTyped(ReaderOptions.P_EL_ANNOTATION_ID);
     diagramNS = config.getTyped(ReaderOptions.P_DIAGRAM_NS);
@@ -121,7 +121,7 @@ public class Weaver {
     handlers.put(metadataEl, new MetadataAnnotationHandler(config));
     handlers.put(metadataId, new MetadataAnnotationHandler(config));
     handlers.put(annotatedItem, new AnnotatedFragmentHandler(config));
-    handlers.put(metadataRs, new MetadataAnnotationHandler(config));
+    handlers.put(metadataRS, new MetadataAnnotationHandler(config));
   }
 
   public String getMetadataNS() {
@@ -132,8 +132,8 @@ public class Weaver {
     return metadataEl;
   }
 
-  public String getMetadataRs() {
-    return metadataRs;
+  public String getMetadataRS() {
+    return metadataRS;
   }
 
   public String getMetadataDiagramDmnNS() {
@@ -206,7 +206,7 @@ public class Weaver {
     weaveDiagramExtension(diagramExtension, dox);
 
     // relationships can be in CMMN TODO: Can tell if DMN or CMMNN so don't try to process items only in one? CAO
-    NodeList relations = dox.getElementsByTagNameNS(metadataNS, metadataRs);
+    NodeList relations = dox.getElementsByTagNameNS(metadataNS, metadataRS);
     weaveRelations(relations);
 
     // Find the Asset ID, if present
@@ -216,10 +216,6 @@ public class Weaver {
     // get metas after the move so the moved elements are captured
     NodeList metas = dox.getElementsByTagNameNS(metadataNS, metadataEl);
     weaveMetadata(metas);
-
-    // fix decisions before removing traces of Trisotech as some triso values are needed
-    // TODO: only for CMMN? CAO
-    weaveDecisions(dox);
 
     /****** Remove traces of Trisotech  ******/
     // remove the namespace attributes
@@ -240,33 +236,16 @@ public class Weaver {
     return dox;
   }
 
-  /**
-   * Rewrite the decisions externalRef information before the triso tags disappear.
-   */
-  private void weaveDecisions(Document dox) {
-    XMLUtil.asElementStream(dox.getElementsByTagName("*"))
-        .filter(el -> el.getLocalName().equals(getDecisionEl()))
-        .forEach(element -> {
-          Attr modelIdAttr = element.getAttributeNodeNS(getMetadataNS(),
-              "modelId"); //.getAttributeNode("triso:modelId");
-          Attr refAttr = element.getAttributeNode("externalRef");
-          if ((modelIdAttr != null) && (refAttr != null)) {
-            String refId = refAttr.getValue().substring(refAttr.getValue().lastIndexOf('_') + 1);
-            String prefix = refAttr.getValue().substring(0, refAttr.getValue().lastIndexOf('_'));
-            refAttr.setValue(prefix + refId);
-          }
-        });
-  }
-
   private void verifyAndRemoveInvalidCaseFileItemDefinition(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         .filter(el -> (el.getLocalName().equals("caseFileItemDefinition")))
         .forEach(element -> {
           Attr attr = element.getAttributeNode("definitionType");
-          if (attr.getValue().contains(TRISOTECH_COM)) {
+          // TODO: is it an error if there isn't a definitionType for caseFileItemDefinition? CAO
+          if ((null != attr) && (attr.getValue().contains(TRISOTECH_COM))) {
             logger.warn(
                 String.format(
-                    "WARNING: Should not have %s in caseFileItemDefinition. Rewriting to default value of Unspecified.Found for %s",
+                    "WARNING: Should not have %s in caseFileItemDefinition. Rewriting to default value of Unspecified. Found for %s",
                     TRISOTECH_COM, element.getAttributeNode("name").getValue()));
             // TODO: a way to do this using the XSD? CAO
             attr.setValue("http://www.omg.org/spec/CMMN/DefinitionType/Unspecified");
@@ -382,7 +361,6 @@ public class Weaver {
     dox.getDocumentElement().appendChild(newElement);
   }
 
-
   private void weaveRelations(NodeList relations) {
     logger.debug("weaveRelations.... relations size: {}", relations.getLength());
     //
@@ -390,8 +368,6 @@ public class Weaver {
     asElementStream(relations).forEach(
         this::doRewriteRelations
     );
-
-
   }
 
   private void weaveIdentifier(NodeList metas) {
@@ -407,15 +383,20 @@ public class Weaver {
   private void rewriteValue(Attr attr) {
     String value = attr.getValue();
     if (value.lastIndexOf('/') != -1) {
-      String id = value.substring(value.lastIndexOf('/') + 2);
+      // get the ids after the last '/'
+      // and replace the '_' in the ids
+      String id = value.substring(value.lastIndexOf('/') + 1).replaceAll("_", "");
+      // reset the value to the KMDP URI
       attr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
     }
   }
 
 
   private void doRewriteRelations(Element el) {
+    // remove leading '_' from modelId
     String modelId = el.getAttribute("modelId").substring(1);
-    String elementId = el.getAttribute("elementId");
+    // remove leading '_' from elementId
+    String elementId = el.getAttribute("elementId").substring(1);
     BaseAnnotationHandler handler = handler(el);
     DatatypeAnnotation dta = new DatatypeAnnotation();
     // TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO

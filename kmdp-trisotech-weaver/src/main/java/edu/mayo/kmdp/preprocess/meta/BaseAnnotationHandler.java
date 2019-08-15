@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 
 public abstract class BaseAnnotationHandler {
 
-//	public abstract List<String> getDictionaryIDs( Element el );
-
 	public abstract void replaceProprietaryElement( Element original, Element replace );
 
 	public abstract void replaceProprietaryElement( Element original, List<Element> replace );

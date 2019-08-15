@@ -19,6 +19,9 @@ import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -227,10 +230,18 @@ class TrisotechWrapperTestInt {
   @Test
   final void testGetLatestVersionArtifactIdDMN() {
     String expectedVersion = "1.8";
+    XMLGregorianCalendar expectedUpdated = null;
+    try {
+      expectedUpdated = DatatypeFactory.newInstance().newXMLGregorianCalendar("2019-08-06T20:21:53Z");
+    } catch (DatatypeConfigurationException e) {
+      e.printStackTrace();
+    }
+
     VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersion());
+    assertEquals(expectedUpdated.toString(), versionIdentifier.getEstablishedOn().toString());
   }
   // latest version 7/9/2019:
   //             "file": {
@@ -356,21 +367,21 @@ class TrisotechWrapperTestInt {
   final void testGetCmmnModels() {
     List<TrisotechFileInfo> cmmnModels = TrisotechWrapper.getCmmnModels();
     assertNotNull(cmmnModels);
-    assertEquals(2, cmmnModels.size());
+    assertEquals(3, cmmnModels.size());
   }
 
   @Test
   final void testGetPublishedCmmnModels() {
     List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedCMMNModels();
     assertNotNull(publishedModels);
-    assertEquals(1, publishedModels.size());
+    assertEquals(2, publishedModels.size());
   }
 
   @Test
   final void testGetPublishedDmnModels() {
     List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedDmnModels();
     assertNotNull(publishedModels);
-    assertEquals(1, publishedModels.size());
+    assertEquals(3, publishedModels.size());
   }
 
   @Test
@@ -409,6 +420,7 @@ class TrisotechWrapperTestInt {
     assertNotNull(dox);
   }
 
+  @Disabled("these no longer fail, instead return a JSON file; change on Trisotech side?")
   @Test
   final void testDownloadXmlModelErrors() {
     // Any other exceptions to confirm?

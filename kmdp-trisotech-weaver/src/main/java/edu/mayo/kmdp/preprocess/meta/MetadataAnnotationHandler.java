@@ -26,8 +26,10 @@ import java.util.List;
  * Rewrites proprietary tags explicitly
  */
 public class MetadataAnnotationHandler extends BaseAnnotationHandler {
+	private ReaderConfig config;
 
-	public MetadataAnnotationHandler() {
+	public MetadataAnnotationHandler( ReaderConfig config ) {
+		this.config = config;
 	}
 
 	@Override

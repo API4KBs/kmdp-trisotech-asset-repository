@@ -16,12 +16,14 @@
 package edu.mayo.kmdp;
 
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetCatalogApiDelegate;
 import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRepositoryApiDelegate;
 import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRetrievalApiDelegate;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
@@ -43,13 +45,9 @@ import org.slf4j.Logger;
 
 import static edu.mayo.kmdp.util.ws.ResponseHelper.notSupported;
 
-// TODO: questions for Davide:
-//  Do we need an internal 'cache'? (previously done as 'resolvedModels')
 @Component
 public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegate, KnowledgeAssetRepositoryApiDelegate, KnowledgeAssetRetrievalApiDelegate {
   Logger log = LoggerFactory.getLogger(TrisotechAssetRepository.class);
-  private Weaver weaver;
-  private MetadataExtractor extractor;
 
 
   @Override
@@ -63,7 +61,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     // TODO: then modelInfo can be
     VersionIdentifier version = TrisotechWrapper.getLatestVersion(assetId.toString());
     return getVersionedKnowledgeAsset(assetId, version.getVersion());
-//    return null; // TODO: fix this CAO per Davide: ResponseHelper.succeed();
+// TODO:   return null; // TODO: fix this CAO per Davide: ResponseHelper.succeed();
   }
 
   /**
@@ -84,15 +82,15 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
 
   @Override
-  public ResponseEntity<KnowledgeAsset> getVersionedKnowledgeAsset(UUID uuid, String versionTag) {
+  public ResponseEntity<KnowledgeAsset> getVersionedKnowledgeAsset(UUID assetId, String versionTag) {
     // TODO: confirm extractor behavior and data here w/Davide CAO
     //  what is the UUID value passed in? assetId -- the ASSETID is a Mayo-specific ID; it is in the trisotech model
     //  is internalId internal to enterprise or internal to Trisotech? Maybe better naming? Yes, better naming; internal is enterprise
     //  from Signavio code, appears to be from the editor, why not just get it from the model using the version? Signavio code had to do things no longer needed w/Trisotech models
     //  does the UUID not tell me which model? Do I need the following line of code? the following is resolving the asset Id <-> artifact Id relationship; can maybe do w/triples now?
-//    String internalId = extractor.resolveInternalArtifactID(uuid.toString(), versionTag);
+//    TODO: String internalId = extractor.resolveInternalArtifactID(uuid.toString(), versionTag);
 
-    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(uuid.toString(), versionTag);
+    // TODO: TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getModelInfoByIdAndVersion(assetId.toString(), versionTag);
     return null;
   }
 
@@ -113,7 +111,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   @Override
   public ResponseEntity<List<Pointer>> listKnowledgeAssets(String assetType, String assetAnnotation, Integer offset, Integer limit) {
     List<Pointer> assetList = new ArrayList<>();
-    Pointer modelPointer = new Pointer();
+    // TODO: Pointer modelPointer = new Pointer();
     List<TrisotechFileInfo> trisotechFileInfoList;
 
     trisotechFileInfoList = TrisotechWrapper.getPublishedModels();
@@ -129,7 +127,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
     // TODO: this is all wrong; need ASSET information here too
 //    trisotechFileInfoList.stream().skip(offset).limit(limit).forEach((trisotechFileInfo -> {
-//      modelPointer.withEntityRef(/*enterprise assetId*/) // TODO: fileID (123720a6-9758-45a3-8c5c-5fffab12c494) or URL? CAO
+//      modelPointer.withEntityRef(/*enterprise assetId*/)
 //          .withHref(/*URL used for getAsset w/UID & versionTag from assetId */)
 //          .withType(isDMNModel(trisotechFileInfo)
 //              ? KnowledgeAssetType.Decision_Model.getRef()
@@ -147,7 +145,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   @Override
   public ResponseEntity<Void> setVersionedKnowledgeAsset(UUID uuid, String s, KnowledgeAsset knowledgeAsset) {
-    return notSupported(); // TODO:  USE THIS CAO
+    return notSupported();
   }
 
   @Override
@@ -156,21 +154,22 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   }
 
   @Override
-  public ResponseEntity<KnowledgeCarrier> getCanonicalKnowledgeAssetCarrier(UUID assetId, String versionTag, String xAccept) {
+  public ResponseEntity<KnowledgeCarrier> getCanonicalKnowledgeAssetCarrier(UUID assetId, String versionTag, String extAccept) {
     // get the model file -- always do get Canonical
+
     return null;
   }
 
   @Override
-  public ResponseEntity<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(UUID uuid, String s, UUID uuid1, String s1) {
-    // a specific version of knowledge asset carrier
+  public ResponseEntity<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(UUID assetId, String versionTag, UUID artifactId, String artifactVersionTag) {
+    // a specific version of knowledge asset carrier (model)
 return null;
   }
 
   @Override
-  public ResponseEntity<List<Pointer>> getKnowledgeAssetCarriers(UUID uuid, String s) {
-    // all the carriers (only one); Canonical will give XML, this part of the spec may be broken CAO
-    throw new UnsupportedOperationException();
+  public ResponseEntity<List<Pointer>> getKnowledgeAssetCarriers(UUID assetId, String versionTag) {
+    // TODO: all the carriers (only one); Canonical will give XML, this part of the spec may be broken CAO
+    return notSupported(); // for now
   }
 
   // to upload the "dictionary" DMN model (Davide's note)

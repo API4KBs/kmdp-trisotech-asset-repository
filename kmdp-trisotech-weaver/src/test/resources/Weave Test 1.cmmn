@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<semantic:definitions
+  xmlns:ns1="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068"
+  xmlns:ns2="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21"
+  xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"
+  xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
+  xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
+  xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"
+  xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
+  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+  xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/" xmlns:rss="http://purl.org/rss/2.0/"
+  xmlns="http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9"
+  id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9" name="Weave Test 1"
+  targetNamespace="http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9"
+  expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" exporter="CMMN Modeler"
+  exporterVersion="6.2.6.3" triso:logoChoice="Default" triso:version="2.2" triso:state="Published">
+  <semantic:caseFileItemDefinition id="_e9044eea-5a77-4700-b39a-c078eb9cb964" name="Current Weight"
+    definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+    structureRef="string"/>
+  <semantic:caseFileItemDefinition id="_16bd5d00-1584-466b-8a08-bef483fb9f7e"
+    name="My Test Entity 1"
+    definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+    structureRef="string"/>
+  <semantic:caseFileItemDefinition id="_7ea3470c-076e-4156-8715-ad45aa803b01" name="Age"
+    definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+    structureRef="string"/>
+  <semantic:case id="Case_40e952e9-9c4c-4f19-bb14-a8a9681d782d" name="Test">
+    <semantic:caseFileModel>
+      <semantic:caseFileItem id="_8f3ba321-82f5-4523-81bd-3f89e4822e9c" name="Current Weight"
+        definitionRef="_e9044eea-5a77-4700-b39a-c078eb9cb964"/>
+      <semantic:caseFileItem id="_edc3794c-d1c1-4c57-a28d-5c17ff8e07bf" name="My Test Entity 1"
+        definitionRef="_16bd5d00-1584-466b-8a08-bef483fb9f7e"/>
+      <semantic:caseFileItem id="_192c45ea-2898-42a7-9141-1b637745a93d" name="Age"
+        definitionRef="_7ea3470c-076e-4156-8715-ad45aa803b01"/>
+    </semantic:caseFileModel>
+    <semantic:casePlanModel id="_40e952e9-9c4c-4f19-bb14-a8a9681d782d" name="Test">
+      <semantic:planItem id="_0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2"
+        definitionRef="PID__0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2">
+        <semantic:entryCriterion id="_18b1c197-4095-49c0-9373-af1eaf1c8c25"
+          sentryRef="_84d18ac2-6e59-46ab-aa21-57ad86aebfa8"/>
+      </semantic:planItem>
+      <semantic:planItem id="_6088d90d-bc64-40e0-93ca-950552bd4f98"
+        definitionRef="PID__6088d90d-bc64-40e0-93ca-950552bd4f98">
+        <semantic:entryCriterion id="_0d74d4f0-69a7-4b42-8f26-7cd1de04c2e8"
+          sentryRef="_b7684248-eed0-4e44-86a6-2d452e5f0649"/>
+      </semantic:planItem>
+      <semantic:planItem id="_562a5bff-ae43-4bd0-9af4-25197f766a07"
+        definitionRef="PID__562a5bff-ae43-4bd0-9af4-25197f766a07"/>
+      <semantic:sentry id="_84d18ac2-6e59-46ab-aa21-57ad86aebfa8">
+        <semantic:caseFileItemOnPart id="_2e678617-ead5-4d3b-ad7e-1f4493be1eb0"
+          sourceRef="_8f3ba321-82f5-4523-81bd-3f89e4822e9c"/>
+      </semantic:sentry>
+      <semantic:sentry id="_b7684248-eed0-4e44-86a6-2d452e5f0649">
+        <semantic:caseFileItemOnPart id="_41011c8b-0bd9-4a72-98a8-8bdcbc4cec85"
+          sourceRef="_192c45ea-2898-42a7-9141-1b637745a93d"/>
+        <semantic:caseFileItemOnPart id="_0f000968-467f-4961-abae-41e2c74e06b2"
+          sourceRef="_edc3794c-d1c1-4c57-a28d-5c17ff8e07bf"/>
+      </semantic:sentry>
+      <semantic:decisionTask id="PID__0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2"
+        name="Weaver Test 1 Decision" decisionRef="_a920d72fbb4c526d0e62641893cc09c7">
+        <semantic:extensionElements>
+          <triso:semanticLink id="_eb33ba86-04fa-40ea-a2f0-94beec8211af"
+            name="Weaver Test 1 - Weaver Test 1 Decision"
+            modelURI="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068"
+            uri="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+          <triso:interrelationship
+            fileId="eyJmIjp7InNrdSI6IjEyMzcyMGE2LTk3NTgtNDVhMy04YzVjLTVmZmZhYjEyYzQ5NCIsIm5hbWUiOiJXZWF2ZXIgVGVzdCAxIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifSwiciI6eyJhcGlrZXkiOiIyOTIwMDNmNjk4NDBlNzEyIn19"
+            elementId="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+            uri="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+            name="Weaver Test 1 Decision" modelId="_5682fa26-b064-43c8-9475-1e4281e74068"
+            mimeType="application/vnd.triso-dmn+json"/>
+        </semantic:extensionElements>
+      </semantic:decisionTask>
+      <semantic:decisionTask id="PID__6088d90d-bc64-40e0-93ca-950552bd4f98" name="Test Decision 2"
+        decisionRef="_65c08bb65562d6e6923dcb5e1d44ede2">
+        <semantic:extensionElements>
+          <triso:semanticLink id="_e3bc6bcb-0adc-46bf-a617-8779d80de659"
+            name="Weaver Test 2 - Test Decision 2"
+            modelURI="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21"
+            uri="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+          <triso:interrelationship
+            fileId="eyJmIjp7InNrdSI6ImZmYTUzMjYyLTRkMzYtNDY1Ni04OTBiLTRlNDhlZDFjYjljMyIsIm5hbWUiOiJXZWF2ZXIgVGVzdCAyIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifSwiciI6eyJhcGlrZXkiOiIyOTIwMDNmNjk4NDBlNzEyIn19"
+            elementId="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+            uri="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+            name="Test Decision 2" modelId="_ede3b331-7b10-4580-98be-66ebff344c21"
+            mimeType="application/vnd.triso-dmn+json"/>
+        </semantic:extensionElements>
+      </semantic:decisionTask>
+      <semantic:task id="PID__562a5bff-ae43-4bd0-9af4-25197f766a07" name="My Task">
+        <semantic:defaultControl>
+          <semantic:manualActivationRule/>
+        </semantic:defaultControl>
+      </semantic:task>
+    </semantic:casePlanModel>
+  </semantic:case>
+  <semantic:decision id="_a920d72fbb4c526d0e62641893cc09c7"
+    externalRef="ns1:_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Weaver Test 1 Decision" triso:modelId="_5682fa26-b064-43c8-9475-1e4281e74068"/>
+  <semantic:decision id="_65c08bb65562d6e6923dcb5e1d44ede2"
+    externalRef="ns2:_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1" name="Test Decision 2"
+    triso:modelId="_ede3b331-7b10-4580-98be-66ebff344c21"/>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="_58464e33-4c5a-4c60-b0c3-3433c94d8f08" name="Page 1"
+      cmmnElementRef="_fe3937b5-4ddf-4b72-9e2a-81a8f5400ae7">
+      <cmmndi:Size width="1571.481679030827" height="1050"/>
+      <cmmndi:CMMNShape id="_fe3937b5-4ddf-4b72-9e2a-81a8f5400ae7"
+        cmmnElementRef="_40e952e9-9c4c-4f19-bb14-a8a9681d782d">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="86" y="22" width="886.4816790308271" height="600"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="12.015625" width="201" x="92.6486125927312" y="24"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_0cd03ae0-0dda-4336-8320-676eecd91c80"
+        cmmnElementRef="_8f3ba321-82f5-4523-81bd-3f89e4822e9c">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="299" y="94" width="34" height="40"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="12" width="74.140625" x="278.9296875" y="138"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_af2b7308-dc1a-4180-a9ef-05dc6e88ac9f"
+        cmmnElementRef="_0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="268" y="304" width="96" height="76"/>
+        <cmmndi:CMMNLabel>
+          <dc:Bounds height="26" width="68" x="286" y="330"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_e7394aa6-2ded-45d8-b201-0f03354cb439"
+        cmmnElementRef="_edc3794c-d1c1-4c57-a28d-5c17ff8e07bf">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="570.33882188797" y="79" width="34" height="40"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="12" width="77.625" x="548.52632188797" y="123"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_fa5c792c-aece-42b1-9ede-df560906ad04"
+        cmmnElementRef="_192c45ea-2898-42a7-9141-1b637745a93d">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="644.33882188797" y="104" width="34" height="40"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="12" width="20.296875" x="651.19038438797" y="148"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_4e3bca76-09f5-443f-bd9a-384f93e64ca5"
+        cmmnElementRef="_6088d90d-bc64-40e0-93ca-950552bd4f98">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="570.33882188797" y="252.94937491510314" width="96" height="76"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="26" width="68" x="584.33882188797" y="277.94937491510314"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_2f5eca35-5daf-4c5c-ac64-76162cddc88c"
+        cmmnElementRef="_562a5bff-ae43-4bd0-9af4-25197f766a07">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="126" y="113" width="96" height="76"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="12" width="89" x="130.5" y="145"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_18b1c197-4095-49c0-9373-af1eaf1c8c25_di"
+        cmmnElementRef="_18b1c197-4095-49c0-9373-af1eaf1c8c25">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="310.2774237135748" y="289.5031865778264" width="20" height="28"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_0d74d4f0-69a7-4b42-8f26-7cd1de04c2e8_di"
+        cmmnElementRef="_0d74d4f0-69a7-4b42-8f26-7cd1de04c2e8">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="608.33882188797" y="238.22047974577953" width="20" height="28"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="_0a8782cd-0f1e-411d-a580-2e18a1c119f6"
+        cmmnElementRef="_2e678617-ead5-4d3b-ad7e-1f4493be1eb0" isStandardEventVisible="true">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="316" y="134"/>
+        <di:waypoint x="316" y="212.7515932889132"/>
+        <di:waypoint x="320.2774237135748" y="212.7515932889132"/>
+        <di:waypoint x="320.2774237135748" y="291.5031865778264"/>
+        <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge id="_7ce5567a-8830-4949-b179-26f1afe4bccb"
+        cmmnElementRef="_41011c8b-0bd9-4a72-98a8-8bdcbc4cec85" isStandardEventVisible="true">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="661.33882188797" y="144"/>
+        <di:waypoint x="661.33882188797" y="191.61023987288976"/>
+        <di:waypoint x="618.33882188797" y="191.61023987288976"/>
+        <di:waypoint x="618.33882188797" y="240.22047974577953"/>
+        <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge id="_8adc482c-66d7-4877-b2d0-8a297bee7435"
+        cmmnElementRef="_0f000968-467f-4961-abae-41e2c74e06b2" isStandardEventVisible="true">
+        <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="587.33882188797" y="119"/>
+        <di:waypoint x="587.33882188797" y="179.11023987288976"/>
+        <di:waypoint x="618.33882188797" y="179.11023987288976"/>
+        <di:waypoint x="618.33882188797" y="240.22047974577953"/>
+        <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+      </cmmndi:CMMNEdge>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</semantic:definitions>

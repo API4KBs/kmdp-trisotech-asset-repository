@@ -541,14 +541,14 @@ public class TrisotechWrapper {
 
   /**
    * is the model published? models can be published, but not be in the state of 'Published'.
-   * This will only return true for those models that are published AND in a state of 'Published'
+   * All models, of any state, that are published will return true here. (per meeting 8/21/2019)
    *
-   * @param trisotechFileInfo the fileInfo for the model; will contain state if published
+   * @param trisotechFileInfo the fileInfo for the model; will contain state and version if published
    * @return true/false
    */
   private static boolean publishedModel(TrisotechFileInfo trisotechFileInfo) {
     return (Optional.ofNullable(trisotechFileInfo.getState()).isPresent() &&
-        trisotechFileInfo.getState().equals(PUBLISHED_STATE));
+        Optional.ofNullable(trisotechFileInfo.getVersion()).isPresent());
   }
 
 

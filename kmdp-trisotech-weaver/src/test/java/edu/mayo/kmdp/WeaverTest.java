@@ -262,7 +262,6 @@ class WeaverTest {
       assertNotNull(dox);
 
       BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class).iterator().next();
-      // this test is for Decision Subdecision.dmn; disable for any other file
       assertEquals("https://clinicalknowledgemanagement.mayo.edu/assets/22c207d7-36e2-4935-a634-5205699ce6d0",
           id.getExpr().toString());
 

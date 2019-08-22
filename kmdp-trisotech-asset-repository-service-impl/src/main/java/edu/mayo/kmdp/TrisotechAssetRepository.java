@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
@@ -139,12 +140,14 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     return succeed(ka, HttpStatus.OK);
   }
 
-  private TrisotechFileInfo findArtifactVersionForAsset(String internalId, UUID assetId, String versionTag) {
+  private TrisotechFileInfo findArtifactVersionForAsset(String internalId, UUID assetId,
+      String versionTag) {
     Optional<String> fileId = extractor.getFileId(internalId);
     // TODO: ERRORS if fileId and mimeType are not found?
     Optional<String> mimeType = extractor.getMimetype(assetId);
     // need to get all versions for the file
-    List<TrisotechFileInfo> modelVersions = TrisotechWrapper.getModelVersions(fileId.get(), mimeType.get());
+    List<TrisotechFileInfo> modelVersions = TrisotechWrapper
+        .getModelVersions(fileId.get(), mimeType.get());
     // weave each version
     for (TrisotechFileInfo model : modelVersions) {
       // check assetId for each version
@@ -152,7 +155,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
       URIIdentifier asset = extractor.getAssetID(dox);
       // if there is a match to asset looking for, return version
       if (asset.getTag().equals(assetId) && asset.getVersion().equals(versionTag)) { // found it
-        return TrisotechWrapper.getFileInfoByIdAndVersion(fileId.orElse(null), versionTag, mimeType.get());
+        return TrisotechWrapper
+            .getFileInfoByIdAndVersion(fileId.orElse(null), versionTag, mimeType.get());
       }
     }
     return null; // TODO: error? CAO
@@ -175,8 +179,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   @Override
   public ResponseEntity<List<Pointer>> listKnowledgeAssets(String assetType, String assetAnnotation,
       Integer offset, Integer limit) {
-    List<Pointer> assetList = new ArrayList<>();
-    Pointer modelPointer = new Pointer();
     List<TrisotechFileInfo> trisotechFileInfoList;
 
     if ("CMMN".equalsIgnoreCase(assetType)) {
@@ -193,22 +195,20 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     // TODO cont: Url for the fileInfo is returned for XML retrieval.
     //  Is XML retrieval in info needed? CAO
 
-    trisotechFileInfoList.stream()
+    List<Pointer> assetList = trisotechFileInfoList.stream()
         .skip((null == offset) ? 0 : offset)
         .limit((null == limit) ? Integer.MAX_VALUE : limit)
-        .forEach((trisotechFileInfo -> {
-      URIIdentifier assetId = extractor.resolveEnterpriseAssetID(trisotechFileInfo.getId());
-      System.out.println("assetId from extractor.resolveEnterpriseAsset: " + assetId);
-      System.out.println("assetId getURI: " + assetId.getUri() + " ???difference????");
-      // getId from fileInfo is the fileID
-      modelPointer.withEntityRef(assetId)
-          .withHref(assetId.getUri()/*URL used for getAsset w/UID & versionTag from assetId */)
-          .withType(isDMNModel(trisotechFileInfo)
-              ? KnowledgeAssetType.Decision_Model.getRef()
-              : KnowledgeAssetType.Care_Process_Model.getRef())
-          .withName(trisotechFileInfo.getName());
-      assetList.add(modelPointer);
-    }));
+        .map(trisotechFileInfo -> {
+          URIIdentifier assetId = extractor.resolveEnterpriseAssetID(trisotechFileInfo.getId());
+          // getId from fileInfo is the fileID
+          return new Pointer().withEntityRef(assetId)
+              .withHref(assetId.getUri()/*URL used for getAsset w/UID & versionTag from assetId */)
+              .withType(isDMNModel(trisotechFileInfo)
+                  ? KnowledgeAssetType.Decision_Model.getRef()
+                  : KnowledgeAssetType.Care_Process_Model.getRef())
+              .withName(trisotechFileInfo.getName());
+        })
+        .collect(Collectors.toList());
 
     // TODO: return this or succeed? CAO
     return new ResponseEntity<>(assetList,
@@ -241,19 +241,21 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
         .withAssetId(new URIIdentifier()
             // TODO: Need to also send in versionTag and confirm the assetId and version match? CAO
             .withUri(extractor.getEnterpriseAssetIdForAsset(assetId).get())
-        .withVersionId(extractor.getEnterpriseAssetVersionIdForAsset(assetId, versionTag).get()))
-    // TODO: depending on what ArtifactId is, may need to change this either by making
-    //  additional calls to get what I need OR changing what resolveInternalArtifactID returns/processes CAO
+            .withVersionId(
+                extractor.getEnterpriseAssetVersionIdForAsset(assetId, versionTag).get()))
+        // TODO: depending on what ArtifactId is, may need to change this either by making
+        //  additional calls to get what I need OR changing what resolveInternalArtifactID returns/processes CAO
         .withArtifactId(new URIIdentifier().withUri(URI.create(
             getInternalIdAndVersion(assetId, versionTag))));
     return succeed(carrier, HttpStatus.OK);
   }
 
-  private String getInternalIdAndVersion(UUID assetId, String versionTag)  {
+  private String getInternalIdAndVersion(UUID assetId, String versionTag) {
     try {
       String internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag);
       Optional<String> version = extractor.getArtifactVersion(assetId);
-      return convertInternalId(internalId, version.orElse(null)); // TODO: better alternative? error? CAO
+      return convertInternalId(internalId,
+          version.orElse(null)); // TODO: better alternative? error? CAO
     } catch (NotLatestVersionException e) {
       // TODO: handle exception here? CAO
       e.printStackTrace();
@@ -282,12 +284,14 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
       String versionTag, UUID artifactId, String artifactVersionTag) {
     Optional<String> fileId = extractor.getFileId(assetId);
     // a specific version of knowledge asset carrier (fileId)
-    VersionIdentifier latestArtifactVersion = TrisotechWrapper.getLatestVersion(fileId.get()); // TODO: orElseThrow? CAO
+    VersionIdentifier latestArtifactVersion = TrisotechWrapper
+        .getLatestVersion(fileId.get()); // TODO: orElseThrow? CAO
     System.out.println("latestArtifactVersion versionTag" + latestArtifactVersion.getVersion());
     System.out.println("latestArtifactVersion Tag" + latestArtifactVersion.getTag());
-    if(latestArtifactVersion.getVersion().equals(artifactVersionTag)) {
+    if (latestArtifactVersion.getVersion().equals(artifactVersionTag)) {
+      // TODO: this isn't complete -- verify the asset matches? CAO
       // artifact matches, now check asset
-      URIIdentifier assetForArtifact = extractor.getAssetID(latestArtifactVersion.getFormat());
+      Optional<URI> assetForArtifact = extractor.getEnterpriseAssetIdForAsset(assetId);
     }
 
     // TODO: discuss w/Davide -- what needs to be set on the KnowledgeCarrier? CAO
@@ -295,14 +299,15 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
         .withAssetId(new URIIdentifier()
             // TODO: Need to also send in versionTag and confirm the assetId and version match?
             .withUri(extractor.getEnterpriseAssetIdForAsset(assetId).get())
-            .withVersionId(extractor.getEnterpriseAssetVersionIdForAsset(assetId, versionTag).get()))
+            .withVersionId(
+                extractor.getEnterpriseAssetVersionIdForAsset(assetId, versionTag).get()))
         // TODO: depending on what ArtifactId is, may need to change this either by making
         //  additional calls to get what I need OR changing what resolveInternalArtifactID returns/processes CAO
         .withArtifactId(new URIIdentifier()
             .withUri(URI.create(
                 convertInternalId(artifactId.toString(), latestArtifactVersion.getVersion()))));
 
-    // TODO: return 404 for             Asset or Artifact Version not found
+    // TODO: return 404 for Asset or Artifact Version not found -- does this include asset/version not being correct for artifact/version? CAO
     // does that include that this artifact/version and asset/version do not match?
     return succeed(carrier, HttpStatus.OK);
 
@@ -339,11 +344,11 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
     Document model = null;
 
-      model = TrisotechWrapper.getModelById(internalFileId, modelInfo).get();
+    model = TrisotechWrapper.getModelById(internalFileId, modelInfo).get();
 
-      if (model == null) { // TODO: try again??? assuming modelInfo may be invalid? CAO
-        model = TrisotechWrapper.getModelById(internalFileId).get();
-      }
+    if (model == null) { // TODO: try again??? assuming modelInfo may be invalid? CAO
+      model = TrisotechWrapper.getModelById(internalFileId).get();
+    }
 
     return model;
   }

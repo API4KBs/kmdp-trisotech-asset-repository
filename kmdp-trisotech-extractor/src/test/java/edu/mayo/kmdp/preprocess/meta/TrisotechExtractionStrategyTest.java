@@ -108,17 +108,15 @@ class TrisotechExtractionStrategyTest {
   @Test
   void getArtifactID() {
 
-//    Optional<String> value = this.tes.getArtifactID(dmnDox, dmnFile);
-//    System.out.println("value: " + value.get());
-//    assertNotNull(value.get());
-//
-    Optional<String> value = this.tes.getArtifactID(cmmnDox, cmmnFile);
-    System.out.println("value: " + value.get());
+    Optional<String> value = this.tes.getArtifactID(dmnDox, dmnFile);
+    assertNotNull(value.get());
+
+    value = this.tes.getArtifactID(cmmnDox, cmmnFile);
     assertNotNull(value.get());
 
     // TODO: this currently doesn't fail because of workaround for DMN1.2 so DMN1.1 also succeeds; fix this once have fix for DMN 1.2 CAO
-//    value = this.tes.getArtifactID(badDox, badFile );
-//    assertFalse(value.isPresent());
+    value = this.tes.getArtifactID(badDox, badFile );
+    assertFalse(value.isPresent());
 
   }
 
@@ -130,9 +128,8 @@ class TrisotechExtractionStrategyTest {
     Optional<Representation> cmmnRep = this.tes.getRepLanguage(cmmnDox, false);
     assertEquals("CMMN_1_1", cmmnRep.get().getLanguage().toString());
 
-    // TODO: this currently doesn't fail because of workaround for DMN1.2 so DMN1.1 also succeeds; fix this once have fix for DMN 1.2 CAO
-//    Optional<Representation> badRep = this.tes.getRepLanguage(badDox, false);
-//    assertEquals(Optional.empty(), badRep);
+    Optional<Representation> badRep = this.tes.getRepLanguage(badDox, false);
+    assertEquals(Optional.empty(), badRep);
   }
 
   @Test

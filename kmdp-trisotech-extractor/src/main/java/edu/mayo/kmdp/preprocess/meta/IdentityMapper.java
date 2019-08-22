@@ -18,6 +18,7 @@ package edu.mayo.kmdp.preprocess.meta;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.TOKEN;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
+import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
@@ -96,11 +97,6 @@ public class IdentityMapper {
     createMap(query(getQueryStringRelations(place)));
     models = ResultSetFactory.makeRewindable(query(getQueryStringModels(place)));
     orderedModels = hierarchySorter.linearize(getModelList(models), artifactToArtifactIDMap);
-  }
-
-  // TODO: not used. needed? CAO
-  public List<Resource> getOrderedModels() {
-    return orderedModels;
   }
 
   private void createMap(ResultSet results) {
@@ -200,10 +196,11 @@ public class IdentityMapper {
 
   /**
    * Build the queryString needed to query models with their fileId and assetId. This is specific to
-   * Trisotech. TODO: only return models that are Published? CAO By requesting version in the query,
+   * Trisotech. By requesting version in the query,
    * and not making it OPTIONAL, only models that have a version (i.e. are published) will be
    * returned. HOWEVER, having a version does not mean they have a STATE of 'Published'. The State
-   * could be other values, such as 'Draft'.
+   * could be other values, such as 'Draft'. Per Kevide meeting, 8/21, this is ok. Want all published
+   * even if state is not 'Published'.
    *
    * @param place the location the query should use 'place/repository/directory'
    * @return the query string needed to query the models
@@ -316,6 +313,11 @@ public class IdentityMapper {
       QuerySolution soln = models.nextSolution();
 
       if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
+        VersionedIdentifier vi = DatatypeHelper.toVersionIdentifier(URI.create(soln.getLiteral(ASSET_ID).toString()));
+        System.out.println("assetID as versionedIdentifier version: " + vi.getVersion());
+        System.out.println("assetID as versioned format: " + vi.getFormat());
+        System.out.println("assetID as versioned tag: " + vi.getTag());
+        System.out.println("assetId as versioned toString: " + vi.toString());
         return Optional.of(DatatypeHelper.uri(soln.getLiteral(ASSET_ID).toString()));
       }
     }
@@ -396,6 +398,7 @@ public class IdentityMapper {
       System.out.println("assetId.getTag(): " + assetId.getTag());
 
       // versionId value has the UUID of the asset/versions/versionTag, so this will match id and version
+      // TODO: ONlY if state of 'Published'??? CAO
       if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getVersionId().toString())) {
         return soln.getResource(MODEL).getURI();
         // the requested version of the asset doesn't exist on the latest model, check if the

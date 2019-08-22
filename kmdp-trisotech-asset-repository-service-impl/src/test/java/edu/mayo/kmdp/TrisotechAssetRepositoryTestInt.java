@@ -20,6 +20,7 @@ import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import java.io.File;
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -112,12 +113,56 @@ class TrisotechAssetRepositoryTestInt {
 
     List<Pointer> pointers = models.getBody();
 
-    assertEquals(5, pointers.size());
+    assertEquals(6, pointers.size());
+    pointers.forEach( (ptr) -> {
+
+      VersionIdentifier assetId = toVersionIdentifier( ptr.getHref() );
+
+      System.out.println("assetId: " + assetId.toString());
+      System.out.println("name: " + ptr.getName());
+      System.out.println("type: " + ptr.getType().toString());
+
+    });
+  }
+
+
+
+  @Test
+  void listKnowledgeAssets_DMN() {
+    ResponseEntity<List<Pointer>> models = tar.listKnowledgeAssets("dmn", null, null, null);
+    assertSame( models.getStatusCode(), HttpStatus.OK );
+    assertFalse( models.getBody().isEmpty() );
+
+    List<Pointer> pointers = models.getBody();
+
+    assertEquals(4, pointers.size());
+    pointers.forEach( (ptr) -> {
+      // TODO: other data to assert here? CAO
+
+      System.out.println("assetId: " + ptr.getHref().toString());
+      System.out.println("name: " + ptr.getName());
+      System.out.println("type: " + ptr.getType().toString());
+
+    });
+  }
+
+
+  @Test
+  void listKnowledgeAssets_CMMN() {
+    ResponseEntity<List<Pointer>> models = tar.listKnowledgeAssets("cmmn", null, null, null);
+    assertSame( models.getStatusCode(), HttpStatus.OK );
+    assertFalse( models.getBody().isEmpty() );
+
+    List<Pointer> pointers = models.getBody();
+
+    assertEquals(2, pointers.size());
     pointers.forEach( (ptr) -> {
 
       VersionIdentifier assetId = toVersionIdentifier( ptr.getHref() );
 
       System.out.println("assetId: " + assetId);
+      System.out.println("name: " + ptr.getName());
+      System.out.println("type: " + ptr.getType().toString());
 
     });
   }

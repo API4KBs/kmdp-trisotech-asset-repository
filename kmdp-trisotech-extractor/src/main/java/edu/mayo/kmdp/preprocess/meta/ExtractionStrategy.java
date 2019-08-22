@@ -39,33 +39,17 @@ public interface ExtractionStrategy {
 
 	Optional<URIIdentifier> getAssetID( Document dox );
 
-	Optional<URIIdentifier> getAssetID(URIIdentifier artifactId, String versionTag)
-			throws NotLatestVersionException;
-
-	URIIdentifier getAssetID(URI artifact);
-
 	Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
+
 	Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag);
 
-	Optional<String> getArtifactVersionTag( Document dox, TrisotechFileInfo meta );
-
 	Optional<String> getArtifactID( Document dox, TrisotechFileInfo meta );
-
-  String getArtifactID(URIIdentifier assetId, String versionTag) throws NotLatestVersionException;
 
   Optional<Representation> getRepLanguage( Document dox, boolean concrete );
 
   Optional<String> getMimetype(UUID assetId);
 
 	Optional<String> getArtifactVersion(UUID assetId);
-
-	String getMetadataEntryNameForID( String id );
-
-	default KnowledgeAsset newSurrogate() {
-		// surrogate.resources.KnowledgeAsset extends metadata.surrogate.KnowledgeAsset,
-		// but is XML-serializable, so need to create this way to get XML serializable object,
-		return new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset();
-	}
 
 	URIIdentifier extractAssetID( Document dox );
 

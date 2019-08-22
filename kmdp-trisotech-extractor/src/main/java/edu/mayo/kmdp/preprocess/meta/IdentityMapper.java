@@ -18,6 +18,7 @@ package edu.mayo.kmdp.preprocess.meta;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.TOKEN;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
+import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
@@ -46,6 +47,7 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.query.ResultSetRewindable;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
@@ -96,11 +98,6 @@ public class IdentityMapper {
     createMap(query(getQueryStringRelations(place)));
     models = ResultSetFactory.makeRewindable(query(getQueryStringModels(place)));
     orderedModels = hierarchySorter.linearize(getModelList(models), artifactToArtifactIDMap);
-  }
-
-  // TODO: not used. needed? CAO
-  public List<Resource> getOrderedModels() {
-    return orderedModels;
   }
 
   private void createMap(ResultSet results) {
@@ -200,10 +197,11 @@ public class IdentityMapper {
 
   /**
    * Build the queryString needed to query models with their fileId and assetId. This is specific to
-   * Trisotech. TODO: only return models that are Published? CAO By requesting version in the query,
+   * Trisotech. By requesting version in the query,
    * and not making it OPTIONAL, only models that have a version (i.e. are published) will be
    * returned. HOWEVER, having a version does not mean they have a STATE of 'Published'. The State
-   * could be other values, such as 'Draft'.
+   * could be other values, such as 'Draft'. Per Kevide meeting, 8/21, this is ok. Want all published
+   * even if state is not 'Published'.
    *
    * @param place the location the query should use 'place/repository/directory'
    * @return the query string needed to query the models
@@ -245,7 +243,6 @@ public class IdentityMapper {
         // then get the assetId from the customAttribute
         // TODO: do we need to confirm the customAttributeKey to verify it is what we expect? and how would that happen? CAO
         + "         ?caElement ttr:customAttributeValue ?assetId."
-        // TODO: only return Published models? CAO
         + "    }"
         + " UNION "
         + "    {"
@@ -267,7 +264,6 @@ public class IdentityMapper {
         // then get the assetId from the customAttribute
         // TODO: do we need to confirm the customAttributeKey to verify it is what we expect? CAO
         + "         ?caElement ttr:customAttributeValue ?assetId."
-        // TODO: only return Published models? CAO
         + "    }"
         + "  }"
         + "}";
@@ -329,57 +325,51 @@ public class IdentityMapper {
    * @param assetId the assetId to get the URIIdentifier for
    * @return URIIdentifier for the assetId or Empty
    */
-  // TODO: should have the version passed in also to verify the asset requested is for the asset/version that is available? CAO
   public Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId) {
     models.reset();
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
-      System.out.println("soln model: " + soln.getResource(MODEL)
-          + " soln assetId: " + soln.getLiteral(IdentityMapper.ASSET_ID).getString()
-          + " soln fileId: " + soln.getLiteral(FILE_ID)
-          + " compared to assetId: " + assetId.toString());
+
       String enterpriseAssetVersionId = soln.getLiteral(ASSET_ID).getString();
 
       if (enterpriseAssetVersionId.contains(assetId.toString())) {
         // want this to return the ASSETID, NOT the VersionID (which is what this value is)
-
-        System.out.println(
-            "enterpriseAssetId.substring(lastindexOf(/versions)) : " + enterpriseAssetVersionId
-                .substring(enterpriseAssetVersionId
-                    .lastIndexOf("/versions"))); // this gives the versions part: /versions/1.0.1
-        System.out.println(
-            "enterpriseAssetId.substring(0, lastindexOf(/versions)) : " + enterpriseAssetVersionId
-                .substring(0, enterpriseAssetVersionId.lastIndexOf("/versions")));
-
-        // return only the portion of the URI that is hte enterprise Asset ID (no version info)
-        return Optional.ofNullable(
-            // remove the /versions/... part of the URI; enterpriseAssetId is the part without the version
-            URI.create(enterpriseAssetVersionId
-                .substring(0, enterpriseAssetVersionId.lastIndexOf("/versions"))));
+        // return only the portion of the URI that is the enterprise Asset ID (no version info)
+        return Optional
+            .ofNullable(getEnterpriseAssetIdForAssetVersionId(URI.create(enterpriseAssetVersionId))
+            );
       }
     }
     return Optional.empty();
   }
 
-  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag) {
+  public URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId) {
+    String assetVersionId = enterpriseAssetVersionId.toString();
+    // remove the /versions/... part of the URI; enterpriseAssetId is the part without the version
+    return URI.create(assetVersionId
+        .substring(0, assetVersionId.lastIndexOf("/versions")));
+  }
+
+  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag)
+      throws NotLatestVersionException {
     models.reset();
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
-      System.out.println("soln model: " + soln.getResource(MODEL)
-          + " soln assetId: " + soln.getLiteral(IdentityMapper.ASSET_ID).getString()
-          + " soln fileId: " + soln.getLiteral(FILE_ID)
-          + " compared to assetId: " + assetId.toString());
-      String enterpriseAssetVersionId = soln.getLiteral(ASSET_ID).getString();
-      if (enterpriseAssetVersionId.contains(assetId.toString())
-          && enterpriseAssetVersionId.contains(versionTag)) {
 
-        // return only the portion of the URI that is hte enterprise Asset ID (no version info)
-        return Optional.ofNullable(
-            URI.create(enterpriseAssetVersionId));
+      String enterpriseAssetVersionId = soln.getLiteral(ASSET_ID).getString();
+      if (enterpriseAssetVersionId.contains(assetId.toString())) {
+        // found an artifact that has this asset; now check the version
+        if (enterpriseAssetVersionId.contains("/versions/" + versionTag)) {
+          return Optional.ofNullable(
+              URI.create(enterpriseAssetVersionId));
+        } else {
+          // there is an artifact, but the latest does not match the version seeking
+          throw new NotLatestVersionException(soln.getResource(MODEL).getURI());
+        }
       }
     }
-    // TODO: return an error instead?  CAO
-    return Optional.empty();
+    throw new NotFoundException(
+        "No enterprise assetId for asset " + assetId + " version: " + versionTag);
   }
 
   /**
@@ -391,9 +381,11 @@ public class IdentityMapper {
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
       // TODO: need to handle URIIdentifiers not properly created? CAO (ex: DatatypeHelper.uri("my/path/assetId/versions/1.0.0")  OR fix DatatypeHelper?
-      System.out.println("assetId.getUri().toString: " + assetId.getUri().toString());
-      System.out.println("assetId.getVersionId().toString: " + assetId.getVersionId().toString());
-      System.out.println("assetId.getTag(): " + assetId.getTag());
+      logger.debug(String.format("getArtifactId for assetId: %s", assetId.toStringId()));
+      logger.debug(String.format("assetId.getUri().toString: %s", assetId.getUri().toString()));
+      logger.debug(
+          String.format("assetId.getVersionId().toString: %s", assetId.getVersionId().toString()));
+      logger.debug(String.format("assetId.getTag(): %s", assetId.getTag()));
 
       // versionId value has the UUID of the asset/versions/versionTag, so this will match id and version
       if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getVersionId().toString())) {
@@ -411,10 +403,7 @@ public class IdentityMapper {
     models.reset();
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
-      System.out.println("soln model: " + soln.getResource(MODEL)
-          + " soln assetId: " + soln.getLiteral(IdentityMapper.ASSET_ID).getString()
-          + " soln fileId: " + soln.getLiteral(FILE_ID)
-          + " compared to assetId: " + assetId.toString());
+
       if (soln.getLiteral(ASSET_ID).getString().contains(assetId.toString())) {
         return Optional.ofNullable(soln.getLiteral(FILE_ID).getString());
       }
@@ -422,21 +411,6 @@ public class IdentityMapper {
     return Optional.empty();
   }
 
-  public Optional<String> getMimetype(UUID assetId) {
-    models.reset();
-    while (models.hasNext()) {
-      QuerySolution soln = models.nextSolution();
-      System.out.println("soln model: " + soln.getResource(MODEL)
-          + " soln assetId: " + soln.getLiteral(ASSET_ID)
-          + " soln fileId: " + soln.getLiteral(FILE_ID)
-          + " soln mimeType: " + soln.getLiteral(MIME_TYPE)
-          + " compared to assetId: " + assetId.toString());
-      if (soln.getLiteral(ASSET_ID).getString().contains(assetId.toString())) {
-        return Optional.ofNullable(soln.getLiteral(MIME_TYPE).getString());
-      }
-    }
-    return Optional.empty();
-  }
 
   public Optional<String> getFileId(String internalId) {
     models.reset();
@@ -444,6 +418,33 @@ public class IdentityMapper {
       QuerySolution soln = models.nextSolution();
       if (soln.getResource(MODEL).getURI().equals(internalId)) {
         return Optional.ofNullable(soln.getLiteral(FILE_ID).getString());
+      }
+    }
+    return Optional.empty();
+  }
+
+
+  public Optional<String> getMimetype(UUID assetId) {
+    models.reset();
+    while (models.hasNext()) {
+      QuerySolution soln = models.nextSolution();
+
+      if (soln.getLiteral(ASSET_ID).getString().contains(assetId.toString())) {
+        return Optional.ofNullable(soln.getLiteral(MIME_TYPE).getString());
+      }
+    }
+    return Optional.empty();
+  }
+
+
+  public Optional<String> getMimetype(String internalId) {
+    models.reset();
+    while (models.hasNext()) {
+      while (models.hasNext()) {
+        QuerySolution soln = models.nextSolution();
+        if (soln.getResource(MODEL).getURI().equals(internalId)) {
+          return Optional.ofNullable(soln.getLiteral(MIME_TYPE).getString());
+        }
       }
     }
     return Optional.empty();
@@ -488,58 +489,42 @@ public class IdentityMapper {
   public Set<Resource> getArtifactImports(Optional<String> docId) {
     Set<Resource> resources = null;
 
-    String id = docId.get().substring(docId.get().lastIndexOf('/') + 1);
-    System.out.println("id: " + id);
-    for (Entry<Resource, Set<Resource>> entry : artifactToArtifactIDMap.entrySet()) {
-      Resource k = entry.getKey();
-      Set<Resource> v = entry.getValue();
-      if (k.getLocalName().substring(1).equals(id)) {
-        System.out.println("found id in artifactToArtifactIDMap");
-        resources = artifactToArtifactIDMap.get(k);
-      }
-
-    }
-    orderedModels.forEach(model -> {
-      System.out.println("orderedModels URI: " + model.getURI()
-          + " localName: " + model.getLocalName()
-          + " nameSpace: " + model.getNameSpace()
-          + " toString: " + model.toString()
-          + " listProperties: " + model.listProperties());
-    });
-    orderedModels.forEach(model -> {
-      if (model.getLocalName().substring(1).equals(id)) {
-        System.out.println("found model that matches id: " + id);
-        while (model.listProperties().hasNext()) {
-          System.out.println("model property: " + model.listProperties().next().getString());
+    if(docId.isPresent()) {
+      String id = docId.get().substring(docId.get().lastIndexOf('/') + 1);
+      for (Entry<Resource, Set<Resource>> entry : artifactToArtifactIDMap.entrySet()) {
+        Resource k = entry.getKey();
+        if (k.getLocalName().substring(1).equals(id)) {
+          resources = artifactToArtifactIDMap.get(k);
         }
       }
-
-    });
+    }
     return resources;
   }
 
   public List<URIIdentifier> getAssetRelations(Optional<String> docId) {
-    // first find the artifact in the artifactToArtifact mapping
-    String id = docId.get().substring(docId.get().lastIndexOf('/') + 1);
     List<URIIdentifier> assets = new ArrayList<>();
-    System.out.println("id: " + id);
-    artifactToArtifactIDMap.forEach((k, v) -> {
-      if (k.getLocalName().substring(1).equals(id)) {
-        System.out.println("found id in artifactToArtifactIDMap");
-        // once found, for each of the artifacts it is dependent on, find the asset id for those artifacts in the models
-        models.reset();
-        while (models.hasNext()) {
-          QuerySolution soln = models.nextSolution();
-          if (soln.getResource(MODEL).getURI().equals(k.getLocalName())) {
-            assets
-                .add(
-                    new URIIdentifier()
-                        .withUri(URI.create(soln.getLiteral(ASSET_ID).getString())));
-          }
 
+    if (docId.isPresent()) {
+      // first find the artifact in the artifactToArtifact mapping
+      String id = docId.get().substring(docId.get().lastIndexOf('/') + 1);
+      artifactToArtifactIDMap.forEach((k, v) -> {
+        if (k.getLocalName().substring(1).equals(id)) {
+          logger.debug("found id in artifactToArtifactIDMap");
+          // once found, for each of the artifacts it is dependent on, find the asset id for those artifacts in the models
+          models.reset();
+          while (models.hasNext()) {
+            QuerySolution soln = models.nextSolution();
+            if (soln.getResource(MODEL).getURI().equals(k.getLocalName())) {
+              assets
+                  .add(
+                      new URIIdentifier()
+                          .withUri(URI.create(soln.getLiteral(ASSET_ID).getString())));
+            }
+
+          }
         }
-      }
-    });
+      });
+    }
     return assets;
   }
 

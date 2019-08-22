@@ -1,14 +1,14 @@
 {
   "file": {
-    "id": "a0240977-f789-4922-90c8-e6468e59f5c2",
-    "sku": "a0240977-f789-4922-90c8-e6468e59f5c2",
-    "name": "Basic Case Model",
+    "id": "77289402-fd40-4603-9031-d27ee6ec5689",
+    "sku": "77289402-fd40-4603-9031-d27ee6ec5689",
+    "name": "Basic Decision Model",
     "path": "/jls test models",
-    "mimetype": "application/vnd.triso-cmmn+json",
-    "updated": "2019-08-14T15:52:14Z",
+    "mimetype": "application/vnd.triso-dmn+json",
+    "updated": "2019-08-14T13:18:00Z",
     "updater": "Orcutt, Cheryl A.",
-    "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=/jls%20test%20models&mimetype=application%2Fcmmn-1-1%2Bxml&sku=a0240977-f789-4922-90c8-e6468e59f5c2",
-    "version": "1.8.0",
+    "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=/jls%20test%20models&sku=77289402-fd40-4603-9031-d27ee6ec5689",
+    "version": "1.3.0",
     "state": "Published"
   }
 }

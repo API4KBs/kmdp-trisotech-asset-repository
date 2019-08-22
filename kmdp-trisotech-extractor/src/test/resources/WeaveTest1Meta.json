@@ -5,10 +5,10 @@
     "name": "Weave Test 1",
     "path": "/",
     "mimetype": "application/vnd.triso-cmmn+json",
-    "updated": "2019-08-01T15:39:10Z",
+    "updated": "2019-08-16T14:27:01Z",
     "updater": "Orcutt, Cheryl A.",
     "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&sku=93e58aa9-c258-46fd-909d-1cb096e19e64",
-    "version": "2.2",
+    "version": "2.2.1",
     "state": "Published"
   }
 }

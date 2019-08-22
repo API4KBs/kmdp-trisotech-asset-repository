@@ -260,19 +260,19 @@ public class TrisotechWrapper {
   }
 
   /**
-   * Get the Trisotech fileInfo for the model and version provided. This will NOT return the latest.
+   * Get the Trisotech fileInfo for the model and fileVersion provided. This will NOT return the latest.
    * For the latest, use getLatestModelInfo.
    *
    * @param fileId id of the file
-   * @param version the version
+   * @param fileVersion the fileVersion
    * @param mimetype mimetype of the file
-   * @return TrisotechFileInfo object for the file/version requested
+   * @return TrisotechFileInfo object for the file/fileVersion requested
    */
-  public static TrisotechFileInfo getFileInfoByIdAndVersion(String fileId, String version,
+  public static TrisotechFileInfo getFileInfoByIdAndVersion(String fileId, String fileVersion,
       String mimetype) {
     List<TrisotechFileInfo> fileInfos = getModelVersions(fileId, mimetype);
     for (TrisotechFileInfo fileInfo : fileInfos) {
-      if (version.equals(fileInfo.getVersion())) {
+      if (fileVersion.equals(fileInfo.getVersion())) {
         return fileInfo;
       }
     }
@@ -380,14 +380,14 @@ public class TrisotechWrapper {
 
   /**
    * Given a TrisotechFileInfo, return a versionIdentifier for the latest version of that file.
-   * TODO: only return published latest version? CAO
    *
    * @param tfi file info for Trisotech file
    * @return VersionIdentifier
    */
   //return VersionIdentifier uid, versiontag (1.0.0) , create .withEstablishedOn for timestamp
   public static VersionIdentifier getLatestVersion(TrisotechFileInfo tfi) {
-    if (null != tfi) {
+    // only return for published models
+    if (null != tfi && null != tfi.getState()) {
       try {
         return new VersionIdentifier().withTag(tfi.getId())
             .withVersion(tfi.getVersion())
@@ -541,14 +541,14 @@ public class TrisotechWrapper {
 
   /**
    * is the model published? models can be published, but not be in the state of 'Published'.
-   * This will only return true for those models that are published AND in a state of 'Published'
+   * All models, of any state, that are published will return true here. (per meeting 8/21/2019)
    *
-   * @param trisotechFileInfo the fileInfo for the model; will contain state if published
+   * @param trisotechFileInfo the fileInfo for the model; will contain state and version if published
    * @return true/false
    */
   private static boolean publishedModel(TrisotechFileInfo trisotechFileInfo) {
     return (Optional.ofNullable(trisotechFileInfo.getState()).isPresent() &&
-        trisotechFileInfo.getState().equals(PUBLISHED_STATE));
+        Optional.ofNullable(trisotechFileInfo.getVersion()).isPresent());
   }
 
 

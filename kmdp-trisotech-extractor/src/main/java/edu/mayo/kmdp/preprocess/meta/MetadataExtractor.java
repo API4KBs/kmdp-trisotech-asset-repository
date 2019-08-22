@@ -15,45 +15,43 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
+import static edu.mayo.kmdp.util.JaxbUtil.marshall;
+import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.SurrogateHelper;
-import edu.mayo.kmdp.metadata.annotations.Annotation;
-import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
-import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.w3c.dom.Document;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.*;
-
-import static edu.mayo.kmdp.util.JaxbUtil.marshall;
-import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
-
-// TODO: rework for Trisotech data CAO
-// TODO: What does this class do? What is its purpose in life? CAO
 /**
  * MetadataExtractor takes the output of the Weaver and the information of the file to create
  * a KnowledgeAsset surrogate.
  */
 public class MetadataExtractor {
 
-
   public enum Format {
-    JSON( ".json" ),
-    XML( ".xml" );
+    JSON(".json"),
+    XML(".xml");
 
     private String ext;
 
-    Format( String ext ) {
+    Format(String ext) {
       this.ext = ext;
     }
 
@@ -62,100 +60,60 @@ public class MetadataExtractor {
     }
   }
 
-
   private ExtractionStrategy strategy;
 
-  private IdentityMapper mapper;
-
   public MetadataExtractor() {
-    this( new IdentityMapper() );
+    this(new IdentityMapper());
   }
 
-
-  public MetadataExtractor( IdentityMapper mapper ) {
+  public MetadataExtractor(IdentityMapper mapper) {
     strategy = new TrisotechExtractionStrategy();
-    strategy.setMapper( mapper );
-    this.mapper = mapper;
+    strategy.setMapper(mapper);
   }
 
-  // TODO: Needed? not used CAO
-  public MetadataExtractor( IdentityMapper mapper, Map<String,URIIdentifier> idMap ) {
-    strategy = new TrisotechExtractionStrategy();
-    strategy.setMapper( mapper );
-    this.mapper = mapper;
-  }
-
-  public IdentityMapper getMapper() {
-    return mapper;
-  }
-
-//  public void init( Map<String,URIIdentifier> idMap ) {
-//    idMap.forEach( mapper::map );
-//  }
-
-  public Optional<KnowledgeAsset> extract(InputStream resource, InputStream meta ) {
-    Optional<Document> dox = loadXMLDocument( resource );
+  public Optional<KnowledgeAsset> extract(InputStream resource, InputStream meta) {
+    Optional<Document> dox = loadXMLDocument(resource);
     Optional<JsonNode> surrJson = JSonUtil.readJson(meta);
 
     return dox.map(document -> extract(document, surrJson.get()));
   }
 
-  public Optional<ByteArrayOutputStream> doExtract( String resPath, String metaPath, Format f, Properties p ) {
-    InputStream res = MetadataExtractor.class.getResourceAsStream( resPath );
-    InputStream met = MetadataExtractor.class.getResourceAsStream( metaPath );
-
-    return doExtract( res, met, f, p );
-  }
-
-
-  public Optional<ByteArrayOutputStream> doExtract( InputStream resource, InputStream meta, Format f, Properties p ) {
-    return extract( resource, meta ).flatMap( (surr) -> {
-      switch ( f ) {
-        case JSON :
+  public Optional<ByteArrayOutputStream> doExtract(InputStream resource, InputStream meta, Format f,
+      Properties p) {
+    return extract(resource, meta).flatMap(surr -> {
+      switch (f) {
+        case JSON:
           Optional<ByteArrayOutputStream> jsonExtract = JSonUtil.writeJson(surr, p);
           ByteArrayOutputStream baos = jsonExtract.get();
-          System.out.println("JSON output from doExtract: " + new String( baos.toByteArray()));
-          return JSonUtil.writeJson( surr, p );
-        case XML :
+          return JSonUtil.writeJson(surr, p);
+        case XML:
         default:
-          List<? extends Class<? extends KnowledgeAsset>> surrKA = Collections.singletonList(surr.getClass());
-          System.out.println("surrKA: " + surrKA.stream().toString());
-          List<? extends Class<? extends KnowledgeAsset>> listSurrKA = Arrays.asList(surr.getClass());
-          System.out.println("listSurrKA: " + listSurrKA.stream().toString());
-          return marshall( Arrays.asList( surr.getClass() ),
-                  surr,
-                  SurrogateHelper.getSchema().orElseThrow( UnsupportedOperationException::new ),
-                  new JaxbConfig().from( p ) );
+          List<? extends Class<? extends KnowledgeAsset>> surrKA = Collections
+              .singletonList(surr.getClass());
+          List<? extends Class<? extends KnowledgeAsset>> listSurrKA = Arrays
+              .asList(surr.getClass());
+          return marshall(Arrays.asList(surr.getClass()),
+              surr,
+              SurrogateHelper.getSchema().orElseThrow(UnsupportedOperationException::new),
+              new JaxbConfig().from(p));
       }
-    } );
-  }
-
-  public Optional<Document> doExtract( Document dox, JsonNode meta ) {
-    KnowledgeAsset surr = extract( dox, meta );
-    surr.getSubject().forEach(anno -> {
-      System.out.println("before: anno canonical class: " + anno.getClass().getCanonicalName());
-      System.out.println("before: anno type class: " + anno.getClass().getTypeName());
-      if(edu.mayo.kmdp.metadata.annotations.resources.DatatypeAnnotation.class.isInstance(anno)) {
-        System.out.println("anno is resources.DatatypeAnnotation... reinstantiate");
-        anno = (Annotation)anno.copyTo(new DatatypeAnnotation());
-        // rootToFragment doesn't handle DatatypeAnnotation, but the above line is essentially what it does
-//        anno = SurrogateHelper.rootToFragment(anno);
-      }
-      System.out.println("after: anno canonical class: " + anno.getClass().getCanonicalName());
-      System.out.println("after: anno type class: " + anno.getClass().getTypeName());
     });
-
-    return JaxbUtil.marshallDox( Collections.singleton( surr.getClass() ),
-            surr,
-            JaxbUtil.defaultProperties() );
   }
 
-  public KnowledgeAsset extract( Document dox, JsonNode meta ) {
-    return strategy.extractXML( dox, meta );
+  public Optional<Document> doExtract(Document dox, JsonNode meta) {
+    KnowledgeAsset surr = extract(dox, meta);
+
+    return JaxbUtil.marshallDox(Collections.singleton(surr.getClass()),
+        surr,
+        JaxbUtil.defaultProperties());
   }
 
-  public KnowledgeAsset extract( Document dox, TrisotechFileInfo meta ) {
-    return strategy.extractXML( dox, meta );
+  public KnowledgeAsset extract(Document dox, JsonNode meta) {
+    return strategy.extractXML(dox, meta);
+  }
+
+  public KnowledgeAsset extract(Document dox, TrisotechFileInfo meta) {
+    return strategy.extractXML(dox, meta);
   }
 
 
@@ -165,79 +123,74 @@ public class MetadataExtractor {
    * @param dox the Document that has the woven value of the assetId.
    * @return the URIIdentifer for the asset
    */
-  public URIIdentifier getAssetID( Document dox ) {
-    return strategy.extractAssetID( dox );
+  public URIIdentifier getAssetID(Document dox) {
+    return strategy.extractAssetID(dox);
   }
 
-  public Optional<URI> getEnterpriseAssetIdForAsset( UUID assestId ) {
+  public Optional<URI> getEnterpriseAssetIdForAsset(UUID assestId) {
     return strategy.getEnterpriseAssetIdForAsset(assestId);
   }
 
-  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag) {
+  public URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId) {
+    return strategy.getEnterpriseAssetIdForAssetVersionId(enterpriseAssetVersionId);
+  }
+
+  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag)
+      throws NotLatestVersionException {
     return strategy.getEnterpriseAssetVersionIdForAsset(assetId, versionTag);
-  }
-
-  public URIIdentifier getAssetID(URI artifact) {
-    return strategy.getAssetID(artifact);
-  }
-
-  public Optional<URIIdentifier> getAssetID(URIIdentifier artifactId, String versionTag)
-      throws NotLatestVersionException {
-    return strategy.getAssetID(artifactId, versionTag);
-  }
-
-  public String getArtifactId(URIIdentifier assetId, String versionTag)
-      throws NotLatestVersionException {
-    return strategy.getArtifactID(assetId, versionTag);
   }
 
   public Optional<String> getMimetype(UUID assetId) {
     return strategy.getMimetype(assetId);
   }
 
+  public Optional<String> getMimetype(String internalId) {
+    return strategy.getMimetype(internalId);
+  }
+
   public Optional<String> getArtifactVersion(UUID assetId) {
     return strategy.getArtifactVersion(assetId);
+  }
+
+
+  public Optional<String> getFileId(UUID assetId) {
+    return strategy.getFileId(assetId);
+  }
+
+  public Optional<String> getFileId(String internalId) {
+    return strategy.getFileId(internalId);
   }
 
   /**
    * enterpriseAssetId is the assetId found in the Carrier/model/XML file from Trisotech
    *
-   * @param modelId the Trisotech model ID to resolve to an enterprise ID
+   * @param fileId the Trisotech file ID to resolve to an enterprise ID
    * @return
    */
-  public URIIdentifier resolveEnterpriseAssetID( String modelId ) {
-    return strategy.getMapper().getAssetId( modelId )
-            .orElseThrow( () -> new IllegalStateException( "Defensive: Unable to resolve internal ID " + modelId + " to a known Enterprise ID" ) );
+  public URIIdentifier resolveEnterpriseAssetID(String fileId) {
+    // TODO: Need consistency ... return Optional.empty? or throw an error? CAO; should all methods return Optional<T>?
+    return strategy.getAssetId(fileId)
+        .orElseThrow(() -> new IllegalStateException(
+            "Defensive: Unable to resolve internal ID " + fileId + " to a known Enterprise ID"));
   }
 
 
   /**
    * internalArtifactID is the id of the Carrier/model in Trisotech
    *
-   * @param assetId
-   * @param versionTag
-   * @return
+   * @param assetId the assetId for which an artifact is needed
+   * @param versionTag the version of the asset requesting
+   * @return the internalArtifactId or NotLatestVersionException
+   *
+   * The exception will be thrown if the latest version of the artifact does not
+   * map to the requested version of the asset.
    */
   public String resolveInternalArtifactID(String assetId, String versionTag)
       throws NotLatestVersionException {
-    System.out.println("resolveInternalArtifactID: asset " + assetId + " version: " + versionTag);
-    // need to find specific version of artifactId for this version of assetId
+    // need to find the artifactId for this version of assetId
     // URIIdentifer built with assetId and versionTag; allows for finding the artifact associated with this asset/version
     URIIdentifier id = DatatypeHelper.uri(assetId, versionTag);
-    System.out.println("URIIdentifier created from assetId and versionTag: " + id.getUri().toString());
-    try {
-      return strategy.getMapper().getArtifactId(id);
-    } catch (NotLatestVersionException e) {
-      throw e;
-    }
+    return strategy.getArtifactId(id);
   }
 
-
-  public Optional<String> getFileId(UUID assetId) {
-    return strategy.getMapper().getFileId(assetId);
-  }
-
-  public Optional<String> getFileId(String internalId) {
-    return strategy.getMapper().getFileId(internalId);
-  }
 }

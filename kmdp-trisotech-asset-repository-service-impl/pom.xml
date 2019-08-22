@@ -41,10 +41,7 @@
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-rest-ws-utils</artifactId>
     </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-asset-repository-service-server</artifactId>
-    </dependency>
+
     <!-- external -->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -66,14 +63,13 @@
     </dependency>
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
-      <artifactId>hapi-fhir-structures-hl7org-dstu2</artifactId>
+      <artifactId>hapi-fhir-structures-dstu2</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
 </project>

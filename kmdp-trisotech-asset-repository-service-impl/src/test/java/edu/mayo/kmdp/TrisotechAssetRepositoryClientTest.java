@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.preprocess;
+package edu.mayo.kmdp;
 
-/**
- * Exception to handle when the asset version we're looking for doesn't exist for the artifact.
- * Provide the model URI for the artifact as the errorMessage.
- */
-public class NoArtifactVersionException extends Exception {
-  public NoArtifactVersionException(String errorMessage) {
-    super(errorMessage);
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest(classes = TrisotechAssetRepository.class)
+public class TrisotechAssetRepositoryClientTest {
+  // confirm the client starts
+  @Test
+  public void contextLoad(){
   }
 
 }

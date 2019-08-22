@@ -16,7 +16,8 @@
 package edu.mayo.kmdp.preprocess;
 
 /**
- * Exception to handle when the asset version we're looking for doesn't exist for the artifact.
+ * Exception to handle when the asset version we're looking for doesn't
+ * exist for the latest version of the artifact.
  * Provide the model URI for the artifact as the errorMessage.
  */
 public class NotLatestVersionException extends Exception {

@@ -18,13 +18,13 @@ package edu.mayo.kmdp.preprocess.meta;
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
-import edu.mayo.kmdp.preprocess.NoArtifactVersionException;
+import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import java.net.URI;
+import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.w3c.dom.Document;
-
-import java.util.Optional;
 
 public interface ExtractionStrategy {
 
@@ -37,28 +37,29 @@ public interface ExtractionStrategy {
 	KnowledgeAsset extractXML( Document dox, TrisotechFileInfo meta );
 
 	Optional<URIIdentifier> getAssetID( Document dox );
+	Optional<URIIdentifier> getAssetId(String fileId);
 
-	Optional<URIIdentifier> getAssetID(URIIdentifier artifactId, String versionTag)
-			throws NoArtifactVersionException;
+	Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
+	URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId);
 
-	Optional<String> getArtifactVersionTag( Document dox, TrisotechFileInfo meta );
+	Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag)
+			throws NotLatestVersionException;
 
 	Optional<String> getArtifactID( Document dox, TrisotechFileInfo meta );
-
-  String getArtifactID(URIIdentifier assetId, String versionTag) throws NoArtifactVersionException;
 
   Optional<Representation> getRepLanguage( Document dox, boolean concrete );
 
   Optional<String> getMimetype(UUID assetId);
+	Optional<String> getMimetype(String internalId);
 
-  String getMetadataEntryNameForID( String id );
+	Optional<String> getArtifactVersion(UUID assetId);
 
-	default KnowledgeAsset newSurrogate() {
-		// surrogate.resources.KnowledgeAsset extends metadata.surrogate.KnowledgeAsset,
-		// but is XML-serializable, so need to create this way to get XML serializable object,
-		return new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset();
-	}
+	URIIdentifier extractAssetID( Document dox );
 
-	URIIdentifier extractAssetID( Document dox, TrisotechFileInfo meta );
+	Optional<String> getFileId(String internalId);
+
+	Optional<String> getFileId(UUID assetId);
+
+  String getArtifactId(URIIdentifier id) throws NotLatestVersionException;
 
 }

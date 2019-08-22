@@ -5,10 +5,10 @@
     "name": "Basic Case Model",
     "path": "/jls test models",
     "mimetype": "application/vnd.triso-cmmn+json",
-    "updated": "2019-08-09T17:21:50Z",
+    "updated": "2019-08-14T15:52:14Z",
     "updater": "Orcutt, Cheryl A.",
     "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=/jls%20test%20models&sku=a0240977-f789-4922-90c8-e6468e59f5c2",
-    "version": "1.5",
+    "version": "1.8.0",
     "state": "Published"
   }
 }

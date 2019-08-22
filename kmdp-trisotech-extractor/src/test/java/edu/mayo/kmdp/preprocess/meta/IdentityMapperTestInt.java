@@ -17,18 +17,14 @@ package edu.mayo.kmdp.preprocess.meta;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.mayo.kmdp.id.adapter.URIId;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
-import edu.mayo.kmdp.preprocess.NoArtifactVersionException;
+import edu.mayo.kmdp.preprocess.NotLatestVersionException;
+import edu.mayo.kmdp.registry.Registry;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 
@@ -41,6 +37,7 @@ import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 class IdentityMapperTestInt {
 
   static IdentityMapper identityMapper;
+
   @BeforeAll
   public static void setUp() {
     identityMapper = new IdentityMapper();
@@ -51,53 +48,82 @@ class IdentityMapperTestInt {
     identityMapper = null;
   }
 
-  @Disabled("not yet implemented")
-  @Test
-  void getVersionedAsset() {
-  }
-
   @Test
   void getArtifactId() {
     String expectedArtifactId = "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
-    URIIdentifier assetId = DatatypeHelper.uri("https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1");
+    URIIdentifier assetId = DatatypeHelper
+        .uri(Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c", "1.0.1");
+    //DatatypeHelper.uri(/versions/1.0.1");
     String artifactId = null;
     try {
       artifactId = identityMapper.getArtifactId(assetId);
-    } catch (NoArtifactVersionException e) {
+    } catch (NotLatestVersionException e) {
       e.printStackTrace();
     }
     assertEquals(expectedArtifactId, artifactId);
   }
 
+  @Test
+  void getEnterpriseAssetIdForAsset() {
+    UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
+    String expectedEnterpriseId =
+        Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c";
+
+    Optional<URI> enterpriseAssetId = identityMapper.getEnterpriseAssetIdForAsset(assetId);
+    assertEquals(expectedEnterpriseId, enterpriseAssetId.get().toString());
+  }
+
+
+  @Test
+  void getEnterpriseAssetVersionIdForAsset() {
+    UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
+    String versionTag = "1.0.1";
+    String expectedEnterpriseVersionId =
+        Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
+
+    Optional<URI> enterpriseAssetVersionId = null;
+    try {
+      enterpriseAssetVersionId = identityMapper
+          .getEnterpriseAssetVersionIdForAsset(assetId, versionTag);
+    } catch (NotLatestVersionException e) {
+      e.printStackTrace();
+      fail(e.getMessage());
+    }
+    assertEquals(expectedEnterpriseVersionId, enterpriseAssetVersionId.get().toString());
+  }
 
   @Test
   void getAssetId_FileId() {
     String fileId = "a0240977-f789-4922-90c8-e6468e59f5c2";
-    String expectedAssetId = "https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
+    String expectedAssetId =
+        Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
 
     Optional<URIIdentifier> assetId = identityMapper.getAssetId(fileId);
     assertEquals(expectedAssetId, assetId.get().getUri().toString());
   }
 
-  @Test
-  void getAssetIdURI() {
-    URIIdentifier artifactId = DatatypeHelper.uri("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5");;
-    String expectedAssetId = "https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
 
-    Optional<URIIdentifier> assetId = identityMapper.getAssetId(artifactId);
-    assertEquals(expectedAssetId, assetId.get().getUri().toString());
+  @Test
+  void getArtifactVersion() {
+    UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
+    String expectedArtifactVersion = "1.8.0";
+
+    Optional<String> artifactVersion = identityMapper.getArtifactIdVersion(assetId);
+    assertEquals(expectedArtifactVersion, artifactVersion.get());
   }
 
   @Test
   void getAssetId_ArtifactIdVersion_Latest() {
-    URIIdentifier artifactId = DatatypeHelper.uri("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5");
+    URIIdentifier artifactId = DatatypeHelper
+        .uri("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5");
     String versionTag = "1.8.0";
-    String expectedAssetId = "https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
+    String expectedAssetId =
+        Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
 
     Optional<URIIdentifier> assetId = null;
     try {
       assetId = identityMapper.getAssetId(artifactId, versionTag);
-    } catch (NoArtifactVersionException e) {
+    } catch (NotLatestVersionException e) {
       e.printStackTrace();
     }
     assertEquals(expectedAssetId, assetId.get().getUri().toString());
@@ -105,27 +131,30 @@ class IdentityMapperTestInt {
 
   @Test
   void getAssetId_ArtifactIdVersion_matchButNotLatest() {
-    URIIdentifier artifactId = DatatypeHelper.uri("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5");
+    URIIdentifier artifactId = DatatypeHelper
+        .uri("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5");
     String versionTag = "1.6.0";
-    String expectedAssetId = "https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.0";
 
-    RuntimeException re = assertThrows(RuntimeException.class, () -> identityMapper.getAssetId(artifactId, versionTag));
-    assertEquals(artifactId.getUri().toString(), re.getMessage());
+    NotLatestVersionException ave = assertThrows(
+        NotLatestVersionException.class, () -> identityMapper.getAssetId(artifactId, versionTag));
+    assertEquals(artifactId.getUri().toString(), ave.getMessage());
   }
 
 
   @Test
   void getAssetId_ArtifactIdVersion_noArtifactWithVersion() {
     // TODO: this may not be a valid test for identityMapper -- maybe TrisotechWrapper -- CAO
-    URIIdentifier artifactId = DatatypeHelper.uri("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5");
+    URIIdentifier artifactId = DatatypeHelper
+        .uri("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5");
     String versionTag = "1.2.0";
 
-    RuntimeException re = assertThrows(RuntimeException.class, () -> identityMapper.getAssetId(artifactId, versionTag));
-    assertEquals(artifactId.getUri().toString(), re.getMessage());
+    NotLatestVersionException ave = assertThrows(
+        NotLatestVersionException.class, () -> identityMapper.getAssetId(artifactId, versionTag));
+    assertEquals(artifactId.getUri().toString(), ave.getMessage());
   }
 
   @Test
-  void getFileId_AssetUUID(){
+  void getFileId_AssetUUID() {
     UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
     String expectedFileId = "a0240977-f789-4922-90c8-e6468e59f5c2";
     Optional<String> fileId = identityMapper.getFileId(assetId);
@@ -134,12 +163,13 @@ class IdentityMapperTestInt {
   }
 
   @Test
-  void getMimetype(){
+  void getMimetype() {
     UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
     String expectedMimetype = "application/vnd.triso-cmmn+json";
     Optional<String> mimetype = identityMapper.getMimetype(assetId);
     assertNotNull(mimetype);
     assertEquals(expectedMimetype, mimetype.get());
   }
+
 
 }

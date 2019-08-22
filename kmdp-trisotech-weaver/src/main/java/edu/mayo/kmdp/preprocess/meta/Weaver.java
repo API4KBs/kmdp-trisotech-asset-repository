@@ -385,7 +385,7 @@ public class Weaver {
     if (value.lastIndexOf('/') != -1) {
       // get the ids after the last '/'
       // and replace the '_' in the ids
-      String id = value.substring(value.lastIndexOf('/') + 1).replaceAll("_", "");
+      String id = value.substring(value.lastIndexOf('/') + 1).replace("_", "");
       // reset the value to the KMDP URI
       attr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
     }

@@ -5,10 +5,10 @@
     "name": "Weaver Test 1",
     "path": "/",
     "mimetype": "application/vnd.triso-dmn+json",
-    "updated": "2019-08-01T13:33:13Z",
-    "updater": "Sottara, Davide",
+    "updated": "2019-08-06T22:16:54Z",
+    "updater": "Orcutt, Cheryl A.",
     "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&sku=123720a6-9758-45a3-8c5c-5fffab12c494",
-    "version": "1.7",
+    "version": "1.8",
     "state": "Published"
   }
 }

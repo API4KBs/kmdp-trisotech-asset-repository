@@ -312,6 +312,11 @@ public class IdentityMapper {
       QuerySolution soln = models.nextSolution();
 
       if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
+        VersionedIdentifier vi = DatatypeHelper.toVersionIdentifier(URI.create(soln.getLiteral(ASSET_ID).toString()));
+        System.out.println("assetID as versionedIdentifier version: " + vi.getVersion());
+        System.out.println("assetID as versioned format: " + vi.getFormat());
+        System.out.println("assetID as versioned tag: " + vi.getTag());
+        System.out.println("assetId as versioned toString: " + vi.toString());
         return Optional.of(DatatypeHelper.uri(soln.getLiteral(ASSET_ID).toString()));
       }
     }
@@ -388,6 +393,7 @@ public class IdentityMapper {
       logger.debug(String.format("assetId.getTag(): %s", assetId.getTag()));
 
       // versionId value has the UUID of the asset/versions/versionTag, so this will match id and version
+      // TODO: ONlY if state of 'Published'??? CAO
       if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getVersionId().toString())) {
         return soln.getResource(MODEL).getURI();
         // the requested version of the asset doesn't exist on the latest model, check if the

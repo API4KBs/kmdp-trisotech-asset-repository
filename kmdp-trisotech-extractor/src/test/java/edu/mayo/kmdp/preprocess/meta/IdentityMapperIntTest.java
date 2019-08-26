@@ -34,7 +34,7 @@ import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
  * Named as an integration test even though not starting SpringBoot, but
  * because communicating with the Trisotech server through SPARQL queries.
  */
-class IdentityMapperTestInt {
+class IdentityMapperIntTest {
 
   static IdentityMapper identityMapper;
 

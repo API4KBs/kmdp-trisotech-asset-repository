@@ -64,10 +64,6 @@ public class TrisotechWrapper {
   // TODO: setup (environment?) so can use MEA-Test for development, but MEA for test?, int, prod CAO
   private static final String ROOT_DIRECTORY = "MEA-Test";
 
-  private TrisotechWrapper() {
-    throw new IllegalStateException("Utility class");
-  }
-
   /**
    * Retrieves the LATEST version of the model for the fileId provided.
    *

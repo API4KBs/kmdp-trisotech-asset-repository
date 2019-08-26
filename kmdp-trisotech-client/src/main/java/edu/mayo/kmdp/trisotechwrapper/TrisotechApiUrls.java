@@ -47,12 +47,4 @@ public class TrisotechApiUrls {
   static final String MEA_TEST = "MEA-Test";
   public static final String MEA_TEST_ID = "d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf";
 
-  // DMN Published
-  static final String WEAVER_TEST_1_ID = "123720a6-9758-45a3-8c5c-5fffab12c494";
-  // DMN unpublished
-  static final String WEAVER_TEST_2_ID = "ffa53262-4d36-4656-890b-4e48ed1cb9c3";
-  // CMMN Published
-  static final String WEAVE_TEST_1_ID = "93e58aa9-c258-46fd-909d-1cb096e19e64";
-  // CMMN unpublished
-  static final String WEAVE_TEST_2_ID = "84da9f52-44f5-46d1-ae3f-c5599f78ad1f";
 }

@@ -15,6 +15,8 @@
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class TrisotechApiUrls {
 
   private TrisotechApiUrls() { throw new IllegalStateException("Utility class"); }
@@ -36,9 +38,6 @@ public class TrisotechApiUrls {
   static final String DMN_XML_MIMETYPE = "application/dmn-1-2+xml";
   // return CMMN files in XML format
   static final String CMMN_XML_MIMETYPE = "application/cmmn-1-1+xml";
-
-  // TODO: better way? CAO
-  public static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiIxNGY4YmVhMy1jMTNhLTQ1NDYtOWQ5Ni03ZjgwODhlYzEwMzMiLCJzdWIiOiJkbHJzdG1lYTMwQGV4Y2hhbmdlLm1heW8uZWR1IiwiaXNzIjoibWMudHJpc290ZWNoLmNvbSIsImlhdCI6MTU1OTEzODMyNH0.zZoqSOc6tjOi6ZFoHOmTlq_8zJU0KQz2R58z6ygrULs";
 
   // Test files
 

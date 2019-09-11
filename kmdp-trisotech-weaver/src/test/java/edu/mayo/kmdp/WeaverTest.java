@@ -15,61 +15,83 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.metadata.annotations.Annotation;
-import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
-import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
-import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.preprocess.meta.Weaver;
-//import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.w3c.dom.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.util.Util.resolveResource;
-import static edu.mayo.kmdp.util.XMLUtil.*;
+import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
+import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
+import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
+import static edu.mayo.kmdp.util.XMLUtil.validate;
 import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.DMN_1_2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import edu.mayo.kmdp.metadata.annotations.Annotation;
+import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
+import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
+import edu.mayo.kmdp.preprocess.meta.Weaver;
+import edu.mayo.kmdp.registry.Registry;
+import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+
+
+@SpringJUnitConfig(classes = {WeaverTest.TestWeaverConfig.class})
 class WeaverTest {
+
+  @Configuration
+  @ComponentScan("edu.mayo.kmdp.preprocess.meta")
+  public static class TestWeaverConfig {
+
+  }
+
+  @Autowired
   private Weaver weaver;
 
   @BeforeEach
   void setUp() {
-    weaver = new Weaver();
+//    weaver = new Weaver();
   }
 
   @Test
   void testInit() {
-    try {
-      new Weaver();
+    assertNotNull(weaver);
 
-    } catch (Exception e) {
-      e.printStackTrace();
-      fail(e.getMessage());
-    }
+//    try {
+//      new Weaver();
+//
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//      fail(e.getMessage());
+//    }
   }
 
 
   @Test
   void testWeave() {
+
     String path = "/Weaver Test 1.dmn";
 
     // using XMLUtil loadXMLDocument to load the XML Document properly
     // sets up the document for conversion by setting namespaceaware
     Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
     try {
-      new Weaver().weave(dox);
-
+//      new Weaver().weave(dox);
+      weaver.weave(dox);
       streamXMLDocument(dox, System.out);
       System.out.println("KRLanguage DMN1.2 ref: " + DMN_1_2.getRef());
       System.out.println("registry getValidationSchema for KRLanguage ref: " + Registry.getValidationSchema(
@@ -91,8 +113,8 @@ class WeaverTest {
     Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
 
     try {
-      new Weaver().weave(dox);
-
+//      new Weaver().weave(dox);
+weaver.weave(dox);
       assertTrue(true); // dummy
       // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
 //			assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
@@ -114,7 +136,7 @@ class WeaverTest {
     Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
 
     try {
-      new Weaver();
+//      new Weaver();
 
       assertTrue(validate(dox, DMN_1_2.getRef()));
       streamXMLDocument(dox, System.out);
@@ -143,8 +165,8 @@ class WeaverTest {
 //		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
 
     try {
-      new Weaver().weave(dox);
-
+//      new Weaver().weave(dox);
+weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
@@ -199,8 +221,8 @@ class WeaverTest {
 //		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
 
     try {
-      new Weaver().weave(dox);
-
+//      new Weaver().weave(dox);
+weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
@@ -255,8 +277,8 @@ class WeaverTest {
 //		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
 
     try {
-      new Weaver().weave(dox);
-
+//      new Weaver().weave(dox);
+weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
@@ -273,6 +295,60 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
+      // TODO: is any of the following still needed? relevant to Trisotech data? CAO
+//			SimpleAnnotation type = loadAnnotations( dox, KnownAttributes.TYPE, SimpleAnnotation.class ).iterator().next();
+//			assertEquals( KnowledgeAssetType.Semantic_Decision_Model.getLabel(),
+//			              type.getExpr().getLabel() );
+//
+//			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
+//			assertTrue( props.stream()
+//			                 .anyMatch( (ann) -> ann instanceof SimpleAnnotation
+//					                 && ( ( SimpleAnnotation ) ann ).getExpr().getLabel().contains( "Blood Pressure" ) ) );
+//
+//			List<SimpleAnnotation> subj = loadAnnotations( dox, KnownAttributes.SUBJECT, SimpleAnnotation.class );
+//			assertTrue( subj.stream()
+//			                .anyMatch( (ann) -> ann.getExpr().getLabel().contains( "Diabetes Mellitus" )
+//					                || ann .getExpr().getTag().equals( "0215e32f-cced-4388-b0e0-ec8114e632d2" ) ) );
+
+      // TODO: is this something else in Trisotech? CAO
+//		assertEquals( "http://www.foo.bar",
+//			              xString( dox, "//dmn:knowledgeSource[@name='all']/@locationURI" ) );
+
+    } catch (IllegalStateException ie) {
+      ie.printStackTrace();
+      fail(ie.getMessage());
+    }
+  }
+
+  @Test
+  void testVariousMetadataOnDMN_ComputableDecision() {
+    String path = "/Computable Decision Model.dmn";
+    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
+
+    assertTrue(true); // dummy
+    // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
+//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
+
+    try {
+//      new Weaver().weave(dox);
+weaver.weave(dox);
+      streamXMLDocument(dox, System.out);
+
+      assertNotNull(dox);
+
+      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class).iterator().next();
+      assertEquals("https://clinicalknowledgemanagement.mayo.edu/assets/102117ea-82ed-4c34-91dc-c0aa962fbf66",
+          id.getExpr().toString());
+
+      assertTrue(confirmNoTrisoNameSpace(dox));
+
+      assertTrue(verifyRootNamespaces(dox));
+
+      assertTrue(verifyImportNamespace(dox));
+
+      assertTrue(verifyHrefs(dox));
+
+      // TODO: more to do to confirm Computable Decision
       // TODO: is any of the following still needed? relevant to Trisotech data? CAO
 //			SimpleAnnotation type = loadAnnotations( dox, KnownAttributes.TYPE, SimpleAnnotation.class ).iterator().next();
 //			assertEquals( KnowledgeAssetType.Semantic_Decision_Model.getLabel(),
@@ -344,9 +420,9 @@ class WeaverTest {
 
     try {
 
-      new Weaver()
-          .weave(dox);
-
+//      new Weaver()
+//          .weave(dox);
+weaver.weave(dox);
       System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
 
@@ -383,9 +459,9 @@ class WeaverTest {
 
     try {
 
-      new Weaver()
-          .weave(dox);
-
+//      new Weaver()
+//          .weave(dox);
+weaver.weave(dox);
       System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
 

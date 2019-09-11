@@ -21,12 +21,13 @@ import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import java.net.URI;
+import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
-import java.util.Optional;
-
+@Component
 public interface ExtractionStrategy {
 
 	IdentityMapper getMapper();
@@ -38,19 +39,29 @@ public interface ExtractionStrategy {
 	KnowledgeAsset extractXML( Document dox, TrisotechFileInfo meta );
 
 	Optional<URIIdentifier> getAssetID( Document dox );
+	Optional<URIIdentifier> getAssetId(String fileId);
 
 	Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
+	URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId);
 
-	Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag);
+	Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag)
+			throws NotLatestVersionException;
 
 	Optional<String> getArtifactID( Document dox, TrisotechFileInfo meta );
 
   Optional<Representation> getRepLanguage( Document dox, boolean concrete );
 
   Optional<String> getMimetype(UUID assetId);
+	Optional<String> getMimetype(String internalId);
 
 	Optional<String> getArtifactVersion(UUID assetId);
 
 	URIIdentifier extractAssetID( Document dox );
+
+	Optional<String> getFileId(String internalId);
+
+	Optional<String> getFileId(UUID assetId);
+
+  String getArtifactId(URIIdentifier id) throws NotLatestVersionException;
 
 }

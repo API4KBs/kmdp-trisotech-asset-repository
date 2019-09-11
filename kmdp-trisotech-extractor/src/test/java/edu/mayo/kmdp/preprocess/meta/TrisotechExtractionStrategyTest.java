@@ -49,7 +49,7 @@ class TrisotechExtractionStrategyTest {
 
   @BeforeEach
   void setUp() {
-   this.tes = new TrisotechExtractionStrategy();
+    this.tes = new TrisotechExtractionStrategy();
     InputStream dmnStream = MetadataExtractor.class.getResourceAsStream( dmnMeta );
     InputStream cmmnStream = MetadataExtractor.class.getResourceAsStream( cmmnMeta );
     InputStream badStream = MetadataExtractor.class.getResourceAsStream( badMeta );

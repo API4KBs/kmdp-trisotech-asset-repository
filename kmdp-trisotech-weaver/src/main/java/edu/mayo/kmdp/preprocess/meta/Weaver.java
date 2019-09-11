@@ -21,6 +21,7 @@ import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeReprese
 import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.DMN_1_2;
 import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 
+import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
@@ -31,7 +32,10 @@ import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.ws.ResponseHelper;
+import edu.mayo.ontology.taxonomies.kao.decisiontype._20190801.DecisionType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
+import edu.mayo.ontology.taxonomies.propositionalconcepts._20190801.PropositionalConcepts;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
@@ -41,9 +45,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,7 +57,9 @@ import org.omg.spec.api4kp._1_0.AbstractCarrier;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -62,6 +70,7 @@ import org.w3c.dom.NodeList;
  * Weaver class is used for replacing/removing Trisotech-specific information in model files with
  * application needs.
  */
+@Component
 public class Weaver {
 
   public static final String TRISOTECH_COM = "trisotech.com";
@@ -70,6 +79,13 @@ public class Weaver {
 
   public static final String CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowlegemanagement.mayo.edu/artifacts/";
   public static final String WWW_W_3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
+
+  @Autowired
+  private ModelReader reader;
+
+  @Autowired
+  private ReaderConfig config;
+
   private String decisionEl;
   private String elExporter;
   private String elExporterVersion;
@@ -87,20 +103,22 @@ public class Weaver {
   private static final String SURROGATE_SCHEMA = "http://kmdp.mayo.edu/metadata/surrogate";
   private static final String ANNOTATIONS_SCHEMA = "http://kmdp.mayo.edu/metadata/annotations";
 
-  private ReaderConfig config;
-  private ModelReader reader;
-
   private ObjectFactory of = new ObjectFactory();
   private Map<String, BaseAnnotationHandler> handlers = new HashMap<>();
 
 
+//  public Weaver() {
+////    this(new ReaderConfig());
+//  }
+
   public Weaver() {
-    this(new ReaderConfig());
+//    this.reader = new ModelReader(this.config);
   }
 
-  public Weaver(ReaderConfig p) {
-    this.config = p;
-    this.reader = new ModelReader(this.config);
+  @PostConstruct
+  public void init() {
+    System.out.println("Weaver ctor, config is: " + config);
+    System.out.println("Weaver ctor, reader is: " + reader);
 
     metadataNS = config.getTyped(ReaderOptions.P_METADATA_NS);
     metadataDiagramDmnNS = config.getTyped(ReaderOptions.P_METADATA_DIAGRAM_DMN_NS);

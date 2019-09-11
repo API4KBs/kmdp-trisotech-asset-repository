@@ -21,7 +21,6 @@ import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CONTENT_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.MEA_TEST;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.REPOSITORY_PATH;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.TOKEN;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.VERSIONS_PATH;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -43,31 +42,37 @@ import java.util.stream.Collectors;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to wrap the calls to Trisotech in meaningful ways.
  */
 public class TrisotechWrapper {
 
-  private static Logger logger = LogManager.getLogger(TrisotechWrapper.class);
-  private static final String PUBLISHED_STATE = "Published";
+  private static Logger logger = LoggerFactory.getLogger(TrisotechWrapper.class);
   // TODO: search for this particular directory or just use the known ID of our known repository and skip the places call? CAO
   // TODO: setup (environment?) so can use MEA-Test for development, but MEA for test?, int, prod CAO
-  private static final String ROOT_DIRECTORY = "MEA-Test";
+  private static String rootDirectory; // = "MEA-Test";
 
-  private TrisotechWrapper() {
-    throw new IllegalStateException("Utility class");
+  private static String token;
+
+  private TrisotechWrapper() {}
+
+  public static void setToken(String token) {
+    TrisotechWrapper.token = token;
   }
 
+  public static void setRoot(String repositoryName) {
+    rootDirectory = repositoryName;
+  }
   /**
    * Retrieves the LATEST version of the model for the fileId provided.
    *
@@ -417,7 +422,7 @@ public class TrisotechWrapper {
       for (TrisotechPlace tp : data.getData()) {
         // pass in modelsArray as getRepositoryContent is recursive
         // TODO: MEA_TEST for testing and MEA for production - put in environment/config CAO
-        if (tp.getName().equals(ROOT_DIRECTORY)) {
+        if (tp.getName().equals(rootDirectory)) {
           getRepositoryContent(tp.getId(), modelsArray, "/", xmlMimetype);
         }
       }
@@ -556,7 +561,7 @@ public class TrisotechWrapper {
   private static HttpHeaders getHttpHeaders() {
     final HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.add(ACCEPT, "application/json");
-    requestHeaders.add(AUTHORIZATION, "Bearer " + TOKEN);
+    requestHeaders.add(AUTHORIZATION, "Bearer " + token);
     requestHeaders.setContentType(APPLICATION_JSON_UTF8);
     return requestHeaders;
   }
@@ -597,7 +602,7 @@ public class TrisotechWrapper {
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
     conn.setRequestProperty(ACCEPT, "application/json");
-    conn.setRequestProperty(AUTHORIZATION, "Bearer " + TOKEN);
+    conn.setRequestProperty(AUTHORIZATION, "Bearer " + token);
 
     conn.setDoInput(true);
 
@@ -606,7 +611,7 @@ public class TrisotechWrapper {
       switch (conn.getResponseCode()) {
         case 401:
           throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()
-              + String.format("<Token>: %s  ", TOKEN));
+              + String.format("Confirm token value"));
 
         default:
           throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());

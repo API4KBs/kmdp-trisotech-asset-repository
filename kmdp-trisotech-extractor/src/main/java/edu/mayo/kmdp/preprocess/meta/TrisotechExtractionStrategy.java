@@ -421,7 +421,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .filter(el -> el.getLocalName().equals("extensionElements"))
         .flatMap(el -> XMLUtil.asElementStream(el.getChildNodes()))
         .map(SurrogateHelper::unmarshallAnnotation)
-        .map(this::getRootToFragment)
+        .map(SurrogateHelper::rootToFragment)
         .collect(Collectors.toList()));
 
     if (annos.stream()
@@ -458,15 +458,6 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
     System.out.println("end of extractAnnotations; have annos size: " + annos.size());
     return annos;
-  }
-
-  // TODO: This can go away when updated in foundation. surrogateHelper.rootToFragment does not support DatatypeAnnotation CAO
-  private Annotation getRootToFragment(Annotation anno) {
-    if (edu.mayo.kmdp.metadata.annotations.resources.DatatypeAnnotation.class.isInstance(anno)) {
-      return (Annotation) anno.copyTo(new DatatypeAnnotation());
-    } else {
-      return SurrogateHelper.rootToFragment(anno);
-    }
   }
 
   @Override

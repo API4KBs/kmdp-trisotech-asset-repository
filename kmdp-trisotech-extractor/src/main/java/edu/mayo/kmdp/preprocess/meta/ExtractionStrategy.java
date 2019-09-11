@@ -24,8 +24,10 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
+@Component
 public interface ExtractionStrategy {
 
 	IdentityMapper getMapper();

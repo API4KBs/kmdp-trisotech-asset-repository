@@ -35,8 +35,9 @@ public abstract class BaseAnnotationHandler {
 	public List<Annotation> getAnnotation(List<ConceptIdentifier> rows) {
 		return rows.stream().map( (row) -> newAnnotation(Collections.singletonList(row))).collect(Collectors.toList());
 	}
+
 //	public List<Annotation> getAnnotation( String name,
-////	                                       KnownAttributes defaultRel,
+//	                                       KnownAttributes defaultRel,
 //	                                       List<ConceptIdentifier> rows ) {
 //
 //		KnownAttributes rel = KnownAttributes.resolve( name ).orElse( defaultRel );

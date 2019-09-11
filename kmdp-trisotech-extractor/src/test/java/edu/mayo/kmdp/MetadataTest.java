@@ -15,26 +15,6 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.preprocess.NotLatestVersionException;
-import edu.mayo.kmdp.util.JaxbUtil;
-import edu.mayo.kmdp.util.Util;
-import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.preprocess.meta.Weaver;
-import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
-import java.net.URI;
-import java.util.UUID;
-import org.apache.jena.shared.NotFoundException;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
-import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.Optional;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
-
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.JSON;
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.XML;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,31 +24,58 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.preprocess.NotLatestVersionException;
+import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
+import edu.mayo.kmdp.preprocess.meta.Weaver;
+import edu.mayo.kmdp.util.JaxbUtil;
+import edu.mayo.kmdp.util.Util;
+import edu.mayo.kmdp.util.XMLUtil;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.util.Optional;
+import java.util.UUID;
+import javax.annotation.PostConstruct;
+import javax.xml.transform.stream.StreamSource;
+import org.apache.jena.shared.NotFoundException;
+import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
+@SpringBootTest
+@SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class})
 class MetadataTest {
 
+//  private static MetadataExtractor extractor = new MetadataExtractor();
 
-  private static MetadataExtractor extractor = new MetadataExtractor();
+  @Autowired
+  private MetadataExtractor extractor;
 
   private static String dmnPath = "/Weaver Test 1.dmn";
   private static String metaPath = "/WeaverTest1Meta.json";
   private static String cmmnPath = "/Weave Test 1.cmmn";
   private static String cmmnMetaPath = "/WeaveTest1Meta.json";
 
-  private static Weaver dmnWeaver;
-  private static Weaver cmmnWeaver;
+  @Autowired
+  private Weaver weaver;
+//  private static Weaver cmmnWeaver;
 
   private static byte[] annotatedDMN;
   private static byte[] annotatedCMMN;
 
-  @BeforeAll
-  public static void init() {
+//  @BeforeAll
+  @PostConstruct
+  public void init() {
 
-    dmnWeaver = new Weaver();
-
-    cmmnWeaver = new Weaver();
+//    dmnWeaver = new Weaver();
+//
+//    cmmnWeaver = new Weaver();
 
     Optional<byte[]> dmn = XMLUtil.loadXMLDocument(MetadataTest.class.getResourceAsStream(dmnPath))
-        .map(dmnWeaver::weave)
+        .map(weaver::weave)
         .map(XMLUtil::toByteArray);
     assertTrue(dmn.isPresent());
     annotatedDMN = dmn.get();
@@ -77,7 +84,7 @@ class MetadataTest {
 
     Optional<byte[]> cmmn = XMLUtil
         .loadXMLDocument(MetadataTest.class.getResourceAsStream(cmmnPath))
-        .map(cmmnWeaver::weave)
+        .map(weaver::weave)
         .map(XMLUtil::toByteArray);
     assertTrue(cmmn.isPresent());
     annotatedCMMN = cmmn.get();

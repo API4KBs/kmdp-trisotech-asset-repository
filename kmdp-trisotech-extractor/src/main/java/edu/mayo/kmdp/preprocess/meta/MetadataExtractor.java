@@ -36,13 +36,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
+import javax.annotation.PostConstruct;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
 /**
  * MetadataExtractor takes the output of the Weaver and the information of the file to create
  * a KnowledgeAsset surrogate.
  */
+@Component
 public class MetadataExtractor {
 
   public enum Format {
@@ -60,14 +64,28 @@ public class MetadataExtractor {
     }
   }
 
-  private ExtractionStrategy strategy;
+//  private ExtractionStrategy strategy;
+
+  @Autowired
+  private TrisotechExtractionStrategy strategy;
+
+  @Autowired
+  private IdentityMapper mapper;
 
   public MetadataExtractor() {
-    this(new IdentityMapper());
+//    this(new IdentityMapper());
   }
 
-  public MetadataExtractor(IdentityMapper mapper) {
-    strategy = new TrisotechExtractionStrategy();
+//  public MetadataExtractor(IdentityMapper mapper) {
+//    strategy = new TrisotechExtractionStrategy();
+//    strategy.setMapper(mapper);
+//  }
+
+  @PostConstruct
+  public void init() {
+    System.out.println("metadataExtractor postconstruct ctor... with mapper: " + mapper);
+    System.out.println("now have strategy: " + strategy);
+    System.out.println("set mapper on strategy");
     strategy.setMapper(mapper);
   }
 

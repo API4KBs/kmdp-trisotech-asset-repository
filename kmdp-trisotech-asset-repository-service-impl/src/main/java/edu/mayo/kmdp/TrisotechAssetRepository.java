@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import org.apache.jena.shared.NotFoundException;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
@@ -45,6 +46,7 @@ import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -57,20 +59,24 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   Logger log = LoggerFactory.getLogger(TrisotechAssetRepository.class);
 
+  @Autowired
   private Weaver weaver;
-  private MetadataExtractor extractor;
-  private IdentityMapper mapper;
-  private boolean initialized = false;
 
+  @Autowired
+  private MetadataExtractor extractor;
+
+  // postConstruct init to get values set in proper order
+  @PostConstruct
   private void init() {
-    this.mapper = new IdentityMapper();
-    this.weaver = new Weaver();
-    this.extractor = new MetadataExtractor(mapper);
-    initialized = true;
+    System.out.println("TrisotechAssetRepository PostConstruct...");
+    System.out.println("...weaver is: " + weaver);
+    System.out.println("...extractor is: " + extractor);
+//    this.weaver = new Weaver();
+//    this.extractor = new MetadataExtractor();
   }
 
   TrisotechAssetRepository() {
-    init();
+    System.out.println("TrisotechAssetRepository ctor...");
   }
 
   @Override

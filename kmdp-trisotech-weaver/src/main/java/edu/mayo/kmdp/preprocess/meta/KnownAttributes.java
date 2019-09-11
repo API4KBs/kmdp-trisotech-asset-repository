@@ -39,20 +39,50 @@ public enum KnownAttributes {
 	                  false,
 	                  false ),
 
+
+	TYPE( AnnotationRelType.Is_A.getLabel(),
+			"modelURI", // ?? -- this tag on semanticLink matches the ref from getRef()
+			AnnotationRelType.Is_A.getRef(),
+			true,
+			true ),
+
+	// on expressions (models or fragments)
+
+	// TODO: CAPTURES for propositionalconcepts on internal decision (decisionService) CAO
+	CAPTURES( AnnotationRelType.Captures.getLabel(),
+			"clinicalproposition", // TODO: CAO
+			AnnotationRelType.Captures.getRef(),
+			true,
+			true ),
+
+	// TODO: In_Terms_of for propositionalconcepts of all inputs CAO
+	INPUTS( AnnotationRelType.In_Terms_Of.getLabel(),
+			"clinicalproposition", // TODO: CAO
+			AnnotationRelType.In_Terms_Of.getRef(),
+			true,
+			true ),
+
+	// TODO: DEFINES for all other propositionalconcepts??? CAO
+	DEFINES( AnnotationRelType.Defines.getLabel(),
+			"clinicalproposition", // TODO: CAO
+			AnnotationRelType.Defines.getRef(),
+			true,
+			true ),
+
 	;
 
 	private URI uri;
-	private String trisotechLabel;
+	private String key;
 	private String label;
 	private boolean coded;
 	private boolean manyValued;
 
-	KnownAttributes(String label, String trisotechLabel, URI uri, boolean coded, boolean manyValued ) {
+	KnownAttributes(String label, String key, URI uri, boolean coded, boolean manyValued ) {
 		this.label = label;
-		this.trisotechLabel = trisotechLabel;
+		this.key = key;
 		this.uri = uri;
-		this.coded = coded;
-		this.manyValued = manyValued;
+		this.coded = coded; // TODO: remove? never used CAO
+		this.manyValued = manyValued; // TODO: remove? never used CAO
 	}
 
 	public boolean isManyValued() {
@@ -61,7 +91,7 @@ public enum KnownAttributes {
 
 	public static Optional<KnownAttributes> resolve( String trisoName ) {
 		return Arrays.stream( KnownAttributes.values() )
-		             .filter( ka -> ka.trisotechLabel.equals( trisoName ) )
+		             .filter( ka -> ka.key.equals( trisoName ) )
 		             .findFirst();
 	}
 

@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.TOKEN;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 import edu.mayo.kmdp.id.VersionedIdentifier;
@@ -34,6 +33,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import javax.annotation.PostConstruct;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -51,6 +51,9 @@ import org.apache.jena.shared.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -58,7 +61,17 @@ import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
  * the triples from Trisotech for this information. Each artifact has its own assetID, which is also
  * accessible via triples, so asset-to-asset mapping can be handled here as well.
  */
+@Component
 public class IdentityMapper {
+
+  @Value("${edu.mayo.kmdp.trisotechwrapper.trisotechToken}")
+  private String token;
+
+  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName}")
+  private String repositoryName;
+
+  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId}")
+  String place;
 
   private static Logger logger = LogManager.getLogger(IdentityMapper.class);
 
@@ -90,11 +103,17 @@ public class IdentityMapper {
 
 
   public IdentityMapper() {
-    // TODO: default to MEA-Test for testing, but MEA for prod CAO
-    this(TrisotechApiUrls.MEA_TEST_ID);
+    System.out.println("IdentityMapper ctor...");
   }
 
-  public IdentityMapper(String place) {
+  /**
+   * init is needed w/@PostConstruct because @Value values will not be set
+   * until after construction. @PostConstruct will be called after the object is
+   * initialized.
+   */
+  @PostConstruct
+  void init() {
+    System.out.println("place in init " + place);
     createMap(query(getQueryStringRelations(place)));
     models = ResultSetFactory.makeRewindable(query(getQueryStringModels(place)));
     orderedModels = hierarchySorter.linearize(getModelList(models), artifactToArtifactIDMap);
@@ -104,7 +123,7 @@ public class IdentityMapper {
     while (results.hasNext()) {
       QuerySolution soln = results.nextSolution();
       artifactToArtifactIDMap
-          .computeIfAbsent(soln.getResource(MODEL), s -> new HashSet<Resource>())
+          .computeIfAbsent(soln.getResource(MODEL), s -> new HashSet<>())
           .add(soln.getResource("?dModel"));
     }
   }
@@ -134,7 +153,7 @@ public class IdentityMapper {
 
     // TODO: have as a property? CAO
     String endpoint = "https://mc.trisotech.com/ds/query";
-    Header header = new BasicHeader(AUTHORIZATION, "Bearer " + TOKEN);
+    Header header = new BasicHeader(AUTHORIZATION, "Bearer " + token);
 
     HttpClient httpClient = HttpClientBuilder.create()
         .setDefaultHeaders(Collections.singleton(header))
@@ -307,6 +326,7 @@ public class IdentityMapper {
    */
   public Optional<URIIdentifier> getAssetId(String fileId) {
     logger.debug(String.format("getAssetId for fileId: %s", fileId));
+    logger.debug("Place: " + place);
     models.reset();
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();

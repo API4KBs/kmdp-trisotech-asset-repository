@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp;
+package edu.mayo.kmdp.trisotechwrapper;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-public class TrisotechAssetRepositoryClientTest {
-  // confirm the client starts
-  @Test
-  public void contextLoad(){
+@Configuration
+public class TrisotechWrapperConfig {
+  @Bean
+  StaticContextInitializer staticContextInitializer() {
+    return new StaticContextInitializer();
   }
 
 }

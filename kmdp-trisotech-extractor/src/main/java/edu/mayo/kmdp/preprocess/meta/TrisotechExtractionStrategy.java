@@ -16,10 +16,6 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
-
-import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
-import edu.mayo.kmdp.util.XPathUtil;
-
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Plans_Processes_Pathways_And_Protocol_Definitions;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType.Care_Process_Model;
@@ -35,6 +31,7 @@ import edu.mayo.kmdp.SurrogateHelper;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
+import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.Association;
 import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
@@ -46,6 +43,7 @@ import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.kmdp.util.XPathUtil;
 import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
 import edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.KnowledgeArtifactCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
@@ -56,7 +54,6 @@ import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationR
 import edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat;
 import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
-import edu.mayo.ontology.taxonomies.lexicon._20190801.Lexicon;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,12 +68,14 @@ import org.apache.jena.rdf.model.Resource;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
  * Extract the data from the woven (by the Weaver) document to create KnowledgeAsset from model data.
  */
+@Component
 public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   public static final String CMMN_DEFINITIONS = "//cmmn:definitions";
@@ -85,7 +84,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   private XPathUtil xPathUtil;
   Logger logger = LoggerFactory.getLogger(TrisotechExtractionStrategy.class);
 
-  TrisotechExtractionStrategy() {
+  public TrisotechExtractionStrategy() {
+    System.out.println("TrisotechExtractionStrategy ctor...");
     xPathUtil = new XPathUtil();
   }
 
@@ -351,15 +351,14 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   // TODO: Is this needed? Yes -- need example models to work from CAO
   protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
+//    annotations.stream()
+//        .filter((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept())
+//            || ann.getRel().equals(AnnotationRelType.Defines.asConcept())
+//            || ann.getRel().equals(AnnotationRelType.In_Terms_Of.asConcept()))
+//        .forEach(surr::withSubject);
     return;
   }
-//    annotations.stream()
-//            .filter((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept())
-//                    || ann.getRel().equals(AssetVocabulary.DEFINES.asConcept())
-//                    || ann.getRel().equals(KnownAttributes.SUBJECT.asConcept())
-//                    || ann.getRel().equals(AssetVocabulary.IN_TERMS_OF.asConcept()))
-//            .forEach(surr::withSubject);
-//
+    // TODO: Needed? Am not finding use of Computable_Decision_Model in test models CAO
 //    if (surr.getType().contains(KnowledgeAssetType.Computable_Decision_Model)
 //            && annotations.stream().anyMatch((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept()))) {
 //      surr.withType(KnowledgeAssetType.Operational_Concept_Defintion);
@@ -503,6 +502,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   @Override
   public String getArtifactId(URIIdentifier id) throws NotLatestVersionException {
+    System.out.println("getArtifactId, mapper: " + mapper);
     return mapper.getArtifactId(id);
   }
 

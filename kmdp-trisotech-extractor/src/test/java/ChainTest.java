@@ -28,6 +28,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import edu.mayo.kmdp.ChainConverterConfig;
+import edu.mayo.kmdp.ExtractorConfig;
+import edu.mayo.kmdp.IdentityMapperConfig;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
 
@@ -45,6 +48,9 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,11 +59,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 // TODO: fix this. currently the jaxbutil.unmarshall is broken after upgrading to latest libraries from dev CAO
+@SpringBootTest
+@SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class,
+    ChainConverterConfig.class})
 class ChainTest {
 
+  @Autowired
+  ChainConverter chainConverter;
 
   private Model convert(InputStream model, InputStream meta, KnowledgeRepresentationLanguage type) {
-    Model m = new ChainConverter().convert(meta, model, type);
+    Model m = chainConverter.convert(meta, model, type); // new ChainConverter().convert(meta, model, type);
 
     assertNotNull(m.getModel());
     assertNotNull(m.getSurrogate());

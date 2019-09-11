@@ -25,12 +25,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.w3c.dom.Document;
-
 
 /**
  * Tests for TrisotechWrapper.
@@ -38,6 +39,8 @@ import org.w3c.dom.Document;
  * Named as an integration test even though not starting SpringBoot, but
  * because communicating with the Trisotech server.
  */
+@SpringBootTest
+@ContextConfiguration(classes = {TrisotechWrapperConfig.class})
 class TrisotechWrapperIntTest {
 
   static final String TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY = "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=";
@@ -458,20 +461,20 @@ class TrisotechWrapperIntTest {
     assertNotNull(dox);
   }
 
-  @Disabled("update when Trisotech provides support again; 404 will become 400")
   @Test
   final void testDownloadXmlModelErrors() {
     // Any other exceptions to confirm?
     final String repositoryFileUrl =
         TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST_ID
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVE_TEST_1_ID;
-    assertThrows(NoSuchElementException.class,
+    RuntimeException re = assertThrows(RuntimeException.class,
         () -> TrisotechWrapper.downloadXmlModel(repositoryFileUrl));
+    assertEquals("Failed : HTTP error code : 400", re.getMessage());
 
     final String repositoryFileUrl2 =
         TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVER_TEST_1_ID;
-    RuntimeException re = assertThrows(RuntimeException.class,
+    re = assertThrows(RuntimeException.class,
         () -> TrisotechWrapper.downloadXmlModel(repositoryFileUrl2));
     assertEquals("Failed : HTTP error code : 404", re.getMessage());
   }

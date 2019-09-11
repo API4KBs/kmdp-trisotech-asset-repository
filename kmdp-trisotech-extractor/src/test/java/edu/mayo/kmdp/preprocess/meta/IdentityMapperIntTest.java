@@ -17,7 +17,9 @@ package edu.mayo.kmdp.preprocess.meta;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import edu.mayo.kmdp.IdentityMapperConfig;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
+import edu.mayo.kmdp.ExtractorConfig;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.registry.Registry;
 import java.net.URI;
@@ -27,6 +29,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Tests for IdentityMapper.
@@ -34,22 +39,29 @@ import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
  * Named as an integration test even though not starting SpringBoot, but
  * because communicating with the Trisotech server through SPARQL queries.
  */
+@SpringBootTest
+@ContextConfiguration(classes={IdentityMapperConfig.class})
 class IdentityMapperIntTest {
 
-  static IdentityMapper identityMapper;
+  @Autowired
+  IdentityMapper identityMapper;
 
-  @BeforeAll
-  public static void setUp() {
-    identityMapper = new IdentityMapper();
-  }
-
-  @AfterAll
-  public static void tearDown() {
-    identityMapper = null;
-  }
+//  @BeforeAll
+//  public static void setUp() {
+//    System.out.println("setup, is identityMapper set? ");
+////    identityMapper = new IdentityMapper();
+////    identityMapper.init();
+//    System.out.println("after identityMapper ctor");
+//  }
+//
+//  @AfterAll
+//  public static void tearDown() {
+////    identityMapper = null;
+//  }
 
   @Test
   void getArtifactId() {
+    System.out.println("getartifactid, is identityMapper set? " + identityMapper);
     String expectedArtifactId = "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
     URIIdentifier assetId = DatatypeHelper
         .uri(Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c", "1.0.1");

@@ -34,12 +34,21 @@ import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 
-class TrisotechAssetRepositoryTestInt {
+/**
+ * Integration test for TrisotechAssetRepository, using data from test repository.
+ */
+@SpringBootTest
+@ContextConfiguration(classes = {TrisotechAssetRepositoryConfig.class})
+class TrisotechAssetRepositoryIntTest {
 
-  private static TrisotechAssetRepository tar = new TrisotechAssetRepository();
+  @Autowired
+  TrisotechAssetRepository tar;
 
   @BeforeEach
   void setUp() {

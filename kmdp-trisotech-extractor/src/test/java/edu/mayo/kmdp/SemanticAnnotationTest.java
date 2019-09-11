@@ -94,14 +94,14 @@ class SemanticAnnotationTest {
 		String metaPath = "/Salient_Info.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
-		                              .map( dmnWeaver::weave )
-		                              .map( XMLUtil::toByteArray );
+				.map( dmnWeaver::weave )
+				.map( XMLUtil::toByteArray );
 		assertTrue( dmn.isPresent() );
 
 
 		try {
 			Optional<KnowledgeAsset> res = extractor.extract(new ByteArrayInputStream(dmn.get() ),
-			                                                 SemanticAnnotationTest.class.getResourceAsStream(metaPath));
+					SemanticAnnotationTest.class.getResourceAsStream(metaPath));
 			if ( ! res.isPresent() ) {
 				fail( "Unable to instantiate metadata object" );
 			}
@@ -121,12 +121,12 @@ class SemanticAnnotationTest {
 		String metaPath = "/WeaverTest1Meta.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
-		                              .map( dmnWeaver::weave )
-		                              .map( XMLUtil::toByteArray );
+				.map( dmnWeaver::weave )
+				.map( XMLUtil::toByteArray );
 		assertTrue( dmn.isPresent() );
 		try {
 			Optional<KnowledgeAsset> res = extractor.extract(new ByteArrayInputStream(dmn.get() ),
-			                                                 SemanticAnnotationTest.class.getResourceAsStream(metaPath));
+					SemanticAnnotationTest.class.getResourceAsStream(metaPath));
 			if ( ! res.isPresent() ) {
 				fail( "Unable to instantiate metadata object" );
 			}
@@ -134,7 +134,7 @@ class SemanticAnnotationTest {
 			// long form
 			List<Annotation> annotations = surr.getSubject();
 			for (Annotation anno: annotations
-					 ) {
+			) {
 				System.out.println("anno is : " + anno.getClass() + " annotation");
 				System.out.println("anno rel: " + anno.getRel().toString());
 				System.out.println("AnnotationRelType.In_Terms_Of.asConcept(): " + AnnotationRelType.In_Terms_Of.asConcept());
@@ -148,12 +148,12 @@ class SemanticAnnotationTest {
 				}
 			}
 			List<ClinicalSituation> inputs = surr.getSubject().stream()
-			                       .filter(SimpleAnnotation.class::isInstance)
-			                       .map( SimpleAnnotation.class::cast)
-			                       .filter( (a) -> a.getRel().equals( AnnotationRelType.In_Terms_Of.asConcept() ) )
-			                       .map( (a) -> ClinicalSituation.resolve( a.getExpr() ) )
-			                       .map( Optional::get )
-			                       .collect(Collectors.toList());
+					.filter(SimpleAnnotation.class::isInstance)
+					.map( SimpleAnnotation.class::cast)
+					.filter( (a) -> a.getRel().equals( AnnotationRelType.In_Terms_Of.asConcept() ) )
+					.map( (a) -> ClinicalSituation.resolve( a.getExpr() ) )
+					.map( Optional::get )
+					.collect(Collectors.toList());
 
 			// TODO: update per model CAO
 			assertEquals( 19, inputs.size() );
@@ -173,23 +173,23 @@ class SemanticAnnotationTest {
 		String metaPath = "/TBD_Info.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
-		                              .map( dmnWeaver::weave )
-		                              .map( XMLUtil::toByteArray );
+				.map( dmnWeaver::weave )
+				.map( XMLUtil::toByteArray );
 		assertTrue( dmn.isPresent() );
 		try {
 			Optional<KnowledgeAsset> res = extractor.extract(new ByteArrayInputStream(dmn.get() ),
-			                                                 SemanticAnnotationTest.class.getResourceAsStream(metaPath));
+					SemanticAnnotationTest.class.getResourceAsStream(metaPath));
 			if ( ! res.isPresent() ) {
 				fail( "Unable to instantiate metadata object" );
 			}
 			KnowledgeAsset surr = res.get();
 			List<ClinicalSituation> inputs = surr.getSubject().stream()
-			                       .filter(SimpleAnnotation.class::isInstance)
-			                       .map( SimpleAnnotation.class::cast)
-			                       .filter( (a) -> a.getRel().equals( AnnotationRelType.In_Terms_Of.asConcept() ) )
-			                       .map( (a) -> ClinicalSituation.resolve( a.getExpr() ) )
-			                       .map( Optional::get )
-			                       .collect(Collectors.toList());
+					.filter(SimpleAnnotation.class::isInstance)
+					.map( SimpleAnnotation.class::cast)
+					.filter( (a) -> a.getRel().equals( AnnotationRelType.In_Terms_Of.asConcept() ) )
+					.map( (a) -> ClinicalSituation.resolve( a.getExpr() ) )
+					.map( Optional::get )
+					.collect(Collectors.toList());
 
 			assertEquals( 9, inputs.size() );
 			assertTrue( inputs.contains( ClinicalSituation.Sex ) );
@@ -197,9 +197,9 @@ class SemanticAnnotationTest {
 //			assertTrue( inputs.contains( ClinicalSituation.History_Of_Vascular_Disease ) );
 
 			Set<ConceptIdentifier> defines  = surr.getSubject().stream()
-			                                      .filter( (ann) -> ann.getRel().equals( AnnotationRelType.Defines.asConcept() ) )
-			                                      .map( (ann) -> ((SimpleAnnotation) ann).getExpr() )
-			                                      .collect(Collectors.toSet());
+					.filter( (ann) -> ann.getRel().equals( AnnotationRelType.Defines.asConcept() ) )
+					.map( (ann) -> ((SimpleAnnotation) ann).getExpr() )
+					.collect(Collectors.toSet());
 			assertEquals( 3, defines.size() );
 			assertTrue( defines.contains( ClinicalSituation.Current_CHA2DS2_VASc_Score.asConcept() ) );
 			assertTrue( defines.contains( ClinicalSituation.Risk_Of_Embolic_Stroke_CHA2DS2_VASc1.asConcept() ) ); // was: Likelihood_Of_Stroke_Based_On_CHA2DS2Vasc_Score CAO

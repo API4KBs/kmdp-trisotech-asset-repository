@@ -21,6 +21,10 @@ import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.w3c.dom.Document;
 
 import java.io.InputStream;
@@ -32,55 +36,62 @@ import java.util.Optional;
 /**
  * Perform the weave and extract of the model from Trisotech, either DMN or CMMN.
  */
+@Component
 public class ChainConverter {
 
-	public ChainConverter() { }
+  @Autowired
+  Weaver weaver;
 
-	/**
-	 *
-	 * @param meta The file info from Trisotech
-	 * @param model Either a serialized DMN/XML or CMMN/XML
-	 * @param type {DMN, CMMN}
-	 * @return
-	 */
-	public Model convert( InputStream meta, InputStream model, KnowledgeRepresentationLanguage type ) {
-		switch ( type ) {
-			case DMN_1_2:
-			case CMMN_1_1:
-				return convertModel( meta, model, type );
-			default:
-				throw new IllegalArgumentException( "Unexpected source type " + type );
-		}
-	}
+  @Autowired
+  MetadataExtractor extractor;
+
+  public ChainConverter() { }
+
+  /**
+   *
+   * @param meta The file info from Trisotech
+   * @param model Either a serialized DMN/XML or CMMN/XML
+   * @param type {DMN, CMMN}
+   * @return
+   */
+  public Model convert( InputStream meta, InputStream model, KnowledgeRepresentationLanguage type ) {
+    switch ( type ) {
+      case DMN_1_2:
+      case CMMN_1_1:
+        return convertModel( meta, model, type );
+      default:
+        throw new IllegalArgumentException( "Unexpected source type " + type );
+    }
+  }
 
 
-	/**
-	 * perform the weave and extract to convert the model
-	 *
-	 * @param meta
-	 * @param modelXml
-	 * @param src
-	 * @return
-	 */
-	protected Model convertModel( InputStream meta, InputStream modelXml, KnowledgeRepresentationLanguage src ) {
-		MetadataExtractor extractor = new MetadataExtractor();
-		Weaver weaver = new Weaver(); // false, Weaver.getWeaverProperties(src));
+  /**
+   * perform the weave and extract to convert the model
+   *
+   * @param meta
+   * @param modelXml
+   * @param src
+   * @return
+   */
+  protected Model convertModel( InputStream meta, InputStream modelXml, KnowledgeRepresentationLanguage src ) {
+//    MetadataExtractor extractor = new MetadataExtractor();
+//    Weaver weaver = new Weaver(); // false, Weaver.getWeaverProperties(src));
 
-		final Model model = new Model();
+    final Model model = new Model();
 
-		Optional<Document> modelDox = XMLUtil.loadXMLDocument( modelXml );
-		Optional<JsonNode> surrJson = JSonUtil.readJson(meta);
+    Optional<Document> modelDox = XMLUtil.loadXMLDocument( modelXml );
+    Optional<JsonNode> surrJson = JSonUtil.readJson(meta);
 
-		if ( ! modelDox.isPresent() || ! surrJson.isPresent() ) {
-			throw new IllegalArgumentException( "Unable to convert model" );
-		}
+    if ( ! modelDox.isPresent() || ! surrJson.isPresent() ) {
+      throw new IllegalArgumentException( "Unable to convert model" );
+    }
 
-		modelDox.map( weaver::weave )
-		        .map( model::addModel )
-		        .flatMap( (wovenDox) -> extractor.doExtract( wovenDox, surrJson.get() ) )
-		        .map( model::addSurrogate );
+    modelDox.map( weaver::weave )
+        .map( model::addModel )
+        .flatMap( (wovenDox) -> extractor.doExtract( wovenDox, surrJson.get() ) )
+        .map( model::addSurrogate );
 
-		return model;
-	}
+    return model;
+  }
 
 }

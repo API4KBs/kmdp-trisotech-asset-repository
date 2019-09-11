@@ -13,7 +13,7 @@
   id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9" name="Weave Test 1"
   targetNamespace="http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9"
   expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" exporter="CMMN Modeler"
-  exporterVersion="6.2.6.3" triso:logoChoice="Default" triso:version="2.2" triso:state="Published">
+  exporterVersion="6.2.7" triso:logoChoice="Default" triso:version="2.2.1" triso:state="Published">
   <semantic:caseFileItemDefinition id="_e9044eea-5a77-4700-b39a-c078eb9cb964" name="Current Weight"
     definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
     structureRef="string"/>
@@ -25,6 +25,11 @@
     definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
     structureRef="string"/>
   <semantic:case id="Case_40e952e9-9c4c-4f19-bb14-a8a9681d782d" name="Test">
+    <semantic:extensionElements>
+      <triso:customAttribute key="knowledgeAssetId"
+        value="https://clinicalknowledgemanagement.mayo.edu/assets/3c99cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT"
+        type="string" id="_85eb5020-758c-409a-a51a-71f0321c913e"/>
+    </semantic:extensionElements>
     <semantic:caseFileModel>
       <semantic:caseFileItem id="_8f3ba321-82f5-4523-81bd-3f89e4822e9c" name="Current Weight"
         definitionRef="_e9044eea-5a77-4700-b39a-c078eb9cb964"/>
@@ -106,7 +111,8 @@
       cmmnElementRef="_fe3937b5-4ddf-4b72-9e2a-81a8f5400ae7">
       <cmmndi:Size width="1571.481679030827" height="1050"/>
       <cmmndi:CMMNShape id="_fe3937b5-4ddf-4b72-9e2a-81a8f5400ae7"
-        cmmnElementRef="_40e952e9-9c4c-4f19-bb14-a8a9681d782d">
+        cmmnElementRef="_40e952e9-9c4c-4f19-bb14-a8a9681d782d"
+        triso:identificator="assetId-12345678">
         <cmmndi:CMMNStyle fontFamily="arial,helvetica,sans-serif">
           <cmmndi:FillColor red="255" green="255" blue="255"/>
           <cmmndi:StrokeColor red="0" green="0" blue="0"/>

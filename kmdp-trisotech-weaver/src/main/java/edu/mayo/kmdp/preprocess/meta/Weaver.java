@@ -77,7 +77,7 @@ public class Weaver {
   public static final String VALUE = "value";
   private static Logger logger = LogManager.getLogger(Weaver.class);
 
-  public static final String CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowlegemanagement.mayo.edu/artifacts/";
+  public static final String CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/artifacts/";
   public static final String WWW_W_3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
 
   @Autowired
@@ -405,7 +405,7 @@ public class Weaver {
       // and replace the '_' in the ids
       String id = value.substring(value.lastIndexOf('/') + 1).replace("_", "");
       // reset the value to the KMDP URI
-      attr.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
+      attr.setValue(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
     }
   }
 
@@ -418,7 +418,7 @@ public class Weaver {
     BaseAnnotationHandler handler = handler(el);
     DatatypeAnnotation dta = new DatatypeAnnotation();
     // TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
-    dta.setValue(CLINICALKNOWLEGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId);
+    dta.setValue(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId);
     dta.setRel(DependencyType.Imports.asConcept());
 
     handler.replaceProprietaryElement(el, toChildElement(dta, el));

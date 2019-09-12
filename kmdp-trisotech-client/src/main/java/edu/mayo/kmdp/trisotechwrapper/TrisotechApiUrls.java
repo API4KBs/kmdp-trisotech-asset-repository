@@ -15,6 +15,8 @@
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class TrisotechApiUrls {
 
   private TrisotechApiUrls() { throw new IllegalStateException("Utility class"); }
@@ -24,35 +26,32 @@ public class TrisotechApiUrls {
   //    TODO: Needed? Only returns user that is signed in. Needed to confirm API user? CAO
 //  TODO: ?  public static String LOGIN_PATH = "login/";
   // List of repositories
-  public static final String REPOSITORY_PATH = "repository";
+  static final String REPOSITORY_PATH = "repository";
   // content of specified repository; set up for URIComponentsBuilder; mimetype and path are optional
-  public static final String CONTENT_PATH = "repositorycontent?repository={repo}&mimetype={mime}&path={path}";
+  static final String CONTENT_PATH = "repositorycontent?repository={repo}&mimetype={mime}&path={path}";
   // versions of specific file within specified repository
-  public static final String VERSIONS_PATH = "repositoryfileversion?repository={repo}&id={fileId}&mimetype={mime}";
+  static final String VERSIONS_PATH = "repositoryfileversion?repository={repo}&id={fileId}&mimetype={mime}";
 
 
   // TODO: Do we have a need to ever get the JSON? CAO
   // return DMN files in XML format
-  public static final String DMN_XML_MIMETYPE = "application/dmn-1-2+xml";
+  static final String DMN_XML_MIMETYPE = "application/dmn-1-2+xml";
   // return CMMN files in XML format
-  public static final String CMMN_XML_MIMETYPE = "application/cmmn-1-1+xml";
-
-  // TODO: better way? CAO
-  public static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiIxNGY4YmVhMy1jMTNhLTQ1NDYtOWQ5Ni03ZjgwODhlYzEwMzMiLCJzdWIiOiJkbHJzdG1lYTMwQGV4Y2hhbmdlLm1heW8uZWR1IiwiaXNzIjoibWMudHJpc290ZWNoLmNvbSIsImlhdCI6MTU1OTEzODMyNH0.zZoqSOc6tjOi6ZFoHOmTlq_8zJU0KQz2R58z6ygrULs";
+  static final String CMMN_XML_MIMETYPE = "application/cmmn-1-1+xml";
 
   // Test files
 
   // id to MEA-Test repository
   // TODO: Need to do same for MEA? Or just 'find' each time? CAO -- this might be better in the environment so can set this one for development/Test? and set the other one for prod/int?
-  public static final String MEA_TEST = "MEA-Test";
+  static final String MEA_TEST = "MEA-Test";
   public static final String MEA_TEST_ID = "d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf";
 
   // DMN Published
-  public static final String WEAVER_TEST_1_ID = "123720a6-9758-45a3-8c5c-5fffab12c494";
+  static final String WEAVER_TEST_1_ID = "123720a6-9758-45a3-8c5c-5fffab12c494";
   // DMN unpublished
-  public static final String WEAVER_TEST_2_ID = "ffa53262-4d36-4656-890b-4e48ed1cb9c3";
+  static final String WEAVER_TEST_2_ID = "ffa53262-4d36-4656-890b-4e48ed1cb9c3";
   // CMMN Published
-  public static final String WEAVE_TEST_1_ID = "93e58aa9-c258-46fd-909d-1cb096e19e64";
+  static final String WEAVE_TEST_1_ID = "93e58aa9-c258-46fd-909d-1cb096e19e64";
   // CMMN unpublished
-  public static final String WEAVE_TEST_2_ID = "84da9f52-44f5-46d1-ae3f-c5599f78ad1f";
+  static final String WEAVE_TEST_2_ID = "84da9f52-44f5-46d1-ae3f-c5599f78ad1f";
 }

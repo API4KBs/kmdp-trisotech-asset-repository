@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
-  xmlns="https://clinicalknowlegemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
+  xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
   xmlns:ann="http://kmdp.mayo.edu/metadata/annotations"
   xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
   xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
@@ -11,19 +11,19 @@
   xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
   name="Basic Decision Model"
-  namespace="https://clinicalknowlegemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
+  namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
   xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
   <semantic:extensionElements/>
   <semantic:decisionService id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356_DS"
     name="Whole Model Decision Service">
-    <semantic:variable id="_0c76110d-3b5c-447c-8f34-8bcb4f0e6961"
+    <semantic:variable id="_522c26b4-6978-4d9c-b605-8788de660a03"
       name="Whole Model Decision Service" typeRef="Any"/>
     <semantic:outputDecision href="#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"/>
     <semantic:inputData href="#_c8828c20-d075-42bf-bc5e-ad5b4e52ef1d"/>
     <semantic:inputData href="#_ffc7572a-2d99-4721-8cf0-a0f2f0aa5f13"/>
   </semantic:decisionService>
   <semantic:decisionService id="_b1cbbae9-a4c0-4a85-bb26-4c10bf35a750_DS" name="Diagram Page 1">
-    <semantic:variable id="_34ffdcbb-26d7-40db-b2b7-a2456c778242" name="Diagram Page 1"
+    <semantic:variable id="_74aaf4f3-c9f7-475b-a55b-09f084b44328" name="Diagram Page 1"
       typeRef="Any"/>
     <semantic:outputDecision href="#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"/>
     <semantic:inputData href="#_c8828c20-d075-42bf-bc5e-ad5b4e52ef1d"/>
@@ -32,7 +32,7 @@
   <semantic:decision id="_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719" name="Basic Decision">
     <semantic:extensionElements>
       <ann:basicAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers"
-        expr="https://clinicalknowledgemanagement.mayo.edu/assets/735a5764-fe3f-4ab8-b103-650b6e805db2">
+        expr="https://clinicalknowledgemanagement.mayo.edu/assets/735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0">
         <ann:rel label="has ID" ref="https://www.omg.org/spec/API4KP/api4kp/identified-by"
           tag="identified-by">
           <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>

@@ -16,15 +16,19 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import java.util.regex.Pattern;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ModelReader implements TrisotechReader {
 
   protected Pattern urlPattern;
 
-  protected ReaderConfig        config;
 
+  @Autowired
   public ModelReader(ReaderConfig config) {
-    this.config = config;
+    System.out.println("ModelReader ctor, config is: " + config);
+//    this.config = config;
 
     this.urlPattern = Pattern.compile( config.getTyped( ReaderOptions.URL_PATTERN_ST ) );
   }
@@ -33,9 +37,5 @@ public class ModelReader implements TrisotechReader {
     return urlPattern;
   }
 
-
-//	protected ConceptIdentifier toConceptIdentifier( String uuid, String label, URI ref, String catUUID, String catName ) {
-//		return KnownValuesets.resolve( catName, uuid, label, ref );
-//	}
 
 }

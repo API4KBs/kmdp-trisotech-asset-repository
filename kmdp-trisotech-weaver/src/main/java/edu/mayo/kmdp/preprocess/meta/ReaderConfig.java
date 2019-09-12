@@ -18,9 +18,10 @@ package edu.mayo.kmdp.preprocess.meta;
 import edu.mayo.kmdp.ConfigProperties;
 
 import java.util.Properties;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ReaderConfig extends ConfigProperties<ReaderConfig, ReaderOptions>  {
-
 
 	private static final Properties defaultedProperties = defaulted( ReaderOptions.class );
 

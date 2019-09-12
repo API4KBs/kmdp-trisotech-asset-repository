@@ -33,9 +33,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TrisotechExtractionStrategyTest {
   TrisotechExtractionStrategy tes;
-  String dmnPath = "/WeaverTest1.dmn";
+  String dmnPath = "/Weaver Test 1.dmn";
   String dmnMeta = "/WeaverTest1Meta.json";
-  String cmmnPath = "/WeaveTest1.cmmn";
+  String cmmnPath = "/Weave Test 1.cmmn";
   String cmmnMeta = "/WeaveTest1Meta.json";
   // file for testing the negative -- old file in Signavio format
   String badPath  = "/R2R.dmn";
@@ -49,7 +49,7 @@ class TrisotechExtractionStrategyTest {
 
   @BeforeEach
   void setUp() {
-   this.tes = new TrisotechExtractionStrategy();
+    this.tes = new TrisotechExtractionStrategy();
     InputStream dmnStream = MetadataExtractor.class.getResourceAsStream( dmnMeta );
     InputStream cmmnStream = MetadataExtractor.class.getResourceAsStream( cmmnMeta );
     InputStream badStream = MetadataExtractor.class.getResourceAsStream( badMeta );
@@ -71,14 +71,6 @@ class TrisotechExtractionStrategyTest {
     dmnDox = null;
     cmmnDox = null;
     badDox = null;
-  }
-
-  @Test
-  void getMapper() {
-  }
-
-  @Test
-  void setMapper() {
   }
 
   @Test
@@ -113,24 +105,21 @@ class TrisotechExtractionStrategyTest {
   void getVersionTag() {
   }
 
-  @Disabled("getArtifactID Failing for DMN 1.2")
   @Test
   void getArtifactID() {
 
-//    Optional<String> value = this.tes.getArtifactID(dmnDox, dmnFile);
-//    System.out.println("value: " + value.get());
-//    assertNotNull(value.get());
-//
-    Optional<String> value = this.tes.getArtifactID(cmmnDox, cmmnFile);
-    System.out.println("value: " + value.get());
+    Optional<String> value = this.tes.getArtifactID(dmnDox, dmnFile);
     assertNotNull(value.get());
 
+    value = this.tes.getArtifactID(cmmnDox, cmmnFile);
+    assertNotNull(value.get());
+
+    // TODO: this currently doesn't fail because of workaround for DMN1.2 so DMN1.1 also succeeds; fix this once have fix for DMN 1.2 CAO
     value = this.tes.getArtifactID(badDox, badFile );
     assertFalse(value.isPresent());
 
   }
 
-  @Disabled("getRepLanguage Failing for DMN 1.2")
   @Test
   void getRepLanguage() {
     Optional<Representation> dmnRep = this.tes.getRepLanguage(dmnDox, false);

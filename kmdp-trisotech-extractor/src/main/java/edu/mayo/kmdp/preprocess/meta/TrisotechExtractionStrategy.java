@@ -16,9 +16,6 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
-import static edu.mayo.kmdp.util.XPathUtil.xList;
-import static edu.mayo.kmdp.util.XPathUtil.xNode;
-import static edu.mayo.kmdp.util.XPathUtil.xString;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Plans_Processes_Pathways_And_Protocol_Definitions;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType.Care_Process_Model;
@@ -34,16 +31,19 @@ import edu.mayo.kmdp.SurrogateHelper;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
+import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.surrogate.Association;
 import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
 import edu.mayo.kmdp.metadata.surrogate.Publication;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.kmdp.util.XPathUtil;
 import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
 import edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.KnowledgeArtifactCategory;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
@@ -55,31 +55,39 @@ import edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat;
 import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.jena.rdf.model.Resource;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
-//import ca.uhn.fhir.model.dstu2.resource.DataElement;
-//import edu.mayo.kmdp.dataconcepts.FHIR2DataConceptGenerator;
-
-
-
-// TODO: FIXME CAO
 
 /**
  * Extract the data from the woven (by the Weaver) document to create KnowledgeAsset from model data.
  */
+@Component
 public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   public static final String CMMN_DEFINITIONS = "//cmmn:definitions";
   public static final String DMN_DEFINITIONS = "//dmn:definitions";
   private IdentityMapper mapper;
+  private XPathUtil xPathUtil;
+  Logger logger = LoggerFactory.getLogger(TrisotechExtractionStrategy.class);
+
+  public TrisotechExtractionStrategy() {
+    System.out.println("TrisotechExtractionStrategy ctor...");
+    xPathUtil = new XPathUtil();
+  }
 
   @Override
   public IdentityMapper getMapper() {
@@ -105,18 +113,46 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   @Override
   public KnowledgeAsset extractXML(Document dox, TrisotechFileInfo meta) {
 
-//    KnowledgeAsset surr = newSurrogate();
     List<Annotation> annotations = extractAnnotations(dox);
     KnowledgeAssetCategory formalCategory;
 
     KnowledgeAssetType formalType;
+    KnowledgeAsset surr = null;
 
     KnowledgeRepresentationLanguageSerialization syntax;
-    KnowledgeResource theTargetArtifactId = null; // TODO: what is this? CAO -- get all the artifactId; get the imports; put as relationship at artifact level
+    Publication lifecycle = getPublication(meta);
+    // Identifiers
+    Optional<String> docId = getArtifactID(dox, meta);
+    if (!docId.isPresent()) {
+      // error out. Can't proceed w/o Artifact -- How did we get this far?
+      throw new IllegalStateException("Failed to have artifact in Document");
+    }
+
+    logger.debug(String.format("docId: %s", docId));
+
+    Optional<URIIdentifier> assetID = getAssetID(dox);
+    // TODO: Should processing fail if no assetID? CAO
+    logger.debug(
+        String.format("assetID: %s", assetID.isPresent() ? assetID.get() : Optional.empty()));
+
+    // TODO: what to do if not present? CAO
+    // for the surrogate, want the version of the artifact
+    URIIdentifier artifactId = DatatypeHelper.uri(docId.get(), meta.getVersion());
+
+    // artifact<->artifact relation
+    Set<Resource> theTargetArtifactId = mapper.getArtifactImports(docId);
+    if(logger.isDebugEnabled()) {
+      if (null != theTargetArtifactId) {
+        logger.debug(String.format("theTargetArtifactId: %s", theTargetArtifactId.toString()));
+      } else {
+        logger.debug("theTargetArtifactId is null");
+      }
+    }
+    List<URIIdentifier> theTargetAssetId = mapper.getAssetRelations(docId);
 
     // get the language for the document to set the appropriate values
     Optional<Representation> rep = getRepLanguage(dox, false);
-    if(rep.isPresent()) {
+    if (rep.isPresent()) {
       switch (rep.get().getLanguage()) {
         case DMN_1_2:
           formalCategory = Assessment_Predictive_And_Inferential_Models;
@@ -134,64 +170,120 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
           throw new IllegalStateException("Invalid Language detected." + rep.get().getLanguage());
       }
     } else {
-      throw new IllegalStateException("Invalid Language detected." + rep);
+      throw new IllegalStateException(
+          "Invalid Language detected." + rep); // TODO: better error for here? CAO
     }
-    // Identifiers
-    Optional<String> docId = getArtifactID(dox, meta);
-    System.out.println("docId: " + docId);
-    URIIdentifier artifactId = new URIIdentifier().withUri(URI.create(docId.isPresent() ? docId.get() : null)); // TODO: what to do if not present? CAO
-    Optional<URIIdentifier> assetID = getAssetID(dox);
-    // TODO: should CMMN have assetID? currently does not, so this fails if don't check for present CAO
-    System.out.println("assetID: " + (assetID.isPresent() ? assetID.get() : Optional.empty()));
-
 
     // towards the ideal as below
-    KnowledgeAsset surr = new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset()
-        .withAssetId((assetID.isPresent() ? assetID.get() : null)) // TODO: what to do if not present? CAO
+    surr = new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset()
+        .withAssetId(
+            (assetID.isPresent() ? assetID.get() : null)) // TODO: what to do if not present? CAO
+        // TODO: Discuss with Davide, this is the fileInfo name; shouldn't there be some asset name? CAO
         .withName(meta.getName())
         .withTitle(meta.getName())
         .withFormalCategory(formalCategory)
         .withFormalType(formalType)
         .withSubject(annotations)
         // only restrict to published assets
-        .withLifecycle(new Publication().withPublicationStatus(PublicationStatus.Published))
+        .withLifecycle(lifecycle)
         // TODO: Follow-up w/Davide on this CAO
-//        // Some work needed to infer the dependencies
-//        .withRelated( // asset - asset relation/dependency
-//        new Dependency()
-//            .withRel(DependencyType.Depends_On)
-//            .withTgt(new KnowledgeAsset().withAssetId(theTargetAssetId)) // nothing else
-//        )
+        //        // Some work needed to infer the dependencies
+        .withRelated(getRelatedAssets(theTargetAssetId)) // asset - asset relation/dependency
         .withCarriers(new ComputableKnowledgeArtifact()
                 .withArtifactId(artifactId)
+                .withName(meta.getName())
                 .withLocalization(Language.English)
                 .withExpressionCategory(KnowledgeArtifactCategory.Software)
                 .withRepresentation(new Representation()
-                    .withLanguage(rep.get().getLanguage())  // DMN_1_2 or CMMN_1_1)
-                    .withFormat(SerializationFormat.XML_1_1)
-//                    .withLexicon(Lexicon.PCV) // TODO: this doesn't compile anymore CAO
-                    .withSerialization(syntax) // DMN_1_2_XML_Syntax or CMMN_1_1_XML_Syntax)
+                        .withLanguage(rep.get().getLanguage())  // DMN_1_2 or CMMN_1_1)
+                        .withFormat(SerializationFormat.XML_1_1)
+//                                    .withLexicon(Lexicon.PCV) // TODO: this compiles now, but is it accurate? CAO
+                        .withSerialization(syntax) // DMN_1_2_XML_Syntax or CMMN_1_1_XML_Syntax)
                 )
                 .withRelated( // artifact - artifact relation/dependency
-                    new Dependency().withRel(DependencyType.Imports)
-                        .withTgt(theTargetArtifactId)
-                )
-            .withName(meta.getName()) // TODO: might want '(DMN)' / '(CMMN)' here
-        );
+                    getRelatedArtifacts(theTargetArtifactId))
+        )
+        .withName(meta.getName()); // TODO: might want '(DMN)' / '(CMMN)' here
 
 //
 //    // TODO: Needed? yes CAO
 //    // Annotations
-////    addSemanticAnnotations(surr, annotations);
+    addSemanticAnnotations(surr, annotations);
 //
-//    // TODO: Needed? yes CAO
-//    // Dependencies
+//    // TODO: Needed? yes Maybe not anymore due to mapper code CAO
+//    // Dependencies TODO: [asset -> asset ] CAO
 //    resolveDependencies(surr, dox);
 
     return surr;
   }
 
-//  // this is the ideal -- don't recall exactly from the conversation a couple of weeks ago, BUT I believe the following is meant to replace the extractXML() code
+  private Publication getPublication(TrisotechFileInfo meta) {
+    Publication lifecycle = new Publication();
+    // TODO: FAIL if not? shouldn't have made it this far if not CAO
+    if (Optional.ofNullable(meta.getState()).isPresent()) {
+      switch (meta.getState()) {
+        case "Published":
+          lifecycle.withPublicationStatus(PublicationStatus.Published);
+          break;
+        case "Draft":
+          lifecycle.withPublicationStatus(PublicationStatus.Draft);
+          break;
+        case "Pending Approval":
+          lifecycle.withPublicationStatus(PublicationStatus.Final_Draft);
+          break;
+        default: // TODO: ??? error? CAO
+          break;
+      }
+    }
+    System.out.println("lifecycle = " + lifecycle.getPublicationStatus().toString());
+
+    return lifecycle;
+  }
+
+  private Collection<Association> getRelatedArtifacts(Set<Resource> theTargetArtifactId) {
+    List<KnowledgeAsset> knowledgeAssets = new ArrayList<>();
+
+    // TODO: rework this once confirm the logic is correct CAO
+    if (null != theTargetArtifactId) {
+      for (Resource resource : theTargetArtifactId) {
+        KnowledgeAsset knowledgeAsset = null;
+        // handle try/catch with URIs first
+        knowledgeAsset = new KnowledgeAsset().withAssetId(
+            // TODO: Is this right? Should be KnowledgeResource? KnowledgeAsset ISA KnowledgeResource CAO
+            new URIIdentifier()
+                .withUri(URI.create(resource
+                    .getURI()))) // TODO: URI is the Trisotech URI -- need to convert to ckm? CAO
+            .withName(resource
+                .getLocalName()); // TODO: Ask Davide - better name? tgt must have name to pass marshal CAO
+        knowledgeAssets.add(knowledgeAsset);
+      }
+    }
+    // TODO: Is this right? Should be KnowledgeResource; KR is abstract; KnowledgeAsset ISA KnowledgeResource; is it the right one? CAO
+    return knowledgeAssets.stream().map(ka ->
+        new Dependency().withRel(DependencyType.Imports)
+            .withTgt(ka))
+        .collect(Collectors.toList());
+
+  }
+
+  private Collection<Association> getRelatedAssets(List<URIIdentifier> theTargetAssetId) {
+    return theTargetAssetId.stream()
+        .map(uriIdentifier ->
+            new Dependency()
+                .withRel(DependencyType.Depends_On)
+                .withTgt(new KnowledgeAsset().withAssetId(uriIdentifier)
+                    .withName(uriIdentifier
+                        .toString()))) // TODO: Ask Davide -- is something else expected here? have to have name to pass SAXParser CAO
+        .collect(Collectors.toList());
+//    if(null != theTargetAssetId && theTargetAssetId.size() > 0) {
+//      for (URIIdentifier uri : theTargetAssetId) {
+//        new Dependency()
+//            .withRel(DependencyType.Depends_On)
+//            .withTgt(new KnowledgeAsset().withAssetId(uri)); // nothing else
+//      }
+  }
+
+//  // this is the ideal -- don't recall exactly from the conversation several weeks ago, BUT I believe the following is meant to replace the extractXML() code
 //  public KnowledgeAsset metadata() {
 //    return new KnowledgeAsset()
 //        // from the metadata / explicit manually set id
@@ -214,7 +306,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //            .withTgt(new KnowledgeAsset().withAssetId(theTargetAssetId)) // nothing else
 //        )
 //        .withCarriers(new ComputableKnowledgeArtifact()
-//                .withArtifactId(artifactId) // from the document targetNamespace
+//                .withArtifactId(artifactId) // from the document targetNamespace [subject in triples]
 //                .withLocalization(Language.English)
 //                .withExpressionCategory(KnowledgeArtifactCategory.Software)
 //
@@ -239,7 +331,6 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //
 //  }
 
-
   // TODO: Is this needed anymore?  KnowledgeExpression no longer exists? CAO
   // TODO: CAO
   //  From code review: checks the file for a specific asset type instead of the default --- could return type and use above or else default
@@ -259,14 +350,15 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //  }
 
   // TODO: Is this needed? Yes -- need example models to work from CAO
-//  protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
+  protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
 //    annotations.stream()
-//            .filter((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept())
-//                    || ann.getRel().equals(AssetVocabulary.DEFINES.asConcept())
-//                    || ann.getRel().equals(KnownAttributes.SUBJECT.asConcept())
-//                    || ann.getRel().equals(AssetVocabulary.IN_TERMS_OF.asConcept()))
-//            .forEach(surr::withSubject);
-//
+//        .filter((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept())
+//            || ann.getRel().equals(AnnotationRelType.Defines.asConcept())
+//            || ann.getRel().equals(AnnotationRelType.In_Terms_Of.asConcept()))
+//        .forEach(surr::withSubject);
+    return;
+  }
+    // TODO: Needed? Am not finding use of Computable_Decision_Model in test models CAO
 //    if (surr.getType().contains(KnowledgeAssetType.Computable_Decision_Model)
 //            && annotations.stream().anyMatch((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept()))) {
 //      surr.withType(KnowledgeAssetType.Operational_Concept_Defintion);
@@ -288,15 +380,13 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //    }
 //  }
 
-
-
-
-  private String stripIdFromUri(String uri) {
-    return StringUtils.substringBefore(StringUtils.substringAfterLast(uri, "/"), ".");
-  }
+//  private String stripIdFromUri(String uri) {
+//    return StringUtils.substringBefore(StringUtils.substringAfterLast(uri, "/"), ".");
+//  }
 
   // TODO: What is this doing? is it needed anymore? yes; can help with dependency mappings
   //  Re-evaluate mapper code for support of Trisotech data and CAO
+  // need to know kA has dependencies asserted; need to put in KA, but maybe not in this manner
 //  private void resolveDependencies(KnowledgeAsset surr, Document dox) {
 //    NodeList refs = xList(dox, "//*[@externalRef]");
 //    asElementStream(refs).filter((n) -> n.hasAttribute("xmlns"))
@@ -304,7 +394,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //        .map(this::stripIdFromUri)
 //        .filter(mapper::hasIdMapped)
 //        .forEach((artifactId) -> {
-//          mapper.getAssetId(artifactId)
+//          mapper.getAssetId(artifactId) // TODO: artifactId or assetId??? is this supposed to be mapping artifact->asset or artifact->artifact?
+//              // TODO: cont: my mapper will map artifacts->artifacts, so to get asset, need to get the file for the artifact? CAO
 //              .ifPresent((assetId) -> {
 //                KnowledgeAsset ka = new KnowledgeAsset();
 //                ka.setAssetId(mapper.associate(surr.getAssetId(),
@@ -318,27 +409,29 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //        });
 //  }
 
-  // TODO: Needed? Purpose? CAO
+
+  // used to pull out the annotation values from the woven dox
   private List<Annotation> extractAnnotations(Document dox) {
     List<Annotation> annos = new LinkedList<>();
 
-
     // TODO: Maybe extract more annotations, other than the 'document' level ones?
-    annos.addAll(XMLUtil.asElementStream(dox.getDocumentElement().getChildNodes())
+    annos.addAll(XMLUtil.asElementStream(
+        dox.getDocumentElement().getElementsByTagName("semantic:extensionElements"))
         .filter(Objects::nonNull)
         .filter(el -> el.getLocalName().equals("extensionElements"))
         .flatMap(el -> XMLUtil.asElementStream(el.getChildNodes()))
         .map(SurrogateHelper::unmarshallAnnotation)
-        .map(SurrogateHelper::rootToFragment)
+        .map(this::getRootToFragment)
         .collect(Collectors.toList()));
 
-    // TODO: Needed?  yes CAO
     if (annos.stream()
         .filter(SimpleAnnotation.class::isInstance)
         .map(SimpleAnnotation.class::cast)
-        .anyMatch(ann -> KnowledgeAssetType.Computable_Decision_Model.getTag().equals(ann.getExpr().getTag()))) {
+        .anyMatch(ann -> KnowledgeAssetType.Computable_Decision_Model.getTag()
+            .equals(ann.getExpr().getTag()))) {
       // this is a DMN decision model
-      List<Node> itemDefs = asAttributeStream(xList(dox, "//semantic:inputData/@name"))
+      List<Node> itemDefs = asAttributeStream(xPathUtil.xList(dox, "//semantic:inputData/@name"))
+          // TODO: Needed?  CAO
 //					.map( in -> xNode( dox, "//dmn:itemDefinition[@name='"+ in.getValue()+"']" ) ) CAO
           .collect(Collectors.toList());
       for (Node itemDef : itemDefs) {
@@ -363,19 +456,105 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
       }
     }
 
+    System.out.println("end of extractAnnotations; have annos size: " + annos.size());
     return annos;
   }
 
-  @Override
-  public Optional<URIIdentifier> getAssetID(Document dox ) {
-    return getIDAnnotationValue(dox)
-        .map(DatatypeHelper::toVersionIdentifier)
-        .map((versionIdentifier) -> SurrogateBuilder.id(versionIdentifier.getTag(), versionIdentifier.getVersion()));
+  // TODO: This can go away when updated in foundation. surrogateHelper.rootToFragment does not support DatatypeAnnotation CAO
+  private Annotation getRootToFragment(Annotation anno) {
+    if (edu.mayo.kmdp.metadata.annotations.resources.DatatypeAnnotation.class.isInstance(anno)) {
+      return (Annotation) anno.copyTo(new DatatypeAnnotation());
+    } else {
+      return SurrogateHelper.rootToFragment(anno);
+    }
   }
 
+  @Override
+  public Optional<URIIdentifier> getAssetID(Document dox) {
+    System.out.println("in getAssetID...");
+    return getIDAnnotationValue(dox)
+        .map(DatatypeHelper::toVersionIdentifier)
+        .map(versionIdentifier -> SurrogateBuilder
+            .id(versionIdentifier.getTag(), versionIdentifier.getVersion()));
+  }
+
+  @Override
+  public Optional<URIIdentifier> getAssetId(String fileId) {
+    return mapper.getAssetId(fileId);
+  }
+
+  public Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId) {
+    return mapper.getEnterpriseAssetIdForAsset(assetId);
+  }
+
+  public URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId) {
+    return mapper.getEnterpriseAssetIdForAssetVersionId(enterpriseAssetVersionId);
+  }
+
+  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag)
+      throws NotLatestVersionException {
+    return mapper.getEnterpriseAssetVersionIdForAsset(assetId, versionTag);
+  }
+
+  public Optional<String> getFileId(UUID assetId) {
+    return mapper.getFileId(assetId);
+  }
+
+  @Override
+  public String getArtifactId(URIIdentifier id) throws NotLatestVersionException {
+    System.out.println("getArtifactId, mapper: " + mapper);
+    return mapper.getArtifactId(id);
+  }
+
+  public Optional<String> getFileId(String internalId) {
+    return mapper.getFileId(internalId);
+  }
+
+  public Optional<String> getMimetype(UUID assetId) {
+    return mapper.getMimetype(assetId);
+  }
+
+  public Optional<String> getMimetype(String internalId) {
+    return mapper.getMimetype(internalId);
+  }
+
+
+  public Optional<String> getArtifactVersion(UUID assetId) {
+    return mapper.getArtifactIdVersion(assetId);
+  }
+
+
   protected Optional<String> getIDAnnotationValue(Document dox) {
+    logger.debug("in getIDAnnotationValue...");
+    // long form
+    List<Annotation> annotations = extractAnnotations(dox);
+    for (Annotation annotation : annotations) {
+      if (logger.isDebugEnabled()) {
+        logger.debug(String.format("annotation: %s", annotation.toString()));
+      }
+      if (null != annotation.getRel() && annotation.getRel()
+          .equals(KnownAttributes.ASSET_IDENTIFIER.asConcept())) {
+        if (logger.isDebugEnabled()) {
+          logger.debug(String.format("annotation.getRel: %s", annotation.getRel().toString()));
+          logger.debug(
+              String.format("ASSET_IDENTIFIER asConcept: %s",
+                  KnownAttributes.ASSET_IDENTIFIER.asConcept()
+                      .toString()));
+          logger.debug(String.format("class: %s", annotation.getClass().toString()));
+          logger.debug(
+              String.format("is BasicAnnotation: %s",
+                  annotation.getClass().isInstance(BasicAnnotation.class)));
+          logger.debug(
+              String.format("isAssignableFrom BasicAnnotation: %s", annotation.getClass()
+                  .isAssignableFrom(BasicAnnotation.class)));
+          logger.debug(
+              String.format("expr: %s", ((BasicAnnotation) annotation).getExpr().toString()));
+        }
+      }
+
+    }
     return extractAnnotations(dox).stream()
-        .filter((ann) -> ann.getRel().equals(KnownAttributes.ASSET_IDENTIFIER.asConcept()))
+        .filter(ann -> ann.getRel().equals(KnownAttributes.ASSET_IDENTIFIER.asConcept()))
         .filter(BasicAnnotation.class::isInstance)
         .map(BasicAnnotation.class::cast)
         .map(BasicAnnotation::getExpr)
@@ -384,24 +563,15 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
   @Override
-  public Optional<String> getArtifactVersionTag(Document dox, TrisotechFileInfo meta) {
-    String tag = null;
-    if (meta != null) {
-      tag = "" + meta.getVersion();
-    }
-    return Optional.ofNullable(tag);
-  }
-
-  @Override
   public Optional<String> getArtifactID(Document dox, TrisotechFileInfo meta) {
     Optional<KnowledgeRepresentationLanguage> lang = detectRepLanguage(dox);
 
-    return lang.map((l) -> {
+    return lang.map(l -> {
       switch (l) {
         case DMN_1_2:
-          return xString(dox, "//*/@namespace");
+          return xPathUtil.xString(dox, "//*/@namespace");
         case CMMN_1_1:
-          return xString(dox, "//*/@targetNamespace");
+          return xPathUtil.xString(dox, "//*/@targetNamespace");
         default:
           return null;
       }
@@ -410,15 +580,13 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   @Override
   public Optional<Representation> getRepLanguage(Document dox, boolean concrete) {
-//    System.out.println("xNode(dox, xpath //dmn:definitions: " + xNode(dox, DMN_DEFINITIONS));
-//    System.out.println("xNode(dox, xpath //cmmn:definitions: " + xNode(dox, CMMN_DEFINITIONS));
 
-    if (xNode(dox, CMMN_DEFINITIONS) != null) {
+    if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
       return Optional.of(new Representation()
           .withLanguage(CMMN_1_1)
           .withFormat(concrete ? SerializationFormat.XML_1_1 : null));
     }
-    if (xNode(dox, DMN_DEFINITIONS) != null) {
+    if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
       return Optional.of(new Representation()
           .withLanguage(DMN_1_2)
           .withFormat(concrete ? SerializationFormat.XML_1_1 : null));
@@ -427,32 +595,20 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
   public Optional<KnowledgeRepresentationLanguage> detectRepLanguage(Document dox) {
-    System.out.println("xNode(dox, xpath //cmmn:definitions: " + xNode(dox, CMMN_DEFINITIONS));
-    if (xNode(dox, CMMN_DEFINITIONS) != null) {
+    if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
       return Optional.of(CMMN_1_1);
     }
-    System.out.println("xNode(dox, xpath //dmn:definitions: " + xNode(dox, DMN_DEFINITIONS));
-    if (xNode(dox, DMN_DEFINITIONS) != null) {
+    if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
       return Optional.of(DMN_1_2);
     }
     return Optional.empty();
   }
 
-  // TODO: Needed? CAO
   @Override
-  public String getMetadataEntryNameForID(String id) {
-    System.out.println("getMetadataentryNameForID will return: " +
-        "Trisotech Export/model_" +
-        id.substring(id.lastIndexOf('/') + 1, id.lastIndexOf('.')) +
-        "/model_meta.json");
-    return "Trisotech Export/model_" +
-        id.substring(id.lastIndexOf('/') + 1, id.lastIndexOf('.')) +
-        "/model_meta.json";
-  }
-
-  @Override
-  public URIIdentifier extractAssetID(Document dox, TrisotechFileInfo meta) {
-    return null;
+  public URIIdentifier extractAssetID(Document dox) {
+    Optional<URIIdentifier> resId = getAssetID(dox);
+    return resId
+        .orElseThrow(IllegalStateException::new); // TODO: better return value if not existent? CAO
   }
 
 

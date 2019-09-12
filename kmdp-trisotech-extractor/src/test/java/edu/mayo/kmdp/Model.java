@@ -22,53 +22,53 @@ import java.io.ByteArrayOutputStream;
 
 public class Model {
 
-	private Document model;
-	private Document surrogate;
+  private Document model;
+  private Document surrogate;
 
-	public Model() {
-	}
+  public Model() {
+  }
 
-	public Model( Document model, Document surrogate ) {
-		this.model = model;
-		this.surrogate = surrogate;
-	}
+  public Model( Document model, Document surrogate ) {
+    this.model = model;
+    this.surrogate = surrogate;
+  }
 
-	public Document getModel() {
-		return model;
-	}
+  public Document getModel() {
+    return model;
+  }
 
-	public Document getSurrogate() {
-		return surrogate;
-	}
+  public Document getSurrogate() {
+    return surrogate;
+  }
 
-	public void setModel( Document model ) {
-		this.model = model;
-	}
+  public void setModel( Document model ) {
+    this.model = model;
+  }
 
-	public Document addModel( Document model ) {
-		setModel( model );
-		return model;
-	}
+  public Document addModel( Document model ) {
+    setModel( model );
+    return model;
+  }
 
-	public Document addSurrogate( Document surrogate ) {
-		setSurrogate( surrogate );
-		return surrogate;
-	}
+  public Document addSurrogate( Document surrogate ) {
+    setSurrogate( surrogate );
+    return surrogate;
+  }
 
-	public void setSurrogate( Document surrogate ) {
-		this.surrogate = surrogate;
-	}
+  public void setSurrogate( Document surrogate ) {
+    this.surrogate = surrogate;
+  }
 
-	public byte[] streamModel() {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		XMLUtil.streamXMLDocument( model, baos );
-		return baos.toByteArray();
-	}
+  public byte[] streamModel() {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    XMLUtil.streamXMLDocument( model, baos );
+    return baos.toByteArray();
+  }
 
-	public byte[] streamSurrogate() {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		XMLUtil.streamXMLDocument( surrogate, baos );
-		return baos.toByteArray();
-	}
+  public byte[] streamSurrogate() {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    XMLUtil.streamXMLDocument( surrogate, baos );
+    return baos.toByteArray();
+  }
 
 }

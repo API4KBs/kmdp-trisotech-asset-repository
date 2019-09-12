@@ -24,18 +24,8 @@ import edu.mayo.kmdp.Option;
  */
 public enum ReaderOptions implements Option<ReaderOptions> {
 
-	// TODO: reexamine required boolean values; currently set to 'false' until know more of what it does CAO
 	URL_PATTERN_ST( Opt.of( "URL_PATTERN_ST","\\\"(.*)\\\"", String.class, false ) ),
 
-	// Dictionary Information
-	// TODO: update to DMN 1.2 model -- need KRLanguage support first? https://www.omg.org/spec/DMN/20180505/DMN12.xsd
-	// NOTE: OMG has uri as above, but Trisotech model has 20180521 in the path -- cannot find this value on OMG site
-	// Trisotech model also does not call out DMN12.xsd file like Signavio model did
-	// instead has links like this; http://www.omg.org/spec/DMN/20180521/MODEL/ which gives a 404 if I try to traverse to it
-	// Davide explained this: OMG changed it so you have to go to the ref: https://www.omg.org/spec/DMN/1.2 to get the value for the schema.
-	// http://www.omg.org/spec/DMN/20180521/MODEL is the schema
-	// which value to use here?
-	// Is MODEL_NS needed? CAO
 	P_MODEL_NS( Opt.of( "MODEL_NS", "http://www.omg.org/spec/DMN/20151101/dmn.xsd", String.class, false ) ),
 	P_EL_MODEL_EXT( Opt.of( "EL_MODEL_EXTENSIONS", "extensionElements", String.class, false ) ),
 

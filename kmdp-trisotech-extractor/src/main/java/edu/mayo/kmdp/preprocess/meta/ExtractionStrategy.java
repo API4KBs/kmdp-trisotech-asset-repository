@@ -18,12 +18,16 @@ package edu.mayo.kmdp.preprocess.meta;
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import java.net.URI;
+import java.util.Optional;
+import java.util.UUID;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
-import java.util.Optional;
-
+@Component
 public interface ExtractionStrategy {
 
 	IdentityMapper getMapper();
@@ -35,21 +39,29 @@ public interface ExtractionStrategy {
 	KnowledgeAsset extractXML( Document dox, TrisotechFileInfo meta );
 
 	Optional<URIIdentifier> getAssetID( Document dox );
+	Optional<URIIdentifier> getAssetId(String fileId);
 
-	Optional<String> getArtifactVersionTag( Document dox, TrisotechFileInfo meta );
+	Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
+	URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId);
+
+	Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag)
+			throws NotLatestVersionException;
 
 	Optional<String> getArtifactID( Document dox, TrisotechFileInfo meta );
 
-	Optional<Representation> getRepLanguage( Document dox, boolean concrete );
+  Optional<Representation> getRepLanguage( Document dox, boolean concrete );
 
-	String getMetadataEntryNameForID( String id );
+  Optional<String> getMimetype(UUID assetId);
+	Optional<String> getMimetype(String internalId);
 
-	default KnowledgeAsset newSurrogate() {
-		// surrogate.resources.KnowledgeAsset extends metadata.surrogate.KnowledgeAsset,
-		// but is XML-serializable, so need to create this way to get XML serializable object,
-		return new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset();
-	}
+	Optional<String> getArtifactVersion(UUID assetId);
 
-	URIIdentifier extractAssetID( Document dox, TrisotechFileInfo meta );
+	URIIdentifier extractAssetID( Document dox );
+
+	Optional<String> getFileId(String internalId);
+
+	Optional<String> getFileId(UUID assetId);
+
+  String getArtifactId(URIIdentifier id) throws NotLatestVersionException;
 
 }

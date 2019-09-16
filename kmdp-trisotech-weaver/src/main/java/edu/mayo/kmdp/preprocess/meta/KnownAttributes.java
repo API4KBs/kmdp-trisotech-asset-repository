@@ -35,58 +35,42 @@ public enum KnownAttributes {
 	// on models
 	ASSET_IDENTIFIER( AnnotationRelType.Has_ID.getLabel(),
 	                  "knowledgeAssetId",
-	                  AnnotationRelType.Has_ID.getRef(),
-	                  false,
-	                  false ),
+	                  AnnotationRelType.Has_ID.getRef() ),
 
 
 	TYPE( AnnotationRelType.Is_A.getLabel(),
-			"modelURI", // ?? -- this tag on semanticLink matches the ref from getRef()
-			AnnotationRelType.Is_A.getRef(),
-			true,
-			true ),
+			"assetType",
+			AnnotationRelType.Is_A.getRef() ),
 
 	// on expressions (models or fragments)
 
-	// TODO: CAPTURES for propositionalconcepts on internal decision (decisionService) CAO
+	// CAPTURES for propositionalconcepts on internal decision (decisionService)
+  // TODO: don't have an example of CAPTURES in the test files CAO
 	CAPTURES( AnnotationRelType.Captures.getLabel(),
-			"clinicalproposition", // TODO: CAO
-			AnnotationRelType.Captures.getRef(),
-			true,
-			true ),
+			"capture",
+			AnnotationRelType.Captures.getRef()),
 
-	// TODO: In_Terms_of for propositionalconcepts of all inputs CAO
+	// In_Terms_of for propositionalconcepts of all inputs
 	INPUTS( AnnotationRelType.In_Terms_Of.getLabel(),
-			"clinicalproposition", // TODO: CAO
-			AnnotationRelType.In_Terms_Of.getRef(),
-			true,
-			true ),
+			"inTermsOf",
+			AnnotationRelType.In_Terms_Of.getRef()),
 
-	// TODO: DEFINES for all other propositionalconcepts??? CAO
+	// DEFINES for all other propositionalconcepts
 	DEFINES( AnnotationRelType.Defines.getLabel(),
-			"clinicalproposition", // TODO: CAO
-			AnnotationRelType.Defines.getRef(),
-			true,
-			true ),
+			"defines",
+			AnnotationRelType.Defines.getRef() ),
 
 	;
 
 	private URI uri;
 	private String key;
 	private String label;
-	private boolean coded;
-	private boolean manyValued;
 
-	KnownAttributes(String label, String key, URI uri, boolean coded, boolean manyValued ) {
+
+	KnownAttributes(String label, String key, URI uri ) {
 		this.label = label;
 		this.key = key;
 		this.uri = uri;
-		this.coded = coded; // TODO: remove? never used CAO
-		this.manyValued = manyValued; // TODO: remove? never used CAO
-	}
-
-	public boolean isManyValued() {
-		return manyValued;
 	}
 
 	public static Optional<KnownAttributes> resolve( String trisoName ) {

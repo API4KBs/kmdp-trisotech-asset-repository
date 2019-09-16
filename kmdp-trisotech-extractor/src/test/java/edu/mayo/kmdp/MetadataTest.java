@@ -54,33 +54,28 @@ class MetadataTest {
   @Autowired
   private MetadataExtractor extractor;
 
+  @Autowired
+  private Weaver weaver;
+
   private static String dmnPath = "/Weaver Test 1.dmn";
   private static String metaPath = "/WeaverTest1Meta.json";
   private static String cmmnPath = "/Weave Test 1.cmmn";
   private static String cmmnMetaPath = "/WeaveTest1Meta.json";
   private static boolean constructed = false;
 
-  @Autowired
-  private Weaver weaver;
-//  private static Weaver cmmnWeaver;
-
   private static byte[] annotatedDMN;
   private static byte[] annotatedCMMN;
 
-//  @BeforeAll
 
   /**
    * Need to use @PostConstruct instead of @BeforeAll because @BeforeAll requires the method be
    * static, and cannot @Autowired on static variables which would be needed for the static method.
    * Have the check for constructed as otherwise @PostConstruct will be run before EVERY @Test.
-   * It will will, but now the processing won't happen after the first time.
+   * It still will but now the processing won't happen after the first time.
    */
   @PostConstruct
   public void init() {
 
-//    dmnWeaver = new Weaver();
-//
-//    cmmnWeaver = new Weaver();
     if(!constructed) {
 
       Optional<byte[]> dmn = XMLUtil
@@ -90,8 +85,6 @@ class MetadataTest {
       assertTrue(dmn.isPresent());
       annotatedDMN = dmn.get();
 
-      System.out.println(new String(annotatedDMN));
-
       Optional<byte[]> cmmn = XMLUtil
           .loadXMLDocument(MetadataTest.class.getResourceAsStream(cmmnPath))
           .map(weaver::weave)
@@ -99,7 +92,6 @@ class MetadataTest {
       assertTrue(cmmn.isPresent());
       annotatedCMMN = cmmn.get();
 
-      System.out.println(new String(annotatedCMMN));
       constructed = true;
     }
 

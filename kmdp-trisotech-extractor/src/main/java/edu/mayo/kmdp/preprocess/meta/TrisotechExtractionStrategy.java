@@ -82,10 +82,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   public static final String DMN_DEFINITIONS = "//dmn:definitions";
   private IdentityMapper mapper;
   private XPathUtil xPathUtil;
-  Logger logger = LoggerFactory.getLogger(TrisotechExtractionStrategy.class);
+  private static final Logger logger = LoggerFactory.getLogger(TrisotechExtractionStrategy.class);
 
   public TrisotechExtractionStrategy() {
-    System.out.println("TrisotechExtractionStrategy ctor...");
     xPathUtil = new XPathUtil();
   }
 
@@ -235,7 +234,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
           break;
       }
     }
-    System.out.println("lifecycle = " + lifecycle.getPublicationStatus().toString());
+    if(logger.isDebugEnabled()) {
+      logger.debug("lifecycle = " + lifecycle.getPublicationStatus().toString());
+    }
 
     return lifecycle;
   }
@@ -456,13 +457,14 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
       }
     }
 
-    System.out.println("end of extractAnnotations; have annos size: " + annos.size());
+    if(logger.isDebugEnabled()) {
+      logger.debug("end of extractAnnotations; have annos size: " + annos.size());
+    }
     return annos;
   }
 
   @Override
   public Optional<URIIdentifier> getAssetID(Document dox) {
-    System.out.println("in getAssetID...");
     return getIDAnnotationValue(dox)
         .map(DatatypeHelper::toVersionIdentifier)
         .map(versionIdentifier -> SurrogateBuilder
@@ -470,7 +472,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
   @Override
-  public Optional<URIIdentifier> getAssetId(String fileId) {
+  public Optional<URIIdentifier> getAssetID(String fileId) {
     return mapper.getAssetId(fileId);
   }
 
@@ -492,8 +494,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
   @Override
-  public String getArtifactId(URIIdentifier id) throws NotLatestVersionException {
-    System.out.println("getArtifactId, mapper: " + mapper);
+  public String getArtifactID(URIIdentifier id) throws NotLatestVersionException {
     return mapper.getArtifactId(id);
   }
 

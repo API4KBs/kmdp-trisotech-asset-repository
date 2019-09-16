@@ -44,6 +44,11 @@
         </ann:rel>
       </ann:basicAnnotation>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="defines"
+          ref="https://www.omg.org/spec/API4KP/api4kp/defines"
+          tag="defines">
+          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#e9b34549-7e35-3e85-8d35-d01321c87bf3"
           label="PropositionalConcepts - 20190801 - Management of Aortic Stenosisin 'PropositionalConcepts - 20190801'Beta Blocker for HFrEF"
@@ -51,6 +56,11 @@
           tag="_623e1cca-b3c6-4203-ade0-85ba042141db"/>
       </ann:simpleAnnotation>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="is a"
+          ref="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          tag="type">
+          <id:namespace id="http://www.w3.org/1999/02/22-rdf-syntax-ns"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
           label="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
@@ -130,6 +140,11 @@
   <semantic:inputData id="_c8828c20-d075-42bf-bc5e-ad5b4e52ef1d" name="Input 1">
     <semantic:extensionElements>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="in terms of"
+          ref="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          tag="defined-in-terms-of">
+          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/propositionalconcepts#a34c157c-4495-4039-92a5-7bf2ddece5a8"
           label="PropositionalConcepts - 20190801 - Has Hypertension - Isin 'PropositionalConcepts - 20190801'"
@@ -144,6 +159,11 @@
   <semantic:inputData id="_ffc7572a-2d99-4721-8cf0-a0f2f0aa5f13" name="Input 2">
     <semantic:extensionElements>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="in terms of"
+          ref="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          tag="defined-in-terms-of">
+          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/propositionalconcepts#31f92480-1ed8-4b26-81e1-f402df21235b"
           label="PropositionalConcepts - 20190801 - Has Diabetes Mellitus - Isin 'PropositionalConcepts - 20190801'"
@@ -217,6 +237,11 @@
   </dmndi:DMNDI>
   <semantic:extensionElements>
     <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+      <ann:rel label="is a"
+        ref="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        tag="type">
+        <id:namespace id="http://www.w3.org/1999/02/22-rdf-syntax-ns"/>
+      </ann:rel>
       <ann:expr
         conceptId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
         label="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"

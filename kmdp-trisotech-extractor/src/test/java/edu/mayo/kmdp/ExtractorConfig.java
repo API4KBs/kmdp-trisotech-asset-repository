@@ -28,31 +28,26 @@ public class ExtractorConfig {
 
   @Bean
   ModelReader reader(ReaderConfig config) {
-    System.out.println("reader in extractorConfig");
     return new ModelReader(config);
   }
 
   @Bean
   ReaderConfig config() {
-    System.out.println("config in extractorConfig");
     return new ReaderConfig();
   }
 
   @Bean
   Weaver weaver() {
-    System.out.println("weaver in extractorConfig");
     return new Weaver();
   }
 
   @Bean
   TrisotechExtractionStrategy strategy() {
-    System.out.println("strategy in extractorConfig");
     return new TrisotechExtractionStrategy();
   }
 
   @Bean
   MetadataExtractor extractor() {
-    System.out.println("in extractorConfig");
     return new MetadataExtractor();
   }
 }

@@ -44,6 +44,11 @@
         </ann:rel>
       </ann:basicAnnotation>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="is a"
+          ref="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          tag="type">
+          <id:namespace id="http://www.w3.org/1999/02/22-rdf-syntax-ns"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
           label="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
@@ -51,6 +56,11 @@
           tag="_2a02362c-4be7-4a3f-8ddf-c7cb8e088535"/>
       </ann:simpleAnnotation>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="defines"
+          ref="https://www.omg.org/spec/API4KP/api4kp/defines"
+          tag="defines">
+          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#e9b34549-7e35-3e85-8d35-d01321c87bf3"
           label="PropositionalConcepts - 20190801 - Management of Aortic Stenosisin 'PropositionalConcepts - 20190801'Management of Aortic Stenosis"
@@ -78,6 +88,11 @@
   <semantic:decision id="_24cb5787-cf05-4464-ba64-7f7cb40128e0" name="Sub decision">
     <semantic:extensionElements>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="defines"
+          ref="https://www.omg.org/spec/API4KP/api4kp/defines"
+          tag="defines">
+          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#881f9c7f-5e66-3a61-931f-9bcc26f336a9"
           label="PropositionalConcepts - 20190801 - Has Aortic Valve Stenosisin 'PropositionalConcepts - 20190801'"
@@ -99,6 +114,11 @@
   <semantic:inputData id="_458c2a89-3a6c-41b6-a599-136726cb5935" name="Input 1">
     <semantic:extensionElements>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="in terms of"
+          ref="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          tag="defined-in-terms-of">
+          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/propositionalconcepts#f8be45db-22fc-4a17-96ad-6c1b3dfd7ba7"
           label="PropositionalConcepts - 20190801 - Most Recent TSH - Value ofin 'PropositionalConcepts - 20190801'"

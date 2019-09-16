@@ -19,7 +19,6 @@ import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.BASE_URL;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CONTENT_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.MEA_TEST;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.REPOSITORY_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.VERSIONS_PATH;
 import static org.springframework.http.HttpHeaders.ACCEPT;
@@ -57,22 +56,34 @@ import org.slf4j.LoggerFactory;
  */
 public class TrisotechWrapper {
 
-  private static Logger logger = LoggerFactory.getLogger(TrisotechWrapper.class);
+  private static final Logger logger = LoggerFactory.getLogger(TrisotechWrapper.class);
   // TODO: search for this particular directory or just use the known ID of our known repository and skip the places call? CAO
-  // TODO: setup (environment?) so can use MEA-Test for development, but MEA for test?, int, prod CAO
-  private static String rootDirectory; // = "MEA-Test";
+  private static String rootDirectory;
 
   private static String token;
 
   private TrisotechWrapper() {}
 
+  /**
+   * Because static values cannot be set using @Value, these are set through setters
+   * Another class needs to provide the mapping to the properties.
+   *
+   * @param token The token for accessing the repository.
+   */
   public static void setToken(String token) {
     TrisotechWrapper.token = token;
   }
 
+  /**
+   * Because static values cannot be set using @Value, these are set through setters
+   * Another class needs to provide the mapping to the properties.
+   *
+   * @param repositoryName The name of the repository for the models
+   */
   public static void setRoot(String repositoryName) {
     rootDirectory = repositoryName;
   }
+
   /**
    * Retrieves the LATEST version of the model for the fileId provided.
    *
@@ -324,8 +335,7 @@ public class TrisotechWrapper {
    * @return The list of Trisotech FileInfo for all the versions for that model
    */
   public static List<TrisotechFileInfo> getModelVersions(String fileId, String mimetype) {
-    // TODO: This needs to be MEA_TEST for testing and MEA for production CAO
-    return getModelVersions(MEA_TEST, fileId, mimetype);
+    return getModelVersions(rootDirectory, fileId, mimetype);
   }
 
   /**
@@ -353,7 +363,7 @@ public class TrisotechWrapper {
       } else if(mimetype.contains("cmmn")) {
         mimetype = CMMN_XML_MIMETYPE;
       } else {
-        // TODO: error? invalid mimetype -- shoudln't happen CAO
+        // TODO: error? invalid mimetype -- shouldn't happen CAO
         return versions;
       }
     }
@@ -421,7 +431,6 @@ public class TrisotechWrapper {
       // search for the 'place' as that is what modelers will know
       for (TrisotechPlace tp : data.getData()) {
         // pass in modelsArray as getRepositoryContent is recursive
-        // TODO: MEA_TEST for testing and MEA for production - put in environment/config CAO
         if (tp.getName().equals(rootDirectory)) {
           getRepositoryContent(tp.getId(), modelsArray, "/", xmlMimetype);
         }

@@ -16,6 +16,8 @@
 package edu.mayo.kmdp.trisotechwrapper;
 
 import javax.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class StaticContextInitializer {
+  private static final Logger logger = LoggerFactory.getLogger(StaticContextInitializer.class);
 
   @Value("${edu.mayo.kmdp.trisotechwrapper.trisotechToken}")
   private String token;
@@ -38,6 +41,10 @@ public class StaticContextInitializer {
 
   @PostConstruct
   public void init() {
+    if(logger.isDebugEnabled()) {
+      logger.debug("\n\n****token in PostConstruct is " + token);
+      logger.debug("repositoryName in PostConstruct is: " + repositoryName + "*****\n\n");
+    }
     TrisotechWrapper.setToken(token);
     TrisotechWrapper.setRoot(repositoryName);
   }

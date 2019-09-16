@@ -29,6 +29,7 @@ import java.util.Optional;
 
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.w3c.dom.Document;
@@ -45,17 +46,25 @@ class TrisotechWrapperIntTest {
 
   static final String TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY = "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=";
 
+  // id to MEA-Test repository
+  // TODO: Need to do same for MEA? Or just 'find' each time? CAO -- this might be better in the environment so can set this one for development/Test? and set the other one for prod/int?
+  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName}")
+  private String MEA_TEST;
+
+  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId}")
+  private String MEA_TEST_ID = "d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf";
+
   // Test files
   // DMN Published
-  static final String WEAVER_TEST_1_ID = "123720a6-9758-45a3-8c5c-5fffab12c494";
+  private static final String WEAVER_TEST_1_ID = "123720a6-9758-45a3-8c5c-5fffab12c494";
   // DMN published 'Draft'
-  static final String WEAVER_TEST_2_ID = "ffa53262-4d36-4656-890b-4e48ed1cb9c3";
+  private static final String WEAVER_TEST_2_ID = "ffa53262-4d36-4656-890b-4e48ed1cb9c3";
   // DMN unpublished
-  static final String DMN_UNPUBLISHED = "1dd05040-0bc8-4f3f-85b2-a06026c2cdc6";
+  private static final String DMN_UNPUBLISHED = "1dd05040-0bc8-4f3f-85b2-a06026c2cdc6";
   // CMMN Published
-  static final String WEAVE_TEST_1_ID = "93e58aa9-c258-46fd-909d-1cb096e19e64";
+  private static final String WEAVE_TEST_1_ID = "93e58aa9-c258-46fd-909d-1cb096e19e64";
   // CMMN unpublished
-  static final String WEAVE_TEST_2_ID = "84da9f52-44f5-46d1-ae3f-c5599f78ad1f";
+  private static final String WEAVE_TEST_2_ID = "84da9f52-44f5-46d1-ae3f-c5599f78ad1f";
 
   @BeforeAll
   static void setUpBeforeClass() throws Exception {
@@ -159,7 +168,7 @@ class TrisotechWrapperIntTest {
 
   }
 
-  // TODO: add test w/bad repository name
+  // TODO: add test w/bad repository name CAO
 
   @Test
   final void testGetModelVersionsDMN() {
@@ -272,19 +281,6 @@ class TrisotechWrapperIntTest {
     assertEquals(expectedVersion, versionIdentifier.getVersion());
     assertEquals(expectedUpdated.toString(), versionIdentifier.getEstablishedOn().toString());
   }
-  // latest version 7/9/2019:
-  //             "file": {
-  //                "id": "123720a6-9758-45a3-8c5c-5fffab12c494",
-  //                "sku": "123720a6-9758-45a3-8c5c-5fffab12c494",
-  //                "name": "Weaver Test 1",
-  //                "path": "/",
-  //                "mimetype": "application/vnd.triso-dmn+json",
-  //                "updated": "2019-08-06T20:21:53Z",
-  //                "updater": "Cheryl Orcutt",
-  //                "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&sku=123720a6-9758-45a3-8c5c-5fffab12c494",
-  //                "version": "1.8",
-  //                "state": "Published"
-  //            }
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {

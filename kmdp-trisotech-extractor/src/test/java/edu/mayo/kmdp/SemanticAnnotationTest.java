@@ -131,22 +131,7 @@ class SemanticAnnotationTest {
 				fail( "Unable to instantiate metadata object" );
 			}
 			KnowledgeAsset surr = res.get();
-			// long form
-			List<Annotation> annotations = surr.getSubject();
-			for (Annotation anno: annotations
-			) {
-				System.out.println("anno is : " + anno.getClass() + " annotation");
-				System.out.println("anno rel: " + anno.getRel().toString());
-				System.out.println("AnnotationRelType.In_Terms_Of.asConcept(): " + AnnotationRelType.In_Terms_Of.asConcept());
-				System.out.println("((SimpleAnnotation)anno).getExpr()" + ((SimpleAnnotation)anno).getExpr());
-				System.out.println("ClinicalSituation.resolve(anno.getExpr()): " + ClinicalSituation.resolve(((SimpleAnnotation)anno).getExpr()));
-				System.out.println("ClinicalSituation name: " + ClinicalSituation.resolve(((SimpleAnnotation)anno).getExpr()).get().name());
 
-				if(anno.getClass().isInstance(SimpleAnnotation.class)) {
-					System.out.println("anno is SimpleAnnotation: " + anno.toString());
-					System.out.println("anno rel: " + anno.getRel().toString());
-				}
-			}
 			List<ClinicalSituation> inputs = surr.getSubject().stream()
 					.filter(SimpleAnnotation.class::isInstance)
 					.map( SimpleAnnotation.class::cast)

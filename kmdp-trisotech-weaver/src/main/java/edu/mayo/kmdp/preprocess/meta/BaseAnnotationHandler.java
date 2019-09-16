@@ -15,14 +15,17 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import edu.mayo.kmdp.metadata.annotations.*;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.w3c.dom.Element;
-
+import edu.mayo.kmdp.metadata.annotations.Annotation;
+import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
+import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
+import edu.mayo.kmdp.metadata.annotations.MultiwordAnnotation;
+import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.w3c.dom.Element;
 
 public abstract class BaseAnnotationHandler {
 
@@ -33,20 +36,22 @@ public abstract class BaseAnnotationHandler {
 	public abstract List<Element> wrap( List<Element> element );
 
 	public List<Annotation> getAnnotation(List<ConceptIdentifier> rows) {
-		return rows.stream().map( (row) -> newAnnotation(Collections.singletonList(row))).collect(Collectors.toList());
+		return rows.stream().map( row -> newAnnotation(Collections.singletonList(row))).collect(Collectors.toList());
 	}
 
-//	public List<Annotation> getAnnotation( String name,
-//	                                       KnownAttributes defaultRel,
-//	                                       List<ConceptIdentifier> rows ) {
-//
-//		KnownAttributes rel = KnownAttributes.resolve( name ).orElse( defaultRel );
+	public List<Annotation> getAnnotation( String name,
+	                                       KnownAttributes defaultRel,
+	                                       List<ConceptIdentifier> rows ) {
+
+		KnownAttributes rel = KnownAttributes.resolve( name ).orElse( defaultRel );
 //		KnownRoles rol = KnownRoles.resolve( rel );
-//
-//		return rel.isManyValued()
+
+		return
+//        rel.isManyValued()
 //				? rows.stream().map( (row) -> newAnnotation( rel, rol, Collections.singletonList( row ) ) ).collect( Collectors.toList() )
-//				: Collections.singletonList( newAnnotation( rel, rol, rows ) );
-//	}
+				 Collections.singletonList(
+				    newAnnotation( rel, /*rol,*/ rows ) );
+	}
 
 	public List<Annotation> getDataAnnotation(
 //					String name,
@@ -77,23 +82,26 @@ public abstract class BaseAnnotationHandler {
 		return anno;
 	}
 
-//	protected Annotation newAnnotation( KnownAttributes rel, KnownRoles rol, List<ConceptIdentifier> rows ) {
-//		Annotation anno;
-//		switch ( rows.size() ) {
-//			case 0:
-//				anno = new SimpleAnnotation();
-//				break;
-//			case 1:
-//				anno = new SimpleAnnotation()
-//						.withExpr( rows.get( 0 ) );
-//				break;
-//			default:
-//				anno = new MultiwordAnnotation()
-//						.withExpr( rows );
-//		}
-//		return anno.withRel( rel.asConcept() )
-//		           .withRol( rol.asConcept() );
-//	}
+	protected Annotation newAnnotation( KnownAttributes rel, List<ConceptIdentifier> rows ) {
+		Annotation anno;
+		switch ( rows.size() ) {
+			case 0:
+				anno = new SimpleAnnotation();
+				break;
+			case 1:
+				anno = new SimpleAnnotation()
+						.withExpr( rows.get( 0 ) );
+				break;
+			default:
+				anno = new MultiwordAnnotation()
+						.withExpr( rows );
+		}
+		if(null != rel) {
+      return anno.withRel(rel.asConcept());
+    } else {
+		  return anno;
+    }
+	}
 
 	public Annotation getBasicAnnotation( KnownAttributes attr, String v ) {
 		return new BasicAnnotation().withRel( attr.asConcept() )

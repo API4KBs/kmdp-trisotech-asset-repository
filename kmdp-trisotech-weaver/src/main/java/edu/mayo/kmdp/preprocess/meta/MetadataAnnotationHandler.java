@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

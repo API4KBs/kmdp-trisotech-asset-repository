@@ -46,22 +46,8 @@ class IdentityMapperIntTest {
   @Autowired
   IdentityMapper identityMapper;
 
-//  @BeforeAll
-//  public static void setUp() {
-//    System.out.println("setup, is identityMapper set? ");
-////    identityMapper = new IdentityMapper();
-////    identityMapper.init();
-//    System.out.println("after identityMapper ctor");
-//  }
-//
-//  @AfterAll
-//  public static void tearDown() {
-////    identityMapper = null;
-//  }
-
   @Test
   void getArtifactId() {
-    System.out.println("getartifactid, is identityMapper set? " + identityMapper);
     String expectedArtifactId = "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
     URIIdentifier assetId = DatatypeHelper
         .uri(Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c", "1.0.1");

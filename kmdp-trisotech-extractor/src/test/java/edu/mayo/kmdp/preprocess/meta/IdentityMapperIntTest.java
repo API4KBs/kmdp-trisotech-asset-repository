@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.preprocess.meta;
 
@@ -23,8 +21,10 @@ import edu.mayo.kmdp.ExtractorConfig;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.registry.Registry;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.apache.jena.rdf.model.Resource;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,9 +40,11 @@ import org.springframework.test.context.ContextConfiguration;
  * because communicating with the Trisotech server through SPARQL queries.
  */
 @SpringBootTest
-@ContextConfiguration(classes={IdentityMapperConfig.class})
+@ContextConfiguration(classes = {IdentityMapperConfig.class})
 class IdentityMapperIntTest {
 
+  public static final String DMN_MIMETYPE = "application/vnd.triso-dmn+json";
+  public static final String CMMN_MIMETYPE = "application/vnd.triso-cmmn+json";
   @Autowired
   IdentityMapper identityMapper;
 
@@ -61,6 +63,18 @@ class IdentityMapperIntTest {
     assertEquals(expectedArtifactId, artifactId);
   }
 
+  @Test
+  void getArtifactId_nonPublishedModel() {
+    // valid assetId; non-published model, so not in our query set
+    URIIdentifier assetId = DatatypeHelper.uri(Registry.MAYO_ASSETS_BASE_URI + "3c66cf3a-93c4-4e09-b1aa-14088c76dead", "1.0.0-SNAPSHOT");
+    try {
+      String artifactId = identityMapper.getArtifactId(assetId);
+      assertNull(artifactId);
+    } catch (NotLatestVersionException e) {
+      fail(e.getMessage());
+    }
+
+  }
   @Test
   void getEnterpriseAssetIdForAsset() {
     UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
@@ -141,7 +155,6 @@ class IdentityMapperIntTest {
 
   @Test
   void getAssetId_ArtifactIdVersion_noArtifactWithVersion() {
-    // TODO: this may not be a valid test for identityMapper -- maybe TrisotechWrapper -- CAO
     URIIdentifier artifactId = DatatypeHelper
         .uri("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5");
     String versionTag = "1.2.0";
@@ -149,6 +162,24 @@ class IdentityMapperIntTest {
     NotLatestVersionException ave = assertThrows(
         NotLatestVersionException.class, () -> identityMapper.getAssetId(artifactId, versionTag));
     assertEquals(artifactId.getUri().toString(), ave.getMessage());
+  }
+
+
+  @Test
+  void getAssetId_ArtifactIdVersion_invalidArtifact() {
+    URIIdentifier artifactId = DatatypeHelper
+        .uri("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5abc");
+    String versionTag = "1.2.0";
+    try {
+      Optional<URIIdentifier> assetId = identityMapper.getAssetId(artifactId, versionTag);
+      assertNotNull(assetId);
+      assertFalse(assetId.isPresent());
+      assertEquals(Optional.empty(), assetId);
+    } catch (NotLatestVersionException e) {
+      fail(e.getMessage());
+      e.printStackTrace();
+    }
+
   }
 
   @Test
@@ -161,13 +192,57 @@ class IdentityMapperIntTest {
   }
 
   @Test
-  void getMimetype() {
+  void getMimetype_CMMN() {
     UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
-    String expectedMimetype = "application/vnd.triso-cmmn+json";
     Optional<String> mimetype = identityMapper.getMimetype(assetId);
     assertNotNull(mimetype);
-    assertEquals(expectedMimetype, mimetype.get());
+    assertEquals(CMMN_MIMETYPE, mimetype.get());
   }
 
+  @Test
+  void getMimetype_DMN() {
+    UUID assetId = UUID.fromString("bd0014e6-afbe-4006-b182-baa973f2929a");
+    Optional<String> mimetype = identityMapper.getMimetype(assetId);
+    assertNotNull(mimetype);
+    assertEquals(DMN_MIMETYPE, mimetype.get());
+  }
+
+  @Test
+  void getMimetype_invalidId() {
+    UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e123");
+    Optional<String> mimetype = identityMapper.getMimetype(assetId);
+    assertNotNull(mimetype);
+    assertFalse(mimetype.isPresent());
+    assertEquals(Optional.empty(), mimetype);
+  }
+
+  @Test
+  void getMimetype_internalId_CMMN() {
+    Optional<String> mimetype = identityMapper.getMimetype("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5");
+    assertNotNull(mimetype);
+    assertEquals(CMMN_MIMETYPE, mimetype.get());
+  }
+
+  @Test
+  void getMimetype_internalId_DMN() {
+    Optional<String> mimetype = identityMapper.getMimetype("http://www.trisotech.com/definitions/_c2e182f5-96a2-4ced-958a-8c43b7469b26");
+    assertNotNull(mimetype);
+    assertEquals(DMN_MIMETYPE, mimetype.get());
+  }
+
+  @Test
+  void getMimetype_internalId_invalidId() {
+    Optional<String> mimetype = identityMapper.getMimetype("http://www.trisotech.com/definitions/_e36338e7-500c-43a0-881d-22aa5dc538df");
+    assertNotNull(mimetype);
+    assertFalse(mimetype.isPresent());
+    assertEquals(Optional.empty(), mimetype);
+
+  }
+
+  @Test
+  void getOrderedModels() {
+    List<Resource> models = identityMapper.getOrderedModels();
+    assertNotNull(models);
+  }
 
 }

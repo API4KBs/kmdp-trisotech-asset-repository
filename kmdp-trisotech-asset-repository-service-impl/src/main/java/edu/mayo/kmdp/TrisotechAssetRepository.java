@@ -16,6 +16,9 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_UPPER;
 import static edu.mayo.kmdp.util.ws.ResponseHelper.notSupported;
 import static edu.mayo.kmdp.util.ws.ResponseHelper.succeed;
 
@@ -136,7 +139,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
       dox = weaver.weave(TrisotechWrapper.downloadXmlModel(trisotechFileInfo.getUrl()));
       ka = extractor.extract(dox, trisotechFileInfo);
     } catch (NotLatestVersionException e) {
-      logger.debug("error message from NotLatestVersionException: " + e.getMessage());
+      logger.debug("error message from NotLatestVersionException: {}", e.getMessage());
       // check other versions of the model
       try {
         ka = findArtifactVersionForAsset(e.getMessage(), assetId, versionTag);
@@ -216,10 +219,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
       Integer offset, Integer limit) {
     List<TrisotechFileInfo> trisotechFileInfoList;
 
-    if ("CMMN".equalsIgnoreCase(assetType)) {
+    if (CMMN_UPPER.equalsIgnoreCase(assetType)) {
       // get CMMN assets
       trisotechFileInfoList = TrisotechWrapper.getPublishedCMMNModelsFileInfo();
-    } else if ("DMN".equalsIgnoreCase(assetType)) {
+    } else if (DMN_UPPER.equalsIgnoreCase(assetType)) {
       // DMN
       trisotechFileInfoList = TrisotechWrapper.getPublishedDMNModelsFileInfo();
     } else {
@@ -258,9 +261,16 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     return notSupported();
   }
 
-  // corresponds to this uri:  /cat/assets/{assetId}/versions/{versionTag}/
-  // KnowledgeCarrier:
-  //A Resource that wraps a Serialized, Encoded Knowledge Artifact
+  /**
+   *  corresponds to this uri:  /cat/assets/{assetId}/versions/{versionTag}/
+   *  KnowledgeCarrier:
+   *  A Resource that wraps a Serialized, Encoded Knowledge Artifact
+   *
+   * @param assetId assetId of the asset
+   * @param versionTag version of the asset
+   * @param extAccept ???
+   * @return
+   */
   @Override
   public ResponseEntity<KnowledgeCarrier> getCanonicalKnowledgeAssetCarrier(UUID assetId,
       String versionTag, String extAccept) {
@@ -313,21 +323,15 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
   private String getInternalIdAndVersion(UUID assetId, String versionTag)
       throws NotLatestVersionException {
-    try {
       String internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag);
       Optional<String> version = extractor.getArtifactVersion(assetId);
       return convertInternalId(internalId,
           version.orElse(null)); // TODO: better alternative? error? CAO
-    } catch (NotLatestVersionException e) {
-      // TODO: handle exception here? CAO
-      logger.error(e.getStackTrace().toString());
-      throw e;
-    }
   }
 
   /**
-   * Need the Trisotech path converted to KMDP path and underscores removed TODO: move to utility
-   * class? put in extractor?  The other place this happens is Weaver CAO
+   * Need the Trisotech path converted to KMDP path and underscores removed
+   * TODO: move to utility class? put in extractor?  The other place this happens is Weaver CAO
    *
    * @param internalId the Trisotech internal id for the model
    * @return the KMDP-ified internal id
@@ -341,10 +345,18 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     }
   }
 
-  // corresponds to this uri: /cat/assets/{assetId}/versions/{versionTag}/carriers/{artifactId}/versions/{artifactVersionTag}
-  // Retrieves (a copy of) a specific version of an Artifact.
-  // That Artifact must be known to the client to carry at least one expression, in some language, of the given Knowledge Asset.
-  // TODO: only return if the assetId/version is associated with the artifactid/version provided? CAO
+  /**
+   * Retrieves (a copy of) a specific version of an Artifact.
+   * That Artifact must be known to the client to carry at least one expression, in some language, of the given Knowledge Asset.
+   * corresponds to this uri: /cat/assets/{assetId}/versions/{versionTag}/carriers/{artifactId}/versions/{artifactVersionTag}
+   * only return if the assetId/version is associated with the artifactid/version provided
+   *
+   * @param assetId enterprise asset ID
+   * @param versionTag version for the asset
+   * @param artifactId artifact ID
+   * @param artifactVersionTag version for the artifact
+   * @return
+   */
   @Override
   public ResponseEntity<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(UUID assetId,
       String versionTag, UUID artifactId, String artifactVersionTag) {
@@ -386,12 +398,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           // a specific version of knowledge asset carrier (fileId)
           VersionIdentifier latestArtifactVersion = TrisotechWrapper
               .getLatestVersion(fileId.get());
-          if (logger.isDebugEnabled()) {
-            logger.debug(String
-                .format("latestArtifactVersion versionTag %s", latestArtifactVersion.getVersion()));
-            logger.debug(
-                String.format("latestArtifactVersion Tag %s", latestArtifactVersion.getTag()));
-          }
+            logger.debug("latestArtifactVersion version {}", latestArtifactVersion.getVersion());
+            logger.debug("latestArtifactVersion Tag {}", latestArtifactVersion.getTag());
 
           // TODO: discuss w/Davide -- what needs to be set on the KnowledgeCarrier? CAO
           carrier = new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
@@ -503,7 +511,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
 
 
   private boolean isDMNModel(TrisotechFileInfo fileInfo) {
-    return fileInfo.getMimetype().contains("dmn");
+    return fileInfo.getMimetype().contains(DMN_LOWER);
   }
 
   @Override

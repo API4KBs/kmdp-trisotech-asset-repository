@@ -89,7 +89,6 @@ class WeaverTest {
     }
   }
 
-  // TODO: How is 'default' different than test above? What is considered 'default'? CAO
   @Test
   void testWeaveDefault() {
     String path = "/Weaver Test 1.dmn";
@@ -108,32 +107,6 @@ class WeaverTest {
       fail(ie.getMessage());
     }
   }
-
-
-  // TODO: Needed? CAO
-  @Disabled
-  @Test
-  void testWeaveSalience() {
-    // TODO: If needed, need a new dmn for testing
-    String path = "/Salient.dmn";
-    Document dox = loadXMLDocument(resolveResource(path))
-        .orElseGet(() -> fail("Unable to load document " + path));
-
-    try {
-      assertTrue(validate(dox, DMN_1_2.getRef()));
-      streamXMLDocument(dox, System.out);
-
-//			List<Annotation> props = loadAnnotations( dox, KnownAttributes.SALIENCE, Annotation.class );
-//			assertEquals( 1, props.size() );
-//			assertTrue( props.get( 0 ) instanceof DatatypeAnnotation );
-//			assertEquals( "33", ((DatatypeAnnotation) props.get( 0 )).getValue() );
-
-    } catch (IllegalStateException ie) {
-      ie.printStackTrace();
-      fail(ie.getMessage());
-    }
-  }
-
 
   @Test
   void testVariousMetadataOnDMN_BasicDecision() {
@@ -605,7 +578,7 @@ class WeaverTest {
     asElementStream(elements).forEach(
         (el) -> {
           NamedNodeMap attributes = el.getAttributes();
-          int attrSize = attributes.getLength(); // TODO: filter? map? doable with NamedNodeMap? CAO
+          int attrSize = attributes.getLength();
           for (int i = 0; i < attrSize; i++) {
             Attr attr = (Attr) attributes.item(i);
             if ((weaver.getMetadataNS().equals(attr.getNamespaceURI()))

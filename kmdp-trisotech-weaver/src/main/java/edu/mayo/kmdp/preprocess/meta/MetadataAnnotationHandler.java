@@ -16,22 +16,15 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import java.util.List;
 
 
 /**
  * Rewrites proprietary tags explicitly
  */
 public class MetadataAnnotationHandler extends BaseAnnotationHandler {
-	private ReaderConfig config;
-
-	public MetadataAnnotationHandler( ReaderConfig config ) {
-		this.config = config;
-	}
 
 	@Override
 	public void replaceProprietaryElement( Element oldEl, Element newEl ) {

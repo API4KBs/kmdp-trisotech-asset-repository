@@ -16,6 +16,7 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import edu.mayo.kmdp.util.URIUtil;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
 import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
@@ -26,6 +27,8 @@ import java.util.Optional;
 
 /*
  Trisotech ... explain yourself
+
+Is this class really needed if it is just 'wrapping' AnnotationRelType?
 
  This class ensures that the names used in the 'published' artifacts
  are up to date. [original description ... what does it mean?]
@@ -41,6 +44,11 @@ public enum KnownAttributes {
 	TYPE( AnnotationRelType.Is_A.getLabel(),
 			"assetType",
 			AnnotationRelType.Is_A.getRef() ),
+
+  DATA(DependencyType.Imports.getLabel(),
+      "imports",
+      DependencyType.Imports.getRef()),
+
 
 	// on expressions (models or fragments)
 

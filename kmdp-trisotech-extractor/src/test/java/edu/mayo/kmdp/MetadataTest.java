@@ -338,4 +338,13 @@ class MetadataTest {
   }
 
 
+  @Test
+  void testGetFileId_internalId_URIString_empty() {
+    Optional<String> fileid = extractor.getFileId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e7abcd");
+    assertNotNull(fileid);
+    assertFalse(fileid.isPresent());
+    assertEquals(Optional.empty(), fileid);
+  }
+
+
 }

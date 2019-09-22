@@ -31,7 +31,6 @@ import edu.mayo.kmdp.SurrogateHelper;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
-import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.metadata.surrogate.Association;
 import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
@@ -127,25 +126,22 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
       throw new IllegalStateException("Failed to have artifact in Document");
     }
 
-    logger.debug(String.format("docId: %s", docId));
+    logger.debug("docId: {}", docId);
 
     Optional<URIIdentifier> assetID = getAssetID(dox);
     // TODO: Should processing fail if no assetID? CAO
-    logger.debug(
-        String.format("assetID: %s", assetID.isPresent() ? assetID.get() : Optional.empty()));
-
-    // TODO: what to do if not present? CAO
+    if(logger.isDebugEnabled()) {
+      logger.debug("assetID: {}", assetID.isPresent() ? assetID.get() : Optional.empty());
+    }
     // for the surrogate, want the version of the artifact
     URIIdentifier artifactId = DatatypeHelper.uri(docId.get(), meta.getVersion());
 
     // artifact<->artifact relation
     Set<Resource> theTargetArtifactId = mapper.getArtifactImports(docId);
-    if(logger.isDebugEnabled()) {
-      if (null != theTargetArtifactId) {
-        logger.debug(String.format("theTargetArtifactId: %s", theTargetArtifactId.toString()));
-      } else {
-        logger.debug("theTargetArtifactId is null");
-      }
+    if (null != theTargetArtifactId) {
+      logger.debug("theTargetArtifactId: {}", theTargetArtifactId);
+    } else {
+      logger.debug("theTargetArtifactId is null");
     }
     List<URIIdentifier> theTargetAssetId = mapper.getAssetRelations(docId);
 
@@ -211,7 +207,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //
 //    // TODO: Needed? yes Maybe not anymore due to mapper code CAO
 //    // Dependencies TODO: [asset -> asset ] CAO
-//    resolveDependencies(surr, dox);
+//    resolveDependencies(surr, dox)
 
     return surr;
   }
@@ -234,9 +230,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
           break;
       }
     }
-    if(logger.isDebugEnabled()) {
-      logger.debug("lifecycle = " + lifecycle.getPublicationStatus().toString());
-    }
+    logger.debug("lifecycle = {}", lifecycle.getPublicationStatus());
 
     return lifecycle;
   }
@@ -274,91 +268,19 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
                 .withRel(DependencyType.Depends_On)
                 .withTgt(new KnowledgeAsset().withAssetId(uriIdentifier)
                     .withName(uriIdentifier
-                        .toString()))) // TODO: Ask Davide -- is something else expected here? have to have name to pass SAXParser CAO
+                        .toString()))) // TODO: Ask Davide -- is something else expected here as name value? have to have name to pass SAXParser CAO
         .collect(Collectors.toList());
-//    if(null != theTargetAssetId && theTargetAssetId.size() > 0) {
-//      for (URIIdentifier uri : theTargetAssetId) {
-//        new Dependency()
-//            .withRel(DependencyType.Depends_On)
-//            .withTgt(new KnowledgeAsset().withAssetId(uri)); // nothing else
-//      }
   }
 
-//  // this is the ideal -- don't recall exactly from the conversation several weeks ago, BUT I believe the following is meant to replace the extractXML() code
-//  public KnowledgeAsset metadata() {
-//    return new KnowledgeAsset()
-//        // from the metadata / explicit manually set id
-//        // these come from the modelInfo
-//        .withAssetId(assetId)
-//        .withName(modelName)
-//        .withTitle(modelName)
-//        .withDescription(maybe ?)
-//        // these come from the annotations
-//        .withFormalCategory(Assessment_Predictive_And_Inferential_Models or Plans_Processes_Pathways_And_Protocol_Definitions)
-//        .withFormalType(Semantic_Decision_Model or Cognitive_Care_Process_Model)
-//        // plug in all the annotations - only the ones of type Simple/MultiWord Annotations, i.e. the ones whose 'expr' is a ClinicalSituation
-//        // or a 'focal concept'
-//        .withSubject(annotationList)
-//        // May still evolve
-//        .withLifecycle(new Publication().withPublicationStatus(publicationStatus))
-//        // Some work needed to infer the dependencies
-//        .withRelated(new Dependency()
-//            .withRel(DependencyType.Depends_On)
-//            .withTgt(new KnowledgeAsset().withAssetId(theTargetAssetId)) // nothing else
-//        )
-//        .withCarriers(new ComputableKnowledgeArtifact()
-//                .withArtifactId(artifactId) // from the document targetNamespace [subject in triples]
-//                .withLocalization(Language.English)
-//                .withExpressionCategory(KnowledgeArtifactCategory.Software)
-//
-////                    .withInlined( (serialize the woven document) ) // NOT really at least for now
-//                // the final URL/API call in either the KAssR or the KArtR where to get the artifact
-//                // either 'assetRepo.getDefaultCarrier(ids..)' or artifactRepo.getArtifact(ids..)'
-//                // may leave it out for now
-//                //.withLocator( url )
-//                .withRepresentation(new Representation()
-//                    .withLanguage(DMN_1_2 or CMMN_1_1)
-//                    .withFormat(SerializationFormat.XML_1_1)
-//                    .withLexicon(Lexicon.PCV)
-//                    .withSerialization(DMN_1_2_XML_Syntax or CMMN_1_1_XML_Syntax)
-//                )
-//                .withRelated(
-//                    new Dependency().withRel(DependencyType.Imports)
-//                        .withTgt(theTargtArtifactId)
-//                )
-//
-//
-//        );
-//
-//  }
-
-  // TODO: Is this needed anymore?  KnowledgeExpression no longer exists? CAO
-  // TODO: CAO
-  //  From code review: checks the file for a specific asset type instead of the default --- could return type and use above or else default
-//  protected void trackRepresentationInfo(List<Annotation> annotations) {
-//
-//
-//    annotations.stream()
-//            .filter((ann) -> ann.getRel().equals(KnownAttributes.TYPE.asConcept()))
-//            .forEach((ann) -> {
-//              if (!(ann instanceof SimpleAnnotation)) {
-//                throw new IllegalStateException("Asset Type annotation: expected Simple Type, found " + ann.getClass().getName());
-//              }
-//              SimpleAnnotation sa = (SimpleAnnotation) ann;
-//              surr.withType(KnowledgeAssetType.resolve(sa.getExpr())
-//                      .orElseThrow(() -> new IllegalStateException("Unable to resolve type-safe annotation " + sa.getExpr())));
-//            });
-//  }
 
   // TODO: Is this needed? Yes -- need example models to work from CAO
   protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
 //    annotations.stream()
-//        .filter((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept())
+//        .filter(ann -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept())
 //            || ann.getRel().equals(AnnotationRelType.Defines.asConcept())
 //            || ann.getRel().equals(AnnotationRelType.In_Terms_Of.asConcept()))
 //        .forEach(surr::withSubject);
-    return;
-  }
+
     // TODO: Needed? Am not finding use of Computable_Decision_Model in test models CAO
 //    if (surr.getType().contains(KnowledgeAssetType.Computable_Decision_Model)
 //            && annotations.stream().anyMatch((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept()))) {
@@ -379,36 +301,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //              .forEach((typeCode) -> surr.withRelated(new Dependency().withRel(DependencyType.Effectuates)
 //                      .withTgt(buildFhir2Datatype(typeCode))));
 //    }
-//  }
-
-//  private String stripIdFromUri(String uri) {
-//    return StringUtils.substringBefore(StringUtils.substringAfterLast(uri, "/"), ".");
-//  }
-
-  // TODO: What is this doing? is it needed anymore? yes; can help with dependency mappings
-  //  Re-evaluate mapper code for support of Trisotech data and CAO
-  // need to know kA has dependencies asserted; need to put in KA, but maybe not in this manner
-//  private void resolveDependencies(KnowledgeAsset surr, Document dox) {
-//    NodeList refs = xList(dox, "//*[@externalRef]");
-//    asElementStream(refs).filter((n) -> n.hasAttribute("xmlns"))
-//        .map((n) -> n.getAttribute("xmlns"))
-//        .map(this::stripIdFromUri)
-//        .filter(mapper::hasIdMapped)
-//        .forEach((artifactId) -> {
-//          mapper.getAssetId(artifactId) // TODO: artifactId or assetId??? is this supposed to be mapping artifact->asset or artifact->artifact?
-//              // TODO: cont: my mapper will map artifacts->artifacts, so to get asset, need to get the file for the artifact? CAO
-//              .ifPresent((assetId) -> {
-//                KnowledgeAsset ka = new KnowledgeAsset();
-//                ka.setAssetId(mapper.associate(surr.getAssetId(),
-//                    artifactId,
-//                    DependencyType.Depends_On));
-//
-//                surr.getRelated().add(
-//                    new Dependency().withRel(DependencyType.Depends_On)
-//                        .withTgt(ka));
-//              });
-//        });
-//  }
+  }
 
 
   // used to pull out the annotation values from the woven dox
@@ -446,9 +339,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
           throw new IllegalStateException("Missing or duplicated input concept");
         }
 
-        // TODO: Needed? yes CAO
         SimpleAnnotation inputAnno = inputAnnos.stream()
-//                .filter(ann -> KnownAttributes.CAPTURES.asConcept().equals(ann.getRel())) // TODO: Needed? yes needed, but need better example files CAO
+//                .filter(ann -> KnownAttributes.CAPTURES.asConcept().equals(ann.getRel())) // TODO: Needed? yes needed, but need better example files, no sample files have CAPTURES CAO
             .map(SimpleAnnotation.class::cast)
             .map(sa -> new SimpleAnnotation().withRel(AnnotationRelType.In_Terms_Of.asConcept())
                 .withExpr(sa.getExpr()))
@@ -457,9 +349,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
       }
     }
 
-    if(logger.isDebugEnabled()) {
-      logger.debug("end of extractAnnotations; have annos size: " + annos.size());
-    }
+    logger.debug("end of extractAnnotations; have annos size: {} ", annos.size());
     return annos;
   }
 
@@ -521,27 +411,18 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     // long form
     List<Annotation> annotations = extractAnnotations(dox);
     for (Annotation annotation : annotations) {
-      if (logger.isDebugEnabled()) {
-        logger.debug(String.format("annotation: %s", annotation.toString()));
-      }
+      logger.debug("annotation: {}", annotation);
       if (null != annotation.getRel() && annotation.getRel()
           .equals(KnownAttributes.ASSET_IDENTIFIER.asConcept())) {
-        if (logger.isDebugEnabled()) {
-          logger.debug(String.format("annotation.getRel: %s", annotation.getRel().toString()));
-          logger.debug(
-              String.format("ASSET_IDENTIFIER asConcept: %s",
-                  KnownAttributes.ASSET_IDENTIFIER.asConcept()
-                      .toString()));
-          logger.debug(String.format("class: %s", annotation.getClass().toString()));
-          logger.debug(
-              String.format("is BasicAnnotation: %s",
-                  annotation.getClass().isInstance(BasicAnnotation.class)));
-          logger.debug(
-              String.format("isAssignableFrom BasicAnnotation: %s", annotation.getClass()
-                  .isAssignableFrom(BasicAnnotation.class)));
-          logger.debug(
-              String.format("expr: %s", ((BasicAnnotation) annotation).getExpr().toString()));
-        }
+        logger.debug("annotation.getRel: {}", annotation.getRel());
+        logger.debug("ASSET_IDENTIFIER asConcept: {}",
+                KnownAttributes.ASSET_IDENTIFIER.asConcept());
+        logger.debug("class: {}", annotation.getClass());
+        logger.debug("is BasicAnnotation: {}",
+                annotation.getClass().isInstance(BasicAnnotation.class));
+        logger.debug("isAssignableFrom BasicAnnotation: {}", annotation.getClass()
+                .isAssignableFrom(BasicAnnotation.class));
+        logger.debug("expr: {}", ((BasicAnnotation) annotation).getExpr());
       }
 
     }

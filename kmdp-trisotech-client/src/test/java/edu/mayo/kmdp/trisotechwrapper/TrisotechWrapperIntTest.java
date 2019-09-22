@@ -426,7 +426,7 @@ class TrisotechWrapperIntTest {
     assertTrue("Weaver Test 1".equals(fileInfo.getName()));
     assertTrue(WEAVER_TEST_1_ID.equals(fileInfo.getId()));
     assertTrue(fileInfo.getUrl().contains("&mimetype="));
-    assertTrue(fileInfo.getMimetype().contains("dmn"));
+    assertTrue(fileInfo.getMimetype().contains(DMN_LOWER));
   }
 
   @Test
@@ -436,7 +436,7 @@ class TrisotechWrapperIntTest {
     assertTrue("Weave Test 1".equals(fileInfo.getName()));
     assertTrue(WEAVE_TEST_1_ID.equals(fileInfo.getId()));
     assertTrue(fileInfo.getUrl().contains("&mimetype="));
-    assertTrue(fileInfo.getMimetype().contains("cmmn"));
+    assertTrue(fileInfo.getMimetype().contains(CMMN_LOWER));
   }
 
   @Test

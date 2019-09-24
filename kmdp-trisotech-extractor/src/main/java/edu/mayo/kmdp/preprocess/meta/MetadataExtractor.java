@@ -38,6 +38,8 @@ import java.util.Properties;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -48,6 +50,8 @@ import org.w3c.dom.Document;
  */
 @Component
 public class MetadataExtractor {
+
+  private static final Logger logger = LoggerFactory.getLogger(MetadataExtractor.class);
 
   public enum Format {
     JSON(".json"),
@@ -83,9 +87,11 @@ public class MetadataExtractor {
 
   @PostConstruct
   public void init() {
-    System.out.println("metadataExtractor postconstruct ctor... with mapper: " + mapper);
-    System.out.println("now have strategy: " + strategy);
-    System.out.println("set mapper on strategy");
+    if(logger.isDebugEnabled()) {
+      logger.debug("metadataExtractor postconstruct ctor... with mapper: " + mapper);
+      logger.debug("now have strategy: " + strategy);
+      logger.debug("set mapper on strategy");
+    }
     strategy.setMapper(mapper);
   }
 
@@ -187,7 +193,7 @@ public class MetadataExtractor {
    */
   public URIIdentifier resolveEnterpriseAssetID(String fileId) {
     // TODO: Need consistency ... return Optional.empty? or throw an error? CAO; should all methods return Optional<T>?
-    return strategy.getAssetId(fileId)
+    return strategy.getAssetID(fileId)
         .orElseThrow(() -> new IllegalStateException(
             "Defensive: Unable to resolve internal ID " + fileId + " to a known Enterprise ID"));
   }
@@ -208,7 +214,7 @@ public class MetadataExtractor {
     // need to find the artifactId for this version of assetId
     // URIIdentifer built with assetId and versionTag; allows for finding the artifact associated with this asset/version
     URIIdentifier id = DatatypeHelper.uri(assetId, versionTag);
-    return strategy.getArtifactId(id);
+    return strategy.getArtifactID(id);
   }
 
 }

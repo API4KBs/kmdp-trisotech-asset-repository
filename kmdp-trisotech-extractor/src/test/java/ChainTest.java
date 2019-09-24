@@ -1,17 +1,27 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ *
+ * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
@@ -28,29 +38,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import edu.mayo.kmdp.ChainConverterConfig;
-import edu.mayo.kmdp.ExtractorConfig;
-import edu.mayo.kmdp.IdentityMapperConfig;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
-
-import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.util.JaxbUtil;
-import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.ChainConverter;
-import edu.mayo.kmdp.Model;
-import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,17 +45,37 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-// TODO: fix this. currently the jaxbutil.unmarshall is broken after upgrading to latest libraries from dev CAO
+import edu.mayo.kmdp.ChainConverter;
+import edu.mayo.kmdp.ChainConverterConfig;
+import edu.mayo.kmdp.ExtractorConfig;
+import edu.mayo.kmdp.IdentityMapperConfig;
+import edu.mayo.kmdp.Model;
+import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
+import edu.mayo.kmdp.registry.Registry;
+import edu.mayo.kmdp.util.JaxbUtil;
+import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
 @SpringBootTest
 @SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class,
     ChainConverterConfig.class})
 class ChainTest {
 
+  // FYI: The IDE may complain that it can't find a Bean for chainConverter,
+  // but it's an issue with IDE. The code works.
   @Autowired
-  ChainConverter chainConverter;
+  private ChainConverter chainConverter;
 
   private Model convert(InputStream model, InputStream meta, KnowledgeRepresentationLanguage type) {
-    Model m = chainConverter.convert(meta, model, type); // new ChainConverter().convert(meta, model, type);
+    Model m = chainConverter.convert(meta, model, type);
 
     assertNotNull(m.getModel());
     assertNotNull(m.getSurrogate());
@@ -99,10 +106,7 @@ class ChainTest {
       Optional<KnowledgeAsset> s = JaxbUtil.unmarshall(ObjectFactory.class,
           KnowledgeAsset.class,
           m.getSurrogate());
-//      .unmarshall(ObjectFactory.class,
-//          KnowledgeAsset.class,
-//          m.getSurrogate(),
-//          JaxbUtil.defaultProperties());
+
       assertTrue(s.isPresent());
       assertEquals(expectedAssetId,
           s.get().getAssetId().getUri().toString());
@@ -118,7 +122,6 @@ class ChainTest {
 
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       XMLUtil.streamXMLDocument(m.getModel(), baos);
-//      System.out.println("what is in baos? " + new String(baos.toByteArray()));
       assertTrue(new String(baos.toByteArray()).contains(
           "KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"));
 
@@ -141,10 +144,10 @@ class ChainTest {
       String expectedAssetVersionId =
           Registry.MAYO_ASSETS_BASE_URI + expectedAssetTag + "/versions/" + expectedVersion;
       String expectedArtifactTag = "5682fa26-b064-43c8-9475-1e4281e74068";
+      String expectedArtifactVersion = "1.8";
       String expectedArtifactId =
           CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
-      String expectedArtifactVersionId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI
-          + expectedArtifactTag + "/versions/1.8";
+      String expectedArtifactVersionId = expectedArtifactId + "/versions/" + expectedArtifactVersion;
 
       Model m = convert(dmn, meta, KnowledgeRepresentationLanguage.DMN_1_2);
 
@@ -184,15 +187,14 @@ class ChainTest {
       String cmmnPath = "/Basic Case Model.cmmn"; // cao: The xml for the CMMN
       InputStream cmmn = ChainTest.class.getResourceAsStream(cmmnPath);
       String modelInfoPath = "/Basic Case ModelMeta.json";
-      String expectedAssetVersionId =
-          Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
       String expectedAssetId =
           Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c";
+      String expectedAssetVersionId = expectedAssetId + "/versions/1.0.1";
       String expectedAssetTag = "14321e7c-cb9a-427f-abf5-1420bf26e03c";
-      String expectedArtifactVersionId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI
-          + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.8.0";
       String expectedArtifactId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI
           + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
+      String expectedArtifactVersionId = expectedArtifactId
+          + "/versions/1.8.0";
 
       InputStream modelInfo = ChainTest.class.getResourceAsStream(modelInfoPath);
 
@@ -202,8 +204,6 @@ class ChainTest {
           KnowledgeAsset.class,
           m.getSurrogate());
       assertTrue(s.isPresent());
-      System.out.println("s: " + s.get());
-      System.out.println("s assetId: " + s.get().getAssetId());
       assertEquals(expectedAssetVersionId, s.get().getAssetId().getVersionId().toString());
       assertEquals(expectedAssetId, s.get().getAssetId().getUri().toString());
       assertEquals(expectedAssetTag, s.get().getAssetId().getTag());
@@ -248,8 +248,6 @@ class ChainTest {
           KnowledgeAsset.class,
           m.getSurrogate());
       assertTrue(s.isPresent());
-      System.out.println("s: " + s.get());
-      System.out.println("s assetId: " + s.get().getAssetId());
       assertEquals(expectedAssetTag, s.get().getAssetId().getTag());
       assertEquals(expectedAssetId,
           s.get().getAssetId().getUri().toString());

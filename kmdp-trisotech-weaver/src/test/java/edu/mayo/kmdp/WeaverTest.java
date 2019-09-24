@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp;
 
@@ -29,14 +27,15 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
+import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
 import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,22 +61,9 @@ class WeaverTest {
   @Autowired
   private Weaver weaver;
 
-  @BeforeEach
-  void setUp() {
-//    weaver = new Weaver();
-  }
-
   @Test
   void testInit() {
     assertNotNull(weaver);
-
-//    try {
-//      new Weaver();
-//
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//      fail(e.getMessage());
-//    }
   }
 
 
@@ -88,14 +74,11 @@ class WeaverTest {
 
     // using XMLUtil loadXMLDocument to load the XML Document properly
     // sets up the document for conversion by setting namespaceaware
-    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
     try {
-//      new Weaver().weave(dox);
       weaver.weave(dox);
       streamXMLDocument(dox, System.out);
-      System.out.println("KRLanguage DMN1.2 ref: " + DMN_1_2.getRef());
-      System.out.println("registry getValidationSchema for KRLanguage ref: " + Registry.getValidationSchema(
-          DMN_1_2.getRef()).get());
 
       assertTrue(true); // dummy
       // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
@@ -110,12 +93,12 @@ class WeaverTest {
   @Test
   void testWeaveDefault() {
     String path = "/Weaver Test 1.dmn";
-    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
 
     try {
-//      new Weaver().weave(dox);
-weaver.weave(dox);
-      assertTrue(true); // dummy
+      weaver.weave(dox);
+      assertTrue(true); // dummy assertion so sonarlint doesn't complain
       // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
 //			assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
 
@@ -133,11 +116,10 @@ weaver.weave(dox);
   void testWeaveSalience() {
     // TODO: If needed, need a new dmn for testing
     String path = "/Salient.dmn";
-    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
 
     try {
-//      new Weaver();
-
       assertTrue(validate(dox, DMN_1_2.getRef()));
       streamXMLDocument(dox, System.out);
 
@@ -157,24 +139,24 @@ weaver.weave(dox);
   void testVariousMetadataOnDMN_BasicDecision() {
     String path = "/Basic Decision Model.dmn";
 
-    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
-
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
 
     assertTrue(true); // dummy
     // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
 //		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
 
     try {
-//      new Weaver().weave(dox);
-weaver.weave(dox);
+      weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
 
-      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class).iterator().next();
-      assertEquals("https://clinicalknowledgemanagement.mayo.edu/assets/735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0",
+      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER,
+          BasicAnnotation.class).iterator().next();
+      assertEquals(
+          "https://clinicalknowledgemanagement.mayo.edu/assets/735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0",
           id.getExpr().toString());
-
 
       assertTrue(confirmNoTrisoNameSpace(dox));
 
@@ -184,20 +166,17 @@ weaver.weave(dox);
 
       assertTrue(verifyHrefs(dox));
 
-      // TODO: is any of the following still needed? relevant to Trisotech data? CAO
-//			SimpleAnnotation type = loadAnnotations( dox, KnownAttributes.TYPE, SimpleAnnotation.class ).iterator().next();
-//			assertEquals( KnowledgeAssetType.Semantic_Decision_Model.getLabel(),
-//			              type.getExpr().getLabel() );
-//
+      SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
+          .iterator().next();
+      assertEquals(AnnotationRelType.Is_A.getLabel(),
+          type.getRel().getLabel());
+
+      // TODO: no examples of CAPTURES in sample models, provide? CAO
 //			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
 //			assertTrue( props.stream()
 //			                 .anyMatch( (ann) -> ann instanceof SimpleAnnotation
 //					                 && ( ( SimpleAnnotation ) ann ).getExpr().getLabel().contains( "Blood Pressure" ) ) );
 //
-//			List<SimpleAnnotation> subj = loadAnnotations( dox, KnownAttributes.SUBJECT, SimpleAnnotation.class );
-//			assertTrue( subj.stream()
-//			                .anyMatch( (ann) -> ann.getExpr().getLabel().contains( "Diabetes Mellitus" )
-//					                || ann .getExpr().getTag().equals( "0215e32f-cced-4388-b0e0-ec8114e632d2" ) ) );
 
       // TODO: is this something else in Trisotech? CAO
 //		assertEquals( "http://www.foo.bar",
@@ -213,25 +192,26 @@ weaver.weave(dox);
   @Test
   void testVariousMetadataOnDMN_WeaverTest2() {
     String path = "/Weaver Test 2.dmn";
-    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
-
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
 
     assertTrue(true); // dummy
     // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
 //		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
 
     try {
-//      new Weaver().weave(dox);
-weaver.weave(dox);
+      weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
 
-      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class).iterator().next();
-      // this test is for WeaverTest1.dmn; disable for any other file
-      assertEquals("https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT",
-          id.getExpr().toString());
+      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER,
+          BasicAnnotation.class).iterator().next();
 
+      // assert basics for a woven file; this test file doesn't have any valid annotation types to confirm
+      assertEquals(
+          "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT",
+          id.getExpr().toString());
 
       assertTrue(confirmNoTrisoNameSpace(dox));
 
@@ -240,25 +220,6 @@ weaver.weave(dox);
       assertTrue(verifyImportNamespace(dox));
 
       assertTrue(verifyHrefs(dox));
-
-      // TODO: is any of the following still needed? relevant to Trisotech data? CAO
-//			SimpleAnnotation type = loadAnnotations( dox, KnownAttributes.TYPE, SimpleAnnotation.class ).iterator().next();
-//			assertEquals( KnowledgeAssetType.Semantic_Decision_Model.getLabel(),
-//			              type.getExpr().getLabel() );
-//
-//			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
-//			assertTrue( props.stream()
-//			                 .anyMatch( (ann) -> ann instanceof SimpleAnnotation
-//					                 && ( ( SimpleAnnotation ) ann ).getExpr().getLabel().contains( "Blood Pressure" ) ) );
-//
-//			List<SimpleAnnotation> subj = loadAnnotations( dox, KnownAttributes.SUBJECT, SimpleAnnotation.class );
-//			assertTrue( subj.stream()
-//			                .anyMatch( (ann) -> ann.getExpr().getLabel().contains( "Diabetes Mellitus" )
-//					                || ann .getExpr().getTag().equals( "0215e32f-cced-4388-b0e0-ec8114e632d2" ) ) );
-
-      // TODO: is this something else in Trisotech? CAO
-//		assertEquals( "http://www.foo.bar",
-//			              xString( dox, "//dmn:knowledgeSource[@name='all']/@locationURI" ) );
 
     } catch (IllegalStateException ie) {
       ie.printStackTrace();
@@ -270,21 +231,23 @@ weaver.weave(dox);
   @Test
   void testVariousMetadataOnDMN_Subdecision() {
     String path = "/Decision Subdecision.dmn";
-    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
 
     assertTrue(true); // dummy
     // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
 //		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
 
     try {
-//      new Weaver().weave(dox);
-weaver.weave(dox);
+      weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
 
-      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class).iterator().next();
-      assertEquals("https://clinicalknowledgemanagement.mayo.edu/assets/22c207d7-36e2-4935-a634-5205699ce6d0",
+      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER,
+          BasicAnnotation.class).iterator().next();
+      assertEquals(
+          "https://clinicalknowledgemanagement.mayo.edu/assets/22c207d7-36e2-4935-a634-5205699ce6d0",
           id.getExpr().toString());
 
       assertTrue(confirmNoTrisoNameSpace(dox));
@@ -295,20 +258,17 @@ weaver.weave(dox);
 
       assertTrue(verifyHrefs(dox));
 
-      // TODO: is any of the following still needed? relevant to Trisotech data? CAO
-//			SimpleAnnotation type = loadAnnotations( dox, KnownAttributes.TYPE, SimpleAnnotation.class ).iterator().next();
-//			assertEquals( KnowledgeAssetType.Semantic_Decision_Model.getLabel(),
-//			              type.getExpr().getLabel() );
-//
+      SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
+          .iterator().next();
+      assertEquals(AnnotationRelType.Is_A.getLabel(),
+          type.getRel().getLabel());
+
+      // TODO: No example of CAPTURES in test models. provide? CAO
 //			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
 //			assertTrue( props.stream()
 //			                 .anyMatch( (ann) -> ann instanceof SimpleAnnotation
 //					                 && ( ( SimpleAnnotation ) ann ).getExpr().getLabel().contains( "Blood Pressure" ) ) );
 //
-//			List<SimpleAnnotation> subj = loadAnnotations( dox, KnownAttributes.SUBJECT, SimpleAnnotation.class );
-//			assertTrue( subj.stream()
-//			                .anyMatch( (ann) -> ann.getExpr().getLabel().contains( "Diabetes Mellitus" )
-//					                || ann .getExpr().getTag().equals( "0215e32f-cced-4388-b0e0-ec8114e632d2" ) ) );
 
       // TODO: is this something else in Trisotech? CAO
 //		assertEquals( "http://www.foo.bar",
@@ -323,21 +283,23 @@ weaver.weave(dox);
   @Test
   void testVariousMetadataOnDMN_ComputableDecision() {
     String path = "/Computable Decision Model.dmn";
-    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
 
     assertTrue(true); // dummy
     // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
 //		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
 
     try {
-//      new Weaver().weave(dox);
-weaver.weave(dox);
+      weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
 
-      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class).iterator().next();
-      assertEquals("https://clinicalknowledgemanagement.mayo.edu/assets/102117ea-82ed-4c34-91dc-c0aa962fbf66",
+      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER,
+          BasicAnnotation.class).iterator().next();
+      assertEquals(
+          "https://clinicalknowledgemanagement.mayo.edu/assets/102117ea-82ed-4c34-91dc-c0aa962fbf66",
           id.getExpr().toString());
 
       assertTrue(confirmNoTrisoNameSpace(dox));
@@ -348,21 +310,28 @@ weaver.weave(dox);
 
       assertTrue(verifyHrefs(dox));
 
-      // TODO: more to do to confirm Computable Decision
-      // TODO: is any of the following still needed? relevant to Trisotech data? CAO
-//			SimpleAnnotation type = loadAnnotations( dox, KnownAttributes.TYPE, SimpleAnnotation.class ).iterator().next();
-//			assertEquals( KnowledgeAssetType.Semantic_Decision_Model.getLabel(),
-//			              type.getExpr().getLabel() );
-//
+      SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
+          .iterator().next();
+      assertEquals(AnnotationRelType.Is_A.getLabel(),
+          type.getRel().getLabel());
+
+      type = loadAnnotations(dox, KnownAttributes.DEFINES, SimpleAnnotation.class).iterator()
+          .next();
+      assertEquals(AnnotationRelType.Defines.getLabel(),
+          type.getRel().getLabel());
+
+      List<Annotation> props = loadAnnotations(dox, KnownAttributes.INPUTS, Annotation.class);
+      assertTrue(props.stream()
+          .anyMatch(ann -> ann instanceof SimpleAnnotation
+              && (ann).getRel().getLabel()
+              .equals(AnnotationRelType.In_Terms_Of.getLabel())));
+
+// TODO: No example of CAPTURES in test models. Need one? CAO
 //			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
 //			assertTrue( props.stream()
 //			                 .anyMatch( (ann) -> ann instanceof SimpleAnnotation
 //					                 && ( ( SimpleAnnotation ) ann ).getExpr().getLabel().contains( "Blood Pressure" ) ) );
 //
-//			List<SimpleAnnotation> subj = loadAnnotations( dox, KnownAttributes.SUBJECT, SimpleAnnotation.class );
-//			assertTrue( subj.stream()
-//			                .anyMatch( (ann) -> ann.getExpr().getLabel().contains( "Diabetes Mellitus" )
-//					                || ann .getExpr().getTag().equals( "0215e32f-cced-4388-b0e0-ec8114e632d2" ) ) );
 
       // TODO: is this something else in Trisotech? CAO
 //		assertEquals( "http://www.foo.bar",
@@ -378,18 +347,16 @@ weaver.weave(dox);
   void testVariousMetadataOnCMMN_WeaveTest1() {
     String path = "/Weave Test 1.cmmn";
 
-    // loadXMLDocument set setNamespaceAware
-    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
+    // loadXMLDocument sets NamespaceAware
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
 
     try {
 
-      weaver
-          .weave(dox);
+      weaver.weave(dox);
 
       System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
-
-//      System.out.println("registry getValidationSchema for CMMN KRLanguage ref: " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()).get());
 
       assertTrue(validate(dox, KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
 
@@ -402,7 +369,8 @@ weaver.weave(dox);
 
       NodeList metas = dox.getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataEl());
       assertEquals(0, metas.getLength());
-      NodeList relations = dox.getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataRS());
+      NodeList relations = dox
+          .getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataRS());
 
       assertEquals(0, relations.getLength());
 
@@ -416,17 +384,14 @@ weaver.weave(dox);
   void testVariousMetadataOnCMMN_WeaveTest2() {
     String path = "/Weave Test 2.cmmn";
     // loadXMLDocument set setNamespaceAware
-    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
 
     try {
 
-//      new Weaver()
-//          .weave(dox);
-weaver.weave(dox);
+      weaver.weave(dox);
       System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
-
-//      System.out.println("registry getValidationSchema for CMMN KRLanguage ref: " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()).get());
 
       assertTrue(validate(dox, KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
 
@@ -439,7 +404,8 @@ weaver.weave(dox);
 
       NodeList metas = dox.getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataEl());
       assertEquals(0, metas.getLength());
-      NodeList relations = dox.getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataRS());
+      NodeList relations = dox
+          .getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataRS());
 
       assertEquals(0, relations.getLength());
 
@@ -453,24 +419,22 @@ weaver.weave(dox);
   @Test
   void testVariousMetadataOnCMMN_BasicCaseModel() {
     String path = "/Basic Case Model.cmmn";
-    // loadXMLDocument set setNamespaceAware
-    Document dox = loadXMLDocument(resolveResource(path)).orElseGet(() -> fail("Unable to load document " + path));
-    System.out.println("dox for Basic Case Model.cmmn: " + dox);
+    // loadXMLDocument sets NamespaceAware
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
 
     try {
 
-//      new Weaver()
-//          .weave(dox);
-weaver.weave(dox);
+      weaver.weave(dox);
       System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
 
-//      System.out.println("registry getValidationSchema for CMMN KRLanguage ref: " + Registry.getValidationSchema(KnowledgeRepresentationLanguage.CMMN_1_1.getRef()).get());
-
       assertTrue(validate(dox, KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
 
-      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER, BasicAnnotation.class).iterator().next();
-      assertEquals("https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1",
+      BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER,
+          BasicAnnotation.class).iterator().next();
+      assertEquals(
+          "https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1",
           id.getExpr().toString());
 
       assertTrue(confirmDecisionURI(dox));
@@ -482,7 +446,8 @@ weaver.weave(dox);
 
       NodeList metas = dox.getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataEl());
       assertEquals(0, metas.getLength());
-      NodeList relations = dox.getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataRS());
+      NodeList relations = dox
+          .getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataRS());
 
       assertEquals(0, relations.getLength());
 
@@ -509,7 +474,7 @@ weaver.weave(dox);
         .filter(el -> el.getLocalName().equals("caseFileItemDefinition"))
         .forEach(element -> {
           Attr attr = element.getAttributeNode("definitionType");
-          if(null != attr) {
+          if (null != attr) {
             checkAttribute(attr, "definitionType");
           }
         });
@@ -518,11 +483,8 @@ weaver.weave(dox);
 
 
   /**
-   * verify that inputData and requiredInput elements have the correct href values
-   * no longer contain 'trisotech.com' and are KMDP namespaces
-   *
-   * @param dox
-   * @return
+   * verify that inputData and requiredInput elements have the correct href values no longer contain
+   * 'trisotech.com' and are KMDP namespaces
    */
   private boolean verifyHrefs(Document dox) {
     // TODO: check each tag, or just get all href attributes and modify?  use KnownAttributes? CAO
@@ -546,10 +508,8 @@ weaver.weave(dox);
 
 
   /**
-   * verify namespaces on the document root no longer contain 'trisotech.com' and are KMDP namespaces
-   *
-   * @param dox
-   * @return
+   * verify namespaces on the document root no longer contain 'trisotech.com' and are KMDP
+   * namespaces
    */
   private boolean verifyRootNamespaces(Document dox) {
     // get attributes of the first element -- where the namespaces are set
@@ -558,12 +518,6 @@ weaver.weave(dox);
     int attrSize = attributes.getLength();
     for (int i = 0; i < attrSize; i++) {
       Attr attr = (Attr) attributes.item(i);
-
-//      System.out.println("attr value: " + attr.getValue()
-//              + " attr prefix: " + attr.getPrefix()
-//              + " attr localName: " + attr.getLocalName()
-//              + " attr namespaceURI: " + attr.getNamespaceURI()
-//      );
 
       if (!checkAttribute(attr, "xmlns")) {
         return false;
@@ -595,7 +549,8 @@ weaver.weave(dox);
   private boolean checkContainsAttribute(Attr attr, String include) {
     if (attr.getLocalName().contains(include)
         && attr.getValue().contains("trisotech.com")) {
-      fail("should not contain 'trisotech.com' in value: " + " for attribute: " + attr.getLocalName());
+      fail("should not contain 'trisotech.com' in value: " + " for attribute: " + attr
+          .getLocalName());
       return false;
     }
     return true;
@@ -612,7 +567,8 @@ weaver.weave(dox);
   private boolean checkAttribute(Attr attr, String namespace) {
     if (attr.getLocalName().equals(namespace)
         && attr.getValue().contains("trisotech.com")) {
-      fail("should not contain 'trisotech' in value: " + attr.getValue() + " for attribute: " + attr.getLocalName());
+      fail("should not contain 'trisotech' in value: " + attr.getValue() + " for attribute: " + attr
+          .getLocalName());
       return false;
     }
     return true;
@@ -629,7 +585,8 @@ weaver.weave(dox);
                 Attr attr = (Attr) attributes.item(i);
                 if (attr.getLocalName().equals("namespace")) {
                   if (attr.getValue().contains("trisotech.com")) {
-                    fail("should not have " + attr.getValue() + " in attribute: " + attr.getLocalName() + " on parent: " + el.getNodeName());
+                    fail("should not have " + attr.getValue() + " in attribute: " + attr.getLocalName()
+                        + " on parent: " + el.getNodeName());
                   }
                 }
               }
@@ -641,9 +598,6 @@ weaver.weave(dox);
 
   /**
    * Confirm the Trisotech namespaces and namespace attributes have been removed.
-   *
-   * @param dox
-   * @return
    */
   private boolean confirmNoTrisoNameSpace(Document dox) {
     // Confirm no trisotech tags remain:
@@ -675,8 +629,9 @@ weaver.weave(dox);
   }
 
   // TODO: need more capability? CAO
-  private <T extends Annotation> List<T> loadAnnotations(Document dox, KnownAttributes att, Class<T> type) {
-    System.out.println("***** loadAnnotations for knownAttributes: " + att.name() + " and type: " + type.getName());
+  private <T extends Annotation> List<T> loadAnnotations(Document dox, KnownAttributes att,
+      Class<T> type) {
+
     return XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         .filter(el -> el.getLocalName().equals("extensionElements"))
         .map(Element::getChildNodes)

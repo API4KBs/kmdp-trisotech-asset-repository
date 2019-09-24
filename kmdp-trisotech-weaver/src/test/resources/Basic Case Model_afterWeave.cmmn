@@ -50,6 +50,11 @@
         </ann:rel>
       </ann:basicAnnotation>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="is a"
+          ref="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          tag="type">
+          <id:namespace id="http://www.w3.org/1999/02/22-rdf-syntax-ns"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#e12dcd92-f8de-3115-b8ca-4480cfc44d77"
           label="KnowledgeAssetTypes - 20190801 - Cognitive Process Modelin 'KnowledgeAssetTypes - 20190801'"

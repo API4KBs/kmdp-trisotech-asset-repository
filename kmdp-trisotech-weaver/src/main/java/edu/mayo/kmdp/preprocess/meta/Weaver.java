@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.preprocess.meta;
 
@@ -35,11 +33,13 @@ import edu.mayo.kmdp.util.ws.ResponseHelper;
 import edu.mayo.ontology.taxonomies.kao.decisiontype._20190801.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
 import edu.mayo.ontology.taxonomies.propositionalconcepts._20190801.PropositionalConcepts;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -73,12 +73,12 @@ import org.w3c.dom.NodeList;
 @Component
 public class Weaver {
 
-  public static final String TRISOTECH_COM = "trisotech.com";
-  public static final String VALUE = "value";
-  private static Logger logger = LogManager.getLogger(Weaver.class);
+  private static final String TRISOTECH_COM = "trisotech.com";
+  private static final String VALUE = "value";
+  private static final Logger logger = LogManager.getLogger(Weaver.class);
 
   public static final String CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/artifacts/";
-  public static final String WWW_W_3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
+  private static final String WWW_W_3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
 
   @Autowired
   private ModelReader reader;
@@ -106,19 +106,13 @@ public class Weaver {
   private ObjectFactory of = new ObjectFactory();
   private Map<String, BaseAnnotationHandler> handlers = new HashMap<>();
 
-
-//  public Weaver() {
-////    this(new ReaderConfig());
-//  }
-
   public Weaver() {
-//    this.reader = new ModelReader(this.config);
   }
 
   @PostConstruct
   public void init() {
-    System.out.println("Weaver ctor, config is: " + config);
-    System.out.println("Weaver ctor, reader is: " + reader);
+    logger.debug(String.format("Weaver ctor, config is: %s", config));
+    logger.debug(MessageFormat.format("Weaver ctor, reader is: {0}", reader));
 
     metadataNS = config.getTyped(ReaderOptions.P_METADATA_NS);
     metadataDiagramDmnNS = config.getTyped(ReaderOptions.P_METADATA_DIAGRAM_DMN_NS);
@@ -252,6 +246,40 @@ public class Weaver {
     verifyAndRemoveInvalidCaseFileItemDefinition(dox);
 
     return dox;
+  }
+
+  /**
+   * Determine the KnownAttribute based on the key. TODO: this can probably be reworked. wanted to
+   * get something working to discuss results with Davide CAo
+   *
+   * @param el the document element under examination
+   * @return the KnownAttribute to be used in rewriting this element
+   */
+  private KnownAttributes getKnownAttribute(Element el) {
+    String typeScheme = URI.create(el.getAttribute("modelURI")).getSchemeSpecificPart();
+    if (typeScheme.equals(KnowledgeAssetType.schemeURI.getVersionId().getSchemeSpecificPart())) {
+      return KnownAttributes.resolve("assetType").get(); // annotationKey.assetType;
+    } else if (typeScheme.equals(DecisionType.schemeURI.getVersionId().getSchemeSpecificPart())) {
+      logger.debug("Have a DecisionType. Do anything with it?");
+      return null; // TODO: for now, pending below TODO:
+//      return KnownAttributes.resolve(
+//          "decision")
+//          .get(); // annotationKey.decision; // TODO: confirm w/Davide; he didn't give me one for DecisionType CAO
+    } else if (typeScheme
+        .equals(PropositionalConcepts.schemeURI.getVersionId().getSchemeSpecificPart())) {
+// need to figure to what kind
+// need grandparent; parent will always be extensionElements (will this be true for the internal decision??)
+      String grandparent = el.getParentNode().getParentNode().getNodeName();
+      if (grandparent.equals("semantic:decision")) {
+        return KnownAttributes.resolve("defines").get(); // annotationKey.defines;
+      } else if (grandparent.equals("semantic:inputData")) {
+        return KnownAttributes.resolve("inTermsOf").get(); // annotationKey.terms; // In_terms_of
+      } else if (grandparent.equals(
+          "TBD")) {  // TODO: not sure how to handle propositional concepts on internal decision; do not see that in the models CAO
+        return KnownAttributes.resolve("capture").get(); // annotationKey.capture;
+      }
+    } // TODO: error handling
+    return null; //KnownAttributes.resolve("").get();
   }
 
   private void verifyAndRemoveInvalidCaseFileItemDefinition(Document dox) {
@@ -452,6 +480,7 @@ public class Weaver {
     asElementStream(metas)
         .forEach(
             el -> doInjectTerm(el,
+                getKnownAttribute(el),
                 getConceptIdentifiers(el))
         );
   }
@@ -494,6 +523,9 @@ public class Weaver {
 
 
   private BaseAnnotationHandler handler(Element el) {
+    if(logger.isDebugEnabled()) {
+      logger.debug("el localname: " + el.getLocalName());
+    }
     if (!handlers.containsKey(el.getLocalName())) {
       throw new UnsupportedOperationException(
           "Unable to find handler for annotation " + el.getLocalName());
@@ -503,12 +535,12 @@ public class Weaver {
 
 
   private void doInjectTerm(Element el,
-//	                           KnownAttributes defaultRel,
+      KnownAttributes defaultRel,
       List<ConceptIdentifier> rows) {
     BaseAnnotationHandler handler = handler(el);
 
     if (!rows.isEmpty()) {
-      List<Annotation> annos = handler.getAnnotation(rows);
+      List<Annotation> annos = handler.getAnnotation(el.getLocalName(), defaultRel, rows);
       handler.replaceProprietaryElement(el,
           handler.wrap(toChildElements(annos, el)));
     }

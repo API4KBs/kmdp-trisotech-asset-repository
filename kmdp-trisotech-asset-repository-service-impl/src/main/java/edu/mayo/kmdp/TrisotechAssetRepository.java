@@ -22,7 +22,6 @@ import static edu.mayo.kmdp.util.ws.ResponseHelper.succeed;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
-import edu.mayo.kmdp.preprocess.meta.IdentityMapper;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetCatalogApiDelegate;
@@ -37,7 +36,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.apache.jena.shared.NotFoundException;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
@@ -57,7 +55,7 @@ import org.w3c.dom.Document;
 public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegate,
     KnowledgeAssetRepositoryApiDelegate, KnowledgeAssetRetrievalApiDelegate {
 
-  Logger log = LoggerFactory.getLogger(TrisotechAssetRepository.class);
+  private static final Logger logger = LoggerFactory.getLogger(TrisotechAssetRepository.class);
 
   @Autowired
   private Weaver weaver;
@@ -65,18 +63,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   @Autowired
   private MetadataExtractor extractor;
 
-  // postConstruct init to get values set in proper order
-  @PostConstruct
-  private void init() {
-    System.out.println("TrisotechAssetRepository PostConstruct...");
-    System.out.println("...weaver is: " + weaver);
-    System.out.println("...extractor is: " + extractor);
-//    this.weaver = new Weaver();
-//    this.extractor = new MetadataExtractor();
-  }
-
   TrisotechAssetRepository() {
-    System.out.println("TrisotechAssetRepository ctor...");
   }
 
   @Override
@@ -149,7 +136,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
       dox = weaver.weave(TrisotechWrapper.downloadXmlModel(trisotechFileInfo.getUrl()));
       ka = extractor.extract(dox, trisotechFileInfo);
     } catch (NotLatestVersionException e) {
-      log.debug("error message from NotLatestVersionException: " + e.getMessage());
+      logger.debug("error message from NotLatestVersionException: " + e.getMessage());
       // check other versions of the model
       try {
         ka = findArtifactVersionForAsset(e.getMessage(), assetId, versionTag);
@@ -333,7 +320,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           version.orElse(null)); // TODO: better alternative? error? CAO
     } catch (NotLatestVersionException e) {
       // TODO: handle exception here? CAO
-      log.error(e.getStackTrace().toString());
+      logger.error(e.getStackTrace().toString());
       throw e;
     }
   }
@@ -399,10 +386,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           // a specific version of knowledge asset carrier (fileId)
           VersionIdentifier latestArtifactVersion = TrisotechWrapper
               .getLatestVersion(fileId.get());
-          if (log.isDebugEnabled()) {
-            log.debug(String
+          if (logger.isDebugEnabled()) {
+            logger.debug(String
                 .format("latestArtifactVersion versionTag %s", latestArtifactVersion.getVersion()));
-            log.debug(
+            logger.debug(
                 String.format("latestArtifactVersion Tag %s", latestArtifactVersion.getTag()));
           }
 

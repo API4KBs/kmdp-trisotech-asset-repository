@@ -21,7 +21,6 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
-import edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,9 +48,9 @@ import org.apache.jena.query.ResultSetRewindable;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.NotFoundException;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -73,9 +72,11 @@ public class IdentityMapper {
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId}")
   String place;
 
-  private static Logger logger = LogManager.getLogger(IdentityMapper.class);
+  private static final Logger logger = LoggerFactory.getLogger(IdentityMapper.class);
 
   // SPARQL Strings
+  // SPARQL endpoint for repository
+  private static final String ENDPOINT = "https://mc.trisotech.com/ds/query";
   // PREFIX sets up the namespaces to be used in the query
   private static final String QUERYSTRINGPREFIX =
       "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
@@ -101,11 +102,6 @@ public class IdentityMapper {
   // results of the hierarchySorter
   private List<Resource> orderedModels;
 
-
-  public IdentityMapper() {
-    System.out.println("IdentityMapper ctor...");
-  }
-
   /**
    * init is needed w/@PostConstruct because @Value values will not be set
    * until after construction. @PostConstruct will be called after the object is
@@ -113,7 +109,9 @@ public class IdentityMapper {
    */
   @PostConstruct
   void init() {
-    System.out.println("place in init " + place);
+    if(logger.isDebugEnabled()) {
+      logger.debug(String.format("place in init %s", place));
+    }
     createMap(query(getQueryStringRelations(place)));
     models = ResultSetFactory.makeRewindable(query(getQueryStringModels(place)));
     orderedModels = hierarchySorter.linearize(getModelList(models), artifactToArtifactIDMap);
@@ -151,15 +149,13 @@ public class IdentityMapper {
   private ResultSet query(String queryString) {
     Query query = QueryFactory.create(queryString);
 
-    // TODO: have as a property? CAO
-    String endpoint = "https://mc.trisotech.com/ds/query";
     Header header = new BasicHeader(AUTHORIZATION, "Bearer " + token);
 
     HttpClient httpClient = HttpClientBuilder.create()
         .setDefaultHeaders(Collections.singleton(header))
         .build();
     QueryExecution qexec = QueryExecutionFactory
-        .sparqlService(endpoint, query, httpClient);
+        .sparqlService(ENDPOINT, query, httpClient);
     return qexec.execSelect();
   }
 
@@ -325,18 +321,14 @@ public class IdentityMapper {
    * @param fileId the id for the file representing the model
    */
   public Optional<URIIdentifier> getAssetId(String fileId) {
-    logger.debug(String.format("getAssetId for fileId: %s", fileId));
-    logger.debug("Place: " + place);
+    if(logger.isDebugEnabled()) {
+      logger.debug(String.format("getAssetId for fileId: %s", fileId));
+    }
     models.reset();
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
 
       if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
-        VersionedIdentifier vi = DatatypeHelper.toVersionIdentifier(URI.create(soln.getLiteral(ASSET_ID).toString()));
-        System.out.println("assetID as versionedIdentifier version: " + vi.getVersion());
-        System.out.println("assetID as versioned format: " + vi.getFormat());
-        System.out.println("assetID as versioned tag: " + vi.getTag());
-        System.out.println("assetId as versioned toString: " + vi.toString());
         return Optional.of(DatatypeHelper.uri(soln.getLiteral(ASSET_ID).toString()));
       }
     }
@@ -406,14 +398,16 @@ public class IdentityMapper {
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
       // TODO: need to handle URIIdentifiers not properly created? CAO (ex: DatatypeHelper.uri("my/path/assetId/versions/1.0.0")  OR fix DatatypeHelper?
-      logger.debug(String.format("getArtifactId for assetId: %s", assetId.toStringId()));
-      logger.debug(String.format("assetId.getUri().toString: %s", assetId.getUri().toString()));
-      logger.debug(
-          String.format("assetId.getVersionId().toString: %s", assetId.getVersionId().toString()));
-      logger.debug(String.format("assetId.getTag(): %s", assetId.getTag()));
-
+      if(logger.isDebugEnabled()) {
+        logger.debug(String.format("getArtifactId for assetId: %s", assetId.toStringId()));
+        logger.debug(String.format("assetId.getUri().toString: %s", assetId.getUri().toString()));
+        logger.debug(
+            String
+                .format("assetId.getVersionId().toString: %s", assetId.getVersionId().toString()));
+        logger.debug(String.format("assetId.getTag(): %s", assetId.getTag()));
+      }
       // versionId value has the UUID of the asset/versions/versionTag, so this will match id and version
-      // TODO: ONlY if state of 'Published'??? CAO
+      // TODO: ONlY if published??? CAO
       if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getVersionId().toString())) {
         return soln.getResource(MODEL).getURI();
         // the requested version of the asset doesn't exist on the latest model, check if the

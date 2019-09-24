@@ -27,9 +27,6 @@ public class ModelReader implements TrisotechReader {
 
   @Autowired
   public ModelReader(ReaderConfig config) {
-    System.out.println("ModelReader ctor, config is: " + config);
-//    this.config = config;
-
     this.urlPattern = Pattern.compile( config.getTyped( ReaderOptions.URL_PATTERN_ST ) );
   }
 

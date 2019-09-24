@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 public class IdentityMapperConfig {
   @Bean
   IdentityMapper identityMapper() {
-    System.out.println("in identityMapper for IdentityMapperConfig...");
     return new IdentityMapper();
   }
 }

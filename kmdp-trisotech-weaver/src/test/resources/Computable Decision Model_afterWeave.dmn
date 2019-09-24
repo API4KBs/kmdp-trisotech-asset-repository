@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
   xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/cdda3e01-7152-4888-a984-d938a7cecf6b"
   xmlns:ann="http://kmdp.mayo.edu/metadata/annotations"
@@ -50,6 +51,11 @@
           tag="_3ab98050-5d08-49f2-b783-1ab4850bad6c"/>
       </ann:simpleAnnotation>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="is a"
+          ref="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          tag="type">
+          <id:namespace id="http://www.w3.org/1999/02/22-rdf-syntax-ns"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
           label="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
@@ -57,6 +63,11 @@
           tag="b4503b62-ac44-41ac-86d7-603544ecda82"/>
       </ann:simpleAnnotation>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="defines"
+          ref="https://www.omg.org/spec/API4KP/api4kp/defines"
+          tag="defines">
+          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#353475a1-b661-3a7f-b06b-925cb73aec6b"
           label="PropositionalConcepts - 20190801 - Current CHA2DS2-VASc Scorein 'PropositionalConcepts - 20190801'"
@@ -136,6 +147,11 @@
   <semantic:inputData id="_a7c2fa04-29e6-4d8a-bae3-fd9ec2e509f0" name="Input 1">
     <semantic:extensionElements>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="in terms of"
+          ref="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          tag="defined-in-terms-of">
+          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#6c14a53a-7ce2-34aa-9cf1-a800317bebef"
           label="PropositionalConcepts - 20190801 - Most Recent Bilirubinin 'PropositionalConcepts - 20190801'"
@@ -150,6 +166,11 @@
   <semantic:inputData id="_c69760ee-988d-437a-94a8-c88117df75d3" name="Input 2">
     <semantic:extensionElements>
       <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
+        <ann:rel label="in terms of"
+          ref="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          tag="defined-in-terms-of">
+          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
+        </ann:rel>
         <ann:expr
           conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#9296f375-a7ed-3c59-a972-4a7eb40c8820"
           label="PropositionalConcepts - 20190801 - Agein 'PropositionalConcepts - 20190801'"

@@ -14,12 +14,9 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
-import static edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat.XML_1_1;
 import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.CMMN_1_1;
 import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.DMN_1_2;
-import static org.omg.spec.api4kp._1_0.AbstractCarrier.rep;
 
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
@@ -29,23 +26,18 @@ import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.util.ws.ResponseHelper;
 import edu.mayo.ontology.taxonomies.kao.decisiontype._20190801.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
 import edu.mayo.ontology.taxonomies.propositionalconcepts._20190801.PropositionalConcepts;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
@@ -53,12 +45,8 @@ import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omg.spec.api4kp._1_0.AbstractCarrier;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.services.DocumentCarrier;
-import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -79,6 +67,9 @@ public class Weaver {
 
   public static final String CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/artifacts/";
   private static final String WWW_W_3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
+  private static final String MODEL_URI = "modelURI";
+  private static final String DMN = "DMN";
+  private static final String CMMN = "CMMN";
 
   @Autowired
   private ModelReader reader;
@@ -99,20 +90,16 @@ public class Weaver {
   private String metadataDiagramCmmnNS;
   private String droolsNS;
   private String diagramExt;
-  private String annotatedItem;
   private static final String SURROGATE_SCHEMA = "http://kmdp.mayo.edu/metadata/surrogate";
   private static final String ANNOTATIONS_SCHEMA = "http://kmdp.mayo.edu/metadata/annotations";
 
   private ObjectFactory of = new ObjectFactory();
   private Map<String, BaseAnnotationHandler> handlers = new HashMap<>();
 
-  public Weaver() {
-  }
-
   @PostConstruct
   public void init() {
-    logger.debug(String.format("Weaver ctor, config is: %s", config));
-    logger.debug(MessageFormat.format("Weaver ctor, reader is: {0}", reader));
+    logger.debug("Weaver ctor, config is: {}", config);
+    logger.debug("Weaver ctor, reader is: {}", reader);
 
     metadataNS = config.getTyped(ReaderOptions.P_METADATA_NS);
     metadataDiagramDmnNS = config.getTyped(ReaderOptions.P_METADATA_DIAGRAM_DMN_NS);
@@ -127,13 +114,11 @@ public class Weaver {
     elExporter = config.getTyped(ReaderOptions.P_EL_EXPORTER);
     elExporterVersion = config.getTyped(ReaderOptions.P_EL_EXPORTER_VERSION);
     decisionEl = config.getTyped(ReaderOptions.P_EL_DECISION);
-    annotatedItem = config.getTyped(ReaderOptions.P_EL_ANNOTATED_ITEM);
 
     logger.debug("METADATA_EL: {}", metadataEl);
-    handlers.put(metadataEl, new MetadataAnnotationHandler(config));
-    handlers.put(metadataId, new MetadataAnnotationHandler(config));
-    handlers.put(annotatedItem, new AnnotatedFragmentHandler(config));
-    handlers.put(metadataRS, new MetadataAnnotationHandler(config));
+    handlers.put(metadataEl, new MetadataAnnotationHandler());
+    handlers.put(metadataId, new MetadataAnnotationHandler());
+    handlers.put(metadataRS, new MetadataAnnotationHandler());
   }
 
   public String getMetadataNS() {
@@ -172,26 +157,6 @@ public class Weaver {
     return decisionEl;
   }
 
-  public ReaderConfig getConfig() {
-    return config;
-  }
-
-  //DocumentCarrier input = new DocumentCarrier().withStructuredExpression(dox).withRepresentation(rep(DMN_1_2, XML_1_1));
-
-  // CAO: TODO: This is how it should be done with the updated classes 06/20 review w/Davide
-  public ResponseEntity<KnowledgeCarrier> weave(KnowledgeCarrier toBeWovenInto,
-      KnowledgeCarrier toBeWovenIn) {
-    DocumentCarrier input = (DocumentCarrier) toBeWovenInto;
-    if (input.getRepresentation().getFormat() != XML_1_1) {
-      // exception
-    }
-    Document out = weave((Document) input.getStructuredExpression());
-
-    // ResponseHelper will handle all the error handling for the response
-    return ResponseHelper
-        .attempt(AbstractCarrier.of(out).withRepresentation(rep(DMN_1_2, XML_1_1)));
-  }
-
   /**
    * Weave out Trisotech-specific elements and where necessary, replace with KMDP-specific.
    */
@@ -200,14 +165,22 @@ public class Weaver {
         "xmlns:" + "xsi",
         "http://www.w3.org/2001/XMLSchema-instance");
 
-    // TODO: remove hardcoded values? CAO
     dox.getDocumentElement().setAttributeNS(WWW_W_3_ORG_2000_XMLNS,
         "xmlns:surr",
         SURROGATE_SCHEMA);
     // TODO: remove hardcoded values? CAO
+    // TODO: SURROGATE_SCHEMA used to be done this way:
+    //  Registry.getPrefixforNamespace( KRLanguage.Asset_Surrogate.getRef() )
+    //		                                                            .orElseThrow( IllegalStateException::new ),
+    //		                                         KRLanguage.Asset_Surrogate.getRef().toString()
     dox.getDocumentElement().setAttributeNS(WWW_W_3_ORG_2000_XMLNS,
         "xmlns:ann",
         ANNOTATIONS_SCHEMA);
+    // TODO: remove hardcoded values? CAO
+    // TODO: ANNOTATIONS_SCHEMA used to be done this way:
+    //  Registry.getPrefixforNamespace( KRLanguage.Annotations.getRef() )
+    //		                                                            .orElseThrow( IllegalStateException::new ),
+    //		                                         KRLanguage.Annotations.getRef().toString()
 
     dox.getDocumentElement().setAttributeNS("http://www.w3.org/2001/XMLSchema-instance",
         "xsi:" + "schemaLocation",
@@ -256,30 +229,30 @@ public class Weaver {
    * @return the KnownAttribute to be used in rewriting this element
    */
   private KnownAttributes getKnownAttribute(Element el) {
-    String typeScheme = URI.create(el.getAttribute("modelURI")).getSchemeSpecificPart();
+    String typeScheme = URI.create(el.getAttribute(MODEL_URI)).getSchemeSpecificPart();
     if (typeScheme.equals(KnowledgeAssetType.schemeURI.getVersionId().getSchemeSpecificPart())) {
-      return KnownAttributes.resolve("assetType").get(); // annotationKey.assetType;
+      return KnownAttributes.resolve("assetType").orElse(null);
     } else if (typeScheme.equals(DecisionType.schemeURI.getVersionId().getSchemeSpecificPart())) {
       logger.debug("Have a DecisionType. Do anything with it?");
       return null; // TODO: for now, pending below TODO:
 //      return KnownAttributes.resolve(
 //          "decision")
-//          .get(); // annotationKey.decision; // TODO: confirm w/Davide; he didn't give me one for DecisionType CAO
+//          .get() // TODO: confirm w/Davide; he didn't give me one for DecisionType CAO
     } else if (typeScheme
         .equals(PropositionalConcepts.schemeURI.getVersionId().getSchemeSpecificPart())) {
 // need to figure to what kind
 // need grandparent; parent will always be extensionElements (will this be true for the internal decision??)
       String grandparent = el.getParentNode().getParentNode().getNodeName();
       if (grandparent.equals("semantic:decision")) {
-        return KnownAttributes.resolve("defines").get(); // annotationKey.defines;
+        return KnownAttributes.resolve("defines").orElse(null);
       } else if (grandparent.equals("semantic:inputData")) {
-        return KnownAttributes.resolve("inTermsOf").get(); // annotationKey.terms; // In_terms_of
+        return KnownAttributes.resolve("inTermsOf").orElse(null);
       } else if (grandparent.equals(
           "TBD")) {  // TODO: not sure how to handle propositional concepts on internal decision; do not see that in the models CAO
-        return KnownAttributes.resolve("capture").get(); // annotationKey.capture;
+        return KnownAttributes.resolve("capture").orElse(null);
       }
-    } // TODO: error handling
-    return null; //KnownAttributes.resolve("").get();
+    } // TODO: error handling CAO
+    return null;
   }
 
   private void verifyAndRemoveInvalidCaseFileItemDefinition(Document dox) {
@@ -444,13 +417,8 @@ public class Weaver {
     // remove leading '_' from elementId
     String elementId = el.getAttribute("elementId").substring(1);
     BaseAnnotationHandler handler = handler(el);
-    DatatypeAnnotation dta = new DatatypeAnnotation();
-    // TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
-    dta.setValue(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId);
-    dta.setRel(DependencyType.Imports.asConcept());
-
-    handler.replaceProprietaryElement(el, toChildElement(dta, el));
-
+    List<Annotation> annotations = handler.getDataAnnotation(modelId, elementId);
+    handler.replaceProprietaryElement(el, toChildElements(annotations, el));
   }
 
   private void doRewriteId(Element el) {
@@ -487,7 +455,7 @@ public class Weaver {
 
   private List<ConceptIdentifier> getConceptIdentifiers(Element el) {
     // need to verify any URI values are valid -- no trisotech
-    Attr modelUriAttr = el.getAttributeNode("modelURI");
+    Attr modelUriAttr = el.getAttributeNode(MODEL_URI);
     Attr uriAttr = el.getAttributeNode("uri");
     if (modelUriAttr.getValue().contains(TRISOTECH_COM)) {
       rewriteValue(modelUriAttr);
@@ -502,7 +470,7 @@ public class Weaver {
     try {
       concept = new ConceptIdentifier().withLabel(el.getAttribute("name"))
           .withTag(el.getAttribute("id"))
-          .withRef(new URI(el.getAttribute("modelURI")))
+          .withRef(new URI(el.getAttribute(MODEL_URI)))
           .withConceptId(new URI(el.getAttribute("uri")));
     } catch (URISyntaxException e) {
       logger.error(String.format("%s%s", e.getMessage(), e.getStackTrace()));
@@ -510,13 +478,13 @@ public class Weaver {
     conceptIdentifiers.add(concept);
 
     // TODO: shouldn't assume here? id might not have leading '_'? or is that just because of test file? CAO
-    //  String tag = el.getAttribute("id").substring(1);
+    //  String tag = el.getAttribute("id").substring(1)
     // TODO: discuss with Davide -- which of the two examples given below are needed? both? for different reasons? How to tell? CAO
     // TODO: This is failing -- should it work? CAO
-//    ConceptIdentifier ciFromCS = ClinicalSituation.resolve(tag).orElseThrow(IllegalStateException::new).??; // CAO -- for now: TODO: fix this -- there will be more support coming
+//    ConceptIdentifier ciFromCS = ClinicalSituation.resolve(tag).orElseThrow(IllegalStateException::new).?? // CAO -- for now: TODO: fix this -- there will be more support coming
 
     // TODO: fix this CAO -- this replaces the 'new ConceptIdentifer' code above (need the above statement working first???) this currently FAILS
-//    ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(tag).orElseThrow(IllegalStateException::new).asConcept();
+//   TODO: ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(tag).orElseThrow(IllegalStateException::new).asConcept()
 
     return conceptIdentifiers;
   }
@@ -524,7 +492,7 @@ public class Weaver {
 
   private BaseAnnotationHandler handler(Element el) {
     if(logger.isDebugEnabled()) {
-      logger.debug("el localname: " + el.getLocalName());
+      logger.debug("el localname:  {}", el.getLocalName());
     }
     if (!handlers.containsKey(el.getLocalName())) {
       throw new UnsupportedOperationException(
@@ -640,12 +608,12 @@ public class Weaver {
         .append(" ").append("xsd/metadata/annotations/annotations.xsd");
 
     String baseNS = dox.getDocumentElement().getNamespaceURI();
-    if (baseNS.contains("DMN")) {
+    if (baseNS.contains(DMN)) {
       sb.append(" ")
           .append(DMN_1_2.getRef())
           .append(" ").append(Registry.getValidationSchema(DMN_1_2.getRef())
           .orElseThrow(IllegalStateException::new));
-    } else if (baseNS.contains("CMMN")) {
+    } else if (baseNS.contains(CMMN)) {
       sb.append(" ").append(CMMN_1_1)
           .append(" ").append(Registry.getValidationSchema(CMMN_1_1.getRef())
           .orElseThrow(IllegalStateException::new));

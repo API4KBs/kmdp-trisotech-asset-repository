@@ -38,7 +38,4 @@ public class TrisotechFileInfo {
     private String version;
     private String state;
 
-	public String toString() {
-		return name;
-	}
 }

@@ -16,8 +16,10 @@
 package edu.mayo.kmdp.trisotechwrapper;
 
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.BASE_URL;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CONTENT_PATH;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.REPOSITORY_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.VERSIONS_PATH;
@@ -41,15 +43,14 @@ import java.util.stream.Collectors;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class to wrap the calls to Trisotech in meaningful ways.
@@ -57,7 +58,6 @@ import org.slf4j.LoggerFactory;
 public class TrisotechWrapper {
 
   private static final Logger logger = LoggerFactory.getLogger(TrisotechWrapper.class);
-  // TODO: search for this particular directory or just use the known ID of our known repository and skip the places call? CAO
   private static String rootDirectory;
 
   private static String token;
@@ -119,7 +119,6 @@ public class TrisotechWrapper {
   /**
    * Retrieve the PUBLISHED Model given the file ID
    * Will only return if the model has been published, else empty.
-   * TODO: Needed? CAO
    *
    * @param fileId the fileId for the file to find the model information
    * @return DMN XML Document or Optional.empty
@@ -213,14 +212,13 @@ public class TrisotechWrapper {
   /**
    * get the ModelInfo for the fileID provided. mimeType is used to return the appropriate
    * information in a format for download
-   * TODO: verify mimeType as expected ones?
-   * Acceptable values for mimeType are: application/dmn-1-2+xml or application/cmmn-1-1+xml
+   * Acceptable values for mimeType are: DMN_XMl_MIMETYPE or CMMN_XML_MIMETYPE
    *
    * @param fileID the fileID for the model used to query from Trisotech
    * @param mimeType the mimeType to allow for XML-compatible URL
    * @return the Trisotech FileInfo about the model
    */
-  public static TrisotechFileInfo getFileInfo(String fileID, String mimeType) {
+  private static TrisotechFileInfo getFileInfo(String fileID, String mimeType) {
     List<TrisotechFileInfo> fileInfos = getModels(mimeType);
     return fileInfos.stream()
         .filter(f -> f.getId().equals(fileID)).findAny()
@@ -260,13 +258,13 @@ public class TrisotechWrapper {
     if (null != fileInfo) {
 
       // want to return the XML version of the file, so need the fileInfo based on mimetype
-      // this has to do with how Trisotech returns the data;
-      // we don't get the XML path unless we provide the correct mimetype in the query
-      // contains is used as a test as the mimetype returned is not exactly what we need, but
+      // this has to do with how Trisotech returns the data
+      // we don't get the XML path unless we provide the correct mimetype in the query.
+      // contains() is used as a test as the mimetype returned is not exactly what we need, but
       // can be used to determine which one to use
-      if (fileInfo.getMimetype().contains("dmn")) {
+      if (fileInfo.getMimetype().contains(DMN_LOWER)) {
         return DMN_XML_MIMETYPE;
-      } else if (fileInfo.getMimetype().contains("cmmn")) {
+      } else if (fileInfo.getMimetype().contains(CMMN_LOWER)) {
         return CMMN_XML_MIMETYPE;
       } else {
         return null; // TODO: error? undefined mimetype?? shouldn't ever happen CAO
@@ -358,9 +356,9 @@ public class TrisotechWrapper {
     }
     if(!DMN_XML_MIMETYPE.equals(mimetype) || !CMMN_XML_MIMETYPE.equals(mimetype)) {
       // not a valid mimetype, but maybe can determine
-      if(mimetype.contains("dmn")) {
+      if(mimetype.contains(DMN_LOWER)) {
         mimetype = DMN_XML_MIMETYPE;
-      } else if(mimetype.contains("cmmn")) {
+      } else if(mimetype.contains(CMMN_LOWER)) {
         mimetype = CMMN_XML_MIMETYPE;
       } else {
         // TODO: error? invalid mimetype -- shouldn't happen CAO
@@ -548,7 +546,6 @@ public class TrisotechWrapper {
       });
 
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       throw new RuntimeException(e);
     }
   }
@@ -566,7 +563,6 @@ public class TrisotechWrapper {
   }
 
 
-  // TODO: How to handle bearer token? CAO
   private static HttpHeaders getHttpHeaders() {
     final HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.add(ACCEPT, "application/json");
@@ -617,12 +613,10 @@ public class TrisotechWrapper {
 
     if (conn.getResponseCode() != 200) {
 
-      switch (conn.getResponseCode()) {
-        case 401:
-          throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()
-              + String.format("Confirm token value"));
-
-        default:
+      if (401 == conn.getResponseCode()) {
+        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()
+            + "Confirm token value");
+      } else {
           throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
       }
     }

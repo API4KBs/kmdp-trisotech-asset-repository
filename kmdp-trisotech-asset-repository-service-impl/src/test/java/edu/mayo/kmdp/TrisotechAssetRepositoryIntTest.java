@@ -16,6 +16,8 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -251,7 +253,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_CMMN() {
-    ResponseEntity<List<Pointer>> models = tar.listKnowledgeAssets("cmmn", null, null, null);
+    ResponseEntity<List<Pointer>> models = tar.listKnowledgeAssets(CMMN_UPPER, null, null, null);
     assertSame(HttpStatus.OK, models.getStatusCode());
     assertFalse(models.getBody().isEmpty());
 
@@ -266,7 +268,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_CMMN_limit() {
-    ResponseEntity<List<Pointer>> models = tar.listKnowledgeAssets("cmmn", null, null, 1);
+    ResponseEntity<List<Pointer>> models = tar.listKnowledgeAssets(CMMN_LOWER, null, null, 1);
     assertSame(HttpStatus.OK, models.getStatusCode());
     assertFalse(models.getBody().isEmpty());
 
@@ -425,7 +427,7 @@ class TrisotechAssetRepositoryIntTest {
   void getKnowledgeAssetCarrierVersion_notFound_badAssetId() {
     ResponseEntity response = tar
         .getKnowledgeAssetCarrierVersion(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03d"),
-            "1.0.0", UUID.fromString("16086bb8-c1fc-49b0-800b-c9b995dc5ed5"), "1.6.0");
+            "1.0.0", UUID.fromString("16086bb8-c1fc-49b0-800b-c9b995dc5ed5"), "1.8.0");
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
 
@@ -433,7 +435,7 @@ class TrisotechAssetRepositoryIntTest {
   void getKnowledgeAssetCarrierVersion_notFound_badArtifactId() {
     ResponseEntity response = tar
         .getKnowledgeAssetCarrierVersion(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
-            "1.0.0", UUID.fromString("16086bb8-c1fc-49b0-800b-c9b995dc5ed6"), "1.6.0");
+            "1.0.1", UUID.fromString("16086bb8-c1fc-49b0-800b-c9b995dc5ed6"), "1.8.0");
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
 

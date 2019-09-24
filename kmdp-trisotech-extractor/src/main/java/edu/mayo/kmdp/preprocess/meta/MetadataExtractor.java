@@ -68,30 +68,17 @@ public class MetadataExtractor {
     }
   }
 
-//  private ExtractionStrategy strategy;
-
   @Autowired
   private TrisotechExtractionStrategy strategy;
 
   @Autowired
   private IdentityMapper mapper;
 
-  public MetadataExtractor() {
-//    this(new IdentityMapper());
-  }
-
-//  public MetadataExtractor(IdentityMapper mapper) {
-//    strategy = new TrisotechExtractionStrategy();
-//    strategy.setMapper(mapper);
-//  }
-
   @PostConstruct
   public void init() {
-    if(logger.isDebugEnabled()) {
-      logger.debug("metadataExtractor postconstruct ctor... with mapper: " + mapper);
-      logger.debug("now have strategy: " + strategy);
-      logger.debug("set mapper on strategy");
-    }
+    logger.debug("metadataExtractor postconstruct ctor... with mapper: {}", mapper);
+    logger.debug("now have strategy: {}", strategy);
+    logger.debug("set mapper on strategy");
     strategy.setMapper(mapper);
   }
 
@@ -177,11 +164,22 @@ public class MetadataExtractor {
   }
 
 
+  /**
+   * The fileId is the id of the file for the artifact that can be used with the APIs.
+   *
+   * @param assetId the enterprise asset ID
+   * @return fileId
+   */
   public Optional<String> getFileId(UUID assetId) {
     return strategy.getFileId(assetId);
   }
 
-  public Optional<String> getFileId(String internalId) {
+  /**
+   * The fileId is the id of the file for the artifact that can be used with the APIs.
+   *
+   * @param internalId the internal identifier for teh artifact
+   * @return fileId
+   */  public Optional<String> getFileId(String internalId) {
     return strategy.getFileId(internalId);
   }
 

@@ -42,8 +42,8 @@ public class StaticContextInitializer {
   @PostConstruct
   public void init() {
     if(logger.isDebugEnabled()) {
-      logger.debug("\n\n****token in PostConstruct is " + token);
-      logger.debug("repositoryName in PostConstruct is: " + repositoryName + "*****\n\n");
+      logger.debug("\n\n****token in PostConstruct is {} ", token);
+      logger.debug("repositoryName in PostConstruct is: {}", repositoryName + "*****\n\n");
     }
     TrisotechWrapper.setToken(token);
     TrisotechWrapper.setRoot(repositoryName);

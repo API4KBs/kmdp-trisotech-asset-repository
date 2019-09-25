@@ -183,17 +183,12 @@ class SemanticAnnotationTest {
 					.collect(Collectors.toSet());
 			assertEquals( 3, defines.size() );
 			assertTrue( defines.contains( ClinicalSituation.Current_CHA2DS2_VASc_Score.asConcept() ) );
-			assertTrue( defines.contains( ClinicalSituation.Risk_Of_Embolic_Stroke_CHA2DS2_VASc1.asConcept() ) ); // was: Likelihood_Of_Stroke_Based_On_CHA2DS2Vasc_Score CAO
+			assertTrue( defines.contains( ClinicalSituation.Risk_Of_Embolic_Stroke_CHA2DS2_VASc.asConcept() ) );
 
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			fail( e.getMessage() );
 		}
 	}
-
-
-
-
-
-
+	
 }

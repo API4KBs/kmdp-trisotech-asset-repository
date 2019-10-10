@@ -194,7 +194,7 @@ class MetadataTest {
     try {
       enterpriseAssetVersion = extractor.getEnterpriseAssetVersionIdForAsset(
           UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
-          "1.0.1");
+          "1.0.1", false);
     } catch (NotLatestVersionException e) {
       fail();
     }
@@ -211,7 +211,7 @@ class MetadataTest {
         NotFoundException.class,
         () -> extractor.getEnterpriseAssetVersionIdForAsset(
             UUID.fromString("14ba1e7c-cb9a-427f-abf5-1420bf26e03c"),
-            "1.0.1"));
+            "1.0.1", false));
 
   }
 
@@ -241,7 +241,7 @@ class MetadataTest {
         NotLatestVersionException.class,
         () -> extractor.getEnterpriseAssetVersionIdForAsset(
             UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
-            "1.1.0"));
+            "1.1.0", false));
     // internalId provided with exception
     assertEquals(
         "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"
@@ -252,7 +252,7 @@ class MetadataTest {
   void testResolveInternalArtifactID() {
     try {
       String artifactId = extractor
-          .resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "1.0.0-SNAPSHOT");
+          .resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "1.0.0-SNAPSHOT", false);
       assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
           artifactId);
     } catch (NotLatestVersionException e) {
@@ -262,19 +262,55 @@ class MetadataTest {
   }
 
   @Test
-  void testResolveInternalArtifactID_NotLatestVersionException() {
+  void testResolveInternalArtifactID_Published_NotLatestVersionException() {
     NotLatestVersionException ave = assertThrows(
         NotLatestVersionException.class,
-        () -> extractor.resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "2.0.0"));
+        () -> extractor.resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "2.0.0",
+            false));
     assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
         ave.getMessage());
   }
 
   @Test
-  void testResolveInternalArtifactID_Null() {
+  void testResolveInternalArtifactID_Published_Null() {
     try {
       String artifactId = extractor
-          .resolveInternalArtifactID("abcdef3a-93c4-4e09-b1aa-14088c76adee", "1.0.0-SNAPSHOT");
+          .resolveInternalArtifactID("abcdef3a-93c4-4e09-b1aa-14088c76adee", "1.0.0-SNAPSHOT", false);
+      assertEquals(null, artifactId);
+    } catch (NotLatestVersionException e) {
+      fail("Unexpected error");
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  void testResolveInternalArtifactID_Any() {
+    try {
+      String artifactId = extractor
+          .resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "1.0.0-SNAPSHOT", true);
+      assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
+          artifactId);
+    } catch (NotLatestVersionException e) {
+      fail("Should have artifact for specified asset: 3c66cf3a-93c4-4e09-b1aa-14088c76aded");
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  void testResolveInternalArtifactID_Any_NotLatestVersionException() {
+    NotLatestVersionException ave = assertThrows(
+        NotLatestVersionException.class,
+        () -> extractor.resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "2.0.0",
+            true));
+    assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
+        ave.getMessage());
+  }
+
+  @Test
+  void testResolveInternalArtifactID_Any_Null() {
+    try {
+      String artifactId = extractor
+          .resolveInternalArtifactID("abcdef3a-93c4-4e09-b1aa-14088c76adee", "1.0.0-SNAPSHOT", true);
       assertEquals(null, artifactId);
     } catch (NotLatestVersionException e) {
       fail("Unexpected error");
@@ -304,7 +340,7 @@ class MetadataTest {
   @Test
   void testGetFileId_AssetUUID() {
     Optional<String> fileid = extractor
-        .getFileId(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"));
+        .getFileId(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"), false);
     assertNotNull(fileid);
     assertTrue(fileid.isPresent());
     assertEquals("123720a6-9758-45a3-8c5c-5fffab12c494", fileid.get());
@@ -313,7 +349,7 @@ class MetadataTest {
   @Test
   void testGetFileId_AssetUUID_empty() {
     Optional<String> fileid = extractor
-        .getFileId(UUID.fromString("abcdef3a-93c4-4e09-b1aa-14088c76adee"));
+        .getFileId(UUID.fromString("abcdef3a-93c4-4e09-b1aa-14088c76adee"), false);
     assertNotNull(fileid);
     assertFalse(fileid.isPresent());
     assertEquals(Optional.empty(), fileid);

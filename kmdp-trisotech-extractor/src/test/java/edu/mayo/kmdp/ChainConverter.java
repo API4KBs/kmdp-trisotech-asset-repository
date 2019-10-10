@@ -74,8 +74,6 @@ public class ChainConverter {
    * @return
    */
   protected Model convertModel( InputStream meta, InputStream modelXml, KnowledgeRepresentationLanguage src ) {
-//    MetadataExtractor extractor = new MetadataExtractor();
-//    Weaver weaver = new Weaver(); // false, Weaver.getWeaverProperties(src));
 
     final Model model = new Model();
 

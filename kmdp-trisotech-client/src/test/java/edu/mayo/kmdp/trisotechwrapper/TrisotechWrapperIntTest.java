@@ -416,7 +416,7 @@ class TrisotechWrapperIntTest {
   final void testGetPublishedDmnModels() {
     List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedDMNModelsFileInfo();
     assertNotNull(publishedModels);
-    assertEquals(4, publishedModels.size());
+    assertTrue(publishedModels.size() >= 4);
   }
 
   @Test

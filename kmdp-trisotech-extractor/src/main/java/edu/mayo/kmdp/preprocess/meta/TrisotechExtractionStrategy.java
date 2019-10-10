@@ -374,18 +374,20 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return mapper.getEnterpriseAssetIdForAssetVersionId(enterpriseAssetVersionId);
   }
 
-  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag)
+  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag,
+      boolean any)
       throws NotLatestVersionException {
-    return mapper.getEnterpriseAssetVersionIdForAsset(assetId, versionTag);
+    return mapper.getEnterpriseAssetVersionIdForAsset(assetId, versionTag, any);
   }
 
-  public Optional<String> getFileId(UUID assetId) {
-    return mapper.getFileId(assetId);
+  public Optional<String> getFileId(UUID assetId, boolean any) {
+    return mapper.getFileId(assetId, any);
   }
+
 
   @Override
-  public String getArtifactID(URIIdentifier id) throws NotLatestVersionException {
-    return mapper.getArtifactId(id);
+  public String getArtifactID(URIIdentifier id, boolean any) throws NotLatestVersionException {
+    return mapper.getArtifactId(id, any);
   }
 
   public Optional<String> getFileId(String internalId) {
@@ -483,6 +485,5 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return resId
         .orElseThrow(IllegalStateException::new); // TODO: better return value if not existent? CAO
   }
-
 
 }

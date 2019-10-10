@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+  xmlns:include1="http://www.trisotech.com/definitions/_d2169127-dea3-4462-86bf-d906cacac137"
+  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+  xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+  xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
+  xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+  xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+  xmlns:drools="http://www.drools.org/kie/dmn/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rss="http://purl.org/rss/2.0/"
+  xmlns:openapi="https://openapis.org/omg/extension/1.0"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.trisotech.com/definitions/_ff05700d-8433-4bdc-baa7-ef62c4a165c5"
+  id="_ff05700d-8433-4bdc-baa7-ef62c4a165c5" name="TestPushingAndPublished"
+  namespace="http://www.trisotech.com/definitions/_ff05700d-8433-4bdc-baa7-ef62c4a165c5"
+  exporter="DMN Modeler" exporterVersion="6.2.11.1" triso:logoChoice="Default" triso:version="1.2.0"
+  triso:state="Draft">
+    <semantic:extensionElements/>
+    <semantic:import
+      namespace="http://www.trisotech.com/definitions/_d2169127-dea3-4462-86bf-d906cacac137"
+      name="Drawing 1"
+      triso:fileId="eyJmIjp7InBhdGgiOiIvVGVzdEZvbGRlciIsInNrdSI6IjY1NDc5OTk4LTE1MWMtNGZjYS1iZmVjLThhNDY2YzBmNjQxMyIsIm5hbWUiOiJEcmF3aW5nIDEifSwiciI6eyJhcGlrZXkiOiIyOTIwMDNmNjk4NDBlNzEyIn19"
+      triso:fileName="MEA-Test/TestFolder/Drawing 1"
+      importType="http://www.omg.org/spec/DMN/20180521/MODEL/" drools:modelName="Drawing 1"/>
+    <semantic:decisionService id="_ff05700d-8433-4bdc-baa7-ef62c4a165c5_DS"
+      name="Whole Model Decision Service" triso:dynamicDecisionService="true">
+        <semantic:variable name="Whole Model Decision Service"
+          id="_ff05700d-8433-4bdc-baa7-ef62c4a165c5_DS_VAR" typeRef="Any"/>
+        <semantic:outputDecision href="#_fe3dfce1-0d81-46a9-aa71-aa4963805881"/>
+        <semantic:outputDecision href="#_0a08a501-93df-4bf2-aba1-f991f142e3c7"/>
+        <semantic:encapsulatedDecision
+          href="http://www.trisotech.com/definitions/_d2169127-dea3-4462-86bf-d906cacac137#_c32a41ca-2783-4e34-b55e-cdc3f88d9acc"/>
+        <semantic:inputData
+          href="http://www.trisotech.com/definitions/_d2169127-dea3-4462-86bf-d906cacac137#_54e89287-848b-4665-b3e1-3ac5b5a98506"/>
+    </semantic:decisionService>
+    <semantic:decisionService id="_86cc3bde-f17f-4f38-9330-a300c6f63ebd_DS" name="Diagram Page 1"
+      triso:dynamicDecisionService="true">
+        <semantic:variable name="Diagram Page 1" id="_86cc3bde-f17f-4f38-9330-a300c6f63ebd_DS_VAR"
+          typeRef="Any"/>
+        <semantic:outputDecision href="#_fe3dfce1-0d81-46a9-aa71-aa4963805881"/>
+        <semantic:outputDecision href="#_0a08a501-93df-4bf2-aba1-f991f142e3c7"/>
+        <semantic:inputDecision
+          href="http://www.trisotech.com/definitions/_d2169127-dea3-4462-86bf-d906cacac137#_c32a41ca-2783-4e34-b55e-cdc3f88d9acc"/>
+    </semantic:decisionService>
+    <semantic:decision id="_fe3dfce1-0d81-46a9-aa71-aa4963805881" name="Test updating and published">
+        <semantic:variable name="Test updating and published" id="_1fdcf35d-ad1e-4165-a058-ff55a60c2b09"
+          typeRef="Any"/>
+        <semantic:informationRequirement id="_58c7fecc-3979-45ed-95bc-9ade8dd2566c">
+            <semantic:requiredDecision
+              href="http://www.trisotech.com/definitions/_d2169127-dea3-4462-86bf-d906cacac137#_c32a41ca-2783-4e34-b55e-cdc3f88d9acc"/>
+        </semantic:informationRequirement>
+        <semantic:literalExpression id="_47cd8cfe-befd-49c1-8088-a128a72aae14" typeRef="Any"
+          triso:expressionId="_a89b49e1-fb23-4058-9069-80439634f246">
+            <semantic:text>42</semantic:text>
+        </semantic:literalExpression>
+    </semantic:decision>
+    <semantic:decision id="_0a08a501-93df-4bf2-aba1-f991f142e3c7" name="Test Asset on Decision">
+        <semantic:extensionElements>
+            <triso:customAttribute key="knowledgeAssetId"
+              value="https://clinicalknowledgemanagement.mayo.edu/assets/abcdcf3a-93c4-4e09-b1aa-14088c76dead/versions/1.0.1"
+              type="string" id="_a4933896-5190-4f76-adf4-e088fb2d2b06"/>
+        </semantic:extensionElements>
+        <semantic:variable name="Test Asset on Decision" id="_cbef5f4d-011c-41d2-862f-0b9ac96b17f6"
+          typeRef="Any"/>
+    </semantic:decision>
+    <dmndi:DMNDI>
+        <dmndi:DMNDiagram id="_86cc3bde-f17f-4f38-9330-a300c6f63ebd"
+          triso:modelElementRef="_ef9eac0f-fd31-4781-a07f-fd6e2a8ed34f" name="Page 1">
+            <di:extension/>
+            <dmndi:Size height="1050" width="1485"/>
+            <dmndi:DMNShape id="_e924c67a-554e-4b85-b85f-47f76662c13b"
+              dmnElementRef="_fe3dfce1-0d81-46a9-aa71-aa4963805881">
+                <dc:Bounds x="449.5" y="172" width="153" height="60"/>
+                <dmndi:DMNLabel sharedStyle="LS_ff05700d-8433-4bdc-baa7-ef62c4a165c5_0"
+                  trisodmn:defaultBounds="true"/>
+            </dmndi:DMNShape>
+            <dmndi:DMNShape id="_3729d138-822f-4841-b4af-b796f38d97a6"
+              dmnElementRef="include1:_c32a41ca-2783-4e34-b55e-cdc3f88d9acc">
+                <dc:Bounds x="473.5" y="281" width="153" height="60"/>
+                <dmndi:DMNLabel sharedStyle="LS_ff05700d-8433-4bdc-baa7-ef62c4a165c5_0"
+                  trisodmn:defaultBounds="true"/>
+            </dmndi:DMNShape>
+            <dmndi:DMNShape id="_64ce5549-6af5-4195-9838-20223e0acd60"
+              dmnElementRef="_0a08a501-93df-4bf2-aba1-f991f142e3c7">
+                <dc:Bounds x="83.5" y="145" width="153" height="60"/>
+                <dmndi:DMNLabel sharedStyle="LS_ff05700d-8433-4bdc-baa7-ef62c4a165c5_0"
+                  trisodmn:defaultBounds="true"/>
+            </dmndi:DMNShape>
+            <dmndi:DMNEdge id="_825037ac-a00b-454d-bc55-b9bce2de7214"
+              dmnElementRef="_58c7fecc-3979-45ed-95bc-9ade8dd2566c">
+                <di:waypoint x="550" y="281"/>
+                <di:waypoint x="546" y="232"/>
+                <dmndi:DMNLabel sharedStyle="LS_ff05700d-8433-4bdc-baa7-ef62c4a165c5_0"/>
+            </dmndi:DMNEdge>
+        </dmndi:DMNDiagram>
+        <dmndi:DMNStyle id="LS_ff05700d-8433-4bdc-baa7-ef62c4a165c5_0"
+          fontFamily="arial,helvetica,sans-serif" fontSize="11" fontBold="false" fontItalic="false"
+          fontUnderline="false" fontStrikeThrough="false"/>
+    </dmndi:DMNDI>
+</semantic:definitions>

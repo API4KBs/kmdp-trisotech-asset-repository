@@ -26,7 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.registry.Registry;
+import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -212,7 +214,7 @@ class TrisotechAssetRepositoryIntTest {
 
     List<Pointer> pointers = models.getBody();
 
-    assertEquals(4, pointers.size());
+    assertTrue(pointers.size() >= 4);
     pointers.forEach((ptr) -> {
       // only Decision Models should be returned
       assertEquals(KnowledgeAssetType.Decision_Model.getRef(), ptr.getType());
@@ -243,7 +245,7 @@ class TrisotechAssetRepositoryIntTest {
 
     List<Pointer> pointers = models.getBody();
 
-    assertEquals(1, pointers.size());
+    assertTrue(pointers.size() >= 1 && pointers.size() < 3);
     pointers.forEach((ptr) -> {
       // only Decision Models should be returned
       assertEquals(KnowledgeAssetType.Decision_Model.getRef(), ptr.getType());
@@ -447,11 +449,55 @@ class TrisotechAssetRepositoryIntTest {
   }
 
   @Test
-  void setKnowledgeAssetCarrierVersion() {
+  void setKnowledgeAssetCarrierVersion_NotFound_InvalidAssetId() {
     ResponseEntity<Void> responseEntity = tar
         .setKnowledgeAssetCarrierVersion(UUID.randomUUID(), "versionTag", UUID.randomUUID(),
             "artifactVersionTag", null);
-    assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+  }
+
+  @Test
+  void setKnowledgeAssetCarrierVersion_NotFound_InvalidVersion() {
+    InputStream testFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream(
+        "/Test Save As.dmn");
+    ResponseEntity<Void> responseEntity = tar
+        .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
+            "1.0.0",
+            UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"), "",
+            XMLUtil.toByteArray(XMLUtil.loadXMLDocument(testFile).get()));
+    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+  }
+
+  @Test
+  void setKnowledgeAssetCarrierVersion_NotFound_InvalidArtifactid() {
+    InputStream testFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream("/Test Save As.dmn");
+    ResponseEntity<Void> responseEntity = tar
+        .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
+            "1.0.0-SNAPSHOT", UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc53abc"), "",
+            XMLUtil.toByteArray(XMLUtil.loadXMLDocument(testFile).get()));
+    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+  }
+
+
+  @Test
+  void setKnowledgeAssetCarrierVersion_found() {
+    InputStream testFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream("/Test Save As.dmn");
+    ResponseEntity<Void> responseEntity = tar
+        .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
+            "1.0.0-SNAPSHOT", UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"), "",
+            XMLUtil.toByteArray(XMLUtil.loadXMLDocument(testFile).get()));
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+  }
+
+  @Test
+  void setKnowledgeAssetCarrierVersion_published_found() {
+    // not planning on uploading published versions, but test that it works until further notice
+    InputStream publishedFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream("/TestPushingAndPublished.dmn");
+    ResponseEntity<Void> responseEntity = tar.setKnowledgeAssetCarrierVersion(
+        UUID.fromString("abcdcf3a-93c4-4e09-b1aa-14088c76dead"),
+        "1.0.1", UUID.fromString("ff05700d-8433-4bdc-baa7-ef62c4a165c5"), "1.2.0",
+        XMLUtil.toByteArray(XMLUtil.loadXMLDocument(publishedFile).get()));
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 
   @Test

@@ -542,10 +542,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
         // pursuant to the answer to the above TODO, go ahead and PUSH to the current version if it matches CAO
         if (artifactVersion.isPresent()) {
           if (artifactVersion.get().equals(artifactVersionTag)) {
-            // artifact matches, get the file and process
-            // a specific version of knowledge asset carrier (fileId)
-            VersionIdentifier latestArtifactVersion = TrisotechWrapper
-                .getLatestVersion(fileId.get());
             // if have a version, provide it and state to the PUSH
             // TODO: OR ERROR? if there is a version and state, then the model is published;
             //  should not be using this support for published models CAO
@@ -557,7 +553,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           }
         } else {
           // ok for version to not be present, in fact, preferred
-          uploadFile(null, exemplar, trisotechFileInfo, mimeType);
+          uploadFile(artifactVersionTag, exemplar, trisotechFileInfo, mimeType);
         }
       } else {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -528,8 +528,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
       internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, true);
       trisotechFileInfo = TrisotechWrapper
           .getLatestModelFileInfo(fileId.orElse(null));
-      System.out.println("fileUrl for file: " + trisotechFileInfo.getUrl());
-      System.out.println("path for file: " + trisotechFileInfo.getPath());
 
       // verify artifact for asset matches the artifactId requested
       if (internalId.contains(artifactId.toString())) {
@@ -537,8 +535,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
         Optional<String> artifactVersion = extractor.getArtifactVersion(assetId);
         // TODO: If there is a version, do we fail? expect to only have this support on
         //  non-published models, and only published models have a version CAO
-        System.out.println("artifactVersionTag: " + artifactVersionTag);
-        System.out.println("artifactVersion present: " + artifactVersion.isPresent());
         // pursuant to the answer to the above TODO, go ahead and PUSH to the current version if it matches CAO
         if (artifactVersion.isPresent()) {
           if (artifactVersion.get().equals(artifactVersionTag)) {
@@ -553,7 +549,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           }
         } else {
           // ok for version to not be present, in fact, preferred
-          uploadFile(artifactVersionTag, exemplar, trisotechFileInfo, mimeType);
+          uploadFile(null, exemplar, trisotechFileInfo, mimeType);
         }
       } else {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

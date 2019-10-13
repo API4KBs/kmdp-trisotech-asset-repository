@@ -188,7 +188,7 @@ class TrisotechAssetRepositoryIntTest {
 
     List<Pointer> pointers = models.getBody();
 
-    assertEquals(6, pointers.size());
+    assertTrue(pointers.size() >= 6);
     // Confirm some of the values
     pointers.forEach((ptr) -> {
       if(expectedDecisionId.equals(ptr.getHref().toString())) {

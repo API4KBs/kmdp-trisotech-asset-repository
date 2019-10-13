@@ -581,8 +581,13 @@ public class TrisotechWrapper {
    * @return true/false
    */
   private static boolean publishedModel(TrisotechFileInfo trisotechFileInfo) {
-    return (Optional.ofNullable(trisotechFileInfo.getState()).isPresent() &&
-        Optional.ofNullable(trisotechFileInfo.getVersion()).isPresent());
+    // using the new POST capabilities, it is possible to get a state and version of ""
+    // which can mess up the search for models as the SPARQL query will not return
+    // those values
+    return ((Optional.ofNullable(trisotechFileInfo.getState()).isPresent() &&
+        !trisotechFileInfo.getState().isEmpty()) &&
+        (Optional.ofNullable(trisotechFileInfo.getVersion()).isPresent() &&
+        !trisotechFileInfo.getVersion().isEmpty()));
   }
 
 
@@ -658,25 +663,29 @@ public class TrisotechWrapper {
       String mimeType, String version, String state,
       byte[] fileContents)
       throws IOException {
-    System.out.println(
-        "uploadXmlModel, path: " + path + " mimeType: " + mimeType + " version: " + version
-            + " state: " + state);
+
     // first make sure mimetype is in correct format for API call
     mimeType = getXmlMimeType(mimeType);
+    URI uri;
 
     // NOTE: MUST Use UriComponentBuilder to handle '+' in the MimeType, otherwise it will be
     // double-encoded and request will fail to return all values expected
     // See: https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#web-uri-encoding for details
-    URI uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
-        + CONTENT_PATH_POST)
-        .build(getRepositoryId(rootDirectory), mimeType, path, version, state);
+    if(null == version || null == state) {
+      uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
+          + CONTENT_PATH)
+          .build(getRepositoryId(rootDirectory), mimeType, path);
+    } else {
+      uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
+          + CONTENT_PATH_POST)
+          .build(getRepositoryId(rootDirectory), mimeType, path, version, state);
+    }
 
     MultipartEntityBuilder mb = MultipartEntityBuilder.create();
     mb.addBinaryBody("file", fileContents);
     org.apache.http.HttpEntity e = mb.build();
 
-    System.out.println("e.contenttype: " + e.getContentType().toString());
-    System.out.println("uri.toURL: " + uri.toURL());
+    logger.debug("uri.toURL: " + uri.toURL());
     HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
     final String boundary = Strings.repeat("-", 15) + Long.toHexString(System.currentTimeMillis());
 
@@ -725,20 +734,13 @@ public class TrisotechWrapper {
 
 
     if (conn.getResponseCode() != 200) {
-
-      System.out.println("Response Status Code = " + conn.getResponseCode());
-      System.out.println("Response Message:");
-      System.out.println(conn.getResponseMessage());
-
       if (401 == conn.getResponseCode()) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()
             + "Confirm token value");
       } else {
-        System.out.println("responsecode information: " + conn.getResponseMessage());
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
       }
     }
-    System.out.println("inputStream: " + conn.getInputStream().toString());
     conn.getInputStream().close();
     return;
   }

@@ -186,10 +186,6 @@ public class Weaver {
         "xsi:" + "schemaLocation",
         getSchemaLocations(dox));
 
-    // first rename and move elements needed out of diagram element and into root element
-    NodeList diagramExtension = dox.getElementsByTagNameNS(diagramNS, diagramExt);
-    weaveDiagramExtension(diagramExtension, dox);
-
     // relationships can be in CMMN TODO: Can tell if DMN or CMMNN so don't try to process items only in one? CAO
     NodeList relations = dox.getElementsByTagNameNS(metadataNS, metadataRS);
     weaveRelations(relations);
@@ -348,37 +344,6 @@ public class Weaver {
     );
   }
 
-
-  /**
-   * weaveDiagramExtension will take data from the diagram section of the DMN that are needed and
-   * move them to be parented by the root. Specifically: Extract the <di:extension></di:extension>
-   * fragment and rename to <semantic:extensionElements></semantic:extensionElements> Move as a
-   * child of the root of the document
-   */
-  private void weaveDiagramExtension(NodeList diagramExtension, Document dox) {
-    logger.debug("weaveDiagramExtension size: {} ", diagramExtension.getLength());
-    asElementStream(diagramExtension)
-        .forEach(el -> {
-          logger.debug(String.format(
-              "el: tagName %s nodeName: %s localname: %s baseURI: %s NamespaceURI: %s nodeValue: %s",
-              el.getTagName(), el.getNodeName(), el.getLocalName(), el.getBaseURI(),
-              el.getNamespaceURI(), el.getNodeValue()));
-          reparentDiagramElement(el, dox);
-        });
-  }
-
-  /**
-   * rename and reparent the diagram element
-   */
-  private void reparentDiagramElement(Element el, Document dox) {
-    NodeList children = el.getChildNodes();
-    Element newElement = dox
-        .createElementNS(dox.getDocumentElement().getNamespaceURI(), metadataExt);
-    newElement.setPrefix("semantic");
-    asElementStream(children)
-        .forEach(newElement::appendChild);
-    dox.getDocumentElement().appendChild(newElement);
-  }
 
   private void weaveRelations(NodeList relations) {
     logger.debug("weaveRelations.... relations size: {}", relations.getLength());

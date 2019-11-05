@@ -186,7 +186,7 @@ class TrisotechAssetRepositoryIntTest {
 
     List<Pointer> pointers = models.getBody();
 
-    assertEquals(6, pointers.size());
+    assertTrue(pointers.size() >= 6);
     // Confirm some of the values
     pointers.forEach((ptr) -> {
       if(expectedDecisionId.equals(ptr.getHref().toString())) {
@@ -212,7 +212,7 @@ class TrisotechAssetRepositoryIntTest {
 
     List<Pointer> pointers = models.getBody();
 
-    assertEquals(4, pointers.size());
+    assertTrue(pointers.size() >= 4);
     pointers.forEach((ptr) -> {
       // only Decision Models should be returned
       assertEquals(KnowledgeAssetType.Decision_Model.getRef(), ptr.getType());
@@ -243,7 +243,7 @@ class TrisotechAssetRepositoryIntTest {
 
     List<Pointer> pointers = models.getBody();
 
-    assertEquals(1, pointers.size());
+    assertTrue(pointers.size() >= 1);
     pointers.forEach((ptr) -> {
       // only Decision Models should be returned
       assertEquals(KnowledgeAssetType.Decision_Model.getRef(), ptr.getType());

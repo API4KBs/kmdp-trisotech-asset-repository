@@ -402,7 +402,7 @@ class TrisotechWrapperIntTest {
   final void testGetCmmnModels() {
     List<TrisotechFileInfo> cmmnModels = TrisotechWrapper.getCMMNModelsFileInfo();
     assertNotNull(cmmnModels);
-    assertEquals(3, cmmnModels.size());
+    assertTrue(cmmnModels.size() >= 3);
   }
 
   @Test
@@ -416,7 +416,7 @@ class TrisotechWrapperIntTest {
   final void testGetPublishedDmnModels() {
     List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedDMNModelsFileInfo();
     assertNotNull(publishedModels);
-    assertEquals(4, publishedModels.size());
+    assertTrue(publishedModels.size() >= 4);
   }
 
   @Test

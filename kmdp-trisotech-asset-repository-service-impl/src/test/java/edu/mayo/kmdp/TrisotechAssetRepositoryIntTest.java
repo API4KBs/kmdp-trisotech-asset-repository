@@ -34,6 +34,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
@@ -478,7 +479,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
   }
 
-
+  @Disabled("turn on when trisotech provides fix")
   @Test
   void setKnowledgeAssetCarrierVersion_found() {
     InputStream testFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream("/Test Save As.dmn");
@@ -489,6 +490,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 
+  @Disabled("turn on when trisotech provides fix")
   @Test
   void setKnowledgeAssetCarrierVersion_published_found() {
     // not planning on uploading published versions, but test that it works until further notice

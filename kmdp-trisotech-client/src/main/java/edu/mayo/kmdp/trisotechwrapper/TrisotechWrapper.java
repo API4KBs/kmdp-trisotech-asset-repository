@@ -704,35 +704,6 @@ public class TrisotechWrapper {
     addFileData("file", filename, fileContents, body, fout, boundary);
     addCloseDelimiter(body, boundary);
 
-//    e.writeTo(fout);
-//    fout.close();
-
-//    OutputStream os = conn.getOutputStream();
-//    os.write(fileContents);
-//    os.flush();
-//    os.close();
-
-    // **** PICK UP HERE ****
-    // THESE 3 lines are examples of writing a byte[] to OutputStream
-//    outputStream.write(b);
-//    outputStream.flush();
-//    outputStream.close();
-
-//    BufferedWriter httpRequestBodyWriter = new BufferedWriter( new OutputStreamWriter( conn.getOutputStream()));
-//    httpRequestBodyWriter.write( String.format( "file=", fileContents ) );
-//    httpRequestBodyWriter.close();
-
-//    try (BufferedReader br = new BufferedReader(
-//        new InputStreamReader(conn.getInputStream(), "utf-8"))) {
-//      StringBuilder response = new StringBuilder();
-//      String responseLine = null;
-//      while ((responseLine = br.readLine()) != null) {
-//        response.append(responseLine.trim());
-//      }
-//      System.out.println(response.toString());
-//    }
-
-
     if (conn.getResponseCode() != 200) {
       if (401 == conn.getResponseCode()) {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()
@@ -742,6 +713,7 @@ public class TrisotechWrapper {
       }
     }
     conn.getInputStream().close();
+    fout.close();
     return;
   }
 

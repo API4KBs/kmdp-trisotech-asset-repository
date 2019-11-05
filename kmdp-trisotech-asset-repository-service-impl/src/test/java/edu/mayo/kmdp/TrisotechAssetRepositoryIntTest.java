@@ -247,6 +247,7 @@ class TrisotechAssetRepositoryIntTest {
     List<Pointer> pointers = models.getBody();
 
     assertTrue(pointers.size() >= 1 && pointers.size() < 3);
+
     pointers.forEach((ptr) -> {
       // only Decision Models should be returned
       assertEquals(KnowledgeAssetType.Decision_Model.getRef(), ptr.getType());

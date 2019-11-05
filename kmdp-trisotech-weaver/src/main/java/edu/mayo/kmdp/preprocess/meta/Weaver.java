@@ -186,7 +186,6 @@ public class Weaver {
         "xsi:" + "schemaLocation",
         getSchemaLocations(dox));
 
-
     // relationships can be in CMMN TODO: Can tell if DMN or CMMNN so don't try to process items only in one? CAO
     NodeList relations = dox.getElementsByTagNameNS(metadataNS, metadataRS);
     weaveRelations(relations);
@@ -343,19 +342,6 @@ public class Weaver {
           }
         }
     );
-  }
-
-  /**
-   * rename and reparent the diagram element
-   */
-  private void reparentDiagramElement(Element el, Document dox) {
-    NodeList children = el.getChildNodes();
-    Element newElement = dox
-        .createElementNS(dox.getDocumentElement().getNamespaceURI(), metadataExt);
-    newElement.setPrefix("semantic");
-    asElementStream(children)
-        .forEach(newElement::appendChild);
-    dox.getDocumentElement().appendChild(newElement);
   }
 
   private void weaveRelations(NodeList relations) {
@@ -599,6 +585,5 @@ public class Weaver {
 
     return sb.toString();
   }
-
 
 }

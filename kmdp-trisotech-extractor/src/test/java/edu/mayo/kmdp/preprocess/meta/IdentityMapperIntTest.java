@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.apache.jena.rdf.model.Resource;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -301,6 +302,7 @@ class IdentityMapperIntTest {
     assertEquals(Optional.empty(), mimetype);
   }
 
+  @Disabled("until get fix or replacement for hierarchySorter")
   @Test
   void getOrderedModels() {
     List<Resource> models = identityMapper.getOrderedModels();

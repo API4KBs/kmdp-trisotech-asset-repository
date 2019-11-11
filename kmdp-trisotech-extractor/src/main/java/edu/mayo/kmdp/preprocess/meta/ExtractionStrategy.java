@@ -41,7 +41,7 @@ public interface ExtractionStrategy {
 	Optional<URIIdentifier> getAssetID( Document dox );
 	Optional<URIIdentifier> getAssetID(String fileId);
 
-	Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
+  Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
 	URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId);
 
 	Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag, boolean any)

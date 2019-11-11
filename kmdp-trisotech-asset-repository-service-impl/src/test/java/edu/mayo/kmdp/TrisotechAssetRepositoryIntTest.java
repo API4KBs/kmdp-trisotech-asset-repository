@@ -480,7 +480,6 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
   }
 
-  @Disabled("turn on when trisotech provides fix")
   @Test
   void setKnowledgeAssetCarrierVersion_found() {
     InputStream testFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream("/Test Save As.dmn");
@@ -491,7 +490,6 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 
-  @Disabled("turn on when trisotech provides fix")
   @Test
   void setKnowledgeAssetCarrierVersion_published_found() {
     // not planning on uploading published versions, but test that it works until further notice

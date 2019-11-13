@@ -30,6 +30,7 @@ import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRepositoryApiDelegate
 import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRetrievalApiDelegate;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
 import java.io.IOException;
 import java.net.URI;
@@ -44,6 +45,7 @@ import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
+import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -287,13 +289,14 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
         URI enterpriseId = extractor
             .getEnterpriseAssetIdForAssetVersionId(enterpriseVersionId.get());
         // get the model file -- always do get Canonical
-        carrier = new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+        String internalFileId = extractor.getFileId(assetId, false).get();
+        carrier = new BinaryCarrier().withArtifactId(new URIIdentifier()
+            .withUri(URI.create(getInternalIdAndVersion(assetId, versionTag))))
             .withAssetId(new URIIdentifier()
                 .withUri(enterpriseId)
                 .withVersionId(enterpriseVersionId.get()))
-            .withArtifactId(new URIIdentifier().withUri(URI.create(
-                getInternalIdAndVersion(assetId, versionTag))));
-
+            .withEncodedExpression(XMLUtil.toByteArray(
+                weaver.weave(resolveModel(internalFileId, null))));
       } else {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }

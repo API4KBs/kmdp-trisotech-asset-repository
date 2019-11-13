@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
+import org.omg.spec.api4kp._1_0.services.resources.BinaryCarrier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -343,6 +344,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(expectedAssetVersionId, kc.getAssetId().getVersionId().toString());
     assertEquals(expectedArtifactId,
         kc.getArtifactId().getVersionId().toString());
+
 
   }
 

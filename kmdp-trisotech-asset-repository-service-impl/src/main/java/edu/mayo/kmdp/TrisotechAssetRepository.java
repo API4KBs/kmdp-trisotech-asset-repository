@@ -13,7 +13,6 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_UPPER;
@@ -43,9 +42,9 @@ import org.apache.jena.shared.NotFoundException;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
+import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
-import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -330,24 +329,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
       throws NotLatestVersionException {
     String internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, false);
     Optional<String> version = extractor.getArtifactVersion(assetId);
-    return convertInternalId(internalId,
+    return extractor.convertInternalId(internalId,
         version.orElse(null)); // TODO: better alternative? error? CAO
-  }
-
-  /**
-   * Need the Trisotech path converted to KMDP path and underscores removed
-   * TODO: move to utility class? put in extractor?  The other place this happens is Weaver CAO
-   *
-   * @param internalId the Trisotech internal id for the model
-   * @return the KMDP-ified internal id
-   */
-  private String convertInternalId(String internalId, String versionTag) {
-    String id = internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
-    if (null == versionTag) {
-      return CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id;
-    } else {
-      return CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id + "/versions/" + versionTag;
-    }
   }
 
   /**
@@ -414,7 +397,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
                   .withVersionId(enterpriseVersionAssetId.get()))
               .withArtifactId(new URIIdentifier()
                   .withUri(URI.create(
-                      convertInternalId(artifactId.toString(),
+                      extractor.convertInternalId(artifactId.toString(),
                           latestArtifactVersion.getVersion()))));
 
         } else {
@@ -468,8 +451,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
             new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
                 .withAssetId(asset)
                 .withArtifactId(new URIIdentifier()
-                    .withUri(URI.create(convertInternalId(internalId, null)))
-                    .withVersionId(URI.create(convertInternalId(internalId, model.getVersion())))),
+                    .withUri(URI.create(extractor.convertInternalId(internalId, null)))
+                    .withVersionId(URI.create(extractor.convertInternalId(internalId, model.getVersion())))),
             HttpStatus.OK);
       }
     }

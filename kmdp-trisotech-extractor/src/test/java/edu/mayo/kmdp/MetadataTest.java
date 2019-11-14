@@ -17,6 +17,7 @@ package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.JSON;
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.XML;
+import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -364,7 +365,6 @@ class MetadataTest {
     assertEquals("123720a6-9758-45a3-8c5c-5fffab12c494", fileid.get());
   }
 
-
   @Test
   void testGetFileId_internalId_empty() {
     Optional<String> fileid = extractor.getFileId("abcdef3a-93c4-4e09-b1aa-14088c76adee");
@@ -373,13 +373,29 @@ class MetadataTest {
     assertEquals(Optional.empty(), fileid);
   }
 
-
   @Test
   void testGetFileId_internalId_URIString_empty() {
     Optional<String> fileid = extractor.getFileId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e7abcd");
     assertNotNull(fileid);
     assertFalse(fileid.isPresent());
     assertEquals(Optional.empty(), fileid);
+  }
+
+  @Test
+  void testConvertInternalId() {
+    String id = "5682fa26-b064-43c8-9475-1e4281e7abcd";
+    String internalId = "http://www.trisotech.com/definitions/_" + id;
+    String versionTag = "3.2.4";
+    String expectedFileId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id;
+    String expectedFileIdAndVersion = expectedFileId + "/versions/" + versionTag;
+
+
+    String fileId = extractor.convertInternalId(internalId, null);
+    assertNotNull(fileId);
+    assertEquals(expectedFileId, fileId);
+    fileId = extractor.convertInternalId(internalId, versionTag);
+    assertNotNull(fileId);
+    assertEquals(expectedFileIdAndVersion, fileId);
   }
 
 

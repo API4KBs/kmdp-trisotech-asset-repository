@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
+import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Plans_Processes_Pathways_And_Protocol_Definitions;
@@ -209,6 +210,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 //    // Dependencies TODO: [asset -> asset ] CAO
 //    resolveDependencies(surr, dox)
 
+    logger.debug("surrogate in JSON format: " + new String(JSonUtil.writeJson(surr).get().toByteArray()));
+
     return surr;
   }
 
@@ -246,8 +249,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         knowledgeAsset = new KnowledgeAsset().withAssetId(
             // TODO: Is this right? Should be KnowledgeResource? KnowledgeAsset ISA KnowledgeResource CAO
             new URIIdentifier()
-                .withUri(URI.create(resource
-                    .getURI()))) // TODO: URI is the Trisotech URI -- need to convert to ckm? CAO
+                .withUri(URI.create(convertInternalId(resource
+                    .getURI(), null))))
             .withName(resource
                 .getLocalName()); // TODO: Ask Davide - better name? tgt must have name to pass marshal CAO
         knowledgeAssets.add(knowledgeAsset);
@@ -353,6 +356,22 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return annos;
   }
 
+  /**
+   * Need the Trisotech path converted to KMDP path and underscores removed
+   * TODO: move to utility class? The other place this happens is Weaver CAO
+   *
+   * @param internalId the Trisotech internal id for the model
+   * @return the KMDP-ified internal id
+   */
+  public String convertInternalId(String internalId, String versionTag) {
+    String id = internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
+    if (null == versionTag) {
+      return CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id;
+    } else {
+      return CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id + "/versions/" + versionTag;
+    }
+  }
+
   @Override
   public Optional<URIIdentifier> getAssetID(Document dox) {
     return getIDAnnotationValue(dox)
@@ -374,18 +393,20 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return mapper.getEnterpriseAssetIdForAssetVersionId(enterpriseAssetVersionId);
   }
 
-  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag)
+  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag,
+      boolean any)
       throws NotLatestVersionException {
-    return mapper.getEnterpriseAssetVersionIdForAsset(assetId, versionTag);
+    return mapper.getEnterpriseAssetVersionIdForAsset(assetId, versionTag, any);
   }
 
-  public Optional<String> getFileId(UUID assetId) {
-    return mapper.getFileId(assetId);
+  public Optional<String> getFileId(UUID assetId, boolean any) {
+    return mapper.getFileId(assetId, any);
   }
+
 
   @Override
-  public String getArtifactID(URIIdentifier id) throws NotLatestVersionException {
-    return mapper.getArtifactId(id);
+  public String getArtifactID(URIIdentifier id, boolean any) throws NotLatestVersionException {
+    return mapper.getArtifactId(id, any);
   }
 
   public Optional<String> getFileId(String internalId) {
@@ -483,6 +504,5 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return resId
         .orElseThrow(IllegalStateException::new); // TODO: better return value if not existent? CAO
   }
-
 
 }

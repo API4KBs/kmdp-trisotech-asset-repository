@@ -26,7 +26,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.registry.Registry;
+import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -73,7 +76,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = Registry.MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedArtifactId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.0";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
     ResponseEntity<KnowledgeAsset> responseEntity = tar
         .getKnowledgeAsset(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"));
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -107,7 +110,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = Registry.MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedArtifactId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.0";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
 
     ResponseEntity<KnowledgeAsset> responseEntity = tar
         .getVersionedKnowledgeAsset(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"),
@@ -121,7 +124,6 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(1, ka.getCarriers().size());
     assertEquals(expectedArtifactId,
         ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
-
   }
 
   @Test
@@ -146,6 +148,31 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(expectedArtifactId,
         ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
 
+  }
+
+
+  @Test
+  void getVersionedKnowledgeAsset_PendingApproval() {
+    String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI
+        + "e35a686e-5b72-4feb-b923-b79ac1417613";
+    String expectedAssetVersionId = Registry.MAYO_ASSETS_BASE_URI
+        + "e35a686e-5b72-4feb-b923-b79ac1417613/versions/1.0.0";
+    String expectedArtifactId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI
+        + "ad174bca-8dd1-4e35-8933-e7456e1f3e5c/versions/0.0.1";
+
+    ResponseEntity<KnowledgeAsset> responseEntity = tar
+        .getVersionedKnowledgeAsset(UUID.fromString("e35a686e-5b72-4feb-b923-b79ac1417613"),
+            "1.0.0");
+
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertNotNull(responseEntity.getBody());
+    KnowledgeAsset ka = responseEntity.getBody();
+    assertEquals(expectedAssetId, ka.getAssetId().getUri().toString());
+    assertEquals(expectedAssetVersionId, ka.getAssetId().getVersionId().toString());
+    assertEquals(1, ka.getCarriers().size());
+    assertEquals(expectedArtifactId,
+        ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
+    assertEquals(PublicationStatus.Final_Draft, ka.getLifecycle().getPublicationStatus());
   }
 
   @Test
@@ -186,7 +213,7 @@ class TrisotechAssetRepositoryIntTest {
 
     List<Pointer> pointers = models.getBody();
 
-    assertEquals(6, pointers.size());
+    assertTrue(pointers.size() >= 6);
     // Confirm some of the values
     pointers.forEach((ptr) -> {
       if(expectedDecisionId.equals(ptr.getHref().toString())) {
@@ -212,7 +239,7 @@ class TrisotechAssetRepositoryIntTest {
 
     List<Pointer> pointers = models.getBody();
 
-    assertEquals(4, pointers.size());
+    assertTrue(pointers.size() >= 4);
     pointers.forEach((ptr) -> {
       // only Decision Models should be returned
       assertEquals(KnowledgeAssetType.Decision_Model.getRef(), ptr.getType());
@@ -243,7 +270,8 @@ class TrisotechAssetRepositoryIntTest {
 
     List<Pointer> pointers = models.getBody();
 
-    assertEquals(1, pointers.size());
+    assertTrue(pointers.size() >= 1 && pointers.size() < 3);
+
     pointers.forEach((ptr) -> {
       // only Decision Models should be returned
       assertEquals(KnowledgeAssetType.Decision_Model.getRef(), ptr.getType());
@@ -304,7 +332,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = Registry.MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedArtifactId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.0";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
 
     ResponseEntity<KnowledgeCarrier> responseEntity = tar
         .getCanonicalKnowledgeAssetCarrier(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"),
@@ -340,6 +368,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(expectedArtifactId,
         kc.getArtifactId().getVersionId().toString());
 
+
   }
 
   @Test
@@ -366,12 +395,12 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = expectedAssetId
         + "/versions/1.0.0";
     String expectedArtifactId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.0";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
 
     ResponseEntity<KnowledgeCarrier> responseEntity = tar
         .getKnowledgeAssetCarrierVersion(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"),
             "1.0.0",
-            UUID.fromString("ee0c768a-a0d4-4052-a6ea-fc0a3889b356"), "1.3.0");
+            UUID.fromString("ee0c768a-a0d4-4052-a6ea-fc0a3889b356"), "1.3.1");
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     assertNotNull(responseEntity.getBody());
@@ -447,11 +476,54 @@ class TrisotechAssetRepositoryIntTest {
   }
 
   @Test
-  void setKnowledgeAssetCarrierVersion() {
+  void setKnowledgeAssetCarrierVersion_NotFound_InvalidAssetId() {
     ResponseEntity<Void> responseEntity = tar
         .setKnowledgeAssetCarrierVersion(UUID.randomUUID(), "versionTag", UUID.randomUUID(),
             "artifactVersionTag", null);
-    assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+  }
+
+  @Test
+  void setKnowledgeAssetCarrierVersion_NotFound_InvalidVersion() {
+    InputStream testFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream(
+        "/Test Save As.dmn");
+    ResponseEntity<Void> responseEntity = tar
+        .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
+            "1.0.0",
+            UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"), "",
+            XMLUtil.toByteArray(XMLUtil.loadXMLDocument(testFile).get()));
+    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+  }
+
+  @Test
+  void setKnowledgeAssetCarrierVersion_NotFound_InvalidArtifactid() {
+    InputStream testFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream("/Test Save As.dmn");
+    ResponseEntity<Void> responseEntity = tar
+        .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
+            "1.0.0-SNAPSHOT", UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc53abc"), "",
+            XMLUtil.toByteArray(XMLUtil.loadXMLDocument(testFile).get()));
+    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+  }
+
+  @Test
+  void setKnowledgeAssetCarrierVersion_found() {
+    InputStream testFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream("/Test Save As.dmn");
+    ResponseEntity<Void> responseEntity = tar
+        .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
+            "1.0.0-SNAPSHOT", UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"), "",
+            XMLUtil.toByteArray(XMLUtil.loadXMLDocument(testFile).get()));
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+  }
+
+  @Test
+  void setKnowledgeAssetCarrierVersion_published_found() {
+    // not planning on uploading published versions, but test that it works until further notice
+    InputStream publishedFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream("/TestPushingAndPublished.dmn");
+    ResponseEntity<Void> responseEntity = tar.setKnowledgeAssetCarrierVersion(
+        UUID.fromString("abcdcf3a-93c4-4e09-b1aa-14088c76dead"),
+        "1.0.1", UUID.fromString("ff05700d-8433-4bdc-baa7-ef62c4a165c5"), "1.2.0",
+        XMLUtil.toByteArray(XMLUtil.loadXMLDocument(publishedFile).get()));
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 
   @Test

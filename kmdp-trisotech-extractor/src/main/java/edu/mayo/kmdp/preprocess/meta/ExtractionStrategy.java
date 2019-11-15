@@ -41,19 +41,19 @@ public interface ExtractionStrategy {
 	Optional<URIIdentifier> getAssetID( Document dox );
 	Optional<URIIdentifier> getAssetID(String fileId);
 
-	Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
+  Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
 	URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId);
 
-	Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag)
+	Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag, boolean any)
 			throws NotLatestVersionException;
 
 	Optional<String> getArtifactID( Document dox, TrisotechFileInfo meta );
 
-	String getArtifactID(URIIdentifier id) throws NotLatestVersionException;
+	String getArtifactID(URIIdentifier id, boolean any) throws NotLatestVersionException;
 
   Optional<Representation> getRepLanguage( Document dox, boolean concrete );
-	Optional<String> getMimetype(UUID assetId);
 
+  Optional<String> getMimetype(UUID assetId);
 	Optional<String> getMimetype(String internalId);
 
 	Optional<String> getArtifactVersion(UUID assetId);
@@ -62,6 +62,6 @@ public interface ExtractionStrategy {
 
 	Optional<String> getFileId(String internalId);
 
-	Optional<String> getFileId(UUID assetId);
+	Optional<String> getFileId(UUID assetId, boolean any);
 
 }

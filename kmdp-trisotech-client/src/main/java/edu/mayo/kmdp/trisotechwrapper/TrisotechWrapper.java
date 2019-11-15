@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
@@ -19,12 +17,14 @@ import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.BASE_URL;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CONTENT_PATH;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CONTENT_PATH_POST;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.REPOSITORY_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.VERSIONS_PATH;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileData;
@@ -32,7 +32,13 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
 import edu.mayo.kmdp.util.XMLUtil;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -42,6 +48,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.jena.ext.com.google.common.base.Strings;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,11 +66,13 @@ import org.w3c.dom.Document;
 public class TrisotechWrapper {
 
   private static final Logger logger = LoggerFactory.getLogger(TrisotechWrapper.class);
+  private static final String CRLF = "\r\n";
   private static String rootDirectory;
 
   private static String token;
 
-  private TrisotechWrapper() {}
+  private TrisotechWrapper() {
+  }
 
   /**
    * Because static values cannot be set using @Value, these are set through setters
@@ -241,6 +251,16 @@ public class TrisotechWrapper {
   }
 
   /**
+   * Updates the model for the fileId provided with the file provided
+   *
+   * @param fileId the fileId of the file to be updated
+   * @param data the XML data to update the file
+   */
+  public static void updateModelFile(String fileId, byte[] data) {
+
+  }
+
+  /**
    * Trisotech by default returns JSON files. In order to get a XML-ready URL for downloading
    * XML-compliant model information, a mimeType must be provided in the query.
    * This method will be used when the mimeType is not provided initially. It will first query all
@@ -262,15 +282,25 @@ public class TrisotechWrapper {
       // we don't get the XML path unless we provide the correct mimetype in the query.
       // contains() is used as a test as the mimetype returned is not exactly what we need, but
       // can be used to determine which one to use
-      if (fileInfo.getMimetype().contains(DMN_LOWER)) {
-        return DMN_XML_MIMETYPE;
-      } else if (fileInfo.getMimetype().contains(CMMN_LOWER)) {
-        return CMMN_XML_MIMETYPE;
-      } else {
-        return null; // TODO: error? undefined mimetype?? shouldn't ever happen CAO
-      }
+      return getXmlMimeType(fileInfo.getMimetype());
     }
     return null; // TODO: error? undefined mimetype?? shouldn't ever happen CAO
+  }
+
+  /**
+   * get the XML-specified mimeType for transferring XML files with Trisotech
+   *
+   * @param mimetype the mimetype specified through file information
+   * @return the XML mimetype specfication to be used in API calls
+   */
+  private static String getXmlMimeType(String mimetype) {
+    if (mimetype.contains(DMN_LOWER)) {
+      return DMN_XML_MIMETYPE;
+    } else if (mimetype.contains(CMMN_LOWER)) {
+      return CMMN_XML_MIMETYPE;
+    } else {
+      return null; // TODO: error? undefined mimetype?? shouldn't ever happen CAO
+    }
   }
 
   /**
@@ -354,16 +384,9 @@ public class TrisotechWrapper {
           .format("getModelVersions for model: %s in repository: %s with mimetype: %s", fileId,
               repositoryName, mimetype));
     }
-    if(!DMN_XML_MIMETYPE.equals(mimetype) || !CMMN_XML_MIMETYPE.equals(mimetype)) {
+    if (!DMN_XML_MIMETYPE.equals(mimetype) || !CMMN_XML_MIMETYPE.equals(mimetype)) {
       // not a valid mimetype, but maybe can determine
-      if(mimetype.contains(DMN_LOWER)) {
-        mimetype = DMN_XML_MIMETYPE;
-      } else if(mimetype.contains(CMMN_LOWER)) {
-        mimetype = CMMN_XML_MIMETYPE;
-      } else {
-        // TODO: error? invalid mimetype -- shouldn't happen CAO
-        return versions;
-      }
+      mimetype = getXmlMimeType(mimetype);
     }
     String repositoryId = getRepositoryId(repositoryName);
     URI uri;
@@ -558,8 +581,13 @@ public class TrisotechWrapper {
    * @return true/false
    */
   private static boolean publishedModel(TrisotechFileInfo trisotechFileInfo) {
-    return (Optional.ofNullable(trisotechFileInfo.getState()).isPresent() &&
-        Optional.ofNullable(trisotechFileInfo.getVersion()).isPresent());
+    // using the new POST capabilities, it is possible to get a state and version of ""
+    // which can mess up the search for models as the SPARQL query will not return
+    // those values
+    return ((Optional.ofNullable(trisotechFileInfo.getState()).isPresent() &&
+        !trisotechFileInfo.getState().isEmpty()) &&
+        (Optional.ofNullable(trisotechFileInfo.getVersion()).isPresent() &&
+        !trisotechFileInfo.getVersion().isEmpty()));
   }
 
 
@@ -617,10 +645,99 @@ public class TrisotechWrapper {
         throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()
             + "Confirm token value");
       } else {
-          throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
       }
     }
     return conn;
   }
 
+  /**
+   * Upload model file to Tristotech
+   * @param path The path location for the file to be uploaded to
+   * @param filename The name of the file uploading
+   * @param version the version for the file (NOTE: only for published models)
+   * @param state the state for the file (NOTE: only for published models)
+   * @param fileContents the file contents
+   */
+  public static void uploadXmlModel(String path, String filename,
+      String mimeType, String version, String state,
+      byte[] fileContents)
+      throws IOException {
+
+    // first make sure mimetype is in correct format for API call
+    mimeType = getXmlMimeType(mimeType);
+    URI uri;
+
+    // NOTE: MUST Use UriComponentBuilder to handle '+' in the MimeType, otherwise it will be
+    // double-encoded and request will fail to return all values expected
+    // See: https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#web-uri-encoding for details
+    if(null == version || null == state) {
+      uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
+          + CONTENT_PATH)
+          .build(getRepositoryId(rootDirectory), mimeType, path);
+    } else {
+      uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
+          + CONTENT_PATH_POST)
+          .build(getRepositoryId(rootDirectory), mimeType, path, version, state);
+    }
+
+    MultipartEntityBuilder mb = MultipartEntityBuilder.create();
+    mb.addBinaryBody("file", fileContents);
+    org.apache.http.HttpEntity e = mb.build();
+
+    logger.debug("uri.toURL: " + uri.toURL());
+    HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
+    final String boundary = Strings.repeat("-", 15) + Long.toHexString(System.currentTimeMillis());
+
+    conn.setDoInput(true);
+    conn.setDoOutput(true);
+    conn.setRequestMethod("POST");
+    conn.setRequestProperty(ACCEPT, "application/json");
+    conn.setRequestProperty(AUTHORIZATION, "Bearer " + token);
+    conn.setRequestProperty(CONTENT_TYPE, "multipart/form-data; boundary=" + boundary);
+//    conn.setRequestProperty(e.getContentType().getName(), e.getContentType().getValue());
+//    ;
+//    conn.addRequestProperty("Content-Length", String.valueOf(e.getContentLength()));
+    OutputStream fout = conn.getOutputStream();
+    PrintWriter body = new PrintWriter(new OutputStreamWriter(fout), true);
+    body.append(CRLF);
+    addFileData("file", filename, fileContents, body, fout, boundary);
+    addCloseDelimiter(body, boundary);
+
+    if (conn.getResponseCode() != 200) {
+      if (401 == conn.getResponseCode()) {
+        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()
+            + "Confirm token value");
+      } else {
+        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+      }
+    }
+    conn.getInputStream().close();
+    fout.close();
+    return;
+  }
+
+  private static void addFileData(String paramName, String filename, byte[] byteStream, PrintWriter body,
+      OutputStream directOutput, final String boundary)
+      throws IOException {
+    body.append("--").append(boundary).append(CRLF);
+    body.append(
+        "Content-Disposition: form-data; name=\"" + paramName + "\"; filename=\"" + filename + "\"")
+        .append(CRLF);
+    body.append("Content-Type: application/octed-stream").append(CRLF);
+    body.append("Content-Transfer-Encoding: binary").append(CRLF);
+    body.append(CRLF);
+    body.flush();
+
+    directOutput.write(byteStream);
+    directOutput.flush();
+
+    body.append(CRLF);
+    body.flush();
+
+  }
+  private static void addCloseDelimiter(PrintWriter body, final String boundary) {
+    body.append("--").append(boundary).append("--").append(CRLF);
+    body.flush();
+  }
 }

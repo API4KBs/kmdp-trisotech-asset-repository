@@ -45,13 +45,14 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
 /**
- * MetadataExtractor takes the output of the Weaver and the information of the file to create
+ * MetadataExtractor takes the output of the Weaver and the information of the artifact to create
  * a KnowledgeAsset surrogate.
  */
 @Component
 public class MetadataExtractor {
 
   private static final Logger logger = LoggerFactory.getLogger(MetadataExtractor.class);
+
 
   public enum Format {
     JSON(".json"),
@@ -146,9 +147,10 @@ public class MetadataExtractor {
     return strategy.getEnterpriseAssetIdForAssetVersionId(enterpriseAssetVersionId);
   }
 
-  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag)
+  public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag,
+      boolean any)
       throws NotLatestVersionException {
-    return strategy.getEnterpriseAssetVersionIdForAsset(assetId, versionTag);
+    return strategy.getEnterpriseAssetVersionIdForAsset(assetId, versionTag, any);
   }
 
   public Optional<String> getMimetype(UUID assetId) {
@@ -168,11 +170,13 @@ public class MetadataExtractor {
    * The fileId is the id of the file for the artifact that can be used with the APIs.
    *
    * @param assetId the enterprise asset ID
+   * @param any boolean to determine if any model is considered, false to consider only published
    * @return fileId
    */
-  public Optional<String> getFileId(UUID assetId) {
-    return strategy.getFileId(assetId);
+  public Optional<String> getFileId(UUID assetId, boolean any) {
+    return strategy.getFileId(assetId, any);
   }
+
 
   /**
    * The fileId is the id of the file for the artifact that can be used with the APIs.
@@ -192,6 +196,8 @@ public class MetadataExtractor {
   public URIIdentifier resolveEnterpriseAssetID(String fileId) {
     // TODO: Need consistency ... return Optional.empty? or throw an error? CAO; should all methods return Optional<T>?
     return strategy.getAssetID(fileId)
+        // TODO: Need a better exception? This can happen when a model is published
+        //  but does NOT have an assetId CAO
         .orElseThrow(() -> new IllegalStateException(
             "Defensive: Unable to resolve internal ID " + fileId + " to a known Enterprise ID"));
   }
@@ -202,17 +208,23 @@ public class MetadataExtractor {
    *
    * @param assetId the assetId for which an artifact is needed
    * @param versionTag the version of the asset requesting
+   * @param any should any model be searched? false means only published models will be searched
    * @return the internalArtifactId or NotLatestVersionException
    *
    * The exception will be thrown if the latest version of the artifact does not
    * map to the requested version of the asset.
    */
-  public String resolveInternalArtifactID(String assetId, String versionTag)
+  public String resolveInternalArtifactID(String assetId, String versionTag, boolean any)
       throws NotLatestVersionException {
     // need to find the artifactId for this version of assetId
     // URIIdentifer built with assetId and versionTag; allows for finding the artifact associated with this asset/version
     URIIdentifier id = DatatypeHelper.uri(assetId, versionTag);
-    return strategy.getArtifactID(id);
+    return strategy.getArtifactID(id, any);
   }
+
+  public String convertInternalId(String internalId, String versionTag) {
+    return strategy.convertInternalId(internalId, versionTag);
+  }
+
 
 }

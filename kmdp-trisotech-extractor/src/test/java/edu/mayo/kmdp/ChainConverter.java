@@ -16,22 +16,17 @@
 package edu.mayo.kmdp;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
+import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.kmdp.preprocess.meta.Weaver;
-import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.w3c.dom.Document;
-
 import java.io.InputStream;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
 
-
-// TODO: Update for Trisotech data; use DMN_1_2
 
 /**
  * Perform the weave and extract of the model from Trisotech, either DMN or CMMN.
@@ -74,8 +69,6 @@ public class ChainConverter {
    * @return
    */
   protected Model convertModel( InputStream meta, InputStream modelXml, KnowledgeRepresentationLanguage src ) {
-//    MetadataExtractor extractor = new MetadataExtractor();
-//    Weaver weaver = new Weaver(); // false, Weaver.getWeaverProperties(src));
 
     final Model model = new Model();
 

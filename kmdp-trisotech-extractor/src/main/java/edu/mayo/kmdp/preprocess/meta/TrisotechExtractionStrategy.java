@@ -202,7 +202,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .withName(meta.getName()); // TODO: might want '(DMN)' / '(CMMN)' here
 
 //
-//    // TODO: Needed? yes CAO
+//    // TODO: Needed? yes CAO Is it? annotations are added above in .withSubject
 //    // Annotations
     addSemanticAnnotations(surr, annotations);
 //

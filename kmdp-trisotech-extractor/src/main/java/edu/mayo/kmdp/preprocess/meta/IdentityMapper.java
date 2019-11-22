@@ -113,9 +113,8 @@ public class IdentityMapper {
     createMap(query(getQueryStringRelations(place)));
     models = ResultSetFactory.makeRewindable(query(getQueryStringModels(place)));
     publishedModels = ResultSetFactory.makeRewindable(query(getQueryStringPublishedModels(place)));
-    // TODO: FIX this -- need a replacement for hierarchySorter that handles a bi-directional graph CAO
-//    orderedModels = hierarchySorter
-//        .linearize(getModelList(publishedModels), artifactToArtifactIDMap);
+    orderedModels = hierarchySorter
+        .linearize(getModelList(publishedModels), artifactToArtifactIDMap);
   }
 
   private void createMap(ResultSet results) {

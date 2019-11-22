@@ -302,7 +302,6 @@ class IdentityMapperIntTest {
     assertEquals(Optional.empty(), mimetype);
   }
 
-  @Disabled("until get fix or replacement for hierarchySorter")
   @Test
   void getOrderedModels() {
     List<Resource> models = identityMapper.getOrderedModels();

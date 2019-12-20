@@ -42,7 +42,10 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -424,14 +427,11 @@ public class TrisotechWrapper {
   public static VersionIdentifier getLatestVersion(TrisotechFileInfo tfi) {
     // only return for published models
     if (null != tfi && null != tfi.getState()) {
-      try {
+      System.out.println("tfiUpdated: " + tfi.getUpdated());
+      System.out.println("Date from tfiUpdated: " + Date.from(Instant.parse(tfi.getUpdated())).toString());
         return new VersionIdentifier().withTag(tfi.getId())
             .withVersion(tfi.getVersion())
-            .withEstablishedOn(
-                DatatypeFactory.newInstance().newXMLGregorianCalendar(tfi.getUpdated()));
-      } catch (DatatypeConfigurationException e) {
-        logger.error(String.format("%s %s", e.getMessage(), e.getStackTrace()));
-      }
+            .withEstablishedOn(Date.from(Instant.parse(tfi.getUpdated())));
     }
     return null; // TODO: better default return value? CAO
   }

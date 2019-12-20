@@ -46,12 +46,12 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-ext-terminology-content</artifactId>
-      <version>${kmdp.version}</version>
+      <version>${kmdp.impl.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>terms-generator</artifactId>
-      <version>${kmdp.version}</version>
+      <version>${kmdp.impl.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -70,12 +70,12 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-datatype</artifactId>
-      <version>${kmdp.version}</version>
+      <version>${kmdp.impl.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-utils</artifactId>
-      <version>${kmdp.version}</version>
+      <version>${kmdp.impl.version}</version>
     </dependency>
 
     <dependency>

@@ -20,7 +20,7 @@ import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
 import edu.mayo.kmdp.metadata.annotations.MultiwordAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +57,7 @@ public abstract class BaseAnnotationHandler {
       String elementId) {
 
     return Collections.singletonList(new DatatypeAnnotation()
-        .withRel(DependencyType.Imports.asConcept())
+        .withRel(DependencyTypeSeries.Imports.asConcept())
         .withValue(
 						// TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
             CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId));

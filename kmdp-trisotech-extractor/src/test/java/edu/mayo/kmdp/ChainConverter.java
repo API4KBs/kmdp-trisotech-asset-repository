@@ -20,7 +20,7 @@ import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import java.io.InputStream;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class ChainConverter {
    * @param type {DMN, CMMN}
    * @return
    */
-  public Model convert( InputStream meta, InputStream model, KnowledgeRepresentationLanguage type ) {
+  public Model convert( InputStream meta, InputStream model, KnowledgeRepresentationLanguageSeries type ) {
     switch ( type ) {
       case DMN_1_2:
       case CMMN_1_1:
@@ -68,7 +68,7 @@ public class ChainConverter {
    * @param src
    * @return
    */
-  protected Model convertModel( InputStream meta, InputStream modelXml, KnowledgeRepresentationLanguage src ) {
+  protected Model convertModel( InputStream meta, InputStream modelXml, KnowledgeRepresentationLanguageSeries src ) {
 
     final Model model = new Model();
 

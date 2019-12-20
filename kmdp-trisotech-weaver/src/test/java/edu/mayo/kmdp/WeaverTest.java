@@ -19,7 +19,7 @@ import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.validate;
-import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.DMN_1_2;
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,8 +32,8 @@ import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Disabled;
@@ -141,7 +141,7 @@ class WeaverTest {
 
       SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
           .iterator().next();
-      assertEquals(AnnotationRelType.Is_A.getLabel(),
+      assertEquals(AnnotationRelTypeSeries.Is_A.getLabel(),
           type.getRel().getLabel());
 
       // TODO: no examples of CAPTURES in sample models, provide? CAO
@@ -233,7 +233,7 @@ class WeaverTest {
 
       SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
           .iterator().next();
-      assertEquals(AnnotationRelType.Is_A.getLabel(),
+      assertEquals(AnnotationRelTypeSeries.Is_A.getLabel(),
           type.getRel().getLabel());
 
       // TODO: No example of CAPTURES in test models. provide? CAO
@@ -285,19 +285,19 @@ class WeaverTest {
 
       SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
           .iterator().next();
-      assertEquals(AnnotationRelType.Is_A.getLabel(),
+      assertEquals(AnnotationRelTypeSeries.Is_A.getLabel(),
           type.getRel().getLabel());
 
       type = loadAnnotations(dox, KnownAttributes.DEFINES, SimpleAnnotation.class).iterator()
           .next();
-      assertEquals(AnnotationRelType.Defines.getLabel(),
+      assertEquals(AnnotationRelTypeSeries.Defines.getLabel(),
           type.getRel().getLabel());
 
       List<Annotation> props = loadAnnotations(dox, KnownAttributes.INPUTS, Annotation.class);
       assertTrue(props.stream()
           .anyMatch(ann -> ann instanceof SimpleAnnotation
               && (ann).getRel().getLabel()
-              .equals(AnnotationRelType.In_Terms_Of.getLabel())));
+              .equals(AnnotationRelTypeSeries.In_Terms_Of.getLabel())));
 
 // TODO: No example of CAPTURES in test models. Need one? CAO
 //			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
@@ -331,7 +331,7 @@ class WeaverTest {
       System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
 
-      assertTrue(validate(dox, KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
+      assertTrue(validate(dox, CMMN_1_1.getRef()));
 
       assertTrue(confirmDecisionURI(dox));
 
@@ -366,7 +366,7 @@ class WeaverTest {
       System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
 
-      assertTrue(validate(dox, KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
+      assertTrue(validate(dox, CMMN_1_1.getRef()));
 
       assertTrue(confirmDecisionURI(dox));
 
@@ -402,7 +402,7 @@ class WeaverTest {
       System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
 
-      assertTrue(validate(dox, KnowledgeRepresentationLanguage.CMMN_1_1.getRef()));
+      assertTrue(validate(dox, CMMN_1_1.getRef()));
 
       BasicAnnotation id = loadAnnotations(dox, KnownAttributes.ASSET_IDENTIFIER,
           BasicAnnotation.class).iterator().next();

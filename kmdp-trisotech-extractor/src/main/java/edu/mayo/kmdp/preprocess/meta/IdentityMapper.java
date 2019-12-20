@@ -17,7 +17,7 @@ import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
-import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
+import edu.mayo.kmdp.util.graph.HierarchySorter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -696,17 +696,24 @@ public class IdentityMapper {
         if (k.getLocalName().substring(1).equals(id)) {
           logger.debug("found id in artifactToArtifactIDMap");
           // once found, for each of the artifacts it is dependent on, find the asset id for those artifacts in the models
-          publishedModels.reset();
-          while (publishedModels.hasNext()) {
-            QuerySolution soln = publishedModels.nextSolution();
-            if (soln.getResource(MODEL).getURI().equals(k.getLocalName())) {
-              assets
-                  .add(
-                      new URIIdentifier()
-                          .withUri(URI.create(soln.getLiteral(ASSET_ID).getString())));
+          v.stream().forEach(dependent -> {
+            System.out.println("dependent URI: " + dependent.getURI());
+            String dependentId = dependent.getURI().substring(dependent.getURI().lastIndexOf('/'));
+            publishedModels.reset();
+            while (publishedModels.hasNext()) {
+              QuerySolution soln = publishedModels.nextSolution();
+              System.out.println("soln MODEL URI: " + soln.getResource(MODEL).getURI());
+              if (soln.getResource(MODEL).getURI().equals(dependent.getURI())) {
+                System.out.println("Asset ID for Model: " + soln.getLiteral(ASSET_ID));
+                assets
+                    .add(
+                        new URIIdentifier()
+                            .withUri(URI.create(soln.getLiteral(ASSET_ID).getString())));
+              } else {
+                logger.debug("Dependency {} for {} is NOT Published", dependentId, k.getLocalName());
+              }
             }
-
-          }
+          });
         }
       });
     }

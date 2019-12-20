@@ -16,8 +16,8 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import edu.mayo.kmdp.util.URIUtil;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
 
@@ -36,37 +36,37 @@ Is this class really needed if it is just 'wrapping' AnnotationRelType?
 public enum KnownAttributes {
 
 	// on models
-	ASSET_IDENTIFIER( AnnotationRelType.Has_ID.getLabel(),
+	ASSET_IDENTIFIER( AnnotationRelTypeSeries.Has_ID.getLabel(),
 	                  "knowledgeAssetId",
-	                  AnnotationRelType.Has_ID.getRef() ),
+	                  AnnotationRelTypeSeries.Has_ID.getRef() ),
 
 
-	TYPE( AnnotationRelType.Is_A.getLabel(),
+	TYPE( AnnotationRelTypeSeries.Is_A.getLabel(),
 			"assetType",
-			AnnotationRelType.Is_A.getRef() ),
+			AnnotationRelTypeSeries.Is_A.getRef() ),
 
-  DATA(DependencyType.Imports.getLabel(),
+  DATA(DependencyTypeSeries.Imports.getLabel(),
       "imports",
-      DependencyType.Imports.getRef()),
+      DependencyTypeSeries.Imports.getRef()),
 
 
 	// on expressions (models or fragments)
 
 	// CAPTURES for propositionalconcepts on internal decision (decisionService)
   // TODO: don't have an example of CAPTURES in the test files CAO
-	CAPTURES( AnnotationRelType.Captures.getLabel(),
+	CAPTURES( AnnotationRelTypeSeries.Captures.getLabel(),
 			"capture",
-			AnnotationRelType.Captures.getRef()),
+			AnnotationRelTypeSeries.Captures.getRef()),
 
 	// In_Terms_of for propositionalconcepts of all inputs
-	INPUTS( AnnotationRelType.In_Terms_Of.getLabel(),
+	INPUTS( AnnotationRelTypeSeries.In_Terms_Of.getLabel(),
 			"inTermsOf",
-			AnnotationRelType.In_Terms_Of.getRef()),
+			AnnotationRelTypeSeries.In_Terms_Of.getRef()),
 
 	// DEFINES for all other propositionalconcepts
-	DEFINES( AnnotationRelType.Defines.getLabel(),
+	DEFINES( AnnotationRelTypeSeries.Defines.getLabel(),
 			"defines",
-			AnnotationRelType.Defines.getRef() ),
+			AnnotationRelTypeSeries.Defines.getRef() ),
 
 	;
 

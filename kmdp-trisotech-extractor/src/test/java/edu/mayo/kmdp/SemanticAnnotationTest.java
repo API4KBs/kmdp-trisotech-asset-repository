@@ -22,8 +22,9 @@ import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 //import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
-import edu.mayo.ontology.taxonomies.clinicalsituations._20190801.ClinicalSituation;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
+import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituation;
+import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituationSeries;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -131,14 +132,14 @@ class SemanticAnnotationTest {
 			List<ClinicalSituation> inputs = surr.getSubject().stream()
 					.filter(SimpleAnnotation.class::isInstance)
 					.map( SimpleAnnotation.class::cast)
-					.filter( (a) -> a.getRel().equals( AnnotationRelType.In_Terms_Of.asConcept() ) )
-					.map( (a) -> ClinicalSituation.resolve( a.getExpr() ) )
+					.filter( (a) -> a.getRel().equals( AnnotationRelTypeSeries.In_Terms_Of.asConcept() ) )
+					.map( (a) -> ClinicalSituationSeries.resolve( a.getExpr() ) )
 					.map( Optional::get )
 					.collect(Collectors.toList());
 
 			// TODO: update per model CAO
 			assertEquals( 19, inputs.size() );
-			assertTrue( inputs.contains( ClinicalSituation.History_Of_GI_Bleeding ) ); // was .Has_Bleeding_Disorder CAO
+			assertTrue( inputs.contains( ClinicalSituationSeries.History_Of_GI_Bleeding ) ); // was .Has_Bleeding_Disorder CAO
 //			assertTrue( inputs.contains( ClinicalSituation.Has_Cirrhosis ) );
 		} catch ( Exception e ) {
 			e.printStackTrace();
@@ -167,23 +168,23 @@ class SemanticAnnotationTest {
 			List<ClinicalSituation> inputs = surr.getSubject().stream()
 					.filter(SimpleAnnotation.class::isInstance)
 					.map( SimpleAnnotation.class::cast)
-					.filter( (a) -> a.getRel().equals( AnnotationRelType.In_Terms_Of.asConcept() ) )
-					.map( (a) -> ClinicalSituation.resolve( a.getExpr() ) )
+					.filter( (a) -> a.getRel().equals( AnnotationRelTypeSeries.In_Terms_Of.asConcept() ) )
+					.map( (a) -> ClinicalSituationSeries.resolve( a.getExpr() ) )
 					.map( Optional::get )
 					.collect(Collectors.toList());
 
 			assertEquals( 9, inputs.size() );
-			assertTrue( inputs.contains( ClinicalSituation.Sex ) );
+			assertTrue( inputs.contains( ClinicalSituationSeries.Sex ) );
 //			assertTrue( inputs.contains( ClinicalSituation.Recent_History_Of_TIA ) );
 //			assertTrue( inputs.contains( ClinicalSituation.History_Of_Vascular_Disease ) );
 
 			Set<ConceptIdentifier> defines  = surr.getSubject().stream()
-					.filter( (ann) -> ann.getRel().equals( AnnotationRelType.Defines.asConcept() ) )
+					.filter( (ann) -> ann.getRel().equals( AnnotationRelTypeSeries.Defines.asConcept() ) )
 					.map( (ann) -> ((SimpleAnnotation) ann).getExpr() )
 					.collect(Collectors.toSet());
 			assertEquals( 3, defines.size() );
-			assertTrue( defines.contains( ClinicalSituation.Current_CHA2DS2_VASc_Score.asConcept() ) );
-			assertTrue( defines.contains( ClinicalSituation.Risk_Of_Embolic_Stroke_CHA2DS2_VASc.asConcept() ) );
+			assertTrue( defines.contains( ClinicalSituationSeries.Current_CHA2DS2_VASc_Score.asConcept() ) );
+			assertTrue( defines.contains( ClinicalSituationSeries.Risk_Of_Embolic_Stroke_CHA2DS2_VASc.asConcept() ) );
 
 		} catch ( Exception e ) {
 			e.printStackTrace();

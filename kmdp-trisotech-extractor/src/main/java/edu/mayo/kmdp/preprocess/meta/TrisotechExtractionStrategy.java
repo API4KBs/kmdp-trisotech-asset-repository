@@ -17,14 +17,15 @@ package edu.mayo.kmdp.preprocess.meta;
 
 import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Assessment_Predictive_And_Inferential_Models;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory.Plans_Processes_Pathways_And_Protocol_Definitions;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType.Care_Process_Model;
-import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType.Decision_Model;
-import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.CMMN_1_1;
-import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.DMN_1_2;
-import static edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization.CMMN_1_1_XML_Syntax;
-import static edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization.DMN_1_2_XML_Syntax;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
+import static edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries.XML_1_1;
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax;
+import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.SurrogateBuilder;
@@ -44,16 +45,15 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.XPathUtil;
-import edu.mayo.ontology.taxonomies.iso639_2_languagecodes._20190201.Language;
+import edu.mayo.ontology.taxonomies.iso639_2_languagecodes.LanguageSeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeartifactcategory.KnowledgeArtifactCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory._20190801.KnowledgeAssetCategory;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.publicationstatus._2014_02_01.PublicationStatus;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
-import edu.mayo.ontology.taxonomies.kmdo.annotationreltype._20190801.AnnotationRelType;
-import edu.mayo.ontology.taxonomies.krformat._20190801.SerializationFormat;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
-import edu.mayo.ontology.taxonomies.krserialization._20190801.KnowledgeRepresentationLanguageSerialization;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -113,12 +113,12 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   public KnowledgeAsset extractXML(Document dox, TrisotechFileInfo meta) {
 
     List<Annotation> annotations = extractAnnotations(dox);
-    KnowledgeAssetCategory formalCategory;
+    KnowledgeAssetCategorySeries formalCategory;
 
-    KnowledgeAssetType formalType;
+    KnowledgeAssetTypeSeries formalType;
     KnowledgeAsset surr = null;
 
-    KnowledgeRepresentationLanguageSerialization syntax;
+    KnowledgeRepresentationLanguageSerializationSeries syntax;
     Publication lifecycle = getPublication(meta);
     // Identifiers
     Optional<String> docId = getArtifactID(dox, meta);
@@ -149,7 +149,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     // get the language for the document to set the appropriate values
     Optional<Representation> rep = getRepLanguage(dox, false);
     if (rep.isPresent()) {
-      switch (rep.get().getLanguage()) {
+      switch (rep.get().getLanguage().asEnum()) {
         case DMN_1_2:
           formalCategory = Assessment_Predictive_And_Inferential_Models;
           // default value
@@ -188,11 +188,11 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .withCarriers(new ComputableKnowledgeArtifact()
                 .withArtifactId(artifactId)
                 .withName(meta.getName())
-                .withLocalization(Language.English)
+                .withLocalization(LanguageSeries.English)
                 .withExpressionCategory(KnowledgeArtifactCategory.Software)
                 .withRepresentation(new Representation()
                         .withLanguage(rep.get().getLanguage())  // DMN_1_2 or CMMN_1_1)
-                        .withFormat(SerializationFormat.XML_1_1)
+                        .withFormat(XML_1_1)
 //                                    .withLexicon(Lexicon.PCV) // TODO: this compiles now, but is it accurate? CAO
                         .withSerialization(syntax) // DMN_1_2_XML_Syntax or CMMN_1_1_XML_Syntax)
                 )
@@ -221,13 +221,13 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     if (Optional.ofNullable(meta.getState()).isPresent()) {
       switch (meta.getState()) {
         case "Published":
-          lifecycle.withPublicationStatus(PublicationStatus.Published);
+          lifecycle.withPublicationStatus(PublicationStatusSeries.resolve(PublicationStatusSeries.Published).get());
           break;
         case "Draft":
-          lifecycle.withPublicationStatus(PublicationStatus.Draft);
+          lifecycle.withPublicationStatus(PublicationStatusSeries.resolve(PublicationStatusSeries.Draft).get());
           break;
         case "Pending Approval":
-          lifecycle.withPublicationStatus(PublicationStatus.Final_Draft);
+          lifecycle.withPublicationStatus(PublicationStatusSeries.resolve(PublicationStatusSeries.Final_Draft).get());
           break;
         default: // TODO: ??? error? CAO
           break;
@@ -258,7 +258,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     }
     // TODO: Is this right? Should be KnowledgeResource; KR is abstract; KnowledgeAsset ISA KnowledgeResource; is it the right one? CAO
     return knowledgeAssets.stream().map(ka ->
-        new Dependency().withRel(DependencyType.Imports)
+        new Dependency().withRel(DependencyTypeSeries.Imports)
             .withTgt(ka))
         .collect(Collectors.toList());
 
@@ -268,7 +268,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return theTargetAssetId.stream()
         .map(uriIdentifier ->
             new Dependency()
-                .withRel(DependencyType.Depends_On)
+                .withRel(DependencyTypeSeries.Depends_On)
                 .withTgt(new KnowledgeAsset().withAssetId(uriIdentifier)
                     .withName(uriIdentifier
                         .toString()))) // TODO: Ask Davide -- is something else expected here as name value? have to have name to pass SAXParser CAO
@@ -324,7 +324,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     if (annos.stream()
         .filter(SimpleAnnotation.class::isInstance)
         .map(SimpleAnnotation.class::cast)
-        .anyMatch(ann -> KnowledgeAssetType.Computable_Decision_Model.getTag()
+        .anyMatch(ann -> KnowledgeAssetTypeSeries.Computable_Decision_Model.getTag()
             .equals(ann.getExpr().getTag()))) {
       // this is a DMN decision model
       List<Node> itemDefs = asAttributeStream(xPathUtil.xList(dox, "//semantic:inputData/@name"))
@@ -345,7 +345,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         SimpleAnnotation inputAnno = inputAnnos.stream()
 //                .filter(ann -> KnownAttributes.CAPTURES.asConcept().equals(ann.getRel())) // TODO: Needed? yes needed, but need better example files, no sample files have CAPTURES CAO
             .map(SimpleAnnotation.class::cast)
-            .map(sa -> new SimpleAnnotation().withRel(AnnotationRelType.In_Terms_Of.asConcept())
+            .map(sa -> new SimpleAnnotation().withRel(AnnotationRelTypeSeries.In_Terms_Of.asConcept())
                 .withExpr(sa.getExpr()))
             .collect(Collectors.toList()).get(0);
         annos.add(inputAnno);
@@ -458,7 +458,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   @Override
   public Optional<String> getArtifactID(Document dox, TrisotechFileInfo meta) {
-    Optional<KnowledgeRepresentationLanguage> lang = detectRepLanguage(dox);
+    Optional<KnowledgeRepresentationLanguageSeries> lang = detectRepLanguage(dox);
 
     return lang.map(l -> {
       switch (l) {
@@ -478,17 +478,17 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
       return Optional.of(new Representation()
           .withLanguage(CMMN_1_1)
-          .withFormat(concrete ? SerializationFormat.XML_1_1 : null));
+          .withFormat(concrete ? XML_1_1 : null));
     }
     if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
       return Optional.of(new Representation()
           .withLanguage(DMN_1_2)
-          .withFormat(concrete ? SerializationFormat.XML_1_1 : null));
+          .withFormat(concrete ? XML_1_1 : null));
     }
     return Optional.empty();
   }
 
-  public Optional<KnowledgeRepresentationLanguage> detectRepLanguage(Document dox) {
+  public Optional<KnowledgeRepresentationLanguageSeries> detectRepLanguage(Document dox) {
     if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
       return Optional.of(CMMN_1_1);
     }

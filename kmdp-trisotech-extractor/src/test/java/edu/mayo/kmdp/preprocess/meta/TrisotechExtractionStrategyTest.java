@@ -16,8 +16,7 @@ package edu.mayo.kmdp.preprocess.meta;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
-import java.net.URI;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -134,15 +133,15 @@ class TrisotechExtractionStrategyTest {
 
   @Test
   void detectRepLanguage() {
-    Optional<KnowledgeRepresentationLanguage> dmnRep = this.tes.detectRepLanguage(dmnDox);
+    Optional<KnowledgeRepresentationLanguageSeries> dmnRep = this.tes.detectRepLanguage(dmnDox);
     assertEquals("DMN 1.2", dmnRep.get().getLabel()); //.getLanguage().toString());
-    assertEquals(KnowledgeRepresentationLanguage.DMN_1_2, dmnRep.get());
+    assertEquals(KnowledgeRepresentationLanguageSeries.DMN_1_2, dmnRep.get());
 
-    Optional<KnowledgeRepresentationLanguage> cmmnRep = this.tes.detectRepLanguage(cmmnDox);
+    Optional<KnowledgeRepresentationLanguageSeries> cmmnRep = this.tes.detectRepLanguage(cmmnDox);
     assertEquals("CMMN 1.1", cmmnRep.get().getLabel()); //.getLanguage().toString());
-    assertEquals(KnowledgeRepresentationLanguage.CMMN_1_1, cmmnRep.get());
+    assertEquals(KnowledgeRepresentationLanguageSeries.CMMN_1_1, cmmnRep.get());
 
-    Optional<KnowledgeRepresentationLanguage> badRep = this.tes.detectRepLanguage(badDox);
+    Optional<KnowledgeRepresentationLanguageSeries> badRep = this.tes.detectRepLanguage(badDox);
     assertEquals(Optional.empty(), badRep);
   }
 

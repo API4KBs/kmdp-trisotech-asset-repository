@@ -16,21 +16,20 @@ package edu.mayo.kmdp;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_UPPER;
-import static edu.mayo.kmdp.util.ws.ResponseHelper.notSupported;
-import static edu.mayo.kmdp.util.ws.ResponseHelper.succeed;
+import static org.omg.spec.api4kp._1_0.Answer.unsupported;
 
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
-import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetCatalogApiDelegate;
-import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRepositoryApiDelegate;
-import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRetrievalApiDelegate;
+import edu.mayo.kmdp.repository.asset.v3.server.KnowledgeAssetCatalogApiInternal;
+import edu.mayo.kmdp.repository.asset.v3.server.KnowledgeAssetRepositoryApiInternal;
+import edu.mayo.kmdp.repository.asset.v3.server.KnowledgeAssetRetrievalApiInternal;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
@@ -39,6 +38,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.jena.shared.NotFoundException;
+import org.omg.spec.api4kp._1_0.Answer;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
@@ -48,15 +48,17 @@ import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
+//import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetCatalogApiDelegate;
+//import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRepositoryApiDelegate;
+//import edu.mayo.kmdp.repository.asset.server.KnowledgeAssetRetrievalApiDelegate;
+
 
 @Component
-public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegate,
-    KnowledgeAssetRepositoryApiDelegate, KnowledgeAssetRetrievalApiDelegate {
+public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInternal,
+    KnowledgeAssetRepositoryApiInternal, KnowledgeAssetRetrievalApiInternal {
 
   private static final Logger logger = LoggerFactory.getLogger(TrisotechAssetRepository.class);
 
@@ -70,18 +72,20 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   }
 
   @Override
-  public ResponseEntity<KnowledgeAssetCatalog> getAssetCatalog() {
-    return notSupported();
+  public Answer<KnowledgeAssetCatalog> getAssetCatalog() {
+    return unsupported();
   }
+
 
   /**
    * Of all the versions in the series, several criteria concur to determine the LATEST, including
    * the time at which a version was created, the (partial) ordering of the version tags, and the
    * association of that version of the Asset with an Artifact in a "published" state
+   * @return
    */
   @Override
-  public ResponseEntity<KnowledgeAsset> getKnowledgeAsset(UUID assetId) {
-    // need the fileId of the model in order to query for modelInfo
+  public Answer<KnowledgeAsset> getKnowledgeAsset(UUID assetId, String s) {
+     // need the fileId of the model in order to query for modelInfo
     Optional<String> internalFileId = extractor.getFileId(assetId, false);
     // need the mimetype to get the correct file format
     Optional<String> mimeType = extractor.getMimetype(assetId);
@@ -90,27 +94,28 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     if (!internalFileId.isPresent()
         || !mimeType.isPresent()
         || !artifactVersion.isPresent()) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     // get the modelInfo for the latest artifactVersion
     TrisotechFileInfo modelInfo = TrisotechWrapper.getLatestModelFileInfo(internalFileId.get());
     if (null == modelInfo) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     // get the knowledgeAsset
     KnowledgeAsset ka = getKnowledgeAssetForModel(internalFileId.get(), modelInfo);
-    return succeed(ka, HttpStatus.OK);
+    return Answer.of(Optional.of(ka)); //succeed(ka, HttpStatus.OK);
   }
 
   /**
    *
+   * @return
    */
   @Override
-  public ResponseEntity<List<Pointer>> getKnowledgeAssetVersions(UUID assetId, Integer offset,
+  public Answer<List<Pointer>> getKnowledgeAssetVersions(UUID assetId, Integer offset,
       Integer limit, String beforeTag, String afterTag, String sort) {
     // all versions of given knowledge asset. May make sense to implement
     // may be empty if no versions have been established
-    return notSupported(); // for now
+    return unsupported(); // for now
   }
 
 
@@ -120,7 +125,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   //  might want to keep a map of those that have been scanned so don't have to scan again?
   //  scan all versions of so have saved? or only scan until find what we need? CAO
   @Override
-  public ResponseEntity<KnowledgeAsset> getVersionedKnowledgeAsset(UUID assetId,
+  public Answer<KnowledgeAsset> getVersionedKnowledgeAsset(UUID assetId,
       String versionTag) {
     String internalId;
     Optional<String> fileId = null;
@@ -133,7 +138,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
       internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, false);
       fileId = extractor.getFileId(internalId);
       if (!fileId.isPresent()) { // not found
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
       // the url is available from the extractor, HOWEVER, it is not the correct form to retrieve
       // the file in the correct format (xml) so need to make a server call now to get the proper URL
@@ -146,10 +151,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
       try {
         ka = findArtifactVersionForAsset(e.getMessage(), assetId, versionTag);
       } catch (NotFoundException nfe) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
     }
-    return succeed(ka, HttpStatus.OK);
+    return Answer.of(Optional.of(ka)); //succeed(ka, HttpStatus.OK);
   }
 
   /**
@@ -204,21 +209,21 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   }
 
   @Override
-  public ResponseEntity<UUID> initKnowledgeAsset() {
-    return notSupported();
+  public Answer<UUID> initKnowledgeAsset() {
+    return unsupported();
   }
 
   /**
    * list of the all published assets. If assetType is available will return all published assets of
    * that type.
-   *
-   * @param assetType: the type of asset to retrieve; if null, will get ALL types;
+   *  @param assetType : the type of asset to retrieve; if null, will get ALL types;
    * @param assetAnnotation ignore
    * @param offset ignore -- needed if we have pagination
    * @param limit ignore -- needed if we have pagination
+   * @return
    */
   @Override
-  public ResponseEntity<List<Pointer>> listKnowledgeAssets(String assetType, String assetAnnotation,
+  public Answer<List<Pointer>> listKnowledgeAssets(String assetType, String assetAnnotation,
       Integer offset, Integer limit) {
     List<TrisotechFileInfo> trisotechFileInfoList;
 
@@ -242,26 +247,26 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           return new Pointer().withEntityRef(assetId)
               .withHref(assetId.getUri()/*URL used for getAsset w/UID & versionTag from assetId */)
               .withType(isDMNModel(trisotechFileInfo)
-                  ? KnowledgeAssetType.Decision_Model.getRef()
-                  : KnowledgeAssetType.Care_Process_Model.getRef())
+                  ? KnowledgeAssetTypeSeries.Decision_Model.getRef()
+                  : KnowledgeAssetTypeSeries.Care_Process_Model.getRef())
               .withName(trisotechFileInfo.getName());
         })
         .collect(Collectors.toList());
 
-    return succeed(assetList, HttpStatus.OK);
+    return Answer.of(Optional.of(assetList)); //succeed(assetList, HttpStatus.OK);
 
   }
 
 
   @Override
-  public ResponseEntity<Void> setVersionedKnowledgeAsset(UUID uuid, String s,
+  public Answer<Void> setVersionedKnowledgeAsset(UUID uuid, String s,
       KnowledgeAsset knowledgeAsset) {
-    return notSupported();
+    return unsupported();
   }
 
   @Override
-  public ResponseEntity<Void> addKnowledgeAssetCarrier(UUID uuid, String s, byte[] bytes) {
-    return notSupported();
+  public Answer<Void> addKnowledgeAssetCarrier(UUID uuid, String s, byte[] bytes) {
+    return unsupported();
   }
 
   /**
@@ -275,7 +280,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
    * @return
    */
   @Override
-  public ResponseEntity<KnowledgeCarrier> getCanonicalKnowledgeAssetCarrier(UUID assetId,
+  public Answer<KnowledgeCarrier> getCanonicalKnowledgeAssetCarrier(UUID assetId,
       String versionTag, String extAccept) {
     Optional<URI> enterpriseVersionId;
     KnowledgeCarrier carrier;
@@ -297,18 +302,18 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
             .withEncodedExpression(XMLUtil.toByteArray(
                 weaver.weave(resolveModel(internalFileId, null))));
       } else {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
     } catch (NotLatestVersionException e) {
       return tryAnotherVersion(e.getMessage(), assetId, versionTag);
     } catch (NotFoundException e) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    return succeed(carrier, HttpStatus.OK);
+    return Answer.of(Optional.of(carrier)); //succeed(carrier, HttpStatus.OK);
   }
 
-  private ResponseEntity<KnowledgeCarrier> tryAnotherVersion(
+  private Answer<KnowledgeCarrier> tryAnotherVersion(
       String internalId, UUID assetId, String versionTag) {
     KnowledgeCarrier carrier;
     try {
@@ -319,10 +324,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           .withAssetId(ka.getAssetId())
           .withArtifactId(knowledgeArtifact.getArtifactId());
     } catch (NotFoundException nfe) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    return succeed(carrier, HttpStatus.OK);
+    return Answer.of(Optional.of(carrier)); //succeed(carrier, HttpStatus.OK);
   }
 
   private String getInternalIdAndVersion(UUID assetId, String versionTag)
@@ -346,7 +351,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
    * @return
    */
   @Override
-  public ResponseEntity<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(UUID assetId,
+  public Answer<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(UUID assetId,
       String versionTag, UUID artifactId, String artifactVersionTag) {
     KnowledgeCarrier carrier;
     String internalId;
@@ -354,7 +359,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     Optional<String> fileId = extractor.getFileId(assetId, false);
     // fileId is not found in the extractor for the assetId provided; fail
     if (!fileId.isPresent()) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     //  1. Check  if assetId is latest (no server call needed)
     //  2. If assetId is not latest (exception), query versions from server
@@ -371,7 +376,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           .getEnterpriseAssetVersionIdForAsset(assetId, versionTag, false);
       if (!enterpriseVersionAssetId
           .isPresent()) { // should never happen, as exception should be thrown instead
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
 
       // asset matches for latest, now check the artifact for asset
@@ -407,7 +412,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
         }
       } else {
         // artifactId does not match what was requested
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
     } catch (NotLatestVersionException e) {
       // something failed to be in the latest version of the artifact, so check all other artifact versions
@@ -416,16 +421,16 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
         return getKnowledgeCarrierFromOtherVersion(assetId, versionTag, e.getMessage(),
             artifactVersionTag);
       } else {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
 
     } catch (NotFoundException nfe) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    return succeed(carrier, HttpStatus.OK);
+    return Answer.of(Optional.of(carrier)); //succeed(carrier, HttpStatus.OK);
   }
 
-  private ResponseEntity<KnowledgeCarrier> getKnowledgeCarrierFromOtherVersion(UUID assetId,
+  private Answer<KnowledgeCarrier> getKnowledgeCarrierFromOtherVersion(UUID assetId,
       String versionTag,
       String internalId, String artifactVersionTag) {
     List<TrisotechFileInfo> modelVersions = getTrisotechModelVersions(internalId);
@@ -447,22 +452,22 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           && asset.getTag().equals(assetId.toString())
           && asset.getVersion().equals(versionTag)
           && model.getVersion().equals(artifactVersionTag)) {
-        return succeed(
+        return Answer.of(Optional.of(
             new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
                 .withAssetId(asset)
                 .withArtifactId(new URIIdentifier()
                     .withUri(URI.create(extractor.convertInternalId(internalId, null)))
-                    .withVersionId(URI.create(extractor.convertInternalId(internalId, model.getVersion())))),
-            HttpStatus.OK);
+                    .withVersionId(URI.create(extractor.convertInternalId(internalId, model.getVersion()))))));
+//            HttpStatus.OK);
       }
     }
-    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
   @Override
-  public ResponseEntity<List<Pointer>> getKnowledgeAssetCarriers(UUID assetId, String versionTag) {
+  public Answer<List<Pointer>> getKnowledgeAssetCarriers(UUID assetId, String versionTag) {
     // TODO: all the carriers (only one); Canonical will give XML, this part of the spec may be broken CAO
-    return notSupported();
+    return unsupported();
   }
 
   // to upload the "dictionary" DMN model
@@ -481,7 +486,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
    * @return return status
    */
   @Override
-  public ResponseEntity<Void> setKnowledgeAssetCarrierVersion(UUID assetId, String versionTag,
+  public Answer<Void> setKnowledgeAssetCarrierVersion(UUID assetId, String versionTag,
       UUID artifactId, String artifactVersionTag, byte[] exemplar) {
     String internalId;
     TrisotechFileInfo trisotechFileInfo;
@@ -491,7 +496,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
     // fileId is not found in the extractor for the assetId provided; fail
     // At this time, not allowing for create, so if no fileId, fail
     if (!fileId.isPresent()) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     // 1. Check if assetId is latest (no server call needed)
@@ -507,7 +512,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           .getEnterpriseAssetVersionIdForAsset(assetId, versionTag, true);
       if (!enterpriseVersionAssetId
           .isPresent()) { // should never happen, as exception should be thrown instead
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
 
       // asset matches for latest, now check the artifact for asset
@@ -531,22 +536,22 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
           } else {
             // TODO: do we care? CAO
             // if we care, can try to find the matching version
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
           }
         } else {
           // ok for version to not be present, in fact, preferred
           uploadFile(null, exemplar, trisotechFileInfo, mimeType);
         }
       } else {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
-      return new ResponseEntity<>(HttpStatus.OK);
+      return Answer.of(); // new ResponseEntity<>(HttpStatus.OK);
     } catch (NotLatestVersionException e) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     } catch (IOException e) {
       e.printStackTrace();
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      return Answer.failed(); // new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -587,31 +592,31 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiDelegat
   }
 
   @Override
-  public ResponseEntity<List<KnowledgeCarrier>> getCompositeKnowledgeAsset(UUID uuid, String s,
+  public Answer<List<KnowledgeCarrier>> getCompositeKnowledgeAsset(UUID uuid, String s,
       Boolean aBoolean, String s1) {
-    return notSupported();
+    return unsupported();
   }
 
   @Override
-  public ResponseEntity<KnowledgeCarrier> getCompositeKnowledgeAssetStructure(UUID uuid, String s) {
-    return notSupported();
+  public Answer<KnowledgeCarrier> getCompositeKnowledgeAssetStructure(UUID uuid, String s) {
+    return unsupported();
   }
 
   @Override
-  public ResponseEntity<List<KnowledgeCarrier>> getKnowledgeArtifactBundle(UUID uuid, String s,
+  public Answer<List<KnowledgeCarrier>> getKnowledgeArtifactBundle(UUID uuid, String s,
       String s1, Integer integer, String s2) {
-    return notSupported();
+    return unsupported();
   }
 
   @Override
-  public ResponseEntity<List<KnowledgeAsset>> getKnowledgeAssetBundle(UUID uuid, String s,
+  public Answer<List<KnowledgeAsset>> getKnowledgeAssetBundle(UUID uuid, String s,
       String s1, Integer integer) {
-    return notSupported();
+    return unsupported();
   }
 
   @Override
-  public ResponseEntity<Void> queryKnowledgeAssets(String s) {
-    return notSupported();
+  public Answer<Void> queryKnowledgeAssets(String s) {
+    return unsupported();
   }
 
 

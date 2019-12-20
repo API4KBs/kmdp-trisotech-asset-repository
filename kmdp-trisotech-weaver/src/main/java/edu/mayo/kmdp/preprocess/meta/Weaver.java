@@ -14,8 +14,8 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
-import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.CMMN_1_1;
-import static edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage.DMN_1_2;
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
@@ -26,9 +26,9 @@ import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.kao.decisiontype._20190801.DecisionType;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype._20190801.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.propositionalconcepts._20190801.PropositionalConcepts;
+import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import edu.mayo.ontology.taxonomies.propositionalconcepts.PropositionalConceptsSeries;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
@@ -226,16 +226,16 @@ public class Weaver {
    */
   private KnownAttributes getKnownAttribute(Element el) {
     String typeScheme = URI.create(el.getAttribute(MODEL_URI)).getSchemeSpecificPart();
-    if (typeScheme.equals(KnowledgeAssetType.schemeURI.getVersionId().getSchemeSpecificPart())) {
+    if (typeScheme.equals(KnowledgeAssetTypeSeries.seriesUri.getVersionId().getSchemeSpecificPart())) {
       return KnownAttributes.resolve("assetType").orElse(null);
-    } else if (typeScheme.equals(DecisionType.schemeURI.getVersionId().getSchemeSpecificPart())) {
+    } else if (typeScheme.equals(DecisionTypeSeries.seriesUri.getVersionId().getSchemeSpecificPart())) {
       logger.debug("Have a DecisionType. Do anything with it?");
       return null; // TODO: for now, pending below TODO:
 //      return KnownAttributes.resolve(
 //          "decision")
 //          .get() // TODO: confirm w/Davide; he didn't give me one for DecisionType CAO
     } else if (typeScheme
-        .equals(PropositionalConcepts.schemeURI.getVersionId().getSchemeSpecificPart())) {
+        .equals(PropositionalConceptsSeries.seriesUri.getVersionId().getSchemeSpecificPart())) {
 // need to figure to what kind
 // need grandparent; parent will always be extensionElements (will this be true for the internal decision??)
       String grandparent = el.getParentNode().getParentNode().getNodeName();

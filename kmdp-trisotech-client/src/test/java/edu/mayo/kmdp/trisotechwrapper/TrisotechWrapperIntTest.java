@@ -76,19 +76,19 @@ class TrisotechWrapperIntTest {
   private static final String WEAVE_TEST_2_ID = "84da9f52-44f5-46d1-ae3f-c5599f78ad1f";
 
   @BeforeAll
-  static void setUpBeforeClass() throws Exception {
+  static void setUpBeforeClass() {
   }
 
   @AfterAll
-  static void tearDownAfterClass() throws Exception {
+  static void tearDownAfterClass() {
   }
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
   }
 
   @AfterEach
-  void tearDown() throws Exception {
+  void tearDown() {
   }
 
   @Test
@@ -152,14 +152,17 @@ class TrisotechWrapperIntTest {
     String expectedVersion = "1.2";
     String expectedVersion_2 = "0.1";
     TrisotechFileInfo fileInfo = TrisotechWrapper
-        .getFileInfoByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion);
+        .getFileInfoByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion)
+        .orElse(null);
     assertNotNull(fileInfo);
-    assertTrue(expectedVersion.equals(fileInfo.getVersion()));
-    assertTrue(WEAVER_TEST_1_ID.equals(fileInfo.getId()));
+    assertEquals(expectedVersion, fileInfo.getVersion());
+    assertEquals(WEAVER_TEST_1_ID, fileInfo.getId());
 
-    fileInfo = TrisotechWrapper.getFileInfoByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
-    assertTrue(expectedVersion_2.equals(fileInfo.getVersion()));
-    assertTrue(WEAVER_TEST_2_ID.equals(fileInfo.getId()));
+    fileInfo = TrisotechWrapper.getFileInfoByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2)
+        .orElse(null);
+    assertNotNull(fileInfo);
+    assertEquals(expectedVersion_2, fileInfo.getVersion());
+    assertEquals(WEAVER_TEST_2_ID, fileInfo.getId());
   }
 
   @Test
@@ -167,12 +170,14 @@ class TrisotechWrapperIntTest {
     String expectedVersion = "2.0";
     String expectedVersion_2 = "1.0";
     TrisotechFileInfo fileInfo = TrisotechWrapper
-        .getFileInfoByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion);
+        .getFileInfoByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion)
+        .orElse(null);
     assertNotNull(fileInfo);
-    assertTrue(expectedVersion.equals(fileInfo.getVersion()));
-    assertTrue(WEAVE_TEST_1_ID.equals(fileInfo.getId()));
+    assertEquals(expectedVersion, fileInfo.getVersion());
+    assertEquals(WEAVE_TEST_1_ID, fileInfo.getId());
 
-    fileInfo = TrisotechWrapper.getFileInfoByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2);
+    fileInfo = TrisotechWrapper.getFileInfoByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2)
+        .orElse(null);
     assertNull(fileInfo);
 
   }
@@ -191,8 +196,9 @@ class TrisotechWrapperIntTest {
         .filter(f -> f.getVersion().equals("1.6"))
         .findAny()
         .orElse(null);
+    assertNotNull(file);
 
-    assertTrue(file.getVersion().equals("1.6"));
+    assertEquals("1.6", file.getVersion());
 
     // expect same results with repository provided
     fileVersions = TrisotechWrapper.getModelVersions(MEA_TEST, WEAVER_TEST_1_ID,
@@ -205,8 +211,9 @@ class TrisotechWrapperIntTest {
         .filter(f -> f.getVersion().equals("1.6"))
         .findAny()
         .orElse(null);
+    assertNotNull(file);
 
-    assertTrue(file.getVersion().equals("1.6"));
+    assertEquals("1.6", file.getVersion());
   }
 
   // TODO: add test w/bad repository name
@@ -223,8 +230,9 @@ class TrisotechWrapperIntTest {
         .filter(f -> f.getVersion().equals("1.6"))
         .findAny()
         .orElse(null);
+    assertNotNull(file);
 
-    assertTrue(file.getVersion().equals("1.6"));
+    assertEquals("1.6", file.getVersion());
 
     // expect same results with repository provided
     fileVersions = TrisotechWrapper.getModelVersions(MEA_TEST, WEAVER_TEST_1_ID, DMN_XML_MIMETYPE);
@@ -236,8 +244,9 @@ class TrisotechWrapperIntTest {
         .filter(f -> f.getVersion().equals("1.6"))
         .findAny()
         .orElse(null);
+    assertNotNull(file);
 
-    assertTrue(file.getVersion().equals("1.6"));
+    assertEquals("1.6", file.getVersion());
   }
 
 
@@ -253,8 +262,9 @@ class TrisotechWrapperIntTest {
         .filter(f -> f.getVersion().equals("2.0"))
         .findAny()
         .orElse(null);
+    assertNotNull(file);
 
-    assertTrue(file.getVersion().equals("2.0"));
+    assertEquals("2.0", file.getVersion());
   }
 
   @Test
@@ -269,8 +279,9 @@ class TrisotechWrapperIntTest {
         .filter(f -> f.getVersion().equals("2.0"))
         .findAny()
         .orElse(null);
+    assertNotNull(file);
 
-    assertTrue(file.getVersion().equals("2.0"));
+    assertEquals("2.0", file.getVersion());
   }
 
   @Test
@@ -279,7 +290,9 @@ class TrisotechWrapperIntTest {
     Date expectedUpdated = DateTimeUtil
         .parseDateTime("2019-12-30T22:08:43Z","yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID);
+    VersionIdentifier versionIdentifier =
+        TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID)
+            .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersion());
@@ -289,8 +302,11 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {
     String expectedVersion = "1.8";
-    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID);
-    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo);
+    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID)
+        .orElse(null);
+    assertNotNull(trisotechFileInfo);
+    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo)
+        .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersion());
@@ -299,7 +315,8 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetLatestVersionArtifactIdCMMN() {
     String expectedVersion = "2.2.1";
-    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID);
+    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID)
+        .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersion());
@@ -308,8 +325,11 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetLatestVersionTrisotechFileInfoCMMN() {
     String expectedVersion = "2.2.1";
-    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID);
-    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo);
+    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID)
+        .orElse(null);
+    assertNotNull(trisotechFileInfo);
+    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo)
+        .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersion());
@@ -319,21 +339,22 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetLatestVersionCMMN_Null() {
     // while a file may have multiple versions, no version tag is given to a file until it is published
-    VersionIdentifier version = TrisotechWrapper.getLatestVersion(WEAVE_TEST_2_ID);
+    VersionIdentifier version = TrisotechWrapper.getLatestVersion(WEAVE_TEST_2_ID)
+        .orElse(null);
     assertNull(version);
   }
 
   @Test
   final void testGetPublishedModelByIdDMN() {
     Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVER_TEST_1_ID);
-    assertNotEquals(Optional.empty(), dox);
+    assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
   @Test
   final void testGetPublishedModelByIdDMN_Draft() {
     Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVER_TEST_2_ID);
-    assertNotEquals(Optional.empty(), dox);
+    assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
@@ -341,15 +362,14 @@ class TrisotechWrapperIntTest {
   final void testGetPublishedModelByIdDMN_Null() {
     // getPublishedModelById returns empty if model is not published
     Optional<Document> dox = TrisotechWrapper.getPublishedModelById(DMN_UNPUBLISHED);
-    assertNotNull(dox);
-    assertEquals(Optional.empty(), dox);
+    assertFalse(dox.isPresent());
   }
 
   @Test
   final void testGetModelByIdDMN() {
     // getModelById returns empty if model is not published
     Optional<Document> dox = TrisotechWrapper.getModelById(WEAVER_TEST_2_ID);
-    assertNotEquals(Optional.empty(), dox);
+    assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
@@ -357,10 +377,12 @@ class TrisotechWrapperIntTest {
   final void testGetPublishedModelByIdWithFileInfoDMN() {
     List<TrisotechFileInfo> trisotechFileInfos = TrisotechWrapper.getDMNModelsFileInfo();
     TrisotechFileInfo trisotechFileInfo = trisotechFileInfos.stream()
-        .filter((f) -> f.getId().equals(WEAVER_TEST_1_ID)).findAny().get();
+        .filter((f) -> f.getId().equals(WEAVER_TEST_1_ID)).findAny()
+        .orElse(null);
+    assertNotNull(trisotechFileInfo);
     Optional<Document> dox = TrisotechWrapper
-        .getPublishedModelById(WEAVER_TEST_1_ID, trisotechFileInfo);
-    assertNotEquals(Optional.empty(), dox);
+        .getPublishedModel(trisotechFileInfo);
+    assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
@@ -373,21 +395,21 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetPublishedModelByIdCMMN() {
     Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVE_TEST_1_ID);
-    assertNotEquals(Optional.empty(), dox);
+    assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
   @Test
   final void testGetPublishedModelByIdCMMN_Empty() {
     Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVE_TEST_2_ID);
-    assertEquals(Optional.empty(), dox);
+    assertFalse(dox.isPresent());
   }
 
 
   @Test
   final void testGetModelByIdCMMN() {
     Optional<Document> dox = TrisotechWrapper.getModelById(WEAVE_TEST_2_ID);
-    assertNotEquals(Optional.empty(), dox);
+    assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
@@ -395,10 +417,13 @@ class TrisotechWrapperIntTest {
   final void testGetPublishedModelByIdWithFileInfoCMMN() {
     List<TrisotechFileInfo> trisotechFileInfos = TrisotechWrapper.getCMMNModelsFileInfo();
     TrisotechFileInfo trisotechFileInfo = trisotechFileInfos.stream()
-        .filter((f) -> f.getId().equals(WEAVE_TEST_1_ID)).findAny().get();
+        .filter((f) -> f.getId().equals(WEAVE_TEST_1_ID))
+        .findAny()
+        .orElse(null);
+    assertNotNull(trisotechFileInfo);
     Optional<Document> dox = TrisotechWrapper
-        .getPublishedModelById(WEAVE_TEST_1_ID, trisotechFileInfo);
-    assertNotEquals(Optional.empty(), dox);
+        .getPublishedModel(trisotechFileInfo);
+    assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
@@ -425,31 +450,32 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetModelInfoDMN() {
-    TrisotechFileInfo fileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID);
+    TrisotechFileInfo fileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID)
+        .orElse(null);
     assertNotNull(fileInfo);
-    assertTrue("Weaver Test 1".equals(fileInfo.getName()));
-    assertTrue(WEAVER_TEST_1_ID.equals(fileInfo.getId()));
+    assertEquals("Weaver Test 1", fileInfo.getName());
+    assertEquals(WEAVER_TEST_1_ID, fileInfo.getId());
     assertTrue(fileInfo.getUrl().contains("&mimetype="));
     assertTrue(fileInfo.getMimetype().contains(DMN_LOWER));
   }
 
   @Test
   final void testGetModelInfoCMMN() {
-    TrisotechFileInfo fileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID);
+    TrisotechFileInfo fileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID)
+        .orElse(null);
     assertNotNull(fileInfo);
-    assertTrue("Weave Test 1".equals(fileInfo.getName()));
-    assertTrue(WEAVE_TEST_1_ID.equals(fileInfo.getId()));
+    assertEquals("Weave Test 1", fileInfo.getName());
+    assertEquals(WEAVE_TEST_1_ID, fileInfo.getId());
     assertTrue(fileInfo.getUrl().contains("&mimetype="));
     assertTrue(fileInfo.getMimetype().contains(CMMN_LOWER));
   }
 
   @Test
   final void testDownloadXmlModelDMN() {
-
     String repositoryFileUrl = TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST_ID
         + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVER_TEST_1_ID;
-    Document dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
-    assertNotNull(dox);
+    Optional<Document> dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
+    assertTrue(dox.isPresent());
   }
 
   @Test
@@ -457,8 +483,8 @@ class TrisotechWrapperIntTest {
 
     String repositoryFileUrl = TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST_ID
         + "&mimetype=application%2Fcmmn-1-1%2Bxml&path=/&sku=" + WEAVE_TEST_1_ID;
-    Document dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
-    assertNotNull(dox);
+    Optional<Document> dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
+    assertTrue(dox.isPresent());
   }
 
   @Test
@@ -467,16 +493,14 @@ class TrisotechWrapperIntTest {
     final String repositoryFileUrl =
         TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST_ID
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVE_TEST_1_ID;
-    RuntimeException re = assertThrows(RuntimeException.class,
-        () -> TrisotechWrapper.downloadXmlModel(repositoryFileUrl));
-    assertEquals("Failed : HTTP error code : 400", re.getMessage());
+    Optional<Document> dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
+    assertFalse(dox.isPresent());
 
     final String repositoryFileUrl2 =
         TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVER_TEST_1_ID;
-    re = assertThrows(RuntimeException.class,
-        () -> TrisotechWrapper.downloadXmlModel(repositoryFileUrl2));
-    assertEquals("Failed : HTTP error code : 404", re.getMessage());
+    dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl2);
+    assertFalse(dox.isPresent());
   }
 
 

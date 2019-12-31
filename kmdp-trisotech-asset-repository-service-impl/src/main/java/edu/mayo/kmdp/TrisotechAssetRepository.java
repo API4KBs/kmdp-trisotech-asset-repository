@@ -103,7 +103,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     }
     // get the knowledgeAsset
     KnowledgeAsset ka = getKnowledgeAssetForModel(internalFileId.get(), modelInfo);
-    return Answer.of(Optional.of(ka)); //succeed(ka, HttpStatus.OK);
+    return Answer.of(ka); //succeed(ka, HttpStatus.OK);
   }
 
   /**

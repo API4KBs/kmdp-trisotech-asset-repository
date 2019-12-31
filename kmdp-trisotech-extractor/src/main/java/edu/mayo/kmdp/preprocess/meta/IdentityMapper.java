@@ -17,6 +17,7 @@ import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
+import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.graph.HierarchySorter;
 import java.net.URI;
 import java.util.ArrayList;
@@ -90,8 +91,10 @@ public class IdentityMapper {
   private static final String MIME_TYPE = "?mimeType";
   private static final String VERSION = "?version";
 
+  private static final String VERSIONS = "/versions";
+
   // HierarchySorter will sort in reverse order of use, so an artifact imported by another will be at the top of the tree after the sort
-  private HierarchySorter hierarchySorter = new HierarchySorter();
+  private HierarchySorter<Resource> hierarchySorter = new HierarchySorter<>();
   // map of artifact relations (artifact = model)
   private Map<Resource, Set<Resource>> artifactToArtifactIDMap = new HashMap<>();
   // make the resultSet rewindable because will need to access it many times; if not rewindable, cannot get back to the beginning
@@ -105,7 +108,7 @@ public class IdentityMapper {
    * init is needed w/@PostConstruct because @Value values will not be set until after
    * construction.
    *
-   * @PostConstruct will be called after the object is initialized.
+   * /@PostConstruct will be called after the object is initialized.
    */
   @PostConstruct
   void init() {
@@ -164,7 +167,7 @@ public class IdentityMapper {
    * Build the queryString needed to query the DMN->DMN and CMMN->DMN relations in the place
    * requested. This is specific to Trisotech.
    *
-   * TODO: only get those models that are Published? CAO
+   * Should only get those models that are Published? CAO | DS
    *
    * @param place the Trisotech 'place' (aka directory/folder) to query
    * @return the query string to query the relations between models
@@ -255,7 +258,6 @@ public class IdentityMapper {
         // then get the customAttribute of the children
         .append("         ?cElement ttr:customAttribute ?caElement.")
         // then get the assetId from the customAttribute
-        // TODO: do we need to confirm the customAttributeKey to verify it is what we expect? and how would that happen? CAO
         .append("         ?caElement ttr:customAttributeValue ?assetId.")
         .append("    }")
         // AND also get the CMMNModel information
@@ -278,7 +280,6 @@ public class IdentityMapper {
         // then get the customAttribute of the children
         .append("         ?cElement ttr:customAttribute ?caElement.")
         // then get the assetId from the customAttribute
-        // TODO: do we need to confirm the customAttributeKey to verify it is what we expect? CAO
         .append("         ?caElement ttr:customAttributeValue ?assetId.")
         .append("    }  }  }")
         .toString();
@@ -432,10 +433,10 @@ public class IdentityMapper {
    */
   public URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId) {
     String assetVersionId = enterpriseAssetVersionId.toString();
-    if(enterpriseAssetVersionId.getPath().contains("/versions")) {
+    if(enterpriseAssetVersionId.getPath().contains(VERSIONS)) {
       // remove the /versions/... part of the URI; enterpriseAssetId is the part without the version
       return URI.create(assetVersionId
-          .substring(0, assetVersionId.lastIndexOf("/versions")));
+          .substring(0, assetVersionId.lastIndexOf(VERSIONS)));
     } else {
       return enterpriseAssetVersionId; // just give back what was given
     }
@@ -457,7 +458,7 @@ public class IdentityMapper {
   public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag,
       boolean any)
       throws NotLatestVersionException {
-    if(true == any) {
+    if(any) {
       return enterpriseAssetVersionIdForAssetInModel(models, assetId, versionTag);
     } else {
       return enterpriseAssetVersionIdForAssetInModel(publishedModels, assetId, versionTag);
@@ -474,9 +475,9 @@ public class IdentityMapper {
       if (enterpriseAssetVersionId.contains(assetId.toString())) {
         // found an artifact that has this asset; now check the version
         String versionFromId = enterpriseAssetVersionId.substring(
-            enterpriseAssetVersionId.lastIndexOf("/versions"));
-        if (versionFromId.equals("/versions/" + versionTag)) {
-          return Optional.ofNullable(
+            enterpriseAssetVersionId.lastIndexOf(VERSIONS));
+        if (versionFromId.equals(VERSIONS + "/" + versionTag)) {
+          return Optional.of(
               URI.create(enterpriseAssetVersionId));
         } else {
           // there is an artifact, but the latest does not match the version seeking
@@ -513,7 +514,6 @@ public class IdentityMapper {
     // this will only match if the exact version of the asset is available on a latest model
     while (theModels.hasNext()) {
       QuerySolution soln = theModels.nextSolution();
-      // TODO: need to handle URIIdentifiers not properly created? CAO (ex: DatatypeHelper.uri("my/path/assetId/versions/1.0.0")  OR fix DatatypeHelper?
       if (logger.isDebugEnabled()) {
         logger.debug("getArtifactId for assetId: {}", assetId.toStringId());
         logger.debug("assetId.getUri().toString: {}", assetId.getUri());
@@ -540,7 +540,7 @@ public class IdentityMapper {
    * @return the fileId for the asset; the fileId can be used in the APIs
    */
   public Optional<String> getFileId(UUID assetId, boolean any) {
-    if (true == any) {
+    if (any) {
       return getFileIdFromModels(models, assetId);
     } else {
       return getFileIdFromModels(publishedModels, assetId);
@@ -665,11 +665,11 @@ public class IdentityMapper {
    * @param docId the artifact id
    * @return a set of resources for the artifacts used by this artifact (dependencies)
    */
-  public Set<Resource> getArtifactImports(Optional<String> docId) {
+  public Set<Resource> getArtifactImports(String docId) {
     Set<Resource> resources = null;
 
-    if (docId.isPresent()) {
-      String id = docId.get().substring(docId.get().lastIndexOf('/') + 1);
+    if (!Util.isEmpty(docId)) {
+      String id = docId.substring(docId.lastIndexOf('/') + 1);
       for (Entry<Resource, Set<Resource>> entry : artifactToArtifactIDMap.entrySet()) {
         Resource k = entry.getKey();
         if (k.getLocalName().substring(1).equals(id)) {
@@ -686,38 +686,39 @@ public class IdentityMapper {
    * @param docId the artifact id
    * @return a set of resources for the assets used by this model (dependencies)
    */
-  public List<URIIdentifier> getAssetRelations(Optional<String> docId) {
+  public List<URIIdentifier> getAssetRelations(String docId) {
     List<URIIdentifier> assets = new ArrayList<>();
 
-    if (docId.isPresent()) {
+    if (!Util.isEmpty(docId)) {
       // first find the artifact in the artifactToArtifact mapping
-      String id = docId.get().substring(docId.get().lastIndexOf('/') + 1);
+      String id = docId.substring(docId.lastIndexOf('/') + 1);
       artifactToArtifactIDMap.forEach((k, v) -> {
         if (k.getLocalName().substring(1).equals(id)) {
           logger.debug("found id in artifactToArtifactIDMap");
           // once found, for each of the artifacts it is dependent on, find the asset id for those artifacts in the models
-          v.stream().forEach(dependent -> {
-            System.out.println("dependent URI: " + dependent.getURI());
-            String dependentId = dependent.getURI().substring(dependent.getURI().lastIndexOf('/'));
-            publishedModels.reset();
-            while (publishedModels.hasNext()) {
-              QuerySolution soln = publishedModels.nextSolution();
-              System.out.println("soln MODEL URI: " + soln.getResource(MODEL).getURI());
-              if (soln.getResource(MODEL).getURI().equals(dependent.getURI())) {
-                System.out.println("Asset ID for Model: " + soln.getLiteral(ASSET_ID));
-                assets
-                    .add(
-                        new URIIdentifier()
-                            .withUri(URI.create(soln.getLiteral(ASSET_ID).getString())));
-              } else {
-                logger.debug("Dependency {} for {} is NOT Published", dependentId, k.getLocalName());
-              }
-            }
-          });
+          v.forEach(dependent -> getAssetRelation(dependent, k).ifPresent(assets::add));
         }
       });
     }
     return assets;
+  }
+
+  private Optional<URIIdentifier> getAssetRelation(Resource dependent, Resource subject) {
+    logger.debug("dependent URI: {}", dependent.getURI());
+    String dependentId = dependent.getURI().substring(dependent.getURI().lastIndexOf('/'));
+    publishedModels.reset();
+    while (publishedModels.hasNext()) {
+      QuerySolution soln = publishedModels.nextSolution();
+      logger.debug("soln MODEL URI: {} ", soln.getResource(MODEL).getURI());
+      if (soln.getResource(MODEL).getURI().equals(dependent.getURI())) {
+        logger.debug("Asset ID for Model: {}", soln.getLiteral(ASSET_ID));
+        return Optional.of(new URIIdentifier()
+            .withUri(URI.create(soln.getLiteral(ASSET_ID).getString())));
+      } else {
+        logger.debug("Dependency {} for {} is NOT Published", dependentId, subject.getLocalName());
+      }
+    }
+    return Optional.empty();
   }
 
 

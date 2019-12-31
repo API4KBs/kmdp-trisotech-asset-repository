@@ -17,8 +17,10 @@ package edu.mayo.kmdp.preprocess.meta;
 
 import static edu.mayo.kmdp.util.JaxbUtil.marshall;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
+import static java.util.Collections.singletonList;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import edu.mayo.kmdp.SurrogateHelper;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
@@ -30,9 +32,7 @@ import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
@@ -87,24 +87,27 @@ public class MetadataExtractor {
     Optional<Document> dox = loadXMLDocument(resource);
     Optional<JsonNode> surrJson = JSonUtil.readJson(meta);
 
-    return dox.map(document -> extract(document, surrJson.get()));
+    return dox.map(document ->
+        extract(document, surrJson
+            .orElse(JsonNodeFactory.instance.nullNode())));
   }
 
-  public Optional<ByteArrayOutputStream> doExtract(InputStream resource, InputStream meta, Format f,
-      Properties p) {
+  public Optional<ByteArrayOutputStream> doExtract(
+      InputStream resource, InputStream meta, Format f, Properties p) {
     return extract(resource, meta).flatMap(surr -> {
       switch (f) {
         case JSON:
           Optional<ByteArrayOutputStream> jsonExtract = JSonUtil.writeJson(surr, p);
-          ByteArrayOutputStream baos = jsonExtract.get();
+          // ByteArrayOutputStream baos = jsonExtract.get();
           return JSonUtil.writeJson(surr, p);
         case XML:
         default:
-          List<? extends Class<? extends KnowledgeAsset>> surrKA = Collections
-              .singletonList(surr.getClass());
-          List<? extends Class<? extends KnowledgeAsset>> listSurrKA = Arrays
-              .asList(surr.getClass());
-          return marshall(Arrays.asList(surr.getClass()),
+          // List<? extends Class<? extends KnowledgeAsset>> surrKA =
+          //    Collections.singletonList(surr.getClass());
+          // List<? extends Class<? extends KnowledgeAsset>> listSurrKA =
+          //    Arrays.asList(surr.getClass());
+          return marshall(
+              singletonList(surr.getClass()),
               surr,
               SurrogateHelper.getSchema().orElseThrow(UnsupportedOperationException::new),
               new JaxbConfig().from(p));
@@ -191,13 +194,11 @@ public class MetadataExtractor {
    * enterpriseAssetId is the assetId found in the Carrier/model/XML file from Trisotech
    *
    * @param fileId the Trisotech file ID to resolve to an enterprise ID
-   * @return
+   * @return the enterprise ID
    */
   public URIIdentifier resolveEnterpriseAssetID(String fileId) {
-    // TODO: Need consistency ... return Optional.empty? or throw an error? CAO; should all methods return Optional<T>?
     return strategy.getAssetID(fileId)
-        // TODO: Need a better exception? This can happen when a model is published
-        //  but does NOT have an assetId CAO
+        // Defensive exception. Published models should have an assetId | CAO | DS
         .orElseThrow(() -> new IllegalStateException(
             "Defensive: Unable to resolve internal ID " + fileId + " to a known Enterprise ID"));
   }

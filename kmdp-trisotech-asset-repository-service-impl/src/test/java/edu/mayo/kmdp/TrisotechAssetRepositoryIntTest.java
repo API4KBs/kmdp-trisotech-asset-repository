@@ -21,7 +21,6 @@ import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
@@ -37,13 +36,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._1_0.Answer;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.omg.spec.api4kp._1_0.Answer;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
@@ -178,7 +176,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getVersionedKnowledgeAsset_notFound_badVersion() {
-    Answer answer = tar
+    Answer<KnowledgeAsset> answer = tar
         .getVersionedKnowledgeAsset(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.2.0");
     assertTrue(answer.isClientFailure());
@@ -187,7 +185,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getVersionedKnowledgeAsset_notFound_badId() {
-    Answer answer = tar
+    Answer<KnowledgeAsset> answer = tar
         .getVersionedKnowledgeAsset(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03d"),
             "1.0.0");
     assertTrue(answer.isClientFailure());
@@ -333,12 +331,10 @@ class TrisotechAssetRepositoryIntTest {
         .setVersionedKnowledgeAsset(UUID.randomUUID(), "s", ka);
     assertTrue(answer.isFailure());
     assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
-//    assertEquals(HttpStatus.NOT_IMPLEMENTED, answer.getStatusCode());
   }
 
   @Test
   void addKnowledgeAssetCarrier() {
-    KnowledgeAsset ka = new KnowledgeAsset();
     Answer<Void> answer= tar
         .addKnowledgeAssetCarrier(UUID.randomUUID(), "s", null);
     assertTrue(answer.isFailure());
@@ -394,7 +390,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getCanonicalKnowledgeAssetCarrier_notFound_badVersion() {
-    Answer answer = tar
+    Answer<KnowledgeCarrier> answer = tar
         .getCanonicalKnowledgeAssetCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.2.0", null);
     assertTrue(answer.isClientFailure());
@@ -403,7 +399,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getCanonicalKnowledgeAssetCarrier_notFound_badId() {
-    Answer answer = tar
+    Answer<KnowledgeCarrier> answer = tar
         .getCanonicalKnowledgeAssetCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03d"),
             "1.0.0", null);
     assertTrue(answer.isClientFailure());
@@ -461,7 +457,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getKnowledgeAssetCarrierVersion_notFound_badAssetVersion() {
-    Answer answer = tar
+    Answer<KnowledgeCarrier> answer = tar
         .getKnowledgeAssetCarrierVersion(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"),
             "1.2.0", UUID.fromString("ee0c768a-a0d4-4052-a6ea-fc0a3889b356"), "1.3.0");
     assertTrue(answer.isClientFailure());
@@ -471,7 +467,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getKnowledgeAssetCarrierVersion_notFound_badArtifactVersion() {
-    Answer answer = tar
+    Answer<KnowledgeCarrier> answer = tar
         .getKnowledgeAssetCarrierVersion(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"),
             "1.0.0", UUID.fromString("ee0c768a-a0d4-4052-a6ea-fc0a3889b356"), "1.2.0");
     assertTrue(answer.isClientFailure());
@@ -480,7 +476,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getKnowledgeAssetCarrierVersion_notFound_badAssetId() {
-    Answer answer = tar
+    Answer<KnowledgeCarrier> answer = tar
         .getKnowledgeAssetCarrierVersion(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03d"),
             "1.0.0", UUID.fromString("16086bb8-c1fc-49b0-800b-c9b995dc5ed5"), "1.8.0");
     assertTrue(answer.isClientFailure());
@@ -489,7 +485,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getKnowledgeAssetCarrierVersion_notFound_badArtifactId() {
-    Answer answer = tar
+    Answer<KnowledgeCarrier> answer = tar
         .getKnowledgeAssetCarrierVersion(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.0.1", UUID.fromString("16086bb8-c1fc-49b0-800b-c9b995dc5ed6"), "1.8.0");
     assertTrue(answer.isClientFailure());
@@ -523,7 +519,7 @@ class TrisotechAssetRepositoryIntTest {
         .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
             "1.0.0",
             UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"), "",
-            XMLUtil.toByteArray(XMLUtil.loadXMLDocument(testFile).get()));
+            XMLUtil.loadXMLDocument(testFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
     assertTrue(answer.isClientFailure());
 //    assertEquals(HttpStatus.NOT_FOUND, answer.getStatusCode());
   }
@@ -534,7 +530,7 @@ class TrisotechAssetRepositoryIntTest {
     Answer<Void> answer= tar
         .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
             "1.0.0-SNAPSHOT", UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc53abc"), "",
-            XMLUtil.toByteArray(XMLUtil.loadXMLDocument(testFile).get()));
+            XMLUtil.loadXMLDocument(testFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
     assertTrue(answer.isClientFailure());
 //    assertEquals(HttpStatus.NOT_FOUND, answer.getStatusCode());
   }
@@ -545,7 +541,7 @@ class TrisotechAssetRepositoryIntTest {
     Answer<Void> answer= tar
         .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
             "1.0.0-SNAPSHOT", UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"), "",
-            XMLUtil.toByteArray(XMLUtil.loadXMLDocument(testFile).get()));
+            XMLUtil.loadXMLDocument(testFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
     assertTrue(answer.isSuccess()); /// HttpStatus.OK, answer.getStatusCode());
   }
 
@@ -556,7 +552,7 @@ class TrisotechAssetRepositoryIntTest {
     Answer<Void> answer= tar.setKnowledgeAssetCarrierVersion(
         UUID.fromString("abcdcf3a-93c4-4e09-b1aa-14088c76dead"),
         "1.0.1", UUID.fromString("ff05700d-8433-4bdc-baa7-ef62c4a165c5"), "1.2.0",
-        XMLUtil.toByteArray(XMLUtil.loadXMLDocument(publishedFile).get()));
+        XMLUtil.loadXMLDocument(publishedFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
     assertTrue(answer.isSuccess());
 //    assertEquals(HttpStatus.OK, answer.getStatusCode());
   }

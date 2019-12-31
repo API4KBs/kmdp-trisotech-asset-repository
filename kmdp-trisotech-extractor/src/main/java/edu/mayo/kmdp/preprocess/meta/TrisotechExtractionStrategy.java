@@ -138,13 +138,13 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     URIIdentifier artifactId = DatatypeHelper.uri(docId.get(), meta.getVersion());
 
     // artifact<->artifact relation
-    Set<Resource> theTargetArtifactId = mapper.getArtifactImports(docId);
+    Set<Resource> theTargetArtifactId = mapper.getArtifactImports(docId.get());
     if (null != theTargetArtifactId) {
       logger.debug("theTargetArtifactId: {}", theTargetArtifactId);
     } else {
       logger.debug("theTargetArtifactId is null");
     }
-    List<URIIdentifier> theTargetAssetId = mapper.getAssetRelations(docId);
+    List<URIIdentifier> theTargetAssetId = mapper.getAssetRelations(docId.get());
 
     // get the language for the document to set the appropriate values
     Optional<Representation> rep = getRepLanguage(dox, false);

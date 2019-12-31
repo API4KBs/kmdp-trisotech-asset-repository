@@ -34,6 +34,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -671,11 +672,19 @@ public class TrisotechWrapper {
     if(null == version || null == state) {
       uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
           + CONTENT_PATH)
-          .build(getRepositoryId(rootDirectory), mimeType, path);
+          .build(
+              getRepositoryId(rootDirectory).orElseThrow(FileNotFoundException::new),
+              mimeType,
+              path);
     } else {
       uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
           + CONTENT_PATH_POST)
-          .build(getRepositoryId(rootDirectory), mimeType, path, version, state);
+          .build(
+              getRepositoryId(rootDirectory).orElseThrow(FileNotFoundException::new),
+              mimeType,
+              path,
+              version,
+              state);
     }
 
     MultipartEntityBuilder mb = MultipartEntityBuilder.create();

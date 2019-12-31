@@ -15,20 +15,29 @@
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_XML_MIMETYPE;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import org.junit.jupiter.api.*;
-
+import edu.mayo.kmdp.util.DateTimeUtil;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -267,19 +276,14 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetLatestVersionArtifactIdDMN() {
     String expectedVersion = "1.8";
-    XMLGregorianCalendar expectedUpdated = null;
-    try {
-      expectedUpdated = DatatypeFactory.newInstance()
-          .newXMLGregorianCalendar("2019-08-06T22:16:54Z");
-    } catch (DatatypeConfigurationException e) {
-      e.printStackTrace();
-    }
+    Date expectedUpdated = DateTimeUtil
+        .parseDateTime("2019-12-30T22:08:43Z","yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersion());
-    assertEquals(expectedUpdated.toString(), versionIdentifier.getEstablishedOn().toString());
+    assertEquals(expectedUpdated, versionIdentifier.getEstablishedOn());
   }
 
   @Test

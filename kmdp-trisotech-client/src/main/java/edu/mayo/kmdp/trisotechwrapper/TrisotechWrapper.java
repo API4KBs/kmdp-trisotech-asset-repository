@@ -31,26 +31,21 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileData;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.jena.ext.com.google.common.base.Strings;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
@@ -431,7 +426,7 @@ public class TrisotechWrapper {
       System.out.println("Date from tfiUpdated: " + Date.from(Instant.parse(tfi.getUpdated())).toString());
         return new VersionIdentifier().withTag(tfi.getId())
             .withVersion(tfi.getVersion())
-            .withEstablishedOn(Date.from(Instant.parse(tfi.getUpdated())));
+            .withEstablishedOn(DateTimeUtil.parseDateTime(tfi.getUpdated()));
     }
     return null; // TODO: better default return value? CAO
   }
@@ -714,7 +709,6 @@ public class TrisotechWrapper {
     }
     conn.getInputStream().close();
     fout.close();
-    return;
   }
 
   private static void addFileData(String paramName, String filename, byte[] byteStream, PrintWriter body,

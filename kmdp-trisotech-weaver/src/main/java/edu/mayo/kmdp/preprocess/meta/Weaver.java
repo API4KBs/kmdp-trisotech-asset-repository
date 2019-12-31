@@ -26,8 +26,13 @@ import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.ontology.taxonomies.clinicaltasks.ClinicalTask;
+import edu.mayo.ontology.taxonomies.clinicaltasks.ClinicalTaskSeries;
+import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
+import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import edu.mayo.ontology.taxonomies.propositionalconcepts.PropositionalConcepts;
 import edu.mayo.ontology.taxonomies.propositionalconcepts.PropositionalConceptsSeries;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,14 +43,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
@@ -63,7 +69,7 @@ public class Weaver {
 
   private static final String TRISOTECH_COM = "trisotech.com";
   private static final String VALUE = "value";
-  private static final Logger logger = LogManager.getLogger(Weaver.class);
+  private static final Logger logger = LoggerFactory.getLogger(Weaver.class);
 
   public static final String CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/artifacts/";
   private static final String WWW_W_3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
@@ -225,29 +231,30 @@ public class Weaver {
    * @return the KnownAttribute to be used in rewriting this element
    */
   private KnownAttributes getKnownAttribute(Element el) {
-    String typeScheme = URI.create(el.getAttribute(MODEL_URI)).getSchemeSpecificPart();
-    if (typeScheme.equals(KnowledgeAssetTypeSeries.seriesUri.getVersionId().getSchemeSpecificPart())) {
-      return KnownAttributes.resolve("assetType").orElse(null);
-    } else if (typeScheme.equals(DecisionTypeSeries.seriesUri.getVersionId().getSchemeSpecificPart())) {
-      logger.debug("Have a DecisionType. Do anything with it?");
-      return null; // TODO: for now, pending below TODO:
-//      return KnownAttributes.resolve(
-//          "decision")
-//          .get() // TODO: confirm w/Davide; he didn't give me one for DecisionType CAO
-    } else if (typeScheme
-        .equals(PropositionalConceptsSeries.seriesUri.getVersionId().getSchemeSpecificPart())) {
-// need to figure to what kind
-// need grandparent; parent will always be extensionElements (will this be true for the internal decision??)
+    URI attrUri = URI.create(el.getAttribute(MODEL_URI));
+    if (KnowledgeAssetType.seriesUri.getUri().equals(attrUri)
+        || KnowledgeAssetTypeSeries.schemeVersionIdentifiers.contains(attrUri)) {
+      return KnownAttributes.TYPE;
+    }
+    if (DecisionType.seriesUri.getUri().equals(attrUri)
+        || DecisionTypeSeries.schemeVersionIdentifiers.contains(attrUri)) {
+      return KnownAttributes.CAPTURES;
+    }
+    if (ClinicalTask.seriesUri.getUri().equals(attrUri)
+        || ClinicalTaskSeries.schemeVersionIdentifiers.contains(attrUri)) {
+      return KnownAttributes.CAPTURES;
+    }
+    if (PropositionalConcepts.seriesUri.getUri().equals(attrUri)
+        || PropositionalConceptsSeries.schemeVersionIdentifiers.contains(attrUri)) {
       String grandparent = el.getParentNode().getParentNode().getNodeName();
       if (grandparent.equals("semantic:decision")) {
-        return KnownAttributes.resolve("defines").orElse(null);
+        return KnownAttributes.DEFINES;
       } else if (grandparent.equals("semantic:inputData")) {
-        return KnownAttributes.resolve("inTermsOf").orElse(null);
-      } else if (grandparent.equals(
-          "TBD")) {  // TODO: not sure how to handle propositional concepts on internal decision; do not see that in the models CAO
-        return KnownAttributes.resolve("capture").orElse(null);
+        return KnownAttributes.INPUTS;
+      } else {
+        return null;
       }
-    } // TODO: error handling CAO
+    }
     return null;
   }
 
@@ -548,13 +555,16 @@ public class Weaver {
   public static <T> Element toElement(Object ctx,
       T root,
       final Function<T, JAXBElement<? super T>> mapper) {
-    return JaxbUtil.marshall(Collections.singleton(ctx.getClass()),
+    Optional<Document> dox = JaxbUtil.marshall(Collections.singleton(ctx.getClass()),
         root,
         mapper,
         JaxbUtil.defaultProperties())
         .map(ByteArrayOutputStream::toByteArray)
         .map(ByteArrayInputStream::new)
-        .flatMap(XMLUtil::loadXMLDocument)
+        .flatMap(XMLUtil::loadXMLDocument);
+    // TODO remove when loadXMLDocument provides normalization
+    dox.ifPresent(Document::normalizeDocument);
+    return dox
         .map(Document::getDocumentElement)
         .orElseThrow(IllegalStateException::new);
   }

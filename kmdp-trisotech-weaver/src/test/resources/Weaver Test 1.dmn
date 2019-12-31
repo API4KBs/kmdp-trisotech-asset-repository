@@ -102,9 +102,6 @@
     <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
     <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
   </semantic:decisionService>
-  <semantic:decisionService id="_2d9e4438-b341-432f-a081-fa4082003e68">
-    <semantic:variable id="_497e538f-b91c-4daa-8cda-a690fb7596ce" typeRef="Any"/>
-  </semantic:decisionService>
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe"
       triso:modelElementRef="_4ced0fdf-f289-48b5-8e31-05da34279b00" name="Page 1">

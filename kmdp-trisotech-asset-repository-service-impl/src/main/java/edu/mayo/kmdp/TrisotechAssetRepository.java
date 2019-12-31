@@ -183,7 +183,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       // check assetId for each version
       URIIdentifier asset = extractor.getAssetID(dox);
       if ((null != asset.getTag()
-          && null != asset.getVersion())
+          && null != asset.getVersionId())
           && asset.getTag().equals(assetId.toString())
           && asset.getVersion().equals(versionTag)) {
         // go ahead and extract the KA here otherwise have to re-query and re-weave
@@ -447,7 +447,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       Document dox = weaver.weave(TrisotechWrapper.downloadXmlModel(model.getUrl()));
       // check assetId for each version
       URIIdentifier asset = extractor.getAssetID(dox);
-      if (null != asset.getTag() && null != asset.getVersion()
+      if (null != asset.getTag() && null != asset.getVersionId()
           // no need to check artifactId here as all the versions are for the same artifact
           && asset.getTag().equals(assetId.toString())
           && asset.getVersion().equals(versionTag)

@@ -30,14 +30,14 @@ import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
 import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
-import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +51,8 @@ import org.w3c.dom.NodeList;
 
 @SpringJUnitConfig(classes = {WeaverTest.TestWeaverConfig.class})
 class WeaverTest {
+  
+  Logger logger = LoggerFactory.getLogger(WeaverTest.class);
 
   @Configuration
   @ComponentScan("edu.mayo.kmdp.preprocess.meta")
@@ -80,11 +82,9 @@ class WeaverTest {
       weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
-      assertTrue(true); // dummy
-      // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
-//			assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef())); // URI.create(Registry.getValidationSchema(KnowledgeRepresentationLanguage.DMN_1_2.getRef()).get() )) );
+			assertTrue( validate( dox, KnowledgeRepresentationLanguageSeries.DMN_1_2.getRef()));
     } catch (IllegalStateException ie) {
-      ie.printStackTrace();
+      logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
     }
   }
@@ -97,19 +97,17 @@ class WeaverTest {
 
     try {
       weaver.weave(dox);
-      assertTrue(true); // dummy assertion so sonarlint doesn't complain
-      // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
-//			assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
+      assertTrue( validate( dox, KnowledgeRepresentationLanguageSeries.DMN_1_2.getRef() ) );
 
       streamXMLDocument(dox, System.out);
     } catch (IllegalStateException ie) {
-      ie.printStackTrace();
+      logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
     }
   }
 
   @Test
-  void testVariousMetadataOnDMN_BasicDecision() {
+  void testVariousMetadataOnDMNBasicDecision() {
     String path = "/Basic Decision Model.dmn";
 
     Document dox = loadXMLDocument(resolveResource(path))
@@ -156,7 +154,7 @@ class WeaverTest {
 //			              xString( dox, "//dmn:knowledgeSource[@name='all']/@locationURI" ) );
 
     } catch (IllegalStateException ie) {
-      ie.printStackTrace();
+      logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
     }
   }
@@ -195,7 +193,7 @@ class WeaverTest {
       assertTrue(verifyHrefs(dox));
 
     } catch (IllegalStateException ie) {
-      ie.printStackTrace();
+      logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
     }
   }
@@ -207,9 +205,7 @@ class WeaverTest {
     Document dox = loadXMLDocument(resolveResource(path))
         .orElseGet(() -> fail("Unable to load document " + path));
 
-    assertTrue(true); // dummy
-    // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
-//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
+		assertTrue( validate( dox, KnowledgeRepresentationLanguageSeries.DMN_1_2.getRef() ) );
 
     try {
       weaver.weave(dox);
@@ -248,13 +244,13 @@ class WeaverTest {
 //			              xString( dox, "//dmn:knowledgeSource[@name='all']/@locationURI" ) );
 
     } catch (IllegalStateException ie) {
-      ie.printStackTrace();
+      logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
     }
   }
 
   @Test
-  void testVariousMetadataOnDMN_ComputableDecision() {
+  void testVariousMetadataOnDMNComputableDecision() {
     String path = "/Computable Decision Model.dmn";
     Document dox = loadXMLDocument(resolveResource(path))
         .orElseGet(() -> fail("Unable to load document " + path));
@@ -311,13 +307,13 @@ class WeaverTest {
 //			              xString( dox, "//dmn:knowledgeSource[@name='all']/@locationURI" ) );
 
     } catch (IllegalStateException ie) {
-      ie.printStackTrace();
+      logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
     }
   }
 
   @Test
-  void testVariousMetadataOnCMMN_WeaveTest1() {
+  void testVariousMetadataOnCMMNWeaveTest1() {
     String path = "/Weave Test 1.cmmn";
 
     // loadXMLDocument sets NamespaceAware
@@ -328,7 +324,6 @@ class WeaverTest {
 
       weaver.weave(dox);
 
-      System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
 
       assertTrue(validate(dox, CMMN_1_1.getRef()));
@@ -348,13 +343,13 @@ class WeaverTest {
       assertEquals(0, relations.getLength());
 
     } catch (IllegalStateException ie) {
-      ie.printStackTrace();
+      logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
     }
   }
 
   @Test
-  void testVariousMetadataOnCMMN_WeaveTest2() {
+  void testVariousMetadataOnCMMNWeaveTest2() {
     String path = "/Weave Test 2.cmmn";
     // loadXMLDocument set setNamespaceAware
     Document dox = loadXMLDocument(resolveResource(path))
@@ -363,7 +358,6 @@ class WeaverTest {
     try {
 
       weaver.weave(dox);
-      System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
 
       assertTrue(validate(dox, CMMN_1_1.getRef()));
@@ -383,14 +377,14 @@ class WeaverTest {
       assertEquals(0, relations.getLength());
 
     } catch (IllegalStateException ie) {
-      ie.printStackTrace();
+      logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
     }
   }
 
 
   @Test
-  void testVariousMetadataOnCMMN_BasicCaseModel() {
+  void testVariousMetadataOnCMMNBasicCaseModel() {
     String path = "/Basic Case Model.cmmn";
     // loadXMLDocument sets NamespaceAware
     Document dox = loadXMLDocument(resolveResource(path))
@@ -399,7 +393,6 @@ class WeaverTest {
     try {
 
       weaver.weave(dox);
-      System.out.println("CMMN file AFTER weave: ");
       streamXMLDocument(dox, System.out);
 
       assertTrue(validate(dox, CMMN_1_1.getRef()));
@@ -425,7 +418,7 @@ class WeaverTest {
       assertEquals(0, relations.getLength());
 
     } catch (IllegalStateException ie) {
-      ie.printStackTrace();
+      logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
     }
   }
@@ -462,7 +455,7 @@ class WeaverTest {
   private boolean verifyHrefs(Document dox) {
     // TODO: check each tag, or just get all href attributes and modify?  use KnownAttributes? CAO
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
-        .filter((el) -> (el.getLocalName().equals("inputData")
+        .filter(el -> (el.getLocalName().equals("inputData")
             || el.getLocalName().equals("requiredInput")
             || el.getLocalName().equals("encapsulatedDecision")
             || el.getLocalName().equals("inputDecision")
@@ -530,10 +523,8 @@ class WeaverTest {
   }
 
   private boolean confirmKMDPnamespace(Attr attr) {
-    if (attr.getValue().contains(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI)) {
-      return true;
-    }
-    return false;
+    return attr.getValue()
+        .contains(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI);
   }
 
 
@@ -550,19 +541,19 @@ class WeaverTest {
 
   private boolean verifyImportNamespace(Document dox) {
     NodeList elements = dox.getElementsByTagName("*");
-    asElementStream(elements).filter((el) -> el.getLocalName().equals("import"))
-        .forEach((el) -> {
+    asElementStream(elements).filter(el -> el.getLocalName().equals("import"))
+        .forEach(el -> {
               NamedNodeMap attributes = el.getAttributes();
               int attrSize = attributes.getLength();
               for (int i = 0; i < attrSize; i++) {
                 Attr attr = (Attr) attributes.item(i);
-                if (attr.getLocalName().equals("namespace")) {
-                  if (attr.getValue().contains("trisotech.com")) {
-                    fail("should not have " + attr.getValue() + " in attribute: " + attr.getLocalName()
-                        + " on parent: " + el.getNodeName());
-                  }
+                if (attr.getLocalName().equals("namespace")
+                    && (attr.getValue().contains("trisotech.com"))) {
+                  fail("should not have " + attr.getValue() + " in attribute: " + attr.getLocalName()
+                      + " on parent: " + el.getNodeName());
                 }
               }
+
             }
         );
     return true;
@@ -576,7 +567,7 @@ class WeaverTest {
     // Confirm no trisotech tags remain:
     NodeList elements = dox.getElementsByTagNameNS("*", "*");
     asElementStream(elements).forEach(
-        (el) -> {
+        el -> {
           NamedNodeMap attributes = el.getAttributes();
           int attrSize = attributes.getLength();
           for (int i = 0; i < attrSize; i++) {

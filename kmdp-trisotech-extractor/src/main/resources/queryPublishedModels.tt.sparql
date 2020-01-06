@@ -1,0 +1,62 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX tt: <http://www.trisotech.com/graph/1.0/element#>
+PREFIX ttr: <http://www.trisotech.com/graph/1.0/elementRel#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# ?model is our variable we will expect in the output
+# ?model will be a DMN or CMMN model
+# ?fileId is the id for the physical file (artifact) and is used in the APIs
+# ?assetId is the enterprise ID that is associated with this artifact through a customAttribute; can vary by version
+# ?version is the latest version of the model
+# ?mimeType helps with the ability to retrieve the correct filetype for the model
+# ?artifactName is the name of the model
+SELECT ?model ?fileId ?assetId ?version ?state ?mimeType ?artifactName
+FROM NAMED ?
+WHERE {
+GRAPH ? {
+  {
+    ?model a tt:DMNModel.
+        # gets the name for the model
+    ?model rdfs:label ?artifactName.
+        # gets the fileId
+    ?model ttr:fileId ?fileId.
+        # gets the version - only latest version is returned; there will only be a version if the model is published
+    ?model ttr:version ?version.
+        # gets the state - only latest state is returned; there will only be a state if the model is published
+    ?model ttr:state ?state.
+        # gets the mimeType
+    ?model ttr:mimeType ?mimeType.
+        # the following processing gets the assetId
+        # first get the children of the model
+    ?cElement ttr:childOf* ?model.
+        # then get the customAttribute of the children
+    ?cElement ttr:customAttribute ?caElement.
+        # then get the assetId from the customAttribute
+    ?caElement ttr:customAttributeValue ?assetId.
+   }
+UNION  # now do the same for CMMN->DMN models
+   {
+    ?model a tt:CMMNModel.
+        # gets the name for the model
+    ?model rdfs:label ?artifactName.
+        # gets the fileId; fileId can be used for querying from the APIs
+    ?model ttr:fileId ?fileId.
+        # gets the version
+    ?model ttr:version ?version.
+        # gets the state
+    ?model ttr:state ?state.
+        # gets the mimeType; mimeType helps figure out what type of file so correct mimeType query can be used
+    ?model ttr:mimeType ?mimeType.
+        # the following processing gets the assetId
+        # first get the children of the model
+    ?cElement ttr:childOf* ?model.
+        # then get the customAttribute of the children
+    ?cElement ttr:customAttribute ?caElement.
+        # then get the assetId from the customAttribute
+    ?caElement ttr:customAttributeValue ?assetId.
+ }
+}
+}

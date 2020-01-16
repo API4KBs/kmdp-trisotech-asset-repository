@@ -15,8 +15,6 @@
  */
 package edu.mayo.kmdp;
 
-import com.jayway.jsonpath.ReadContext;
-import edu.mayo.kmdp.preprocess.meta.ExtractionStrategy;
 import edu.mayo.kmdp.preprocess.meta.IdentityMapper;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.ModelReader;
@@ -24,7 +22,6 @@ import edu.mayo.kmdp.preprocess.meta.ReaderConfig;
 import edu.mayo.kmdp.preprocess.meta.TrisotechExtractionStrategy;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.StaticContextInitializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

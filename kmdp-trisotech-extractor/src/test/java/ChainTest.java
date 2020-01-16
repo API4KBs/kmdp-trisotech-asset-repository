@@ -40,6 +40,8 @@
  */
 
 import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -55,18 +57,22 @@ import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.krlanguage._20190801.KnowledgeRepresentationLanguage;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringBootTest
 @SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class,
     ChainConverterConfig.class})
+@ActiveProfiles("dev")
+//@TestPropertySource("classpath:application-dev.properties")
 class ChainTest {
 
   // FYI: The IDE may complain that it can't find a Bean for chainConverter,
@@ -74,7 +80,7 @@ class ChainTest {
   @Autowired
   private ChainConverter chainConverter;
 
-  private Model convert(InputStream model, InputStream meta, KnowledgeRepresentationLanguage type) {
+  private Model convert(InputStream model, InputStream meta, KnowledgeRepresentationLanguageSeries type) {
     Model m = chainConverter.convert(meta, model, type);
 
     assertNotNull(m.getModel());
@@ -101,7 +107,7 @@ class ChainTest {
       String expectedArtifactVersionId =
           expectedArtifactId + "/versions/" + expectedArtifactVersion;
 
-      Model m = convert(dmn, meta, KnowledgeRepresentationLanguage.DMN_1_2);
+      Model m = convert(dmn, meta, DMN_1_2);
 
       Optional<KnowledgeAsset> s = JaxbUtil.unmarshall(ObjectFactory.class,
           KnowledgeAsset.class,
@@ -149,7 +155,7 @@ class ChainTest {
           CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
       String expectedArtifactVersionId = expectedArtifactId + "/versions/" + expectedArtifactVersion;
 
-      Model m = convert(dmn, meta, KnowledgeRepresentationLanguage.DMN_1_2);
+      Model m = convert(dmn, meta, DMN_1_2);
 
       Optional<KnowledgeAsset> s = JaxbUtil.unmarshall(ObjectFactory.class,
           KnowledgeAsset.class,
@@ -198,7 +204,7 @@ class ChainTest {
 
       InputStream modelInfo = ChainTest.class.getResourceAsStream(modelInfoPath);
 
-      Model m = convert(cmmn, modelInfo, KnowledgeRepresentationLanguage.CMMN_1_1);
+      Model m = convert(cmmn, modelInfo, CMMN_1_1);
 
       Optional<KnowledgeAsset> s = JaxbUtil.unmarshall(ObjectFactory.class,
           KnowledgeAsset.class,
@@ -242,7 +248,7 @@ class ChainTest {
 
       InputStream modelInfo = ChainTest.class.getResourceAsStream(modelInfoPath);
 
-      Model m = convert(cmmn, modelInfo, KnowledgeRepresentationLanguage.CMMN_1_1);
+      Model m = convert(cmmn, modelInfo, CMMN_1_1);
 
       Optional<KnowledgeAsset> s = JaxbUtil.unmarshall(ObjectFactory.class,
           KnowledgeAsset.class,

@@ -6,7 +6,7 @@
   <parent>
     <artifactId>kmdp-trisotech-asset-repository-service</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
-    <version>1.0.0</version>
+    <version>1.5.0</version>
   </parent>
 
   <artifactId>kmdp-knowledge-asset-repository-trisotech</artifactId>
@@ -18,24 +18,23 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-trisotech-client</artifactId>
-      <version>1.0.0</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-trisotech-weaver</artifactId>
-      <version>1.0.0</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-trisotech-extractor</artifactId>
-      <version>1.0.0</version>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- internal -->
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-datatype</artifactId>
-      <version>${kmdp.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
@@ -60,14 +59,9 @@
     </dependency>
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
-      <artifactId>hapi-fhir-structures-hl7org-dstu2</artifactId>
+      <artifactId>hapi-fhir-structures-dstu3</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>

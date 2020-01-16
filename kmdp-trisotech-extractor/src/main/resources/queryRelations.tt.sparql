@@ -1,0 +1,35 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX tt: <http://www.trisotech.com/graph/1.0/element#>
+PREFIX ttr: <http://www.trisotech.com/graph/1.0/elementRel#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?model ?dModel
+FROM NAMED ?
+WHERE {
+GRAPH ? {
+  {
+        # gets the models that are of type DMNModel
+                            ?model a tt:DMNModel.
+        # gets the models that are of type DMNModel
+                            ?dModel a tt:DMNModel.
+        # gets elements that are childOf for the model; the '*' will get all 'childOf' matches
+                            ?cElement ttr:childOf* ?model.
+        # do the same thing here with the second set of DMNModels
+                            ?dElement ttr:childOf* ?dModel.
+        # Now match the elements on the 'semantic' -- this is the link between the models
+                            ?cElement ttr:semantic ?dElement.
+   }
+UNION  # now do the same for CMMN->DMN models
+   {
+        # gets the models that are of type CMMNModel
+                            ?model a tt:CMMNModel.
+                            ?dModel a tt:DMNModel.
+                            ?cElement ttr:childOf* ?model.
+                            ?dElement ttr:childOf* ?dModel.
+                            ?cElement ttr:semantic ?dElement.
+   }
+ }
+}

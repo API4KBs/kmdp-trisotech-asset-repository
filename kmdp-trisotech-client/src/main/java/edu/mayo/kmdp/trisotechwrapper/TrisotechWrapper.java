@@ -26,16 +26,16 @@ import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileData;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -43,11 +43,11 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
+import org.apache.http.HttpException;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.jena.ext.com.google.common.base.Strings;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
@@ -101,27 +101,22 @@ public class TrisotechWrapper {
    * @return XML Document for the model or Empty
    */
   public static Optional<Document> getModelById(String fileId) {
-    return getModelById(fileId, null);
+    return getFileInfo(fileId)
+        .flatMap(TrisotechWrapper::getModel);
   }
 
   /**
    * Retrieves the latest version of the model for the fileId provided.
    *
-   * @param fileId the id for the model file
    * @param trisotechFileInfo the fileinfo for the model. can be null
    * @return the XML document
    */
-  public static Optional<Document> getModelById(String fileId,
+  public static Optional<Document> getModel(
       TrisotechFileInfo trisotechFileInfo) {
     try {
-      if (null == trisotechFileInfo) {
-        trisotechFileInfo = getFileInfo(fileId);
-      }
-      if (null != trisotechFileInfo) {
-        return Optional.of(downloadXmlModel(trisotechFileInfo.getUrl()));
-      }
-    } catch (Exception e) { // TODO: Better exception handling. Do we have a preferred process? return empty here too? CAO
-      logger.error(String.format("%s %s", e.getMessage(), e.getStackTrace()));
+      return downloadXmlModel(trisotechFileInfo.getUrl());
+    } catch (Exception e) {
+      logger.error(String.format("%s %s", e.getMessage(), Arrays.toString(e.getStackTrace())), e);
     }
     return Optional.empty();
   }
@@ -134,28 +129,25 @@ public class TrisotechWrapper {
    * @return DMN XML Document or Optional.empty
    */
   public static Optional<Document> getPublishedModelById(String fileId) {
-    return getPublishedModelById(fileId, null);
+    return getFileInfo(fileId)
+        .flatMap(TrisotechWrapper::getPublishedModel);
   }
 
 
   /**
    * Get the XML Document for the model.
    *
-   * @param fileId the ID of the file being requested
    * @param trisotechFileInfo The info of the file being requested. Can be null.
    * @return The XML Document or Optional.empty if model is not published.
    */
-  public static Optional<Document> getPublishedModelById(String fileId,
+  public static Optional<Document> getPublishedModel(
       TrisotechFileInfo trisotechFileInfo) {
     try {
-      if (null == trisotechFileInfo) {
-        trisotechFileInfo = getFileInfo(fileId);
-      }
       if (publishedModel(trisotechFileInfo)) {
-        return Optional.of(downloadXmlModel(trisotechFileInfo.getUrl()));
+        return downloadXmlModel(trisotechFileInfo.getUrl());
       }
-    } catch (Exception e) { // TODO: Better exception handling. Do we have a preferred process? CAO
-      logger.error(String.format("%s%s", e.getMessage(), e.getStackTrace()));
+    } catch (Exception e) {
+      logger.error(String.format("%s %s", e.getMessage(), Arrays.toString(e.getStackTrace())), e);
     }
     return Optional.empty();
   }
@@ -212,11 +204,11 @@ public class TrisotechWrapper {
    * @param fileID Trisotech fileID used to query the repository
    * @return Trisotech FileInfo
    */
-  public static TrisotechFileInfo getFileInfo(String fileID) {
+  public static Optional<TrisotechFileInfo> getFileInfo(String fileID) {
     // get the mimeType first
-    String mimeType = getFileInfoMimeType(fileID);
+    Optional<String> mimeType = getFileInfoMimeType(fileID);
     // now the modelInfo will return with a URL that can be used to download XML file
-    return getFileInfo(fileID, mimeType);
+    return mimeType.flatMap(mime -> getFileInfo(fileID, mime));
   }
 
   /**
@@ -228,14 +220,14 @@ public class TrisotechWrapper {
    * @param mimeType the mimeType to allow for XML-compatible URL
    * @return the Trisotech FileInfo about the model
    */
-  private static TrisotechFileInfo getFileInfo(String fileID, String mimeType) {
+  private static Optional<TrisotechFileInfo> getFileInfo(String fileID, String mimeType) {
     List<TrisotechFileInfo> fileInfos = getModels(mimeType);
     return fileInfos.stream()
-        .filter(f -> f.getId().equals(fileID)).findAny()
-        .orElse(null); // TODO: what to return if doesn't exist? CAO
+        .filter(f -> f.getId().equals(fileID))
+        .findAny();
   }
 
-  /*** version support ***/
+  /* version support ***/
 
   /**
    * Gets the modelInfo for the version requested.
@@ -244,10 +236,12 @@ public class TrisotechWrapper {
    * @param version the version of the file in Trisotech.
    * @return TrisotechFileInfo
    */
-  public static TrisotechFileInfo getFileInfoByIdAndVersion(String fileId, String version) {
+  public static Optional<TrisotechFileInfo> getFileInfoByIdAndVersion(
+      String fileId, String version) {
     // first get the mimetype to provide the correct XML-ready URL in the TrisotechFileInfo
-    String mimeType = getFileInfoMimeType(fileId);
-    return getFileInfoByIdAndVersion(fileId, version, mimeType);
+    Optional<String> mimeType = getFileInfoMimeType(fileId);
+    return mimeType
+        .flatMap(mime -> getFileInfoByIdAndVersion(fileId, version, mime));
   }
 
   /**
@@ -257,7 +251,7 @@ public class TrisotechWrapper {
    * @param data the XML data to update the file
    */
   public static void updateModelFile(String fileId, byte[] data) {
-
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -269,22 +263,21 @@ public class TrisotechWrapper {
    * @param fileId the ID in Tristoech for the file to be queried
    * @return the mimetype for the file to be used to query needed information for download
    */
-  private static String getFileInfoMimeType(String fileId) {
+  private static Optional<String> getFileInfoMimeType(String fileId) {
     List<TrisotechFileInfo> fileInfos = getModels(null);
-    TrisotechFileInfo fileInfo = fileInfos.stream()
+    Optional<TrisotechFileInfo> fileInfo = fileInfos.stream()
         .filter(f -> f.getId().equals(fileId)
-        ).findAny().orElse(null); // TODO: better orElse value? CAO
-    // fetch with the appropriate mimetype for XML download
-    if (null != fileInfo) {
+        ).findAny();
+    if (! fileInfo.isPresent()) {
+      logger.error("Unable to get FileInfo for {}", fileId);
+    }
 
       // want to return the XML version of the file, so need the fileInfo based on mimetype
       // this has to do with how Trisotech returns the data
       // we don't get the XML path unless we provide the correct mimetype in the query.
       // contains() is used as a test as the mimetype returned is not exactly what we need, but
       // can be used to determine which one to use
-      return getXmlMimeType(fileInfo.getMimetype());
-    }
-    return null; // TODO: error? undefined mimetype?? shouldn't ever happen CAO
+    return fileInfo.map(info -> getXmlMimeType(info.getMimetype()));
   }
 
   /**
@@ -292,14 +285,15 @@ public class TrisotechWrapper {
    *
    * @param mimetype the mimetype specified through file information
    * @return the XML mimetype specfication to be used in API calls
+   * @throws IllegalArgumentException if a type other than "dmn" and "cmmn" is requested
    */
   private static String getXmlMimeType(String mimetype) {
-    if (mimetype.contains(DMN_LOWER)) {
+    if (null != mimetype && mimetype.contains(DMN_LOWER)) {
       return DMN_XML_MIMETYPE;
-    } else if (mimetype.contains(CMMN_LOWER)) {
+    } else if (null != mimetype && mimetype.contains(CMMN_LOWER)) {
       return CMMN_XML_MIMETYPE;
     } else {
-      return null; // TODO: error? undefined mimetype?? shouldn't ever happen CAO
+      throw new IllegalArgumentException("Unexpected MIME type " + mimetype);
     }
   }
 
@@ -312,15 +306,16 @@ public class TrisotechWrapper {
    * @param mimetype mimetype of the file
    * @return TrisotechFileInfo object for the file/fileVersion requested
    */
-  public static TrisotechFileInfo getFileInfoByIdAndVersion(String fileId, String fileVersion,
-      String mimetype) {
+  public static Optional<TrisotechFileInfo> getFileInfoByIdAndVersion(
+      String fileId, String fileVersion, String mimetype) {
     List<TrisotechFileInfo> fileInfos = getModelVersions(fileId, mimetype);
     for (TrisotechFileInfo fileInfo : fileInfos) {
       if (fileVersion.equals(fileInfo.getVersion())) {
-        return fileInfo;
+        return Optional.of(fileInfo);
       }
     }
-    return null; // TODO: better return value? error? CAO
+    logger.error("Unable to resolve {} for version {}", fileId, fileVersion);
+    return Optional.empty();
   }
 
   /**
@@ -329,7 +324,7 @@ public class TrisotechWrapper {
    * @param fileId id of the file for the model interested in
    * @return TrisotechFileInfo for the model
    */
-  public static TrisotechFileInfo getLatestModelFileInfo(String fileId) {
+  public static Optional<TrisotechFileInfo> getLatestModelFileInfo(String fileId) {
     return getFileInfo(fileId);
   }
 
@@ -341,13 +336,16 @@ public class TrisotechWrapper {
    * @return the XML Document for the specified version of the model or Empty
    */
   public static Optional<Document> getModelByIdAndVersion(String fileId, String version) {
-    String mimeType = getFileInfoMimeType(fileId);
-    List<TrisotechFileInfo> fileInfos = getModelVersions(fileId, mimeType);
+    Optional<String> mimeType = getFileInfoMimeType(fileId);
+    if (!mimeType.isPresent()) {
+      return Optional.empty();
+    }
+    List<TrisotechFileInfo> fileInfos = getModelVersions(fileId, mimeType.get());
 
     // long form
     for (TrisotechFileInfo fileInfo : fileInfos) {
       if (version.equals(fileInfo.getVersion())) {
-        return Optional.ofNullable(downloadXmlModel(fileInfo.getUrl()));
+        return downloadXmlModel(fileInfo.getUrl());
       }
     }
     return Optional.empty();
@@ -375,43 +373,39 @@ public class TrisotechWrapper {
    * @param fileId - file id of the model requested
    * @return list of modelFileInfo for all but the latest version of the model
    */
-  public static List<TrisotechFileInfo> getModelVersions(String repositoryName, String fileId,
-      String mimetype) {
+  public static List<TrisotechFileInfo> getModelVersions(
+      final String repositoryName,
+      final String fileId,
+      final String mimetype) {
     List<TrisotechFileInfo> versions = new ArrayList<>();
 
-    if (logger.isDebugEnabled()) {
-      logger.debug(String
-          .format("getModelVersions for model: %s in repository: %s with mimetype: %s", fileId,
-              repositoryName, mimetype));
-    }
-    if (!DMN_XML_MIMETYPE.equals(mimetype) || !CMMN_XML_MIMETYPE.equals(mimetype)) {
-      // not a valid mimetype, but maybe can determine
-      mimetype = getXmlMimeType(mimetype);
-    }
-    String repositoryId = getRepositoryId(repositoryName);
-    URI uri;
-    uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
-        + VERSIONS_PATH)
-        .build(repositoryId, fileId, mimetype);
+    logger.debug("getModelVersions for model: {} in repository: {} with mimetype: {}", fileId,
+            repositoryName, mimetype);
+    String resolvedMimetype = getXmlMimeType(mimetype);
+    Optional<String> optRepositoryId = getRepositoryId(repositoryName);
 
-    logger.debug("uri string: {}", uri);
-    // TODO: only unique versions? and then, only latest of each version? CAO
-    getRepositoryContent(uri).getData().forEach((datum -> versions.add(datum.getFile())));
+    if (optRepositoryId.isPresent()) {
+      URI uri;
+      uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
+          + VERSIONS_PATH)
+          .build(optRepositoryId.get(), fileId, resolvedMimetype);
+
+      logger.debug("uri string: {}", uri);
+      collectRepositoryContent(uri).getData().forEach((datum -> versions.add(datum.getFile())));
+    }
 
     return versions;
   }
 
   /**
    * Returns a VersionIdentifier of the model information for the artifactId provided.
-   * This versionIdentifier will be for the latest version of the model.
-   * TODO: Only return published versions? CAO
+   * This versionIdentifier will be for the latest published version of the model.
    *
    * @param artifactId the id for the artifact requesting latest version of
-   * @return
    */
-  public static VersionIdentifier getLatestVersion(String artifactId) {
-    TrisotechFileInfo trisotechFileInfo = getFileInfo(artifactId);
-    return getLatestVersion(trisotechFileInfo);
+  public static Optional<VersionIdentifier> getLatestVersion(String artifactId) {
+    return getFileInfo(artifactId)
+        .flatMap(TrisotechWrapper::getLatestVersion);
   }
 
   /**
@@ -421,19 +415,18 @@ public class TrisotechWrapper {
    * @return VersionIdentifier
    */
   //return VersionIdentifier uid, versiontag (1.0.0) , create .withEstablishedOn for timestamp
-  public static VersionIdentifier getLatestVersion(TrisotechFileInfo tfi) {
+  public static Optional<VersionIdentifier> getLatestVersion(TrisotechFileInfo tfi) {
     // only return for published models
-    if (null != tfi && null != tfi.getState()) {
-      try {
-        return new VersionIdentifier().withTag(tfi.getId())
-            .withVersion(tfi.getVersion())
-            .withEstablishedOn(
-                DatatypeFactory.newInstance().newXMLGregorianCalendar(tfi.getUpdated()));
-      } catch (DatatypeConfigurationException e) {
-        logger.error(String.format("%s %s", e.getMessage(), e.getStackTrace()));
-      }
+    if (null != tfi.getState()) {
+      logger.debug("tfiUpdated: {}", tfi.getUpdated());
+      logger.debug("Date from tfiUpdated: {}", DateTimeUtil.parseDate(tfi.getUpdated()));
+      return Optional.of(new VersionIdentifier()
+          .withTag(tfi.getId())
+          .withVersion(tfi.getVersion())
+          .withEstablishedOn(DateTimeUtil.parseDateTime(tfi.getUpdated())));
     }
-    return null; // TODO: better default return value? CAO
+    logger.info("No published version for {}", tfi.getName() );
+    return Optional.empty();
   }
 
 
@@ -453,12 +446,12 @@ public class TrisotechWrapper {
       for (TrisotechPlace tp : data.getData()) {
         // pass in modelsArray as getRepositoryContent is recursive
         if (tp.getName().equals(rootDirectory)) {
-          getRepositoryContent(tp.getId(), modelsArray, "/", xmlMimetype);
+          collectRepositoryContent(tp.getId(), modelsArray, "/", xmlMimetype);
         }
       }
 
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      logger.error(e.getMessage(),e);
     }
     return modelsArray;
   }
@@ -470,18 +463,18 @@ public class TrisotechWrapper {
    * @param repositoryName the name of the repository; users should know this, but may not know the ID
    * @return the ID for the repository requested
    */
-  private static String getRepositoryId(String repositoryName) {
+  private static Optional<String> getRepositoryId(String repositoryName) {
     try {
       TrisotechPlaceData data = getPlaces();
       for (TrisotechPlace tp : data.getData()) {
         if (tp.getName().equals(repositoryName)) {
-          return tp.getId();
+          return Optional.ofNullable(tp.getId());
         }
       }
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      logger.error(e.getMessage(),e);
     }
-    return null;
+    return Optional.empty();
   }
 
   /**
@@ -524,7 +517,7 @@ public class TrisotechWrapper {
    * @return object that contains a list of all the files and directories found in the requested
    * repository in a JSON format
    */
-  private static TrisotechFileData getRepositoryContent(URI uri) {
+  private static TrisotechFileData collectRepositoryContent(URI uri) {
 
     HttpEntity<?> requestEntity = getHttpEntity();
     RestTemplate restTemplate = new RestTemplate();
@@ -548,7 +541,7 @@ public class TrisotechWrapper {
    * @param path path of a folder
    * @param mimeType what type of files requesting from repository; no mimeType will retrieve all file types
    */
-  private static void getRepositoryContent(String directoryID, List<TrisotechFileInfo> modelsArray,
+  private static void collectRepositoryContent(String directoryID, List<TrisotechFileInfo> modelsArray,
       String path, String mimeType) {
     URI uri;
     try {
@@ -559,17 +552,17 @@ public class TrisotechWrapper {
           + CONTENT_PATH)
           .build(directoryID, mimeType, path);
 
-      TrisotechFileData fileData = getRepositoryContent(uri);
+      TrisotechFileData fileData = collectRepositoryContent(uri);
       fileData.getData().forEach(datum -> {
         if (null != datum.getFile()) {
           modelsArray.add(datum.getFile());
         } else { // assume folder?
-          getRepositoryContent(directoryID, modelsArray, datum.getFolder().getPath(), mimeType);
+          collectRepositoryContent(directoryID, modelsArray, datum.getFolder().getPath(), mimeType);
         }
       });
 
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      logger.error(e.getMessage(),e);
     }
   }
 
@@ -593,8 +586,8 @@ public class TrisotechWrapper {
 
   private static HttpHeaders getHttpHeaders() {
     final HttpHeaders requestHeaders = new HttpHeaders();
-    requestHeaders.add(ACCEPT, "application/json");
-    requestHeaders.add(AUTHORIZATION, "Bearer " + token);
+    requestHeaders.add(ACCEPT, APPLICATION_JSON_VALUE);
+    requestHeaders.add(AUTHORIZATION, getBearerToken());
     requestHeaders.setContentType(APPLICATION_JSON_UTF8);
     return requestHeaders;
   }
@@ -610,7 +603,7 @@ public class TrisotechWrapper {
    * @param fromUrl String representing an ENCODED URI
    * @return XML document
    */
-  public static Document downloadXmlModel(String fromUrl) {
+  public static Optional<Document> downloadXmlModel(String fromUrl) {
     try {
 
       URL url = new URL(fromUrl);
@@ -620,35 +613,38 @@ public class TrisotechWrapper {
       // conversion by setting namespaceaware
       Optional<Document> document = XMLUtil.loadXMLDocument(conn.getInputStream());
       conn.disconnect();
-      // TODO: better option orElse return? CAO
-      return document.orElse(null);
+      return document;
 
-    } catch (IOException e) {
-
-      throw new RuntimeException(e);
-
+    } catch (IOException | HttpException e) {
+      logger.error(e.getMessage(),e);
+      return Optional.empty();
     }
-
   }
 
-  private static HttpURLConnection getHttpURLConnection(URL url) throws IOException {
+  private static HttpURLConnection getHttpURLConnection(URL url) throws IOException, HttpException {
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
     conn.setRequestProperty(ACCEPT, "application/json");
-    conn.setRequestProperty(AUTHORIZATION, "Bearer " + token);
+    conn.setRequestProperty(AUTHORIZATION, getBearerToken());
 
     conn.setDoInput(true);
 
-    if (conn.getResponseCode() != 200) {
+    checkResponse(conn);
+    return conn;
+  }
 
+  private static void checkResponse(HttpURLConnection conn) throws IOException, HttpException {
+    if (conn.getResponseCode() != 200) {
       if (401 == conn.getResponseCode()) {
-        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()
-            + "Confirm token value");
+        throw raiseHttpException(conn.getResponseCode(), "Confirm token value");
       } else {
-        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+        throw raiseHttpException(conn.getResponseCode(), conn.getResponseMessage());
       }
     }
-    return conn;
+  }
+
+  private static HttpException raiseHttpException(int code, String msg) {
+    return new HttpException("Failed : HTTP error code : " + code + " : " + msg);
   }
 
   /**
@@ -658,11 +654,13 @@ public class TrisotechWrapper {
    * @param version the version for the file (NOTE: only for published models)
    * @param state the state for the file (NOTE: only for published models)
    * @param fileContents the file contents
+   * @throws IOException unable to load the source document
+   * @throws HttpException if TT Digital Enterprise Server refuses the request
    */
   public static void uploadXmlModel(String path, String filename,
       String mimeType, String version, String state,
       byte[] fileContents)
-      throws IOException {
+      throws IOException, HttpException {
 
     // first make sure mimetype is in correct format for API call
     mimeType = getXmlMimeType(mimeType);
@@ -674,18 +672,26 @@ public class TrisotechWrapper {
     if(null == version || null == state) {
       uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
           + CONTENT_PATH)
-          .build(getRepositoryId(rootDirectory), mimeType, path);
+          .build(
+              getRepositoryId(rootDirectory).orElseThrow(FileNotFoundException::new),
+              mimeType,
+              path);
     } else {
       uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
           + CONTENT_PATH_POST)
-          .build(getRepositoryId(rootDirectory), mimeType, path, version, state);
+          .build(
+              getRepositoryId(rootDirectory).orElseThrow(FileNotFoundException::new),
+              mimeType,
+              path,
+              version,
+              state);
     }
 
     MultipartEntityBuilder mb = MultipartEntityBuilder.create();
     mb.addBinaryBody("file", fileContents);
-    org.apache.http.HttpEntity e = mb.build();
+    //org.apache.http.HttpEntity e = mb.build();
 
-    logger.debug("uri.toURL: " + uri.toURL());
+    logger.debug("uri.toURL: {}", uri.toURL());
     HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
     final String boundary = Strings.repeat("-", 15) + Long.toHexString(System.currentTimeMillis());
 
@@ -693,7 +699,7 @@ public class TrisotechWrapper {
     conn.setDoOutput(true);
     conn.setRequestMethod("POST");
     conn.setRequestProperty(ACCEPT, "application/json");
-    conn.setRequestProperty(AUTHORIZATION, "Bearer " + token);
+    conn.setRequestProperty(AUTHORIZATION, getBearerToken());
     conn.setRequestProperty(CONTENT_TYPE, "multipart/form-data; boundary=" + boundary);
 //    conn.setRequestProperty(e.getContentType().getName(), e.getContentType().getValue());
 //    ;
@@ -704,29 +710,24 @@ public class TrisotechWrapper {
     addFileData("file", filename, fileContents, body, fout, boundary);
     addCloseDelimiter(body, boundary);
 
-    if (conn.getResponseCode() != 200) {
-      if (401 == conn.getResponseCode()) {
-        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()
-            + "Confirm token value");
-      } else {
-        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-      }
-    }
+    checkResponse(conn);
     conn.getInputStream().close();
     fout.close();
-    return;
   }
 
-  private static void addFileData(String paramName, String filename, byte[] byteStream, PrintWriter body,
+  private static void addFileData(String paramName, String filename, byte[] byteStream,
+      PrintWriter body,
       OutputStream directOutput, final String boundary)
       throws IOException {
-    body.append("--").append(boundary).append(CRLF);
-    body.append(
-        "Content-Disposition: form-data; name=\"" + paramName + "\"; filename=\"" + filename + "\"")
+    body.append("--")
+        .append(boundary)
+        .append(CRLF)
+        .append("Content-Disposition: form-data; name=\"")
+        .append(paramName).append("\"; filename=\"").append(filename).append("\"")
+        .append(CRLF)
+        .append("Content-Type: application/octed-stream").append(CRLF)
+        .append("Content-Transfer-Encoding: binary").append(CRLF)
         .append(CRLF);
-    body.append("Content-Type: application/octed-stream").append(CRLF);
-    body.append("Content-Transfer-Encoding: binary").append(CRLF);
-    body.append(CRLF);
     body.flush();
 
     directOutput.write(byteStream);
@@ -739,5 +740,9 @@ public class TrisotechWrapper {
   private static void addCloseDelimiter(PrintWriter body, final String boundary) {
     body.append("--").append(boundary).append("--").append(CRLF);
     body.flush();
+  }
+
+  private static String getBearerToken() {
+    return "Bearer " + token;
   }
 }

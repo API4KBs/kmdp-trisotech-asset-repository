@@ -5,7 +5,7 @@
   <parent>
     <artifactId>kmdp-trisotech-asset-repository-service</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
-    <version>1.0.0</version>
+    <version>1.5.0</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -20,29 +20,24 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>omg-dmn-12</artifactId>
-      <version>${kmdp.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>omg-cmmn-11</artifactId>
-      <version>${kmdp.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-utils</artifactId>
-      <version>${kmdp.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-ext-terminology-content</artifactId>
-      <version>${kmdp.version}</version>
+      <groupId>edu.mayo.kmdp.kdcaci.knew</groupId>
+      <artifactId>knew-terminology-content</artifactId>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-rest-ws-utils</artifactId>
-      <version>${kmdp.version}</version>
     </dependency>
 
 
@@ -55,12 +50,10 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <version>2.11.2</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.11.2</version>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
     </dependency>
 
     <dependency>

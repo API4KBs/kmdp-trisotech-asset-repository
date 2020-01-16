@@ -17,7 +17,9 @@ import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
-import edu.mayo.kmdp.terms.generator.util.HierarchySorter;
+import edu.mayo.kmdp.util.FileUtil;
+import edu.mayo.kmdp.util.Util;
+import edu.mayo.kmdp.util.graph.HierarchySorter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,10 +36,10 @@ import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
+import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
@@ -62,8 +64,8 @@ public class IdentityMapper {
   @Value("${edu.mayo.kmdp.trisotechwrapper.trisotechToken}")
   private String token;
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName}")
-  private String repositoryName;
+//  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName}")
+//  private String repositoryName;
 
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId}")
   String place;
@@ -82,7 +84,7 @@ public class IdentityMapper {
           + "PREFIX owl: <http://www.w3.org/2002/07/owl#>"
           + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
           + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>";
-  private static final String TRISOTECH_GRAPH = "<http://trisotech.com/graph/1.0/graph#";
+  private static final String TRISOTECH_GRAPH = "http://trisotech.com/graph/1.0/graph#";
   private static final String ASSET_ID = "?assetId";
   private static final String FILE_ID = "?fileId";
   private static final String MODEL = "?model";
@@ -90,8 +92,10 @@ public class IdentityMapper {
   private static final String MIME_TYPE = "?mimeType";
   private static final String VERSION = "?version";
 
+  private static final String VERSIONS = "/versions";
+
   // HierarchySorter will sort in reverse order of use, so an artifact imported by another will be at the top of the tree after the sort
-  private HierarchySorter hierarchySorter = new HierarchySorter();
+  private HierarchySorter<Resource> hierarchySorter = new HierarchySorter<>();
   // map of artifact relations (artifact = model)
   private Map<Resource, Set<Resource>> artifactToArtifactIDMap = new HashMap<>();
   // make the resultSet rewindable because will need to access it many times; if not rewindable, cannot get back to the beginning
@@ -105,14 +109,14 @@ public class IdentityMapper {
    * init is needed w/@PostConstruct because @Value values will not be set until after
    * construction.
    *
-   * @PostConstruct will be called after the object is initialized.
+   * /@PostConstruct will be called after the object is initialized.
    */
   @PostConstruct
   void init() {
     logger.debug("place in init {}", place);
-    createMap(query(getQueryStringRelations(place)));
-    models = ResultSetFactory.makeRewindable(query(getQueryStringModels(place)));
-    publishedModels = ResultSetFactory.makeRewindable(query(getQueryStringPublishedModels(place)));
+    createMap(query(getQueryStringRelations(),place));
+    models = ResultSetFactory.makeRewindable(query(getQueryStringModels(),place));
+    publishedModels = ResultSetFactory.makeRewindable(query(getQueryStringPublishedModels(),place));
     orderedModels = hierarchySorter
         .linearize(getModelList(publishedModels), artifactToArtifactIDMap);
   }
@@ -144,10 +148,17 @@ public class IdentityMapper {
    * Perform the query
    *
    * @param queryString the queryString to be executed
+   * @param place the place to query models from
    * @return The ResultSet with the results from the query
    */
-  private ResultSet query(String queryString) {
-    Query query = QueryFactory.create(queryString);
+  private ResultSet query(String queryString, String place) {
+    ParameterizedSparqlString sparqlString = new ParameterizedSparqlString(queryString);
+    String graph = TRISOTECH_GRAPH + place;
+    // set NAMED
+    sparqlString.setIri(0, graph);
+    // set GRAPH
+    sparqlString.setIri(1, graph);
+    Query query = sparqlString.asQuery();
 
     Header header = new BasicHeader(AUTHORIZATION, "Bearer " + token);
 
@@ -164,47 +175,13 @@ public class IdentityMapper {
    * Build the queryString needed to query the DMN->DMN and CMMN->DMN relations in the place
    * requested. This is specific to Trisotech.
    *
-   * TODO: only get those models that are Published? CAO
+   * Should only get those models that are Published? CAO | DS
    *
-   * @param place the Trisotech 'place' (aka directory/folder) to query
    * @return the query string to query the relations between models
    */
-  private String getQueryStringRelations(String place) {
-    // value after # specifies the 'place/repository' in Trisotech we are querying
-    String graph = TRISOTECH_GRAPH + place + ">";
-    // The following gets the DMN->DMN AND the CMMN->DMN mappings
-    // documenting here for future reference if new to SPARQL, or just forgot ;-)
-    StringBuilder queryString = new StringBuilder();
-    return queryString.append(QUERYSTRINGPREFIX)
-        // ?model and ?dModel are our variables we will expect in the output
-        // ?model will be a DMN or CMMN model and ?dModel will be the DMN model that is used in the ?model
-        .append("SELECT ?model ?dModel")
-        // Trisotech requires a NAMED GRAPH be used or will fail
-        .append(" FROM NAMED ").append(graph)
-        .append("WHERE {  GRAPH ").append(graph)
-        .append("  {    {")
-        // gets the models that are of type DMNModel
-        .append("                             ?model a tt:DMNModel.")
-        // gets the models that are of type DMNModel
-        .append("                             ?dModel a tt:DMNModel.")
-        // gets elements that are childOf for the model; the '*' will get all 'childOf' matches
-        .append("                             ?cElement ttr:childOf* ?model.")
-        // do the same thing here with the second set of DMNModels
-        .append("                             ?dElement ttr:childOf* ?dModel.")
-        // Now match the elements on the 'semantic' -- this is the link between the models
-        .append("                             ?cElement ttr:semantic ?dElement.")
-        .append("    }")
-        .append(" UNION ") // now do the same for CMMN->DMN models
-        .append("    {")
-        // gets the models that are of type CMMNModel
-        .append("                             ?model a tt:CMMNModel.")
-        .append("                             ?dModel a tt:DMNModel.")
-        .append("                             ?cElement ttr:childOf* ?model.")
-        .append("                             ?dElement ttr:childOf* ?dModel.")
-        .append("                             ?cElement ttr:semantic ?dElement.")
-        .append("    }  }  }")
-        .toString();
-
+  private String getQueryStringRelations() {
+    return FileUtil.read(IdentityMapper.class.getResourceAsStream("/queryRelations.tt.sparql"))
+        .orElseThrow(IllegalStateException::new);
   }
 
 
@@ -215,74 +192,11 @@ public class IdentityMapper {
    * they have a STATE of 'Published'. The State could be other values, such as 'Draft'. Per Kevide
    * meeting, 8/21, this is ok. Want all published even if state is not 'Published'.
    *
-   * @param place the location the query should use 'place/repository/directory'
    * @return the query string needed to query the models
    */
-  private String getQueryStringPublishedModels(String place) {
-    // value after # specifies the 'place/repository' in Trisotech we are querying
-    String graph = TRISOTECH_GRAPH + place + ">";
-    // The following gets the DMN->DMN AND the CMMN->DMN mappings
-    // documenting here for future reference if new to SPARQL, or just forgot ;-)
-    StringBuilder queryString = new StringBuilder();
-    return queryString.append(QUERYSTRINGPREFIX)
-        // ?model is our variable we will expect in the output
-        // ?model will be a DMN or CMMN model
-        // ?fileId is the id for the physical file (artifact) and is used in the APIs
-        // ?assetId is the enterprise ID that is associated with this artifact through a customAttribute; can vary by version
-        // ?version is the latest version of the model
-        // ?mimeType helps with the ability to retrieve the correct filetype for the model
-        // ?artifactName is the name of the model
-        .append("SELECT ?model ?fileId ?assetId ?version ?state ?mimeType ?artifactName")
-        // Trisotech requires a NAMED GRAPH be used or will fail
-        .append(" FROM NAMED ").append(graph)
-        .append("WHERE { GRAPH ").append(graph)
-        .append("  {   {")
-        // gets the models that are of type DMNModel
-        .append("         ?model a tt:DMNModel.")
-        // gets the name for the model
-        .append("         ?model rdfs:label ?artifactName.")
-        // gets the fileId
-        .append("         ?model ttr:fileId ?fileId.")
-        // gets the version - only latest version is returned; there will only be a version if the model is published
-        .append("         ?model ttr:version ?version.")
-        // gets the state - only latest state is returned; there will only be a state if the model is published
-        .append("         ?model ttr:state ?state.")
-        // gets the mimeType
-        .append("         ?model ttr:mimeType ?mimeType.")
-        // the following processing gets the assetId
-        // first get the children of the model
-        .append("         ?cElement ttr:childOf* ?model.")
-        // then get the customAttribute of the children
-        .append("         ?cElement ttr:customAttribute ?caElement.")
-        // then get the assetId from the customAttribute
-        // TODO: do we need to confirm the customAttributeKey to verify it is what we expect? and how would that happen? CAO
-        .append("         ?caElement ttr:customAttributeValue ?assetId.")
-        .append("    }")
-        // AND also get the CMMNModel information
-        .append(" UNION  {")
-        // gets the models that are of type CMMNModel
-        .append("         ?model a tt:CMMNModel.")
-        // gets the name for the model
-        .append("         ?model rdfs:label ?artifactName.")
-        // gets the fileId; fileId can be used for querying from the APIs
-        .append("         ?model ttr:fileId ?fileId.")
-        // gets the version
-        .append("         ?model ttr:version ?version.")
-        // gets the state
-        .append("         ?model ttr:state ?state.")
-        // gets the mimeType; mimeType helps figure out what type of file so correct mimeType query can be used
-        .append("         ?model ttr:mimeType ?mimeType.")
-        // the following processing gets the assetId
-        // first get the children of the model
-        .append("         ?cElement ttr:childOf* ?model.")
-        // then get the customAttribute of the children
-        .append("         ?cElement ttr:customAttribute ?caElement.")
-        // then get the assetId from the customAttribute
-        // TODO: do we need to confirm the customAttributeKey to verify it is what we expect? CAO
-        .append("         ?caElement ttr:customAttributeValue ?assetId.")
-        .append("    }  }  }")
-        .toString();
-
+  private String getQueryStringPublishedModels() {
+    return FileUtil.read(IdentityMapper.class.getResourceAsStream("/queryPublishedModels.tt.sparql"))
+        .orElseThrow(IllegalStateException::new);
   }
 
   /**
@@ -290,65 +204,11 @@ public class IdentityMapper {
    * Trisotech. This query is for ALL models, published and not, though because none of the
    * selectors are given as optional, if they don't exist on a model, that model will not be returned.
    *
-   * @param place the location the query should use 'place/repository/directory'
    * @return the query string needed to query the models
    */
-  private String getQueryStringModels(String place) {
-    // value after # specifies the 'place/repository' in Trisotech we are querying
-    String graph = TRISOTECH_GRAPH + place + ">";
-    // The following gets the DMN->DMN AND the CMMN->DMN mappings
-    // documenting here for future reference if new to SPARQL, or just forgot ;-)
-    StringBuilder queryString = new StringBuilder();
-    return queryString.append(QUERYSTRINGPREFIX)
-        // ?model is our variable we will expect in the output
-        // ?model will be a DMN or CMMN model
-        // ?fileId is the id for the physical file (artifact) and is used in the APIs
-        // ?assetId is the enterprise ID that is associated with this artifact through a customAttribute; can vary by version
-        // ?mimeType helps with the ability to retrieve the correct filetype for the model
-        // ?artifactName is the name of the model
-        .append("SELECT ?model ?fileId ?assetId ?mimeType ?artifactName")
-        // Trisotech requires a NAMED GRAPH be used or will fail
-        .append(" FROM NAMED ").append(graph)
-        .append("WHERE { GRAPH ").append(graph)
-        .append("  {   {")
-        // gets the models that are of type DMNModel
-        .append("         ?model a tt:DMNModel.")
-        // gets the name for the model
-        .append("         ?model rdfs:label ?artifactName.")
-        // gets the fileId
-        .append("         ?model ttr:fileId ?fileId.")
-        // gets the mimeType
-        .append("         ?model ttr:mimeType ?mimeType.")
-        // the following processing gets the assetId
-        // first get the children of the model
-        .append("         ?cElement ttr:childOf* ?model.")
-        // then get the customAttribute of the children
-        .append("         ?cElement ttr:customAttribute ?caElement.")
-        // TODO: do we need to confirm the customAttributeKey to verify it is what we expect? and how would that happen? CAO
-        // then get the assetId from the customAttribute
-        .append("         ?caElement ttr:customAttributeValue ?assetId.")
-        .append("    }")
-        // AND also get the CMMNModel information
-        .append(" UNION  {")
-        // gets the models that are of type CMMNModel
-        .append("         ?model a tt:CMMNModel.")
-        // gets the name for the model
-        .append("         ?model rdfs:label ?artifactName.")
-        // gets the fileId; fileId can be used for querying from the APIs
-        .append("         ?model ttr:fileId ?fileId.")
-        // gets the mimeType; mimeType helps figure out what type of file so correct mimeType query can be used
-        .append("         ?model ttr:mimeType ?mimeType.")
-        // the following processing gets the assetId
-        // first get the children of the model
-        .append("         ?cElement ttr:childOf* ?model.")
-        // then get the customAttribute of the children
-        .append("         ?cElement ttr:customAttribute ?caElement.")
-        // TODO: do we need to confirm the customAttributeKey to verify it is what we expect? CAO
-        // then get the assetId from the customAttribute
-        .append("         ?caElement ttr:customAttributeValue ?assetId.")
-        .append("    }  }  }")
-        .toString();
-
+  private String getQueryStringModels() {
+    return FileUtil.read(IdentityMapper.class.getResourceAsStream("/queryModels.tt.sparql"))
+        .orElseThrow(IllegalStateException::new);
   }
 
   /**
@@ -432,10 +292,10 @@ public class IdentityMapper {
    */
   public URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId) {
     String assetVersionId = enterpriseAssetVersionId.toString();
-    if(enterpriseAssetVersionId.getPath().contains("/versions")) {
+    if(enterpriseAssetVersionId.getPath().contains(VERSIONS)) {
       // remove the /versions/... part of the URI; enterpriseAssetId is the part without the version
       return URI.create(assetVersionId
-          .substring(0, assetVersionId.lastIndexOf("/versions")));
+          .substring(0, assetVersionId.lastIndexOf(VERSIONS)));
     } else {
       return enterpriseAssetVersionId; // just give back what was given
     }
@@ -457,7 +317,7 @@ public class IdentityMapper {
   public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag,
       boolean any)
       throws NotLatestVersionException {
-    if(true == any) {
+    if(any) {
       return enterpriseAssetVersionIdForAssetInModel(models, assetId, versionTag);
     } else {
       return enterpriseAssetVersionIdForAssetInModel(publishedModels, assetId, versionTag);
@@ -474,9 +334,9 @@ public class IdentityMapper {
       if (enterpriseAssetVersionId.contains(assetId.toString())) {
         // found an artifact that has this asset; now check the version
         String versionFromId = enterpriseAssetVersionId.substring(
-            enterpriseAssetVersionId.lastIndexOf("/versions"));
-        if (versionFromId.equals("/versions/" + versionTag)) {
-          return Optional.ofNullable(
+            enterpriseAssetVersionId.lastIndexOf(VERSIONS));
+        if (versionFromId.equals(VERSIONS + "/" + versionTag)) {
+          return Optional.of(
               URI.create(enterpriseAssetVersionId));
         } else {
           // there is an artifact, but the latest does not match the version seeking
@@ -513,7 +373,6 @@ public class IdentityMapper {
     // this will only match if the exact version of the asset is available on a latest model
     while (theModels.hasNext()) {
       QuerySolution soln = theModels.nextSolution();
-      // TODO: need to handle URIIdentifiers not properly created? CAO (ex: DatatypeHelper.uri("my/path/assetId/versions/1.0.0")  OR fix DatatypeHelper?
       if (logger.isDebugEnabled()) {
         logger.debug("getArtifactId for assetId: {}", assetId.toStringId());
         logger.debug("assetId.getUri().toString: {}", assetId.getUri());
@@ -540,7 +399,7 @@ public class IdentityMapper {
    * @return the fileId for the asset; the fileId can be used in the APIs
    */
   public Optional<String> getFileId(UUID assetId, boolean any) {
-    if (true == any) {
+    if (any) {
       return getFileIdFromModels(models, assetId);
     } else {
       return getFileIdFromModels(publishedModels, assetId);
@@ -665,11 +524,11 @@ public class IdentityMapper {
    * @param docId the artifact id
    * @return a set of resources for the artifacts used by this artifact (dependencies)
    */
-  public Set<Resource> getArtifactImports(Optional<String> docId) {
+  public Set<Resource> getArtifactImports(String docId) {
     Set<Resource> resources = null;
 
-    if (docId.isPresent()) {
-      String id = docId.get().substring(docId.get().lastIndexOf('/') + 1);
+    if (!Util.isEmpty(docId)) {
+      String id = docId.substring(docId.lastIndexOf('/') + 1);
       for (Entry<Resource, Set<Resource>> entry : artifactToArtifactIDMap.entrySet()) {
         Resource k = entry.getKey();
         if (k.getLocalName().substring(1).equals(id)) {
@@ -686,31 +545,39 @@ public class IdentityMapper {
    * @param docId the artifact id
    * @return a set of resources for the assets used by this model (dependencies)
    */
-  public List<URIIdentifier> getAssetRelations(Optional<String> docId) {
+  public List<URIIdentifier> getAssetRelations(String docId) {
     List<URIIdentifier> assets = new ArrayList<>();
 
-    if (docId.isPresent()) {
+    if (!Util.isEmpty(docId)) {
       // first find the artifact in the artifactToArtifact mapping
-      String id = docId.get().substring(docId.get().lastIndexOf('/') + 1);
+      String id = docId.substring(docId.lastIndexOf('/') + 1);
       artifactToArtifactIDMap.forEach((k, v) -> {
         if (k.getLocalName().substring(1).equals(id)) {
           logger.debug("found id in artifactToArtifactIDMap");
           // once found, for each of the artifacts it is dependent on, find the asset id for those artifacts in the models
-          publishedModels.reset();
-          while (publishedModels.hasNext()) {
-            QuerySolution soln = publishedModels.nextSolution();
-            if (soln.getResource(MODEL).getURI().equals(k.getLocalName())) {
-              assets
-                  .add(
-                      new URIIdentifier()
-                          .withUri(URI.create(soln.getLiteral(ASSET_ID).getString())));
-            }
-
-          }
+          v.forEach(dependent -> getAssetRelation(dependent, k).ifPresent(assets::add));
         }
       });
     }
     return assets;
+  }
+
+  private Optional<URIIdentifier> getAssetRelation(Resource dependent, Resource subject) {
+    logger.debug("dependent URI: {}", dependent.getURI());
+    String dependentId = dependent.getURI().substring(dependent.getURI().lastIndexOf('/'));
+    publishedModels.reset();
+    while (publishedModels.hasNext()) {
+      QuerySolution soln = publishedModels.nextSolution();
+      logger.debug("soln MODEL URI: {} ", soln.getResource(MODEL).getURI());
+      if (soln.getResource(MODEL).getURI().equals(dependent.getURI())) {
+        logger.debug("Asset ID for Model: {}", soln.getLiteral(ASSET_ID));
+        return Optional.of(new URIIdentifier()
+            .withUri(URI.create(soln.getLiteral(ASSET_ID).getString())));
+      } else {
+        logger.debug("Dependency {} for {} is NOT Published", dependentId, subject.getLocalName());
+      }
+    }
+    return Optional.empty();
   }
 
 

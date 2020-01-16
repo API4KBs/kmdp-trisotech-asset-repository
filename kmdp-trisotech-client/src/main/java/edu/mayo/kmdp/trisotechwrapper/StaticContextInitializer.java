@@ -26,8 +26,6 @@ import org.springframework.stereotype.Component;
  * @Value cannot be used with static values.
  * @Value is needed to set the token and repository needed in TrisotechWrapper so those values
  * (especially the token) are NOT in the codebase.
- * This is generally considered bad practice.
- * TODO: Review how TrisotechWrapper is used and decide if this is OK CAO
  */
 @Component
 public class StaticContextInitializer {
@@ -45,6 +43,7 @@ public class StaticContextInitializer {
       logger.debug("\n\n****token in PostConstruct is {} ", token);
       logger.debug("repositoryName in PostConstruct is: {}", repositoryName + "*****\n\n");
     }
+
     TrisotechWrapper.setToken(token);
     TrisotechWrapper.setRoot(repositoryName);
   }

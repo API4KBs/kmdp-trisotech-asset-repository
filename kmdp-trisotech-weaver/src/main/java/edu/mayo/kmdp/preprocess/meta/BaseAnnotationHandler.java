@@ -16,11 +16,7 @@ package edu.mayo.kmdp.preprocess.meta;
 import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 
 import edu.mayo.kmdp.metadata.annotations.Annotation;
-import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
-import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
-import edu.mayo.kmdp.metadata.annotations.MultiwordAnnotation;
-import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype._20190801.DependencyType;
+import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -56,8 +52,8 @@ public abstract class BaseAnnotationHandler {
       String modelId,
       String elementId) {
 
-    return Collections.singletonList(new DatatypeAnnotation()
-        .withRel(DependencyType.Imports.asConcept())
+    return Collections.singletonList(new edu.mayo.kmdp.metadata.annotations.resources.DatatypeAnnotation()
+        .withRel(DependencyTypeSeries.Imports.asConcept())
         .withValue(
 						// TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
             CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId));
@@ -67,14 +63,14 @@ public abstract class BaseAnnotationHandler {
     Annotation anno;
     switch (rows.size()) {
       case 0:
-        anno = new SimpleAnnotation();
+        anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation();
         break;
       case 1:
-        anno = new SimpleAnnotation()
+        anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation()
             .withExpr(rows.get(0));
         break;
       default:
-        anno = new MultiwordAnnotation()
+        anno = new edu.mayo.kmdp.metadata.annotations.resources.MultiwordAnnotation()
             .withExpr(rows);
     }
     return anno;
@@ -84,14 +80,14 @@ public abstract class BaseAnnotationHandler {
     Annotation anno;
     switch (rows.size()) {
       case 0:
-        anno = new SimpleAnnotation();
+        anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation();
         break;
       case 1:
-        anno = new SimpleAnnotation()
+        anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation()
             .withExpr(rows.get(0));
         break;
       default:
-        anno = new MultiwordAnnotation()
+        anno = new edu.mayo.kmdp.metadata.annotations.resources.MultiwordAnnotation()
             .withExpr(rows);
     }
     if (null != rel) {
@@ -102,7 +98,7 @@ public abstract class BaseAnnotationHandler {
   }
 
   public Annotation getBasicAnnotation(KnownAttributes attr, String v) {
-    return new BasicAnnotation().withRel(attr.asConcept())
+    return new edu.mayo.kmdp.metadata.annotations.resources.BasicAnnotation().withRel(attr.asConcept())
         .withExpr(URI.create(v));
   }
 

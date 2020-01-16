@@ -64,8 +64,8 @@ public class IdentityMapper {
   @Value("${edu.mayo.kmdp.trisotechwrapper.trisotechToken}")
   private String token;
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName}")
-  private String repositoryName;
+//  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName}")
+//  private String repositoryName;
 
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId}")
   String place;

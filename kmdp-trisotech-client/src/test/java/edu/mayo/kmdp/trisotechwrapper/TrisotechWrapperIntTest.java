@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.w3c.dom.Document;
 
@@ -50,6 +51,7 @@ import org.w3c.dom.Document;
  * because communicating with the Trisotech server.
  */
 @SpringBootTest
+@ActiveProfiles("dev")
 @ContextConfiguration(classes = {TrisotechWrapperConfig.class})
 class TrisotechWrapperIntTest {
 

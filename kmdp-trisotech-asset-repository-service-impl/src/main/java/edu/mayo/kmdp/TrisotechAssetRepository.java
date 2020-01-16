@@ -45,6 +45,7 @@ import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
 import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
+import org.omg.spec.api4kp._1_0.services.KPServer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
 import org.slf4j.Logger;
@@ -55,6 +56,7 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
 @Component
+@KPServer
 public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInternal,
     KnowledgeAssetRepositoryApiInternal, KnowledgeAssetRetrievalApiInternal {
 

@@ -64,11 +64,15 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringBootTest
 @SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class,
     ChainConverterConfig.class})
+@ActiveProfiles("dev")
+//@TestPropertySource("classpath:application-dev.properties")
 class ChainTest {
 
   // FYI: The IDE may complain that it can't find a Bean for chainConverter,

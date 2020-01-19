@@ -32,6 +32,7 @@ import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import edu.mayo.ontology.taxonomies.propositionalconcepts.PropositionalConcepts;
 import edu.mayo.ontology.taxonomies.propositionalconcepts.PropositionalConceptsSeries;
 import java.io.ByteArrayInputStream;
@@ -317,6 +318,11 @@ public class Weaver {
       }
 
     }
+    // add attribute for assets namespace
+    Attr assetsAttr = dox.createAttributeNS(WWW_W_3_ORG_2000_XMLNS, "xmlns:assets");
+    assetsAttr.setValue("https://clinicalknowledgemanagement.mayo.edu/assets");
+    dox.getDocumentElement().setAttributeNodeNS(assetsAttr);
+
   }
 
   /**

@@ -46,7 +46,7 @@
       <dependency>
         <groupId>edu.mayo.kmdp.kdcaci.knew</groupId>
         <artifactId>knew-terminology-content</artifactId>
-        <version>3.6.0</version>
+        <version>3.5.5</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

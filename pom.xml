@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>kmdp-trisotech-asset-repository-service</artifactId>
-  <version>1.5.0</version>
+  <version>1.6.0</version>
 
   <packaging>pom</packaging>
 
@@ -36,7 +36,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
-      <scope>runtime, test</scope>
+      <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
   </dependencies>
@@ -46,7 +46,7 @@
       <dependency>
         <groupId>edu.mayo.kmdp.kdcaci.knew</groupId>
         <artifactId>knew-terminology-content</artifactId>
-        <version>3.5.5</version>
+        <version>3.6.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

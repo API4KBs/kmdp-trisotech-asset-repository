@@ -448,6 +448,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
     }
     return extractAnnotations(dox).stream()
+        .filter(ann -> ann.getRel()!=null)
         .filter(ann -> ann.getRel().equals(KnownAttributes.ASSET_IDENTIFIER.asConcept()))
         .filter(BasicAnnotation.class::isInstance)
         .map(BasicAnnotation.class::cast)

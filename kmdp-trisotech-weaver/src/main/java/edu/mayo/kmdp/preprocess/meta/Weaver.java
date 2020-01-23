@@ -32,7 +32,6 @@ import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import edu.mayo.ontology.taxonomies.propositionalconcepts.PropositionalConcepts;
 import edu.mayo.ontology.taxonomies.propositionalconcepts.PropositionalConceptsSeries;
 import java.io.ByteArrayInputStream;
@@ -97,6 +96,8 @@ public class Weaver {
   private String metadataDiagramCmmnNS;
   private String droolsNS;
   private String diagramExt;
+  private String metadataItemDef;
+  private String metadataAttachment;
   private static final String SURROGATE_SCHEMA = "http://kmdp.mayo.edu/metadata/surrogate";
   private static final String ANNOTATIONS_SCHEMA = "http://kmdp.mayo.edu/metadata/annotations";
 
@@ -121,6 +122,8 @@ public class Weaver {
     elExporter = config.getTyped(ReaderOptions.P_EL_EXPORTER);
     elExporterVersion = config.getTyped(ReaderOptions.P_EL_EXPORTER_VERSION);
     decisionEl = config.getTyped(ReaderOptions.P_EL_DECISION);
+    metadataItemDef = config.getTyped(ReaderOptions.P_METADATA_ITEM_DEFINITION);
+    metadataAttachment = config.getTyped(ReaderOptions.P_METADATA_ATTACHMENT_ITEM);
 
     logger.debug("METADATA_EL: {}", metadataEl);
     handlers.put(metadataEl, new MetadataAnnotationHandler());
@@ -163,6 +166,15 @@ public class Weaver {
   public String getDecisionEl() {
     return decisionEl;
   }
+
+  public String getMetadataItemDef() {
+    return metadataItemDef;
+  }
+
+  public String getMetadataAttachment() {
+    return metadataAttachment;
+  }
+
 
   /**
    * Weave out Trisotech-specific elements and where necessary, replace with KMDP-specific.
@@ -208,6 +220,9 @@ public class Weaver {
     /****** Remove traces of Trisotech  ******/
     // remove the namespace attributes
     removeProprietaryAttributesAndNS(dox);
+
+    // remove additional Trisotech tags we don't need
+    removeTrisoTagsNotRetaining(dox);
 
     // rewrite namespaces
     weaveNamespaces(dox);
@@ -274,6 +289,31 @@ public class Weaver {
             attr.setValue("http://www.omg.org/spec/CMMN/DefinitionType/Unspecified");
           }
         });
+  }
+
+  /**
+   * This method is to remove any triso: tags that are not being kept in the woven file, and
+   * therefore in the surrogate.
+   *
+   * 'attachment' elements are in the model for CKE and SME use and SHOULD NOT carry over to the
+   * woven document.
+   *
+   * 'itemDefinitions' were an experiment. IGNORE if they are in the file, but provide a warning.
+   */
+  private void removeTrisoTagsNotRetaining(Document dox) {
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, metadataAttachment))
+        .forEach(element -> {
+          element.getParentNode().removeChild(element);
+        });
+
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, metadataItemDef))
+        .forEach(element -> {
+            logger.warn(
+                String.format(
+                    "WARNING: Should not have %s in model. Removing from output file",
+                    element.getLocalName()));
+            element.getParentNode().removeChild(element);
+          });
   }
 
   private void weaveInputs(Document dox) {
@@ -468,7 +508,7 @@ public class Weaver {
 
 
   private BaseAnnotationHandler handler(Element el) {
-    if(logger.isDebugEnabled()) {
+    if (logger.isDebugEnabled()) {
       logger.debug("el localname:  {}", el.getLocalName());
     }
     if (!handlers.containsKey(el.getLocalName())) {

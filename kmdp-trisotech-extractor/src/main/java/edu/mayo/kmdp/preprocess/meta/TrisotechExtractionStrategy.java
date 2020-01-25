@@ -144,6 +144,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     } else {
       logger.debug("theTargetArtifactId is null");
     }
+    // asset<->asset relations
+    // assets are derived from the artifact relations
     List<URIIdentifier> theTargetAssetId = mapper.getAssetRelations(docId.get());
 
     // get the language for the document to set the appropriate values
@@ -170,7 +172,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
           "Invalid Language detected." + rep); // TODO: better error for here? CAO
     }
 
-    // towards the ideal as below
+    // towards the ideal
     surr = new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset()
         .withAssetId(
             (assetID.isPresent() ? assetID.get() : null)) // TODO: what to do if not present? CAO
@@ -179,7 +181,6 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .withTitle(meta.getName())
         .withFormalCategory(formalCategory)
         .withFormalType(formalType)
-        .withSubject(annotations)
         // only restrict to published assets
         .withLifecycle(lifecycle)
         // TODO: Follow-up w/Davide on this CAO
@@ -232,6 +233,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         default: // TODO: ??? error? CAO
           break;
       }
+    } else {
+      // NOTE: This should NOT happen in production, but can happen when we are testing models and downloading manually
+      // either way, don't want to leave lifecycle empty, so default to Draft (per e-mail w/Davide 1/24/2020)
+      lifecycle.withPublicationStatus(PublicationStatusSeries.resolve(PublicationStatusSeries.Draft).get());
     }
     logger.debug("lifecycle = {}", lifecycle.getPublicationStatus());
 
@@ -239,25 +244,21 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
   private Collection<Association> getRelatedArtifacts(Set<Resource> theTargetArtifactId) {
+    List<ComputableKnowledgeArtifact> knowledgeArtifacts = new ArrayList<>();
     List<KnowledgeAsset> knowledgeAssets = new ArrayList<>();
 
     // TODO: rework this once confirm the logic is correct CAO
     if (null != theTargetArtifactId) {
       for (Resource resource : theTargetArtifactId) {
-        KnowledgeAsset knowledgeAsset = null;
-        // handle try/catch with URIs first
-        knowledgeAsset = new KnowledgeAsset().withAssetId(
-            // TODO: Is this right? Should be KnowledgeResource? KnowledgeAsset ISA KnowledgeResource CAO
-            new URIIdentifier()
-                .withUri(URI.create(convertInternalId(resource
-                    .getURI(), null))))
-            .withName(resource
-                .getLocalName()); // TODO: Ask Davide - better name? tgt must have name to pass marshal CAO
-        knowledgeAssets.add(knowledgeAsset);
+        ComputableKnowledgeArtifact knowledgeArtifact;
+        knowledgeArtifact = new ComputableKnowledgeArtifact().withArtifactId(
+            DatatypeHelper.uri(resource.getURI()))
+            .withName(resource.getLocalName());
+        knowledgeArtifacts.add(knowledgeArtifact);
       }
     }
-    // TODO: Is this right? Should be KnowledgeResource; KR is abstract; KnowledgeAsset ISA KnowledgeResource; is it the right one? CAO
-    return knowledgeAssets.stream().map(ka ->
+
+    return knowledgeArtifacts.stream().map(ka ->
         new Dependency().withRel(DependencyTypeSeries.Imports)
             .withTgt(ka))
         .collect(Collectors.toList());
@@ -270,8 +271,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
             new Dependency()
                 .withRel(DependencyTypeSeries.Depends_On)
                 .withTgt(new KnowledgeAsset().withAssetId(uriIdentifier)
-                    .withName(uriIdentifier
-                        .toString()))) // TODO: Ask Davide -- is something else expected here as name value? have to have name to pass SAXParser CAO
+                    .withName(mapper.getArtifactName(uriIdentifier).get())))
         .collect(Collectors.toList());
   }
 

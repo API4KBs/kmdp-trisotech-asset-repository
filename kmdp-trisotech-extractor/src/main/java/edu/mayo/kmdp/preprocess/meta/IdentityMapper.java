@@ -91,6 +91,7 @@ public class IdentityMapper {
   private static final String STATE = "?state";
   private static final String MIME_TYPE = "?mimeType";
   private static final String VERSION = "?version";
+  private static final String ARTIFACTNAME= "?artifactName";
 
   private static final String VERSIONS = "/versions";
 
@@ -459,6 +460,26 @@ public class IdentityMapper {
 
 
   /**
+   * Get the name of the artifact for the asset
+   * If this becomes a performance bottleneck, can look at separating out searches for published
+   * models only.
+   *
+   * @param assetId The id of the asset looking for
+   * @return the name of the artifact as specified in the triples
+   */
+  public Optional<String> getArtifactName(URIIdentifier assetId) {
+    models.reset();
+    while (models.hasNext()) {
+      QuerySolution soln = models.nextSolution();
+      if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getUri().toString())) {
+        return Optional.ofNullable(soln.getLiteral(ARTIFACTNAME).getString());
+      }
+    }
+    return Optional.empty();
+  }
+
+
+  /**
    * Get the mimetype using the model id
    * All models have a mimetype. If performance becomes an issue, might want to separate
    * out searching in published models instead of all models.
@@ -540,7 +561,9 @@ public class IdentityMapper {
   }
 
   /**
-   * given the internal id for the model, get the information for the assets the model imports
+   * given the internal id for the model (artifact),
+   * get the information for the assets the model imports
+   * each artifact should have an assetID, this allows us to map asset<->asset relations
    *
    * @param docId the artifact id
    * @return a set of resources for the assets used by this model (dependencies)

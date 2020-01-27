@@ -70,6 +70,48 @@ class WeaverTest {
 
 
   @Test
+  void testAfibCMMN() {
+
+    String path = "/afib/Atrial Fibrillation.cmmn";
+
+    // using XMLUtil loadXMLDocument to load the XML Document properly
+    // sets up the document for conversion by setting namespaceaware
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+    try {
+      weaver.weave(dox);
+      streamXMLDocument(dox, System.out);
+      assertTrue(confirmNoTrisoNameSpace(dox));
+      assertTrue(confirmNoTrisotechTags(dox));
+
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(),ie);
+      fail(ie.getMessage());
+    }
+  }
+
+  @Test
+  void testAfibDMN() {
+
+    String path = "/afib/Choice of Long-Term Management of Coagulation Status.dmn";
+
+    // using XMLUtil loadXMLDocument to load the XML Document properly
+    // sets up the document for conversion by setting namespaceaware
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+    try {
+      weaver.weave(dox);
+      streamXMLDocument(dox, System.out);
+      assertTrue(confirmNoTrisoNameSpace(dox));
+      assertTrue(confirmNoTrisotechTags(dox));
+
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(),ie);
+      fail(ie.getMessage());
+    }
+  }
+
+  @Test
   void testWeave() {
 
     String path = "/Weaver Test 1.dmn";
@@ -131,6 +173,8 @@ class WeaverTest {
 
       assertTrue(confirmNoTrisoNameSpace(dox));
 
+      assertTrue(confirmNoTrisotechTags(dox));
+
       assertTrue(verifyRootNamespaces(dox));
 
       assertTrue(verifyImportNamespace(dox));
@@ -186,6 +230,8 @@ class WeaverTest {
 
       assertTrue(confirmNoTrisoNameSpace(dox));
 
+      assertTrue(confirmNoTrisotechTags(dox));
+
       assertTrue(verifyRootNamespaces(dox));
 
       assertTrue(verifyImportNamespace(dox));
@@ -220,6 +266,8 @@ class WeaverTest {
           id.getExpr().toString());
 
       assertTrue(confirmNoTrisoNameSpace(dox));
+
+      assertTrue(confirmNoTrisotechTags(dox));
 
       assertTrue(verifyRootNamespaces(dox));
 
@@ -272,6 +320,8 @@ class WeaverTest {
           id.getExpr().toString());
 
       assertTrue(confirmNoTrisoNameSpace(dox));
+
+      assertTrue(confirmNoTrisotechTags(dox));
 
       assertTrue(verifyRootNamespaces(dox));
 
@@ -332,6 +382,8 @@ class WeaverTest {
 
       assertTrue(confirmNoTrisoNameSpace(dox));
 
+      assertTrue(confirmNoTrisotechTags(dox));
+
       assertTrue(verifyRootNamespaces(dox));
       assertTrue(verifyCaseFileItemDefinition(dox));
 
@@ -365,6 +417,8 @@ class WeaverTest {
       assertTrue(confirmDecisionURI(dox));
 
       assertTrue(confirmNoTrisoNameSpace(dox));
+
+      assertTrue(confirmNoTrisotechTags(dox));
 
       assertTrue(verifyRootNamespaces(dox));
       assertTrue(verifyCaseFileItemDefinition(dox));
@@ -406,6 +460,8 @@ class WeaverTest {
       assertTrue(confirmDecisionURI(dox));
 
       assertTrue(confirmNoTrisoNameSpace(dox));
+
+      assertTrue(confirmNoTrisotechTags(dox));
 
       assertTrue(verifyRootNamespaces(dox));
       assertTrue(verifyCaseFileItemDefinition(dox));
@@ -591,6 +647,25 @@ class WeaverTest {
     );
     return true;
   }
+
+  /**
+   * Confirm the Trisotech tags not being modified have been removed.
+   */
+  private boolean confirmNoTrisotechTags(Document dox) {
+    // Confirm no trisotech tags remain:
+    NodeList elements = dox.getElementsByTagNameNS(weaver.getMetadataNS(), "*");
+    asElementStream(elements).forEach(
+        el -> {
+          if((weaver.getMetadataItemDef().equals(el.getLocalName()))
+          || (weaver.getMetadataAttachment().equals(el.getLocalName()))) {
+            fail("should not have " + el.getNodeName() + " elements anymore.");
+          }
+        }
+    );
+
+    return true;
+  }
+
 
   // TODO: need more capability? CAO
   private <T extends Annotation> List<T> loadAnnotations(Document dox, KnownAttributes att,

@@ -138,7 +138,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     URIIdentifier artifactId = DatatypeHelper.uri(docId.get(), meta.getVersion());
 
     // artifact<->artifact relation
-    Set<Resource> theTargetArtifactId = mapper.getArtifactImports(docId.get());
+    List<URIIdentifier> theTargetArtifactId = mapper.getArtifactImports(docId.get());
     if (null != theTargetArtifactId) {
       logger.debug("theTargetArtifactId: {}", theTargetArtifactId);
     } else {
@@ -243,18 +243,20 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return lifecycle;
   }
 
-  private Collection<Association> getRelatedArtifacts(Set<Resource> theTargetArtifactId) {
+  private Collection<Association> getRelatedArtifacts(List<URIIdentifier> theTargetArtifactId) {
     List<ComputableKnowledgeArtifact> knowledgeArtifacts = new ArrayList<>();
     List<KnowledgeAsset> knowledgeAssets = new ArrayList<>();
 
     // TODO: rework this once confirm the logic is correct CAO
     if (null != theTargetArtifactId) {
-      for (Resource resource : theTargetArtifactId) {
-        ComputableKnowledgeArtifact knowledgeArtifact;
-        knowledgeArtifact = new ComputableKnowledgeArtifact().withArtifactId(
-            DatatypeHelper.uri(resource.getURI()))
-            .withName(resource.getLocalName());
-        knowledgeArtifacts.add(knowledgeArtifact);
+      for (URIIdentifier id : theTargetArtifactId) {
+        // TODO: Do something different if get null id? means related artifact was not published CAO
+        if(null != id) {
+          ComputableKnowledgeArtifact knowledgeArtifact = new ComputableKnowledgeArtifact()
+              .withArtifactId(id)
+              .withName(id.getTag());
+          knowledgeArtifacts.add(knowledgeArtifact);
+        }
       }
     }
 
@@ -356,20 +358,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return annos;
   }
 
-  /**
-   * Need the Trisotech path converted to KMDP path and underscores removed
-   * TODO: move to utility class? The other place this happens is Weaver CAO
-   *
-   * @param internalId the Trisotech internal id for the model
-   * @return the KMDP-ified internal id
-   */
   public String convertInternalId(String internalId, String versionTag) {
-    String id = internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
-    if (null == versionTag) {
-      return CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id;
-    } else {
-      return CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id + "/versions/" + versionTag;
-    }
+   return mapper.convertInternalId(internalId, versionTag);
   }
 
   @Override
@@ -377,7 +367,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return getIDAnnotationValue(dox)
         .map(DatatypeHelper::toVersionIdentifier)
         .map(versionIdentifier -> SurrogateBuilder
-            .id(versionIdentifier.getTag(), versionIdentifier.getVersion()));
+            .assetId(versionIdentifier.getTag(), versionIdentifier.getVersion()));
   }
 
   @Override

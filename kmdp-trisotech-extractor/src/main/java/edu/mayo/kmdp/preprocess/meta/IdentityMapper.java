@@ -468,7 +468,7 @@ public class IdentityMapper {
    * @param assetId The id of the asset looking for
    * @return the name of the artifact as specified in the triples
    */
-  public Optional<String> getArtifactName(URIIdentifier assetId) {
+  public Optional<String> getArtifactNameByAssetId(URIIdentifier assetId) {
     models.reset();
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
@@ -478,6 +478,18 @@ public class IdentityMapper {
     }
     return Optional.empty();
   }
+
+  public Optional<String> getArtifactNameByArtifactId(URIIdentifier artifactId) {
+    models.reset();
+    while (models.hasNext()) {
+      QuerySolution soln = models.nextSolution();
+      if (soln.getResource(MODEL).getURI().contains(artifactId.getTag())) {
+        return Optional.ofNullable(soln.getLiteral(ARTIFACTNAME).getString());
+      }
+    }
+    return Optional.empty();
+  }
+
 
 
   /**

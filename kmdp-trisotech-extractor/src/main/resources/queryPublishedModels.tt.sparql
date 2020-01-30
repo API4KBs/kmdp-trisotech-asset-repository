@@ -11,6 +11,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 # ?fileId is the id for the physical file (artifact) and is used in the APIs
 # ?assetId is the enterprise ID that is associated with this artifact through a customAttribute; can vary by version
 # ?version is the latest version of the model
+# ?state is the published state of the model
 # ?mimeType helps with the ability to retrieve the correct filetype for the model
 # ?artifactName is the name of the model
 SELECT ?model ?fileId ?assetId ?version ?state ?mimeType ?artifactName
@@ -31,13 +32,15 @@ GRAPH ? {
     ?model ttr:mimeType ?mimeType.
         # the following processing gets the assetId
         # first get the children of the model
-    ?cElement ttr:childOf* ?model.
+    ?cElement (ttr:childOf)* ?model.
+        # only get children that are of type decision
+    ?cElement a tt:decision.
         # then get the customAttribute of the children
     ?cElement ttr:customAttribute ?caElement.
         # then get the assetId from the customAttribute
     ?caElement ttr:customAttributeValue ?assetId.
    }
-UNION  # now do the same for CMMN->DMN models
+UNION  # now do the same for CMMN models
    {
     ?model a tt:CMMNModel.
         # gets the name for the model
@@ -52,7 +55,9 @@ UNION  # now do the same for CMMN->DMN models
     ?model ttr:mimeType ?mimeType.
         # the following processing gets the assetId
         # first get the children of the model
-    ?cElement ttr:childOf* ?model.
+    ?cElement (ttr:childOf)* ?model.
+        # only get children that are of type activity
+    ?cElement a tt:activity.
         # then get the customAttribute of the children
     ?cElement ttr:customAttribute ?caElement.
         # then get the assetId from the customAttribute

@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
@@ -61,10 +60,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.apache.jena.rdf.model.Resource;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -254,7 +251,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         if(null != id) {
           ComputableKnowledgeArtifact knowledgeArtifact = new ComputableKnowledgeArtifact()
               .withArtifactId(id)
-              .withName(id.getTag());
+              .withName(mapper.getArtifactNameByArtifactId(id).get());
           knowledgeArtifacts.add(knowledgeArtifact);
         }
       }
@@ -273,7 +270,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
             new Dependency()
                 .withRel(DependencyTypeSeries.Depends_On)
                 .withTgt(new KnowledgeAsset().withAssetId(uriIdentifier)
-                    .withName(mapper.getArtifactName(uriIdentifier).get())))
+                    .withName(mapper.getArtifactNameByAssetId(uriIdentifier).get())))
         .collect(Collectors.toList());
   }
 

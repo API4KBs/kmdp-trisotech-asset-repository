@@ -13,7 +13,7 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.util.Util.resolveResource;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
@@ -580,7 +580,7 @@ class WeaverTest {
 
   private boolean confirmKMDPnamespace(Attr attr) {
     return attr.getValue()
-        .contains(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI);
+        .contains(MAYO_ARTIFACTS_BASE_URI);
   }
 
 

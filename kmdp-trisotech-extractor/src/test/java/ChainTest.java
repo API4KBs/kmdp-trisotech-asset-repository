@@ -39,7 +39,8 @@
  * limitations under the License.
  */
 
-import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,7 +55,6 @@ import edu.mayo.kmdp.IdentityMapperConfig;
 import edu.mayo.kmdp.Model;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
-import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
@@ -97,13 +97,13 @@ class ChainTest {
       String metaPath = "/Basic Decision ModelMeta.json";
       InputStream meta = ChainTest.class.getResourceAsStream(metaPath);
       String expectedAssetTag = "735a5764-fe3f-4ab8-b103-650b6e805db2";
-      String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI + expectedAssetTag;
+      String expectedAssetId = MAYO_ASSETS_BASE_URI + expectedAssetTag;
       String expectedAssetVersion = "1.0.0";
       String expectedAssetVersionId = expectedAssetId + "/versions/" + expectedAssetVersion;
       String expectedArtifactTag = "ee0c768a-a0d4-4052-a6ea-fc0a3889b356";
       String expectedArtifactVersion = "1.3.0";
       String expectedArtifactId =
-          CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
+          MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
       String expectedArtifactVersionId =
           expectedArtifactId + "/versions/" + expectedArtifactVersion;
 
@@ -148,11 +148,11 @@ class ChainTest {
       String expectedAssetTag = "3c66cf3a-93c4-4e09-b1aa-14088c76aded";
       String expectedVersion = "1.0.0-SNAPSHOT";
       String expectedAssetVersionId =
-          Registry.MAYO_ASSETS_BASE_URI + expectedAssetTag + "/versions/" + expectedVersion;
+          MAYO_ASSETS_BASE_URI + expectedAssetTag + "/versions/" + expectedVersion;
       String expectedArtifactTag = "5682fa26-b064-43c8-9475-1e4281e74068";
       String expectedArtifactVersion = "1.8";
       String expectedArtifactId =
-          CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
+          MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
       String expectedArtifactVersionId = expectedArtifactId + "/versions/" + expectedArtifactVersion;
 
       Model m = convert(dmn, meta, DMN_1_2);
@@ -194,10 +194,10 @@ class ChainTest {
       InputStream cmmn = ChainTest.class.getResourceAsStream(cmmnPath);
       String modelInfoPath = "/Basic Case ModelMeta.json";
       String expectedAssetId =
-          Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c";
+          MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c";
       String expectedAssetVersionId = expectedAssetId + "/versions/1.0.1";
       String expectedAssetTag = "14321e7c-cb9a-427f-abf5-1420bf26e03c";
-      String expectedArtifactId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI
+      String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
           + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
       String expectedArtifactVersionId = expectedArtifactId
           + "/versions/1.8.0";
@@ -239,11 +239,11 @@ class ChainTest {
       InputStream cmmn = ChainTest.class.getResourceAsStream(cmmnPath);
       String modelInfoPath = "/WeaveTest1Meta.json";
       String expectedAssetTag = "3c99cf3a-93c4-4e09-b1aa-14088c76aded";
-      String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI + expectedAssetTag;
+      String expectedAssetId = MAYO_ASSETS_BASE_URI + expectedAssetTag;
       String expectedAssetVersionId = expectedAssetId + "/versions/1.0.0-SNAPSHOT";
       String expectedArtifactTag = "f59708b6-96c0-4aa3-be4a-31e075d76ec9";
       String expectedArtifactId =
-          CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
+          MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
       String expectedArtifactVersionId = expectedArtifactId + "/versions/2.2.1";
 
       InputStream modelInfo = ChainTest.class.getResourceAsStream(modelInfoPath);

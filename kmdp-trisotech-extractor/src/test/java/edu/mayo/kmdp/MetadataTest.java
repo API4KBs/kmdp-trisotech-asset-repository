@@ -17,7 +17,7 @@ package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.JSON;
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.XML;
-import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -50,8 +50,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class})
 class MetadataTest {
 
-//  private static MetadataExtractor extractor = new MetadataExtractor();
-
+  // FYI: IDE may complain about
+  // the following two not being able to be autowired, but the code works.
   @Autowired
   private MetadataExtractor extractor;
 
@@ -386,7 +386,7 @@ class MetadataTest {
     String id = "5682fa26-b064-43c8-9475-1e4281e7abcd";
     String internalId = "http://www.trisotech.com/definitions/_" + id;
     String versionTag = "3.2.4";
-    String expectedFileId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id;
+    String expectedFileId = MAYO_ARTIFACTS_BASE_URI + id;
     String expectedFileIdAndVersion = expectedFileId + "/versions/" + versionTag;
 
 

@@ -19,11 +19,13 @@ import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_UPPER;
 import static org.omg.spec.api4kp._1_0.Answer.unsupported;
 
 import edu.mayo.kmdp.id.VersionedIdentifier;
+import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.repository.asset.v3.server.KnowledgeAssetCatalogApiInternal;
 import edu.mayo.kmdp.repository.asset.v3.server.KnowledgeAssetRepositoryApiInternal;
 import edu.mayo.kmdp.repository.asset.v3.server.KnowledgeAssetRetrievalApiInternal;
@@ -40,6 +42,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.http.HttpException;
 import org.apache.jena.shared.NotFoundException;
+import org.omg.spec.api4kp._1_0.AbstractCarrier;
 import org.omg.spec.api4kp._1_0.Answer;
 import org.omg.spec.api4kp._1_0.identifiers.Pointer;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
@@ -402,16 +405,26 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             logger.debug("latestArtifactVersion version {}", latestArtifactVersion.getVersion());
             logger.debug("latestArtifactVersion Tag {}", latestArtifactVersion.getTag());
 
-            // TODO: discuss w/Davide -- what needs to be set on the KnowledgeCarrier? CAO
-            carrier = new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
-                .withAssetId(new URIIdentifier()
-                    .withUri(extractor
-                        .getEnterpriseAssetIdForAssetVersionId(enterpriseVersionAssetId.get()))
-                    .withVersionId(enterpriseVersionAssetId.get()))
-                .withArtifactId(new URIIdentifier()
-                    .withUri(URI.create(
-                        extractor.convertInternalId(artifactId.toString(),
-                            latestArtifactVersion.getVersion()))));
+            // 02/03 -- need to return the actual FILE (woven)
+            carrier = AbstractCarrier.of(resolveModel(fileId.get(), null)
+                .map(weaver::weave)
+                .map(XMLUtil::toByteArray).orElse(new byte[0]))
+                .withAssetId(
+                    DatatypeHelper.uri(Registry.MAYO_ASSETS_BASE_URI, assetId.toString(), versionTag)) // enterpriseVersionAssetId.get()) // .uri(extractor.getEnterpriseAssetIdStringForAssetVersionId(enterpriseVersionAssetId.get()), versionTag))
+                .withArtifactId(DatatypeHelper.uri(Registry.MAYO_ARTIFACTS_BASE_URI, artifactId.toString(), latestArtifactVersion.getVersion()));
+            // TODO: 02/03/2020 -- need to add representation info -- want to do it in a way that can be re-used in multiple places (see SurrogateBuilder) - CAO
+//                .withRepresentation(new Representation().withLanguage(extractor))
+
+//            // TODO: discuss w/Davide -- what needs to be set on the KnowledgeCarrier? CAO
+//            carrier = new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+//                .withAssetId(new URIIdentifier()
+//                    .withUri(extractor
+//                        .getEnterpriseAssetIdForAssetVersionId(enterpriseVersionAssetId.get()))
+//                    .withVersionId(enterpriseVersionAssetId.get()))
+//                .withArtifactId(new URIIdentifier()
+//                    .withUri(URI.create(
+//                        extractor.convertInternalId(artifactId.toString(),
+//                            latestArtifactVersion.getVersion()))));
           } else {
             return Answer.of(Optional.empty());
           }
@@ -489,8 +502,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   /**
    * Support for updating a model 'in place' The assetId, versionTag, artifactId and
-   * artifactVersionTag should match the current model, any mismatch will fail as NOT_FOUND. TODO:
-   * Confirm w/Davide which cases should fail and why
+   * artifactVersionTag should match the current model, any mismatch will fail as NOT_FOUND.
+   * TODO: Confirm w/Davide which cases should fail and why
    *
    * @param assetId enterprise asset ID
    * @param versionTag version for the asset

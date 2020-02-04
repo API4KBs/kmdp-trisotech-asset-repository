@@ -71,7 +71,6 @@ public class Weaver {
   private static final String VALUE = "value";
   private static final Logger logger = LoggerFactory.getLogger(Weaver.class);
 
-  public static final String CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/artifacts/";
   private static final String WWW_W_3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
   private static final String MODEL_URI = "modelURI";
   private static final String DMN = "DMN";
@@ -418,7 +417,7 @@ public class Weaver {
       // and replace the '_' in the ids
       String id = value.substring(value.lastIndexOf('/') + 1).replace("_", "");
       // reset the value to the KMDP URI
-      attr.setValue(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
+      attr.setValue(Registry.MAYO_ARTIFACTS_BASE_URI + id);
     }
   }
 

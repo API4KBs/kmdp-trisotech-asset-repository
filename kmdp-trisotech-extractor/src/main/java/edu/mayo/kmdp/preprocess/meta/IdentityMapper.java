@@ -13,7 +13,7 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
@@ -670,9 +670,9 @@ public class IdentityMapper {
   public String convertInternalId(String internalId, String versionTag) {
     String id = internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
     if (null == versionTag) {
-      return CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id;
+      return MAYO_ARTIFACTS_BASE_URI + id;
     } else {
-      return CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id + "/versions/" + versionTag;
+      return MAYO_ARTIFACTS_BASE_URI + id + "/versions/" + versionTag;
     }
   }
 }

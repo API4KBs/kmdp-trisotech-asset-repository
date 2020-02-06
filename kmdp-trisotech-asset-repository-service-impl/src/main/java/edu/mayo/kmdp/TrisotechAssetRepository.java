@@ -22,6 +22,7 @@ import edu.mayo.kmdp.id.VersionedIdentifier;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
@@ -33,6 +34,9 @@ import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
+import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
+import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
@@ -51,6 +55,7 @@ import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
 import org.omg.spec.api4kp._1_0.services.KPServer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
+import org.omg.spec.api4kp._1_0.services.resources.SyntacticRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -406,25 +411,14 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             logger.debug("latestArtifactVersion Tag {}", latestArtifactVersion.getTag());
 
             // 02/03 -- need to return the actual FILE (woven)
-            carrier = AbstractCarrier.of(resolveModel(fileId.get(), null)
+            Optional<Document> dox = resolveModel(fileId.get(), null);
+            carrier = AbstractCarrier.of(dox
                 .map(weaver::weave)
                 .map(XMLUtil::toByteArray).orElse(new byte[0]))
                 .withAssetId(
-                    DatatypeHelper.uri(Registry.MAYO_ASSETS_BASE_URI, assetId.toString(), versionTag)) // enterpriseVersionAssetId.get()) // .uri(extractor.getEnterpriseAssetIdStringForAssetVersionId(enterpriseVersionAssetId.get()), versionTag))
-                .withArtifactId(DatatypeHelper.uri(Registry.MAYO_ARTIFACTS_BASE_URI, artifactId.toString(), latestArtifactVersion.getVersion()));
-            // TODO: 02/03/2020 -- need to add representation info -- want to do it in a way that can be re-used in multiple places (see SurrogateBuilder) - CAO
-//                .withRepresentation(new Representation().withLanguage(extractor))
-
-//            // TODO: discuss w/Davide -- what needs to be set on the KnowledgeCarrier? CAO
-//            carrier = new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
-//                .withAssetId(new URIIdentifier()
-//                    .withUri(extractor
-//                        .getEnterpriseAssetIdForAssetVersionId(enterpriseVersionAssetId.get()))
-//                    .withVersionId(enterpriseVersionAssetId.get()))
-//                .withArtifactId(new URIIdentifier()
-//                    .withUri(URI.create(
-//                        extractor.convertInternalId(artifactId.toString(),
-//                            latestArtifactVersion.getVersion()))));
+                    DatatypeHelper.uri(Registry.MAYO_ASSETS_BASE_URI, assetId.toString(), versionTag))
+                .withArtifactId(DatatypeHelper.uri(Registry.MAYO_ARTIFACTS_BASE_URI, artifactId.toString(), latestArtifactVersion.getVersion()))
+                .withRepresentation(getLanguageRepresentationForModel(dox));
           } else {
             return Answer.of(Optional.empty());
           }
@@ -435,7 +429,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         }
       } else {
         // artifactId does not match what was requested
-        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty());
       }
     } catch (NotLatestVersionException e) {
       // something failed to be in the latest version of the artifact, so check all other artifact versions
@@ -444,13 +438,45 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         return getKnowledgeCarrierFromOtherVersion(assetId, versionTag, e.getMessage(),
             artifactVersionTag);
       } else {
-        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty());
       }
 
     } catch (NotFoundException nfe) {
-      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty());
     }
-    return Answer.of(Optional.of(carrier)); //succeed(carrier, HttpStatus.OK);
+    return Answer.of(Optional.of(carrier));
+  }
+
+  /**
+   * Get the Representation for the language of the model given the model document.
+   * creates a Representation object that can be used in .withRepresentation() method of creating
+   * a Carrier, for example.
+   *
+   * @param dox the document of the model
+   * @return SyntacticRepresentation which has the values set for the language of this model
+   */
+  private SyntacticRepresentation getLanguageRepresentationForModel(Optional<Document> dox) {
+    if(dox.isPresent()) {
+      Optional<Representation> rep = extractor.getRepLanguage(dox.get());
+      if(rep.isPresent()) {
+        switch(rep.get().getLanguage().asEnum()) {
+          case DMN_1_2:
+            return new SyntacticRepresentation().withLanguage(
+                KnowledgeRepresentationLanguageSeries.DMN_1_2)
+                .withFormat(SerializationFormatSeries.XML_1_1)
+                .withSerialization(KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax);
+          case CMMN_1_1:
+            return new SyntacticRepresentation().withLanguage(
+                KnowledgeRepresentationLanguageSeries.CMMN_1_1)
+                .withFormat(SerializationFormatSeries.XML_1_1)
+                .withSerialization(KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax);
+          default:
+            throw new IllegalStateException("Invalid document representation language: " + rep.get().getLanguage().toString());
+        }
+      }
+
+    }
+    return null;
   }
 
   private Answer<KnowledgeCarrier> getKnowledgeCarrierFromOtherVersion(UUID assetId,

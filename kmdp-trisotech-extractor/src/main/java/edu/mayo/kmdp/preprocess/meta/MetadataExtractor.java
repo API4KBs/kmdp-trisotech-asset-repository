@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import edu.mayo.kmdp.SurrogateHelper;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
@@ -52,7 +53,6 @@ import org.w3c.dom.Document;
 public class MetadataExtractor {
 
   private static final Logger logger = LoggerFactory.getLogger(MetadataExtractor.class);
-
 
   public enum Format {
     JSON(".json"),
@@ -131,6 +131,9 @@ public class MetadataExtractor {
     return strategy.extractXML(dox, meta);
   }
 
+  public Optional<Representation> getRepLanguage(Document document) {
+    return strategy.getRepLanguage(document, false);
+  }
 
   /**
    * Get the assetId from the Document.

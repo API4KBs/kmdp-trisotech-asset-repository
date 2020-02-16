@@ -226,7 +226,7 @@ public class MetadataExtractor {
     return strategy.getArtifactID(id, any);
   }
 
-  public String convertInternalId(String internalId, String versionTag) {
+  public URIIdentifier convertInternalId(String internalId, String versionTag) {
     return strategy.convertInternalId(internalId, versionTag);
   }
 

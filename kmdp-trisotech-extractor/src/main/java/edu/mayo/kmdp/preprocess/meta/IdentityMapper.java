@@ -255,7 +255,7 @@ public class IdentityMapper {
       QuerySolution soln = publishedModels.nextSolution();
 
       if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
-        return Optional.of(DatatypeHelper.uri(soln.getLiteral(ASSET_ID).toString()));
+       return Optional.of(DatatypeHelper.toURIIDentifier(soln.getLiteral(ASSET_ID).toString()));
       }
     }
     return Optional.empty();
@@ -593,12 +593,10 @@ public class IdentityMapper {
       QuerySolution soln = publishedModels.nextSolution();
       if (soln.getResource(MODEL).equals(resource)) {
         if (soln.getLiteral(VERSION) != null) {
-          return DatatypeHelper.toURIIDentifier(
-              convertInternalId(soln.getResource(MODEL).getURI(),
-                  soln.getLiteral(VERSION).getString()));
+          return convertInternalId(soln.getResource(MODEL).getURI(),
+                  soln.getLiteral(VERSION).getString());
         } else {
-          return DatatypeHelper.toURIIDentifier(
-              convertInternalId(soln.getResource(MODEL).getURI(), null));
+          return convertInternalId(soln.getResource(MODEL).getURI(), null);
 
         }
       }
@@ -665,14 +663,10 @@ public class IdentityMapper {
    * Need the Trisotech path converted to KMDP path and underscores removed
    *
    * @param internalId the Trisotech internal id for the model
-   * @return the KMDP-ified internal id
+   * @return URIIdentifier with the KMDP-ified internal id
    */
-  public String convertInternalId(String internalId, String versionTag) {
+  public URIIdentifier convertInternalId(String internalId, String versionTag) {
     String id = internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
-    if (null == versionTag) {
-      return MAYO_ARTIFACTS_BASE_URI + id;
-    } else {
-      return MAYO_ARTIFACTS_BASE_URI + id + "/versions/" + versionTag;
-    }
+      return DatatypeHelper.uri(MAYO_ARTIFACTS_BASE_URI, id, versionTag);
   }
 }

@@ -103,7 +103,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     if (!internalFileId.isPresent()
         || !mimeType.isPresent()
         || !artifactVersion.isPresent()) {
-      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty());
     }
     // get the modelInfo for the latest artifactVersion
 
@@ -155,7 +155,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       try {
         return Answer.of(findArtifactVersionForAsset(e.getMessage(), assetId, versionTag));
       } catch (NotFoundException nfe) {
-        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty());
       }
     }
   }
@@ -262,7 +262,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         })
         .collect(Collectors.toList());
 
-    return Answer.of(Optional.of(assetList)); //succeed(assetList, HttpStatus.OK);
+    return Answer.of(assetList);
 
   }
 
@@ -307,8 +307,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         carrier = new BinaryCarrier()
             // TODO MUST have the representation info set, which can be obtained from the Surrogate
 //            .withRepresentation(AbstractCarrier.rep(AbstractCarrier.canonicalRepresentationOf(asset)))
-            .withArtifactId(new URIIdentifier()
-                .withUri(URI.create(getInternalIdAndVersion(assetId, versionTag))))
+            .withArtifactId(getInternalIdAndVersion(assetId, versionTag))
             .withAssetId(new URIIdentifier()
                 .withUri(enterpriseId)
                 .withVersionId(enterpriseVersionId.get()))
@@ -317,15 +316,15 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
                     .map(weaver::weave)
                     .map(XMLUtil::toByteArray).orElse(new byte[0]));
       } else {
-        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty());
       }
     } catch (NotLatestVersionException e) {
       return tryAnotherVersion(e.getMessage(), assetId, versionTag);
     } catch (NotFoundException e) {
-      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty());
     }
 
-    return Answer.of(Optional.of(carrier)); //succeed(carrier, HttpStatus.OK);
+    return Answer.of(carrier);
   }
 
   private Answer<KnowledgeCarrier> tryAnotherVersion(
@@ -339,13 +338,13 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .withAssetId(ka.getAssetId())
           .withArtifactId(knowledgeArtifact.getArtifactId());
     } catch (NotFoundException nfe) {
-      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty());
     }
 
-    return Answer.of(Optional.of(carrier)); //succeed(carrier, HttpStatus.OK);
+    return Answer.of(carrier);
   }
 
-  private String getInternalIdAndVersion(UUID assetId, String versionTag)
+  private URIIdentifier getInternalIdAndVersion(UUID assetId, String versionTag)
       throws NotLatestVersionException {
     String internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, false);
     Optional<String> version = extractor.getArtifactVersion(assetId);
@@ -373,7 +372,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     Optional<String> fileId = extractor.getFileId(assetId, false);
     // fileId is not found in the extractor for the assetId provided; fail
     if (!fileId.isPresent()) {
-      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty());
     }
     //  1. Check  if assetId is latest (no server call needed)
     //  2. If assetId is not latest (exception), query versions from server
@@ -390,7 +389,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .getEnterpriseAssetVersionIdForAsset(assetId, versionTag, false);
       if (!enterpriseVersionAssetId
           .isPresent()) { // should never happen, as exception should be thrown instead
-        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty());
       }
 
       // asset matches for latest, now check the artifact for asset
@@ -416,8 +415,11 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
                 .map(weaver::weave)
                 .map(XMLUtil::toByteArray).orElse(new byte[0]))
                 .withAssetId(
-                    DatatypeHelper.uri(Registry.MAYO_ASSETS_BASE_URI, assetId.toString(), versionTag))
-                .withArtifactId(DatatypeHelper.uri(Registry.MAYO_ARTIFACTS_BASE_URI, artifactId.toString(), latestArtifactVersion.getVersion()))
+                    DatatypeHelper
+                        .uri(Registry.MAYO_ASSETS_BASE_URI, assetId.toString(), versionTag))
+                .withArtifactId(DatatypeHelper
+                    .uri(Registry.MAYO_ARTIFACTS_BASE_URI, artifactId.toString(),
+                        latestArtifactVersion.getVersion()))
                 .withRepresentation(getLanguageRepresentationForModel(dox));
           } else {
             return Answer.of(Optional.empty());
@@ -444,34 +446,37 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     } catch (NotFoundException nfe) {
       return Answer.of(Optional.empty());
     }
-    return Answer.of(Optional.of(carrier));
+    return Answer.of(carrier);
   }
 
   /**
-   * Get the Representation for the language of the model given the model document.
-   * creates a Representation object that can be used in .withRepresentation() method of creating
-   * a Carrier, for example.
+   * Get the Representation for the language of the model given the model document. creates a
+   * Representation object that can be used in .withRepresentation() method of creating a Carrier,
+   * for example.
    *
    * @param dox the document of the model
    * @return SyntacticRepresentation which has the values set for the language of this model
    */
   private SyntacticRepresentation getLanguageRepresentationForModel(Optional<Document> dox) {
-    if(dox.isPresent()) {
+    if (dox.isPresent()) {
       Optional<Representation> rep = extractor.getRepLanguage(dox.get());
-      if(rep.isPresent()) {
-        switch(rep.get().getLanguage().asEnum()) {
+      if (rep.isPresent()) {
+        switch (rep.get().getLanguage().asEnum()) {
           case DMN_1_2:
             return new SyntacticRepresentation().withLanguage(
                 KnowledgeRepresentationLanguageSeries.DMN_1_2)
                 .withFormat(SerializationFormatSeries.XML_1_1)
-                .withSerialization(KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax);
+                .withSerialization(
+                    KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax);
           case CMMN_1_1:
             return new SyntacticRepresentation().withLanguage(
                 KnowledgeRepresentationLanguageSeries.CMMN_1_1)
                 .withFormat(SerializationFormatSeries.XML_1_1)
-                .withSerialization(KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax);
+                .withSerialization(
+                    KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax);
           default:
-            throw new IllegalStateException("Invalid document representation language: " + rep.get().getLanguage().toString());
+            throw new IllegalStateException(
+                "Invalid document representation language: " + rep.get().getLanguage().toString());
         }
       }
 
@@ -504,18 +509,17 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             && asset.getTag().equals(assetId.toString())
             && asset.getVersion().equals(versionTag)
             && model.getVersion().equals(artifactVersionTag)) {
-          return Answer.of(Optional.of(
-              new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
+
+          return Answer.of(
+              AbstractCarrier.of(xml
+                  .map(XMLUtil::toByteArray).orElse(new byte[0]))
                   .withAssetId(asset)
-                  .withArtifactId(new URIIdentifier()
-                      .withUri(URI.create(extractor.convertInternalId(internalId, null)))
-                      .withVersionId(
-                          URI.create(
-                              extractor.convertInternalId(internalId, model.getVersion()))))));
+                  .withArtifactId(extractor.convertInternalId(internalId, model.getVersion()))
+                  .withRepresentation(getLanguageRepresentationForModel(xml)));
         }
       }
     }
-    return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    return Answer.of(Optional.empty());
   }
 
   @Override
@@ -528,8 +532,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   /**
    * Support for updating a model 'in place' The assetId, versionTag, artifactId and
-   * artifactVersionTag should match the current model, any mismatch will fail as NOT_FOUND.
-   * TODO: Confirm w/Davide which cases should fail and why
+   * artifactVersionTag should match the current model, any mismatch will fail as NOT_FOUND. TODO:
+   * Confirm w/Davide which cases should fail and why
    *
    * @param assetId enterprise asset ID
    * @param versionTag version for the asset
@@ -565,7 +569,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .getEnterpriseAssetVersionIdForAsset(assetId, versionTag, true);
       if (!enterpriseVersionAssetId
           .isPresent()) { // should never happen, as exception should be thrown instead
-        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty());
       }
 
       // asset matches for latest, now check the artifact for asset
@@ -590,21 +594,21 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           } else {
             // TODO: do we care? CAO
             // if we care, can try to find the matching version
-            return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return Answer.of(Optional.empty());
           }
         } else {
           // ok for version to not be present, in fact, preferred
           uploadFile(null, exemplar, tfi.get(), mimeType);
         }
       } else {
-        return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return Answer.of(Optional.empty());
       }
-      return Answer.of(); // new ResponseEntity<>(HttpStatus.OK);
+      return Answer.of();
     } catch (NotLatestVersionException e) {
-      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty());
     } catch (IOException | HttpException e) {
       logger.error(e.getMessage(), e);
-      return Answer.failed(); // new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      return Answer.failed();
     }
   }
 

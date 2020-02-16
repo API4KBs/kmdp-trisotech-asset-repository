@@ -16,6 +16,7 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
@@ -70,9 +70,9 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getKnowledgeAsset() {
-    String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2";
-    String expectedAssetVersionId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
         + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
@@ -104,9 +104,9 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getVersionedKnowledgeAsset() {
-    String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2";
-    String expectedAssetVersionId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
         + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
@@ -127,7 +127,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getVersionedKnowledgeAsset_found() {
-    String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "14321e7c-cb9a-427f-abf5-1420bf26e03c";
     String expectedAssetVersionId = expectedAssetId
         + "/versions/1.0.0";
@@ -152,9 +152,9 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getVersionedKnowledgeAsset_PendingApproval() {
-    String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "e35a686e-5b72-4feb-b923-b79ac1417613";
-    String expectedAssetVersionId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "e35a686e-5b72-4feb-b923-b79ac1417613/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
         + "ad174bca-8dd1-4e35-8933-e7456e1f3e5c/versions/0.0.1";
@@ -204,9 +204,9 @@ class TrisotechAssetRepositoryIntTest {
     Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets(null, null, null, null);
     assertTrue(listAnswer.isSuccess());
     assertFalse(listAnswer.get().isEmpty());
-    String expectedDecisionId = Registry.MAYO_ASSETS_BASE_URI + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
+    String expectedDecisionId = MAYO_ASSETS_BASE_URI + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedDecisionName = "Basic Decision Model";
-    String expectedCaseId = Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
+    String expectedCaseId = MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
     String expectedCaseName = "Basic Case Model";
     AtomicBoolean foundDecision = new AtomicBoolean(false);
     AtomicBoolean foundCase = new AtomicBoolean(false);
@@ -216,12 +216,12 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(pointers.size() >= 6);
     // Confirm some of the values
     pointers.forEach((ptr) -> {
-      if(expectedDecisionId.equals(ptr.getHref().toString())) {
+      if(expectedDecisionId.equals(ptr.getEntityRef().getVersionId().toString())) {
         assertEquals(expectedDecisionName, ptr.getName());
         assertEquals(KnowledgeAssetTypeSeries.Decision_Model.getRef(), ptr.getType());
         foundDecision.set(true);
       }
-      if(expectedCaseId.equals(ptr.getHref().toString())) {
+      if(expectedCaseId.equals(ptr.getEntityRef().getVersionId().toString())) {
         assertEquals(expectedCaseName, ptr.getName());
         assertEquals(KnowledgeAssetTypeSeries.Care_Process_Model.getRef(), ptr.getType());
         foundCase.set(true);
@@ -333,9 +333,9 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getCanonicalKnowledgeAssetCarrier() {
-    String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2";
-    String expectedAssetVersionId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
         + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
@@ -349,13 +349,13 @@ class TrisotechAssetRepositoryIntTest {
     KnowledgeCarrier kc = answer.get();
     assertEquals(expectedAssetId, kc.getAssetId().getUri().toString());
     assertEquals(expectedAssetVersionId, kc.getAssetId().getVersionId().toString());
-    assertEquals(expectedArtifactId, kc.getArtifactId().getUri().toString());
+    assertEquals(expectedArtifactId, kc.getArtifactId().getVersionId().toString());
 
   }
 
   @Test
   void getCanonicalKnowledgeAssetCarrier_found() {
-    String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "14321e7c-cb9a-427f-abf5-1420bf26e03c";
     String expectedAssetVersionId = expectedAssetId
         + "/versions/1.0.0";
@@ -395,7 +395,7 @@ class TrisotechAssetRepositoryIntTest {
   // TODO: more tests for versions that need to be 'found' and for versions that don't exist, for both asset and artifact CAO
   @Test
   void getKnowledgeAssetCarrierVersion() {
-    String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2";
     String expectedAssetVersionId = expectedAssetId
         + "/versions/1.0.0";
@@ -420,7 +420,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getKnowledgeAssetCarrierVersion_found() {
-    String expectedAssetId = Registry.MAYO_ASSETS_BASE_URI
+    String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "14321e7c-cb9a-427f-abf5-1420bf26e03c";
     String expectedAssetVersionId = expectedAssetId
         + "/versions/1.0.0";

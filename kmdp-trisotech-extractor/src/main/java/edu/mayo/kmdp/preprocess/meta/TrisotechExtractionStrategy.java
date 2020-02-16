@@ -127,7 +127,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     logger.debug("docId: {}", docId);
 
     Optional<URIIdentifier> assetID = getAssetID(dox);
-    // TODO: Should processing fail if no assetID? CAO
+    // TODO: Should processing fail if no assetID? CAO - don't continue processing; provide warning
     if(logger.isDebugEnabled()) {
       logger.debug("assetID: {}", assetID.isPresent() ? assetID.get() : Optional.empty());
     }
@@ -181,7 +181,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         // only restrict to published assets
         .withLifecycle(lifecycle)
         // TODO: Follow-up w/Davide on this CAO
-        //        // Some work needed to infer the dependencies
+        // Some work needed to infer the dependencies
         .withRelated(getRelatedAssets(theTargetAssetId)) // asset - asset relation/dependency
         .withCarriers(new ComputableKnowledgeArtifact()
                 .withArtifactId(artifactId)
@@ -200,7 +200,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .withName(meta.getName()); // TODO: might want '(DMN)' / '(CMMN)' here
 
 //
-//    // TODO: Needed? yes CAO Is it? annotations are added above in .withSubject
+//    // TODO: Needed? yes CAO Is it? annotations are added above in .withSubject [withSubject has been removed per Davide notes in surrogate]
 //    // Annotations
     addSemanticAnnotations(surr, annotations);
 //
@@ -275,34 +275,15 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
 
-  // TODO: Is this needed? Yes -- need example models to work from CAO
+  // TODO: Is this needed? Yes (eventually) -- need example models to work from CAO
+  // 02/10/2020: pulls annotations up
   protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
 //    annotations.stream()
-//        .filter(ann -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept())
-//            || ann.getRel().equals(AnnotationRelType.Defines.asConcept())
-//            || ann.getRel().equals(AnnotationRelType.In_Terms_Of.asConcept()))
+//        .filter(ann -> ann.getRel().equals(AnnotationRelTypeSeries.Captures.asConcept())
+//            || ann.getRel().equals(AnnotationRelTypeSeries.Defines.asConcept())
+//            || ann.getRel().equals(AnnotationRelTypeSeries.In_Terms_Of.asConcept()))
 //        .forEach(surr::withSubject);
 
-    // TODO: Needed? Am not finding use of Computable_Decision_Model in test models CAO
-//    if (surr.getType().contains(KnowledgeAssetType.Computable_Decision_Model)
-//            && annotations.stream().anyMatch((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept()))) {
-//      surr.withType(KnowledgeAssetType.Operational_Concept_Defintion);
-//
-//      annotations.stream()
-//              .filter((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept()))
-//              .forEach((ann) -> surr.withSubject(new SimpleAnnotation().withRel(AssetVocabulary.DEFINES.asConcept())
-//                      .withExpr(((SimpleAnnotation) ann).getExpr())));
-//      annotations.stream()
-//              .filter((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept()))
-//              .map((ann) -> ((SimpleAnnotation) ann).getExpr().getTag())
-//              .map(ClinicalSituation::resolve)
-//              .filter(Optional::isPresent)
-//              .map(Optional::get)
-//              .map(this::getDatatypeModel)
-//              .collect(Collectors.toSet())
-//              .forEach((typeCode) -> surr.withRelated(new Dependency().withRel(DependencyType.Effectuates)
-//                      .withTgt(buildFhir2Datatype(typeCode))));
-//    }
   }
 
 
@@ -355,7 +336,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return annos;
   }
 
-  public String convertInternalId(String internalId, String versionTag) {
+  public URIIdentifier convertInternalId(String internalId, String versionTag) {
    return mapper.convertInternalId(internalId, versionTag);
   }
 

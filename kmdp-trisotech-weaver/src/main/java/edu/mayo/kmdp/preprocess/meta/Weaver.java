@@ -242,15 +242,18 @@ public class Weaver {
    * Determine the KnownAttribute based on the key. TODO: this can probably be reworked. wanted to
    * get something working to discuss results with Davide CAO
    *
+   * Can get rid of - was a Signavio use
+   *
    * @param el the document element under examination
    * @return the KnownAttribute to be used in rewriting this element
    */
   private KnownAttributes getKnownAttribute(Element el) {
     String uri = el.getAttribute("uri");
 
-    if (KnowledgeAssetTypeSeries.resolveId(uri).isPresent()) {
-      return KnownAttributes.TYPE;
-    } else if (DecisionTypeSeries.resolveId(uri).isPresent()) {
+//    if (KnowledgeAssetTypeSeries.resolveId(uri).isPresent()) {
+//      return KnownAttributes.TYPE;
+//    } else
+      if (DecisionTypeSeries.resolveId(uri).isPresent()) {
       return KnownAttributes.CAPTURES;
     } else if (ClinicalTaskSeries.resolveId(uri).isPresent()) {
       return KnownAttributes.CAPTURES;

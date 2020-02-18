@@ -57,6 +57,8 @@ steps:
       Write-Host MVN Enforcer Rules Version: $env:MVN_ENFORCER_RULES_VERSION
       Write-Host Master Version: $env:MASTER_VERSION
       Write-Host Release Version: $env:RELEASE_VERSION
+      Write-Host Release Version: $env:TRISO_REPO_DEV_NAME
+      Write-Host Release Version: $env:TRISO_REPO_DEV_ID
   env: 
     PROJECT_VERSION: $(projectVersion)
     ARTIFACT_ID: $(projectArtifactId)
@@ -66,6 +68,8 @@ steps:
     DEV_VERSION: $(devVersion)
     MASTER_VERSION: $(masterVersion)
     RELEASE_VERSION: $(releaseVersion)
+    TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
+    TRISO_REPO_DEV_ID: $(trisoRepoDevId)
 
 # STEP 3 SLM Versioning Policy
 - task: AlmVersioning@4
@@ -100,7 +104,11 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-        mvn clean package -Prefresh
+        -U clean package -Dspring.profiles.active=dev "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN"
+  env:
+    TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
+    TRISO_REPO_DEV_ID: $(trisoRepoDevId)
+    TRISO_DEV_TOKEN: $(trisoDevToken)
 
 # STEP 8 Deploy Maven to AzDo KMD Artifacts
 - task: Maven@3

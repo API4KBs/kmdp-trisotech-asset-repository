@@ -116,7 +116,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-        mvn deploy "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN"
+        mvn deploy "-DaltDeploymentRepository=KMD::default::https://pkgs.dev.azure.com/mclm/_packaging/KMD/maven/v1" "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN"
   env:
     TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
     TRISO_REPO_DEV_ID: $(trisoRepoDevId)

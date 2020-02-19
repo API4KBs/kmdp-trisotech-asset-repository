@@ -377,7 +377,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return getIDAnnotationValue(dox)
         .map(DatatypeHelper::toVersionIdentifier)
         .map(versionIdentifier -> SurrogateBuilder
-            .id(versionIdentifier.getTag(), versionIdentifier.getVersion()));
+            .assetId(versionIdentifier.getTag(), versionIdentifier.getVersion()));
   }
 
   @Override

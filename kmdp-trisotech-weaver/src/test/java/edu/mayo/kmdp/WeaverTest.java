@@ -334,7 +334,7 @@ class WeaverTest {
 //      assertEquals(AnnotationRelTypeSeries.Is_A.getLabel(),
 //          type.getRel().getLabel());
 
-      type = loadAnnotations(dox, KnownAttributes.DEFINES, SimpleAnnotation.class).iterator()
+      SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.DEFINES, SimpleAnnotation.class).iterator()
           .next();
       assertEquals(AnnotationRelTypeSeries.Defines.getLabel(),
           type.getRel().getLabel());

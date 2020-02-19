@@ -248,10 +248,10 @@ public class Weaver {
    */
   private KnownAttributes getKnownAttribute(Element el) {
     URI attrUri = URI.create(el.getAttribute(MODEL_URI));
-    if (KnowledgeAssetType.seriesUri.getUri().equals(attrUri)
-        || KnowledgeAssetTypeSeries.schemeVersionIdentifiers.contains(attrUri)) {
-      return KnownAttributes.TYPE;
-    }
+//    if (KnowledgeAssetType.seriesUri.getUri().equals(attrUri)
+//        || KnowledgeAssetTypeSeries.schemeVersionIdentifiers.contains(attrUri)) {
+//      return KnownAttributes.TYPE;
+//    }
     if (DecisionType.seriesUri.getUri().equals(attrUri)
         || DecisionTypeSeries.schemeVersionIdentifiers.contains(attrUri)) {
       return KnownAttributes.CAPTURES;

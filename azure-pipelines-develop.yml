@@ -100,7 +100,7 @@ steps:
 
 # STEP 7: API project clean package using refresh
 - task: PowerShell@2
-  displayName: 'Maven Clean Package -Prefresh'
+  displayName: 'Maven Clean Package'
   inputs:
     targetType: 'inline'
     script: |
@@ -110,16 +110,17 @@ steps:
     TRISO_REPO_DEV_ID: $(trisoRepoDevId)
     TRISO_DEV_TOKEN: $(trisoDevToken)
 
-# STEP 8 Deploy Maven to AzDo KMD Artifacts
-- task: Maven@3
-  displayName: 'Maven Deploy to KMD Artifacts'
+# STEP 8: Deploy maven using trisotech tokens
+- task: PowerShell@2
+  displayName: 'Maven Deploy'
   inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'deploy'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    options: '-DaltDeploymentRepository=KMD::default::https://pkgs.dev.azure.com/mclm/_packaging/KMD/maven/v1'
+    targetType: 'inline'
+    script: |
+        mvn deploy"-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN"
+  env:
+    TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
+    TRISO_REPO_DEV_ID: $(trisoRepoDevId)
+    TRISO_DEV_TOKEN: $(trisoDevToken)
 
 # ENDING STEP
 - script: |

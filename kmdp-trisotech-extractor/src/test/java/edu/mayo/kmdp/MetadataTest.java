@@ -17,10 +17,11 @@ package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.JSON;
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.XML;
-import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -41,6 +42,7 @@ import javax.annotation.PostConstruct;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.jena.shared.NotFoundException;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,8 +52,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class})
 class MetadataTest {
 
-//  private static MetadataExtractor extractor = new MetadataExtractor();
-
+  // FYI: IDE may complain about
+  // the following two not being able to be autowired, but the code works.
   @Autowired
   private MetadataExtractor extractor;
 
@@ -335,7 +337,7 @@ class MetadataTest {
         .resolveEnterpriseAssetID("123720a6-9758-45a3-8c5c-5fffab12c494");
     assertEquals(
         "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT",
-        assetID.getUri().toString());
+        assetID.getVersionId().toString());
   }
 
   @Test
@@ -386,16 +388,24 @@ class MetadataTest {
     String id = "5682fa26-b064-43c8-9475-1e4281e7abcd";
     String internalId = "http://www.trisotech.com/definitions/_" + id;
     String versionTag = "3.2.4";
-    String expectedFileId = CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id;
+    String expectedFileId = MAYO_ARTIFACTS_BASE_URI + id;
     String expectedFileIdAndVersion = expectedFileId + "/versions/" + versionTag;
 
 
-    String fileId = extractor.convertInternalId(internalId, null);
+    // test w/o a version
+    URIIdentifier fileId = extractor.convertInternalId(internalId, null);
     assertNotNull(fileId);
-    assertEquals(expectedFileId, fileId);
+    assertEquals(id, fileId.getTag());
+    assertThrows(NullPointerException.class, fileId::getVersion);
+    assertEquals(expectedFileId, fileId.getUri().toString());
+
+    // test w/version
     fileId = extractor.convertInternalId(internalId, versionTag);
     assertNotNull(fileId);
-    assertEquals(expectedFileIdAndVersion, fileId);
+    assertEquals(id, fileId.getTag());
+    assertEquals(versionTag, fileId.getVersion());
+    assertEquals(expectedFileId, fileId.getUri().toString());
+    assertEquals(expectedFileIdAndVersion, fileId.getVersionId().toString());
   }
 
 

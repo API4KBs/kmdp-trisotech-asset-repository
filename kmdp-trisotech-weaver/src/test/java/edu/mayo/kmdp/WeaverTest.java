@@ -13,7 +13,7 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.util.Util.resolveResource;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
@@ -181,6 +181,7 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
+      // TODO: Check with Davide if this is still needed, and if so, what replaces IS_A in RelTypeSeries - CAO
 //      SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
 //          .iterator().next();
 //      assertEquals(AnnotationRelTypeSeries.Is_A.getLabel(),
@@ -275,6 +276,7 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
+      // TODO: Check with Davide if this is still needed, and if so, what replaces IS_A in RelTypeSeries - CAO
 //      SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
 //          .iterator().next();
 //      assertEquals(AnnotationRelTypeSeries.Is_A.getLabel(),
@@ -329,6 +331,7 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
+      // TODO: Check with Davide if this is still needed, and if so, what replaces IS_A in RelTypeSeries - CAO
 //      SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
 //          .iterator().next();
 //      assertEquals(AnnotationRelTypeSeries.Is_A.getLabel(),
@@ -580,7 +583,7 @@ class WeaverTest {
 
   private boolean confirmKMDPnamespace(Attr attr) {
     return attr.getValue()
-        .contains(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI);
+        .contains(MAYO_ARTIFACTS_BASE_URI);
   }
 
 

@@ -13,9 +13,8 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
-
 import edu.mayo.kmdp.metadata.annotations.Annotation;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
 import java.net.URI;
 import java.util.Collections;
@@ -55,8 +54,7 @@ public abstract class BaseAnnotationHandler {
     return Collections.singletonList(new edu.mayo.kmdp.metadata.annotations.resources.DatatypeAnnotation()
         .withRel(DependencyTypeSeries.Imports.asConcept())
         .withValue(
-						// TODO: This should be Registry.MAYO_ARTIFACTS_BASE_URI -- Davide is adding CAO
-            CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId));
+            Registry.MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId));
   }
 
   protected Annotation newAnnotation(List<ConceptIdentifier> rows) {

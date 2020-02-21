@@ -71,7 +71,6 @@ public class Weaver {
   private static final String VALUE = "value";
   private static final Logger logger = LoggerFactory.getLogger(Weaver.class);
 
-  public static final String CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI = "https://clinicalknowledgemanagement.mayo.edu/artifacts/";
   private static final String WWW_W_3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
   private static final String MODEL_URI = "modelURI";
   private static final String DMN = "DMN";
@@ -241,27 +240,24 @@ public class Weaver {
 
   /**
    * Determine the KnownAttribute based on the key. TODO: this can probably be reworked. wanted to
-   * get something working to discuss results with Davide CAo
+   * get something working to discuss results with Davide CAO
+   *
+   * Can get rid of - was a Signavio use
    *
    * @param el the document element under examination
    * @return the KnownAttribute to be used in rewriting this element
    */
   private KnownAttributes getKnownAttribute(Element el) {
-    URI attrUri = URI.create(el.getAttribute(MODEL_URI));
-//    if (KnowledgeAssetType.seriesUri.getUri().equals(attrUri)
-//        || KnowledgeAssetTypeSeries.schemeVersionIdentifiers.contains(attrUri)) {
+    String uri = el.getAttribute("uri");
+
+//    if (KnowledgeAssetTypeSeries.resolveId(uri).isPresent()) {
 //      return KnownAttributes.TYPE;
-//    }
-    if (DecisionType.seriesUri.getUri().equals(attrUri)
-        || DecisionTypeSeries.schemeVersionIdentifiers.contains(attrUri)) {
+//    } else
+      if (DecisionTypeSeries.resolveId(uri).isPresent()) {
       return KnownAttributes.CAPTURES;
-    }
-    if (ClinicalTask.seriesUri.getUri().equals(attrUri)
-        || ClinicalTaskSeries.schemeVersionIdentifiers.contains(attrUri)) {
+    } else if (ClinicalTaskSeries.resolveId(uri).isPresent()) {
       return KnownAttributes.CAPTURES;
-    }
-    if (PropositionalConcepts.seriesUri.getUri().equals(attrUri)
-        || PropositionalConceptsSeries.schemeVersionIdentifiers.contains(attrUri)) {
+    } else if (PropositionalConceptsSeries.resolveId(uri).isPresent()) {
       String grandparent = el.getParentNode().getParentNode().getNodeName();
       if (grandparent.equals("semantic:decision")) {
         return KnownAttributes.DEFINES;
@@ -271,6 +267,7 @@ public class Weaver {
         return null;
       }
     }
+
     return null;
   }
 
@@ -308,12 +305,12 @@ public class Weaver {
 
     XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, metadataItemDef))
         .forEach(element -> {
-            logger.warn(
-                String.format(
-                    "WARNING: Should not have %s in model. Removing from output file",
-                    element.getLocalName()));
-            element.getParentNode().removeChild(element);
-          });
+          logger.warn(
+              String.format(
+                  "WARNING: Should not have %s in model. Removing from output file",
+                  element.getLocalName()));
+          element.getParentNode().removeChild(element);
+        });
   }
 
   private void weaveInputs(Document dox) {
@@ -423,7 +420,7 @@ public class Weaver {
       // and replace the '_' in the ids
       String id = value.substring(value.lastIndexOf('/') + 1).replace("_", "");
       // reset the value to the KMDP URI
-      attr.setValue(CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id);
+      attr.setValue(Registry.MAYO_ARTIFACTS_BASE_URI + id);
     }
   }
 

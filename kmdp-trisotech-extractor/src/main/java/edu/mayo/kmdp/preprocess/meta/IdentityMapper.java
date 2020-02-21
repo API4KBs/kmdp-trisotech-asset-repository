@@ -13,6 +13,7 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
@@ -91,6 +92,7 @@ public class IdentityMapper {
   private static final String STATE = "?state";
   private static final String MIME_TYPE = "?mimeType";
   private static final String VERSION = "?version";
+  private static final String ARTIFACTNAME= "?artifactName";
 
   private static final String VERSIONS = "/versions";
 
@@ -253,7 +255,7 @@ public class IdentityMapper {
       QuerySolution soln = publishedModels.nextSolution();
 
       if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
-        return Optional.of(DatatypeHelper.uri(soln.getLiteral(ASSET_ID).toString()));
+       return Optional.of(DatatypeHelper.toURIIDentifier(soln.getLiteral(ASSET_ID).toString()));
       }
     }
     return Optional.empty();
@@ -459,6 +461,38 @@ public class IdentityMapper {
 
 
   /**
+   * Get the name of the artifact for the asset
+   * If this becomes a performance bottleneck, can look at separating out searches for published
+   * models only.
+   *
+   * @param assetId The id of the asset looking for
+   * @return the name of the artifact as specified in the triples
+   */
+  public Optional<String> getArtifactNameByAssetId(URIIdentifier assetId) {
+    models.reset();
+    while (models.hasNext()) {
+      QuerySolution soln = models.nextSolution();
+      if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getUri().toString())) {
+        return Optional.ofNullable(soln.getLiteral(ARTIFACTNAME).getString());
+      }
+    }
+    return Optional.empty();
+  }
+
+  public Optional<String> getArtifactNameByArtifactId(URIIdentifier artifactId) {
+    models.reset();
+    while (models.hasNext()) {
+      QuerySolution soln = models.nextSolution();
+      if (soln.getResource(MODEL).getURI().contains(artifactId.getTag())) {
+        return Optional.ofNullable(soln.getLiteral(ARTIFACTNAME).getString());
+      }
+    }
+    return Optional.empty();
+  }
+
+
+
+  /**
    * Get the mimetype using the model id
    * All models have a mimetype. If performance becomes an issue, might want to separate
    * out searching in published models instead of all models.
@@ -500,7 +534,7 @@ public class IdentityMapper {
   }
 
   /**
-   * Get the version of the model artifact
+   * Get the version of the artifact for the asset provided
    * Versions only exist on published models.
    *
    * @param assetId The enterprise asset Id
@@ -522,10 +556,11 @@ public class IdentityMapper {
    * Given the internal id for the model, get the information about other models it imports.
    *
    * @param docId the artifact id
-   * @return a set of resources for the artifacts used by this artifact (dependencies)
+   * @return a list of URIIdentifiers for the artifacts used by this artifact (dependencies)
    */
-  public Set<Resource> getArtifactImports(String docId) {
+  public List<URIIdentifier> getArtifactImports(String docId) {
     Set<Resource> resources = null;
+    List<URIIdentifier> artifacts = new ArrayList<>();
 
     if (!Util.isEmpty(docId)) {
       String id = docId.substring(docId.lastIndexOf('/') + 1);
@@ -536,21 +571,55 @@ public class IdentityMapper {
         }
       }
     }
-    return resources;
+
+    if(null != resources) {
+      for (Resource resource : resources) {
+        artifacts.add(getArtifactURIIdentifier(resource));
+      }
+    }
+    return artifacts;
   }
 
   /**
-   * given the internal id for the model, get the information for the assets the model imports
+   * get the system ID for the internal ID of the resource (artifact)
+   * only published models are considered
    *
-   * @param docId the artifact id
-   * @return a set of resources for the assets used by this model (dependencies)
+   * @param resource the resource for the artifact desired
+   * @return URIIdentifier in appropriate format
    */
-  public List<URIIdentifier> getAssetRelations(String docId) {
+  private URIIdentifier getArtifactURIIdentifier(Resource resource) {
+    publishedModels.reset();
+    while (publishedModels.hasNext()) {
+      QuerySolution soln = publishedModels.nextSolution();
+      if (soln.getResource(MODEL).equals(resource)) {
+        if (soln.getLiteral(VERSION) != null) {
+          return convertInternalId(soln.getResource(MODEL).getURI(),
+                  soln.getLiteral(VERSION).getString());
+        } else {
+          return convertInternalId(soln.getResource(MODEL).getURI(), null);
+
+        }
+      }
+    }
+    // TODO: return something different? Error? CAO
+    logger.warn("Artifact {} is not a published model.", resource);
+    return null;
+  }
+
+    /**
+     * given the internal id for the model (artifact),
+     * get the information for the assets the model imports
+     * each artifact should have an assetID, this allows us to map asset<->asset relations
+     *
+     * @param artifactId the artifact id
+     * @return a set of resources for the assets used by this model (dependencies)
+     */
+  public List<URIIdentifier> getAssetRelations(String artifactId) {
     List<URIIdentifier> assets = new ArrayList<>();
 
-    if (!Util.isEmpty(docId)) {
+    if (!Util.isEmpty(artifactId)) {
       // first find the artifact in the artifactToArtifact mapping
-      String id = docId.substring(docId.lastIndexOf('/') + 1);
+      String id = artifactId.substring(artifactId.lastIndexOf('/') + 1);
       artifactToArtifactIDMap.forEach((k, v) -> {
         if (k.getLocalName().substring(1).equals(id)) {
           logger.debug("found id in artifactToArtifactIDMap");
@@ -571,12 +640,11 @@ public class IdentityMapper {
       logger.debug("soln MODEL URI: {} ", soln.getResource(MODEL).getURI());
       if (soln.getResource(MODEL).getURI().equals(dependent.getURI())) {
         logger.debug("Asset ID for Model: {}", soln.getLiteral(ASSET_ID));
-        return Optional.of(new URIIdentifier()
-            .withUri(URI.create(soln.getLiteral(ASSET_ID).getString())));
-      } else {
-        logger.debug("Dependency {} for {} is NOT Published", dependentId, subject.getLocalName());
+        return Optional.of(DatatypeHelper.toURIIDentifier(soln.getLiteral(ASSET_ID).getString()));
       }
     }
+    // if not found, because not published
+    logger.warn("Dependency {} for {} is NOT Published", dependentId, subject.getLocalName());
     return Optional.empty();
   }
 
@@ -591,4 +659,14 @@ public class IdentityMapper {
     return orderedModels;
   }
 
+  /**
+   * Need the Trisotech path converted to KMDP path and underscores removed
+   *
+   * @param internalId the Trisotech internal id for the model
+   * @return URIIdentifier with the KMDP-ified internal id
+   */
+  public URIIdentifier convertInternalId(String internalId, String versionTag) {
+    String id = internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
+      return DatatypeHelper.uri(MAYO_ARTIFACTS_BASE_URI, id, versionTag);
+  }
 }

@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import static edu.mayo.kmdp.preprocess.meta.Weaver.CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models;
 import static edu.mayo.ontology.taxonomies.kao.knowledgeassetcategory.KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
@@ -61,10 +60,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.apache.jena.rdf.model.Resource;
 import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +127,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     logger.debug("docId: {}", docId);
 
     Optional<URIIdentifier> assetID = getAssetID(dox);
-    // TODO: Should processing fail if no assetID? CAO
+    // TODO: Should processing fail if no assetID? CAO - don't continue processing; provide warning
     if(logger.isDebugEnabled()) {
       logger.debug("assetID: {}", assetID.isPresent() ? assetID.get() : Optional.empty());
     }
@@ -138,12 +135,14 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     URIIdentifier artifactId = DatatypeHelper.uri(docId.get(), meta.getVersion());
 
     // artifact<->artifact relation
-    Set<Resource> theTargetArtifactId = mapper.getArtifactImports(docId.get());
+    List<URIIdentifier> theTargetArtifactId = mapper.getArtifactImports(docId.get());
     if (null != theTargetArtifactId) {
       logger.debug("theTargetArtifactId: {}", theTargetArtifactId);
     } else {
       logger.debug("theTargetArtifactId is null");
     }
+    // asset<->asset relations
+    // assets are derived from the artifact relations
     List<URIIdentifier> theTargetAssetId = mapper.getAssetRelations(docId.get());
 
     // get the language for the document to set the appropriate values
@@ -170,7 +169,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
           "Invalid Language detected." + rep); // TODO: better error for here? CAO
     }
 
-    // towards the ideal as below
+    // towards the ideal
     surr = new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset()
         .withAssetId(
             (assetID.isPresent() ? assetID.get() : null)) // TODO: what to do if not present? CAO
@@ -179,11 +178,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .withTitle(meta.getName())
         .withFormalCategory(formalCategory)
         .withFormalType(formalType)
-        .withSubject(annotations)
         // only restrict to published assets
         .withLifecycle(lifecycle)
         // TODO: Follow-up w/Davide on this CAO
-        //        // Some work needed to infer the dependencies
+        // Some work needed to infer the dependencies
         .withRelated(getRelatedAssets(theTargetAssetId)) // asset - asset relation/dependency
         .withCarriers(new ComputableKnowledgeArtifact()
                 .withArtifactId(artifactId)
@@ -202,7 +200,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .withName(meta.getName()); // TODO: might want '(DMN)' / '(CMMN)' here
 
 //
-//    // TODO: Needed? yes CAO Is it? annotations are added above in .withSubject
+//    // TODO: Needed? yes CAO Is it? annotations are added above in .withSubject [withSubject has been removed per Davide notes in surrogate]
 //    // Annotations
     addSemanticAnnotations(surr, annotations);
 //
@@ -232,32 +230,34 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         default: // TODO: ??? error? CAO
           break;
       }
+    } else {
+      // NOTE: This should NOT happen in production, but can happen when we are testing models and downloading manually
+      // either way, don't want to leave lifecycle empty, so default to Draft (per e-mail w/Davide 1/24/2020)
+      lifecycle.withPublicationStatus(PublicationStatusSeries.resolve(PublicationStatusSeries.Draft).get());
     }
     logger.debug("lifecycle = {}", lifecycle.getPublicationStatus());
 
     return lifecycle;
   }
 
-  private Collection<Association> getRelatedArtifacts(Set<Resource> theTargetArtifactId) {
+  private Collection<Association> getRelatedArtifacts(List<URIIdentifier> theTargetArtifactId) {
+    List<ComputableKnowledgeArtifact> knowledgeArtifacts = new ArrayList<>();
     List<KnowledgeAsset> knowledgeAssets = new ArrayList<>();
 
     // TODO: rework this once confirm the logic is correct CAO
     if (null != theTargetArtifactId) {
-      for (Resource resource : theTargetArtifactId) {
-        KnowledgeAsset knowledgeAsset = null;
-        // handle try/catch with URIs first
-        knowledgeAsset = new KnowledgeAsset().withAssetId(
-            // TODO: Is this right? Should be KnowledgeResource? KnowledgeAsset ISA KnowledgeResource CAO
-            new URIIdentifier()
-                .withUri(URI.create(convertInternalId(resource
-                    .getURI(), null))))
-            .withName(resource
-                .getLocalName()); // TODO: Ask Davide - better name? tgt must have name to pass marshal CAO
-        knowledgeAssets.add(knowledgeAsset);
+      for (URIIdentifier id : theTargetArtifactId) {
+        // TODO: Do something different if get null id? means related artifact was not published CAO
+        if(null != id) {
+          ComputableKnowledgeArtifact knowledgeArtifact = new ComputableKnowledgeArtifact()
+              .withArtifactId(id)
+              .withName(mapper.getArtifactNameByArtifactId(id).get());
+          knowledgeArtifacts.add(knowledgeArtifact);
+        }
       }
     }
-    // TODO: Is this right? Should be KnowledgeResource; KR is abstract; KnowledgeAsset ISA KnowledgeResource; is it the right one? CAO
-    return knowledgeAssets.stream().map(ka ->
+
+    return knowledgeArtifacts.stream().map(ka ->
         new Dependency().withRel(DependencyTypeSeries.Imports)
             .withTgt(ka))
         .collect(Collectors.toList());
@@ -270,40 +270,20 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
             new Dependency()
                 .withRel(DependencyTypeSeries.Depends_On)
                 .withTgt(new KnowledgeAsset().withAssetId(uriIdentifier)
-                    .withName(uriIdentifier
-                        .toString()))) // TODO: Ask Davide -- is something else expected here as name value? have to have name to pass SAXParser CAO
+                    .withName(mapper.getArtifactNameByAssetId(uriIdentifier).get())))
         .collect(Collectors.toList());
   }
 
 
-  // TODO: Is this needed? Yes -- need example models to work from CAO
+  // TODO: Is this needed? Yes (eventually) -- need example models to work from CAO
+  // 02/10/2020: pulls annotations up
   protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
 //    annotations.stream()
-//        .filter(ann -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept())
-//            || ann.getRel().equals(AnnotationRelType.Defines.asConcept())
-//            || ann.getRel().equals(AnnotationRelType.In_Terms_Of.asConcept()))
+//        .filter(ann -> ann.getRel().equals(AnnotationRelTypeSeries.Captures.asConcept())
+//            || ann.getRel().equals(AnnotationRelTypeSeries.Defines.asConcept())
+//            || ann.getRel().equals(AnnotationRelTypeSeries.In_Terms_Of.asConcept()))
 //        .forEach(surr::withSubject);
 
-    // TODO: Needed? Am not finding use of Computable_Decision_Model in test models CAO
-//    if (surr.getType().contains(KnowledgeAssetType.Computable_Decision_Model)
-//            && annotations.stream().anyMatch((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept()))) {
-//      surr.withType(KnowledgeAssetType.Operational_Concept_Defintion);
-//
-//      annotations.stream()
-//              .filter((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept()))
-//              .forEach((ann) -> surr.withSubject(new SimpleAnnotation().withRel(AssetVocabulary.DEFINES.asConcept())
-//                      .withExpr(((SimpleAnnotation) ann).getExpr())));
-//      annotations.stream()
-//              .filter((ann) -> ann.getRel().equals(KnownAttributes.CAPTURES.asConcept()))
-//              .map((ann) -> ((SimpleAnnotation) ann).getExpr().getTag())
-//              .map(ClinicalSituation::resolve)
-//              .filter(Optional::isPresent)
-//              .map(Optional::get)
-//              .map(this::getDatatypeModel)
-//              .collect(Collectors.toSet())
-//              .forEach((typeCode) -> surr.withRelated(new Dependency().withRel(DependencyType.Effectuates)
-//                      .withTgt(buildFhir2Datatype(typeCode))));
-//    }
   }
 
 
@@ -356,20 +336,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return annos;
   }
 
-  /**
-   * Need the Trisotech path converted to KMDP path and underscores removed
-   * TODO: move to utility class? The other place this happens is Weaver CAO
-   *
-   * @param internalId the Trisotech internal id for the model
-   * @return the KMDP-ified internal id
-   */
-  public String convertInternalId(String internalId, String versionTag) {
-    String id = internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
-    if (null == versionTag) {
-      return CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id;
-    } else {
-      return CLINICALKNOWLEDGEMANAGEMENT_MAYO_ARTIFACTS_BASE_URI + id + "/versions/" + versionTag;
-    }
+  public URIIdentifier convertInternalId(String internalId, String versionTag) {
+   return mapper.convertInternalId(internalId, versionTag);
   }
 
   @Override

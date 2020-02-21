@@ -163,7 +163,7 @@ class IdentityMapperIntTest {
         Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
 
     Optional<URIIdentifier> assetId = identityMapper.getAssetId(fileId);
-    assertEquals(expectedAssetId, assetId.get().getUri().toString());
+    assertEquals(expectedAssetId, assetId.get().toStringId());
   }
 
 

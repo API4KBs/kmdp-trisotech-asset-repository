@@ -12,7 +12,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 # ?assetId is the enterprise ID that is associated with this artifact through a customAttribute; can vary by version
 # ?mimeType helps with the ability to retrieve the correct filetype for the model
 # ?artifactName is the name of the model
-SELECT ?model ?fileId ?assetId ?version ?state ?mimeType ?artifactName
+SELECT ?model ?fileId ?assetId ?mimeType ?artifactName
 FROM NAMED ?
 WHERE {
 GRAPH ? {
@@ -29,9 +29,11 @@ GRAPH ? {
         # the following processing gets the assetId
         # first get the children of the model
        ?cElement (ttr:childOf)* ?model.
+        # only get children that are of type decision
+       ?cElement a tt:decision.
         # then get the customAttribute of the children
        ?cElement ttr:customAttribute ?caElement.
-        # TODO: do we need to confirm the customAttributeKey to verify it is what we expect? and how would that happen? CAO
+        # TODO: do we need to confirm the customAttributeKey to verify it is what we expect? CAO
         # then get the assetId from the customAttribute
        ?caElement ttr:customAttributeValue ?assetId.
     }
@@ -48,6 +50,8 @@ GRAPH ? {
         # the following processing gets the assetId
         # first get the children of the model
        ?cElement (ttr:childOf)* ?model.
+        # only get children that are of type activity
+       ?cElement a tt:activity.
         # then get the customAttribute of the children
        ?cElement ttr:customAttribute ?caElement.
         # TODO: do we need to confirm the customAttributeKey to verify it is what we expect? CAO

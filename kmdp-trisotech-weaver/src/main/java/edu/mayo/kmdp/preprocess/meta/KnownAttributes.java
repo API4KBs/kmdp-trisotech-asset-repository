@@ -37,8 +37,11 @@ public enum KnownAttributes {
 
 	// on models
 	ASSET_IDENTIFIER( AnnotationRelTypeSeries.Is_Identified_By.getLabel(),
-	                  "knowledgeAssetId",
-	                  AnnotationRelTypeSeries.Is_Identified_By.getRef() ),
+			"knowledgeAssetId",
+			AnnotationRelTypeSeries.Is_Identified_By.getRef() ),
+//	ASSET_IDENTIFIER( AnnotationRelTypeSeries.Has_ID.getLabel(),
+//	                  "knowledgeAssetId",
+//	                  AnnotationRelTypeSeries.Has_ID.getRef() ),
 
 
 //	TYPE( AnnotationRelTypeSeries.Is_A.getLabel(),

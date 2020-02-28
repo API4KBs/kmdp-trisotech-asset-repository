@@ -10,6 +10,8 @@
   </parent>
 
   <artifactId>kmdp-knowledge-asset-repository-trisotech</artifactId>
+  <version>1.7.0-SNAPSHOT</version>
+
   <packaging>war</packaging>
 
 
@@ -18,17 +20,17 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-trisotech-client</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-trisotech-weaver</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-trisotech-extractor</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <!-- internal -->

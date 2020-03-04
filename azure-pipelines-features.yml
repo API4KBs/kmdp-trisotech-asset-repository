@@ -87,28 +87,17 @@ steps:
   inputs:
     artifactsFeeds: 'KMD'
 
-# Maven Clean Package Profile = Refresh
-- task: Maven@3
-  displayName: 'Maven Clean Package Prefresh'
-  inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'clean package'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    options: '-q -Prefresh'
-
-
-# Maven Clean Package
-- task: Maven@3
+# Maven Clean Package with Triso Tokens
+- task: PowerShell@2
   displayName: 'Maven Clean Package'
   inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'clean package'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    options: '-q'
+    targetType: 'inline'
+    script: |
+        mvn clean package -q "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN"
+  env:
+    TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
+    TRISO_REPO_DEV_ID: $(trisoRepoDevId)
+    TRISO_DEV_TOKEN: $(trisoDevToken)
 
 # ------------------ END PIPELINE  ------------------
 - script: |

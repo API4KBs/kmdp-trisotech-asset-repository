@@ -138,7 +138,7 @@ class SemanticAnnotationTest {
 
 			// TODO: update per model CAO
 			assertEquals( 19, inputs.size() );
-			assertTrue( inputs.contains( ClinicalSituationSeries.History_Of_GI_Bleeding ) ); // was .Has_Bleeding_Disorder CAO
+			assertTrue( inputs.contains( ClinicalSituationSeries.History_Of_Gastrointestinal_Bleeding ) ); // was .Has_Bleeding_Disorder CAO
 //			assertTrue( inputs.contains( ClinicalSituation.Has_Cirrhosis ) );
 		} catch ( Exception e ) {
 			e.printStackTrace();

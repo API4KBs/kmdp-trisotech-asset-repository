@@ -42,8 +42,7 @@ import javax.annotation.PostConstruct;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.jena.shared.NotFoundException;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Null;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -333,7 +332,7 @@ class MetadataTest {
 
   @Test
   void testResolveEnterpriseAssetID() {
-    URIIdentifier assetID = extractor
+    ResourceIdentifier assetID = extractor
         .resolveEnterpriseAssetID("123720a6-9758-45a3-8c5c-5fffab12c494");
     assertEquals(
         "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT",
@@ -393,18 +392,18 @@ class MetadataTest {
 
 
     // test w/o a version
-    URIIdentifier fileId = extractor.convertInternalId(internalId, null);
+    ResourceIdentifier fileId = extractor.convertInternalId(internalId, null);
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
-    assertThrows(NullPointerException.class, fileId::getVersion);
-    assertEquals(expectedFileId, fileId.getUri().toString());
+    assertNull(fileId.getVersionTag());
+    assertEquals(expectedFileId, fileId.getResourceId().toString());
 
     // test w/version
     fileId = extractor.convertInternalId(internalId, versionTag);
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
-    assertEquals(versionTag, fileId.getVersion());
-    assertEquals(expectedFileId, fileId.getUri().toString());
+    assertEquals(versionTag, fileId.getVersionTag());
+    assertEquals(expectedFileId, fileId.getResourceId().toString());
     assertEquals(expectedFileIdAndVersion, fileId.getVersionId().toString());
   }
 

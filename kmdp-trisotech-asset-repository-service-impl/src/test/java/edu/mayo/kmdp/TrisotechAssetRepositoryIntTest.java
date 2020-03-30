@@ -37,7 +37,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.Answer;
-import org.omg.spec.api4kp._1_0.identifiers.Pointer;
+import org.omg.spec.api4kp._1_0.id.Pointer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -216,12 +216,12 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(pointers.size() >= 6);
     // Confirm some of the values
     pointers.forEach((ptr) -> {
-      if(expectedDecisionId.equals(ptr.getEntityRef().getVersionId().toString())) {
+      if(expectedDecisionId.equals(ptr.getVersionId().toString())) {
         assertEquals(expectedDecisionName, ptr.getName());
         assertEquals(KnowledgeAssetTypeSeries.Decision_Model.getRef(), ptr.getType());
         foundDecision.set(true);
       }
-      if(expectedCaseId.equals(ptr.getEntityRef().getVersionId().toString())) {
+      if(expectedCaseId.equals(ptr.getVersionId().toString())) {
         assertEquals(expectedCaseName, ptr.getName());
         assertEquals(KnowledgeAssetTypeSeries.Care_Process_Model.getRef(), ptr.getType());
         foundCase.set(true);
@@ -347,7 +347,7 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
     KnowledgeCarrier kc = answer.get();
-    assertEquals(expectedAssetId, kc.getAssetId().getUri().toString());
+    assertEquals(expectedAssetId, kc.getAssetId().getResourceId().toString());
     assertEquals(expectedAssetVersionId, kc.getAssetId().getVersionId().toString());
     assertEquals(expectedArtifactId, kc.getArtifactId().getVersionId().toString());
 
@@ -368,7 +368,7 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
     KnowledgeCarrier kc = answer.get();
-    assertEquals(expectedAssetId, kc.getAssetId().getUri().toString());
+    assertEquals(expectedAssetId, kc.getAssetId().getResourceId().toString());
     assertEquals(expectedAssetVersionId, kc.getAssetId().getVersionId().toString());
     assertEquals(expectedArtifactId,
         kc.getArtifactId().getVersionId().toString());
@@ -410,9 +410,9 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
     KnowledgeCarrier kc = answer.get();
-    assertEquals(expectedAssetId, kc.getAssetId().getUri().toString());
+    assertEquals(expectedAssetId, kc.getAssetId().getResourceId().toString());
     assertEquals(expectedAssetVersionId, kc.getAssetId().getVersionId().toString());
-    assertEquals(expectedArtifactId, kc.getArtifactId().getUri().toString());
+    assertEquals(expectedArtifactId, kc.getArtifactId().getResourceId().toString());
     assertEquals(expectedArtifactVersionId, kc.getArtifactId().getVersionId().toString());
 
   }
@@ -434,7 +434,7 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
     KnowledgeCarrier kc = answer.get();
-    assertEquals(expectedAssetId, kc.getAssetId().getUri().toString());
+    assertEquals(expectedAssetId, kc.getAssetId().getResourceId().toString());
     assertEquals(expectedAssetVersionId, kc.getAssetId().getVersionId().toString());
     assertEquals(expectedArtifactId,
         kc.getArtifactId().getVersionId().toString());

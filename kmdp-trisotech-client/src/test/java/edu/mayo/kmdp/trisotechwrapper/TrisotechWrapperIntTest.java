@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
@@ -37,7 +36,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -292,12 +291,12 @@ class TrisotechWrapperIntTest {
     Date expectedUpdated = DateTimeUtil
         .parseDateTime("2019-12-30T22:08:43Z","yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    VersionIdentifier versionIdentifier =
+    ResourceIdentifier versionIdentifier =
         TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID)
             .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
-    assertEquals(expectedVersion, versionIdentifier.getVersion());
+    assertEquals(expectedVersion, versionIdentifier.getVersionTag());
     assertEquals(expectedUpdated, versionIdentifier.getEstablishedOn());
   }
 
@@ -307,21 +306,21 @@ class TrisotechWrapperIntTest {
     TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID)
         .orElse(null);
     assertNotNull(trisotechFileInfo);
-    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo)
+    ResourceIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo)
         .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
-    assertEquals(expectedVersion, versionIdentifier.getVersion());
+    assertEquals(expectedVersion, versionIdentifier.getVersionTag());
   }
 
   @Test
   final void testGetLatestVersionArtifactIdCMMN() {
     String expectedVersion = "2.2.1";
-    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID)
+    ResourceIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID)
         .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
-    assertEquals(expectedVersion, versionIdentifier.getVersion());
+    assertEquals(expectedVersion, versionIdentifier.getVersionTag());
   }
 
   @Test
@@ -330,18 +329,18 @@ class TrisotechWrapperIntTest {
     TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID)
         .orElse(null);
     assertNotNull(trisotechFileInfo);
-    VersionIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo)
+    ResourceIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo)
         .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
-    assertEquals(expectedVersion, versionIdentifier.getVersion());
+    assertEquals(expectedVersion, versionIdentifier.getVersionTag());
   }
 
 
   @Test
   final void testGetLatestVersionCMMN_Null() {
     // while a file may have multiple versions, no version tag is given to a file until it is published
-    VersionIdentifier version = TrisotechWrapper.getLatestVersion(WEAVE_TEST_2_ID)
+    ResourceIdentifier version = TrisotechWrapper.getLatestVersion(WEAVE_TEST_2_ID)
         .orElse(null);
     assertNull(version);
   }

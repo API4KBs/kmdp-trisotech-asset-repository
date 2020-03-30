@@ -27,7 +27,6 @@ import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentati
 import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.mayo.kmdp.SurrogateBuilder;
 import edu.mayo.kmdp.SurrogateHelper;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
@@ -62,7 +61,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -126,16 +126,16 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
     logger.debug("docId: {}", docId);
 
-    Optional<URIIdentifier> assetID = getAssetID(dox);
+    Optional<ResourceIdentifier> assetID = getAssetID(dox);
     // TODO: Should processing fail if no assetID? CAO - don't continue processing; provide warning
     if(logger.isDebugEnabled()) {
       logger.debug("assetID: {}", assetID.isPresent() ? assetID.get() : Optional.empty());
     }
     // for the surrogate, want the version of the artifact
-    URIIdentifier artifactId = DatatypeHelper.uri(docId.get(), meta.getVersion());
+    ResourceIdentifier artifactId = SemanticIdentifier.newVersionId(URI.create(docId.get())).withVersionTag(meta.getVersion());
 
     // artifact<->artifact relation
-    List<URIIdentifier> theTargetArtifactId = mapper.getArtifactImports(docId.get());
+    List<ResourceIdentifier> theTargetArtifactId = mapper.getArtifactImports(docId.get());
     if (null != theTargetArtifactId) {
       logger.debug("theTargetArtifactId: {}", theTargetArtifactId);
     } else {
@@ -143,7 +143,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     }
     // asset<->asset relations
     // assets are derived from the artifact relations
-    List<URIIdentifier> theTargetAssetId = mapper.getAssetRelations(docId.get());
+    List<ResourceIdentifier> theTargetAssetId = mapper.getAssetRelations(docId.get());
 
     // get the language for the document to set the appropriate values
     Optional<Representation> rep = getRepLanguage(dox, false);
@@ -172,7 +172,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     // towards the ideal
     surr = new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset()
         .withAssetId(
-            (assetID.isPresent() ? assetID.get() : null)) // TODO: what to do if not present? CAO
+            (assetID.isPresent() ?
+                DatatypeHelper.toURIIdentifier(assetID.get()) : null)) // TODO: what to do if not present? CAO
         // TODO: Discuss with Davide, this is the fileInfo name; shouldn't there be some asset name? CAO
         .withName(meta.getName())
         .withTitle(meta.getName())
@@ -184,7 +185,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         // Some work needed to infer the dependencies
         .withRelated(getRelatedAssets(theTargetAssetId)) // asset - asset relation/dependency
         .withCarriers(new ComputableKnowledgeArtifact()
-                .withArtifactId(artifactId)
+                .withArtifactId(DatatypeHelper.toURIIdentifier(artifactId))
                 .withName(meta.getName())
                 .withLocalization(LanguageSeries.English)
                 .withExpressionCategory(KnowledgeArtifactCategory.Software)
@@ -240,17 +241,17 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return lifecycle;
   }
 
-  private Collection<Association> getRelatedArtifacts(List<URIIdentifier> theTargetArtifactId) {
+  private Collection<Association> getRelatedArtifacts(List<ResourceIdentifier> theTargetArtifactId) {
     List<ComputableKnowledgeArtifact> knowledgeArtifacts = new ArrayList<>();
     List<KnowledgeAsset> knowledgeAssets = new ArrayList<>();
 
     // TODO: rework this once confirm the logic is correct CAO
     if (null != theTargetArtifactId) {
-      for (URIIdentifier id : theTargetArtifactId) {
+      for (ResourceIdentifier id : theTargetArtifactId) {
         // TODO: Do something different if get null id? means related artifact was not published CAO
         if(null != id) {
           ComputableKnowledgeArtifact knowledgeArtifact = new ComputableKnowledgeArtifact()
-              .withArtifactId(id)
+              .withArtifactId(DatatypeHelper.toURIIdentifier(id))
               .withName(mapper.getArtifactNameByArtifactId(id).get());
           knowledgeArtifacts.add(knowledgeArtifact);
         }
@@ -264,13 +265,13 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   }
 
-  private Collection<Association> getRelatedAssets(List<URIIdentifier> theTargetAssetId) {
+  private Collection<Association> getRelatedAssets(List<ResourceIdentifier> theTargetAssetId) {
     return theTargetAssetId.stream()
-        .map(uriIdentifier ->
+        .map(resourceIdentifier ->
             new Dependency()
                 .withRel(DependencyTypeSeries.Depends_On)
-                .withTgt(new KnowledgeAsset().withAssetId(uriIdentifier)
-                    .withName(mapper.getArtifactNameByAssetId(uriIdentifier).get())))
+                .withTgt(new KnowledgeAsset().withAssetId(DatatypeHelper.toURIIdentifier(resourceIdentifier))
+                    .withName(mapper.getArtifactNameByAssetId(resourceIdentifier).orElse(null))))
         .collect(Collectors.toList());
   }
 
@@ -336,20 +337,19 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return annos;
   }
 
-  public URIIdentifier convertInternalId(String internalId, String versionTag) {
+  public ResourceIdentifier convertInternalId(String internalId, String versionTag) {
    return mapper.convertInternalId(internalId, versionTag);
   }
 
   @Override
-  public Optional<URIIdentifier> getAssetID(Document dox) {
+  public Optional<ResourceIdentifier> getAssetID(Document dox) {
     return getIDAnnotationValue(dox)
-        .map(DatatypeHelper::toVersionIdentifier)
-        .map(versionIdentifier -> SurrogateBuilder
-            .assetId(versionIdentifier.getTag(), versionIdentifier.getVersion()));
+        .map(URI::create)
+        .map(SemanticIdentifier::newVersionId);
   }
 
   @Override
-  public Optional<URIIdentifier> getAssetID(String fileId) {
+  public Optional<ResourceIdentifier> getAssetID(String fileId) {
     return mapper.getAssetId(fileId);
   }
 
@@ -373,7 +373,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
 
   @Override
-  public String getArtifactID(URIIdentifier id, boolean any) throws NotLatestVersionException {
+  public String getArtifactID(ResourceIdentifier id, boolean any) throws NotLatestVersionException {
     return mapper.getArtifactId(id, any);
   }
 
@@ -468,8 +468,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
   @Override
-  public URIIdentifier extractAssetID(Document dox) {
-    Optional<URIIdentifier> resId = getAssetID(dox);
+  public ResourceIdentifier extractAssetID(Document dox) {
+    Optional<ResourceIdentifier> resId = getAssetID(dox);
     return resId
         .orElseThrow(IllegalStateException::new); // TODO: better return value if not existent? CAO
   }

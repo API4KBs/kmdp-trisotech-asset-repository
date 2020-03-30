@@ -13,10 +13,9 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
@@ -47,7 +46,8 @@ import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.query.ResultSetRewindable;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.NotFoundException;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -218,20 +218,20 @@ public class IdentityMapper {
    *
    * @param artifactId Id for an artifact in the Trisotech models
    * @param versionTag the version of the artifact
-   * @return URIIdentifier for the asset
+   * @return ResourceIdentifier for the asset
    * @throws NotLatestVersionException thrown if this version is not the latest for the artifact It
    * is possible the version exists, but is not the latest. Additional processing may be needed.
    */
   // input should be artifactId (from the triple); version is version of artifact
-  public Optional<URIIdentifier> getAssetId(URIIdentifier artifactId, String versionTag)
+  public Optional<ResourceIdentifier> getAssetId(ResourceIdentifier artifactId, String versionTag)
       throws NotLatestVersionException {
     publishedModels.reset();
     while (publishedModels.hasNext()) {
       QuerySolution soln = publishedModels.nextSolution();
 
-      if (soln.getResource(MODEL).getURI().equals(artifactId.getUri().toString())) {
+      if (soln.getResource(MODEL).getURI().equals(artifactId.getResourceId().toString())) {
         if (soln.getLiteral(VERSION).getString().equals(versionTag)) {
-          return Optional.of(DatatypeHelper.uri(soln.getLiteral(ASSET_ID).toString()));
+          return Optional.of(SemanticIdentifier.newVersionId(URI.create(soln.getLiteral(ASSET_ID).toString())));
         } else { // have the artifact, but not version looking for; more work to see if the version exists
           throw new NotLatestVersionException(soln.getResource(MODEL).getURI());
         }
@@ -247,26 +247,27 @@ public class IdentityMapper {
    * to the LATEST version of the model.
    *
    * @param fileId the id for the file representing the model
+   * @return ResourceIdentifier for assetId of model
    */
-  public Optional<URIIdentifier> getAssetId(String fileId) {
+  public Optional<ResourceIdentifier> getAssetId(String fileId) {
     logger.debug("getAssetId for fileId: {}", fileId);
     publishedModels.reset();
     while (publishedModels.hasNext()) {
       QuerySolution soln = publishedModels.nextSolution();
 
       if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
-       return Optional.of(DatatypeHelper.toURIIDentifier(soln.getLiteral(ASSET_ID).toString()));
+       return Optional.of(SemanticIdentifier.newVersionId(URI.create(soln.getLiteral(ASSET_ID).toString()))); //DatatypeHelper.toURIIDentifier(soln.getLiteral(ASSET_ID).toString()));
       }
     }
     return Optional.empty();
   }
 
   /**
-   * Need to be able to retrieve the asset URIIdentifier given the assetId NOTE: This only checks
+   * Need to be able to retrieve the asset ResourceIdentifier given the assetId NOTE: This only checks
    * the information for the LATEST version of the model, which is available in the models.
    *
-   * @param assetId the assetId to get the URIIdentifier for
-   * @return URIIdentifier for the assetId or Empty
+   * @param assetId the assetId to get the ResourceIdentifier for
+   * @return ResourceIdentifier for the assetId or Empty
    */
   public Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId) {
     publishedModels.reset();
@@ -361,7 +362,7 @@ public class IdentityMapper {
    * to finding the version needed. The exception will return the artifactId for the asset
    * requested. The artifactId can be used with Trisotech APIs
    */
-  public String getArtifactId(URIIdentifier assetId, boolean any) throws NotLatestVersionException {
+  public String getArtifactId(ResourceIdentifier assetId, boolean any) throws NotLatestVersionException {
     if (any) {
       return artifactIdFromModel(models, assetId);
     } else {
@@ -370,15 +371,14 @@ public class IdentityMapper {
   }
 
   private String artifactIdFromModel(ResultSetRewindable theModels,
-      URIIdentifier assetId) throws NotLatestVersionException {
+      ResourceIdentifier assetId) throws NotLatestVersionException {
     theModels.reset();
     // this will only match if the exact version of the asset is available on a latest model
     while (theModels.hasNext()) {
       QuerySolution soln = theModels.nextSolution();
       if (logger.isDebugEnabled()) {
-        logger.debug("getArtifactId for assetId: {}", assetId.toStringId());
-        logger.debug("assetId.getUri().toString: {}", assetId.getUri());
-        logger.debug("assetId.getVersionId().toString: {}", assetId.getVersionId());
+        logger.debug("assetId.getResourceId().toString: {}", assetId.getResourceId().toString());
+        logger.debug("assetId.getVersionId().toString: {}", assetId.getVersionId().toString());
         logger.debug("assetId.getTag(): {}", assetId.getTag());
       }
       // versionId value has the UUID of the asset/versions/versionTag, so this will match id and version
@@ -468,18 +468,18 @@ public class IdentityMapper {
    * @param assetId The id of the asset looking for
    * @return the name of the artifact as specified in the triples
    */
-  public Optional<String> getArtifactNameByAssetId(URIIdentifier assetId) {
+  public Optional<String> getArtifactNameByAssetId(ResourceIdentifier assetId) {
     models.reset();
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
-      if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getUri().toString())) {
+      if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getResourceId().toString())) {
         return Optional.ofNullable(soln.getLiteral(ARTIFACTNAME).getString());
       }
     }
     return Optional.empty();
   }
 
-  public Optional<String> getArtifactNameByArtifactId(URIIdentifier artifactId) {
+  public Optional<String> getArtifactNameByArtifactId(ResourceIdentifier artifactId) {
     models.reset();
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
@@ -556,11 +556,11 @@ public class IdentityMapper {
    * Given the internal id for the model, get the information about other models it imports.
    *
    * @param docId the artifact id
-   * @return a list of URIIdentifiers for the artifacts used by this artifact (dependencies)
+   * @return a list of ResourceIdentifier for the artifacts used by this artifact (dependencies)
    */
-  public List<URIIdentifier> getArtifactImports(String docId) {
+  public List<ResourceIdentifier> getArtifactImports(String docId) {
     Set<Resource> resources = null;
-    List<URIIdentifier> artifacts = new ArrayList<>();
+    List<ResourceIdentifier> artifacts = new ArrayList<>();
 
     if (!Util.isEmpty(docId)) {
       String id = docId.substring(docId.lastIndexOf('/') + 1);
@@ -574,7 +574,7 @@ public class IdentityMapper {
 
     if(null != resources) {
       for (Resource resource : resources) {
-        artifacts.add(getArtifactURIIdentifier(resource));
+        artifacts.add(getArtifactIdentifier(resource));
       }
     }
     return artifacts;
@@ -585,9 +585,9 @@ public class IdentityMapper {
    * only published models are considered
    *
    * @param resource the resource for the artifact desired
-   * @return URIIdentifier in appropriate format
+   * @return ResourceIdentifier in appropriate format
    */
-  private URIIdentifier getArtifactURIIdentifier(Resource resource) {
+  private ResourceIdentifier getArtifactIdentifier(Resource resource) {
     publishedModels.reset();
     while (publishedModels.hasNext()) {
       QuerySolution soln = publishedModels.nextSolution();
@@ -614,8 +614,8 @@ public class IdentityMapper {
      * @param artifactId the artifact id
      * @return a set of resources for the assets used by this model (dependencies)
      */
-  public List<URIIdentifier> getAssetRelations(String artifactId) {
-    List<URIIdentifier> assets = new ArrayList<>();
+  public List<ResourceIdentifier> getAssetRelations(String artifactId) {
+    List<ResourceIdentifier> assets = new ArrayList<>();
 
     if (!Util.isEmpty(artifactId)) {
       // first find the artifact in the artifactToArtifact mapping
@@ -631,7 +631,7 @@ public class IdentityMapper {
     return assets;
   }
 
-  private Optional<URIIdentifier> getAssetRelation(Resource dependent, Resource subject) {
+  private Optional<ResourceIdentifier> getAssetRelation(Resource dependent, Resource subject) {
     logger.debug("dependent URI: {}", dependent.getURI());
     String dependentId = dependent.getURI().substring(dependent.getURI().lastIndexOf('/'));
     publishedModels.reset();
@@ -640,7 +640,7 @@ public class IdentityMapper {
       logger.debug("soln MODEL URI: {} ", soln.getResource(MODEL).getURI());
       if (soln.getResource(MODEL).getURI().equals(dependent.getURI())) {
         logger.debug("Asset ID for Model: {}", soln.getLiteral(ASSET_ID));
-        return Optional.of(DatatypeHelper.toURIIDentifier(soln.getLiteral(ASSET_ID).getString()));
+        return Optional.of(SemanticIdentifier.newVersionId(URI.create(soln.getLiteral(ASSET_ID).getString())));
       }
     }
     // if not found, because not published
@@ -663,10 +663,11 @@ public class IdentityMapper {
    * Need the Trisotech path converted to KMDP path and underscores removed
    *
    * @param internalId the Trisotech internal id for the model
-   * @return URIIdentifier with the KMDP-ified internal id
+   * @return ResourceIdentifier with the KMDP-ified internal id
    */
-  public URIIdentifier convertInternalId(String internalId, String versionTag) {
+  public ResourceIdentifier convertInternalId(String internalId, String versionTag) {
     String id = internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
-      return DatatypeHelper.uri(MAYO_ARTIFACTS_BASE_URI, id, versionTag);
+    return SemanticIdentifier.newId(MAYO_ARTIFACTS_BASE_URI_URI, id, versionTag);
+//      return DatatypeHelper.uri(MAYO_ARTIFACTS_BASE_URI, id, versionTag);
   }
 }

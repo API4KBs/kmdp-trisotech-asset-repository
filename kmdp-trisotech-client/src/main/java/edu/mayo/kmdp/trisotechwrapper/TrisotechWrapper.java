@@ -50,7 +50,8 @@ import java.util.stream.Collectors;
 import org.apache.http.HttpException;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.jena.ext.com.google.common.base.Strings;
-import org.omg.spec.api4kp._1_0.identifiers.VersionIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -398,32 +399,36 @@ public class TrisotechWrapper {
   }
 
   /**
-   * Returns a VersionIdentifier of the model information for the artifactId provided.
-   * This versionIdentifier will be for the latest published version of the model.
+   * Returns a ResourceIdentifier of the model information for the artifactId provided.
+   * This resourceIdentifier will be for the latest published version of the model.
    *
    * @param artifactId the id for the artifact requesting latest version of
    */
-  public static Optional<VersionIdentifier> getLatestVersion(String artifactId) {
+  public static Optional<ResourceIdentifier> getLatestVersion(String artifactId) {
     return getFileInfo(artifactId)
         .flatMap(TrisotechWrapper::getLatestVersion);
   }
 
   /**
-   * Given a TrisotechFileInfo, return a versionIdentifier for the latest version of that file.
+   * Given a TrisotechFileInfo, return a ResourceIdentifier for the latest version of that file.
    *
    * @param tfi file info for Trisotech file
-   * @return VersionIdentifier
+   * @return ResourceIdentifier
    */
-  //return VersionIdentifier uid, versiontag (1.0.0) , create .withEstablishedOn for timestamp
-  public static Optional<VersionIdentifier> getLatestVersion(TrisotechFileInfo tfi) {
+  //return ResourceIdentifier uid, versiontag (1.0.0) , create .withEstablishedOn for timestamp
+  public static Optional<ResourceIdentifier> getLatestVersion(TrisotechFileInfo tfi) {
     // only return for published models
     if (null != tfi.getState()) {
       logger.debug("tfiUpdated: {}", tfi.getUpdated());
       logger.debug("Date from tfiUpdated: {}", DateTimeUtil.parseDate(tfi.getUpdated()));
-      return Optional.of(new VersionIdentifier()
-          .withTag(tfi.getId())
-          .withVersion(tfi.getVersion())
+
+      return Optional.of(SemanticIdentifier.newId(tfi.getId(), tfi.getVersion())
           .withEstablishedOn(DateTimeUtil.parseDateTime(tfi.getUpdated())));
+
+//          new VersionIdentifier()
+//          .withTag(tfi.getId())
+//          .withVersion(tfi.getVersion())
+//          .withEstablishedOn(DateTimeUtil.parseDateTime(tfi.getUpdated())));
     }
     logger.info("No published version for {}", tfi.getName() );
     return Optional.empty();

@@ -22,7 +22,6 @@ import static java.util.Collections.singletonList;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import edu.mayo.kmdp.SurrogateHelper;
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
@@ -38,7 +37,8 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,9 +139,9 @@ public class MetadataExtractor {
    * Get the assetId from the Document.
    *
    * @param dox the Document that has the woven value of the assetId.
-   * @return the URIIdentifer for the asset
+   * @return the ResourceIdentifier for the asset
    */
-  public URIIdentifier getAssetID(Document dox) {
+  public ResourceIdentifier getAssetID(Document dox) {
     return strategy.extractAssetID(dox);
   }
 
@@ -199,7 +199,7 @@ public class MetadataExtractor {
    * @param fileId the Trisotech file ID to resolve to an enterprise ID
    * @return the enterprise ID
    */
-  public URIIdentifier resolveEnterpriseAssetID(String fileId) {
+  public ResourceIdentifier resolveEnterpriseAssetID(String fileId) {
     return strategy.getAssetID(fileId)
         // Defensive exception. Published models should have an assetId | CAO | DS
         .orElseThrow(() -> new IllegalStateException(
@@ -221,12 +221,12 @@ public class MetadataExtractor {
   public String resolveInternalArtifactID(String assetId, String versionTag, boolean any)
       throws NotLatestVersionException {
     // need to find the artifactId for this version of assetId
-    // URIIdentifer built with assetId and versionTag; allows for finding the artifact associated with this asset/version
-    URIIdentifier id = DatatypeHelper.uri(assetId, versionTag);
+    // ResourceIdentifier built with assetId URI and versionTag; allows for finding the artifact associated with this asset/version
+    ResourceIdentifier id = SemanticIdentifier.newId(URI.create(assetId)).withVersionTag(versionTag);
     return strategy.getArtifactID(id, any);
   }
 
-  public URIIdentifier convertInternalId(String internalId, String versionTag) {
+  public ResourceIdentifier convertInternalId(String internalId, String versionTag) {
     return strategy.convertInternalId(internalId, versionTag);
   }
 

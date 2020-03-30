@@ -13,22 +13,25 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
+import static edu.mayo.kmdp.util.Util.resolveResource;
+import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import java.io.InputStream;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.w3c.dom.Document;
-
-import java.io.InputStream;
-import java.util.Optional;
-
-import static edu.mayo.kmdp.util.Util.resolveResource;
-import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
-import static org.junit.jupiter.api.Assertions.*;
 
 class TrisotechExtractionStrategyTest {
 
@@ -155,7 +158,7 @@ class TrisotechExtractionStrategyTest {
     basicDecisionDox = loadXMLDocument(resolveResource(basicDecisionWovenPath))
         .orElseGet(() -> fail("Unable to load document " + basicDecisionWovenPath));
 
-    URIIdentifier uriIdentifier = this.tes.extractAssetID(basicCaseDox);
+    ResourceIdentifier uriIdentifier = this.tes.extractAssetID(basicCaseDox);
     assertNotNull(uriIdentifier);
     assertEquals(expectedBasicCase, uriIdentifier.getVersionId().toString());
 

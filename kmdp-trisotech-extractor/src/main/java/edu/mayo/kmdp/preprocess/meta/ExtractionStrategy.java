@@ -23,7 +23,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
-import org.omg.spec.api4kp._1_0.identifiers.URIIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
@@ -38,8 +38,8 @@ public interface ExtractionStrategy {
 
 	KnowledgeAsset extractXML( Document dox, TrisotechFileInfo meta );
 
-	Optional<URIIdentifier> getAssetID( Document dox );
-	Optional<URIIdentifier> getAssetID(String fileId);
+	Optional<ResourceIdentifier> getAssetID( Document dox );
+	Optional<ResourceIdentifier> getAssetID(String fileId);
 
   Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
 	URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId);
@@ -49,7 +49,7 @@ public interface ExtractionStrategy {
 
 	Optional<String> getArtifactID( Document dox, TrisotechFileInfo meta );
 
-	String getArtifactID(URIIdentifier id, boolean any) throws NotLatestVersionException;
+	String getArtifactID(ResourceIdentifier id, boolean any) throws NotLatestVersionException;
 
   Optional<Representation> getRepLanguage( Document dox, boolean concrete );
 
@@ -58,7 +58,7 @@ public interface ExtractionStrategy {
 
 	Optional<String> getArtifactVersion(UUID assetId);
 
-	URIIdentifier extractAssetID( Document dox );
+	ResourceIdentifier extractAssetID( Document dox );
 
 	Optional<String> getFileId(String internalId);
 

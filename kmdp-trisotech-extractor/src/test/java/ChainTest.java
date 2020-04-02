@@ -53,8 +53,8 @@ import edu.mayo.kmdp.ChainConverterConfig;
 import edu.mayo.kmdp.ExtractorConfig;
 import edu.mayo.kmdp.IdentityMapperConfig;
 import edu.mayo.kmdp.Model;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.ObjectFactory;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.ObjectFactory;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
@@ -115,14 +115,14 @@ class ChainTest {
 
       assertTrue(s.isPresent());
       assertEquals(expectedAssetId,
-          s.get().getAssetId().getUri().toString());
+          s.get().getAssetId().getResourceId().toString());
       assertEquals(expectedAssetTag, s.get().getAssetId().getTag());
-      assertEquals(expectedAssetVersion, s.get().getAssetId().getVersion());
+      assertEquals(expectedAssetVersion, s.get().getAssetId().getVersionTag());
       assertEquals(expectedAssetVersionId,
           s.get().getAssetId().getVersionId().toString());
 
       assertEquals(expectedArtifactId,
-          s.get().getCarriers().get(0).getArtifactId().getUri().toString());
+          s.get().getCarriers().get(0).getArtifactId().getResourceId().toString());
       assertEquals(expectedArtifactVersionId,
           s.get().getCarriers().get(0).getArtifactId().getVersionId().toString());
 
@@ -163,14 +163,14 @@ class ChainTest {
       assertTrue(s.isPresent());
       assertEquals(
           "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded",
-          s.get().getAssetId().getUri().toString());
+          s.get().getAssetId().getResourceId().toString());
       assertEquals(expectedAssetTag, s.get().getAssetId().getTag());
-      assertEquals(expectedVersion, s.get().getAssetId().getVersion());
+      assertEquals(expectedVersion, s.get().getAssetId().getVersionTag());
       assertEquals(expectedAssetVersionId,
           s.get().getAssetId().getVersionId().toString());
 
       assertEquals(expectedArtifactId,
-          s.get().getCarriers().get(0).getArtifactId().getUri().toString());
+          s.get().getCarriers().get(0).getArtifactId().getResourceId().toString());
       assertEquals(expectedArtifactVersionId,
           s.get().getCarriers().get(0).getArtifactId().getVersionId().toString());
 
@@ -211,12 +211,12 @@ class ChainTest {
           m.getSurrogate());
       assertTrue(s.isPresent());
       assertEquals(expectedAssetVersionId, s.get().getAssetId().getVersionId().toString());
-      assertEquals(expectedAssetId, s.get().getAssetId().getUri().toString());
+      assertEquals(expectedAssetId, s.get().getAssetId().getResourceId().toString());
       assertEquals(expectedAssetTag, s.get().getAssetId().getTag());
-      assertEquals("1.0.1", s.get().getAssetId().getVersion());
+      assertEquals("1.0.1", s.get().getAssetId().getVersionTag());
 
       assertEquals(expectedArtifactId,
-          s.get().getCarriers().get(0).getArtifactId().getUri().toString());
+          s.get().getCarriers().get(0).getArtifactId().getResourceId().toString());
       assertEquals(expectedArtifactVersionId,
           s.get().getCarriers().get(0).getArtifactId().getVersionId().toString());
       // TODO: More to check for here??? CAO
@@ -256,14 +256,14 @@ class ChainTest {
       assertTrue(s.isPresent());
       assertEquals(expectedAssetTag, s.get().getAssetId().getTag());
       assertEquals(expectedAssetId,
-          s.get().getAssetId().getUri().toString());
+          s.get().getAssetId().getResourceId().toString());
       assertEquals(expectedAssetVersionId,
           s.get().getAssetId().getVersionId().toString());
 
       assertEquals(expectedArtifactTag,
           s.get().getCarriers().get(0).getArtifactId().getTag());
       assertEquals(expectedArtifactId,
-          s.get().getCarriers().get(0).getArtifactId().getUri().toString());
+          s.get().getCarriers().get(0).getArtifactId().getResourceId().toString());
       assertEquals(expectedArtifactVersionId,
           s.get().getCarriers().get(0).getArtifactId().getVersionId().toString());
       // TODO: other things to verify? CAO

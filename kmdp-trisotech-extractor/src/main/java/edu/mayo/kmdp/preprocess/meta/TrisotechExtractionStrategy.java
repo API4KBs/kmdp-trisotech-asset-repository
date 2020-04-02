@@ -27,16 +27,19 @@ import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentati
 import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.mayo.kmdp.SurrogateHelper;
+import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateHelper;
 import edu.mayo.kmdp.id.helper.DatatypeHelper;
 import edu.mayo.kmdp.metadata.annotations.Annotation;
 import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
 import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
-import edu.mayo.kmdp.metadata.surrogate.Association;
-import edu.mayo.kmdp.metadata.surrogate.ComputableKnowledgeArtifact;
-import edu.mayo.kmdp.metadata.surrogate.Dependency;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.Publication;
+//import edu.mayo.kmdp.metadata.surrogate.Association;
+//import edu.mayo.kmdp.metadata.surrogate.KnowledgeResource;
+import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
+//import edu.mayo.kmdp.metadata.surrogate.Dependency;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.util.JaxbUtil;
+import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
@@ -68,6 +71,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Extract the data from the woven (by the Weaver) document to create KnowledgeAsset from model data.
@@ -113,7 +117,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     KnowledgeAssetCategorySeries formalCategory;
 
     KnowledgeAssetTypeSeries formalType;
-    KnowledgeAsset surr = null;
+    KnowledgeAsset surr;
 
     KnowledgeRepresentationLanguageSerializationSeries syntax;
     Publication lifecycle = getPublication(meta);
@@ -141,9 +145,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     } else {
       logger.debug("theTargetArtifactId is null");
     }
+    // TODO: is this still needed with new surrogate?
     // asset<->asset relations
     // assets are derived from the artifact relations
-    List<ResourceIdentifier> theTargetAssetId = mapper.getAssetRelations(docId.get());
+//    List<ResourceIdentifier> theTargetAssetId = mapper.getAssetRelations(docId.get());
 
     // get the language for the document to set the appropriate values
     Optional<Representation> rep = getRepLanguage(dox, false);
@@ -170,33 +175,32 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     }
 
     // towards the ideal
-    surr = new edu.mayo.kmdp.metadata.surrogate.resources.KnowledgeAsset()
+    surr = new edu.mayo.kmdp.metadata.v2.surrogate.resources.KnowledgeAsset()
         .withAssetId(
             (assetID.isPresent() ?
-                DatatypeHelper.toURIIdentifier(assetID.get()) : null)) // TODO: what to do if not present? CAO
+                assetID.get() : null)) // TODO: what to do if not present? CAO
         // TODO: Discuss with Davide, this is the fileInfo name; shouldn't there be some asset name? CAO
         .withName(meta.getName())
-        .withTitle(meta.getName())
         .withFormalCategory(formalCategory)
         .withFormalType(formalType)
         // only restrict to published assets
-        .withLifecycle(lifecycle)
-        // TODO: Follow-up w/Davide on this CAO
+//        .withLifecycle(lifecycle)
+//         TODO: Follow-up w/Davide on this CAO
         // Some work needed to infer the dependencies
-        .withRelated(getRelatedAssets(theTargetAssetId)) // asset - asset relation/dependency
+//        .withRelated(getRelatedAssets(theTargetAssetId)) // asset - asset relation/dependency
         .withCarriers(new ComputableKnowledgeArtifact()
-                .withArtifactId(DatatypeHelper.toURIIdentifier(artifactId))
+                .withArtifactId(artifactId)
                 .withName(meta.getName())
                 .withLocalization(LanguageSeries.English)
                 .withExpressionCategory(KnowledgeArtifactCategory.Software)
-                .withRepresentation(new Representation()
+                .withRepresentation(new SyntacticRepresentation()
                         .withLanguage(rep.get().getLanguage())  // DMN_1_2 or CMMN_1_1)
                         .withFormat(XML_1_1)
 //                                    .withLexicon(Lexicon.PCV) // TODO: this compiles now, but is it accurate? CAO
                         .withSerialization(syntax) // DMN_1_2_XML_Syntax or CMMN_1_1_XML_Syntax)
                 )
-                .withRelated( // artifact - artifact relation/dependency
-                    getRelatedArtifacts(theTargetArtifactId))
+//                .withRelated( // artifact - artifact relation/dependency
+//                    getRelatedArtifacts(theTargetArtifactId))
         )
         .withName(meta.getName()); // TODO: might want '(DMN)' / '(CMMN)' here
 
@@ -241,39 +245,39 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return lifecycle;
   }
 
-  private Collection<Association> getRelatedArtifacts(List<ResourceIdentifier> theTargetArtifactId) {
-    List<ComputableKnowledgeArtifact> knowledgeArtifacts = new ArrayList<>();
-    List<KnowledgeAsset> knowledgeAssets = new ArrayList<>();
+//  private Collection<Association> getRelatedArtifacts(List<ResourceIdentifier> theTargetArtifactId) {
+//    List<ComputableKnowledgeArtifact> knowledgeArtifacts = new ArrayList<>();
+//    List<KnowledgeAsset> knowledgeAssets = new ArrayList<>();
+//
+//    // TODO: rework this once confirm the logic is correct CAO
+//    if (null != theTargetArtifactId) {
+//      for (ResourceIdentifier id : theTargetArtifactId) {
+//        // TODO: Do something different if get null id? means related artifact was not published CAO
+//        if(null != id) {
+//          ComputableKnowledgeArtifact knowledgeArtifact = new ComputableKnowledgeArtifact()
+//              .withArtifactId(id)
+//              .withName(mapper.getArtifactNameByArtifactId(id).get());
+//          knowledgeArtifacts.add(knowledgeArtifact);
+//        }
+//      }
+//    }
+//
+//    return knowledgeArtifacts.stream().map(ka ->
+//        new Dependency().withRel(DependencyTypeSeries.Imports)
+//            .withTgt(ka))
+//        .collect(Collectors.toList());
+//
+//  }
 
-    // TODO: rework this once confirm the logic is correct CAO
-    if (null != theTargetArtifactId) {
-      for (ResourceIdentifier id : theTargetArtifactId) {
-        // TODO: Do something different if get null id? means related artifact was not published CAO
-        if(null != id) {
-          ComputableKnowledgeArtifact knowledgeArtifact = new ComputableKnowledgeArtifact()
-              .withArtifactId(DatatypeHelper.toURIIdentifier(id))
-              .withName(mapper.getArtifactNameByArtifactId(id).get());
-          knowledgeArtifacts.add(knowledgeArtifact);
-        }
-      }
-    }
-
-    return knowledgeArtifacts.stream().map(ka ->
-        new Dependency().withRel(DependencyTypeSeries.Imports)
-            .withTgt(ka))
-        .collect(Collectors.toList());
-
-  }
-
-  private Collection<Association> getRelatedAssets(List<ResourceIdentifier> theTargetAssetId) {
-    return theTargetAssetId.stream()
-        .map(resourceIdentifier ->
-            new Dependency()
-                .withRel(DependencyTypeSeries.Depends_On)
-                .withTgt(new KnowledgeAsset().withAssetId(DatatypeHelper.toURIIdentifier(resourceIdentifier))
-                    .withName(mapper.getArtifactNameByAssetId(resourceIdentifier).orElse(null))))
-        .collect(Collectors.toList());
-  }
+//  private Collection<Association> getRelatedAssets(List<ResourceIdentifier> theTargetAssetId) {
+//    return theTargetAssetId.stream()
+//        .map(resourceIdentifier ->
+//            new Dependency()
+//                .withRel(DependencyTypeSeries.Depends_On)
+//                .withTgt(new KnowledgeResource().withAssetId(resourceIdentifier)
+//                    .withName(mapper.getArtifactNameByAssetId(resourceIdentifier).orElse(null))))
+//        .collect(Collectors.toList());
+//  }
 
 
   // TODO: Is this needed? Yes (eventually) -- need example models to work from CAO
@@ -292,14 +296,16 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   private List<Annotation> extractAnnotations(Document dox) {
     List<Annotation> annos = new LinkedList<>();
 
+
     // TODO: Maybe extract more annotations, other than the 'document' level ones?
     annos.addAll(XMLUtil.asElementStream(
         dox.getDocumentElement().getElementsByTagName("semantic:extensionElements"))
         .filter(Objects::nonNull)
         .filter(el -> el.getLocalName().equals("extensionElements"))
         .flatMap(el -> XMLUtil.asElementStream(el.getChildNodes()))
-        .map(SurrogateHelper::unmarshallAnnotation)
-        .map(SurrogateHelper::rootToFragment)
+        .map(child -> JaxbUtil.unmarshall(Annotation.class, Annotation.class, child))
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .collect(Collectors.toList()));
 
     if (annos.stream()
@@ -317,7 +323,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
             .filter(Objects::nonNull)
             .filter(el -> el.getLocalName().equals("semantic:extensionElements"))
             .flatMap(el -> XMLUtil.asElementStream(el.getChildNodes()))
-            .map(SurrogateHelper::unmarshallAnnotation)
+            .map(child -> JaxbUtil.unmarshall(Annotation.class, Annotation.class, child))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .collect(Collectors.toList());
         if (inputAnnos.isEmpty() || inputAnnos.size() > 2) {
           throw new IllegalStateException("Missing or duplicated input concept");

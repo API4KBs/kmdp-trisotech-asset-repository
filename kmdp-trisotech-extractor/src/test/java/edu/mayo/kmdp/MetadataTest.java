@@ -26,7 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateHelper;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
@@ -112,7 +113,7 @@ class MetadataTest {
       assertNotNull(surr.getCarriers());
 
       assertNotNull(surr.getAssetId());
-      assertNotNull(surr.getAssetId().getUri());
+      assertNotNull(surr.getAssetId().getResourceId());
       assertNotNull(surr.getAssetId().getVersionId());
       assertNotNull(surr.getName());
       // TODO: anything else to validate? CAO

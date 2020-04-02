@@ -18,10 +18,9 @@ import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_UPPER;
 import static org.omg.spec.api4kp._1_0.Answer.unsupported;
 
-import edu.mayo.kmdp.id.helper.DatatypeHelper;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeArtifact;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeArtifact;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
@@ -47,9 +46,10 @@ import org.apache.http.HttpException;
 import org.apache.jena.shared.NotFoundException;
 import org.omg.spec.api4kp._1_0.AbstractCarrier;
 import org.omg.spec.api4kp._1_0.Answer;
+import org.omg.spec.api4kp._1_0.datatypes.Bindings;
 import org.omg.spec.api4kp._1_0.id.Pointer;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
 import org.omg.spec.api4kp._1_0.services.KPServer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
@@ -221,24 +221,25 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
   /**
-   * list of the all published assets. If assetType is available will return all published assets of
+   * list of the all published assets. If assetTypeTag is available will return all published assets of
    * that type.
    *
-   * @param assetType : the type of asset to retrieve; if null, will get ALL types;
-   * @param assetAnnotation ignore
+   * @param assetTypeTag : the type of asset to retrieve; if null, will get ALL types;
+   * @param assetAnnotationTag ignore
+   * @param assetAnnotationConcept ignore
    * @param offset ignore -- needed if we have pagination
    * @param limit ignore -- needed if we have pagination
    * @return Pointers to available Assets
    */
   @Override
-  public Answer<List<Pointer>> listKnowledgeAssets(String assetType, String assetAnnotation,
-      Integer offset, Integer limit) {
+  public Answer<List<Pointer>> listKnowledgeAssets(String assetTypeTag, String assetAnnotationTag,
+      String assetAnnotationConcept, Integer offset, Integer limit) {
     List<TrisotechFileInfo> trisotechFileInfoList;
 
-    if (CMMN_UPPER.equalsIgnoreCase(assetType)) {
+    if (CMMN_UPPER.equalsIgnoreCase(assetTypeTag)) {
       // get CMMN assets
       trisotechFileInfoList = TrisotechWrapper.getPublishedCMMNModelsFileInfo();
-    } else if (DMN_UPPER.equalsIgnoreCase(assetType)) {
+    } else if (DMN_UPPER.equalsIgnoreCase(assetTypeTag)) {
       // DMN
       trisotechFileInfoList = TrisotechWrapper.getPublishedDMNModelsFileInfo();
     } else {
@@ -253,6 +254,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           // getId from fileInfo is the fileID
           ResourceIdentifier assetId = extractor.resolveEnterpriseAssetID(trisotechFileInfo.getId());
           return assetId.toPointer()
+              // TODO: should href be versionId?
           .withHref(assetId.getResourceId())
           .withType(isDMNModel(trisotechFileInfo)
           ? KnowledgeAssetTypeSeries.Decision_Model.getRef()
@@ -349,8 +351,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       KnowledgeArtifact knowledgeArtifact = ka.getCarriers().get(0);
 
       carrier = new org.omg.spec.api4kp._1_0.services.resources.KnowledgeCarrier()
-          .withAssetId(DatatypeHelper.toSemanticIdentifier(ka.getAssetId()))
-          .withArtifactId(DatatypeHelper.toSemanticIdentifier(knowledgeArtifact.getArtifactId()));
+          .withAssetId(ka.getAssetId())
+          .withArtifactId(knowledgeArtifact.getArtifactId());
     } catch (NotFoundException nfe) {
       return Answer.of(Optional.empty());
     }
@@ -693,9 +695,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
   @Override
-  public Answer<Void> queryKnowledgeAssets(String s) {
+  public Answer<List<Bindings>> queryKnowledgeAssets(KnowledgeCarrier knowledgeCarrier) {
     return unsupported();
   }
-
 
 }

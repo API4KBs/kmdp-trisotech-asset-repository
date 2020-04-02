@@ -21,8 +21,8 @@ import static java.util.Collections.singletonList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import edu.mayo.kmdp.SurrogateHelper;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateHelper;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
@@ -222,7 +222,7 @@ public class MetadataExtractor {
       throws NotLatestVersionException {
     // need to find the artifactId for this version of assetId
     // ResourceIdentifier built with assetId URI and versionTag; allows for finding the artifact associated with this asset/version
-    ResourceIdentifier id = SemanticIdentifier.newId(URI.create(assetId)).withVersionTag(versionTag);
+    ResourceIdentifier id = SemanticIdentifier.newNamespaceId(URI.create(assetId)).withVersionTag(versionTag);
     return strategy.getArtifactID(id, any);
   }
 

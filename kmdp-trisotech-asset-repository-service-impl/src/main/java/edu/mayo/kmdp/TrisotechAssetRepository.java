@@ -50,7 +50,6 @@ import org.omg.spec.api4kp._1_0.datatypes.Bindings;
 import org.omg.spec.api4kp._1_0.id.Pointer;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.services.BinaryCarrier;
 import org.omg.spec.api4kp._1_0.services.KPServer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
@@ -312,7 +311,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         String internalFileId = extractor.getFileId(assetId, false)
             .orElse("");
 
-        carrier = new BinaryCarrier()
+        carrier = new KnowledgeCarrier()
             // TODO MUST have the representation info set, which can be obtained from the Surrogate
 //            .withRepresentation(AbstractCarrier.rep(AbstractCarrier.canonicalRepresentationOf(asset)))
             .withArtifactId(getInternalIdAndVersion(assetId, versionTag))
@@ -321,7 +320,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 //                new URIIdentifier()
 //                .withUri(enterpriseId)
 //                .withVersionId(enterpriseVersionId.get()))
-            .withEncodedExpression(
+            .withExpression(
                 resolveModel(internalFileId, null)
                     .map(weaver::weave)
                     .map(XMLUtil::toByteArray).orElse(new byte[0]));
@@ -335,11 +334,23 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     }
 
     return Answer.of(carrier);
+
   }
 
   @Override
-  public Answer<KnowledgeCarrier> getCanonicalKnowledgeAssetSurrogate(UUID uuid, String s,
-      String s1) {
+  public Answer<KnowledgeCarrier> getCanonicalKnowledgeAssetSurrogate(UUID assetId, String versionTag,
+      String extAccept) {
+    return unsupported();
+  }
+
+  @Override
+  public Answer<KnowledgeCarrier> getCanonicalKnowledgeAssetSurrogateVersion(UUID assetId, String versionTag,
+      String surrogateVersionTag, String extAccept) {
+    return unsupported();
+  }
+
+  @Override
+  public Answer<List<Pointer>> getCanonicalKnowledgeAssetSurrogateVersions(UUID assetId, String versionTag) {
     return unsupported();
   }
 
@@ -543,13 +554,19 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
   @Override
-  public Answer<KnowledgeCarrier> getKnowledgeAssetSurrogateVersion(UUID uuid, String s, String s1,
-      String s2) {
+  public Answer<KnowledgeCarrier> getKnowledgeAssetSurrogateVersion(UUID uuid, String s, UUID uuid1,
+      String s1) {
     return unsupported();
   }
 
   @Override
-  public Answer<List<Pointer>> getKnowledgeAssetSurrogateVersions(UUID uuid, String s) {
+  public Answer<List<Pointer>> getKnowledgeAssetSurrogates(UUID uuid, String s) {
+    return unsupported();
+  }
+
+  @Override
+  public Answer<Void> publishKnowledgeAsset(UUID uuid, String s,
+      KnowledgeCarrier knowledgeCarrier) {
     return unsupported();
   }
 

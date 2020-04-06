@@ -256,7 +256,9 @@ public class IdentityMapper {
       QuerySolution soln = publishedModels.nextSolution();
 
       if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
-       return Optional.of(SemanticIdentifier.newVersionId(URI.create(soln.getLiteral(ASSET_ID).toString()))); //DatatypeHelper.toURIIDentifier(soln.getLiteral(ASSET_ID).toString()));
+       return Optional.of(
+           SemanticIdentifier.newVersionId(
+               URI.create(soln.getLiteral(ASSET_ID).toString())));
       }
     }
     return Optional.empty();

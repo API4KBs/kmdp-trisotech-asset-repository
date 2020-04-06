@@ -178,21 +178,19 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       if (null == model.getVersion() && null == model.getState()) {
         continue;
       }
-      // weave each version
-      // need to weave to be able to getAssetID from extractor
       Optional<Document> downloadedXml =
-          TrisotechWrapper.downloadXmlModel(model.getUrl())
-              .map(weaver::weave);
+          TrisotechWrapper.downloadXmlModel(model.getUrl());
       // check assetId for each version
       if (downloadedXml.isPresent()) {
         Document dox = downloadedXml.get();
-        ResourceIdentifier asset = extractor.getAssetID(dox);
+        ResourceIdentifier asset = weaver.getAssetID(dox);
         if ((null != asset.getTag()
             && null != asset.getVersionTag())
             && asset.getTag().equals(assetId.toString())
             && asset.getVersionTag().equals(versionTag)) {
-          // go ahead and extract the KA here otherwise have to re-query and re-weave
-          return extractor.extract(dox, model);
+          // weave and extract the KA here otherwise have to re-query and re-weave
+          Document woven = weaver.weave(dox);
+          return extractor.extract(woven, model, asset);
         }
       }
     }
@@ -253,19 +251,11 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           // getId from fileInfo is the fileID
           ResourceIdentifier assetId = extractor.resolveEnterpriseAssetID(trisotechFileInfo.getId());
           return assetId.toPointer()
-              // TODO: should href be versionId?
-          .withHref(assetId.getResourceId())
           .withType(isDMNModel(trisotechFileInfo)
           ? KnowledgeAssetTypeSeries.Decision_Model.getRef()
               : KnowledgeAssetTypeSeries.Care_Process_Model.getRef())
               .withName(trisotechFileInfo.getName());
 
-//              new Pointer().withEntityRef(assetId)
-//              .withHref(assetId.getUri()/*URL used for getAsset w/UID & versionTag from assetId */)
-//              .withType(isDMNModel(trisotechFileInfo)
-//                  ? KnowledgeAssetTypeSeries.Decision_Model.getRef()
-//                  : KnowledgeAssetTypeSeries.Care_Process_Model.getRef())
-//              .withName(trisotechFileInfo.getName());
         })
         .collect(Collectors.toList());
 
@@ -305,25 +295,17 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       enterpriseVersionId = extractor
           .getEnterpriseAssetVersionIdForAsset(assetId, versionTag, false);
       if (enterpriseVersionId.isPresent()) {
-//        URI enterpriseId = extractor
-//            .getEnterpriseAssetIdForAssetVersionId(enterpriseVersionId.get());
         // get the model file -- always do get Canonical
         String internalFileId = extractor.getFileId(assetId, false)
             .orElse("");
 
-        carrier = new KnowledgeCarrier()
+        carrier = AbstractCarrier.of(resolveModel(internalFileId, null)
+            .map(weaver::weave)
+            .map(XMLUtil::toByteArray).orElse(new byte[0]))
             // TODO MUST have the representation info set, which can be obtained from the Surrogate
 //            .withRepresentation(AbstractCarrier.rep(AbstractCarrier.canonicalRepresentationOf(asset)))
             .withArtifactId(getInternalIdAndVersion(assetId, versionTag))
-            .withAssetId(SemanticIdentifier.newVersionId(enterpriseVersionId.get()))
-
-//                new URIIdentifier()
-//                .withUri(enterpriseId)
-//                .withVersionId(enterpriseVersionId.get()))
-            .withExpression(
-                resolveModel(internalFileId, null)
-                    .map(weaver::weave)
-                    .map(XMLUtil::toByteArray).orElse(new byte[0]));
+            .withAssetId(SemanticIdentifier.newVersionId(enterpriseVersionId.get()));
       } else {
         return Answer.of(Optional.empty());
       }
@@ -484,7 +466,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    */
   private SyntacticRepresentation getLanguageRepresentationForModel(Optional<Document> dox) {
     if (dox.isPresent()) {
-      Optional<Representation> rep = extractor.getRepLanguage(dox.get());
+      Optional<org.omg.spec.api4kp._1_0.services.SyntacticRepresentation> rep = extractor.getRepLanguage(dox.get());
       if (rep.isPresent()) {
         switch (rep.get().getLanguage().asEnum()) {
           case DMN_1_2:
@@ -509,6 +491,20 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     return null;
   }
 
+  /**
+   * when asset version does not match for model (artifact) version given, need to search
+   * all versions of the artifacts for the assetID.
+   * NOTE: This should NOT happen in reality. New artifacts should be created if the assetID
+   * changes.
+   * This will only match if all ids and tags match.
+   * TODO: much of this code is the same as findArtifactVersionForAsset. Refactor.
+   *
+   * @param assetId the assetId looking for
+   * @param versionTag the version of the asset looking for
+   * @param internalId the artifactID
+   * @param artifactVersionTag the version of the artifactID
+   * @return KnowledgeCarrier for the version of the artifact with the requested version of the asset
+   */
   private Answer<KnowledgeCarrier> getKnowledgeCarrierFromOtherVersion(UUID assetId,
       String versionTag,
       String internalId, String artifactVersionTag) {
@@ -521,26 +517,25 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       if (null == model.getVersion() && null == model.getState()) {
         continue;
       }
-      // weave each version
-      // need to weave to be able to getAssetID from extractor
-      Optional<Document> xml = TrisotechWrapper.downloadXmlModel(model.getUrl())
-          .map(weaver::weave);
-      if (xml.isPresent()) {
-        Document dox = xml.get();
+      Optional<Document> downloadXml =
+          TrisotechWrapper.downloadXmlModel(model.getUrl());
+      if (downloadXml.isPresent()) {
+        Document dox = downloadXml.get();
         // check assetId for each version
-        ResourceIdentifier asset = extractor.getAssetID(dox);
+        ResourceIdentifier asset = weaver.getAssetID(dox);
         if (null != asset.getTag() && null != asset.getVersionTag()
             // no need to check artifactId here as all the versions are for the same artifact
             && asset.getTag().equals(assetId.toString())
             && asset.getVersionTag().equals(versionTag)
             && model.getVersion().equals(artifactVersionTag)) {
 
+          Document woven = weaver.weave(dox);
           return Answer.of(
-              AbstractCarrier.of(xml
-                  .map(XMLUtil::toByteArray).orElse(new byte[0]))
+              AbstractCarrier.of(XMLUtil.toByteArray(woven))
+//                  .map(XMLUtil::toByteArray))
                   .withAssetId(asset)
                   .withArtifactId(extractor.convertInternalId(internalId, model.getVersion()))
-                  .withRepresentation(getLanguageRepresentationForModel(xml)));
+                  .withRepresentation(getLanguageRepresentationForModel(downloadXml)));
         }
       }
     }

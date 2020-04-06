@@ -40,6 +40,7 @@ public enum ReaderOptions implements Option<ReaderOptions> {
 	P_EL_ANNOTATION( Opt.of( "EL_ANNOTATION", "semanticLink", String.class, false ) ),
 	P_EL_RELATIONSHIP( Opt.of( "EL_RELATIONSHIP", "interrelationship", String.class, false ) ),
 	P_EL_ANNOTATION_ID( Opt.of( "EL_ANNOTATION_ID", "customAttribute", String.class, false)),
+	P_EL_ID_ATT( Opt.of( "EL_ID_ATTRIBUTE", "knowledgeAssetId", String.class, false)),
 	P_EL_DECISION( Opt.of( "EL_DECISION", "decision", String.class, false)),
 	P_METADATA_ITEM_DEFINITION( Opt.of( "METADATA_ITEM_DEFINITION", "itemDefinitions", String.class, false ) ),
 	P_METADATA_ATTACHMENT_ITEM( Opt.of( "METADATA_ATTACHMENT_ITEM", "attachment", String.class, false ) );

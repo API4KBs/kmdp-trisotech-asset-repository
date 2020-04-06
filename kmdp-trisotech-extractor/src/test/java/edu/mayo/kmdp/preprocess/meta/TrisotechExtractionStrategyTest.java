@@ -18,10 +18,8 @@ import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.metadata.surrogate.Representation;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
@@ -30,7 +28,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.w3c.dom.Document;
 
 class TrisotechExtractionStrategyTest {
@@ -124,51 +122,28 @@ class TrisotechExtractionStrategyTest {
 
   @Test
   void getRepLanguage() {
-    Optional<Representation> dmnRep = this.tes.getRepLanguage(dmnDox, false);
+    Optional<SyntacticRepresentation> dmnRep = this.tes.getRepLanguage(dmnDox, false);
     assertEquals("DMN_1_2", dmnRep.get().getLanguage().toString());
 
-    Optional<Representation> cmmnRep = this.tes.getRepLanguage(cmmnDox, false);
+    Optional<SyntacticRepresentation> cmmnRep = this.tes.getRepLanguage(cmmnDox, false);
     assertEquals("CMMN_1_1", cmmnRep.get().getLanguage().toString());
 
-    Optional<Representation> badRep = this.tes.getRepLanguage(badDox, false);
+    Optional<SyntacticRepresentation> badRep = this.tes.getRepLanguage(badDox, false);
     assertEquals(Optional.empty(), badRep);
   }
 
   @Test
   void detectRepLanguage() {
     Optional<KnowledgeRepresentationLanguageSeries> dmnRep = this.tes.detectRepLanguage(dmnDox);
-    assertEquals("DMN 1.2", dmnRep.get().getLabel()); //.getLanguage().toString());
+    assertEquals("DMN 1.2", dmnRep.get().getLabel());
     assertEquals(KnowledgeRepresentationLanguageSeries.DMN_1_2, dmnRep.get());
 
     Optional<KnowledgeRepresentationLanguageSeries> cmmnRep = this.tes.detectRepLanguage(cmmnDox);
-    assertEquals("CMMN 1.1", cmmnRep.get().getLabel()); //.getLanguage().toString());
+    assertEquals("CMMN 1.1", cmmnRep.get().getLabel());
     assertEquals(KnowledgeRepresentationLanguageSeries.CMMN_1_1, cmmnRep.get());
 
     Optional<KnowledgeRepresentationLanguageSeries> badRep = this.tes.detectRepLanguage(badDox);
     assertEquals(Optional.empty(), badRep);
-  }
-
-  @Test
-  void extractAssetID() {
-    String expectedBasicCase = "https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
-    String expectedBasicDecision = "https://clinicalknowledgemanagement.mayo.edu/assets/735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
-
-    basicCaseDox = loadXMLDocument(resolveResource(basicCaseWovenPath))
-        .orElseGet(() -> fail("Unable to load document " + basicCaseWovenPath));
-    basicDecisionDox = loadXMLDocument(resolveResource(basicDecisionWovenPath))
-        .orElseGet(() -> fail("Unable to load document " + basicDecisionWovenPath));
-
-    ResourceIdentifier uriIdentifier = this.tes.extractAssetID(basicCaseDox);
-    assertNotNull(uriIdentifier);
-    assertEquals(expectedBasicCase, uriIdentifier.getVersionId().toString());
-
-    uriIdentifier = this.tes.extractAssetID(basicDecisionDox);
-    assertNotNull(uriIdentifier);
-    assertEquals(expectedBasicDecision, uriIdentifier.getVersionId().toString());
-
-    assertThrows(
-        IllegalStateException.class,
-        () -> this.tes.extractAssetID(badDox));
   }
 
 }

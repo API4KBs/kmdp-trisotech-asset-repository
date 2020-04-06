@@ -18,12 +18,12 @@ package edu.mayo.kmdp.preprocess.meta;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeries;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.identifiers.NamespaceIdentifier;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
 
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Optional;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 
 /*
  Trisotech ... explain yourself
@@ -36,18 +36,6 @@ Is this class really needed if it is just 'wrapping' AnnotationRelType?
 public enum KnownAttributes {
 
 	// on models
-	ASSET_IDENTIFIER( AnnotationRelTypeSeries.Is_Identified_By.getLabel(),
-			"knowledgeAssetId",
-			AnnotationRelTypeSeries.Is_Identified_By.getRef() ),
-//	ASSET_IDENTIFIER( AnnotationRelTypeSeries.Has_ID.getLabel(),
-//	                  "knowledgeAssetId",
-//	                  AnnotationRelTypeSeries.Has_ID.getRef() ),
-
-
-//	TYPE( AnnotationRelTypeSeries.Is_A.getLabel(),
-//			"assetType",
-//			AnnotationRelTypeSeries.Is_A.getRef() ),
-
   DATA(DependencyTypeSeries.Imports.getLabel(),
       "imports",
       DependencyTypeSeries.Imports.getRef()),
@@ -91,10 +79,9 @@ public enum KnownAttributes {
 	}
 
 	public ConceptIdentifier asConcept() {
-		return new ConceptIdentifier().withLabel( label )
+		return new ConceptIdentifier().withName( label )
 		                              .withTag( URIUtil.detectLocalName( uri ) )
-		                              .withRef( uri )
-		                              .withNamespace( new NamespaceIdentifier()
-				                                              .withId( URIUtil.detectNamespace( uri ) ) );
+		                              .withResourceId( uri )
+		                              .withNamespaceUri(SemanticIdentifier.newNamespaceId(uri).getNamespaceUri() );
 	}
 }

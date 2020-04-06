@@ -17,39 +17,32 @@ import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
-import edu.mayo.kmdp.metadata.annotations.Annotation;
-import edu.mayo.kmdp.metadata.annotations.BasicAnnotation;
-import edu.mayo.kmdp.metadata.annotations.DatatypeAnnotation;
-import edu.mayo.kmdp.metadata.annotations.MultiwordAnnotation;
-import edu.mayo.kmdp.metadata.annotations.ObjectFactory;
-import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.ObjectFactory;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.clinicaltasks.ClinicalTask;
 import edu.mayo.ontology.taxonomies.clinicaltasks.ClinicalTaskSeries;
-import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetType;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
-import edu.mayo.ontology.taxonomies.propositionalconcepts.PropositionalConcepts;
 import edu.mayo.ontology.taxonomies.propositionalconcepts.PropositionalConceptsSeries;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +83,7 @@ public class Weaver {
   private String metadataEl;
   private String metadataExt;
   private String metadataId;
+  private String idAttribute;
   private String diagramNS;
   private String metadataDiagramDmnNS;
   private String metadataDiagramCmmnNS;
@@ -113,9 +107,12 @@ public class Weaver {
     metadataDiagramCmmnNS = config.getTyped(ReaderOptions.P_METADATA_DIAGRAM_CMMN_NS);
     droolsNS = config.getTyped(ReaderOptions.P_DROOLS_NS);
     metadataEl = config.getTyped(ReaderOptions.P_EL_ANNOTATION);
+    // 04/03/2020: do not need interrelationship anymore; remove with other triso: tags
     metadataRS = config.getTyped(ReaderOptions.P_EL_RELATIONSHIP);
     metadataExt = config.getTyped(ReaderOptions.P_EL_MODEL_EXT);
+    // 04/03/2020: not keeping assetId in XML, remove with other triso: tags
     metadataId = config.getTyped(ReaderOptions.P_EL_ANNOTATION_ID);
+    idAttribute = config.getTyped(ReaderOptions.P_EL_ID_ATT);
     diagramNS = config.getTyped(ReaderOptions.P_DIAGRAM_NS);
     diagramExt = config.getTyped(ReaderOptions.P_EL_DIAGRAM_EXT);
     elExporter = config.getTyped(ReaderOptions.P_EL_EXPORTER);
@@ -126,8 +123,6 @@ public class Weaver {
 
     logger.debug("METADATA_EL: {}", metadataEl);
     handlers.put(metadataEl, new MetadataAnnotationHandler());
-    handlers.put(metadataId, new MetadataAnnotationHandler());
-    handlers.put(metadataRS, new MetadataAnnotationHandler());
   }
 
   public String getMetadataNS() {
@@ -204,15 +199,7 @@ public class Weaver {
         "xsi:" + "schemaLocation",
         getSchemaLocations(dox));
 
-    // relationships can be in CMMN TODO: Can tell if DMN or CMMNN so don't try to process items only in one? CAO
-    NodeList relations = dox.getElementsByTagNameNS(metadataNS, metadataRS);
-    weaveRelations(relations);
-
-    // Find the Asset ID, if present
-    NodeList ids = dox.getElementsByTagNameNS(metadataNS, metadataId);
-    weaveIdentifier(ids);
-
-    // get metas after the move so the moved elements are captured
+    // get metas
     NodeList metas = dox.getElementsByTagNameNS(metadataNS, metadataEl);
     weaveMetadata(metas);
 
@@ -250,10 +237,7 @@ public class Weaver {
   private KnownAttributes getKnownAttribute(Element el) {
     String uri = el.getAttribute("uri");
 
-//    if (KnowledgeAssetTypeSeries.resolveId(uri).isPresent()) {
-//      return KnownAttributes.TYPE;
-//    } else
-      if (DecisionTypeSeries.resolveId(uri).isPresent()) {
+    if (DecisionTypeSeries.resolveId(uri).isPresent()) {
       return KnownAttributes.CAPTURES;
     } else if (ClinicalTaskSeries.resolveId(uri).isPresent()) {
       return KnownAttributes.CAPTURES;
@@ -295,13 +279,26 @@ public class Weaver {
    * 'attachment' elements are in the model for CKE and SME use and SHOULD NOT carry over to the
    * woven document.
    *
+   * 'interrelationship' elements are not needed in the output as they deal with model->model
+   * relationships and we can get that another way.
+   *
    * 'itemDefinitions' were an experiment. IGNORE if they are in the file, but provide a warning.
    */
   private void removeTrisoTagsNotRetaining(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, metadataAttachment))
-        .forEach(element -> {
-          element.getParentNode().removeChild(element);
-        });
+        .forEach(element ->
+          element.getParentNode().removeChild(element)
+        );
+
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, metadataRS))
+        .forEach(element ->
+          element.getParentNode().removeChild(element)
+        );
+
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, metadataId))
+        .forEach(element ->
+          element.getParentNode().removeChild(element)
+        );
 
     XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, metadataItemDef))
         .forEach(element -> {
@@ -313,6 +310,12 @@ public class Weaver {
         });
   }
 
+  /**
+   * weaveInputs will rewrite the href attribute of the tags given to be KMDP hrefs instead of
+   * Trisotech
+   *
+   * @param dox the XML document being rewritten
+   */
   private void weaveInputs(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         // TODO: code review -- need to know which tags, or just check all hrefs? CAO
@@ -394,25 +397,12 @@ public class Weaver {
     );
   }
 
-  private void weaveRelations(NodeList relations) {
-    logger.debug("weaveRelations.... relations size: {}", relations.getLength());
-    //
-//		// TODO: How to handle CMMN data? [interrelationship should be DatatypeAnnotation]
-    asElementStream(relations).forEach(
-        this::doRewriteRelations
-    );
-  }
-
-  private void weaveIdentifier(NodeList metas) {
-    logger.debug("weaveIdentifier.... metas size: {}", metas.getLength());
-    // rewire dictionary-bound attributes
-    asElementStream(metas)
-        .filter(this::isIdentifier)
-        .forEach(
-            this::doRewriteId);
-  }
-
-
+  /**
+   * Used to rewrite the value of an attribute expected to be a URI from Trisotech URI to KMDP URI.
+   * Also remove leading underscore of identifier.
+   *
+   * @param attr the attribute of a Document tag
+   */
   private void rewriteValue(Attr attr) {
     String value = attr.getValue();
     if (value.lastIndexOf('/') != -1) {
@@ -423,40 +413,6 @@ public class Weaver {
       attr.setValue(Registry.MAYO_ARTIFACTS_BASE_URI + id);
     }
   }
-
-
-  private void doRewriteRelations(Element el) {
-    // remove leading '_' from modelId
-    String modelId = el.getAttribute("modelId").substring(1);
-    // remove leading '_' from elementId
-    String elementId = el.getAttribute("elementId").substring(1);
-    BaseAnnotationHandler handler = handler(el);
-    List<Annotation> annotations = handler.getDataAnnotation(modelId, elementId);
-    handler.replaceProprietaryElement(el, toChildElements(annotations, el));
-  }
-
-  private void doRewriteId(Element el) {
-    BaseAnnotationHandler handler = handler(el);
-    if (KnownAttributes.resolve(el.getAttribute("key")).orElse(null)
-        != KnownAttributes.ASSET_IDENTIFIER) {
-      throw new IllegalStateException("This method should be called only on ID annotations");
-    }
-    Map<String, String> ids = extractKeyValuePairs(el.getAttribute(VALUE));
-    switch (ids.size()) {
-      case 0:
-        return;
-      case 1:
-        Annotation idAnn = handler.getBasicAnnotation(KnownAttributes.ASSET_IDENTIFIER,
-            ids.values().iterator().next());
-        handler.replaceProprietaryElement(el,
-            toChildElement(idAnn, el));
-        return;
-      default:
-        throw new IllegalStateException(
-            "More than 1 ID annotations are not supported - found " + ids.size());
-    }
-  }
-
 
   private void weaveMetadata(NodeList metas) {
     asElementStream(metas)
@@ -482,12 +438,15 @@ public class Weaver {
     List conceptIdentifiers = new ArrayList<ConceptIdentifier>();
     ConceptIdentifier concept = null;
     try {
-      concept = new ConceptIdentifier().withLabel(el.getAttribute("name"))
+      ResourceIdentifier resourceIdentifier = SemanticIdentifier
+          .newId(new URI(el.getAttribute("uri")));
+      concept = new ConceptIdentifier().withName(el.getAttribute("name"))
           .withTag(el.getAttribute("id"))
-          .withRef(new URI(el.getAttribute(MODEL_URI)))
-          .withConceptId(new URI(el.getAttribute("uri")));
-    } catch (URISyntaxException e) {
-      logger.error(String.format("%s%s", e.getMessage(), e.getStackTrace()));
+          .withReferentId(new URI(el.getAttribute(MODEL_URI)))
+          .withResourceId(resourceIdentifier.getResourceId())
+          .withNamespaceUri(resourceIdentifier.getNamespaceUri());
+    } catch (URISyntaxException | IllegalArgumentException e) {
+      logger.error(String.format("%s%s", e.getMessage(), Arrays.toString(e.getStackTrace())));
     }
     conceptIdentifiers.add(concept);
 
@@ -528,25 +487,8 @@ public class Weaver {
     }
   }
 
-  private Map<String, String> extractKeyValuePairs(String value) {
-    HashMap<String, String> map = new HashMap<>();
-    Matcher m = reader.getURLPattern().matcher(value);
-    if (m.find()) {
-      map.put(getUrlKey(m.group(1)), m.group(2));
-    } else {
-      map.put(VALUE, value);
-    }
-    return map;
-  }
-
   private boolean isIdentifier(Element el) {
-    return KnownAttributes.resolve(el.getAttribute("key"))
-        .filter(x -> x == KnownAttributes.ASSET_IDENTIFIER)
-        .isPresent();
-  }
-
-  private String getUrlKey(String value) {
-    return value;
+    return (el.getAttribute(idAttribute) != null);
   }
 
   private List<Element> toChildElements(List<Annotation> annos, Element parent) {
@@ -557,34 +499,10 @@ public class Weaver {
 
   private Element toChildElement(Annotation ann, Element parent) {
     Element el;
-    if (ann instanceof MultiwordAnnotation) {
+    if (ann instanceof Annotation) {
       el = toElement(of,
-          (MultiwordAnnotation) ann,
-          of::createMultiwordAnnotation
-          // TODO: CAO: The following 2 lines were for validation of schema, and used to not have hard-coded values in the call
-//			                         XMLUtil.getSchemas( "http://kmdp.mayo.edu/metadata/surrogate" )
-//			                                .orElseThrow( IllegalStateException::new )
-      );
-    } else if (ann instanceof SimpleAnnotation) {
-      el = toElement(of,
-          (SimpleAnnotation) ann,
-          of::createSimpleAnnotation
-//			  TODO:  CAO:                     XMLUtil.getSchemas( "http://kmdp.mayo.edu/metadata/surrogate" )
-//			                                .orElseThrow( IllegalStateException::new )
-      );
-    } else if (ann instanceof BasicAnnotation) {
-      el = toElement(of,
-          (BasicAnnotation) ann,
-          of::createBasicAnnotation
-//			 TODO: CAO:                        XMLUtil.getSchemas( "http://kmdp.mayo.edu/metadata/surrogate" )
-//			                                .orElseThrow( IllegalStateException::new )
-      );
-    } else if (ann instanceof DatatypeAnnotation) {
-      el = toElement(of,
-          (DatatypeAnnotation) ann,
-          of::createDatatypeAnnotation
-//			TODO: CAO                         XMLUtil.getSchemas( "http://kmdp.mayo.edu/metadata/surrogate" )
-//			                                .orElseThrow( IllegalStateException::new )
+          (Annotation) ann,
+          of::createAnnotation
       );
     } else {
       throw new IllegalStateException("Unmanaged annotation type" + ann.getClass().getName());
@@ -639,4 +557,20 @@ public class Weaver {
     return sb.toString();
   }
 
+  /**
+   * Get the customAttribute assetID from the document. This is a value that is stripped from a
+   * woven file but can be retrieved from an unwoven file.
+   *
+   * @param dox the model XML document
+   * @return ResourceIdenifier of the assetID
+   */
+  public ResourceIdentifier getAssetID(Document dox) {
+    NodeList metas = dox.getElementsByTagNameNS(metadataNS, metadataId);
+
+    return asElementStream(metas)
+        .filter(this::isIdentifier)
+        .map(el -> el.getAttribute(VALUE))
+        .map(id -> SemanticIdentifier.newVersionId(URI.create(id)))
+        .collect(Collectors.toList()).get(0);
+  }
 }

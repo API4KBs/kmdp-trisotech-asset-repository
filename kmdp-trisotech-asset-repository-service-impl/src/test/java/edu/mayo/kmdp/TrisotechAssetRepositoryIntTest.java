@@ -76,7 +76,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1+1573591682000";
     Answer<KnowledgeAsset> answer = tar
         .getKnowledgeAsset(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"), null);
     assertTrue(answer.isSuccess());
@@ -110,7 +110,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1+1573591682000";
 
     Answer<KnowledgeAsset> answer = tar
         .getVersionedKnowledgeAsset(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"),
@@ -133,7 +133,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = expectedAssetId
         + "/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0";
+        + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0+1565742456000";
 
     Answer<KnowledgeAsset> answer= tar
         .getVersionedKnowledgeAsset(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
@@ -158,7 +158,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "e35a686e-5b72-4feb-b923-b79ac1417613/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "ad174bca-8dd1-4e35-8933-e7456e1f3e5c/versions/0.0.1";
+        + "ad174bca-8dd1-4e35-8933-e7456e1f3e5c/versions/0.0.1+1573767134000";
 
     Answer<KnowledgeAsset> answer= tar
         .getVersionedKnowledgeAsset(UUID.fromString("e35a686e-5b72-4feb-b923-b79ac1417613"),
@@ -172,7 +172,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(1, ka.getCarriers().size());
     assertEquals(expectedArtifactId,
         ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
-//    assertEquals(PublicationStatusSeries.Final_Draft, ka.getSurrogate().getPublicationStatus());
+    assertEquals(PublicationStatusSeries.Final_Draft, ka.getLifecycle().getPublicationStatus());
   }
 
   @Test
@@ -361,7 +361,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = expectedAssetId
         + "/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0";
+        + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0+1565742456000";
 
     Answer<KnowledgeCarrier> answer= tar
         .getCanonicalKnowledgeAssetCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),

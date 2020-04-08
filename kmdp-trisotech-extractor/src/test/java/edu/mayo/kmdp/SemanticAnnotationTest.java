@@ -15,12 +15,10 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.annotations.Annotation;
-import edu.mayo.kmdp.metadata.annotations.SimpleAnnotation;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
-//import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituation;
 import edu.mayo.ontology.taxonomies.clinicalsituations.ClinicalSituationSeries;
@@ -28,7 +26,8 @@ import edu.mayo.ontology.taxonomies.kmdo.annotationreltype.AnnotationRelTypeSeri
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -103,7 +102,7 @@ class SemanticAnnotationTest {
 				fail( "Unable to instantiate metadata object" );
 			}
 			KnowledgeAsset surr = res.get();
-			List<Annotation> annos = surr.getSubject();
+			List<Annotation> annos = surr.getAnnotation(); //.getSubject();
 			assertEquals(0, annos.size() );
 		} catch ( Exception e ) {
 			e.printStackTrace();
@@ -129,11 +128,11 @@ class SemanticAnnotationTest {
 			}
 			KnowledgeAsset surr = res.get();
 
-			List<ClinicalSituation> inputs = surr.getSubject().stream()
-					.filter(SimpleAnnotation.class::isInstance)
-					.map( SimpleAnnotation.class::cast)
-					.filter( (a) -> a.getRel().equals( AnnotationRelTypeSeries.In_Terms_Of.asConcept() ) )
-					.map( (a) -> ClinicalSituationSeries.resolve( a.getExpr() ) )
+			List<ClinicalSituation> inputs = surr.getAnnotation().stream()
+					.filter(Annotation.class::isInstance)
+					.map( Annotation.class::cast)
+					.filter( annotation -> annotation.getRel().equals( AnnotationRelTypeSeries.In_Terms_Of.asConcept() ) )
+					.map( annotation -> ClinicalSituationSeries.resolve(annotation.getRef().getReferentId().toString())) //annotation.getRef()) )
 					.map( Optional::get )
 					.collect(Collectors.toList());
 
@@ -165,11 +164,11 @@ class SemanticAnnotationTest {
 				fail( "Unable to instantiate metadata object" );
 			}
 			KnowledgeAsset surr = res.get();
-			List<ClinicalSituation> inputs = surr.getSubject().stream()
-					.filter(SimpleAnnotation.class::isInstance)
-					.map( SimpleAnnotation.class::cast)
-					.filter( (a) -> a.getRel().equals( AnnotationRelTypeSeries.In_Terms_Of.asConcept() ) )
-					.map( (a) -> ClinicalSituationSeries.resolve( a.getExpr() ) )
+			List<ClinicalSituation> inputs = surr.getAnnotation().stream()
+					.filter(Annotation.class::isInstance)
+					.map( Annotation.class::cast)
+					.filter( a -> a.getRel().equals( AnnotationRelTypeSeries.In_Terms_Of.asConcept() ) )
+					.map( a -> ClinicalSituationSeries.resolve( a.getRef().getReferentId().toString() ) )
 					.map( Optional::get )
 					.collect(Collectors.toList());
 
@@ -178,9 +177,9 @@ class SemanticAnnotationTest {
 //			assertTrue( inputs.contains( ClinicalSituation.Recent_History_Of_TIA ) );
 //			assertTrue( inputs.contains( ClinicalSituation.History_Of_Vascular_Disease ) );
 
-			Set<ConceptIdentifier> defines  = surr.getSubject().stream()
+			Set<ConceptIdentifier> defines  = surr.getAnnotation().stream()
 					.filter( (ann) -> ann.getRel().equals( AnnotationRelTypeSeries.Defines.asConcept() ) )
-					.map( (ann) -> ((SimpleAnnotation) ann).getExpr() )
+					.map( (ann) -> ann.getRef())
 					.collect(Collectors.toSet());
 			assertEquals( 3, defines.size() );
 			assertTrue( defines.contains( ClinicalSituationSeries.Current_CHA2DS2_VASc_Score.asConcept() ) );

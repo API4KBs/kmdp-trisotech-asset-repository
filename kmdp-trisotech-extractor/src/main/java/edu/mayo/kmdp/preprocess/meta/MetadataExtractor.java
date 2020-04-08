@@ -21,9 +21,8 @@ import static java.util.Collections.singletonList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import edu.mayo.kmdp.SurrogateHelper;
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.surrogate.Representation;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateHelper;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
@@ -39,6 +38,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,15 +97,9 @@ public class MetadataExtractor {
     return extract(resource, meta).flatMap(surr -> {
       switch (f) {
         case JSON:
-          Optional<ByteArrayOutputStream> jsonExtract = JSonUtil.writeJson(surr, p);
-          // ByteArrayOutputStream baos = jsonExtract.get();
           return JSonUtil.writeJson(surr, p);
         case XML:
         default:
-          // List<? extends Class<? extends KnowledgeAsset>> surrKA =
-          //    Collections.singletonList(surr.getClass());
-          // List<? extends Class<? extends KnowledgeAsset>> listSurrKA =
-          //    Arrays.asList(surr.getClass());
           return marshall(
               singletonList(surr.getClass()),
               surr,
@@ -118,9 +112,13 @@ public class MetadataExtractor {
   public Optional<Document> doExtract(Document dox, JsonNode meta) {
     KnowledgeAsset surr = extract(dox, meta);
 
-    return JaxbUtil.marshallDox(Collections.singleton(surr.getClass()),
-        surr,
-        JaxbUtil.defaultProperties());
+    if(null != surr) {
+      return JaxbUtil.marshallDox(Collections.singleton(surr.getClass()),
+          surr,
+          JaxbUtil.defaultProperties());
+    } else {
+      return Optional.empty();
+    }
   }
 
   public KnowledgeAsset extract(Document dox, JsonNode meta) {
@@ -131,26 +129,17 @@ public class MetadataExtractor {
     return strategy.extractXML(dox, meta);
   }
 
-  public Optional<Representation> getRepLanguage(Document document) {
-    return strategy.getRepLanguage(document, false);
+
+  public KnowledgeAsset extract(Document woven, TrisotechFileInfo model, ResourceIdentifier asset) {
+    return strategy.extractXML(woven, model, asset);
   }
 
-  /**
-   * Get the assetId from the Document.
-   *
-   * @param dox the Document that has the woven value of the assetId.
-   * @return the ResourceIdentifier for the asset
-   */
-  public ResourceIdentifier getAssetID(Document dox) {
-    return strategy.extractAssetID(dox);
+  public Optional<SyntacticRepresentation> getRepLanguage(Document document) {
+    return strategy.getRepLanguage(document, false);
   }
 
   public Optional<URI> getEnterpriseAssetIdForAsset(UUID assestId) {
     return strategy.getEnterpriseAssetIdForAsset(assestId);
-  }
-
-  public URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId) {
-    return strategy.getEnterpriseAssetIdForAssetVersionId(enterpriseAssetVersionId);
   }
 
   public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag,
@@ -222,7 +211,7 @@ public class MetadataExtractor {
       throws NotLatestVersionException {
     // need to find the artifactId for this version of assetId
     // ResourceIdentifier built with assetId URI and versionTag; allows for finding the artifact associated with this asset/version
-    ResourceIdentifier id = SemanticIdentifier.newId(URI.create(assetId)).withVersionTag(versionTag);
+    ResourceIdentifier id = SemanticIdentifier.newNamespaceId(URI.create(assetId)).withVersionTag(versionTag);
     return strategy.getArtifactID(id, any);
   }
 

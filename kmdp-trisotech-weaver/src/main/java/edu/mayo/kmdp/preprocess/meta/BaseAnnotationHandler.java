@@ -13,14 +13,15 @@
  */
 package edu.mayo.kmdp.preprocess.meta;
 
-import edu.mayo.kmdp.metadata.annotations.Annotation;
-import edu.mayo.kmdp.registry.Registry;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
+
+import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
 import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
-import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.omg.spec.api4kp._1_0.identifiers.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
+import org.omg.spec.api4kp._1_0.id.Term;
 import org.w3c.dom.Element;
 
 public abstract class BaseAnnotationHandler {
@@ -51,25 +52,21 @@ public abstract class BaseAnnotationHandler {
       String modelId,
       String elementId) {
 
-    return Collections.singletonList(new edu.mayo.kmdp.metadata.annotations.resources.DatatypeAnnotation()
-        .withRel(DependencyTypeSeries.Imports.asConcept())
-        .withValue(
-            Registry.MAYO_ARTIFACTS_BASE_URI + modelId + "#" + elementId));
+    return Collections.singletonList(new Annotation()
+        .withRel(DependencyTypeSeries.Imports.asConceptIdentifier())
+        .withRef(Term.newTerm(MAYO_ARTIFACTS_BASE_URI_URI, modelId + "#" + elementId).asConceptIdentifier()));
   }
 
   protected Annotation newAnnotation(List<ConceptIdentifier> rows) {
     Annotation anno;
     switch (rows.size()) {
       case 0:
-        anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation();
-        break;
-      case 1:
-        anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation()
-            .withExpr(rows.get(0));
+        anno = new Annotation();
         break;
       default:
-        anno = new edu.mayo.kmdp.metadata.annotations.resources.MultiwordAnnotation()
-            .withExpr(rows);
+        anno = new Annotation()
+            .withRef(rows.get(0));
+//            .withExpr(rows);
     }
     return anno;
   }
@@ -78,15 +75,11 @@ public abstract class BaseAnnotationHandler {
     Annotation anno;
     switch (rows.size()) {
       case 0:
-        anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation();
-        break;
-      case 1:
-        anno = new edu.mayo.kmdp.metadata.annotations.resources.SimpleAnnotation()
-            .withExpr(rows.get(0));
+        anno = new Annotation();
         break;
       default:
-        anno = new edu.mayo.kmdp.metadata.annotations.resources.MultiwordAnnotation()
-            .withExpr(rows);
+        anno = new Annotation()
+            .withRef(rows.get(0));
     }
     if (null != rel) {
       return anno.withRel(rel.asConcept());
@@ -96,8 +89,9 @@ public abstract class BaseAnnotationHandler {
   }
 
   public Annotation getBasicAnnotation(KnownAttributes attr, String v) {
-    return new edu.mayo.kmdp.metadata.annotations.resources.BasicAnnotation().withRel(attr.asConcept())
-        .withExpr(URI.create(v));
+    return new Annotation()
+        .withRel(attr.asConcept())
+        .withRef(Term.newTerm(v).asConceptIdentifier());
   }
 
 }

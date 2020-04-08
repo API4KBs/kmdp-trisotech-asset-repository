@@ -57,7 +57,7 @@ class IdentityMapperIntTest {
     String expectedArtifactId = "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
     ResourceIdentifier assetId = SemanticIdentifier
         .newId(MAYO_ASSETS_BASE_URI_URI, "14321e7c-cb9a-427f-abf5-1420bf26e03c", "1.0.1");
-    //DatatypeHelper.uri(/versions/1.0.1");
+
     String artifactId = null;
     try {
       artifactId = identityMapper.getArtifactId(assetId, false);
@@ -72,7 +72,7 @@ class IdentityMapperIntTest {
     String expectedArtifactId = "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
     ResourceIdentifier assetId = SemanticIdentifier
         .newId(MAYO_ASSETS_BASE_URI_URI, "14321e7c-cb9a-427f-abf5-1420bf26e03c", "1.0.1");
-    //DatatypeHelper.uri(/versions/1.0.1");
+    
     String artifactId = null;
     try {
       artifactId = identityMapper.getArtifactId(assetId, true);
@@ -185,7 +185,7 @@ class IdentityMapperIntTest {
   @Test
   void getAssetId_ArtifactIdVersion_Latest() {
     ResourceIdentifier artifactId = SemanticIdentifier
-        .newVersionId(URI.create("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"));
+        .newId(URI.create("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"));
     String versionTag = "1.8.0";
     String expectedAssetId =
         Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";

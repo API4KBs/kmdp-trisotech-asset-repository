@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.kmdp.metadata.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
@@ -37,6 +37,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.Answer;
+import org.omg.spec.api4kp._1_0.datatypes.Bindings;
 import org.omg.spec.api4kp._1_0.id.Pointer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
@@ -75,13 +76,13 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1+1573591682000";
     Answer<KnowledgeAsset> answer = tar
         .getKnowledgeAsset(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"), null);
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
     KnowledgeAsset ka = answer.get();
-    assertEquals(expectedAssetId, ka.getAssetId().getUri().toString());
+    assertEquals(expectedAssetId, ka.getAssetId().getResourceId().toString());
     assertEquals(expectedAssetVersionId, ka.getAssetId().getVersionId().toString());
     assertEquals(1, ka.getCarriers().size());
     assertEquals(expectedArtifactId,
@@ -109,7 +110,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1+1573591682000";
 
     Answer<KnowledgeAsset> answer = tar
         .getVersionedKnowledgeAsset(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"),
@@ -118,7 +119,7 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
     KnowledgeAsset ka = answer.get();
-    assertEquals(expectedAssetId, ka.getAssetId().getUri().toString());
+    assertEquals(expectedAssetId, ka.getAssetId().getResourceId().toString());
     assertEquals(expectedAssetVersionId, ka.getAssetId().getVersionId().toString());
     assertEquals(1, ka.getCarriers().size());
     assertEquals(expectedArtifactId,
@@ -132,7 +133,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = expectedAssetId
         + "/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0";
+        + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0+1565742456000";
 
     Answer<KnowledgeAsset> answer= tar
         .getVersionedKnowledgeAsset(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
@@ -141,7 +142,7 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
     KnowledgeAsset ka = answer.get();
-    assertEquals(expectedAssetId, ka.getAssetId().getUri().toString());
+    assertEquals(expectedAssetId, ka.getAssetId().getResourceId().toString());
     assertEquals(expectedAssetVersionId, ka.getAssetId().getVersionId().toString());
     assertEquals(1, ka.getCarriers().size());
     assertEquals(expectedArtifactId,
@@ -157,7 +158,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "e35a686e-5b72-4feb-b923-b79ac1417613/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "ad174bca-8dd1-4e35-8933-e7456e1f3e5c/versions/0.0.1";
+        + "ad174bca-8dd1-4e35-8933-e7456e1f3e5c/versions/0.0.1+1573767134000";
 
     Answer<KnowledgeAsset> answer= tar
         .getVersionedKnowledgeAsset(UUID.fromString("e35a686e-5b72-4feb-b923-b79ac1417613"),
@@ -166,7 +167,7 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
     KnowledgeAsset ka = answer.get();
-    assertEquals(expectedAssetId, ka.getAssetId().getUri().toString());
+    assertEquals(expectedAssetId, ka.getAssetId().getResourceId().toString());
     assertEquals(expectedAssetVersionId, ka.getAssetId().getVersionId().toString());
     assertEquals(1, ka.getCarriers().size());
     assertEquals(expectedArtifactId,
@@ -201,7 +202,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets(null, null, null, null);
+    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets(null, null, null, null, null);
     assertTrue(listAnswer.isSuccess());
     assertFalse(listAnswer.get().isEmpty());
     String expectedDecisionId = MAYO_ASSETS_BASE_URI + "735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0";
@@ -233,7 +234,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_DMN() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets("dmn", null, null, null);
+    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets("dmn", null, null, null, null);
     assertTrue(listAnswer.isSuccess());
 
     assertFalse(listAnswer.get().isEmpty());
@@ -249,7 +250,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_DMN_limit() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets("dmn", null, null, 2);
+    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets("dmn", null, null, null, 2);
     assertTrue(listAnswer.isSuccess());
 
     assertFalse(listAnswer.get().isEmpty());
@@ -266,7 +267,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_DMN_offset() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets("dmn", null, 3, 2);
+    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets("dmn", null, null, 3, 2);
     assertTrue(listAnswer.isSuccess());
 
     assertFalse(listAnswer.get().isEmpty());
@@ -284,7 +285,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_CMMN() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets(CMMN_UPPER, null, null, null);
+    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets(CMMN_UPPER, null, null, null, null);
     assertTrue(listAnswer.isSuccess());
 
     assertFalse(listAnswer.get().isEmpty());
@@ -300,7 +301,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_CMMN_limit() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets(CMMN_LOWER, null, null, 1);
+    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets(CMMN_LOWER, null, null, null, 1);
     assertTrue(listAnswer.isSuccess());
 
     assertFalse(listAnswer.get().isEmpty());
@@ -360,7 +361,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = expectedAssetId
         + "/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0";
+        + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0+1565742456000";
 
     Answer<KnowledgeCarrier> answer= tar
         .getCanonicalKnowledgeAssetCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
@@ -572,8 +573,8 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void queryKnowledgeAssets() {
-    Answer<Void> answer= tar
-        .queryKnowledgeAssets("s");
+    Answer<List<Bindings>> answer= tar
+        .queryKnowledgeAssets(null);
     assertTrue(answer.isFailure());
     assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
 

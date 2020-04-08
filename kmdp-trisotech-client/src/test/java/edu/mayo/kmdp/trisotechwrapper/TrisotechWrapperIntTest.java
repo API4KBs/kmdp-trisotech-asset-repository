@@ -494,12 +494,14 @@ class TrisotechWrapperIntTest {
     final String repositoryFileUrl =
         TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST_ID
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVE_TEST_1_ID;
+
     Optional<Document> dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
     assertFalse(dox.isPresent());
 
     final String repositoryFileUrl2 =
         TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVER_TEST_1_ID;
+
     dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl2);
     assertFalse(dox.isPresent());
   }

@@ -255,9 +255,11 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         // TODO: Do something different for null id? means related artifact was not published
         //  log warning was already noted in gathering of related artifacts CAO
         .filter(Objects::nonNull)
-        .map(resourceIdentifier ->
-            new Dependency().withRel(DependencyTypeSeries.Imports)
-                .withHref(resourceIdentifier))
+        .map(resourceIdentifier ->  {
+          System.out.println("resourceIdentifier for targetArtifact: " + resourceIdentifier.getVersionId().toString());
+          return new Dependency().withRel(DependencyTypeSeries.Imports)
+                .withHref(resourceIdentifier);
+  })
         .collect(Collectors.toList());
 
   }
@@ -337,8 +339,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return annos;
   }
 
-  public ResourceIdentifier convertInternalId(String internalId, String versionTag) {
-    return mapper.convertInternalId(internalId, versionTag);
+  public ResourceIdentifier convertInternalId(String internalId, String versionTag,
+      String timestamp) {
+    return mapper.convertInternalId(internalId, versionTag, timestamp);
   }
 
   @Override
@@ -389,6 +392,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   public Optional<String> getArtifactVersion(UUID assetId) {
     return mapper.getArtifactIdVersion(assetId);
+  }
+
+  public Optional<String> getArtifactIdUpdateTime(UUID assetId) {
+    return mapper.getArtifactIdUpdateTime(assetId);
   }
 
   @Override

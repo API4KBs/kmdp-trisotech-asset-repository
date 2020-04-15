@@ -424,11 +424,6 @@ public class TrisotechWrapper {
 
       return Optional.of(SemanticIdentifier.newId(tfi.getId(), tfi.getVersion())
           .withEstablishedOn(DateTimeUtil.parseDateTime(tfi.getUpdated())));
-
-//          new VersionIdentifier()
-//          .withTag(tfi.getId())
-//          .withVersion(tfi.getVersion())
-//          .withEstablishedOn(DateTimeUtil.parseDateTime(tfi.getUpdated())));
     }
     logger.info("No published version for {}", tfi.getName() );
     return Optional.empty();

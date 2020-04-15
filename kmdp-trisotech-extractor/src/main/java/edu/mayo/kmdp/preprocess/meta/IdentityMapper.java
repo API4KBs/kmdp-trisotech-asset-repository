@@ -21,8 +21,10 @@ import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.graph.HierarchySorter;
 import java.net.URI;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -92,7 +94,8 @@ public class IdentityMapper {
   private static final String STATE = "?state";
   private static final String MIME_TYPE = "?mimeType";
   private static final String VERSION = "?version";
-  private static final String ARTIFACTNAME= "?artifactName";
+  private static final String UPDATED = "?updated";
+  private static final String ARTIFACTNAME = "?artifactName";
 
   private static final String VERSIONS = "/versions";
 
@@ -116,9 +119,10 @@ public class IdentityMapper {
   @PostConstruct
   void init() {
     logger.debug("place in init {}", place);
-    createMap(query(getQueryStringRelations(),place));
-    models = ResultSetFactory.makeRewindable(query(getQueryStringModels(),place));
-    publishedModels = ResultSetFactory.makeRewindable(query(getQueryStringPublishedModels(),place));
+    createMap(query(getQueryStringRelations(), place));
+    models = ResultSetFactory.makeRewindable(query(getQueryStringModels(), place));
+    publishedModels = ResultSetFactory
+        .makeRewindable(query(getQueryStringPublishedModels(), place));
     orderedModels = hierarchySorter
         .linearize(getModelList(publishedModels), artifactToArtifactIDMap);
   }
@@ -197,14 +201,16 @@ public class IdentityMapper {
    * @return the query string needed to query the models
    */
   private String getQueryStringPublishedModels() {
-    return FileUtil.read(IdentityMapper.class.getResourceAsStream("/queryPublishedModels.tt.sparql"))
+    return FileUtil
+        .read(IdentityMapper.class.getResourceAsStream("/queryPublishedModels.tt.sparql"))
         .orElseThrow(IllegalStateException::new);
   }
 
   /**
    * Build the queryString needed to query models with their fileId and assetId. This is specific to
    * Trisotech. This query is for ALL models, published and not, though because none of the
-   * selectors are given as optional, if they don't exist on a model, that model will not be returned.
+   * selectors are given as optional, if they don't exist on a model, that model will not be
+   * returned.
    *
    * @return the query string needed to query the models
    */
@@ -231,7 +237,8 @@ public class IdentityMapper {
 
       if (soln.getResource(MODEL).getURI().equals(artifactId.getResourceId().toString())) {
         if (soln.getLiteral(VERSION).getString().equals(versionTag)) {
-          return Optional.of(SemanticIdentifier.newVersionId(URI.create(soln.getLiteral(ASSET_ID).toString())));
+          return Optional.of(SemanticIdentifier
+              .newVersionId(URI.create(soln.getLiteral(ASSET_ID).toString())));
         } else { // have the artifact, but not version looking for; more work to see if the version exists
           throw new NotLatestVersionException(soln.getResource(MODEL).getURI());
         }
@@ -256,17 +263,17 @@ public class IdentityMapper {
       QuerySolution soln = publishedModels.nextSolution();
 
       if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
-       return Optional.of(
-           SemanticIdentifier.newVersionId(
-               URI.create(soln.getLiteral(ASSET_ID).toString())));
+        return Optional.of(
+            SemanticIdentifier.newVersionId(
+                URI.create(soln.getLiteral(ASSET_ID).toString())));
       }
     }
     return Optional.empty();
   }
 
   /**
-   * Need to be able to retrieve the asset ResourceIdentifier given the assetId NOTE: This only checks
-   * the information for the LATEST version of the model, which is available in the models.
+   * Need to be able to retrieve the asset ResourceIdentifier given the assetId NOTE: This only
+   * checks the information for the LATEST version of the model, which is available in the models.
    *
    * @param assetId the assetId to get the ResourceIdentifier for
    * @return ResourceIdentifier for the assetId or Empty
@@ -297,7 +304,7 @@ public class IdentityMapper {
    */
   public URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId) {
     String assetVersionId = enterpriseAssetVersionId.toString();
-    if(enterpriseAssetVersionId.getPath().contains(VERSIONS)) {
+    if (enterpriseAssetVersionId.getPath().contains(VERSIONS)) {
       // remove the /versions/... part of the URI; enterpriseAssetId is the part without the version
       return URI.create(assetVersionId
           .substring(0, assetVersionId.lastIndexOf(VERSIONS)));
@@ -322,7 +329,7 @@ public class IdentityMapper {
   public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag,
       boolean any)
       throws NotLatestVersionException {
-    if(any) {
+    if (any) {
       return enterpriseAssetVersionIdForAssetInModel(models, assetId, versionTag);
     } else {
       return enterpriseAssetVersionIdForAssetInModel(publishedModels, assetId, versionTag);
@@ -364,7 +371,8 @@ public class IdentityMapper {
    * to finding the version needed. The exception will return the artifactId for the asset
    * requested. The artifactId can be used with Trisotech APIs
    */
-  public String getArtifactId(ResourceIdentifier assetId, boolean any) throws NotLatestVersionException {
+  public String getArtifactId(ResourceIdentifier assetId, boolean any)
+      throws NotLatestVersionException {
     if (any) {
       return artifactIdFromModel(models, assetId);
     } else {
@@ -441,10 +449,8 @@ public class IdentityMapper {
 
 
   /**
-   * Get the mimeType for the asset
-   * All models have a mimetype.
-   * If this becomes a performance bottleneck, can look at separating out searches for published
-   * models only.
+   * Get the mimeType for the asset All models have a mimetype. If this becomes a performance
+   * bottleneck, can look at separating out searches for published models only.
    *
    * @param assetId The id of the asset looking for
    * @return the mimetype as specified in the triples
@@ -463,9 +469,8 @@ public class IdentityMapper {
 
 
   /**
-   * Get the name of the artifact for the asset
-   * If this becomes a performance bottleneck, can look at separating out searches for published
-   * models only.
+   * Get the name of the artifact for the asset If this becomes a performance bottleneck, can look
+   * at separating out searches for published models only.
    *
    * @param assetId The id of the asset looking for
    * @return the name of the artifact as specified in the triples
@@ -493,11 +498,9 @@ public class IdentityMapper {
   }
 
 
-
   /**
-   * Get the mimetype using the model id
-   * All models have a mimetype. If performance becomes an issue, might want to separate
-   * out searching in published models instead of all models.
+   * Get the mimetype using the model id All models have a mimetype. If performance becomes an
+   * issue, might want to separate out searching in published models instead of all models.
    *
    * @param internalId the internal id of the model
    * @return the mimetype as specified in the triples
@@ -516,8 +519,7 @@ public class IdentityMapper {
   }
 
   /**
-   * Get the state using the model id
-   * State only exists on published models
+   * Get the state using the model id State only exists on published models
    *
    * @param fileId the file id of the model
    * @return the state as specified in the triples
@@ -536,8 +538,8 @@ public class IdentityMapper {
   }
 
   /**
-   * Get the version of the artifact for the asset provided
-   * Versions only exist on published models.
+   * Get the version of the artifact for the asset provided Versions only exist on published
+   * models.
    *
    * @param assetId The enterprise asset Id
    * @return the version of the artifact
@@ -553,6 +555,26 @@ public class IdentityMapper {
     }
     return Optional.empty();
   }
+
+
+  /**
+   * Get the updated dateTime of the artifact for the asset provided
+   *
+   * @param assetId The enterprise asset Id
+   * @return the updated value of the artifact
+   */
+  public Optional<String> getArtifactIdUpdateTime(UUID assetId) {
+    // only publishedModels have a version
+    publishedModels.reset();
+    while (publishedModels.hasNext()) {
+      QuerySolution soln = publishedModels.nextSolution();
+      if (soln.getLiteral(ASSET_ID).getString().contains(assetId.toString())) {
+        return Optional.ofNullable(soln.getLiteral(UPDATED).getString());
+      }
+    }
+    return Optional.empty();
+  }
+
 
   /**
    * Given the internal id for the model, get the information about other models it imports.
@@ -574,7 +596,7 @@ public class IdentityMapper {
       }
     }
 
-    if(null != resources) {
+    if (null != resources) {
       for (Resource resource : resources) {
         artifacts.add(getArtifactIdentifier(resource));
       }
@@ -583,8 +605,8 @@ public class IdentityMapper {
   }
 
   /**
-   * get the system ID for the internal ID of the resource (artifact)
-   * only published models are considered
+   * get the system ID for the internal ID of the resource (artifact) only published models are
+   * considered
    *
    * @param resource the resource for the artifact desired
    * @return ResourceIdentifier in appropriate format
@@ -596,9 +618,11 @@ public class IdentityMapper {
       if (soln.getResource(MODEL).equals(resource)) {
         if (soln.getLiteral(VERSION) != null) {
           return convertInternalId(soln.getResource(MODEL).getURI(),
-                  soln.getLiteral(VERSION).getString());
+              soln.getLiteral(VERSION).getString(),
+              soln.getLiteral(UPDATED).getString());
         } else {
-          return convertInternalId(soln.getResource(MODEL).getURI(), null);
+          // TODO: Still use timestamp?
+          return convertInternalId(soln.getResource(MODEL).getURI(), null, null);
 
         }
       }
@@ -608,14 +632,13 @@ public class IdentityMapper {
     return null;
   }
 
-    /**
-     * given the internal id for the model (artifact),
-     * get the information for the assets the model imports
-     * each artifact should have an assetID, this allows us to map asset<->asset relations
-     *
-     * @param artifactId the artifact id
-     * @return a set of resources for the assets used by this model (dependencies)
-     */
+  /**
+   * given the internal id for the model (artifact), get the information for the assets the model
+   * imports each artifact should have an assetID, this allows us to map asset<->asset relations
+   *
+   * @param artifactId the artifact id
+   * @return a set of resources for the assets used by this model (dependencies)
+   */
   public List<ResourceIdentifier> getAssetRelations(String artifactId) {
     List<ResourceIdentifier> assets = new ArrayList<>();
 
@@ -642,7 +665,8 @@ public class IdentityMapper {
       logger.debug("soln MODEL URI: {} ", soln.getResource(MODEL).getURI());
       if (soln.getResource(MODEL).getURI().equals(dependent.getURI())) {
         logger.debug("Asset ID for Model: {}", soln.getLiteral(ASSET_ID));
-        return Optional.of(SemanticIdentifier.newVersionId(URI.create(soln.getLiteral(ASSET_ID).getString())));
+        return Optional
+            .of(SemanticIdentifier.newVersionId(URI.create(soln.getLiteral(ASSET_ID).getString())));
       }
     }
     // if not found, because not published
@@ -665,11 +689,18 @@ public class IdentityMapper {
    * Need the Trisotech path converted to KMDP path and underscores removed
    *
    * @param internalId the Trisotech internal id for the model
+   * @param timestamp the timestamp/updated time for this version of the model
    * @return ResourceIdentifier with the KMDP-ified internal id
    */
-  public ResourceIdentifier convertInternalId(String internalId, String versionTag) {
+  public ResourceIdentifier convertInternalId(String internalId, String versionTag,
+      String timestamp) {
     String id = internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
-    return SemanticIdentifier.newId(MAYO_ARTIFACTS_BASE_URI_URI, id, versionTag);
-//      return DatatypeHelper.uri(MAYO_ARTIFACTS_BASE_URI, id, versionTag);
+    if(null != timestamp) {
+      Date modelDate = Date.from(Instant.parse(timestamp));
+      String timestampVersion = versionTag + "+" + modelDate.getTime();
+      return SemanticIdentifier.newId(MAYO_ARTIFACTS_BASE_URI_URI, id, timestampVersion);
+    } else {
+      return SemanticIdentifier.newId(MAYO_ARTIFACTS_BASE_URI_URI, id, versionTag);
+    }
   }
 }

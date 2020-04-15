@@ -78,10 +78,6 @@ class ChainTest {
   InputStream dmn;
   String metaPath;
   InputStream meta;
-  String cmmnPath;
-  InputStream cmmn;
-  String cmmnMetaPath;
-  InputStream cmmnMeta;
 
   // FYI: The IDE may complain that it can't find a Bean for chainConverter,
   // but it's an issue with IDE. The code works.
@@ -106,6 +102,7 @@ class ChainTest {
 
     return m;
   }
+
 
   @Test
   void testChainDMN_BasicModel() {
@@ -168,7 +165,7 @@ class ChainTest {
       String expectedAssetVersionId =
           MAYO_ASSETS_BASE_URI + expectedAssetTag + "/versions/" + expectedVersion;
       String expectedArtifactTag = "5682fa26-b064-43c8-9475-1e4281e74068";
-      String expectedArtifactVersion = "1.8+1577743723000";
+      String expectedArtifactVersion = "1.9.0+1586549460000";
       String expectedArtifactId =
           MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
       String expectedArtifactVersionId = expectedArtifactId + "/versions/" + expectedArtifactVersion;
@@ -264,7 +261,7 @@ class ChainTest {
       String expectedArtifactTag = "f59708b6-96c0-4aa3-be4a-31e075d76ec9";
       String expectedArtifactId =
           MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
-      String expectedArtifactVersionId = expectedArtifactId + "/versions/2.2.1+1574281679000";
+      String expectedArtifactVersionId = expectedArtifactId + "/versions/2.2.3+1586550844000";
 
       InputStream modelInfo = ChainTest.class.getResourceAsStream(modelInfoPath);
 

@@ -113,7 +113,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
   /**
-   * @return Pointers to the version of a given asset
+   * @return Pointers to the versions of a given asset
    */
   @Override
   public Answer<List<Pointer>> getKnowledgeAssetVersions(UUID assetId, Integer offset,
@@ -278,8 +278,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
   /**
-   * corresponds to this uri:  /cat/assets/{assetId}/versions/{versionTag}/ KnowledgeCarrier: A
-   * Resource that wraps a Serialized, Encoded Knowledge Artifact
+   * corresponds to this uri:  /cat/assets/{assetId}/versions/{versionTag}/
+   * KnowledgeCarrier: A Resource that wraps a Serialized, Encoded Knowledge Artifact
    *
    * @param assetId assetId of the asset
    * @param versionTag version of the asset
@@ -363,10 +363,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             && null != asset.getVersionTag())
             && asset.getTag().equals(assetId.toString())
             && asset.getVersionTag().equals(versionTag)) {
-          Date modelDate = Date.from(Instant.parse(model.getUpdated()));
           ResourceIdentifier artifactId = extractor
-              .convertInternalId(internalId, model.getVersion() + "+" + modelDate.getTime())
-              .withEstablishedOn(modelDate);
+              .convertInternalId(internalId, model.getVersion(),
+                  model.getUpdated())
+              .withEstablishedOn(Date.from(Instant.parse(model.getUpdated())));
           return Answer.of(AbstractCarrier.of(downloadXml
               .map(weaver::weave)
               .map(XMLUtil::toByteArray).orElse(new byte[0]))
@@ -390,8 +390,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       throws NotLatestVersionException {
     String internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, false);
     Optional<String> version = extractor.getArtifactVersion(assetId);
+    Optional<String> updated = extractor.getArtifactIdUpdateTime(assetId);
     return extractor.convertInternalId(internalId,
-        version.orElse(null)); // TODO: better alternative? error? CAO
+        version.orElse(null), updated.orElse(null)); // TODO: better alternative? error? CAO
   }
 
   /**
@@ -570,7 +571,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
                   .map(weaver::weave)
                   .map(XMLUtil::toByteArray).orElse(new byte[0]))
                   .withAssetId(asset)
-                  .withArtifactId(extractor.convertInternalId(internalId, model.getVersion()))
+                  .withArtifactId(extractor.convertInternalId(internalId, model.getVersion(),
+                      model.getUpdated()))
                   .withRepresentation(getLanguageRepresentationForModel(downloadXml)));
         }
       }

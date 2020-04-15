@@ -160,6 +160,11 @@ public class MetadataExtractor {
     return strategy.getArtifactVersion(assetId);
   }
 
+  public Optional<String> getArtifactIdUpdateTime(UUID assetId) {
+    return strategy.getArtifactIdUpdateTime(assetId);
+  }
+
+
 
   /**
    * The fileId is the id of the file for the artifact that can be used with the APIs.
@@ -215,8 +220,9 @@ public class MetadataExtractor {
     return strategy.getArtifactID(id, any);
   }
 
-  public ResourceIdentifier convertInternalId(String internalId, String versionTag) {
-    return strategy.convertInternalId(internalId, versionTag);
+  public ResourceIdentifier convertInternalId(String internalId, String versionTag,
+      String timestamp) {
+    return strategy.convertInternalId(internalId, versionTag, timestamp);
   }
 
 

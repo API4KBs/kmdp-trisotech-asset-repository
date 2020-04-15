@@ -48,6 +48,8 @@
     <dependency>
       <groupId>edu.mayo.kmdp.kdcaci.knew</groupId>
       <artifactId>knew-terminology-content</artifactId>
+<!--      TODO: remove version when new release is out -->
+      <version>${clinical.terms.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>

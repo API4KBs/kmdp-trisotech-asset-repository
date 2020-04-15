@@ -26,10 +26,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>edu.mayo.kmdp.kdcaci.knew</groupId>
-      <artifactId>knew-terminology-content</artifactId>
-    </dependency>
-    <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>terms-generator</artifactId>
     </dependency>

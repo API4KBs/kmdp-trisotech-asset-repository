@@ -287,9 +287,9 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionArtifactIdDMN() {
-    String expectedVersion = "1.8";
+    String expectedVersion = "1.9.0";
     Date expectedUpdated = DateTimeUtil
-        .parseDateTime("2019-12-30T22:08:43Z","yyyy-MM-dd'T'HH:mm:ss'Z'");
+        .parseDateTime("2020-04-10T20:11:00Z","yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     ResourceIdentifier versionIdentifier =
         TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID)
@@ -302,7 +302,7 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {
-    String expectedVersion = "1.8";
+    String expectedVersion = "1.9.0";
     TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID)
         .orElse(null);
     assertNotNull(trisotechFileInfo);
@@ -315,7 +315,7 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionArtifactIdCMMN() {
-    String expectedVersion = "2.2.1";
+    String expectedVersion = "2.2.3";
     ResourceIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID)
         .orElse(null);
     assertNotNull(versionIdentifier);
@@ -325,7 +325,7 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoCMMN() {
-    String expectedVersion = "2.2.1";
+    String expectedVersion = "2.2.3";
     TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID)
         .orElse(null);
     assertNotNull(trisotechFileInfo);

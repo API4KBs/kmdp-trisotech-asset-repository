@@ -1,192 +1,263 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<semantic:definitions xmlns:ns1="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356" xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"   xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"  xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"  xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"  xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"  xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"  xmlns:rss="http://purl.org/rss/2.0/"  xmlns="http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5" id="_16086bb8-c1fc-49b0-800b-c9b995dc5ed5" name="Basic Case Model" targetNamespace="http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5" expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" exporter="CMMN Modeler" exporterVersion="6.8.0" triso:logoChoice="Default" triso:version="1.8.0" triso:state="Published">
-    <semantic:caseFileItemDefinition name="Case File Item Data" definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType" id="_6894ff5f-130a-46a1-bcc4-5e915acd7c9b"/>
-    <semantic:caseFileItemDefinition name="Knowledge - ICD Indications in HCM" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument" id="_00f6dab7-b939-4816-868e-0a64d6ee4994"/>
-    <semantic:caseFileItemDefinition name="Case File Item Decision" id="_f6e3c065-be28-4e35-ac1f-b5fae6a2ddb5"/>
-    <semantic:case id="Case_c5b0fddc-013d-4dfb-be05-1f83f22767c1">
+<semantic:definitions
+  xmlns:ns1="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
+  xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"
+  xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
+  xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
+  xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"
+  xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
+  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+  xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/" xmlns:rss="http://purl.org/rss/2.0/"
+  xmlns="http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"
+  id="_16086bb8-c1fc-49b0-800b-c9b995dc5ed5" name="Basic Case Model"
+  targetNamespace="http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"
+  expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" exporter="CMMN Modeler"
+  exporterVersion="6.8.0" triso:logoChoice="Default" triso:version="1.8.0" triso:state="Published">
+  <semantic:caseFileItemDefinition name="Case File Item Data"
+    definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+    id="_6894ff5f-130a-46a1-bcc4-5e915acd7c9b"/>
+  <semantic:caseFileItemDefinition name="Knowledge - ICD Indications in HCM"
+    definitionType="http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument"
+    id="_00f6dab7-b939-4816-868e-0a64d6ee4994"/>
+  <semantic:caseFileItemDefinition name="Case File Item Decision"
+    id="_f6e3c065-be28-4e35-ac1f-b5fae6a2ddb5"/>
+  <semantic:case id="Case_c5b0fddc-013d-4dfb-be05-1f83f22767c1">
+    <semantic:extensionElements>
+      <triso:semanticLink id="d664416f-ba40-4259-a682-f67e83b28186"
+        name="KnowledgeAssetTypes - 20190801 - Cognitive Process Modelin 'KnowledgeAssetTypes - 20190801'"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#e12dcd92-f8de-3115-b8ca-4480cfc44d77"/>
+      <triso:customAttribute key="knowledgeAssetId"
+        value="https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1"
+        type="string" id="_39e0ff33-94d0-48b4-b8cf-489636c2f896"/>
+    </semantic:extensionElements>
+    <semantic:caseFileModel>
+      <semantic:caseFileItem id="_51629986-fc6c-4759-9dd1-46eb369d3612"
+        name="Case File Item Decision" definitionRef="_f6e3c065-be28-4e35-ac1f-b5fae6a2ddb5"/>
+      <semantic:caseFileItem id="_732407a2-b292-4b8a-bd44-1d04f6ba8e7f" name="Case File Item Data"
+        definitionRef="_6894ff5f-130a-46a1-bcc4-5e915acd7c9b"/>
+      <semantic:caseFileItem id="_e3b0b96f-741f-4852-98a9-b332c24e4f18"
+        name="Knowledge - ICD Indications in HCM"
+        definitionRef="_00f6dab7-b939-4816-868e-0a64d6ee4994"/>
+    </semantic:caseFileModel>
+    <semantic:casePlanModel id="_c5b0fddc-013d-4dfb-be05-1f83f22767c1">
+      <semantic:planItem id="_0b13f9ff-726e-4a7e-b42f-f2497ca47c39"
+        definitionRef="PID__0b13f9ff-726e-4a7e-b42f-f2497ca47c39"/>
+      <semantic:planItem id="_4ad6c909-d593-4616-9bf6-af18752fbbfc"
+        definitionRef="PID__4ad6c909-d593-4616-9bf6-af18752fbbfc"/>
+      <semantic:decisionTask id="PID__0b13f9ff-726e-4a7e-b42f-f2497ca47c39"
+        name="Make Basic Decision" decisionRef="_7dfe244c35cffbd4efa07be80b4df2be">
         <semantic:extensionElements>
-            <triso:semanticLink id="d664416f-ba40-4259-a682-f67e83b28186" name="KnowledgeAssetTypes - 20190801 - Cognitive Process Modelin 'KnowledgeAssetTypes - 20190801'" modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/" uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#e12dcd92-f8de-3115-b8ca-4480cfc44d77"/>
-            <triso:customAttribute key="knowledgeAssetId" value="https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1" type="string" id="_39e0ff33-94d0-48b4-b8cf-489636c2f896"/>
+          <triso:interrelationship
+            fileId="eyJmIjp7InNrdSI6Ijc3Mjg5NDAyLWZkNDAtNDYwMy05MDMxLWQyN2VlNmVjNTY4OSIsIm5hbWUiOiJCYXNpYyBEZWNpc2lvbiBNb2RlbCIsIm1pbWV0eXBlIjoiYXBwbGljYXRpb24vdm5kLnRyaXNvLWRtbitqc29uIn19"
+            elementId="_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"
+            uri="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"
+            name="Basic Decision" modelId="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
+            mimeType="application/vnd.triso-dmn+json"/>
         </semantic:extensionElements>
-        <semantic:caseFileModel>
-            <semantic:caseFileItem id="_51629986-fc6c-4759-9dd1-46eb369d3612" name="Case File Item Decision" definitionRef="_f6e3c065-be28-4e35-ac1f-b5fae6a2ddb5"/>
-            <semantic:caseFileItem id="_732407a2-b292-4b8a-bd44-1d04f6ba8e7f" name="Case File Item Data" definitionRef="_6894ff5f-130a-46a1-bcc4-5e915acd7c9b"/>
-            <semantic:caseFileItem id="_e3b0b96f-741f-4852-98a9-b332c24e4f18" name="Knowledge - ICD Indications in HCM" definitionRef="_00f6dab7-b939-4816-868e-0a64d6ee4994"/>
-        </semantic:caseFileModel>
-        <semantic:casePlanModel id="_c5b0fddc-013d-4dfb-be05-1f83f22767c1">
-            <semantic:planItem id="_0b13f9ff-726e-4a7e-b42f-f2497ca47c39" definitionRef="PID__0b13f9ff-726e-4a7e-b42f-f2497ca47c39"/>
-            <semantic:planItem id="_4ad6c909-d593-4616-9bf6-af18752fbbfc" definitionRef="PID__4ad6c909-d593-4616-9bf6-af18752fbbfc"/>
-            <semantic:decisionTask id="PID__0b13f9ff-726e-4a7e-b42f-f2497ca47c39" name="Make Basic Decision" decisionRef="_7dfe244c35cffbd4efa07be80b4df2be">
-                <semantic:extensionElements>
-                    <triso:interrelationship fileId="eyJmIjp7InNrdSI6Ijc3Mjg5NDAyLWZkNDAtNDYwMy05MDMxLWQyN2VlNmVjNTY4OSIsIm5hbWUiOiJCYXNpYyBEZWNpc2lvbiBNb2RlbCIsIm1pbWV0eXBlIjoiYXBwbGljYXRpb24vdm5kLnRyaXNvLWRtbitqc29uIn19" elementId="_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719" uri="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719" name="Basic Decision" modelId="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356" mimeType="application/vnd.triso-dmn+json"/>
-                </semantic:extensionElements>
-                <semantic:defaultControl>
-                    <semantic:manualActivationRule/>
-                </semantic:defaultControl>
-            </semantic:decisionTask>
-            <semantic:humanTask id="PID__4ad6c909-d593-4616-9bf6-af18752fbbfc" name="Task with Task Concept" isBlocking="false">
-                <semantic:extensionElements>
-                    <triso:semanticLink id="_25983d88-3393-4a09-9774-b2ec1f834cb8" name="ClinicalTasks - 20190801 - Discuss Recommendations for HFrEF" modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks/20190801/" uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#0125bd33-f63d-3376-8203-c81a975b74e2"/>
-                </semantic:extensionElements>
-                <semantic:defaultControl>
-                    <semantic:manualActivationRule/>
-                </semantic:defaultControl>
-            </semantic:humanTask>
-        </semantic:casePlanModel>
-    </semantic:case>
-    <semantic:decision id="_7dfe244c35cffbd4efa07be80b4df2be" externalRef="ns1:_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719" implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1" name="Basic Decision" triso:modelId="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"/>
-    <semantic:textAnnotation id="_72232623-faf7-4f46-97ab-1211522fce68">
-        <semantic:text>Asset ID in both case file item definition and in the identifier field, URL of the KCMS content under attachments</semantic:text>
-    </semantic:textAnnotation>
-    <semantic:textAnnotation id="_10eb8352-ab24-4d4c-abd8-a33ab5e1d00d">
-        <semantic:text>Propositional concept of "Prior Management of HFrEF - same as the propositional concept on the operational definition model. Data type is "data"</semantic:text>
-    </semantic:textAnnotation>
-    <semantic:association id="_122f94c2-88dd-454c-a5ea-db0b73ef832f" sourceRef="_10eb8352-ab24-4d4c-abd8-a33ab5e1d00d" targetRef="_51629986-fc6c-4759-9dd1-46eb369d3612"/>
-    <semantic:association id="_f4631bb4-f28f-4164-a635-4c28da04fa88" sourceRef="_72232623-faf7-4f46-97ab-1211522fce68" targetRef="_e3b0b96f-741f-4852-98a9-b332c24e4f18"/>
-    <semantic:association id="_cf1c8685-039b-41e7-ac69-b91551bd8322" sourceRef="_51629986-fc6c-4759-9dd1-46eb369d3612" targetRef="_0b13f9ff-726e-4a7e-b42f-f2497ca47c39"/>
-    <semantic:association id="_77e63d1a-b036-4793-ba44-976e98d4f1a2" sourceRef="_732407a2-b292-4b8a-bd44-1d04f6ba8e7f" targetRef="_0b13f9ff-726e-4a7e-b42f-f2497ca47c39"/>
-    <semantic:association id="_aac02834-1fce-42da-8264-b5b1b69f8e0d" sourceRef="_e3b0b96f-741f-4852-98a9-b332c24e4f18" targetRef="_4ad6c909-d593-4616-9bf6-af18752fbbfc"/>
-    <cmmndi:CMMNDI>
-        <cmmndi:CMMNDiagram id="_bfeba959-dfeb-4edb-a8db-9dd2b50e5703" name="Page 1" cmmnElementRef="_f2bbf1dd-6ef6-47e2-ba8f-359b519d228b">
-            <cmmndi:Size width="1628.1955028294874" height="1050"/>
-            <cmmndi:CMMNShape id="_f2bbf1dd-6ef6-47e2-ba8f-359b519d228b" cmmnElementRef="_c5b0fddc-013d-4dfb-be05-1f83f22767c1">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:FillColor red="255" green="255" blue="255"/>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <dc:Bounds x="435.19550282948745" y="130" width="800" height="600"/>
-                <cmmndi:CMMNLabel/>
-            </cmmndi:CMMNShape>
-            <cmmndi:CMMNShape id="_bcf6fd98-38aa-4b47-a404-95d0a412f668" cmmnElementRef="_0b13f9ff-726e-4a7e-b42f-f2497ca47c39">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:FillColor red="255" green="255" blue="255"/>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <dc:Bounds x="891.1955028294874" y="292" width="96" height="76"/>
-                <cmmndi:CMMNLabel triso:defaultBounds="true">
-                    <dc:Bounds height="26.015625" width="68" x="905.1955028294874" y="316.9921875"/>
-                </cmmndi:CMMNLabel>
-            </cmmndi:CMMNShape>
-            <cmmndi:CMMNShape id="_c5d89b9a-29a0-4298-a04e-e1e5835f399c" cmmnElementRef="_4ad6c909-d593-4616-9bf6-af18752fbbfc">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:FillColor red="255" green="255" blue="255"/>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <dc:Bounds x="891.1955028294874" y="437.4235215889186" width="96" height="76.00000000000006"/>
-                <cmmndi:CMMNLabel triso:defaultBounds="true">
-                    <dc:Bounds height="26.015625" width="68" x="905.1955028294874" y="462.4157090889186"/>
-                </cmmndi:CMMNLabel>
-            </cmmndi:CMMNShape>
-            <cmmndi:CMMNShape id="_7059079c-da62-4285-9eba-5d9f46420261" cmmnElementRef="_51629986-fc6c-4759-9dd1-46eb369d3612">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:FillColor red="255" green="255" blue="255"/>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <dc:Bounds x="729.6041666666667" y="212" width="34" height="40"/>
-                <cmmndi:CMMNLabel triso:defaultBounds="true">
-                    <dc:Bounds height="26.015625" width="71.09375" x="711.0572916666667" y="256"/>
-                </cmmndi:CMMNLabel>
-            </cmmndi:CMMNShape>
-            <cmmndi:CMMNShape id="_97ff1194-b964-4ccf-96b4-38f693304fcd" cmmnElementRef="_732407a2-b292-4b8a-bd44-1d04f6ba8e7f">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:FillColor red="255" green="255" blue="255"/>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <dc:Bounds x="729.6041666666667" y="355" width="34" height="40"/>
-                <cmmndi:CMMNLabel triso:defaultBounds="true">
-                    <dc:Bounds height="12.015625" width="97.765625" x="697.7213541666667" y="399"/>
-                </cmmndi:CMMNLabel>
-            </cmmndi:CMMNShape>
-            <cmmndi:CMMNShape id="_7ef46ea2-9d62-4a82-a3a1-2e6aaf4ac1f8" cmmnElementRef="_e3b0b96f-741f-4852-98a9-b332c24e4f18">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:FillColor red="255" green="255" blue="255"/>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <dc:Bounds x="729.6041666666667" y="455.42352158891856" width="34" height="40"/>
-                <cmmndi:CMMNLabel triso:defaultBounds="true">
-                    <dc:Bounds height="26.015625" width="92.5" x="700.3541666666667" y="499.42352158891856"/>
-                </cmmndi:CMMNLabel>
-            </cmmndi:CMMNShape>
-            <cmmndi:CMMNShape id="_7af2fac3-f419-432c-ae80-990cb9cb76f7" cmmnElementRef="_72232623-faf7-4f46-97ab-1211522fce68">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:FillColor red="255" green="255" blue="255"/>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <dc:Bounds x="677.1955028294874" y="569" width="100" height="107"/>
-                <cmmndi:CMMNLabel triso:defaultBounds="true">
-                    <dc:Bounds height="96.015625" width="94" x="682.1955028294874" y="577"/>
-                </cmmndi:CMMNLabel>
-            </cmmndi:CMMNShape>
-            <cmmndi:CMMNShape id="_5f0b9250-8575-4664-bacf-de2c8c8a134c" cmmnElementRef="_10eb8352-ab24-4d4c-abd8-a33ab5e1d00d">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:FillColor red="255" green="255" blue="255"/>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <dc:Bounds x="534.6041666666667" y="249" width="100" height="135"/>
-                <cmmndi:CMMNLabel triso:defaultBounds="true">
-                    <dc:Bounds height="124.015625" width="94" x="539.6041666666667" y="257"/>
-                </cmmndi:CMMNLabel>
-            </cmmndi:CMMNShape>
-            <cmmndi:CMMNEdge id="_9559d2f8-32d1-4697-947b-79bec8dc4a32" cmmnElementRef="_122f94c2-88dd-454c-a5ea-db0b73ef832f">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <di:waypoint x="554.6041666666667" y="249"/>
-                <di:waypoint x="554.6041666666667" y="231.98112783208728"/>
-                <di:waypoint x="729.6041666666667" y="231.98112783208728"/>
-                <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
-            </cmmndi:CMMNEdge>
-            <cmmndi:CMMNEdge id="_c2c9ac46-b03f-489f-b22e-e97963858e3f" cmmnElementRef="_f4631bb4-f28f-4164-a635-4c28da04fa88">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <di:waypoint x="677.1955028294874" y="626.7800000000001"/>
-                <di:waypoint x="657.1955028294874" y="626.7800000000001"/>
-                <di:waypoint x="657.1955028294874" y="475.42352158891856"/>
-                <di:waypoint x="729.6041666666667" y="475.42352158891856"/>
-                <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
-            </cmmndi:CMMNEdge>
-            <cmmndi:CMMNEdge id="_b208f397-fb48-4dca-ac42-13e4a92134e7" cmmnElementRef="_cf1c8685-039b-41e7-ac69-b91551bd8322">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <di:waypoint x="763.6041666666667" y="232"/>
-                <di:waypoint x="838.8998347480771" y="232"/>
-                <di:waypoint x="838.8998347480771" y="317.33"/>
-                <di:waypoint x="891.1955028294874" y="317.33"/>
-                <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
-            </cmmndi:CMMNEdge>
-            <cmmndi:CMMNEdge id="_a1940b81-1406-4c83-a7e2-f4855d1e51a1" cmmnElementRef="_77e63d1a-b036-4793-ba44-976e98d4f1a2">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <di:waypoint x="763.6041666666667" y="375"/>
-                <di:waypoint x="840.3998347480771" y="375"/>
-                <di:waypoint x="840.3998347480771" y="342.65999999999997"/>
-                <di:waypoint x="891.1955028294874" y="342.65999999999997"/>
-                <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
-            </cmmndi:CMMNEdge>
-            <cmmndi:CMMNEdge id="_76f492bc-b4ba-4a85-bb86-f0dccf526e36" cmmnElementRef="_aac02834-1fce-42da-8264-b5b1b69f8e0d">
-                <cmmndi:CMMNStyle>
-                    <cmmndi:StrokeColor red="0" green="0" blue="0"/>
-                    <cmmndi:FontColor red="0" green="0" blue="0"/>
-                </cmmndi:CMMNStyle>
-                <di:waypoint x="763.6041666666667" y="475.42352158891856"/>
-                <di:waypoint x="891.1955028294874" y="475.4235215889186"/>
-                <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
-            </cmmndi:CMMNEdge>
-        </cmmndi:CMMNDiagram>
-    </cmmndi:CMMNDI>
+        <semantic:defaultControl>
+          <semantic:manualActivationRule/>
+        </semantic:defaultControl>
+      </semantic:decisionTask>
+      <semantic:humanTask id="PID__4ad6c909-d593-4616-9bf6-af18752fbbfc"
+        name="Task with Task Concept" isBlocking="false">
+        <semantic:extensionElements>
+          <triso:semanticLink id="_25983d88-3393-4a09-9774-b2ec1f834cb8"
+            name="ClinicalTasks - 20190801 - Discuss Recommendations for HFrEF"
+            modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks/20190801/"
+            uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#0125bd33-f63d-3376-8203-c81a975b74e2"/>
+        </semantic:extensionElements>
+        <semantic:defaultControl>
+          <semantic:manualActivationRule/>
+        </semantic:defaultControl>
+      </semantic:humanTask>
+    </semantic:casePlanModel>
+  </semantic:case>
+  <semantic:decision id="_7dfe244c35cffbd4efa07be80b4df2be"
+    externalRef="ns1:_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1" name="Basic Decision"
+    triso:modelId="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"/>
+  <semantic:textAnnotation id="_72232623-faf7-4f46-97ab-1211522fce68">
+    <semantic:text>Asset ID in both case file item definition and in the identifier field, URL of
+      the KCMS content under attachments
+    </semantic:text>
+  </semantic:textAnnotation>
+  <semantic:textAnnotation id="_10eb8352-ab24-4d4c-abd8-a33ab5e1d00d">
+    <semantic:text>Propositional concept of "Prior Management of HFrEF - same as the propositional
+      concept on the operational definition model. Data type is "data"
+    </semantic:text>
+  </semantic:textAnnotation>
+  <semantic:association id="_122f94c2-88dd-454c-a5ea-db0b73ef832f"
+    sourceRef="_10eb8352-ab24-4d4c-abd8-a33ab5e1d00d"
+    targetRef="_51629986-fc6c-4759-9dd1-46eb369d3612"/>
+  <semantic:association id="_f4631bb4-f28f-4164-a635-4c28da04fa88"
+    sourceRef="_72232623-faf7-4f46-97ab-1211522fce68"
+    targetRef="_e3b0b96f-741f-4852-98a9-b332c24e4f18"/>
+  <semantic:association id="_cf1c8685-039b-41e7-ac69-b91551bd8322"
+    sourceRef="_51629986-fc6c-4759-9dd1-46eb369d3612"
+    targetRef="_0b13f9ff-726e-4a7e-b42f-f2497ca47c39"/>
+  <semantic:association id="_77e63d1a-b036-4793-ba44-976e98d4f1a2"
+    sourceRef="_732407a2-b292-4b8a-bd44-1d04f6ba8e7f"
+    targetRef="_0b13f9ff-726e-4a7e-b42f-f2497ca47c39"/>
+  <semantic:association id="_aac02834-1fce-42da-8264-b5b1b69f8e0d"
+    sourceRef="_e3b0b96f-741f-4852-98a9-b332c24e4f18"
+    targetRef="_4ad6c909-d593-4616-9bf6-af18752fbbfc"/>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="_bfeba959-dfeb-4edb-a8db-9dd2b50e5703" name="Page 1"
+      cmmnElementRef="_f2bbf1dd-6ef6-47e2-ba8f-359b519d228b">
+      <cmmndi:Size width="1628.1955028294874" height="1050"/>
+      <cmmndi:CMMNShape id="_f2bbf1dd-6ef6-47e2-ba8f-359b519d228b"
+        cmmnElementRef="_c5b0fddc-013d-4dfb-be05-1f83f22767c1">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="435.19550282948745" y="130" width="800" height="600"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_bcf6fd98-38aa-4b47-a404-95d0a412f668"
+        cmmnElementRef="_0b13f9ff-726e-4a7e-b42f-f2497ca47c39">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="891.1955028294874" y="292" width="96" height="76"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="26.015625" width="68" x="905.1955028294874" y="316.9921875"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_c5d89b9a-29a0-4298-a04e-e1e5835f399c"
+        cmmnElementRef="_4ad6c909-d593-4616-9bf6-af18752fbbfc">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="891.1955028294874" y="437.4235215889186" width="96"
+          height="76.00000000000006"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="26.015625" width="68" x="905.1955028294874" y="462.4157090889186"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_7059079c-da62-4285-9eba-5d9f46420261"
+        cmmnElementRef="_51629986-fc6c-4759-9dd1-46eb369d3612">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="729.6041666666667" y="212" width="34" height="40"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="26.015625" width="71.09375" x="711.0572916666667" y="256"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_97ff1194-b964-4ccf-96b4-38f693304fcd"
+        cmmnElementRef="_732407a2-b292-4b8a-bd44-1d04f6ba8e7f">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="729.6041666666667" y="355" width="34" height="40"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="12.015625" width="97.765625" x="697.7213541666667" y="399"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_7ef46ea2-9d62-4a82-a3a1-2e6aaf4ac1f8"
+        cmmnElementRef="_e3b0b96f-741f-4852-98a9-b332c24e4f18">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="729.6041666666667" y="455.42352158891856" width="34" height="40"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="26.015625" width="92.5" x="700.3541666666667" y="499.42352158891856"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_7af2fac3-f419-432c-ae80-990cb9cb76f7"
+        cmmnElementRef="_72232623-faf7-4f46-97ab-1211522fce68">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="677.1955028294874" y="569" width="100" height="107"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="96.015625" width="94" x="682.1955028294874" y="577"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="_5f0b9250-8575-4664-bacf-de2c8c8a134c"
+        cmmnElementRef="_10eb8352-ab24-4d4c-abd8-a33ab5e1d00d">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor red="255" green="255" blue="255"/>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds x="534.6041666666667" y="249" width="100" height="135"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="124.015625" width="94" x="539.6041666666667" y="257"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="_9559d2f8-32d1-4697-947b-79bec8dc4a32"
+        cmmnElementRef="_122f94c2-88dd-454c-a5ea-db0b73ef832f">
+        <cmmndi:CMMNStyle>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="554.6041666666667" y="249"/>
+        <di:waypoint x="554.6041666666667" y="231.98112783208728"/>
+        <di:waypoint x="729.6041666666667" y="231.98112783208728"/>
+        <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge id="_c2c9ac46-b03f-489f-b22e-e97963858e3f"
+        cmmnElementRef="_f4631bb4-f28f-4164-a635-4c28da04fa88">
+        <cmmndi:CMMNStyle>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="677.1955028294874" y="626.7800000000001"/>
+        <di:waypoint x="657.1955028294874" y="626.7800000000001"/>
+        <di:waypoint x="657.1955028294874" y="475.42352158891856"/>
+        <di:waypoint x="729.6041666666667" y="475.42352158891856"/>
+        <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge id="_b208f397-fb48-4dca-ac42-13e4a92134e7"
+        cmmnElementRef="_cf1c8685-039b-41e7-ac69-b91551bd8322">
+        <cmmndi:CMMNStyle>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="763.6041666666667" y="232"/>
+        <di:waypoint x="838.8998347480771" y="232"/>
+        <di:waypoint x="838.8998347480771" y="317.33"/>
+        <di:waypoint x="891.1955028294874" y="317.33"/>
+        <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge id="_a1940b81-1406-4c83-a7e2-f4855d1e51a1"
+        cmmnElementRef="_77e63d1a-b036-4793-ba44-976e98d4f1a2">
+        <cmmndi:CMMNStyle>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="763.6041666666667" y="375"/>
+        <di:waypoint x="840.3998347480771" y="375"/>
+        <di:waypoint x="840.3998347480771" y="342.65999999999997"/>
+        <di:waypoint x="891.1955028294874" y="342.65999999999997"/>
+        <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge id="_76f492bc-b4ba-4a85-bb86-f0dccf526e36"
+        cmmnElementRef="_aac02834-1fce-42da-8264-b5b1b69f8e0d">
+        <cmmndi:CMMNStyle>
+          <cmmndi:StrokeColor red="0" green="0" blue="0"/>
+          <cmmndi:FontColor red="0" green="0" blue="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="763.6041666666667" y="475.42352158891856"/>
+        <di:waypoint x="891.1955028294874" y="475.4235215889186"/>
+        <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+      </cmmndi:CMMNEdge>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
 </semantic:definitions>

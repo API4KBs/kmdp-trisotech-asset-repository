@@ -37,6 +37,8 @@ import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
@@ -389,21 +391,23 @@ class MetadataTest {
     String internalId = "http://www.trisotech.com/definitions/_" + id;
     String versionTag = "3.2.4";
     String expectedFileId = MAYO_ARTIFACTS_BASE_URI + id;
-    String expectedFileIdAndVersion = expectedFileId + "/versions/" + versionTag;
-
+    String updated = "2019-08-01T13:17:30Z";
+    Date modelDate = Date.from(Instant.parse(updated));
+    String expectedFileIdAndVersion = expectedFileId + "/versions/" + versionTag + "+" + modelDate.getTime();
+    String expectedVersionTag = versionTag + "+" + modelDate.getTime();
 
     // test w/o a version
-    ResourceIdentifier fileId = extractor.convertInternalId(internalId, null);
+    ResourceIdentifier fileId = extractor.convertInternalId(internalId, null, null);
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
     assertNull(fileId.getVersionTag());
     assertEquals(expectedFileId, fileId.getResourceId().toString());
 
     // test w/version
-    fileId = extractor.convertInternalId(internalId, versionTag);
+    fileId = extractor.convertInternalId(internalId, versionTag, updated);
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
-    assertEquals(versionTag, fileId.getVersionTag());
+    assertEquals(expectedVersionTag, fileId.getVersionTag());
     assertEquals(expectedFileId, fileId.getResourceId().toString());
     assertEquals(expectedFileIdAndVersion, fileId.getVersionId().toString());
   }

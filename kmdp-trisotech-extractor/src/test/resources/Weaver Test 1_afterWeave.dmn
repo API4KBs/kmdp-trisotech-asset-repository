@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
   xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
   xmlns:ann="http://kmdp.mayo.edu/metadata/annotations"

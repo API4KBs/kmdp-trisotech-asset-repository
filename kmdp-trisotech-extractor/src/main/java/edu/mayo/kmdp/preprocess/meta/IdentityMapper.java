@@ -54,12 +54,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException.NotFound;
 
 
 /**
  * IdentityMapper is used to map dependencies between Trisotech artifacts. SPARQL is used to query
  * the triples from Trisotech for this information. Each artifact has its own assetID, which is also
- * accessible via triples, so asset-to-asset mapping can be handled here as well.
+ * accessible via triples, so asset-to-asset mapping can be handled here as well. These queries only
+ * return information about the latest versions of the artifacts.
  */
 @Component
 public class IdentityMapper {
@@ -95,7 +97,7 @@ public class IdentityMapper {
   private static final String MIME_TYPE = "?mimeType";
   private static final String VERSION = "?version";
   private static final String UPDATED = "?updated";
-  private static final String ARTIFACTNAME = "?artifactName";
+  private static final String ARTIFACT_NAME = "?artifactName";
 
   private static final String VERSIONS = "/versions";
 
@@ -123,8 +125,9 @@ public class IdentityMapper {
     models = ResultSetFactory.makeRewindable(query(getQueryStringModels(), place));
     publishedModels = ResultSetFactory
         .makeRewindable(query(getQueryStringPublishedModels(), place));
-    orderedModels = hierarchySorter
-        .linearize(getModelList(publishedModels), artifactToArtifactIDMap);
+    // TODO: orderedModels needed? Not currently used; overflow error from hierarchySorter (infinite loop)
+//    orderedModels = hierarchySorter
+//        .linearize(getModelList(publishedModels), artifactToArtifactIDMap);
   }
 
   private void createMap(ResultSet results) {
@@ -400,11 +403,11 @@ public class IdentityMapper {
         throw new NotLatestVersionException(soln.getResource(MODEL).getURI());
       }
     }
-    return null;
+    throw new NotFoundException(assetId.getTag());
   }
 
   /**
-   * Get the fileId for the asset from published models
+   * Get the fileId for the asset from models
    *
    * @param assetId Id of the asset looking for.
    * @param any search any model? true, else search only published models
@@ -440,7 +443,8 @@ public class IdentityMapper {
     publishedModels.reset();
     while (publishedModels.hasNext()) {
       QuerySolution soln = publishedModels.nextSolution();
-      if (soln.getResource(MODEL).getURI().equals(internalId)) {
+      // use contains as sometimes internalId is just the tag
+      if (soln.getResource(MODEL).getURI().contains(internalId)) {
         return Optional.ofNullable(soln.getLiteral(FILE_ID).getString());
       }
     }
@@ -480,7 +484,7 @@ public class IdentityMapper {
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
       if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getResourceId().toString())) {
-        return Optional.ofNullable(soln.getLiteral(ARTIFACTNAME).getString());
+        return Optional.ofNullable(soln.getLiteral(ARTIFACT_NAME).getString());
       }
     }
     return Optional.empty();
@@ -491,7 +495,7 @@ public class IdentityMapper {
     while (models.hasNext()) {
       QuerySolution soln = models.nextSolution();
       if (soln.getResource(MODEL).getURI().contains(artifactId.getTag())) {
-        return Optional.ofNullable(soln.getLiteral(ARTIFACTNAME).getString());
+        return Optional.ofNullable(soln.getLiteral(ARTIFACT_NAME).getString());
       }
     }
     return Optional.empty();
@@ -510,7 +514,8 @@ public class IdentityMapper {
     while (models.hasNext()) {
       while (models.hasNext()) {
         QuerySolution soln = models.nextSolution();
-        if (soln.getResource(MODEL).getURI().equals(internalId)) {
+        // use contains as sometimes internalId is just the tag
+        if (soln.getResource(MODEL).getURI().contains(internalId)) {
           return Optional.ofNullable(soln.getLiteral(MIME_TYPE).getString());
         }
       }
@@ -536,6 +541,27 @@ public class IdentityMapper {
     }
     return Optional.empty();
   }
+
+  /**
+   * Get the version using the model id State only exists on published models
+   *
+   * @param fileId the file id of the model
+   * @return the version as specified in the triples
+   */
+  public Optional<String> getVersion(String fileId) {
+    publishedModels.reset();
+    while (publishedModels.hasNext()) {
+      while (publishedModels.hasNext()) {
+        QuerySolution soln = publishedModels.nextSolution();
+        if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
+          System.out.println("returning version of: " + soln.getLiteral(VERSION).getString());
+          return Optional.ofNullable(soln.getLiteral(VERSION).getString());
+        }
+      }
+    }
+    return Optional.empty();
+  }
+
 
   /**
    * Get the version of the artifact for the asset provided Versions only exist on published
@@ -577,21 +603,30 @@ public class IdentityMapper {
 
 
   /**
-   * Given the internal id for the model, get the information about other models it imports.
+   * Given the internal id, version and timestmamp for the model, get the information about other
+   * models it imports. Want the imported models that correspond to this version of the model, NOT
+   * latest.
    *
    * @param docId the artifact id
+   * @param version the version of the artifact
+   * @param updated the timestamp of the artifact
    * @return a list of ResourceIdentifier for the artifacts used by this artifact (dependencies)
    */
-  public List<ResourceIdentifier> getArtifactImports(String docId) {
+  public List<ResourceIdentifier> getArtifactImports(String docId, String version,
+      String updated) {
     Set<Resource> resources = null;
     List<ResourceIdentifier> artifacts = new ArrayList<>();
 
+    // TODO: potential issue when working with older versions of the model? -
+    //  maybe the artifact->artifact map has changed and has different artifact dependencies
+    //  artifactToArtifactIDMap is based on latest
     if (!Util.isEmpty(docId)) {
       String id = docId.substring(docId.lastIndexOf('/') + 1);
       for (Entry<Resource, Set<Resource>> entry : artifactToArtifactIDMap.entrySet()) {
         Resource k = entry.getKey();
         if (k.getLocalName().substring(1).equals(id)) {
           resources = artifactToArtifactIDMap.get(k);
+          break;
         }
       }
     }
@@ -602,6 +637,10 @@ public class IdentityMapper {
       }
     }
     return artifacts;
+  }
+
+  public boolean isLatest(String fileId, String version) {
+    return getVersion(fileId).equals(Optional.of(version));
   }
 
   /**
@@ -695,7 +734,7 @@ public class IdentityMapper {
   public ResourceIdentifier convertInternalId(String internalId, String versionTag,
       String timestamp) {
     String id = internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
-    if(null != timestamp) {
+    if (null != timestamp) {
       Date modelDate = Date.from(Instant.parse(timestamp));
       String timestampVersion = versionTag + "+" + modelDate.getTime();
       return SemanticIdentifier.newId(MAYO_ARTIFACTS_BASE_URI_URI, id, timestampVersion);

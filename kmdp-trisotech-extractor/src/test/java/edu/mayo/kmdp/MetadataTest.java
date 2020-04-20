@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp;
 
@@ -75,13 +73,13 @@ class MetadataTest {
   /**
    * Need to use @PostConstruct instead of @BeforeAll because @BeforeAll requires the method be
    * static, and cannot @Autowired on static variables which would be needed for the static method.
-   * Have the check for constructed as otherwise @PostConstruct will be run before EVERY @Test.
-   * It still will but now the processing won't happen after the first time.
+   * Have the check for constructed as otherwise @PostConstruct will be run before EVERY @Test. It
+   * still will but now the processing won't happen after the first time.
    */
   @PostConstruct
   public void init() {
 
-    if(!constructed) {
+    if (!constructed) {
 
       Optional<byte[]> dmn = XMLUtil
           .loadXMLDocument(MetadataTest.class.getResourceAsStream(dmnPath))
@@ -257,11 +255,12 @@ class MetadataTest {
   void testResolveInternalArtifactID() {
     try {
       String artifactId = extractor
-          .resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "1.0.0-SNAPSHOT", false);
+          .resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "1.1.1", false);
       assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
           artifactId);
     } catch (NotLatestVersionException e) {
-      fail("Should have artifact for specified asset: 3c66cf3a-93c4-4e09-b1aa-14088c76aded");
+      fail(
+          "Should have artifact for specified asset: 3c66cf3a-93c4-4e09-b1aa-14088c76aded with version 1.1.1");
       e.printStackTrace();
     }
   }
@@ -277,26 +276,24 @@ class MetadataTest {
   }
 
   @Test
-  void testResolveInternalArtifactID_Published_Null() {
-    try {
-      String artifactId = extractor
-          .resolveInternalArtifactID("abcdef3a-93c4-4e09-b1aa-14088c76adee", "1.0.0-SNAPSHOT", false);
-      assertEquals(null, artifactId);
-    } catch (NotLatestVersionException e) {
-      fail("Unexpected error");
-      e.printStackTrace();
-    }
+  void testResolveInternalArtifactID_Published_NotFound() {
+    String assetId = "abcdef3a-93c4-4e09-b1aa-14088c76adee";
+    NotFoundException nfe = assertThrows(NotFoundException.class,
+        () -> extractor
+            .resolveInternalArtifactID(assetId, "1.0.0-SNAPSHOT", false));
+    assertEquals(assetId, nfe.getMessage());
   }
 
   @Test
   void testResolveInternalArtifactID_Any() {
     try {
       String artifactId = extractor
-          .resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "1.0.0-SNAPSHOT", true);
+          .resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "1.1.1", true);
       assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
           artifactId);
     } catch (NotLatestVersionException e) {
-      fail("Should have artifact for specified asset: 3c66cf3a-93c4-4e09-b1aa-14088c76aded");
+      fail(
+          "Should have artifact for specified asset: 3c66cf3a-93c4-4e09-b1aa-14088c76aded and version 1.1.1");
       e.printStackTrace();
     }
   }
@@ -312,15 +309,14 @@ class MetadataTest {
   }
 
   @Test
-  void testResolveInternalArtifactID_Any_Null() {
-    try {
-      String artifactId = extractor
-          .resolveInternalArtifactID("abcdef3a-93c4-4e09-b1aa-14088c76adee", "1.0.0-SNAPSHOT", true);
-      assertEquals(null, artifactId);
-    } catch (NotLatestVersionException e) {
-      fail("Unexpected error");
-      e.printStackTrace();
-    }
+  void testResolveInternalArtifactID_Any_NotFound() {
+    String assetId = "abcdef3a-93c4-4e09-b1aa-14088c76adee";
+    NotFoundException nfe = assertThrows(NotFoundException.class,
+        () -> extractor
+            .resolveInternalArtifactID(assetId, "1.0.0-SNAPSHOT",
+                true));
+    assertEquals(assetId, nfe.getMessage());
+
   }
 
   @Test
@@ -338,7 +334,7 @@ class MetadataTest {
     ResourceIdentifier assetID = extractor
         .resolveEnterpriseAssetID("123720a6-9758-45a3-8c5c-5fffab12c494");
     assertEquals(
-        "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT",
+        "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.1.1",
         assetID.getVersionId().toString());
   }
 
@@ -379,7 +375,8 @@ class MetadataTest {
 
   @Test
   void testGetFileId_internalId_URIString_empty() {
-    Optional<String> fileid = extractor.getFileId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e7abcd");
+    Optional<String> fileid = extractor
+        .getFileId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e7abcd");
     assertNotNull(fileid);
     assertFalse(fileid.isPresent());
     assertEquals(Optional.empty(), fileid);
@@ -393,7 +390,8 @@ class MetadataTest {
     String expectedFileId = MAYO_ARTIFACTS_BASE_URI + id;
     String updated = "2019-08-01T13:17:30Z";
     Date modelDate = Date.from(Instant.parse(updated));
-    String expectedFileIdAndVersion = expectedFileId + "/versions/" + versionTag + "+" + modelDate.getTime();
+    String expectedFileIdAndVersion =
+        expectedFileId + "/versions/" + versionTag + "+" + modelDate.getTime();
     String expectedVersionTag = versionTag + "+" + modelDate.getTime();
 
     // test w/o a version

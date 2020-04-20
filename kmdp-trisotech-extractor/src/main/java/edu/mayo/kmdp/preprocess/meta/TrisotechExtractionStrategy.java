@@ -33,6 +33,7 @@ import edu.mayo.kmdp.metadata.v2.surrogate.Link;
 import edu.mayo.kmdp.metadata.v2.surrogate.Publication;
 import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
+import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
@@ -48,6 +49,7 @@ import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSe
 import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import java.net.URI;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -56,6 +58,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.apache.jena.shared.NotFoundException;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
@@ -105,7 +108,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   @Override
   public KnowledgeAsset extractXML(Document dox, TrisotechFileInfo meta) {
-    Optional<ResourceIdentifier> assetID = getAssetID(meta.getId()); // getAssetID(dox);
+    Optional<ResourceIdentifier> assetID = getAssetID(meta.getId());
     if (logger.isDebugEnabled()) {
       logger.debug("assetID: {}", assetID.isPresent() ? assetID.get() : Optional.empty());
     }
@@ -146,7 +149,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .withEstablishedOn(modelDate);
 
     // artifact<->artifact relation
-    List<ResourceIdentifier> theTargetArtifactId = mapper.getArtifactImports(docId.get());
+    List<ResourceIdentifier> theTargetArtifactId = getArtifactImports(docId.get(), model);
     if (null != theTargetArtifactId) {
       logger.debug("theTargetArtifactId: {}", theTargetArtifactId);
     } else {
@@ -220,6 +223,110 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return surr;
   }
 
+  private List<ResourceIdentifier> getArtifactImports(String docId, TrisotechFileInfo model) {
+    // if dealing with the latest of the model, just retrieve the latest of the imports
+    if(mapper.isLatest(model.getId(), model.getVersion())) {
+      return mapper.getArtifactImports(docId, model.getVersion(), model.getUpdated());
+    }
+     else {
+       return getImportVersions(docId, model);
+    }
+  }
+
+  private List<ResourceIdentifier> getImportVersions(String docId, TrisotechFileInfo model) {
+    List<ResourceIdentifier> dependencies = new ArrayList<>();
+    // need to find the dependency artifact versions that map to this artifact version
+    // using this algorithm:
+    // map to the 'latest' version of the dependency that is not timestamped later then the next
+    // get versions of this artifact
+    logger.debug(
+        "current artifactVersion: {} {} {} ", model.getName(), model.getVersion(), model
+            .getUpdated());
+    // getTrisotechModelVersions returns all versions of the model EXCEPT the latest
+    List<TrisotechFileInfo> artifactModelVersions = getTrisotechModelVersions(model.getId(), model.getMimetype());
+    // get next version
+    TrisotechFileInfo nextArtifactVersion = null;
+    Date artifactDate = Date.from(Instant.parse(model.getUpdated()));
+    Date nextVersionDate = null;
+    for(TrisotechFileInfo tfi: artifactModelVersions) {
+      // compare timestamp
+      // TODO: need to compare version too?
+      nextVersionDate = Date.from(Instant.parse(tfi.getUpdated()));
+      if(nextVersionDate.after(artifactDate)) {
+        nextArtifactVersion = tfi;
+        break;
+      }
+    }
+    // the latest version is NOT included in the list of versions;
+    // if next is null, it needs to be set to latest
+    if(null == nextArtifactVersion) {
+      nextArtifactVersion = TrisotechWrapper.getLatestModelFileInfo(model.getId()).orElse(null);
+      nextVersionDate = Date.from(Instant.parse(nextArtifactVersion.getUpdated()));
+    }
+
+    logger.debug("nextArtifactVersion: {} {} {} ",nextArtifactVersion.getName(),
+        nextArtifactVersion.getVersion(), nextArtifactVersion.getUpdated());
+    logger.debug("nextVersionDate: {}", nextVersionDate.toString());
+    // get versions of the imported artifacts
+    List<ResourceIdentifier> artifactImports = mapper.getArtifactImports(docId, model.getVersion(), model.getUpdated());
+    for(ResourceIdentifier ri : artifactImports) {
+      logger.debug("have resourceIdentifier from artifactImports: {} ", ri.getVersionId().toString());
+      List<TrisotechFileInfo> importVersions = getTrisotechModelVersions(ri.getTag());
+      // will need to use convertInternalId to get the KMDP resourceId to return
+      // use the tag of the artifact with the version and timestamp found to match
+      if(importVersions.size() == 0) {
+        return dependencies;
+      }
+      TrisotechFileInfo matchVersion = findVersionMatch(importVersions, artifactDate, nextVersionDate);
+      if(null != matchVersion) { // shouldn't happen
+        dependencies.add(convertInternalId(ri.getTag(),
+            matchVersion.getVersion(),
+            matchVersion.getUpdated()));
+      }
+    }
+    return dependencies;
+  }
+
+  private TrisotechFileInfo findVersionMatch(List<TrisotechFileInfo> importVersions,
+      Date artifactDate, Date nextVersionDate) {
+    // as loop through the dependency versions, need to keep track of the previous one
+    // as artifact version will depend on the dependency version that is
+    // JUST BEFORE the next version of the artifact
+    TrisotechFileInfo prevVersion;
+    TrisotechFileInfo thisVersion = null;
+    TrisotechFileInfo matchVersion = null;
+    for(TrisotechFileInfo tfi : importVersions) {
+      prevVersion = thisVersion;
+      logger.debug("version: {}", tfi.getVersion());
+      logger.debug("updated: {}", tfi.getUpdated());
+      // find the version that is a match for the artifact
+      Date depDate = Date.from(Instant.parse(tfi.getUpdated()));
+
+      logger.debug("dependency date: {} ", depDate);
+      logger.debug("nextVersion compareTo depDate: {}", nextVersionDate.compareTo(depDate));
+      logger.debug("artifactDate compareTo depDate: {}", artifactDate.compareTo(depDate));
+      logger.debug("depDate before artifactDate? {}", depDate.before(artifactDate));
+      logger.debug("depDate after artifactDate? {}", depDate.after(artifactDate));
+      logger.debug("depDate before nextDate? {}", depDate.before(nextVersionDate));
+      logger.debug("depDate after nextDate? {}", depDate.after(nextVersionDate));
+      // will need to use convertInternalId to get the KMDP resourceId to return
+      if((depDate.after(artifactDate)) &&
+          ((depDate.before(nextVersionDate)) ||
+              (depDate.after(nextVersionDate)))) {
+        matchVersion = prevVersion;
+      }
+      if(matchVersion != null) {
+        break; // for loop
+      }
+      thisVersion = tfi;
+    }
+    if(null != matchVersion) {
+      return matchVersion;
+    } else {
+      return thisVersion;
+    }
+  }
+
   private Publication getPublication(TrisotechFileInfo meta) {
     Publication lifecycle = new Publication();
     // TODO: FAIL if not? shouldn't have made it this far if not CAO
@@ -255,11 +362,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         // TODO: Do something different for null id? means related artifact was not published
         //  log warning was already noted in gathering of related artifacts CAO
         .filter(Objects::nonNull)
-        .map(resourceIdentifier ->  {
-          System.out.println("resourceIdentifier for targetArtifact: " + resourceIdentifier.getVersionId().toString());
-          return new Dependency().withRel(DependencyTypeSeries.Imports)
-                .withHref(resourceIdentifier);
-  })
+        .map(resourceIdentifier -> new Dependency().withRel(DependencyTypeSeries.Imports)
+              .withHref(resourceIdentifier))
         .collect(Collectors.toList());
 
   }
@@ -438,6 +542,25 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
       return Optional.of(DMN_1_2);
     }
     return Optional.empty();
+  }
+
+  public List<TrisotechFileInfo> getTrisotechModelVersions(String internalId) {
+    // need fileId as trisotech APIs work on fileId
+    Optional<String> fileId = getFileId(internalId);
+    // need mimetype to get the correct URL to download XML
+    Optional<String> mimeType = getMimetype(internalId);
+    if (!fileId.isPresent() || !mimeType.isPresent()) {
+      // TODO: throw exception or just return NOT_FOUND? CAO
+      throw new NotFoundException("Error finding fileId or mimetype for internalid " + internalId);
+    }
+    // need to get all versions for the file
+    return getTrisotechModelVersions(fileId.get(), mimeType.get());
+  }
+
+  public List<TrisotechFileInfo> getTrisotechModelVersions(String fileId, String mimeType) {
+    // need to get all versions for the file
+    return TrisotechWrapper
+        .getModelVersions(fileId, mimeType);
   }
 
 }

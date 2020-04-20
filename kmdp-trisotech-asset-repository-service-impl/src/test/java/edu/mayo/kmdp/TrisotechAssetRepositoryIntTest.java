@@ -23,8 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import edu.mayo.kmdp.metadata.v2.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
+import edu.mayo.kmdp.metadata.v2.surrogate.Link;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
 import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
@@ -126,6 +129,10 @@ class TrisotechAssetRepositoryIntTest {
         ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
   }
 
+  /*
+  Test for a version that is not the latest and must be 'found' by searching through older versions.
+  Verify the dependencies are of the correct version also.
+   */
   @Test
   void getVersionedKnowledgeAsset_found() {
     String expectedAssetId = MAYO_ASSETS_BASE_URI
@@ -134,7 +141,8 @@ class TrisotechAssetRepositoryIntTest {
         + "/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
         + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0+1565742456000";
-
+    String expectedDependencyId = MAYO_ARTIFACTS_BASE_URI
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.2+1565368008000";
     Answer<KnowledgeAsset> answer= tar
         .getVersionedKnowledgeAsset(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.0.0");
@@ -147,10 +155,107 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(1, ka.getCarriers().size());
     assertEquals(expectedArtifactId,
         ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
+    Dependency dependency = (Dependency) ka.getCarriers().get(0).getLinks().get(0);
+    assertEquals(expectedDependencyId, dependency.getHref().getVersionId().toString());
 
   }
 
+  /*
+  More complex 'found' version test
+   */
+  @Test
+  void getVersionKnowledgeAsset_found2(){
+    String expectedAssetId = MAYO_ASSETS_BASE_URI
+        + "3c99cf3a-93c4-4e09-b1aa-14088c76aded";
+    String expectedAssetVersionId = expectedAssetId
+        + "/versions/1.0.0";
+    // Weave Test 1 (CMMN)
+    String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
+        + "f59708b6-96c0-4aa3-be4a-31e075d76ec9/versions/3.0.0+1587068731000";
+    // Weaver Test 1 (DMN)
+    String expectedDependencyId1 = MAYO_ARTIFACTS_BASE_URI
+        + "5682fa26-b064-43c8-9475-1e4281e74068/versions/1.9.0+1586549460000";
+    // Weaver Test 2 (DMN)
+    String expectedDependencyId2 = MAYO_ARTIFACTS_BASE_URI
+        + "ede3b331-7b10-4580-98be-66ebff344c21/versions/0.5.0+1587068342000";
 
+    Answer<KnowledgeAsset> answer= tar
+        .getVersionedKnowledgeAsset(UUID.fromString("3c99cf3a-93c4-4e09-b1aa-14088c76aded"),
+            "1.0.0");
+
+    assertTrue(answer.isSuccess());
+    assertNotNull(answer.get());
+    KnowledgeAsset ka = answer.get();
+    assertEquals(expectedAssetId, ka.getAssetId().getResourceId().toString());
+    assertEquals(expectedAssetVersionId, ka.getAssetId().getVersionId().toString());
+    assertEquals(1, ka.getCarriers().size());
+    assertEquals(expectedArtifactId,
+        ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
+    assertEquals(2, ka.getCarriers().get(0).getLinks().size());
+    List<Link> links = ka.getCarriers().get(0).getLinks();
+    for(Link link : links) {
+      Dependency dependency = (Dependency) link;
+      if(dependency.getHref().getTag().equals("5682fa26-b064-43c8-9475-1e4281e74068")) {
+        assertEquals(expectedDependencyId1, dependency.getHref().getVersionId().toString());
+      } else if(dependency.getHref().getTag().equals("ede3b331-7b10-4580-98be-66ebff344c21")) {
+        assertEquals(expectedDependencyId2, dependency.getHref().getVersionId().toString());
+      } else {
+        fail("Unexpected dependency value");
+      }
+    }
+  }
+
+  /*
+  expect to get back the latest versions of dependencies
+   */
+  @Test
+  void getVersionKnowledgeAsset_latest() {
+    String expectedAssetId = MAYO_ASSETS_BASE_URI
+        + "3c99cf3a-93c4-4e09-b1aa-14088c76aded";
+    String expectedAssetVersionId = expectedAssetId
+        + "/versions/2.0.0";
+    // Weave Test 1 (CMMN)
+    String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
+        + "f59708b6-96c0-4aa3-be4a-31e075d76ec9/versions/3.0.1+1587071455000";
+    // Weaver Test 1 (DMN)
+    String expectedDependencyId1 = MAYO_ARTIFACTS_BASE_URI
+        + "5682fa26-b064-43c8-9475-1e4281e74068/versions/2.0.0+1587068239000";
+    // Weaver Test 2 (DMN)
+    String expectedDependencyId2 = MAYO_ARTIFACTS_BASE_URI
+        + "ede3b331-7b10-4580-98be-66ebff344c21/versions/0.6.0+1587069044000";
+
+    Answer<KnowledgeAsset> answer= tar
+        .getVersionedKnowledgeAsset(UUID.fromString("3c99cf3a-93c4-4e09-b1aa-14088c76aded"),
+            "2.0.0");
+
+    assertTrue(answer.isSuccess());
+    assertNotNull(answer.get());
+    KnowledgeAsset ka = answer.get();
+    assertEquals(expectedAssetId, ka.getAssetId().getResourceId().toString());
+    assertEquals(expectedAssetVersionId, ka.getAssetId().getVersionId().toString());
+    assertEquals(1, ka.getCarriers().size());
+    assertEquals(expectedArtifactId,
+        ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
+    assertEquals(2, ka.getCarriers().get(0).getLinks().size());
+    List<Link> links = ka.getCarriers().get(0).getLinks();
+    for(Link link : links) {
+      Dependency dependency = (Dependency) link;
+      if(dependency.getHref().getTag().equals("5682fa26-b064-43c8-9475-1e4281e74068")) {
+        assertEquals(expectedDependencyId1, dependency.getHref().getVersionId().toString());
+      } else if(dependency.getHref().getTag().equals("ede3b331-7b10-4580-98be-66ebff344c21")) {
+        assertEquals(expectedDependencyId2, dependency.getHref().getVersionId().toString());
+      } else {
+        fail("Unexpected dependency value: " + dependency.getHref().getVersionId().toString());
+      }
+    }
+    //    https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.1.1 <- Weaver Test 1 Decision asset Id
+//    Published as 2.0.0
+//    https://clinicalknowledgemanagement.mayo.edu/assets/3c88cf3a-93c4-4e09-b1aa-14088c76aded/versions/2.0.0 <- Weaver Test 2 asset Id
+//     Published as 0.6.0 Draft
+//    https://clinicalknowledgemanagement.mayo.edu/assets/3c99cf3a-93c4-4e09-b1aa-14088c76aded/versions/2.0.0 <- Weave Test 1 CMMN asset Id
+//    Published as 3.0.1 Draft
+
+  }
   @Test
   void getVersionedKnowledgeAsset_PendingApproval() {
     String expectedAssetId = MAYO_ASSETS_BASE_URI
@@ -393,7 +498,6 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(answer.isClientFailure());
   }
 
-  // TODO: more tests for versions that need to be 'found' and for versions that don't exist, for both asset and artifact CAO
   @Test
   void getKnowledgeAssetCarrierVersion() {
     String expectedAssetId = MAYO_ASSETS_BASE_URI

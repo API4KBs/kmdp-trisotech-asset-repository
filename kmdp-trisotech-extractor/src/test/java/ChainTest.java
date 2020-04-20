@@ -161,11 +161,11 @@ class ChainTest {
       String metaPath = "/WeaverTest1Meta.json";
       InputStream meta = ChainTest.class.getResourceAsStream(metaPath);
       String expectedAssetTag = "3c66cf3a-93c4-4e09-b1aa-14088c76aded";
-      String expectedVersion = "1.0.0-SNAPSHOT";
+      String expectedVersion = "1.1.1";
       String expectedAssetVersionId =
           MAYO_ASSETS_BASE_URI + expectedAssetTag + "/versions/" + expectedVersion;
       String expectedArtifactTag = "5682fa26-b064-43c8-9475-1e4281e74068";
-      String expectedArtifactVersion = "1.9.0+1586549460000";
+      String expectedArtifactVersion = "2.0.0+1587068239000";
       String expectedArtifactId =
           MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
       String expectedArtifactVersionId = expectedArtifactId + "/versions/" + expectedArtifactVersion;
@@ -257,11 +257,11 @@ class ChainTest {
       String modelInfoPath = "/WeaveTest1Meta.json";
       String expectedAssetTag = "3c99cf3a-93c4-4e09-b1aa-14088c76aded";
       String expectedAssetId = MAYO_ASSETS_BASE_URI + expectedAssetTag;
-      String expectedAssetVersionId = expectedAssetId + "/versions/1.0.0-SNAPSHOT";
+      String expectedAssetVersionId = expectedAssetId + "/versions/2.0.0";
       String expectedArtifactTag = "f59708b6-96c0-4aa3-be4a-31e075d76ec9";
       String expectedArtifactId =
           MAYO_ARTIFACTS_BASE_URI + expectedArtifactTag;
-      String expectedArtifactVersionId = expectedArtifactId + "/versions/2.2.3+1586550844000";
+      String expectedArtifactVersionId = expectedArtifactId + "/versions/3.0.1+1587071455000";
 
       InputStream modelInfo = ChainTest.class.getResourceAsStream(modelInfoPath);
 

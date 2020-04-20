@@ -13,6 +13,7 @@
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.BASE_URL;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_XML_MIMETYPE;
@@ -422,7 +423,7 @@ public class TrisotechWrapper {
       logger.debug("tfiUpdated: {}", tfi.getUpdated());
       logger.debug("Date from tfiUpdated: {}", DateTimeUtil.parseDate(tfi.getUpdated()));
 
-      return Optional.of(SemanticIdentifier.newId(tfi.getId(), tfi.getVersion())
+      return Optional.of(SemanticIdentifier.newId(MAYO_ARTIFACTS_BASE_URI_URI, tfi.getId(), tfi.getVersion())
           .withEstablishedOn(DateTimeUtil.parseDateTime(tfi.getUpdated())));
     }
     logger.info("No published version for {}", tfi.getName() );

@@ -138,6 +138,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     // For assetId, find artifactId; For assetId/versionTag, is latest artifactId/version a match? if not, get versions of artifactId and weave each one to get assetId/version
     try {
       internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, false);
+
       fileId = extractor.getFileId(internalId);
       // the url is available from the extractor, HOWEVER, it is not the correct form to retrieve
       // the file in the correct format (xml) so need to make a server call now to get the proper URL
@@ -156,6 +157,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       } catch (NotFoundException nfe) {
         return Answer.of(Optional.empty());
       }
+    } catch (NotFoundException nfe) {
+      return Answer.of(Optional.empty());
     }
   }
 
@@ -170,7 +173,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    */
   private KnowledgeAsset findArtifactVersionForAsset(String internalId, UUID assetId,
       String versionTag) {
-    List<TrisotechFileInfo> modelVersions = getTrisotechModelVersions(internalId);
+    List<TrisotechFileInfo> modelVersions = extractor.getTrisotechModelVersions(internalId);
     // reverse the list so the most recent version that matches is selected
     // there can be multiple versions of the artifact that map to one version of asset
     Collections.reverse(modelVersions);
@@ -197,20 +200,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     }
     // have gone through all versions of the artifact and not found...
     throw new NotFoundException("No artifact for asset " + assetId + " version: " + versionTag);
-  }
-
-  private List<TrisotechFileInfo> getTrisotechModelVersions(String internalId) {
-    // need fileId as trisotech APIs work on fileId
-    Optional<String> fileId = extractor.getFileId(internalId);
-    // need mimetype to get the correct URL to download XML
-    Optional<String> mimeType = extractor.getMimetype(internalId);
-    if (!fileId.isPresent() || !mimeType.isPresent()) {
-      // TODO: throw exception or just return NOT_FOUND? CAO
-      throw new NotFoundException("Error finding fileId or mimetype for internalid " + internalId);
-    }
-    // need to get all versions for the file
-    return TrisotechWrapper
-        .getModelVersions(fileId.get(), mimeType.get());
   }
 
   @Override
@@ -349,7 +338,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   private Answer<KnowledgeCarrier> tryAnotherVersion(
       String internalId, UUID assetId, String versionTag) {
     KnowledgeCarrier carrier = null;
-    List<TrisotechFileInfo> trisotechVersions = getTrisotechModelVersions(internalId);
+    List<TrisotechFileInfo> trisotechVersions = extractor.getTrisotechModelVersions(internalId);
     Collections.reverse(trisotechVersions);
     for (TrisotechFileInfo model : trisotechVersions) {
       if (null == model.getVersion() && null == model.getState()) {
@@ -532,7 +521,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    * when asset version does not match for model (artifact) version given, need to search all
    * versions of the artifacts for the assetID. NOTE: This should NOT happen in reality. New
    * artifacts should be created if the assetID changes. This will only match if all ids and tags
-   * match. TODO: much of this code is the same as findArtifactVersionForAsset. Refactor.
+   * match.
+   * TODO: much of this code is the same as findArtifactVersionForAsset. Refactor.
    *
    * @param assetId the assetId looking for
    * @param versionTag the version of the asset looking for
@@ -544,7 +534,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   private Answer<KnowledgeCarrier> getKnowledgeCarrierFromOtherVersion(UUID assetId,
       String versionTag,
       String internalId, String artifactVersionTag) {
-    List<TrisotechFileInfo> modelVersions = getTrisotechModelVersions(internalId);
+    List<TrisotechFileInfo> modelVersions = extractor.getTrisotechModelVersions(internalId);
     // reverse the list so the most recent version that matches is selected
     // there can be multiple versions of the artifact that map to one version of asset
     Collections.reverse(modelVersions);

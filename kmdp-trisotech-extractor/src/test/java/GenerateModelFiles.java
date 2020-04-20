@@ -30,15 +30,15 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  *
  * Some setup is needed to use this file:
  * 1. Download the XML for the models needed if not already in afib, dictionary or SharedCardiologyDecisions
- *    sub-directories. Basic models are in resources.
+ *    sub-directories in resources. Basic models are in resources.
  * 2. Copy the meta from postman to <model name>Meta.json
- * 3. Set MEA name and ID in extractor application.properties for MEA.
+ * 3. Set MEA name and ID in extractor application.properties for MEA (convertModelsAfib).
  *    Set MEA-Test and ID in extractor application.properties for MEA-Test. (default)
  * 4. Add token to the appropriate properties file needed.
  * 5. In printConvertResults, change the date on the extension.
  * 6. Run whichever method is desired to generate the output.
  *
- * The output files can then be used in knew-asset-factory for PD generation testing.
+ * The afib output files can then be used in knew-asset-factory for PD generation testing.
  */
 
 @Disabled("For developer use only")
@@ -76,7 +76,6 @@ public class GenerateModelFiles {
   @Test
   void convertModelsAfib() {
     try {
-      // FAILS because missing Asset ID
       dmnPath = "/afib/Anticoagulation Recommendation.dmn";
       dmn = ChainTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Anticoagulation RecommendationMeta.json";
@@ -101,7 +100,6 @@ public class GenerateModelFiles {
 
       printConvertResults(m, "/afib/Choice of Atrial Fibrillation Treatment Strategy");
 
-      // FAILS -- because not published
       dmnPath = "/afib/Choice of Long-Term Management of Coagulation Status.dmn";
       dmn = ChainTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Choice of Long-Term Management of Coagulation StatusMeta.json";
@@ -134,6 +132,7 @@ public class GenerateModelFiles {
 
       printConvertResults(m, "/afib/Prior Management of Atrial Fibrillation");
 
+      // FAILS due to no AssetID in model
       dmnPath = "/afib/Current Status of Atrial Fibrillation.dmn";
       dmn = ChainTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Current Status of Atrial FibrillationMeta.json";
@@ -288,10 +287,18 @@ public class GenerateModelFiles {
     // Creates files in $HOME (C: on Windows)
   // if a path is defined in the fileName, the directory will be created if it doesn't already exist
   private void printConvertResults(Model m, String fileName) {
+    if(m.getModel() == null) {
+      System.out.println("Model is null for " + fileName + " will NOT generate output files");
+      return;
+    }
+    if(m.getSurrogate() == null) {
+      System.out.println("Surrogate is null for " + fileName + " will NOT generate output files");
+      return;
+    }
     System.out.println("fileName: " + fileName);
 
-    File surrogateFile = new File(fileName + "Surrogate_4_13.xml");
-    File modelFile = new File(fileName + "_AfterWeave_4_13.xml");
+    File surrogateFile = new File(fileName + "Surrogate_4_09.xml");
+    File modelFile = new File(fileName + "_AfterWeave_4_09.xml");
     System.out.println("surrogate parentFile: " + surrogateFile.getParent());
     System.out.println("model parentFile: " + modelFile.getParent());
     System.out.println("modelFile name: " + modelFile.getName());

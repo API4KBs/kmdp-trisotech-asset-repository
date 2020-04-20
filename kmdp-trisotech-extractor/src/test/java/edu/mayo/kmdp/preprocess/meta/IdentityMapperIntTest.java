@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
 import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
@@ -72,7 +73,7 @@ class IdentityMapperIntTest {
     String expectedArtifactId = "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
     ResourceIdentifier assetId = SemanticIdentifier
         .newId(MAYO_ASSETS_BASE_URI_URI, "14321e7c-cb9a-427f-abf5-1420bf26e03c", "1.0.1");
-    
+
     String artifactId = null;
     try {
       artifactId = identityMapper.getArtifactId(assetId, true);
@@ -88,13 +89,9 @@ class IdentityMapperIntTest {
     ResourceIdentifier assetId = SemanticIdentifier
         .newId(MAYO_ASSETS_BASE_URI_URI, "3c66cf3a-93c4-4e09-b1aa-14088c76dead",
             "1.0.0-SNAPSHOT");
-    try {
-      String artifactId = identityMapper.getArtifactId(assetId, false);
-      assertNull(artifactId);
-    } catch (NotLatestVersionException e) {
-      fail(e.getMessage());
-    }
-
+    NotFoundException artifactId = assertThrows(NotFoundException.class,
+        () -> identityMapper.getArtifactId(assetId, false));
+    assertEquals("3c66cf3a-93c4-4e09-b1aa-14088c76dead", artifactId.getMessage());
   }
 
   @Test
@@ -185,7 +182,8 @@ class IdentityMapperIntTest {
   @Test
   void getAssetId_ArtifactIdVersion_Latest() {
     ResourceIdentifier artifactId = SemanticIdentifier
-        .newId(URI.create("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"));
+        .newId(URI.create(
+            "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"));
     String versionTag = "1.8.0";
     String expectedAssetId =
         Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
@@ -202,7 +200,8 @@ class IdentityMapperIntTest {
   @Test
   void getAssetId_ArtifactIdVersion_matchButNotLatest() {
     ResourceIdentifier artifactId = SemanticIdentifier
-        .newId(URI.create("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"));
+        .newId(URI.create(
+            "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"));
     String versionTag = "1.6.0";
 
     NotLatestVersionException ave = assertThrows(
@@ -214,7 +213,8 @@ class IdentityMapperIntTest {
   @Test
   void getAssetId_ArtifactIdVersion_noArtifactWithVersion() {
     ResourceIdentifier artifactId = SemanticIdentifier
-        .newId(URI.create("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"));
+        .newId(URI.create(
+            "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"));
     String versionTag = "1.2.0";
 
     NotLatestVersionException ave = assertThrows(
@@ -226,7 +226,8 @@ class IdentityMapperIntTest {
   @Test
   void getAssetId_ArtifactIdVersion_invalidArtifact() {
     ResourceIdentifier artifactId = SemanticIdentifier
-        .newId(URI.create("http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5abc"));
+        .newId(URI.create(
+            "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5abc"));
     String versionTag = "1.2.0";
     try {
       Optional<ResourceIdentifier> assetId = identityMapper.getAssetId(artifactId, versionTag);
@@ -311,7 +312,7 @@ class IdentityMapperIntTest {
   @Test
   void getOrderedModels() {
     List<Resource> models = identityMapper.getOrderedModels();
-    assertNotNull(models);
+    assertNull(models);
   }
 
   @Test
@@ -319,12 +320,14 @@ class IdentityMapperIntTest {
     URI assetId = identityMapper.getEnterpriseAssetIdForAssetVersionId(URI.create(
         Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1"));
     assertNotNull(assetId);
-    assertEquals(URI.create(Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c"), assetId);
+    assertEquals(URI.create(Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c"),
+        assetId);
 
     assetId = identityMapper.getEnterpriseAssetIdForAssetVersionId(URI.create(
         Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c"));
     assertNotNull(assetId);
-    assertEquals(URI.create(Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c"), assetId);
+    assertEquals(URI.create(Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c"),
+        assetId);
   }
 
   @Test

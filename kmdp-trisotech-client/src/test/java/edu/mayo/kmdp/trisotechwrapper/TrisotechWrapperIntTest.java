@@ -15,6 +15,7 @@
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.util.Date;
@@ -287,9 +289,12 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionArtifactIdDMN() {
-    String expectedVersion = "1.9.0";
+    String expectedVersion = "2.0.0";
     Date expectedUpdated = DateTimeUtil
-        .parseDateTime("2020-04-10T20:11:00Z","yyyy-MM-dd'T'HH:mm:ss'Z'");
+        .parseDateTime("2020-04-16T20:17:19Z","yyyy-MM-dd'T'HH:mm:ss'Z'");
+    String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
+        + "123720a6-9758-45a3-8c5c-5fffab12c494/versions/"
+        + expectedVersion;
 
     ResourceIdentifier versionIdentifier =
         TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID)
@@ -297,12 +302,20 @@ class TrisotechWrapperIntTest {
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
+    assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
     assertEquals(expectedUpdated, versionIdentifier.getEstablishedOn());
   }
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {
-    String expectedVersion = "1.9.0";
+    String expectedVersion = "2.0.0";
+    String updated = "2020-04-16T20:17:19Z";
+    Date expectedUpdated = DateTimeUtil
+        .parseDateTime(updated,"yyyy-MM-dd'T'HH:mm:ss'Z'");
+    String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
+        + "123720a6-9758-45a3-8c5c-5fffab12c494/versions/"
+        + expectedVersion;
+
     TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID)
         .orElse(null);
     assertNotNull(trisotechFileInfo);
@@ -311,11 +324,13 @@ class TrisotechWrapperIntTest {
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
+    assertEquals(expectedUpdated, versionIdentifier.getEstablishedOn());
+    assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
   }
 
   @Test
   final void testGetLatestVersionArtifactIdCMMN() {
-    String expectedVersion = "2.2.3";
+    String expectedVersion = "3.0.1";
     ResourceIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID)
         .orElse(null);
     assertNotNull(versionIdentifier);
@@ -325,7 +340,14 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoCMMN() {
-    String expectedVersion = "2.2.3";
+    String expectedVersion = "3.0.1";
+    String updated = "2020-04-16T21:10:55Z";
+    Date expectedUpdated = DateTimeUtil
+        .parseDateTime(updated,"yyyy-MM-dd'T'HH:mm:ss'Z'");
+    String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
+        + "93e58aa9-c258-46fd-909d-1cb096e19e64/versions/"
+        + expectedVersion;
+
     TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID)
         .orElse(null);
     assertNotNull(trisotechFileInfo);
@@ -334,6 +356,8 @@ class TrisotechWrapperIntTest {
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
+    assertEquals(expectedUpdated, versionIdentifier.getEstablishedOn());
+    assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
   }
 
 

@@ -32,6 +32,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
@@ -164,6 +165,9 @@ public class MetadataExtractor {
     return strategy.getArtifactIdUpdateTime(assetId);
   }
 
+  public List<TrisotechFileInfo> getTrisotechModelVersions(String internalId) {
+    return strategy.getTrisotechModelVersions(internalId);
+  }
 
 
   /**

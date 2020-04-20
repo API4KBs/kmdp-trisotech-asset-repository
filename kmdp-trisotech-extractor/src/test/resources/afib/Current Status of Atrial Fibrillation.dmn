@@ -21,6 +21,13 @@
         <semantic:inputData href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_0964ddd7-f29f-3b46-bb82-10e78651750f"/>
     </semantic:decisionService>
     <semantic:decision id="_69332638-43d8-442f-bd40-634ad54c3158" name="Current Status of Atrial Fibrillation">
+        <semantic:extensionElements>
+            <triso:semanticLink id="_2ce2180e-e824-4f5a-8861-81f1442ebae8" uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce" modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/" name="DecisionTypes - 20190801 - Assessment Decision"/>
+            <triso:semanticLink id="_0999daa2-a44e-4703-9fba-8ea4fc429987" uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823" modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/" name="DecisionTypes - 20190801 - Naturalistic Decision"/>
+            <triso:semanticLink id="_b5271f39-6ace-430d-930a-0e47a3349dae" uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3" modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/" name="DecisionTypes - 20190801 - Aggregation Decision"/>
+            <triso:customAttribute key="knowledgeAssetId" value="https://clinicalknowledgemanagement.mayo.edu/assets/221eda8f-8d4b-4d8e-ad9d-67f1c5ac13f1/versions/1.0.0" type="string" id="_b708a8be-30f7-4692-806b-35cda7e1226f"/>
+            <triso:semanticLink id="_cf4c5b89-6a91-4d66-834e-2c94028bc400" uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916" modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/" name="KnowledgeAssetTypes - 20190801 - Semantic Decision Model"/>
+        </semantic:extensionElements>
         <semantic:variable name="Current Status of Atrial Fibrillation" id="_95fe5e18-4a8b-42a4-9a3c-781df5ef794b" typeRef="Any"/>
         <semantic:informationRequirement id="_68f37555-6397-47dd-8054-ed9776000878">
             <semantic:requiredInput href="#_c9269c07-eda5-49f2-8e9b-7dfe40912745"/>

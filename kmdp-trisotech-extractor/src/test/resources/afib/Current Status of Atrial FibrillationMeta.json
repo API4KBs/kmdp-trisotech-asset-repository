@@ -5,10 +5,10 @@
     "name": "Current Status of Atrial Fibrillation",
     "path": "/Shellum/Atrial Fibrillation",
     "mimetype": "application/vnd.triso-dmn+json",
-    "updated": "2020-04-03T15:30:23Z",
+    "updated": "2020-04-20T13:26:13Z",
     "updater": "Shellum, Jane L., M.H.A.",
     "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=8773e388-75b7-4061-a489-b788222022d3&path=%2FShellum%2FAtrial%20Fibrillation&sku=c4fbbf0f-f3e9-4938-b0bf-7497db5b84f6&mimetype=application%2Fvnd.triso-dmn%2Bjson",
     "version": "1.1",
-    "state": "Published"
+    "state": "Draft"
   }
 }

@@ -26,6 +26,8 @@ import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentati
 import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.zafarkhaja.semver.Version;
+import edu.mayo.kmdp.id.SemVerIdentifier;
 import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.v2.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
@@ -224,15 +226,21 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
   private List<ResourceIdentifier> getArtifactImports(String docId, TrisotechFileInfo model) {
-    // if dealing with the latest of the model, just retrieve the latest of the imports
+    // if dealing with the latest of the model, return the latest of the imports
     if(mapper.isLatest(model.getId(), model.getVersion())) {
-      return mapper.getArtifactImports(docId, model.getVersion(), model.getUpdated());
+      return mapper.getArtifactImports(docId);
     }
-     else {
-       return getImportVersions(docId, model);
-    }
+    return getImportVersions(docId, model);
   }
 
+  /**
+   * Need to get the correct versions of the dependent artifacts for this artifact.
+   * It is possible the latest artifact by date may not be the latest artifact by version.
+   * Need to get the latest version
+   * @param docId the id used to query from Trisotech
+   * @param model the latest model information
+   * @return the list of ResourceIdentifier for the dependencies
+   */
   private List<ResourceIdentifier> getImportVersions(String docId, TrisotechFileInfo model) {
     List<ResourceIdentifier> dependencies = new ArrayList<>();
     // need to find the dependency artifact versions that map to this artifact version
@@ -250,9 +258,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     Date nextVersionDate = null;
     for(TrisotechFileInfo tfi: artifactModelVersions) {
       // compare timestamp
-      // TODO: need to compare version too?
+      // Need to compare version too? yes, per e-mail exchange w/Davide 04/21
       nextVersionDate = Date.from(Instant.parse(tfi.getUpdated()));
-      if(nextVersionDate.after(artifactDate)) {
+      if(nextVersionDate.after(artifactDate) &&
+          (Version.valueOf(tfi.getVersion()).greaterThan(Version.valueOf(model.getVersion())))) {
         nextArtifactVersion = tfi;
         break;
       }
@@ -268,7 +277,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         nextArtifactVersion.getVersion(), nextArtifactVersion.getUpdated());
     logger.debug("nextVersionDate: {}", nextVersionDate.toString());
     // get versions of the imported artifacts
-    List<ResourceIdentifier> artifactImports = mapper.getArtifactImports(docId, model.getVersion(), model.getUpdated());
+    List<ResourceIdentifier> artifactImports = mapper.getArtifactImports(docId);
     for(ResourceIdentifier ri : artifactImports) {
       logger.debug("have resourceIdentifier from artifactImports: {} ", ri.getVersionId().toString());
       List<TrisotechFileInfo> importVersions = getTrisotechModelVersions(ri.getTag());

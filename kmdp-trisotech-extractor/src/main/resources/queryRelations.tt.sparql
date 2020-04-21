@@ -1,3 +1,4 @@
+# PREFIX sets up the namespaces to be used in the query
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX tt: <http://www.trisotech.com/graph/1.0/element#>
 PREFIX ttr: <http://www.trisotech.com/graph/1.0/elementRel#>

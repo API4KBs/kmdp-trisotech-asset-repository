@@ -27,6 +27,10 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  * This process isn't ideal as it doesn't download the models, but relies on input files
  * of the downloaded models and their metadata, but it was quick to put together since it
  * was based on ChainTest.
+ * This can also cause some problems because IdentityMapper will still pull the latest information
+ * so if the model downloaded and the latest don't match (one is published, one is not, etc).
+ * Ideally, this would be more like a jobRunner pipe to download the files and produce the output,
+ * but not upload to the server as this is outputting files that can be used in the PD pipeline test.
  *
  * Some setup is needed to use this file:
  * 1. Download the XML for the models needed if not already in afib, dictionary or SharedCardiologyDecisions
@@ -132,7 +136,6 @@ public class GenerateModelFiles {
 
       printConvertResults(m, "/afib/Prior Management of Atrial Fibrillation");
 
-      // FAILS due to no AssetID in model
       dmnPath = "/afib/Current Status of Atrial Fibrillation.dmn";
       dmn = ChainTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Current Status of Atrial FibrillationMeta.json";
@@ -297,8 +300,8 @@ public class GenerateModelFiles {
     }
     System.out.println("fileName: " + fileName);
 
-    File surrogateFile = new File(fileName + "Surrogate_4_09.xml");
-    File modelFile = new File(fileName + "_AfterWeave_4_09.xml");
+    File surrogateFile = new File(fileName + "Surrogate_4_20.xml");
+    File modelFile = new File(fileName + "_AfterWeave_4_20.xml");
     System.out.println("surrogate parentFile: " + surrogateFile.getParent());
     System.out.println("model parentFile: " + modelFile.getParent());
     System.out.println("modelFile name: " + modelFile.getName());

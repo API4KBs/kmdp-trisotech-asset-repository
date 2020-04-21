@@ -54,7 +54,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
 
 
 /**
@@ -80,15 +79,7 @@ public class IdentityMapper {
   // SPARQL Strings
   // SPARQL endpoint for repository
   private static final String ENDPOINT = "https://mc.trisotech.com/ds/query";
-  // PREFIX sets up the namespaces to be used in the query
-  private static final String QUERYSTRINGPREFIX =
-      "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-          + "PREFIX tt: <http://www.trisotech.com/graph/1.0/element#>"
-          + "PREFIX ttr: <http://www.trisotech.com/graph/1.0/elementRel#>"
-          + "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
-          + "PREFIX owl: <http://www.w3.org/2002/07/owl#>"
-          + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-          + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>";
+
   private static final String TRISOTECH_GRAPH = "http://trisotech.com/graph/1.0/graph#";
   private static final String ASSET_ID = "?assetId";
   private static final String FILE_ID = "?fileId";
@@ -554,7 +545,7 @@ public class IdentityMapper {
       while (publishedModels.hasNext()) {
         QuerySolution soln = publishedModels.nextSolution();
         if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
-          System.out.println("returning version of: " + soln.getLiteral(VERSION).getString());
+          logger.debug("returning version of: {}", soln.getLiteral(VERSION).getString());
           return Optional.ofNullable(soln.getLiteral(VERSION).getString());
         }
       }
@@ -603,17 +594,13 @@ public class IdentityMapper {
 
 
   /**
-   * Given the internal id, version and timestmamp for the model, get the information about other
-   * models it imports. Want the imported models that correspond to this version of the model, NOT
-   * latest.
+   * Given the internal id for the model, get the information about other
+   * models it imports. This is based on the latest version of the model.
    *
    * @param docId the artifact id
-   * @param version the version of the artifact
-   * @param updated the timestamp of the artifact
    * @return a list of ResourceIdentifier for the artifacts used by this artifact (dependencies)
    */
-  public List<ResourceIdentifier> getArtifactImports(String docId, String version,
-      String updated) {
+  public List<ResourceIdentifier> getArtifactImports(String docId) {
     Set<Resource> resources = null;
     List<ResourceIdentifier> artifacts = new ArrayList<>();
 

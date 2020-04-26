@@ -68,6 +68,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+/**
+ * Test the processing "chain" from model to surrogate.
+ */
 @SpringBootTest
 @SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class,
     ChainConverterConfig.class})

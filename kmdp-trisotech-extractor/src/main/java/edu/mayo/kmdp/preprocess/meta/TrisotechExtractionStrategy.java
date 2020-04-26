@@ -27,7 +27,6 @@ import static edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentati
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.zafarkhaja.semver.Version;
-import edu.mayo.kmdp.id.SemVerIdentifier;
 import edu.mayo.kmdp.metadata.v2.surrogate.ComputableKnowledgeArtifact;
 import edu.mayo.kmdp.metadata.v2.surrogate.Dependency;
 import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
@@ -85,11 +84,6 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   public TrisotechExtractionStrategy() {
     xPathUtil = new XPathUtil();
-  }
-
-  @Override
-  public IdentityMapper getMapper() {
-    return mapper;
   }
 
   public void setMapper(IdentityMapper mapper) {
@@ -296,6 +290,17 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return dependencies;
   }
 
+  /**
+   * When looking for matches for imported versions, need to identify the correct version for THIS
+   * version of the artifact.
+   * Finding the correct version relies on knowing what the *next* version of this artifact is.
+   *
+   * @param importVersions versions of the imported models for this model
+   * @param artifactDate the date for this model
+   * @param nextVersionDate the date for the next version of this model
+   * @return the TrisotechFileInfo for the version of the import that is correct for THIS version
+   * of the model
+   */
   private TrisotechFileInfo findVersionMatch(List<TrisotechFileInfo> importVersions,
       Date artifactDate, Date nextVersionDate) {
     // as loop through the dependency versions, need to keep track of the previous one
@@ -366,6 +371,14 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return lifecycle;
   }
 
+  /**
+   * create the information to be returned identifying the artifacts that are imported by
+   * the artifact being processed.
+   *
+   * @param theTargetArtifactId The list of artifact IDs for the imports to the current version
+   * of the model being processed
+   * @return The Link information for the imports; only keeping the identifier
+   */
   private Collection<Link> getRelatedArtifacts(List<ResourceIdentifier> theTargetArtifactId) {
     return theTargetArtifactId.stream()
         // TODO: Do something different for null id? means related artifact was not published
@@ -377,6 +390,14 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   }
 
+  /**
+   * Similar to the relatedArtifacts, related Assets are the asset identifiers for the
+   * artifacts that are imported or used (dependency) of the current processed artifact.
+   * Want to retain the identifiers.
+   *
+   * @param theTargetAssetId the list of assets this model depends on
+   * @return the link information for the assets; only keeping the identifier
+   */
   private Collection<Link> getRelatedAssets(List<ResourceIdentifier> theTargetAssetId) {
     return theTargetAssetId.stream()
         .map(resourceIdentifier ->
@@ -388,7 +409,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
 
   // TODO: Is this needed? Yes (eventually) -- need example models to work from CAO
-  // 02/10/2020: pulls annotations up; may not be needed - terminology
+  // 02/10/2020: pulls annotations up; may not be needed - replace with terminology service
   protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
 //    annotations.stream()
 //        .filter(ann -> ann.getRel().equals(AnnotationRelTypeSeries.Captures.asConcept())
@@ -466,10 +487,6 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return mapper.getEnterpriseAssetIdForAsset(assetId);
   }
 
-  public URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId) {
-    return mapper.getEnterpriseAssetIdForAssetVersionId(enterpriseAssetVersionId);
-  }
-
   public Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag,
       boolean any)
       throws NotLatestVersionException {
@@ -478,11 +495,6 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   public Optional<String> getFileId(UUID assetId, boolean any) {
     return mapper.getFileId(assetId, any);
-  }
-
-  @Override
-  public Optional<ResourceIdentifier> extractAssetID(String internalFileId) {
-    return mapper.getAssetId(internalFileId);
   }
 
   @Override
@@ -553,6 +565,14 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return Optional.empty();
   }
 
+  /**
+   * Trisotech model versions can be retrieved through a specific call. The versions will NOT include
+   * the latest version of the model, but all other versions.
+   *
+   * @param internalId the internalId is the id used by Trisotech internally to identify the model.
+   * The internal id is the URI. It is used to get the appropriate query parameter values.
+   * @return the TrisotechFileInfo list of all but the current version of the model requested
+   */
   public List<TrisotechFileInfo> getTrisotechModelVersions(String internalId) {
     // need fileId as trisotech APIs work on fileId
     Optional<String> fileId = getFileId(internalId);

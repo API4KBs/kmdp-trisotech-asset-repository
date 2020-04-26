@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"  xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"  xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"  xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"  xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"  xmlns:drools="http://www.drools.org/kie/dmn/1.1"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:rss="http://purl.org/rss/2.0/"  xmlns:openapi="https://openapis.org/omg/extension/1.0"  xmlns="http://www.trisotech.com/definitions/_0fb1002b-2519-4394-82bb-ecf6b4f9f931" id="_0fb1002b-2519-4394-82bb-ecf6b4f9f931" name="recommendation chain" namespace="http://www.trisotech.com/definitions/_0fb1002b-2519-4394-82bb-ecf6b4f9f931" exporter="DMN Modeler" exporterVersion="6.2.7" triso:logoChoice="Default">
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"  xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"  xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"  xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"  xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"  xmlns:drools="http://www.drools.org/kie/dmn/1.1"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:rss="http://purl.org/rss/2.0/"  xmlns:openapi="https://openapis.org/omg/extension/1.0"  xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns="http://www.trisotech.com/definitions/_0fb1002b-2519-4394-82bb-ecf6b4f9f931" id="_0fb1002b-2519-4394-82bb-ecf6b4f9f931" name="recommendation chain" namespace="http://www.trisotech.com/definitions/_0fb1002b-2519-4394-82bb-ecf6b4f9f931" exporter="Decision Modeler" exporterVersion="6.10.1" triso:logoChoice="Default">
     <semantic:extensionElements/>
     <semantic:itemDefinition name="mock_test" label="mock test">
         <semantic:itemComponent id="_e618de83-8d68-4920-b9d4-ead936540f6f" name="value">
@@ -18,15 +18,15 @@
             <semantic:text>"A","B"</semantic:text>
         </semantic:allowedValues>
     </semantic:itemDefinition>
-    <semantic:decisionService id="_0fb1002b-2519-4394-82bb-ecf6b4f9f931_DS" name="Whole Model Decision Service" triso:dynamicDecisionService="true">
-        <semantic:variable name="Whole Model Decision Service" id="_bc89fc9b-c57f-48e3-899e-c0bc56874937" typeRef="Any"/>
+    <semantic:decisionService id="_0fb1002b-2519-4394-82bb-ecf6b4f9f931_DS" name="Whole Model Decision Service" triso:dynamicDecisionService="true" triso:wholeModelService="true">
+        <semantic:variable name="Whole Model Decision Service" id="_0fb1002b-2519-4394-82bb-ecf6b4f9f931_DS_VAR" typeRef="Any"/>
         <semantic:outputDecision href="#_0db85de5-7fa6-4232-9a66-9708e9bcb472"/>
         <semantic:encapsulatedDecision href="#_f3413088-1938-49b2-a479-3be9a4b2d4b5"/>
         <semantic:encapsulatedDecision href="#_0729b70e-b19c-4e0c-b7ca-b5de4add6b1e"/>
         <semantic:inputData href="#_573dbb59-0fc3-42ac-b3d6-23a88e00ff83"/>
     </semantic:decisionService>
     <semantic:decisionService id="_313999bd-fce5-493c-9cd5-fb4bdb48e7c9_DS" name="Diagram Page 1" triso:dynamicDecisionService="true">
-        <semantic:variable name="Diagram Page 1" id="_5682f66e-7f09-46a9-8b7d-7febad4d2003" typeRef="Any"/>
+        <semantic:variable name="Diagram Page 1" id="_313999bd-fce5-493c-9cd5-fb4bdb48e7c9_DS_VAR" typeRef="Any"/>
         <semantic:outputDecision href="#_0db85de5-7fa6-4232-9a66-9708e9bcb472"/>
         <semantic:encapsulatedDecision href="#_f3413088-1938-49b2-a479-3be9a4b2d4b5"/>
         <semantic:encapsulatedDecision href="#_0729b70e-b19c-4e0c-b7ca-b5de4add6b1e"/>
@@ -56,7 +56,7 @@
             <semantic:requiredDecision href="#_f3413088-1938-49b2-a479-3be9a4b2d4b5"/>
         </semantic:informationRequirement>
         <semantic:decisionTable id="_a3f35b17-e3f3-4453-b5bf-86b5ccd24090" hitPolicy="UNIQUE" outputLabel="test clinical assessment" typeRef="Assessment_test" triso:expressionId="_350fe282-2c13-44c3-a811-146963504e38">
-            <semantic:input id="_f3d42628-4acd-4508-ba24-9f723546ea03">
+            <semantic:input id="_f3d42628-4acd-4508-ba24-9f723546ea03" label="test computation of new concept">
                 <semantic:inputExpression typeRef="boolean">
                     <semantic:text>test computation of new concept</semantic:text>
                 </semantic:inputExpression>
@@ -97,7 +97,7 @@
             <semantic:requiredDecision href="#_0729b70e-b19c-4e0c-b7ca-b5de4add6b1e"/>
         </semantic:informationRequirement>
         <semantic:decisionTable id="_9b85518a-6dd4-40ff-89b1-6dffab15f1bc" hitPolicy="UNIQUE" outputLabel="test recommendation" typeRef="string" triso:expressionId="_e44b8fad-29a9-4d5e-8f1a-773da2650849">
-            <semantic:input id="_2c858ee3-0afb-4729-b105-fb4c10ff8b06">
+            <semantic:input id="_2c858ee3-0afb-4729-b105-fb4c10ff8b06" label="test clinical assessment">
                 <semantic:inputExpression typeRef="Assessment_test">
                     <semantic:text>test clinical assessment</semantic:text>
                 </semantic:inputExpression>

@@ -2,6 +2,7 @@
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
   xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
   xmlns:ann="http://kmdp.mayo.edu/metadata/annotations"
+  xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
   xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
   xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
   xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
@@ -11,6 +12,7 @@
   xmlns:rss="http://purl.org/rss/2.0/"
   xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
   xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   id="_5682fa26-b064-43c8-9475-1e4281e74068"
   name="Weaver Test 1"
@@ -22,46 +24,40 @@
     namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"/>
   <semantic:decisionService id="_5682fa26-b064-43c8-9475-1e4281e74068_DS"
     name="Whole Model Decision Service">
-    <semantic:variable id="_698b1ad8-7a38-4254-87c7-d6254f9dbef1"
+    <semantic:variable id="_5682fa26-b064-43c8-9475-1e4281e74068_DS_VAR"
       name="Whole Model Decision Service"
       typeRef="Any"/>
     <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-    <semantic:inputData
-      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
-    <semantic:inputData
-      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
     <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
     <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
+    <semantic:inputData
+      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
+    <semantic:inputData
+      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
   </semantic:decisionService>
   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="Diagram Page 1">
-    <semantic:variable id="_81ce98bf-f899-4640-80b5-76a3543f3078"
+    <semantic:variable id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS_VAR"
       name="Diagram Page 1"
       typeRef="Any"/>
     <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-    <semantic:inputData
-      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
-    <semantic:inputData
-      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
     <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
     <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
+    <semantic:inputData
+      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
+    <semantic:inputData
+      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
   </semantic:decisionService>
   <semantic:decision id="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
     name="Weaver Test 1 Decision">
     <semantic:extensionElements>
-      <ann:basicAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers"
-        expr="https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT">
-        <ann:rel label="has ID"
-          ref="https://www.omg.org/spec/API4KP/api4kp/identified-by"
-          tag="identified-by">
-          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
-        </ann:rel>
-      </ann:basicAnnotation>
-      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
-        <ann:expr conceptId="http://foo.mayo.edu/test#Entity1"
-          label="Test Entity Set - My Test Entity 1"
-          ref="http://foo.mayo.edu/test#EntitySet"
+      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
+        <ann:ref name="Test Entity Set - My Test Entity 1"
+          namespaceUri="http://foo.mayo.edu/test#"
+          referentId="http://foo.mayo.edu/test#EntitySet"
+          resourceId="http://foo.mayo.edu/test#Entity1"
           tag="e63052a5-1203-4967-8f7f-abf05c63cdf0"/>
-      </ann:simpleAnnotation>
+      </ann:annotation>
     </semantic:extensionElements>
     <semantic:variable id="_aeba48e7-a5e2-4a2f-a591-f5ddd5dc41cc"
       name="Weaver Test 1 Decision"
@@ -86,13 +82,14 @@
   </semantic:decision>
   <semantic:inputData id="_12873790-73be-4484-bec7-72cb8a6af004" name="Current Weight">
     <semantic:extensionElements>
-      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
-        <ann:expr
-          conceptId="https://ontology.mayo.edu/propositionalconceptvocabulary/db9955-c472-491e-a4d3-55837cd99694"
-          label="propositionalconceptvocabulary_Scheme - Current Weight"
-          ref="https://ontology.mayo.edu/propositionalconceptvocabulary/"
+      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
+        <ann:ref name="propositionalconceptvocabulary_Scheme - Current Weight"
+          namespaceUri="https://ontology.mayo.edu/propositionalconceptvocabulary/"
+          referentId="https://ontology.mayo.edu/propositionalconceptvocabulary/"
+          resourceId="https://ontology.mayo.edu/propositionalconceptvocabulary/db9955-c472-491e-a4d3-55837cd99694"
           tag="_8fdc5119-4263-418f-acaa-17ce32844e7d"/>
-      </ann:simpleAnnotation>
+      </ann:annotation>
     </semantic:extensionElements>
     <semantic:variable id="_9b022735-4f62-4f8b-987c-b60ffce1f17b"
       name="Current Weight"
@@ -108,19 +105,19 @@
       name="Decision"
       typeRef="Any"/>
     <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-    <semantic:inputData
-      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
-    <semantic:inputData
-      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
     <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
     <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_2d9e4438-b341-432f-a081-fa4082003e68">
-    <semantic:variable id="_497e538f-b91c-4daa-8cda-a690fb7596ce" typeRef="Any"/>
+    <semantic:inputData
+      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
+    <semantic:inputData
+      href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
   </semantic:decisionService>
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe" name="Page 1">
-      <di:extension/>
+      <di:extension>
+        <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+          xmlns:id="http://www.omg.org/spec/API4KP/1.0/id"/>
+      </di:extension>
       <dmndi:Size height="1050" width="1485"/>
       <dmndi:DMNShape dmnElementRef="include1:_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"
         id="_94ecd10b-0aad-44d2-a870-b4fd3ea5fefb">
@@ -192,13 +189,4 @@
       fontUnderline="false"
       id="LS_5682fa26-b064-43c8-9475-1e4281e74068_0"/>
   </dmndi:DMNDI>
-  <semantic:extensionElements>
-    <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
-      <ann:expr
-        conceptId="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType#af76c6c0ed31415aa9fa0f5d7e08bad8"
-        label="KnowledgeAssetType_Scheme - Semantic Decision Model"
-        ref="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType#"
-        tag="cfd61e71-6016-460b-a7fd-6ebb1f8ad1ad"/>
-    </ann:simpleAnnotation>
-  </semantic:extensionElements>
 </semantic:definitions>

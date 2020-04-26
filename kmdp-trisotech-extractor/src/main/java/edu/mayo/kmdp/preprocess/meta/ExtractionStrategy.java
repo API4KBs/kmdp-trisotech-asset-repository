@@ -30,8 +30,6 @@ import org.w3c.dom.Document;
 @Component
 public interface ExtractionStrategy {
 
-	IdentityMapper getMapper();
-
 	void setMapper( IdentityMapper mapper );
 
 	KnowledgeAsset extractXML( Document dox, JsonNode meta );
@@ -43,7 +41,6 @@ public interface ExtractionStrategy {
 	Optional<ResourceIdentifier> getAssetID(String fileId);
 
   Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId);
-	URI getEnterpriseAssetIdForAssetVersionId(URI enterpriseAssetVersionId);
 
 	Optional<URI> getEnterpriseAssetVersionIdForAsset(UUID assetId, String versionTag, boolean any)
 			throws NotLatestVersionException;
@@ -62,7 +59,5 @@ public interface ExtractionStrategy {
 	Optional<String> getFileId(String internalId);
 
 	Optional<String> getFileId(UUID assetId, boolean any);
-
-  Optional<ResourceIdentifier> extractAssetID(String internalFileId);
 
 }

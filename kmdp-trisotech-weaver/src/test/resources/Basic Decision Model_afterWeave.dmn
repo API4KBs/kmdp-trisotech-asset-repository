@@ -2,6 +2,7 @@
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
   xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
   xmlns:ann="http://kmdp.mayo.edu/metadata/annotations"
+  xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
   xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
   xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
   xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
@@ -10,6 +11,7 @@
   xmlns:rss="http://purl.org/rss/2.0/"
   xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
   xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
   name="Basic Decision Model"
@@ -18,7 +20,7 @@
   <semantic:extensionElements/>
   <semantic:decisionService id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356_DS"
     name="Whole Model Decision Service">
-    <semantic:variable id="_522c26b4-6978-4d9c-b605-8788de660a03"
+    <semantic:variable id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356_DS_VAR"
       name="Whole Model Decision Service"
       typeRef="Any"/>
     <semantic:outputDecision href="#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"/>
@@ -26,7 +28,7 @@
     <semantic:inputData href="#_ffc7572a-2d99-4721-8cf0-a0f2f0aa5f13"/>
   </semantic:decisionService>
   <semantic:decisionService id="_b1cbbae9-a4c0-4a85-bb26-4c10bf35a750_DS" name="Diagram Page 1">
-    <semantic:variable id="_74aaf4f3-c9f7-475b-a55b-09f084b44328"
+    <semantic:variable id="_b1cbbae9-a4c0-4a85-bb26-4c10bf35a750_DS_VAR"
       name="Diagram Page 1"
       typeRef="Any"/>
     <semantic:outputDecision href="#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"/>
@@ -35,38 +37,28 @@
   </semantic:decisionService>
   <semantic:decision id="_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719" name="Basic Decision">
     <semantic:extensionElements>
-      <ann:basicAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers"
-        expr="https://clinicalknowledgemanagement.mayo.edu/assets/735a5764-fe3f-4ab8-b103-650b6e805db2/versions/1.0.0">
-        <ann:rel label="has ID"
-          ref="https://www.omg.org/spec/API4KP/api4kp/identified-by"
-          tag="identified-by">
-          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
-        </ann:rel>
-      </ann:basicAnnotation>
-      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
-        <ann:rel label="defines"
-          ref="https://www.omg.org/spec/API4KP/api4kp/defines"
-          tag="defines">
-          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
-        </ann:rel>
-        <ann:expr
-          conceptId="https://ontology.mayo.edu/taxonomies/clinicalsituations#e9b34549-7e35-3e85-8d35-d01321c87bf3"
-          label="PropositionalConcepts - 20190801 - Management of Aortic Stenosisin 'PropositionalConcepts - 20190801'Beta Blocker for HFrEF"
-          ref="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
+        <ann:rel name="defines"
+          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
+          resourceId="https://www.omg.org/spec/API4KP/api4kp/defines"
+          tag="defines"/>
+        <ann:ref
+          name="PropositionalConcepts - 20190801 - Management of Aortic Stenosisin 'PropositionalConcepts - 20190801'Beta Blocker for HFrEF"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+          referentId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#e9b34549-7e35-3e85-8d35-d01321c87bf3"
           tag="_623e1cca-b3c6-4203-ade0-85ba042141db"/>
-      </ann:simpleAnnotation>
-      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
-        <ann:rel label="is a"
-          ref="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-          tag="type">
-          <id:namespace id="http://www.w3.org/1999/02/22-rdf-syntax-ns"/>
-        </ann:rel>
-        <ann:expr
-          conceptId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
-          label="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
-          ref="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+      </ann:annotation>
+      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
+        <ann:ref
+          name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#"
+          referentId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+          resourceId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
           tag="_1ab9d894-42a5-48af-aed6-d76ba965214a"/>
-      </ann:simpleAnnotation>
+      </ann:annotation>
     </semantic:extensionElements>
     <semantic:variable id="_55bda1ac-16c0-4a1d-9450-0ee7d32fc632"
       name="Basic Decision"
@@ -81,12 +73,12 @@
       id="_9f5d8814-fad2-47c0-b6f2-1e1ebffb9f34"
       outputLabel="Basic Decision"
       typeRef="boolean">
-      <semantic:input id="_52381df1-592e-4605-b61a-3f3496eea584">
+      <semantic:input id="_52381df1-592e-4605-b61a-3f3496eea584" label="Input 1">
         <semantic:inputExpression typeRef="boolean">
           <semantic:text>Input 1</semantic:text>
         </semantic:inputExpression>
       </semantic:input>
-      <semantic:input id="_29cea758-7ec3-46c9-9213-37b7c935ac46">
+      <semantic:input id="_29cea758-7ec3-46c9-9213-37b7c935ac46" label="Input 2">
         <semantic:inputExpression typeRef="boolean">
           <semantic:text>Input 2</semantic:text>
         </semantic:inputExpression>
@@ -139,18 +131,19 @@
   </semantic:decision>
   <semantic:inputData id="_c8828c20-d075-42bf-bc5e-ad5b4e52ef1d" name="Input 1">
     <semantic:extensionElements>
-      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
-        <ann:rel label="in terms of"
-          ref="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
-          tag="defined-in-terms-of">
-          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
-        </ann:rel>
-        <ann:expr
-          conceptId="https://ontology.mayo.edu/taxonomies/propositionalconcepts#a34c157c-4495-4039-92a5-7bf2ddece5a8"
-          label="PropositionalConcepts - 20190801 - Has Hypertension - Isin 'PropositionalConcepts - 20190801'"
-          ref="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
+        <ann:rel name="in terms of"
+          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          resourceId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          tag="defined-in-terms-of"/>
+        <ann:ref
+          name="PropositionalConcepts - 20190801 - Has Hypertension - Isin 'PropositionalConcepts - 20190801'"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#"
+          referentId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+          resourceId="https://ontology.mayo.edu/taxonomies/propositionalconcepts#a34c157c-4495-4039-92a5-7bf2ddece5a8"
           tag="_899d6481-b87f-4fab-90c1-34ab84b19878"/>
-      </ann:simpleAnnotation>
+      </ann:annotation>
     </semantic:extensionElements>
     <semantic:variable id="_c52decf4-65c7-49d3-8cc8-8dda5a2580ce"
       name="Input 1"
@@ -158,18 +151,19 @@
   </semantic:inputData>
   <semantic:inputData id="_ffc7572a-2d99-4721-8cf0-a0f2f0aa5f13" name="Input 2">
     <semantic:extensionElements>
-      <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
-        <ann:rel label="in terms of"
-          ref="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
-          tag="defined-in-terms-of">
-          <id:namespace id="https://www.omg.org/spec/API4KP/api4kp"/>
-        </ann:rel>
-        <ann:expr
-          conceptId="https://ontology.mayo.edu/taxonomies/propositionalconcepts#31f92480-1ed8-4b26-81e1-f402df21235b"
-          label="PropositionalConcepts - 20190801 - Has Diabetes Mellitus - Isin 'PropositionalConcepts - 20190801'"
-          ref="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
+        <ann:rel name="in terms of"
+          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          resourceId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          tag="defined-in-terms-of"/>
+        <ann:ref
+          name="PropositionalConcepts - 20190801 - Has Diabetes Mellitus - Isin 'PropositionalConcepts - 20190801'"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#"
+          referentId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+          resourceId="https://ontology.mayo.edu/taxonomies/propositionalconcepts#31f92480-1ed8-4b26-81e1-f402df21235b"
           tag="b9c64c5c-3e82-4658-811b-372d35db9369"/>
-      </ann:simpleAnnotation>
+      </ann:annotation>
     </semantic:extensionElements>
     <semantic:variable id="_5445c35a-23e6-4791-ada7-58ea4311b339"
       name="Input 2"
@@ -186,7 +180,17 @@
   </semantic:textAnnotation>
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="_b1cbbae9-a4c0-4a85-bb26-4c10bf35a750" name="Page 1">
-      <di:extension/>
+      <di:extension>
+        <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+          xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
+          <ann:ref
+            name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
+            namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#"
+            referentId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+            resourceId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
+            tag="_07028747-26d2-4f2f-95e3-b9a0e383c130"/>
+        </ann:annotation>
+      </di:extension>
       <dmndi:Size height="1050" width="1485"/>
       <dmndi:DMNShape dmnElementRef="_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"
         id="_5698065e-e606-41f9-aeab-f3026019b501">
@@ -235,18 +239,4 @@
       fontUnderline="false"
       id="LS_ee0c768a-a0d4-4052-a6ea-fc0a3889b356_0"/>
   </dmndi:DMNDI>
-  <semantic:extensionElements>
-    <ann:simpleAnnotation xmlns:id="http://www.omg.org/spec/API4KP/1.0/identifiers">
-      <ann:rel label="is a"
-        ref="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-        tag="type">
-        <id:namespace id="http://www.w3.org/1999/02/22-rdf-syntax-ns"/>
-      </ann:rel>
-      <ann:expr
-        conceptId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
-        label="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
-        ref="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
-        tag="_07028747-26d2-4f2f-95e3-b9a0e383c130"/>
-    </ann:simpleAnnotation>
-  </semantic:extensionElements>
 </semantic:definitions>

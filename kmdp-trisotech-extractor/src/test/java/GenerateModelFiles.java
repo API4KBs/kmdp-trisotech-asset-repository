@@ -300,8 +300,8 @@ public class GenerateModelFiles {
     }
     System.out.println("fileName: " + fileName);
 
-    File surrogateFile = new File(fileName + "Surrogate_4_20.xml");
-    File modelFile = new File(fileName + "_AfterWeave_4_20.xml");
+    File surrogateFile = new File(fileName + "Surrogate_4_26.xml");
+    File modelFile = new File(fileName + "_AfterWeave_4_26.xml");
     System.out.println("surrogate parentFile: " + surrogateFile.getParent());
     System.out.println("model parentFile: " + modelFile.getParent());
     System.out.println("modelFile name: " + modelFile.getName());

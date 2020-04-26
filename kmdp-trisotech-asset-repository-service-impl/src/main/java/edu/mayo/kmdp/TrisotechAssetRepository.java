@@ -26,7 +26,6 @@ import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.repository.asset.v4.server.KnowledgeAssetCatalogApiInternal;
 import edu.mayo.kmdp.repository.asset.v4.server.KnowledgeAssetRepositoryApiInternal;
-import edu.mayo.kmdp.repository.asset.v4.server.KnowledgeAssetRetrievalApiInternal;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -54,7 +53,7 @@ import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
 import org.omg.spec.api4kp._1_0.services.KPServer;
 import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
-import org.omg.spec.api4kp._1_0.services.resources.SyntacticRepresentation;
+import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +61,14 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
+/**
+ * A 'wrapper' class. This class implements the Knowledge Asset API and wraps that API around
+ * the Trisotech API to return Trisotech data in a Knowledge Asset compatible way.
+ */
 @Component
 @KPServer
 public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInternal,
-    KnowledgeAssetRepositoryApiInternal, KnowledgeAssetRetrievalApiInternal {
+    KnowledgeAssetRepositoryApiInternal {
 
   private static final Logger logger = LoggerFactory.getLogger(TrisotechAssetRepository.class);
 
@@ -79,7 +82,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
   @Override
-  public Answer<KnowledgeAssetCatalog> getAssetCatalog() {
+  public Answer<KnowledgeAssetCatalog> getKnowledgeAssetCatalog() {
     return unsupported();
   }
 
@@ -116,7 +119,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    * @return Pointers to the versions of a given asset
    */
   @Override
-  public Answer<List<Pointer>> getKnowledgeAssetVersions(UUID assetId, Integer offset,
+  public Answer<List<Pointer>> listKnowledgeAssetVersions(UUID assetId, Integer offset,
       Integer limit, String beforeTag, String afterTag, String sort) {
     // all versions of given knowledge asset. May make sense to implement
     // may be empty if no versions have been established
@@ -130,7 +133,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   //  might want to keep a map of those that have been scanned so don't have to scan again?
   //  scan all versions of so have saved? or only scan until find what we need? CAO
   @Override
-  public Answer<KnowledgeAsset> getVersionedKnowledgeAsset(UUID assetId,
+  public Answer<KnowledgeAsset> getKnowledgeAssetVersion(UUID assetId,
       String versionTag) {
     String internalId;
     Optional<String> fileId;
@@ -256,13 +259,14 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
 
   @Override
-  public Answer<Void> setVersionedKnowledgeAsset(UUID uuid, String s,
+  public Answer<Void> setKnowledgeAssetVersion(UUID uuid, String s,
       KnowledgeAsset knowledgeAsset) {
     return unsupported();
   }
 
   @Override
-  public Answer<Void> addKnowledgeAssetCarrier(UUID uuid, String s, byte[] bytes) {
+  public Answer<Void> addKnowledgeAssetCarrier(UUID assetId, String versionTag,
+      KnowledgeCarrier assetCarrier) {
     return unsupported();
   }
 
@@ -319,19 +323,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   public Answer<KnowledgeCarrier> getCanonicalKnowledgeAssetSurrogate(UUID assetId,
       String versionTag,
       String extAccept) {
-    return unsupported();
-  }
-
-  @Override
-  public Answer<KnowledgeCarrier> getCanonicalKnowledgeAssetSurrogateVersion(UUID assetId,
-      String versionTag,
-      String surrogateVersionTag, String extAccept) {
-    return unsupported();
-  }
-
-  @Override
-  public Answer<List<Pointer>> getCanonicalKnowledgeAssetSurrogateVersions(UUID assetId,
-      String versionTag) {
     return unsupported();
   }
 
@@ -571,7 +562,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
   @Override
-  public Answer<List<Pointer>> getKnowledgeAssetCarriers(UUID assetId, String versionTag) {
+  public Answer<List<Pointer>> listKnowledgeAssetCarriers(UUID assetId, String versionTag) {
     // Expect only one carrier ; Canonical will give XML
     return unsupported();
   }
@@ -582,16 +573,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     return unsupported();
   }
 
-  @Override
-  public Answer<List<Pointer>> getKnowledgeAssetSurrogates(UUID uuid, String s) {
-    return unsupported();
-  }
-
-  @Override
-  public Answer<Void> publishKnowledgeAsset(UUID uuid, String s,
-      KnowledgeCarrier knowledgeCarrier) {
-    return unsupported();
-  }
 
   // to upload the "dictionary" DMN model
 
@@ -710,33 +691,33 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   private boolean isDMNModel(TrisotechFileInfo fileInfo) {
     return fileInfo.getMimetype().contains(DMN_LOWER);
   }
-
-  @Override
-  public Answer<List<KnowledgeCarrier>> getCompositeKnowledgeAsset(UUID uuid, String s,
-      Boolean aBoolean, String s1) {
-    return unsupported();
-  }
-
-  @Override
-  public Answer<KnowledgeCarrier> getCompositeKnowledgeAssetStructure(UUID uuid, String s) {
-    return unsupported();
-  }
-
-  @Override
-  public Answer<List<KnowledgeCarrier>> getKnowledgeArtifactBundle(UUID uuid, String s,
-      String s1, Integer integer, String s2) {
-    return unsupported();
-  }
-
-  @Override
-  public Answer<List<KnowledgeAsset>> getKnowledgeAssetBundle(UUID uuid, String s,
-      String s1, Integer integer) {
-    return unsupported();
-  }
-
-  @Override
-  public Answer<List<Bindings>> queryKnowledgeAssets(KnowledgeCarrier knowledgeCarrier) {
-    return unsupported();
-  }
+//
+//  @Override
+//  public Answer<List<KnowledgeCarrier>> getCompositeKnowledgeAsset(UUID uuid, String s,
+//      Boolean aBoolean, String s1) {
+//    return unsupported();
+//  }
+//
+//  @Override
+//  public Answer<KnowledgeCarrier> getCompositeKnowledgeAssetStructure(UUID uuid, String s) {
+//    return unsupported();
+//  }
+//
+//  @Override
+//  public Answer<List<KnowledgeCarrier>> getKnowledgeArtifactBundle(UUID uuid, String s,
+//      String s1, Integer integer, String s2) {
+//    return unsupported();
+//  }
+//
+//  @Override
+//  public Answer<List<KnowledgeAsset>> getKnowledgeAssetBundle(UUID uuid, String s,
+//      String s1, Integer integer) {
+//    return unsupported();
+//  }
+//
+//  @Override
+//  public Answer<List<Bindings>> queryKnowledgeAssets(KnowledgeCarrier knowledgeCarrier) {
+//    return unsupported();
+//  }
 
 }

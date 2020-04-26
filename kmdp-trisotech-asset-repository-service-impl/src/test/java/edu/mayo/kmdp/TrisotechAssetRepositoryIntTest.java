@@ -68,7 +68,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getAssetCatalog() {
-    Answer<KnowledgeAssetCatalog> answer = tar.getAssetCatalog();
+    Answer<KnowledgeAssetCatalog> answer = tar.getKnowledgeAssetCatalog();
     assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
   }
 
@@ -102,7 +102,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void getKnowledgeAssetVersions() {
     Answer<List<Pointer>> answer = tar
-        .getKnowledgeAssetVersions(UUID.randomUUID(), 0, 10, "beforeTag", "afterTag", "ascend");
+        .listKnowledgeAssetVersions(UUID.randomUUID(), 0, 10, "beforeTag", "afterTag", "ascend");
     assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
   }
 
@@ -116,7 +116,7 @@ class TrisotechAssetRepositoryIntTest {
         + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.3.1+1573591682000";
 
     Answer<KnowledgeAsset> answer = tar
-        .getVersionedKnowledgeAsset(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"),
+        .getKnowledgeAssetVersion(UUID.fromString("735a5764-fe3f-4ab8-b103-650b6e805db2"),
             "1.0.0");
 
     assertTrue(answer.isSuccess());
@@ -144,7 +144,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedDependencyId = MAYO_ARTIFACTS_BASE_URI
         + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.2+1565368008000";
     Answer<KnowledgeAsset> answer= tar
-        .getVersionedKnowledgeAsset(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
+        .getKnowledgeAssetVersion(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.0.0");
 
     assertTrue(answer.isSuccess());
@@ -180,7 +180,7 @@ class TrisotechAssetRepositoryIntTest {
         + "ede3b331-7b10-4580-98be-66ebff344c21/versions/0.5.0+1587068342000";
 
     Answer<KnowledgeAsset> answer= tar
-        .getVersionedKnowledgeAsset(UUID.fromString("3c99cf3a-93c4-4e09-b1aa-14088c76aded"),
+        .getKnowledgeAssetVersion(UUID.fromString("3c99cf3a-93c4-4e09-b1aa-14088c76aded"),
             "1.0.0");
 
     assertTrue(answer.isSuccess());
@@ -225,7 +225,7 @@ class TrisotechAssetRepositoryIntTest {
         + "ede3b331-7b10-4580-98be-66ebff344c21/versions/0.6.0+1587069044000";
 
     Answer<KnowledgeAsset> answer= tar
-        .getVersionedKnowledgeAsset(UUID.fromString("3c99cf3a-93c4-4e09-b1aa-14088c76aded"),
+        .getKnowledgeAssetVersion(UUID.fromString("3c99cf3a-93c4-4e09-b1aa-14088c76aded"),
             "2.0.0");
 
     assertTrue(answer.isSuccess());
@@ -266,7 +266,7 @@ class TrisotechAssetRepositoryIntTest {
         + "ad174bca-8dd1-4e35-8933-e7456e1f3e5c/versions/0.0.1+1573767134000";
 
     Answer<KnowledgeAsset> answer= tar
-        .getVersionedKnowledgeAsset(UUID.fromString("e35a686e-5b72-4feb-b923-b79ac1417613"),
+        .getKnowledgeAssetVersion(UUID.fromString("e35a686e-5b72-4feb-b923-b79ac1417613"),
             "1.0.0");
 
     assertTrue(answer.isSuccess());
@@ -283,7 +283,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void getVersionedKnowledgeAsset_notFound_badVersion() {
     Answer<KnowledgeAsset> answer = tar
-        .getVersionedKnowledgeAsset(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
+        .getKnowledgeAssetVersion(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.2.0");
     assertTrue(answer.isClientFailure());
   }
@@ -291,7 +291,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void getVersionedKnowledgeAsset_notFound_badId() {
     Answer<KnowledgeAsset> answer = tar
-        .getVersionedKnowledgeAsset(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03d"),
+        .getKnowledgeAssetVersion(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03d"),
             "1.0.0");
     assertTrue(answer.isClientFailure());
   }
@@ -424,7 +424,7 @@ class TrisotechAssetRepositoryIntTest {
   void setVersionedKnowledgeAsset() {
     KnowledgeAsset ka = new KnowledgeAsset();
     Answer<Void> answer= tar
-        .setVersionedKnowledgeAsset(UUID.randomUUID(), "s", ka);
+        .setKnowledgeAssetVersion(UUID.randomUUID(), "s", ka);
     assertTrue(answer.isFailure());
     assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
   }
@@ -582,7 +582,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void getKnowledgeAssetCarriers() {
     Answer<List<Pointer>> answer= tar
-        .getKnowledgeAssetCarriers(UUID.randomUUID(), "s");
+        .listKnowledgeAssetCarriers(UUID.randomUUID(), "s");
     assertTrue(answer.isFailure());
     assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
 
@@ -638,15 +638,15 @@ class TrisotechAssetRepositoryIntTest {
         XMLUtil.loadXMLDocument(publishedFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
     assertTrue(answer.isSuccess());
   }
-
-  @Test
-  void getCompositeKnowledgeAsset() {
-    Answer<List<KnowledgeCarrier>> answer= tar
-        .getCompositeKnowledgeAsset(UUID.randomUUID(), "s", false, "s1");
-    assertTrue(answer.isFailure());
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
-
-  }
+//
+//  @Test
+//  void getCompositeKnowledgeAsset() {
+//    Answer<List<KnowledgeCarrier>> answer= tar
+//        .getCompositeKnowledgeAssetS(UUID.randomUUID(), "s", false, "s1");
+//    assertTrue(answer.isFailure());
+//    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+//
+//  }
 
   @Test
   void getCompositeKnowledgeAssetStructure() {
@@ -657,30 +657,30 @@ class TrisotechAssetRepositoryIntTest {
 
   }
 
-  @Test
-  void getKnowledgeArtifactBundle() {
-    Answer<List<KnowledgeCarrier>> answer= tar
-        .getKnowledgeArtifactBundle(UUID.randomUUID(), "s", "s1", 6, "s2");
-    assertTrue(answer.isFailure());
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+//  @Test
+//  void getKnowledgeArtifactBundle() {
+//    Answer<List<KnowledgeCarrier>> answer= tar
+//        .getKnowledgeArtifactBundle(UUID.randomUUID(), "s", "s1", 6, "s2");
+//    assertTrue(answer.isFailure());
+//    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+//
+//  }
+//
+//  @Test
+//  void getKnowledgeAssetBundle() {
+//    Answer<List<KnowledgeAsset>> answer= tar
+//        .getKnowledgeAssetBundle(UUID.randomUUID(), "s", "s2", 7);
+//    assertTrue(answer.isFailure());
+//    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+//
+//  }
 
-  }
-
-  @Test
-  void getKnowledgeAssetBundle() {
-    Answer<List<KnowledgeAsset>> answer= tar
-        .getKnowledgeAssetBundle(UUID.randomUUID(), "s", "s2", 7);
-    assertTrue(answer.isFailure());
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
-
-  }
-
-  @Test
-  void queryKnowledgeAssets() {
-    Answer<List<Bindings>> answer= tar
-        .queryKnowledgeAssets(null);
-    assertTrue(answer.isFailure());
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
-
-  }
+//  @Test
+//  void queryKnowledgeAssets() {
+//    Answer<List<Bindings>> answer= tar
+//        .queryKnowledgeAssets(null);
+//    assertTrue(answer.isFailure());
+//    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+//
+//  }
 }

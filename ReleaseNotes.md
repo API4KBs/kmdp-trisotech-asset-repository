@@ -1,5 +1,6 @@
-#1.8.0:
+#2.0.0:
 * Updated to v2 of surrogate
+* Updated to latest asset repo APIs
 * Updated to newer ID package
 * Modified artifact version in surrogate to include timestamp
 * Added support to generate MEA files for developer use only

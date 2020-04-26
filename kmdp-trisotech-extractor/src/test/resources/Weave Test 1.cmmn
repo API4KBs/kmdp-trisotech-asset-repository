@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<semantic:definitions xmlns:ns1="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068" xmlns:ns2="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21" xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"    xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"  xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"  xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"  xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"  xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"  xmlns:rss="http://purl.org/rss/2.0/"  xmlns="http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9" id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9" name="Weave Test 1" targetNamespace="http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9" expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" exporter="CMMN Modeler" exporterVersion="6.8.0" triso:logoChoice="Default" triso:version="2.2.1" triso:state="Published">
+<semantic:definitions xmlns:ns1="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068" xmlns:ns2="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21" xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"    xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"  xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"  xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"  xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"  xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"  xmlns:rss="http://purl.org/rss/2.0/"  xmlns="http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9" id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9" name="Weave Test 1" targetNamespace="http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9" expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" exporter="Case Modeler" exporterVersion="6.10.1" triso:logoChoice="Default" triso:version="3.0.1" triso:state="Draft">
     <semantic:caseFileItemDefinition name="Current Weight" definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType" structureRef="string" id="_e9044eea-5a77-4700-b39a-c078eb9cb964"/>
     <semantic:caseFileItemDefinition name="My Test Entity 1" definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType" structureRef="string" id="_16bd5d00-1584-466b-8a08-bef483fb9f7e"/>
     <semantic:caseFileItemDefinition name="Age" definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType" structureRef="string" id="_7ea3470c-076e-4156-8715-ad45aa803b01"/>
     <semantic:case id="Case_40e952e9-9c4c-4f19-bb14-a8a9681d782d" name="Test">
-        <semantic:extensionElements>
-            <triso:customAttribute key="knowledgeAssetId" value="https://clinicalknowledgemanagement.mayo.edu/assets/3c99cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.0.0-SNAPSHOT" type="string" id="_85eb5020-758c-409a-a51a-71f0321c913e"/>
-        </semantic:extensionElements>
         <semantic:caseFileModel>
-            <semantic:caseFileItem id="_8f3ba321-82f5-4523-81bd-3f89e4822e9c" name="Current Weight" definitionRef="_e9044eea-5a77-4700-b39a-c078eb9cb964"/>
-            <semantic:caseFileItem id="_edc3794c-d1c1-4c57-a28d-5c17ff8e07bf" name="My Test Entity 1" definitionRef="_16bd5d00-1584-466b-8a08-bef483fb9f7e"/>
-            <semantic:caseFileItem id="_192c45ea-2898-42a7-9141-1b637745a93d" name="Age" definitionRef="_7ea3470c-076e-4156-8715-ad45aa803b01"/>
+            <semantic:caseFileItem id="_8f3ba321-82f5-4523-81bd-3f89e4822e9c" name="Current Weight" definitionRef="_e9044eea-5a77-4700-b39a-c078eb9cb964">
+                <semantic:extensionElements>
+                    <triso:semanticLink id="_98787376-553b-4949-b42e-7d652bd5d168" name="Weaver Test 1 - Current Weight" modelURI="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068" uri="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068#_12873790-73be-4484-bec7-72cb8a6af004"/>
+                </semantic:extensionElements>
+            </semantic:caseFileItem>
+            <semantic:caseFileItem id="_edc3794c-d1c1-4c57-a28d-5c17ff8e07bf" name="My Test Entity 1" definitionRef="_16bd5d00-1584-466b-8a08-bef483fb9f7e">
+                <semantic:documentation textFormat="text/html">Some Entity</semantic:documentation>
+                <semantic:extensionElements>
+                    <triso:semanticLink id="_8b6d47dc-cd55-4dfd-bfb8-f609884eb690" name="Weaver Test 2 - My Test Entity 1" modelURI="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21" uri="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21#_3ef65bee-95c6-43a3-8da0-8bb13685071b"/>
+                </semantic:extensionElements>
+            </semantic:caseFileItem>
+            <semantic:caseFileItem id="_192c45ea-2898-42a7-9141-1b637745a93d" name="Age" definitionRef="_7ea3470c-076e-4156-8715-ad45aa803b01">
+                <semantic:extensionElements>
+                    <triso:semanticLink id="_67c3a669-4275-4a82-8338-97f1c2191108" name="Weaver Test 2 - Age" modelURI="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21" uri="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21#_9536203e-4d63-4d50-bdf8-92fe1b5953bb"/>
+                </semantic:extensionElements>
+            </semantic:caseFileItem>
         </semantic:caseFileModel>
         <semantic:casePlanModel id="_40e952e9-9c4c-4f19-bb14-a8a9681d782d" name="Test">
+            <semantic:extensionElements>
+                <triso:customAttribute key="knowledgeAssetId" value="https://clinicalknowledgemanagement.mayo.edu/assets/3c99cf3a-93c4-4e09-b1aa-14088c76aded/versions/2.0.0" type="string" id="_85eb5020-758c-409a-a51a-71f0321c913e"/>
+            </semantic:extensionElements>
             <semantic:planItem id="_0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2" definitionRef="PID__0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2">
                 <semantic:entryCriterion id="_18b1c197-4095-49c0-9373-af1eaf1c8c25" sentryRef="_84d18ac2-6e59-46ab-aa21-57ad86aebfa8"/>
             </semantic:planItem>

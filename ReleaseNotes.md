@@ -1,4 +1,8 @@
-#2.0.0:
+# 2.0.0 - 8/11/2020
+- Updated triso service impl to be 2.0.0-snapshot
+- Updated root pom to base 7.0.1-snapshot
+
+# 2.0.0:
 * Updated to v2 of surrogate
 * Updated to latest asset repo APIs
 * Updated to newer ID package
@@ -6,7 +10,7 @@
 * Added support to generate MEA files for developer use only
 * Added a README with some compiling and general information.
 
-#1.7.0: 
+# 1.7.0: 
 Development still.
 * Updated code based on code reviews.
 * Updated KnownAttributes to use updated AnnotationRelTypeSeries values.

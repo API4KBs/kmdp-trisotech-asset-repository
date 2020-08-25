@@ -14,11 +14,11 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
-import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
-import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Knowledge_Asset_Surrogate_2_0_XML_Syntax;
 
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.ObjectFactory;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -40,9 +40,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.surrogate.Annotation;
+import org.omg.spec.api4kp._20200801.surrogate.ObjectFactory;
+import org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,8 +94,6 @@ public class Weaver {
   private String diagramExt;
   private String metadataItemDef;
   private String metadataAttachment;
-  private static final String SURROGATE_SCHEMA = "http://kmdp.mayo.edu/metadata/surrogate";
-  private static final String ANNOTATIONS_SCHEMA = "http://kmdp.mayo.edu/metadata/annotations";
 
   private ObjectFactory of = new ObjectFactory();
   private Map<String, BaseAnnotationHandler> handlers = new HashMap<>();
@@ -178,26 +179,20 @@ public class Weaver {
         "xmlns:" + "xsi",
         "http://www.w3.org/2001/XMLSchema-instance");
 
+    String surrPrefix = Registry
+        .getPrefixforNamespace(Knowledge_Asset_Surrogate_2_0_XML_Syntax.getReferentId())
+        .orElseThrow(IllegalStateException::new);
+    String surrNamespace = Registry
+        .getValidationSchema(Knowledge_Asset_Surrogate_2_0.getReferentId())
+        .orElseThrow(IllegalStateException::new);
+
     dox.getDocumentElement().setAttributeNS(WWW_W_3_ORG_2000_XMLNS,
-        "xmlns:surr",
-        SURROGATE_SCHEMA);
-    // TODO: remove hardcoded values? CAO
-    // TODO: SURROGATE_SCHEMA used to be done this way:
-    //  Registry.getPrefixforNamespace( KRLanguage.Asset_Surrogate.getRef() )
-    //		                                                            .orElseThrow( IllegalStateException::new ),
-    //		                                         KRLanguage.Asset_Surrogate.getRef().toString()
-    dox.getDocumentElement().setAttributeNS(WWW_W_3_ORG_2000_XMLNS,
-        "xmlns:ann",
-        ANNOTATIONS_SCHEMA);
-    // TODO: remove hardcoded values? CAO
-    // TODO: ANNOTATIONS_SCHEMA used to be done this way:
-    //  Registry.getPrefixforNamespace( KRLanguage.Annotations.getRef() )
-    //		                                                            .orElseThrow( IllegalStateException::new ),
-    //		                                         KRLanguage.Annotations.getRef().toString()
+        "xmlns:" + surrPrefix,
+        surrNamespace);
 
     dox.getDocumentElement().setAttributeNS("http://www.w3.org/2001/XMLSchema-instance",
         "xsi:" + "schemaLocation",
-        getSchemaLocations(dox));
+        getSchemaLocations(dox, surrNamespace));
 
     // get metas
     NodeList metas = dox.getElementsByTagNameNS(metadataNS, metadataEl);
@@ -531,26 +526,23 @@ public class Weaver {
   }
 
 
-  private String getSchemaLocations(Document dox) {
+  private String getSchemaLocations(Document dox, String surrNamespace) {
     StringBuilder sb = new StringBuilder();
 
     logger.debug(
-        "KnowledgeRepresentationLanguage.DMN_1_2.getRef(): {}", DMN_1_2.getRef());
-    sb.append(SURROGATE_SCHEMA)
-        .append(" ").append("xsd/metadata/surrogate/surrogate.xsd");
-    sb.append(" ");
-    sb.append(ANNOTATIONS_SCHEMA)
-        .append(" ").append("xsd/metadata/annotations/annotations.xsd");
+        "KnowledgeRepresentationLanguage.DMN_1_2.getReferentId(): {}", DMN_1_2.getReferentId());
+    sb.append(surrNamespace)
+        .append(" ").append("xsd/API4KP/surrogate/surrogate.xsd");
 
     String baseNS = dox.getDocumentElement().getNamespaceURI();
     if (baseNS.contains(DMN)) {
       sb.append(" ")
-          .append(DMN_1_2.getRef())
-          .append(" ").append(Registry.getValidationSchema(DMN_1_2.getRef())
+          .append(DMN_1_2.getReferentId())
+          .append(" ").append(Registry.getValidationSchema(DMN_1_2.getReferentId())
           .orElseThrow(IllegalStateException::new));
     } else if (baseNS.contains(CMMN)) {
       sb.append(" ").append(CMMN_1_1)
-          .append(" ").append(Registry.getValidationSchema(CMMN_1_1.getRef())
+          .append(" ").append(Registry.getValidationSchema(CMMN_1_1.getReferentId())
           .orElseThrow(IllegalStateException::new));
     }
 

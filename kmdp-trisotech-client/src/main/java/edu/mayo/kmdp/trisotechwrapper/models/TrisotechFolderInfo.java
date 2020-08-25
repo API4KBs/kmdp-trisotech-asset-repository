@@ -16,17 +16,47 @@
 package edu.mayo.kmdp.trisotechwrapper.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
 
 /**
  * 'folder' of the Trisotech repository data entry
  */
 @JsonIgnoreProperties( ignoreUnknown = true )
-@Data
 public class TrisotechFolderInfo {
 
   private String id;
   private String sku;
   private String name;
   private String path;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getSku() {
+    return sku;
+  }
+
+  public void setSku(String sku) {
+    this.sku = sku;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
 }

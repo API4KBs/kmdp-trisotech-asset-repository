@@ -10,7 +10,7 @@
                       xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
                       xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
                       xmlns:rss="http://purl.org/rss/2.0/"
-                      xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+                      xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
                       xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       exporter="Trisotech DES API Repository Conversion"
@@ -20,7 +20,7 @@
                       name="Weave Test 1"
                       targetNamespace="http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9"
                       triso:logoChoice="Default"
-                      xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate
+                      xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate
                       xsd/metadata/surrogate/surrogate.xsd
                       http://kmdp.mayo.edu/metadata/annotations
                        xsd/metadata/annotations/annotations.xsd

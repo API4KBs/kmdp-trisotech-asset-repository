@@ -9,13 +9,13 @@
   xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
   xmlns:ns1="https://clinicalknowledgemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
   xmlns:rss="http://purl.org/rss/2.0/"
-  xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
   id="_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"
   name="Basic Case Model"
   targetNamespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/16086bb8-c1fc-49b0-800b-c9b995dc5ed5"
-  xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd CMMN_1_1 http://www.omg.org/spec/CMMN/20151109/MODEL">
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd CMMN_1_1 http://www.omg.org/spec/CMMN/20151109/MODEL">
   <semantic:caseFileItemDefinition
     definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
     id="_6894ff5f-130a-46a1-bcc4-5e915acd7c9b"
@@ -31,7 +31,7 @@
   </semantic:case>
   <semantic:case id="Case_c5b0fddc-013d-4dfb-be05-1f83f22767c1">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:ref
           name="KnowledgeAssetTypes - 20190801 - Cognitive Process Modelin 'KnowledgeAssetTypes - 20190801'"
@@ -95,7 +95,7 @@
         isBlocking="false"
         name="Task with Task Concept">
         <semantic:extensionElements>
-          <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+          <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
             xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
             <ann:rel name="captures"
               namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"

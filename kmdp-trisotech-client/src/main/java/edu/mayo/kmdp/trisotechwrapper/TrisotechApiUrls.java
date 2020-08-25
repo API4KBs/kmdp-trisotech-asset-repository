@@ -24,6 +24,7 @@ public class TrisotechApiUrls {
 
   private TrisotechApiUrls() { throw new IllegalStateException("Utility class"); }
 
+  //TODO FIXME This should be configurable
   public static final String BASE_URL = "https://mc.trisotech.com/publicapi/";
 
   // List of repositories

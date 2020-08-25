@@ -19,20 +19,22 @@ import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.validate;
-import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
 import edu.mayo.kmdp.preprocess.meta.KnownAttributes;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
+import edu.mayo.kmdp.util.JaxbUtil;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,7 +123,7 @@ class WeaverTest {
       weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
-			assertTrue( validate( dox, KnowledgeRepresentationLanguageSeries.DMN_1_2.getRef()));
+			assertTrue( validate( dox, DMN_1_2.getReferentId()));
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
@@ -136,7 +138,7 @@ class WeaverTest {
 
     try {
       weaver.weave(dox);
-      assertTrue( validate( dox, KnowledgeRepresentationLanguageSeries.DMN_1_2.getRef() ) );
+      assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
       streamXMLDocument(dox, System.out);
     } catch (IllegalStateException ie) {
@@ -154,7 +156,7 @@ class WeaverTest {
 
     assertTrue(true); // dummy
     // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
-//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
+//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getReferentId() ) );
 
     try {
       weaver.weave(dox);
@@ -203,7 +205,7 @@ class WeaverTest {
 
     assertTrue(true); // dummy
     // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
-//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
+//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getReferentId() ) );
 
     try {
       weaver.weave(dox);
@@ -234,7 +236,7 @@ class WeaverTest {
     Document dox = loadXMLDocument(resolveResource(path))
         .orElseGet(() -> fail("Unable to load document " + path));
 
-		assertTrue( validate( dox, KnowledgeRepresentationLanguageSeries.DMN_1_2.getRef() ) );
+		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
     try {
       weaver.weave(dox);
@@ -283,7 +285,7 @@ class WeaverTest {
 
     assertTrue(true); // dummy
     // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
-//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getRef() ) );
+//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getReferentId() ) );
 
     try {
       weaver.weave(dox);
@@ -349,7 +351,7 @@ class WeaverTest {
 
       streamXMLDocument(dox, System.out);
 
-      assertTrue(validate(dox, CMMN_1_1.getRef()));
+      assertTrue(validate(dox, CMMN_1_1.getReferentId()));
 
       assertTrue(confirmDecisionURI(dox));
 
@@ -385,7 +387,7 @@ class WeaverTest {
       weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
-      assertTrue(validate(dox, CMMN_1_1.getRef()));
+      assertTrue(validate(dox, CMMN_1_1.getReferentId()));
 
       assertTrue(confirmDecisionURI(dox));
 
@@ -422,7 +424,7 @@ class WeaverTest {
       weaver.weave(dox);
       streamXMLDocument(dox, System.out);
 
-      assertTrue(validate(dox, CMMN_1_1.getRef()));
+      assertTrue(validate(dox, CMMN_1_1.getReferentId()));
 
       assertTrue(confirmDecisionURI(dox));
 
@@ -642,7 +644,8 @@ class WeaverTest {
         .filter(el -> el.getLocalName().equals("extensionElements"))
         .map(Element::getChildNodes)
         .flatMap(XMLUtil::asElementStream)
-        .map(SurrogateHelper::unmarshallAnnotation)
+        .map(el -> JaxbUtil.unmarshall(Annotation.class,el))
+        .flatMap(StreamUtil::trimStream)
         .filter(a -> att.asConcept().equals(a.getRel()))
         .map(type::cast)
         .collect(Collectors.toList());

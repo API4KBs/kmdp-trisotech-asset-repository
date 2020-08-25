@@ -17,6 +17,7 @@ import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
+import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.graph.HierarchySorter;
@@ -48,10 +49,11 @@ import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.query.ResultSetRewindable;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.NotFoundException;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -64,15 +66,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class IdentityMapper {
-
-  @Value("${edu.mayo.kmdp.trisotechwrapper.trisotechToken}")
-  private String token;
-
-//  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName}")
-//  private String repositoryName;
-
-  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId}")
-  String place;
 
   private static final Logger logger = LoggerFactory.getLogger(IdentityMapper.class);
 
@@ -103,6 +96,9 @@ public class IdentityMapper {
   // results of the hierarchySorter
   private List<Resource> orderedModels;
 
+  @Autowired
+  TrisotechWrapper client;
+
   /**
    * init is needed w/@PostConstruct because @Value values will not be set until after
    * construction.
@@ -111,6 +107,7 @@ public class IdentityMapper {
    */
   @PostConstruct
   void init() {
+    String place = client.getConfig().getRepositoryId();
     logger.debug("place in init {}", place);
     createMap(query(getQueryStringRelations(), place));
     models = ResultSetFactory.makeRewindable(query(getQueryStringModels(), place));
@@ -160,7 +157,7 @@ public class IdentityMapper {
     sparqlString.setIri(1, graph);
     Query query = sparqlString.asQuery();
 
-    Header header = new BasicHeader(AUTHORIZATION, "Bearer " + token);
+    Header header = new BasicHeader(AUTHORIZATION, client.getBearerTokenHeader());
 
     HttpClient httpClient = HttpClientBuilder.create()
         .setDefaultHeaders(Collections.singleton(header))

@@ -22,11 +22,24 @@ import edu.mayo.kmdp.preprocess.meta.ReaderConfig;
 import edu.mayo.kmdp.preprocess.meta.TrisotechExtractionStrategy;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.StaticContextInitializer;
+import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 public class TrisotechAssetRepositoryConfig {
+
+  @Bean StaticContextInitializer cfg() {
+    return new StaticContextInitializer();
+  }
+
+  @Bean
+  @Autowired
+  TrisotechWrapper trisotechWrapper(StaticContextInitializer cfg) {
+    return new TrisotechWrapper(cfg);
+  }
 
   @Bean
   TrisotechAssetRepository trisotechAssetRepository() {

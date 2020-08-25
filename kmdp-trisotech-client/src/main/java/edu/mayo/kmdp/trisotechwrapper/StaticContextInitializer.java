@@ -15,10 +15,12 @@
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
+import edu.mayo.kmdp.util.Util;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,11 +33,17 @@ import org.springframework.stereotype.Component;
 public class StaticContextInitializer {
   private static final Logger logger = LoggerFactory.getLogger(StaticContextInitializer.class);
 
+  @Value("${edu.mayo.kmdp.trisotechwrapper.baseUrl:https://mc.trisotech.com/publicapi}")
+  private String baseURL;
+
   @Value("${edu.mayo.kmdp.trisotechwrapper.trisotechToken}")
   private String token;
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName}")
+  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName:}")
   private String repositoryName;
+
+  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId:}")
+  private String repositoryId;
 
   @PostConstruct
   public void init() {
@@ -44,7 +52,32 @@ public class StaticContextInitializer {
       logger.debug("repositoryName in PostConstruct is: {}", repositoryName + "*****\n\n");
     }
 
-    TrisotechWrapper.setToken(token);
-    TrisotechWrapper.setRoot(repositoryName);
+    if (Util.isEmpty(token)) {
+      throw new IllegalStateException("No bearer token detected - Unable to connect to the TT DES");
+    }
+    if (Util.isEmpty(repositoryName) || Util.isEmpty(repositoryId)) {
+      throw new IllegalStateException("No target Place/Repository configuration detected "
+          + "- Unable to retrieve models");
+    }
+
+    if (token.startsWith("edu.mayo") && token.contains("=")) {
+      this.token = token.substring(token.indexOf('=') + 1);
+    }
+  }
+
+  public String getBaseURL() {
+    return baseURL;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public String getRepositoryName() {
+    return repositoryName;
+  }
+
+  public String getRepositoryId() {
+    return repositoryId;
   }
 }

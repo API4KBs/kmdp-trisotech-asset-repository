@@ -13,41 +13,67 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp;
+package edu.mayo.kmdp.preprocess.meta.beans;
 
+import edu.mayo.kmdp.preprocess.meta.IdentityMapper;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.ModelReader;
 import edu.mayo.kmdp.preprocess.meta.ReaderConfig;
 import edu.mayo.kmdp.preprocess.meta.TrisotechExtractionStrategy;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
+import edu.mayo.kmdp.preprocess.meta.beans.ChainConverter;
+import edu.mayo.kmdp.trisotechwrapper.StaticContextInitializer;
+import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ExtractorConfig {
+public class MetadataExtractorTestConfig {
 
   @Bean
-  ModelReader reader(ReaderConfig config) {
+  public StaticContextInitializer cfg() {
+    return new StaticContextInitializer();
+  }
+
+  @Bean
+  public ChainConverter chainConverter() {
+    return new ChainConverter();
+  }
+
+  @Bean
+  public IdentityMapper identityMapper() {
+    return new IdentityMapper();
+  }
+
+  @Bean
+  @Autowired
+  public TrisotechWrapper trisotechWrapper(StaticContextInitializer cfg) {
+    return new TrisotechWrapper(cfg);
+  }
+
+  @Bean
+  public ModelReader reader(ReaderConfig config) {
     return new ModelReader(config);
   }
 
   @Bean
-  ReaderConfig config() {
+  public ReaderConfig config() {
     return new ReaderConfig();
   }
 
   @Bean
-  Weaver weaver() {
+  public Weaver weaver() {
     return new Weaver();
   }
 
   @Bean
-  TrisotechExtractionStrategy strategy() {
+  public TrisotechExtractionStrategy strategy() {
     return new TrisotechExtractionStrategy();
   }
 
   @Bean
-  MetadataExtractor extractor() {
+  public MetadataExtractor extractor() {
     return new MetadataExtractor();
   }
 }

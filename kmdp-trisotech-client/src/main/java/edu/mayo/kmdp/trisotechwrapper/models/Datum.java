@@ -16,7 +16,6 @@
 package edu.mayo.kmdp.trisotechwrapper.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
 
 
 /**
@@ -34,10 +33,24 @@ import lombok.Data;
  *  },
  */
 @JsonIgnoreProperties( ignoreUnknown = true )
-@Data
 public class Datum {
 
   private TrisotechFileInfo file;
   private TrisotechFolderInfo folder;
 
+  public TrisotechFileInfo getFile() {
+    return file;
+  }
+
+  public void setFile(TrisotechFileInfo file) {
+    this.file = file;
+  }
+
+  public TrisotechFolderInfo getFolder() {
+    return folder;
+  }
+
+  public void setFolder(TrisotechFolderInfo folder) {
+    this.folder = folder;
+  }
 }

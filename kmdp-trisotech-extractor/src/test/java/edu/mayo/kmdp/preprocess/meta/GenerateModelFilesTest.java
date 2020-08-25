@@ -1,14 +1,13 @@
-import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
-import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
-import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
-import static org.junit.jupiter.api.Assertions.fail;
+package edu.mayo.kmdp.preprocess.meta;
 
-import edu.mayo.kmdp.ChainConverter;
-import edu.mayo.kmdp.ChainConverterConfig;
-import edu.mayo.kmdp.ExtractorConfig;
-import edu.mayo.kmdp.IdentityMapperConfig;
-import edu.mayo.kmdp.Model;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
+import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+
+import edu.mayo.kmdp.preprocess.meta.beans.ChainConverter;
+import edu.mayo.kmdp.preprocess.meta.beans.MetadataExtractorTestConfig;
+import edu.mayo.kmdp.preprocess.meta.beans.Model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -16,9 +15,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /**
@@ -47,10 +48,12 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @Disabled("For developer use only")
 @SpringBootTest
-@SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class,
-    ChainConverterConfig.class})
+@SpringJUnitConfig(classes = {MetadataExtractorTestConfig.class})
 @ActiveProfiles("dev")
-public class GenerateModelFiles {
+@TestPropertySource(properties = {
+    "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
+    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
+public class GenerateModelFilesTest {
   Model m;
   String dmnPath;
   InputStream dmn;
@@ -81,106 +84,106 @@ public class GenerateModelFiles {
   void convertModelsAfib() {
     try {
       dmnPath = "/afib/Anticoagulation Recommendation.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Anticoagulation RecommendationMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/afib/Anticoagulation Recommendation");
 
       cmmnPath = "/afib/Atrial Fibrillation.cmmn";
-      cmmn = ChainTest.class.getResourceAsStream(cmmnPath);
+      cmmn = GenerateModelFilesTest.class.getResourceAsStream(cmmnPath);
       cmmnMetaPath = "/afib/Atrial FibrillationMeta.json";
-      cmmnMeta = ChainTest.class.getResourceAsStream(cmmnMetaPath);
+      cmmnMeta = GenerateModelFilesTest.class.getResourceAsStream(cmmnMetaPath);
       m = convert(cmmn, cmmnMeta, CMMN_1_1);
 
       printConvertResults(m, "/afib/Atrial Fibrillation");
 
       dmnPath = "/afib/Choice of Atrial Fibrillation Treatment Strategy.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Choice of Atrial Fibrillation Treatment StrategyMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/afib/Choice of Atrial Fibrillation Treatment Strategy");
 
       dmnPath = "/afib/Choice of Long-Term Management of Coagulation Status.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Choice of Long-Term Management of Coagulation StatusMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/afib/Choice of Long-Term Management of Coagulation Status");
 
       dmnPath = "/afib/Choice of Treatment of Abnormal Heart Rate.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Choice of Treatment of Abnormal Heart RateMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/afib/Choice of Treatment of Abnormal Heart Rate");
 
       dmnPath = "/afib/Choice of Treatment of Abnormal Heart Rhythm.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Choice of Treatment of Abnormal Heart RhythmMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/afib/Choice of Treatment of Abnormal Heart Rhythm");
 
       dmnPath = "/afib/Prior Management of Atrial Fibrillation.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Prior Management of Atrial FibrillationMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/afib/Prior Management of Atrial Fibrillation");
 
       dmnPath = "/afib/Current Status of Atrial Fibrillation.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/Current Status of Atrial FibrillationMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/afib/Current Status of Atrial Fibrillation");
 
 
       dmnPath = "/afib/CHA2DS2Vasc Score Model.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/CHA2DS2Vasc Score ModelMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/afib/CHA2DS2Vasc Score Model");
 
       dmnPath = "/afib/HAS-BLED Score Model.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/HAS-BLED Score ModelMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/afib/HAS-BLED Score Model");
 
       dmnPath = "/afib/History Pertinent to Atrial Fibrillation.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/afib/History Pertinent to Atrial FibrillationMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/afib/History Pertinent to Atrial Fibrillation");
 
       dmnPath = "/SharedCardiologyDecisions/Current Cardiac Status.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/SharedCardiologyDecisions/Current Cardiac StatusMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/SharedCardiologyDecisions/Current Cardiac Status");
 
       dmnPath = "/SharedCardiologyDecisions/History Pertinent to Heart Disease.dmn";
-      dmn = ChainTest.class.getResourceAsStream(dmnPath);
+      dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
       metaPath = "/SharedCardiologyDecisions/History Pertinent to Heart DiseaseMeta.json";
-      meta = ChainTest.class.getResourceAsStream(metaPath);
+      meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
       m = convert(dmn, meta, DMN_1_2);
 
       printConvertResults(m, "/SharedCardiologyDecisions/History Pertinent to Heart Disease");
@@ -201,58 +204,58 @@ public class GenerateModelFiles {
   @Test
   void convertModelsBasic() {
     cmmnPath = "/Basic Case Model.cmmn";
-    cmmn = ChainTest.class.getResourceAsStream(cmmnPath);
+    cmmn = GenerateModelFilesTest.class.getResourceAsStream(cmmnPath);
     cmmnMetaPath = "/Basic Case ModelMeta.json";
-    cmmnMeta = ChainTest.class.getResourceAsStream(cmmnMetaPath);
+    cmmnMeta = GenerateModelFilesTest.class.getResourceAsStream(cmmnMetaPath);
 
     m = convert(cmmn, cmmnMeta, CMMN_1_1);
     printConvertResults(m, "/basic/Basic Case Model");
 
 
     dmnPath = "/Basic Decision Model.dmn";
-    dmn = ChainTest.class.getResourceAsStream(dmnPath);
+    dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
     metaPath = "/Basic Decision ModelMeta.json";
-    meta = ChainTest.class.getResourceAsStream(metaPath);
+    meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
     m = convert(dmn, meta, DMN_1_2);
 
     printConvertResults(m, "/basic/Basic Decision Model");
 
     dmnPath = "/Computable Decision Model.dmn";
-    dmn = ChainTest.class.getResourceAsStream(dmnPath);
+    dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
     metaPath = "/ComputableDecisionModelMeta.json";
-    meta = ChainTest.class.getResourceAsStream(metaPath);
+    meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
     m = convert(dmn, meta, DMN_1_2);
 
     printConvertResults(m, "/basic/Computable Decision Model");
 
     dmnPath = "/Decision Reuse.dmn";
-    dmn = ChainTest.class.getResourceAsStream(dmnPath);
+    dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
     metaPath = "/DecisionReuseMeta.json";
-    meta = ChainTest.class.getResourceAsStream(metaPath);
+    meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
     m = convert(dmn, meta, DMN_1_2);
 
     printConvertResults(m, "/basic/Decision Reuse");
 
     dmnPath = "/Decision Subdecision.dmn";
-    dmn = ChainTest.class.getResourceAsStream(dmnPath);
+    dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
     metaPath = "/DecisionSubdecisionMeta.json";
-    meta = ChainTest.class.getResourceAsStream(metaPath);
+    meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
     m = convert(dmn, meta, DMN_1_2);
 
     printConvertResults(m, "/basic/Decision Subdecision");
 
     dmnPath = "/Operational Definition Model.dmn";
-    dmn = ChainTest.class.getResourceAsStream(dmnPath);
+    dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
     metaPath = "/Operational Definition ModelMeta.json";
-    meta = ChainTest.class.getResourceAsStream(metaPath);
+    meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
     m = convert(dmn, meta, DMN_1_2);
 
     printConvertResults(m, "/basic/Operational Definition Model");
 
     dmnPath = "/recommendation chain.dmn";
-    dmn = ChainTest.class.getResourceAsStream(dmnPath);
+    dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
     metaPath = "/recommendationChainMeta.json";
-    meta = ChainTest.class.getResourceAsStream(metaPath);
+    meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
     m = convert(dmn, meta, DMN_1_2);
 
     printConvertResults(m, "/basic/recommendation chain");
@@ -262,25 +265,25 @@ public class GenerateModelFiles {
   @Test
   void convertModelsWeave() {
     cmmnPath = "/Weave Test 1.cmmn";
-    cmmn = ChainTest.class.getResourceAsStream(cmmnPath);
+    cmmn = GenerateModelFilesTest.class.getResourceAsStream(cmmnPath);
     cmmnMetaPath = "/WeaveTest1Meta.json";
-    cmmnMeta = ChainTest.class.getResourceAsStream(cmmnMetaPath);
+    cmmnMeta = GenerateModelFilesTest.class.getResourceAsStream(cmmnMetaPath);
 
     m = convert(cmmn, cmmnMeta, CMMN_1_1);
     printConvertResults(m, "/weave/Weave Test 1");
 
     dmnPath = "/Weaver Test 1.dmn";
-    dmn = ChainTest.class.getResourceAsStream(dmnPath);
+    dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
     metaPath = "/WeaverTest1Meta.json";
-    meta = ChainTest.class.getResourceAsStream(metaPath);
+    meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
     m = convert(dmn, meta, DMN_1_2);
 
     printConvertResults(m, "/weave/Weaver Test 1");
 
     dmnPath = "/Weaver Test 2.dmn";
-    dmn = ChainTest.class.getResourceAsStream(dmnPath);
+    dmn = GenerateModelFilesTest.class.getResourceAsStream(dmnPath);
     metaPath = "/Weaver Test 2Meta.json";
-    meta = ChainTest.class.getResourceAsStream(metaPath);
+    meta = GenerateModelFilesTest.class.getResourceAsStream(metaPath);
     m = convert(dmn, meta, DMN_1_2);
 
     printConvertResults(m, "/weave/Weaver Test 2");

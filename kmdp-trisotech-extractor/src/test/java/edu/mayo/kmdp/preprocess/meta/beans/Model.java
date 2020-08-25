@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp;
+package edu.mayo.kmdp.preprocess.meta.beans;
 
 import edu.mayo.kmdp.util.XMLUtil;
 import org.w3c.dom.Document;

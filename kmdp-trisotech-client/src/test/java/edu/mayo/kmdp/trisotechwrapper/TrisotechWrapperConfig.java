@@ -15,14 +15,21 @@
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TrisotechWrapperConfig {
-  @Bean
-  StaticContextInitializer staticContextInitializer() {
+
+  @Bean StaticContextInitializer cfg() {
     return new StaticContextInitializer();
+  }
+
+  @Bean
+  @Autowired
+  TrisotechWrapper trisotechWrapper(StaticContextInitializer cfg) {
+    return new TrisotechWrapper(cfg);
   }
 
 }

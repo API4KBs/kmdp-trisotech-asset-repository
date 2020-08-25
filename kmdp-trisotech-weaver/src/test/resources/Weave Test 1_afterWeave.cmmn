@@ -10,13 +10,13 @@
   xmlns:ns1="https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
   xmlns:ns2="https://clinicalknowledgemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"
   xmlns:rss="http://purl.org/rss/2.0/"
-  xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
   id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9"
   name="Weave Test 1"
   targetNamespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9"
-  xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd CMMN_1_1 http://www.omg.org/spec/CMMN/20151109/MODEL">
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd CMMN_1_1 http://www.omg.org/spec/CMMN/20151109/MODEL">
   <semantic:caseFileItemDefinition
     definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
     id="_e9044eea-5a77-4700-b39a-c078eb9cb964"
@@ -38,7 +38,7 @@
         id="_8f3ba321-82f5-4523-81bd-3f89e4822e9c"
         name="Current Weight">
         <semantic:extensionElements>
-          <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+          <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
             xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
             <ann:ref name="Weaver Test 1 - Current Weight"
               namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068#"
@@ -53,7 +53,7 @@
         name="My Test Entity 1">
         <semantic:documentation textFormat="text/html">Some Entity</semantic:documentation>
         <semantic:extensionElements>
-          <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+          <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
             xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
             <ann:ref name="Weaver Test 2 - My Test Entity 1"
               namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21#"
@@ -67,7 +67,7 @@
         id="_192c45ea-2898-42a7-9141-1b637745a93d"
         name="Age">
         <semantic:extensionElements>
-          <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+          <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
             xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
             <ann:ref name="Weaver Test 2 - Age"
               namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21#"
@@ -106,7 +106,7 @@
         id="PID__0bf9441d-7c8f-4ff5-9719-0aeb5513d2f2"
         name="Weaver Test 1 Decision">
         <semantic:extensionElements>
-          <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+          <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
             xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
             <ann:ref name="Weaver Test 1 - Weaver Test 1 Decision"
               namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068#"
@@ -120,7 +120,7 @@
         id="PID__6088d90d-bc64-40e0-93ca-950552bd4f98"
         name="Test Decision 2">
         <semantic:extensionElements>
-          <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+          <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
             xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
             <ann:ref name="Weaver Test 2 - Test Decision 2"
               namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21#"

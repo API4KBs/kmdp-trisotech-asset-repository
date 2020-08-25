@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package edu.mayo.kmdp;
+package edu.mayo.kmdp.preprocess.meta;
 
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.JSON;
 import static edu.mayo.kmdp.preprocess.meta.MetadataExtractor.Format.XML;
@@ -24,11 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.v2.surrogate.SurrogateHelper;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
-import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
-import edu.mayo.kmdp.preprocess.meta.Weaver;
+import edu.mayo.kmdp.preprocess.meta.beans.MetadataExtractorTestConfig;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -43,13 +40,19 @@ import javax.annotation.PostConstruct;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.jena.shared.NotFoundException;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringBootTest
-@SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class})
+@SpringJUnitConfig(classes = {MetadataExtractorTestConfig.class})
+@TestPropertySource(properties = {
+    "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
+    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
 class MetadataTest {
 
   // FYI: IDE may complain about

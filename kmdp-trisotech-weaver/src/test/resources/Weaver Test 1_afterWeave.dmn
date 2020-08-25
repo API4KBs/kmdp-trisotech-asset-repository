@@ -10,14 +10,14 @@
   xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"
   xmlns:openapi="https://openapis.org/omg/extension/1.0"
   xmlns:rss="http://purl.org/rss/2.0/"
-  xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
   xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   id="_5682fa26-b064-43c8-9475-1e4281e74068"
   name="Weaver Test 1"
   namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
-  xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
   <semantic:extensionElements/>
   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
     name="Test Dictionary"
@@ -50,7 +50,7 @@
   <semantic:decision id="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
     name="Weaver Test 1 Decision">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:ref name="Test Entity Set - My Test Entity 1"
           namespaceUri="http://foo.mayo.edu/test#"
@@ -82,7 +82,7 @@
   </semantic:decision>
   <semantic:inputData id="_12873790-73be-4484-bec7-72cb8a6af004" name="Current Weight">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:ref name="propositionalconceptvocabulary_Scheme - Current Weight"
           namespaceUri="https://ontology.mayo.edu/propositionalconceptvocabulary/"
@@ -115,7 +115,7 @@
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe" name="Page 1">
       <di:extension>
-        <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
           xmlns:id="http://www.omg.org/spec/API4KP/1.0/id"/>
       </di:extension>
       <dmndi:Size height="1050" width="1485"/>

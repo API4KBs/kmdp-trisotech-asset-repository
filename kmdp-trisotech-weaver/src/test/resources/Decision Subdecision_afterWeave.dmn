@@ -9,14 +9,14 @@
   xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
   xmlns:openapi="https://openapis.org/omg/extension/1.0"
   xmlns:rss="http://purl.org/rss/2.0/"
-  xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
   xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   id="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
   name="Decision Subdecision"
   namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
-  xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
   <semantic:extensionElements/>
   <semantic:decisionService id="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_DS"
     name="Whole Model Decision Service">
@@ -37,7 +37,7 @@
   </semantic:decisionService>
   <semantic:decision id="_721c22c3-3e27-4065-8f84-9b9ab524fb58" name="Top Level Decision">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:ref
           name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
@@ -46,7 +46,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
           tag="_2a02362c-4be7-4a3f-8ddf-c7cb8e088535"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="defines"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
@@ -59,7 +59,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#e9b34549-7e35-3e85-8d35-d01321c87bf3"
           tag="acc0e115-40d2-4bd8-927f-a30bef1db3c0"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -85,7 +85,7 @@
   <semantic:decision id="_24cb5787-cf05-4464-ba64-7f7cb40128e0"
     name="Assessment Subdecision">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="defines"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
@@ -98,7 +98,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#881f9c7f-5e66-3a61-931f-9bcc26f336a9"
           tag="_788cc2c6-d6a7-4d91-815e-e5410b72648d"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -117,7 +117,7 @@
   </semantic:decision>
   <semantic:inputData id="_458c2a89-3a6c-41b6-a599-136726cb5935" name="Observation">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="in terms of"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"

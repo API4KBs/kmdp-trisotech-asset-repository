@@ -18,21 +18,21 @@ import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_UPPER;
-import static org.omg.spec.api4kp._1_0.Answer.unsupported;
+import static org.omg.spec.api4kp._20200801.Answer.unsupported;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
-import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.preprocess.meta.MetadataExtractor;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
-import edu.mayo.kmdp.repository.asset.v4.server.KnowledgeAssetCatalogApiInternal;
-import edu.mayo.kmdp.repository.asset.v4.server.KnowledgeAssetRepositoryApiInternal;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
-import edu.mayo.ontology.taxonomies.krformat.SerializationFormatSeries;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
-import edu.mayo.ontology.taxonomies.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
@@ -44,16 +44,18 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.http.HttpException;
 import org.apache.jena.shared.NotFoundException;
-import org.omg.spec.api4kp._1_0.AbstractCarrier;
-import org.omg.spec.api4kp._1_0.Answer;
-import org.omg.spec.api4kp._1_0.datatypes.Bindings;
-import org.omg.spec.api4kp._1_0.id.Pointer;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
-import org.omg.spec.api4kp._1_0.services.KPServer;
-import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
-import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
-import org.omg.spec.api4kp._1_0.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.AbstractCarrier;
+import org.omg.spec.api4kp._20200801.Answer;
+import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetCatalogApiInternal;
+import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetRepositoryApiInternal;
+import org.omg.spec.api4kp._20200801.id.Pointer;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.services.KPServer;
+import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.repository.KnowledgeAssetCatalog;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +79,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   @Autowired
   private MetadataExtractor extractor;
+
+  @Autowired
+  private TrisotechWrapper client;
 
   TrisotechAssetRepository() {
   }
@@ -110,7 +115,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     // get the modelInfo for the latest artifactVersion
 
     return Answer.of(
-        TrisotechWrapper.getLatestModelFileInfo(internalFileId.get())
+        client.getLatestModelFileInfo(internalFileId.get())
             .flatMap(modelInfo ->
                 getKnowledgeAssetForModel(internalFileId.get(), modelInfo)));
   }
@@ -147,8 +152,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       // the file in the correct format (xml) so need to make a server call now to get the proper URL
       return Answer.of(
           fileId
-              .flatMap(TrisotechWrapper::getLatestModelFileInfo)
-              .flatMap(tfi -> TrisotechWrapper.downloadXmlModel(tfi.getUrl())
+              .flatMap(client::getLatestModelFileInfo)
+              .flatMap(tfi -> client.downloadXmlModel(tfi.getUrl())
                   .map(weaver::weave)
                   .map(dox -> extractor.extract(dox, tfi)))
       );
@@ -186,7 +191,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         continue;
       }
       Optional<Document> downloadedXml =
-          TrisotechWrapper.downloadXmlModel(model.getUrl());
+          client.downloadXmlModel(model.getUrl());
       // check assetId for each version
       if (downloadedXml.isPresent()) {
         Document dox = downloadedXml.get();
@@ -228,13 +233,13 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
     if (CMMN_UPPER.equalsIgnoreCase(assetTypeTag)) {
       // get CMMN assets
-      trisotechFileInfoList = TrisotechWrapper.getPublishedCMMNModelsFileInfo();
+      trisotechFileInfoList = client.getPublishedCMMNModelsFileInfo();
     } else if (DMN_UPPER.equalsIgnoreCase(assetTypeTag)) {
       // DMN
-      trisotechFileInfoList = TrisotechWrapper.getPublishedDMNModelsFileInfo();
+      trisotechFileInfoList = client.getPublishedDMNModelsFileInfo();
     } else {
       // get all published models
-      trisotechFileInfoList = TrisotechWrapper.getPublishedModelsFileInfo();
+      trisotechFileInfoList = client.getPublishedModelsFileInfo();
     }
 
     List<Pointer> assetList = trisotechFileInfoList.stream()
@@ -246,8 +251,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
               .resolveEnterpriseAssetID(trisotechFileInfo.getId());
           return assetId.toPointer()
               .withType(isDMNModel(trisotechFileInfo)
-                  ? KnowledgeAssetTypeSeries.Decision_Model.getRef()
-                  : KnowledgeAssetTypeSeries.Care_Process_Model.getRef())
+                  ? Decision_Model.getReferentId()
+                  : Care_Process_Model.getReferentId())
               .withName(trisotechFileInfo.getName());
 
         })
@@ -335,7 +340,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       if (null == model.getVersion() && null == model.getState()) {
         continue;
       }
-      Optional<Document> downloadXml = TrisotechWrapper.downloadXmlModel(model.getUrl());
+      Optional<Document> downloadXml = client.downloadXmlModel(model.getUrl());
       if (downloadXml.isPresent()) {
         Document dox = downloadXml.get();
         ResourceIdentifier asset = weaver.getAssetID(dox);
@@ -425,7 +430,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             && artifactVersion.get().equals(artifactVersionTag)) {
           // artifact matches, get the file and process
           // a specific version of knowledge asset carrier (fileId)
-          Optional<ResourceIdentifier> lav = TrisotechWrapper
+          Optional<ResourceIdentifier> lav = client
               .getLatestVersion(fileId.get());
           if (lav.isPresent()) {
 //            VersionedIdentifier latestArtifactVersion = lav.get();
@@ -482,22 +487,22 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    */
   private SyntacticRepresentation getLanguageRepresentationForModel(Optional<Document> dox) {
     if (dox.isPresent()) {
-      Optional<org.omg.spec.api4kp._1_0.services.SyntacticRepresentation> rep = extractor
+      Optional<org.omg.spec.api4kp._20200801.services.SyntacticRepresentation> rep = extractor
           .getRepLanguage(dox.get());
       if (rep.isPresent()) {
         switch (rep.get().getLanguage().asEnum()) {
           case DMN_1_2:
             return new SyntacticRepresentation().withLanguage(
-                KnowledgeRepresentationLanguageSeries.DMN_1_2)
-                .withFormat(SerializationFormatSeries.XML_1_1)
+                DMN_1_2)
+                .withFormat(XML_1_1)
                 .withSerialization(
-                    KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax);
+                    DMN_1_2_XML_Syntax);
           case CMMN_1_1:
             return new SyntacticRepresentation().withLanguage(
-                KnowledgeRepresentationLanguageSeries.CMMN_1_1)
-                .withFormat(SerializationFormatSeries.XML_1_1)
+                CMMN_1_1)
+                .withFormat(XML_1_1)
                 .withSerialization(
-                    KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax);
+                    CMMN_1_1_XML_Syntax);
           default:
             throw new IllegalStateException(
                 "Invalid document representation language: " + rep.get().getLanguage().toString());
@@ -535,7 +540,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         continue;
       }
       Optional<Document> downloadXml =
-          TrisotechWrapper.downloadXmlModel(model.getUrl());
+          client.downloadXmlModel(model.getUrl());
       if (downloadXml.isPresent()) {
         Document dox = downloadXml.get();
         // check assetId for each version
@@ -622,7 +627,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, true);
       Optional<TrisotechFileInfo> tfi =
           fileId
-              .flatMap(TrisotechWrapper::getLatestModelFileInfo);
+              .flatMap(client::getLatestModelFileInfo);
 
       // verify artifact for asset matches the artifactId requested
       if (tfi.isPresent() && internalId.contains(artifactId.toString())) {
@@ -660,7 +665,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   private void uploadFile(String artifactVersionTag, byte[] exemplar,
       TrisotechFileInfo trisotechFileInfo, String mimeType) throws IOException, HttpException {
-    TrisotechWrapper
+    client
         .uploadXmlModel(trisotechFileInfo.getPath(), trisotechFileInfo.getName(), mimeType,
             artifactVersionTag,
             trisotechFileInfo.getState(), exemplar);
@@ -680,9 +685,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   private Optional<Document> resolveModel(String internalFileId, TrisotechFileInfo modelInfo) {
     Optional<Document> model = Optional.ofNullable(modelInfo)
-        .flatMap(TrisotechWrapper::getModel);
+        .flatMap(client::getModel);
     if (!model.isPresent()) {
-      model = TrisotechWrapper.getModelById(internalFileId);
+      model = client.getModelById(internalFileId);
     }
     return model;
   }

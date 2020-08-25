@@ -1,4 +1,4 @@
-/**
+package edu.mayo.kmdp.preprocess.meta; /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -42,39 +42,40 @@
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
 import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
-import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
-import static edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
-import edu.mayo.kmdp.ChainConverter;
-import edu.mayo.kmdp.ChainConverterConfig;
-import edu.mayo.kmdp.ExtractorConfig;
-import edu.mayo.kmdp.IdentityMapperConfig;
-import edu.mayo.kmdp.Model;
-import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.v2.surrogate.ObjectFactory;
+import edu.mayo.kmdp.preprocess.meta.beans.ChainConverter;
+import edu.mayo.kmdp.preprocess.meta.beans.MetadataExtractorTestConfig;
+import edu.mayo.kmdp.preprocess.meta.beans.Model;
 import edu.mayo.kmdp.util.JaxbUtil;
-import edu.mayo.ontology.taxonomies.krlanguage.KnowledgeRepresentationLanguageSeries;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.surrogate.ObjectFactory;
+import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /**
  * Test the processing "chain" from model to surrogate.
  */
 @SpringBootTest
-@SpringJUnitConfig(classes = {ExtractorConfig.class, IdentityMapperConfig.class,
-    ChainConverterConfig.class})
+@SpringJUnitConfig(classes = {MetadataExtractorTestConfig.class})
 @ActiveProfiles("dev")
+@TestPropertySource(properties = {
+    "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
+    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
 class ChainTest {
   Model m;
   String dmnPath;

@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.IdentityMapperConfig;
 import edu.mayo.kmdp.preprocess.NotLatestVersionException;
+import edu.mayo.kmdp.preprocess.meta.beans.MetadataExtractorTestConfig;
 import edu.mayo.kmdp.registry.Registry;
 import java.net.URI;
 import java.util.List;
@@ -32,11 +32,12 @@ import java.util.UUID;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.NotFoundException;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.omg.spec.api4kp._1_0.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /**
  * Tests for IdentityMapper.
@@ -45,11 +46,15 @@ import org.springframework.test.context.ContextConfiguration;
  * the Trisotech server through SPARQL queries.
  */
 @SpringBootTest
-@ContextConfiguration(classes = {IdentityMapperConfig.class})
+@SpringJUnitConfig(classes = {MetadataExtractorTestConfig.class})
+@TestPropertySource(properties = {
+    "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
+    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
 class IdentityMapperIntTest {
 
   public static final String DMN_MIMETYPE = "application/vnd.triso-dmn+json";
   public static final String CMMN_MIMETYPE = "application/vnd.triso-cmmn+json";
+
   @Autowired
   IdentityMapper identityMapper;
 

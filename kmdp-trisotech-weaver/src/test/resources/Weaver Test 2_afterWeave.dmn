@@ -11,14 +11,14 @@
   xmlns:include2="https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
   xmlns:openapi="https://openapis.org/omg/extension/1.0"
   xmlns:rss="http://purl.org/rss/2.0/"
-  xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
   xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   id="_ede3b331-7b10-4580-98be-66ebff344c21"
   name="Weaver Test 2"
   namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"
-  xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
   <semantic:extensionElements/>
   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
     name="Test Dictionary"
@@ -77,7 +77,7 @@
   <semantic:inputData id="_3ef65bee-95c6-43a3-8da0-8bb13685071b" name="My Test Entity 1">
     <semantic:description>Some Entity</semantic:description>
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:ref name="Test Entity Set - My Test Entity 1"
           namespaceUri="http://foo.mayo.edu/test#"
@@ -92,7 +92,7 @@
   </semantic:inputData>
   <semantic:inputData id="_9536203e-4d63-4d50-bdf8-92fe1b5953bb" name="Age">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:ref name="propositionalconceptvocabulary_Scheme - Age"
           namespaceUri="https://ontology.mayo.edu/propositionalconceptvocabulary/"
@@ -108,7 +108,7 @@
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe" name="Page 1">
       <di:extension>
-        <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
           xmlns:id="http://www.omg.org/spec/API4KP/1.0/id"/>
       </di:extension>
       <dmndi:Size height="1050" width="1485"/>

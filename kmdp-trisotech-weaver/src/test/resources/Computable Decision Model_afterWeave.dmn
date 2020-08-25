@@ -8,13 +8,13 @@
   xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
   xmlns:openapi="https://openapis.org/omg/extension/1.0"
   xmlns:rss="http://purl.org/rss/2.0/"
-  xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
   xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   id="_cdda3e01-7152-4888-a984-d938a7cecf6b"
   name="Computable Decision Model"
   namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/cdda3e01-7152-4888-a984-d938a7cecf6b"
-  xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
   <semantic:extensionElements/>
   <semantic:decisionService id="_cdda3e01-7152-4888-a984-d938a7cecf6b_DS"
     name="Whole Model Decision Service">

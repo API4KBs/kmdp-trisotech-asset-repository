@@ -19,19 +19,17 @@ import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
+import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.NotImplemented;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Final_Draft;
 
-import edu.mayo.kmdp.metadata.v2.surrogate.Dependency;
-import edu.mayo.kmdp.metadata.v2.surrogate.KnowledgeAsset;
-import edu.mayo.kmdp.metadata.v2.surrogate.Link;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.api4kp.responsecodes.ResponseCodeSeries;
-import edu.mayo.ontology.taxonomies.kao.knowledgeassettype.KnowledgeAssetTypeSeries;
-import edu.mayo.ontology.taxonomies.kao.publicationstatus.PublicationStatusSeries;
 import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
@@ -39,20 +37,26 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.Answer;
-import org.omg.spec.api4kp._1_0.datatypes.Bindings;
-import org.omg.spec.api4kp._1_0.id.Pointer;
-import org.omg.spec.api4kp._1_0.services.KnowledgeCarrier;
-import org.omg.spec.api4kp._1_0.services.repository.KnowledgeAssetCatalog;
+import org.omg.spec.api4kp._20200801.Answer;
+import org.omg.spec.api4kp._20200801.datatypes.Bindings;
+import org.omg.spec.api4kp._20200801.id.Pointer;
+import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.repository.KnowledgeAssetCatalog;
+import org.omg.spec.api4kp._20200801.surrogate.Dependency;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.surrogate.Link;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 
 /**
  * Integration test for TrisotechAssetRepository, using data from test repository.
  */
 @SpringBootTest
 @ContextConfiguration(classes = {TrisotechAssetRepositoryConfig.class})
+@TestPropertySource("/application-dev.properties")
 class TrisotechAssetRepositoryIntTest {
 
   @Autowired
@@ -69,7 +73,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void getAssetCatalog() {
     Answer<KnowledgeAssetCatalog> answer = tar.getKnowledgeAssetCatalog();
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+    assertEquals(NotImplemented, answer.getOutcomeType());
   }
 
   @Test
@@ -103,7 +107,7 @@ class TrisotechAssetRepositoryIntTest {
   void getKnowledgeAssetVersions() {
     Answer<List<Pointer>> answer = tar
         .listKnowledgeAssetVersions(UUID.randomUUID(), 0, 10, "beforeTag", "afterTag", "ascend");
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+    assertEquals(NotImplemented, answer.getOutcomeType());
   }
 
   @Test
@@ -277,7 +281,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(1, ka.getCarriers().size());
     assertEquals(expectedArtifactId,
         ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
-    assertEquals(PublicationStatusSeries.Final_Draft, ka.getLifecycle().getPublicationStatus());
+    assertEquals(Final_Draft, ka.getLifecycle().getPublicationStatus());
   }
 
   @Test
@@ -302,7 +306,7 @@ class TrisotechAssetRepositoryIntTest {
     Answer<UUID> answer= tar
         .initKnowledgeAsset();
     assertTrue(answer.isFailure());
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+    assertEquals(NotImplemented, answer.getOutcomeType());
   }
 
   @Test
@@ -324,12 +328,12 @@ class TrisotechAssetRepositoryIntTest {
     pointers.forEach((ptr) -> {
       if(expectedDecisionId.equals(ptr.getVersionId().toString())) {
         assertEquals(expectedDecisionName, ptr.getName());
-        assertEquals(KnowledgeAssetTypeSeries.Decision_Model.getRef(), ptr.getType());
+        assertEquals(Decision_Model.getReferentId(), ptr.getType());
         foundDecision.set(true);
       }
       if(expectedCaseId.equals(ptr.getVersionId().toString())) {
         assertEquals(expectedCaseName, ptr.getName());
-        assertEquals(KnowledgeAssetTypeSeries.Care_Process_Model.getRef(), ptr.getType());
+        assertEquals(Care_Process_Model.getReferentId(), ptr.getType());
         foundCase.set(true);
       }
     });
@@ -349,7 +353,7 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(pointers.size() >= 4);
     pointers.forEach((ptr) -> {
       // only Decision Models should be returned
-      assertEquals(KnowledgeAssetTypeSeries.Decision_Model.getRef(), ptr.getType());
+      assertEquals(Decision_Model.getReferentId(), ptr.getType());
     });
   }
 
@@ -365,7 +369,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(2, pointers.size());
     pointers.forEach((ptr) -> {
       // only Decision Models should be returned
-      assertEquals(KnowledgeAssetTypeSeries.Decision_Model.getRef(), ptr.getType());
+      assertEquals(Decision_Model.getReferentId(), ptr.getType());
     });
   }
 
@@ -383,7 +387,7 @@ class TrisotechAssetRepositoryIntTest {
 
     pointers.forEach((ptr) -> {
       // only Decision Models should be returned
-      assertEquals(KnowledgeAssetTypeSeries.Decision_Model.getRef(), ptr.getType());
+      assertEquals(Decision_Model.getReferentId(), ptr.getType());
     });
   }
 
@@ -400,7 +404,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(2, pointers.size());
     pointers.forEach((ptr) -> {
       // Only Care Process Models should be returned
-      assertEquals(KnowledgeAssetTypeSeries.Care_Process_Model.getRef(), ptr.getType());
+      assertEquals(Care_Process_Model.getReferentId(), ptr.getType());
     });
   }
 
@@ -416,7 +420,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(1, pointers.size());
     pointers.forEach((ptr) -> {
       // Only Care Process Models should be returned
-      assertEquals(KnowledgeAssetTypeSeries.Care_Process_Model.getRef(), ptr.getType());
+      assertEquals(Care_Process_Model.getReferentId(), ptr.getType());
     });
   }
 
@@ -426,7 +430,7 @@ class TrisotechAssetRepositoryIntTest {
     Answer<Void> answer= tar
         .setKnowledgeAssetVersion(UUID.randomUUID(), "s", ka);
     assertTrue(answer.isFailure());
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+    assertEquals(NotImplemented, answer.getOutcomeType());
   }
 
   @Test
@@ -434,7 +438,7 @@ class TrisotechAssetRepositoryIntTest {
     Answer<Void> answer= tar
         .addKnowledgeAssetCarrier(UUID.randomUUID(), "s", null);
     assertTrue(answer.isFailure());
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+    assertEquals(NotImplemented, answer.getOutcomeType());
   }
 
   @Test
@@ -584,7 +588,7 @@ class TrisotechAssetRepositoryIntTest {
     Answer<List<Pointer>> answer= tar
         .listKnowledgeAssetCarriers(UUID.randomUUID(), "s");
     assertTrue(answer.isFailure());
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+    assertEquals(NotImplemented, answer.getOutcomeType());
 
   }
 
@@ -644,7 +648,7 @@ class TrisotechAssetRepositoryIntTest {
 //    Answer<List<KnowledgeCarrier>> answer= tar
 //        .getCompositeKnowledgeAssetS(UUID.randomUUID(), "s", false, "s1");
 //    assertTrue(answer.isFailure());
-//    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+//    assertEquals(NotImplemented, answer.getOutcomeType());
 //
 //  }
 
@@ -653,7 +657,7 @@ class TrisotechAssetRepositoryIntTest {
     Answer<KnowledgeCarrier> answer= tar
         .getCompositeKnowledgeAssetStructure(UUID.randomUUID(), "s");
     assertTrue(answer.isFailure());
-    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+    assertEquals(NotImplemented, answer.getOutcomeType());
 
   }
 
@@ -662,7 +666,7 @@ class TrisotechAssetRepositoryIntTest {
 //    Answer<List<KnowledgeCarrier>> answer= tar
 //        .getKnowledgeArtifactBundle(UUID.randomUUID(), "s", "s1", 6, "s2");
 //    assertTrue(answer.isFailure());
-//    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+//    assertEquals(NotImplemented, answer.getOutcomeType());
 //
 //  }
 //
@@ -671,7 +675,7 @@ class TrisotechAssetRepositoryIntTest {
 //    Answer<List<KnowledgeAsset>> answer= tar
 //        .getKnowledgeAssetBundle(UUID.randomUUID(), "s", "s2", 7);
 //    assertTrue(answer.isFailure());
-//    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+//    assertEquals(NotImplemented, answer.getOutcomeType());
 //
 //  }
 
@@ -680,7 +684,7 @@ class TrisotechAssetRepositoryIntTest {
 //    Answer<List<Bindings>> answer= tar
 //        .queryKnowledgeAssets(null);
 //    assertTrue(answer.isFailure());
-//    assertEquals(ResponseCodeSeries.NotImplemented, answer.getOutcomeType());
+//    assertEquals(NotImplemented, answer.getOutcomeType());
 //
 //  }
 }

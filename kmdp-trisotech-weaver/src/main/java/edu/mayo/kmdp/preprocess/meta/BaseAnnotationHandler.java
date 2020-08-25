@@ -14,14 +14,14 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
+import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Imports;
 
-import edu.mayo.kmdp.metadata.v2.surrogate.annotations.Annotation;
-import edu.mayo.ontology.taxonomies.kao.rel.dependencyreltype.DependencyTypeSeries;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.omg.spec.api4kp._1_0.id.ConceptIdentifier;
-import org.omg.spec.api4kp._1_0.id.Term;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.Term;
+import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.w3c.dom.Element;
 
 public abstract class BaseAnnotationHandler {
@@ -53,7 +53,7 @@ public abstract class BaseAnnotationHandler {
       String elementId) {
 
     return Collections.singletonList(new Annotation()
-        .withRel(DependencyTypeSeries.Imports.asConceptIdentifier())
+        .withRel(Imports.asConceptIdentifier())
         .withRef(Term.newTerm(MAYO_ARTIFACTS_BASE_URI_URI, modelId + "#" + elementId).asConceptIdentifier()));
   }
 

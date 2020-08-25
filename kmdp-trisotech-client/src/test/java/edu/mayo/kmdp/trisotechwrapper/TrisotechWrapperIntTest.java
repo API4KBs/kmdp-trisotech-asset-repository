@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.util.Date;
@@ -38,11 +37,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._1_0.id.ResourceIdentifier;
-import org.springframework.beans.factory.annotation.Value;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.w3c.dom.Document;
 
 /**
@@ -54,17 +54,20 @@ import org.w3c.dom.Document;
 @SpringBootTest
 @ActiveProfiles("dev")
 @ContextConfiguration(classes = {TrisotechWrapperConfig.class})
+@TestPropertySource(properties = {
+    "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
+    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
 class TrisotechWrapperIntTest {
 
-  static final String TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY = "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=";
+  @Autowired
+  TrisotechWrapper client;
+
+  private String repositoryBaseUrl;
 
   // id to MEA-Test repository
-  // TODO: Need to do same for MEA? Or just 'find' each time? CAO -- this might be better in the environment so can set this one for development/Test? and set the other one for prod/int?
-  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName}")
-  private String MEA_TEST;
+  private String testRepoName;
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId}")
-  private String MEA_TEST_ID = "d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf";
+  private String testRepoId;
 
   // Test files
   // DMN Published
@@ -88,6 +91,9 @@ class TrisotechWrapperIntTest {
 
   @BeforeEach
   void setUp() {
+    repositoryBaseUrl = client.getConfig().getBaseURL() +  "/repositoryfilecontent?repository=";
+    testRepoName = client.getConfig().getRepositoryName();
+    testRepoId = client.getConfig().getRepositoryId();
   }
 
   @AfterEach
@@ -98,13 +104,13 @@ class TrisotechWrapperIntTest {
   final void testGetModelByIdAndVersionDMN() {
     String expectedVersion = "1.4";
     String expectedVersion_2 = "0.2";
-    Optional<Document> dox = TrisotechWrapper
+    Optional<Document> dox = client
         .getModelByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion);
     assertNotEquals(Optional.empty(), dox);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
 
-    dox = TrisotechWrapper.getModelByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
+    dox = client.getModelByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
     assertNotEquals(Optional.empty(), dox);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
@@ -114,11 +120,11 @@ class TrisotechWrapperIntTest {
   final void testGetModelByIdAndVersionDMNInvalidVersion() {
     String expectedVersion = "2.6";
     String expectedVersion_2 = "0.0";
-    Optional<Document> dox = TrisotechWrapper
+    Optional<Document> dox = client
         .getModelByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion);
     assertEquals(Optional.empty(), dox);
 
-    dox = TrisotechWrapper.getModelByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
+    dox = client.getModelByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
     assertEquals(Optional.empty(), dox);
 
   }
@@ -127,7 +133,7 @@ class TrisotechWrapperIntTest {
   final void testGetModelByIdAndVersionCMMN() {
     String expectedVersion = "2.0";
     String expectedVersion_2 = "1.0";
-    Optional<Document> dox = TrisotechWrapper
+    Optional<Document> dox = client
         .getModelByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion);
     assertNotEquals(Optional.empty(), dox);
     assertTrue(dox.isPresent());
@@ -139,12 +145,12 @@ class TrisotechWrapperIntTest {
   final void testGetModelByIdAndVersionCMMNInvalidVersion() {
     String expectedVersion = "6.5";
     String expectedVersion_2 = "1.0";
-    Optional<Document> dox = TrisotechWrapper
+    Optional<Document> dox = client
         .getModelByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion);
     assertEquals(Optional.empty(), dox);
     assertFalse(dox.isPresent());
 
-    dox = TrisotechWrapper.getModelByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2);
+    dox = client.getModelByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2);
     assertEquals(Optional.empty(), dox);
     assertFalse(dox.isPresent());
 
@@ -154,14 +160,14 @@ class TrisotechWrapperIntTest {
   final void testGetModelInfoByIdAndVersionDMN() {
     String expectedVersion = "1.2";
     String expectedVersion_2 = "0.1";
-    TrisotechFileInfo fileInfo = TrisotechWrapper
+    TrisotechFileInfo fileInfo = client
         .getFileInfoByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals(expectedVersion, fileInfo.getVersion());
     assertEquals(WEAVER_TEST_1_ID, fileInfo.getId());
 
-    fileInfo = TrisotechWrapper.getFileInfoByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2)
+    fileInfo = client.getFileInfoByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals(expectedVersion_2, fileInfo.getVersion());
@@ -172,14 +178,14 @@ class TrisotechWrapperIntTest {
   final void testGetModelInfoByIdAndVersionCMMN() {
     String expectedVersion = "2.0";
     String expectedVersion_2 = "1.0";
-    TrisotechFileInfo fileInfo = TrisotechWrapper
+    TrisotechFileInfo fileInfo = client
         .getFileInfoByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals(expectedVersion, fileInfo.getVersion());
     assertEquals(WEAVE_TEST_1_ID, fileInfo.getId());
 
-    fileInfo = TrisotechWrapper.getFileInfoByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2)
+    fileInfo = client.getFileInfoByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2)
         .orElse(null);
     assertNull(fileInfo);
 
@@ -189,7 +195,7 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetModelVersionsDMN() {
-    List<TrisotechFileInfo> fileVersions = TrisotechWrapper
+    List<TrisotechFileInfo> fileVersions = client
         .getModelVersions(WEAVER_TEST_1_ID, DMN_XML_MIMETYPE); // 7/9/2019 -- should be at least 15
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 10);
@@ -204,7 +210,7 @@ class TrisotechWrapperIntTest {
     assertEquals("1.6", file.getVersion());
 
     // expect same results with repository provided
-    fileVersions = TrisotechWrapper.getModelVersions(MEA_TEST, WEAVER_TEST_1_ID,
+    fileVersions = client.getModelVersions(testRepoName, WEAVER_TEST_1_ID,
         DMN_XML_MIMETYPE); // 7/9/2019 -- should be at least 15
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 10);
@@ -223,7 +229,7 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetModelVersionsWithRepositoryDMN() {
-    List<TrisotechFileInfo> fileVersions = TrisotechWrapper
+    List<TrisotechFileInfo> fileVersions = client
         .getModelVersions(WEAVER_TEST_1_ID, DMN_XML_MIMETYPE);
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 10); // 7/9/2019 -- should be at least 15
@@ -238,7 +244,7 @@ class TrisotechWrapperIntTest {
     assertEquals("1.6", file.getVersion());
 
     // expect same results with repository provided
-    fileVersions = TrisotechWrapper.getModelVersions(MEA_TEST, WEAVER_TEST_1_ID, DMN_XML_MIMETYPE);
+    fileVersions = client.getModelVersions(testRepoName, WEAVER_TEST_1_ID, DMN_XML_MIMETYPE);
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 10); // 7/9/2019 -- should be at least 15
 
@@ -255,7 +261,7 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetModelVersionsCMMN() {
-    List<TrisotechFileInfo> fileVersions = TrisotechWrapper
+    List<TrisotechFileInfo> fileVersions = client
         .getModelVersions(WEAVE_TEST_1_ID, CMMN_XML_MIMETYPE);
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 5);
@@ -272,7 +278,7 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetModelVersionsWithRepositoryCMMN() {
-    List<TrisotechFileInfo> fileVersions = TrisotechWrapper
+    List<TrisotechFileInfo> fileVersions = client
         .getModelVersions(WEAVE_TEST_1_ID, CMMN_XML_MIMETYPE);
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 5);
@@ -291,13 +297,13 @@ class TrisotechWrapperIntTest {
   final void testGetLatestVersionArtifactIdDMN() {
     String expectedVersion = "2.0.0";
     Date expectedUpdated = DateTimeUtil
-        .parseDateTime("2020-04-16T20:17:19Z","yyyy-MM-dd'T'HH:mm:ss'Z'");
+        .parseDateTime("2020-04-16T20:17:19Z");
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "123720a6-9758-45a3-8c5c-5fffab12c494/versions/"
         + expectedVersion;
 
     ResourceIdentifier versionIdentifier =
-        TrisotechWrapper.getLatestVersion(WEAVER_TEST_1_ID)
+        client.getLatestVersion(WEAVER_TEST_1_ID)
             .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
@@ -311,15 +317,15 @@ class TrisotechWrapperIntTest {
     String expectedVersion = "2.0.0";
     String updated = "2020-04-16T20:17:19Z";
     Date expectedUpdated = DateTimeUtil
-        .parseDateTime(updated,"yyyy-MM-dd'T'HH:mm:ss'Z'");
+        .parseDateTime(updated);
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "123720a6-9758-45a3-8c5c-5fffab12c494/versions/"
         + expectedVersion;
 
-    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID)
+    TrisotechFileInfo trisotechFileInfo = client.getFileInfo(WEAVER_TEST_1_ID)
         .orElse(null);
     assertNotNull(trisotechFileInfo);
-    ResourceIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo)
+    ResourceIdentifier versionIdentifier = client.getLatestVersion(trisotechFileInfo)
         .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
@@ -331,7 +337,7 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetLatestVersionArtifactIdCMMN() {
     String expectedVersion = "3.0.1";
-    ResourceIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(WEAVE_TEST_1_ID)
+    ResourceIdentifier versionIdentifier = client.getLatestVersion(WEAVE_TEST_1_ID)
         .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
@@ -343,15 +349,15 @@ class TrisotechWrapperIntTest {
     String expectedVersion = "3.0.1";
     String updated = "2020-04-16T21:10:55Z";
     Date expectedUpdated = DateTimeUtil
-        .parseDateTime(updated,"yyyy-MM-dd'T'HH:mm:ss'Z'");
+        .parseDateTime(updated);
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "93e58aa9-c258-46fd-909d-1cb096e19e64/versions/"
         + expectedVersion;
 
-    TrisotechFileInfo trisotechFileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID)
+    TrisotechFileInfo trisotechFileInfo = client.getFileInfo(WEAVE_TEST_1_ID)
         .orElse(null);
     assertNotNull(trisotechFileInfo);
-    ResourceIdentifier versionIdentifier = TrisotechWrapper.getLatestVersion(trisotechFileInfo)
+    ResourceIdentifier versionIdentifier = client.getLatestVersion(trisotechFileInfo)
         .orElse(null);
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
@@ -364,21 +370,21 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetLatestVersionCMMN_Null() {
     // while a file may have multiple versions, no version tag is given to a file until it is published
-    ResourceIdentifier version = TrisotechWrapper.getLatestVersion(WEAVE_TEST_2_ID)
+    ResourceIdentifier version = client.getLatestVersion(WEAVE_TEST_2_ID)
         .orElse(null);
     assertNull(version);
   }
 
   @Test
   final void testGetPublishedModelByIdDMN() {
-    Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVER_TEST_1_ID);
+    Optional<Document> dox = client.getPublishedModelById(WEAVER_TEST_1_ID);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
   @Test
   final void testGetPublishedModelByIdDMN_Draft() {
-    Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVER_TEST_2_ID);
+    Optional<Document> dox = client.getPublishedModelById(WEAVER_TEST_2_ID);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
@@ -386,26 +392,26 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetPublishedModelByIdDMN_Null() {
     // getPublishedModelById returns empty if model is not published
-    Optional<Document> dox = TrisotechWrapper.getPublishedModelById(DMN_UNPUBLISHED);
+    Optional<Document> dox = client.getPublishedModelById(DMN_UNPUBLISHED);
     assertFalse(dox.isPresent());
   }
 
   @Test
   final void testGetModelByIdDMN() {
     // getModelById returns empty if model is not published
-    Optional<Document> dox = TrisotechWrapper.getModelById(WEAVER_TEST_2_ID);
+    Optional<Document> dox = client.getModelById(WEAVER_TEST_2_ID);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
   @Test
   final void testGetPublishedModelByIdWithFileInfoDMN() {
-    List<TrisotechFileInfo> trisotechFileInfos = TrisotechWrapper.getDMNModelsFileInfo();
+    List<TrisotechFileInfo> trisotechFileInfos = client.getDMNModelsFileInfo();
     TrisotechFileInfo trisotechFileInfo = trisotechFileInfos.stream()
         .filter((f) -> f.getId().equals(WEAVER_TEST_1_ID)).findAny()
         .orElse(null);
     assertNotNull(trisotechFileInfo);
-    Optional<Document> dox = TrisotechWrapper
+    Optional<Document> dox = client
         .getPublishedModel(trisotechFileInfo);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
@@ -413,40 +419,40 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetDmnModels() {
-    List<TrisotechFileInfo> dmnModels = TrisotechWrapper.getDMNModelsFileInfo();
+    List<TrisotechFileInfo> dmnModels = client.getDMNModelsFileInfo();
     assertNotNull(dmnModels);
   }
 
   @Test
   final void testGetPublishedModelByIdCMMN() {
-    Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVE_TEST_1_ID);
+    Optional<Document> dox = client.getPublishedModelById(WEAVE_TEST_1_ID);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
   @Test
   final void testGetPublishedModelByIdCMMN_Empty() {
-    Optional<Document> dox = TrisotechWrapper.getPublishedModelById(WEAVE_TEST_2_ID);
+    Optional<Document> dox = client.getPublishedModelById(WEAVE_TEST_2_ID);
     assertFalse(dox.isPresent());
   }
 
 
   @Test
   final void testGetModelByIdCMMN() {
-    Optional<Document> dox = TrisotechWrapper.getModelById(WEAVE_TEST_2_ID);
+    Optional<Document> dox = client.getModelById(WEAVE_TEST_2_ID);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
   }
 
   @Test
   final void testGetPublishedModelByIdWithFileInfoCMMN() {
-    List<TrisotechFileInfo> trisotechFileInfos = TrisotechWrapper.getCMMNModelsFileInfo();
+    List<TrisotechFileInfo> trisotechFileInfos = client.getCMMNModelsFileInfo();
     TrisotechFileInfo trisotechFileInfo = trisotechFileInfos.stream()
         .filter((f) -> f.getId().equals(WEAVE_TEST_1_ID))
         .findAny()
         .orElse(null);
     assertNotNull(trisotechFileInfo);
-    Optional<Document> dox = TrisotechWrapper
+    Optional<Document> dox = client
         .getPublishedModel(trisotechFileInfo);
     assertTrue(dox.isPresent());
     assertNotNull(dox.get());
@@ -454,28 +460,28 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetCmmnModels() {
-    List<TrisotechFileInfo> cmmnModels = TrisotechWrapper.getCMMNModelsFileInfo();
+    List<TrisotechFileInfo> cmmnModels = client.getCMMNModelsFileInfo();
     assertNotNull(cmmnModels);
     assertTrue(cmmnModels.size() >= 3);
   }
 
   @Test
   final void testGetPublishedCmmnModels() {
-    List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedCMMNModelsFileInfo();
+    List<TrisotechFileInfo> publishedModels = client.getPublishedCMMNModelsFileInfo();
     assertNotNull(publishedModels);
     assertEquals(2, publishedModels.size());
   }
 
   @Test
   final void testGetPublishedDmnModels() {
-    List<TrisotechFileInfo> publishedModels = TrisotechWrapper.getPublishedDMNModelsFileInfo();
+    List<TrisotechFileInfo> publishedModels = client.getPublishedDMNModelsFileInfo();
     assertNotNull(publishedModels);
     assertTrue(publishedModels.size() >= 4);
   }
 
   @Test
   final void testGetModelInfoDMN() {
-    TrisotechFileInfo fileInfo = TrisotechWrapper.getFileInfo(WEAVER_TEST_1_ID)
+    TrisotechFileInfo fileInfo = client.getFileInfo(WEAVER_TEST_1_ID)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals("Weaver Test 1", fileInfo.getName());
@@ -486,7 +492,7 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetModelInfoCMMN() {
-    TrisotechFileInfo fileInfo = TrisotechWrapper.getFileInfo(WEAVE_TEST_1_ID)
+    TrisotechFileInfo fileInfo = client.getFileInfo(WEAVE_TEST_1_ID)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals("Weave Test 1", fileInfo.getName());
@@ -497,18 +503,18 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testDownloadXmlModelDMN() {
-    String repositoryFileUrl = TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST_ID
+    String repositoryFileUrl = repositoryBaseUrl + testRepoId
         + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVER_TEST_1_ID;
-    Optional<Document> dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
+    Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
     assertTrue(dox.isPresent());
   }
 
   @Test
   final void testDownloadXmlModelCMMN() {
 
-    String repositoryFileUrl = TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST_ID
+    String repositoryFileUrl = repositoryBaseUrl + testRepoId
         + "&mimetype=application%2Fcmmn-1-1%2Bxml&path=/&sku=" + WEAVE_TEST_1_ID;
-    Optional<Document> dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
+    Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
     assertTrue(dox.isPresent());
   }
 
@@ -516,17 +522,17 @@ class TrisotechWrapperIntTest {
   final void testDownloadXmlModelErrors() {
     // Any other exceptions to confirm?
     final String repositoryFileUrl =
-        TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST_ID
+        repositoryBaseUrl + testRepoId
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVE_TEST_1_ID;
 
-    Optional<Document> dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl);
+    Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
     assertFalse(dox.isPresent());
 
     final String repositoryFileUrl2 =
-        TRISOTECH_PUBLICAPI_REPOSITORYFILECONTENT_REPOSITORY + MEA_TEST
+        repositoryBaseUrl + testRepoName
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVER_TEST_1_ID;
 
-    dox = TrisotechWrapper.downloadXmlModel(repositoryFileUrl2);
+    dox = client.downloadXmlModel(repositoryFileUrl2);
     assertFalse(dox.isPresent());
   }
 

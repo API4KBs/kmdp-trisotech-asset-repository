@@ -9,14 +9,14 @@
   xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
   xmlns:openapi="https://openapis.org/omg/extension/1.0"
   xmlns:rss="http://purl.org/rss/2.0/"
-  xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
   xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
   name="Basic Decision Model"
   namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
-  xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
   <semantic:extensionElements/>
   <semantic:decisionService id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356_DS"
     name="Whole Model Decision Service">
@@ -37,7 +37,7 @@
   </semantic:decisionService>
   <semantic:decision id="_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719" name="Basic Decision">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="defines"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
@@ -50,7 +50,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#e9b34549-7e35-3e85-8d35-d01321c87bf3"
           tag="_623e1cca-b3c6-4203-ade0-85ba042141db"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:ref
           name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
@@ -131,7 +131,7 @@
   </semantic:decision>
   <semantic:inputData id="_c8828c20-d075-42bf-bc5e-ad5b4e52ef1d" name="Input 1">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="in terms of"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
@@ -151,7 +151,7 @@
   </semantic:inputData>
   <semantic:inputData id="_ffc7572a-2d99-4721-8cf0-a0f2f0aa5f13" name="Input 2">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="in terms of"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
@@ -181,7 +181,7 @@
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="_b1cbbae9-a4c0-4a85-bb26-4c10bf35a750" name="Page 1">
       <di:extension>
-        <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
           xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
           <ann:ref
             name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"

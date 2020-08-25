@@ -13,14 +13,14 @@
   xmlns:include4="https://clinicalknowledgemanagement.mayo.edu/artifacts/6e7c088e-ab6d-4c2f-a0cd-120b40889c8e"
   xmlns:openapi="https://openapis.org/omg/extension/1.0"
   xmlns:rss="http://purl.org/rss/2.0/"
-  xmlns:surr="http://kmdp.mayo.edu/metadata/surrogate"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
   xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   id="_3b265cd2-431c-4beb-9a18-f7e644d897b2"
   name="Choice of Long-Term Management of Coagulation Status"
   namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/3b265cd2-431c-4beb-9a18-f7e644d897b2"
-  xsi:schemaLocation="http://kmdp.mayo.edu/metadata/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/metadata/surrogate/surrogate.xsd http://kmdp.mayo.edu/metadata/annotations xsd/metadata/annotations/annotations.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
   <semantic:extensionElements/>
   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
     name="CS"
@@ -124,7 +124,7 @@
   <semantic:decision id="_f2fcd947-6770-42a6-a78b-8fe45450404e"
     name="Choice of Long-term Management of Anticoagulation Status">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="defines"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
@@ -137,7 +137,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#31f8227b-2b19-388e-b707-b69cb553d1d4"
           tag="_9c241396-d248-49cf-856f-c1af9f2cc188"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -149,7 +149,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#28d541e1-bd08-3afc-a3f0-3780601576c6"
           tag="deb94c86-c2db-4f3d-ac8e-2df74266fe62"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -161,7 +161,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"
           tag="_4f83e56c-7442-4c8b-ab99-4ae0f5da94a8"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:ref name="KnowledgeAssetTypes - 20190801 - Semantic Decision Model"
           namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#"
@@ -196,7 +196,7 @@
   <semantic:decision id="_753fbabe-1ba4-479d-a9a8-c1ea71ba487c"
     name="Long-term Anticoagulation for Stroke Prevention">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="defines"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
@@ -209,7 +209,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#31f8227b-2b19-388e-b707-b69cb553d1d4"
           tag="_37d53c07-8544-4ba8-bfbc-1d76f49870f3"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -247,7 +247,7 @@
   <semantic:decision id="_439f6265-86e1-4b8b-a70c-cdc48fb36753"
     name="Prefers Anticoagulation">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="defines"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
@@ -259,7 +259,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#9f16a88d-cb31-35c9-becc-779d16822bce"
           tag="_4282f213-08a7-4485-b3f7-decfb5ab3128"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -271,7 +271,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#bd53d56d-e2c7-3ec2-ae91-5af122027498"
           tag="ff20f6f1-63ca-4dd1-8484-741f1074ec97"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -294,7 +294,7 @@
   <semantic:decision id="_f9d68649-351e-4987-9a47-8f906ea08865"
     name="Left Atrial Appendage Closure Device Indicated">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="defines"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
@@ -307,7 +307,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#23e52336-9fde-3fb8-ae23-ba511113ac4e"
           tag="_3fd14cb5-4d8e-4957-8200-635118420aa1"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -319,7 +319,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
           tag="_86c51dbf-7866-4520-9962-f06045e4acfa"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -356,7 +356,7 @@
   <semantic:decision id="_8011a076-d2b5-4bde-b196-17e590671e55"
     name="Risk of Embolic Stroke">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="defines"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
@@ -368,7 +368,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#f3eb77ed-cd3d-3ce8-b20b-ca700806b118"
           tag="_4ef1e7d2-59c4-40ce-91a2-2577c87db291"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -380,7 +380,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
           tag="_757c0404-1a85-4457-ab27-7cfd783fbc8b"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -411,7 +411,7 @@
   <semantic:decision id="_763f5a74-9ada-481e-b6b4-ba7856722e1a"
     name="Risk of Major Bleeding within One Year">
     <semantic:extensionElements>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -423,7 +423,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
           tag="_468d098c-829d-4efa-8f67-a340fffab36c"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="captures"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
@@ -435,7 +435,7 @@
           resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"
           tag="_52efc211-aaa7-4396-bd04-1e10769ec502"/>
       </ann:annotation>
-      <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+      <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
         xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
         <ann:rel name="defines"
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
@@ -470,9 +470,9 @@
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="_0de3fbe4-827c-4835-a0a4-a8147d4114a9" name="Page 1">
       <di:extension>
-        <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
           xmlns:id="http://www.omg.org/spec/API4KP/1.0/id"/>
-        <ann:annotation xmlns:ann="http://kmdp.mayo.edu/metadata/v2/surrogate/annotations"
+        <ann:annotation xmlns:ann="https://www.omg.org/spec/API4KP/20200801/surrogate"
           xmlns:id="http://www.omg.org/spec/API4KP/1.0/id">
           <ann:ref
             name="ClinicalSituations - Anticoagulation for Stroke Preventionin 'ClinicalSituations'"

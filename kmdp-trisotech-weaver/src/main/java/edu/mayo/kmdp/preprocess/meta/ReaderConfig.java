@@ -16,7 +16,6 @@
 package edu.mayo.kmdp.preprocess.meta;
 
 import edu.mayo.kmdp.ConfigProperties;
-
 import java.util.Properties;
 import org.springframework.stereotype.Component;
 

@@ -16,7 +16,6 @@
 package edu.mayo.kmdp.trisotechwrapper.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.List;
 
 /**

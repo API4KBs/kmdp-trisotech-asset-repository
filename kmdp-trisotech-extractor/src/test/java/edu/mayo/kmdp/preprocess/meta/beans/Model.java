@@ -16,9 +16,8 @@
 package edu.mayo.kmdp.preprocess.meta.beans;
 
 import edu.mayo.kmdp.util.XMLUtil;
-import org.w3c.dom.Document;
-
 import java.io.ByteArrayOutputStream;
+import org.w3c.dom.Document;
 
 public class Model {
 

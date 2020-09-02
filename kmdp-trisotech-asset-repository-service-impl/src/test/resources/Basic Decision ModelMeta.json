@@ -1,0 +1,14 @@
+{
+  "file": {
+    "id": "77289402-fd40-4603-9031-d27ee6ec5689",
+    "sku": "77289402-fd40-4603-9031-d27ee6ec5689",
+    "name": "Basic Decision Model",
+    "path": "jls test models",
+    "mimetype": "application/dmn-1-2+xml",
+    "updated": "2019-11-12T20:48:02Z",
+    "updater": "Orcutt, Cheryl A.",
+    "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=jls%20test%20models&sku=77289402-fd40-4603-9031-d27ee6ec5689&mimetype=application%2Fdmn-1-2%2Bxml",
+    "version": "1.3.1",
+    "state": "Published"
+  }
+}

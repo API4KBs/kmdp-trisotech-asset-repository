@@ -57,6 +57,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
@@ -64,6 +65,7 @@ import org.w3c.dom.Document;
 /**
  * Class to wrap the calls to Trisotech in meaningful ways.
  */
+@Component
 public class TrisotechWrapper {
 
   private final Logger logger = LoggerFactory.getLogger(TrisotechWrapper.class);

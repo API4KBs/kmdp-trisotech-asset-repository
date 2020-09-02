@@ -1,0 +1,40 @@
+// "JSON output from doExtract"
+{
+  "_class": "KnowledgeAsset",
+  "resourceId": {
+    "_class": "URIIdentifier",
+    "uri": "4b9ec2ea-ddfc-3e78-b20a-d46665a1d5f2",
+    "versionId": "4b9ec2ea-ddfc-3e78-b20a-d46665a1d5f2/versions/1.4",
+    "format": null
+  },
+  "alias": [],
+  "related": [],
+  "name": "Weaver Test 1",
+  "description": null,
+  "type": [],
+  "category": [],
+  "method": [],
+  "subject": [],
+  "carriers": [
+    {
+      "_class": "KnowledgeArtifact",
+      "resourceId": {
+        "_class": "URIIdentifier",
+        "uri": "https://clinicalknowledgemanagement.mayo.edu/assets/_5682fa26-b064-43c8-9475-1e4281e74068",
+        "versionId": "https://clinicalknowledgemanagement.mayo.edu/assets/_5682fa26-b064-43c8-9475-1e4281e74068/versions/1.4",
+        "format": null
+      },
+      "alias": [],
+      "related": [],
+      "name": null,
+      "description": null,
+      "locale": [],
+      "representation": null,
+      "inlined": null,
+      "weight": null,
+      "title": null,
+      "masterLocation": null,
+      "abstract": null
+    }
+  ]
+}

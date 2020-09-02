@@ -21,6 +21,7 @@ import edu.mayo.kmdp.preprocess.meta.ModelReader;
 import edu.mayo.kmdp.preprocess.meta.ReaderConfig;
 import edu.mayo.kmdp.preprocess.meta.TrisotechExtractionStrategy;
 import edu.mayo.kmdp.preprocess.meta.Weaver;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
 import edu.mayo.kmdp.trisotechwrapper.StaticContextInitializer;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import org.springframework.beans.factory.annotation.Autowired;

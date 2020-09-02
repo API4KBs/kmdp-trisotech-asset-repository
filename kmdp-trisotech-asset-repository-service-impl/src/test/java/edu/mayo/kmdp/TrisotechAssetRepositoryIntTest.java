@@ -29,6 +29,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Final_Draft;
 
+import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.InputStream;
 import java.util.List;

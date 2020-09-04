@@ -41,6 +41,9 @@ public class StaticContextInitializer {
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName:}")
   private String repositoryName;
 
+  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryPath:/}")
+  private String repositoryPath;
+
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId:}")
   private String repositoryId;
 
@@ -78,5 +81,9 @@ public class StaticContextInitializer {
 
   public String getRepositoryId() {
     return repositoryId;
+  }
+
+  public String getPath() {
+    return repositoryPath;
   }
 }

@@ -1,0 +1,12 @@
+{
+  "id" : "93e58aa9-c258-46fd-909d-1cb096e19e64",
+  "sku" : "93e58aa9-c258-46fd-909d-1cb096e19e64",
+  "name" : "Weave Test 1",
+  "path" : "/",
+  "mimetype" : "application/cmmn-1-1+xml",
+  "updated" : "2020-04-16T21:10:55Z",
+  "updater" : "Orcutt, Cheryl A.",
+  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&id=93e58aa9-c258-46fd-909d-1cb096e19e64&mimetype=application%2Fcmmn-1-1%2Bxml&sku=93e58aa9-c258-46fd-909d-1cb096e19e64&version=2020-04-16T21%3A10%3A55Z",
+  "version" : "3.0.1",
+  "state" : "Draft"
+}

@@ -54,6 +54,7 @@ import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -71,6 +72,7 @@ public class TrisotechWrapper {
   private final Logger logger = LoggerFactory.getLogger(TrisotechWrapper.class);
   private final String CRLF = "\r\n";
 
+  @Autowired
   private StaticContextInitializer cfg;
 
   /**
@@ -78,7 +80,6 @@ public class TrisotechWrapper {
    */
   public TrisotechWrapper(StaticContextInitializer config) {
     this.cfg = config;
-
   }
 
   public StaticContextInitializer getConfig() {
@@ -435,7 +436,7 @@ public class TrisotechWrapper {
       for (TrisotechPlace tp : data.getData()) {
         // pass in modelsArray as getRepositoryContent is recursive
         if (tp.getName().equals(cfg.getRepositoryName())) {
-          collectRepositoryContent(tp.getId(), modelsArray, "/", xmlMimetype);
+          collectRepositoryContent(tp.getId(), modelsArray, cfg.getPath(), xmlMimetype);
         }
       }
 

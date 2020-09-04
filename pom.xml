@@ -18,6 +18,7 @@
   <name>Trisotech :: Knowledge Asset Repository</name>
 
   <modules>
+    <module>kmdp-trisotech-asset-repository-service-core</module>
     <module>kmdp-trisotech-asset-repository-service-impl</module>
     <module>kmdp-trisotech-client</module>
   </modules>
@@ -29,6 +30,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
+    <kmdp.servers.version>4.8.0-SNAPSHOT</kmdp.servers.version>
     <clinical.terms.version>5.0.0-SNAPSHOT</clinical.terms.version>
 
   </properties>

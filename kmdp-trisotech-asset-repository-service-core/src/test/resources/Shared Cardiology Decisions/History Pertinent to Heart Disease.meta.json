@@ -1,0 +1,12 @@
+{
+  "id" : "1233660d-00b5-4227-a12f-e05e6eac248c",
+  "sku" : "1233660d-00b5-4227-a12f-e05e6eac248c",
+  "name" : "History Pertinent to Heart Disease",
+  "path" : "/Shellum/Shared Cardiology Decisions",
+  "mimetype" : "application/dmn-1-2+xml",
+  "updated" : "2020-09-03T17:17:10Z",
+  "updater" : "Sottara, Davide",
+  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=8773e388-75b7-4061-a489-b788222022d3&id=1233660d-00b5-4227-a12f-e05e6eac248c&mimetype=application%2Fdmn-1-2%2Bxml&sku=1233660d-00b5-4227-a12f-e05e6eac248c&version=2020-09-03T17%3A17%3A10Z",
+  "version" : "1.1.0",
+  "state" : "Published"
+}

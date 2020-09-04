@@ -1,0 +1,12 @@
+{
+  "id" : "b96a5875-9e0b-4e62-851a-df4824054203",
+  "sku" : "b96a5875-9e0b-4e62-851a-df4824054203",
+  "name" : "Basic Test Model",
+  "path" : "/jls test models",
+  "mimetype" : "application/cmmn-1-1+xml",
+  "updated" : "2020-09-04T01:03:25Z",
+  "updater" : "Sottara, Davide",
+  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&id=b96a5875-9e0b-4e62-851a-df4824054203&mimetype=application%2Fcmmn-1-1%2Bxml&sku=b96a5875-9e0b-4e62-851a-df4824054203&version=2020-09-04T01%3A03%3A25Z",
+  "version" : "1.0.0",
+  "state" : "Published"
+}

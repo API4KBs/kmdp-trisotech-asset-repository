@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/c2e182f5-96a2-4ced-958a-8c43b7469b26"
+                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
+                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
+                      xmlns:rss="http://purl.org/rss/2.0/"
+                      xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      id="_c2e182f5-96a2-4ced-958a-8c43b7469b26"
+                      name="Decision Reuse"
+                      namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/c2e182f5-96a2-4ced-958a-8c43b7469b26"
+                      xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+   <semantic:extensionElements/>
+   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                    name="Basic Decision Model"
+                    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356"/>
+   <semantic:decisionService id="_c2e182f5-96a2-4ced-958a-8c43b7469b26_DS"
+                             name="Whole Model Decision Service">
+      <semantic:variable id="_c2e182f5-96a2-4ced-958a-8c43b7469b26_DS_VAR"
+                         name="Whole Model Decision Service"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_fe5cc942-4756-4ae8-874a-c9f9e7a1f313"/>
+   </semantic:decisionService>
+   <semantic:decisionService id="_850fe8c8-e6fa-4652-a07b-3dab90310e97_DS" name="Diagram Page 1">
+      <semantic:variable id="_850fe8c8-e6fa-4652-a07b-3dab90310e97_DS_VAR"
+                         name="Diagram Page 1"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_fe5cc942-4756-4ae8-874a-c9f9e7a1f313"/>
+   </semantic:decisionService>
+   <semantic:decision id="_fe5cc942-4756-4ae8-874a-c9f9e7a1f313" name="Decision Re-use">
+      <semantic:extensionElements>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="defines"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/defines"
+                      tag="defines"/>
+            <surr:ref name="PropositionalConcepts - 20190801 - Management of Atrial Fibrillationin 'PropositionalConcepts - 20190801'"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                      referentId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+                      resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#d58d78d9-2f92-307e-b568-2ced074715a2"
+                      tag="a0a0a3b4-b83b-44b7-880c-86cccc4bf69c"/>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="captures"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      tag="captures"/>
+            <surr:ref name="DecisionTypes - 20190801 - Choice Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"
+                      tag="_2098f6cc-ca6c-4d49-8372-fa8e75b0fce4"/>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:ref name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#"
+                      referentId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
+                      tag="_0d412f45-0bff-4123-85a0-1747b09dac21"/>
+         </surr:annotation>
+      </semantic:extensionElements>
+      <semantic:variable id="_d61ee2e2-264d-4aa4-ae64-fd4257469b9d"
+                         name="Decision Re-use"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_3c8db2b4-cbac-494d-879a-a520e51c3eec">
+         <semantic:requiredDecision href="https://clinicalknowledgemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356#4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <dmndi:DMNDI>
+      <dmndi:DMNDiagram id="_850fe8c8-e6fa-4652-a07b-3dab90310e97" name="Page 1">
+         <di:extension/>
+         <dmndi:Size height="1050" width="1485"/>
+         <dmndi:DMNShape dmnElementRef="_fe5cc942-4756-4ae8-874a-c9f9e7a1f313"
+                         id="_0da41b1d-b980-4c42-8c9a-a1534fa0517e">
+            <dc:Bounds height="60" width="153" x="627.5" y="242"/>
+            <dmndi:DMNLabel sharedStyle="LS_c2e182f5-96a2-4ced-958a-8c43b7469b26_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"
+                         id="_f747322a-53ef-4d71-b0dc-afeab3b907b9">
+            <dc:Bounds height="60" width="153" x="627.5" y="345"/>
+            <dmndi:DMNLabel sharedStyle="LS_c2e182f5-96a2-4ced-958a-8c43b7469b26_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNEdge dmnElementRef="_3c8db2b4-cbac-494d-879a-a520e51c3eec"
+                        id="_9f4b8d33-4491-4350-a341-1fa3089bcff6">
+            <di:waypoint x="694" y="345"/>
+            <di:waypoint x="694" y="302"/>
+            <dmndi:DMNLabel sharedStyle="LS_c2e182f5-96a2-4ced-958a-8c43b7469b26_0"/>
+         </dmndi:DMNEdge>
+      </dmndi:DMNDiagram>
+      <dmndi:DMNStyle fontBold="false"
+                      fontFamily="arial,helvetica,sans-serif"
+                      fontItalic="false"
+                      fontSize="11"
+                      fontStrikeThrough="false"
+                      fontUnderline="false"
+                      id="LS_c2e182f5-96a2-4ced-958a-8c43b7469b26_0"/>
+   </dmndi:DMNDI>
+</semantic:definitions>

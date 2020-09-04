@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/958d9f9c-c84d-4d41-ba98-cda111980202"
+                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be"
+                      xmlns:include2="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6"
+                      xmlns:include3="https://clinicalknowledgemanagement.mayo.edu/artifacts/49c65b3e-ed28-4043-a76e-6ea78d44952f"
+                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
+                      xmlns:rss="http://purl.org/rss/2.0/"
+                      xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      id="_958d9f9c-c84d-4d41-ba98-cda111980202"
+                      name="Choice of Atrial Fibrillation Treatment Strategy"
+                      namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/958d9f9c-c84d-4d41-ba98-cda111980202"
+                      xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+   <semantic:extensionElements/>
+   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                    name="History of Management of Atrial Fibrillation"
+                    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be"/>
+   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                    name="CS"
+                    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6"/>
+   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                    name="Current Cardiac Status"
+                    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/49c65b3e-ed28-4043-a76e-6ea78d44952f"/>
+   <semantic:decisionService id="_958d9f9c-c84d-4d41-ba98-cda111980202_DS"
+                             name="Whole Model Decision Service">
+      <semantic:variable id="_958d9f9c-c84d-4d41-ba98-cda111980202_DS_VAR"
+                         name="Whole Model Decision Service"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_6f3689d4-df52-437a-8d70-b65b83c1972e"/>
+      <semantic:encapsulatedDecision href="#_587988ab-2785-44ff-b45a-21f60a345921"/>
+      <semantic:encapsulatedDecision href="#_8633100d-9cbe-4e97-a986-3b1802b761d3"/>
+      <semantic:encapsulatedDecision href="#_54102d88-d001-47ec-a13b-cec89fca965f"/>
+   </semantic:decisionService>
+   <semantic:decisionService id="_7606aa63-7606-4a80-8eb3-95106e6c7a29_DS" name="Diagram Page 1">
+      <semantic:variable id="_7606aa63-7606-4a80-8eb3-95106e6c7a29_DS_VAR"
+                         name="Diagram Page 1"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_6f3689d4-df52-437a-8d70-b65b83c1972e"/>
+      <semantic:encapsulatedDecision href="#_587988ab-2785-44ff-b45a-21f60a345921"/>
+      <semantic:encapsulatedDecision href="#_8633100d-9cbe-4e97-a986-3b1802b761d3"/>
+      <semantic:encapsulatedDecision href="#_54102d88-d001-47ec-a13b-cec89fca965f"/>
+   </semantic:decisionService>
+   <semantic:decision id="_6f3689d4-df52-437a-8d70-b65b83c1972e"
+                      name="Choice of Atrial Fibrillation Treatment Strategy">
+      <semantic:extensionElements>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="defines"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/defines"
+                      tag="defines"/>
+            <surr:ref name="PropositionalConcepts - 20190801 - Treatment of Atrial Fibrillation "
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                      referentId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+                      resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#cbf01dce-74ca-3bc6-b524-764872325f5d"
+                      tag="_908bb805-6bdf-47eb-a6d7-72d03f45f952"/>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="captures"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      tag="captures"/>
+            <surr:ref name="DecisionTypes - 20190801 - Actionable Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#28d541e1-bd08-3afc-a3f0-3780601576c6"
+                      tag="_56a0d1b4-c3f2-4b07-9a3e-215d1346ae97"/>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="captures"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      tag="captures"/>
+            <surr:ref name="DecisionTypes - 20190801 - Choice Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"
+                      tag="f109ce5c-4bb0-4ce8-b1f9-e09c459a4974"/>
+         </surr:annotation>
+      </semantic:extensionElements>
+      <semantic:variable id="_2731df1a-eeb6-4e97-b7ae-54101a09a092"
+                         name="Choice of Atrial Fibrillation Treatment Strategy"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_c6bae929-89d5-4cca-8983-4d3487e07a7a">
+         <semantic:requiredDecision href="#_587988ab-2785-44ff-b45a-21f60a345921"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_5b0b50a0-0f51-4b8e-b4e6-c2238ab470f2">
+         <semantic:requiredDecision href="#_8633100d-9cbe-4e97-a986-3b1802b761d3"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_71b1d3d2-e214-465c-9e36-65d3991bc4c1">
+         <semantic:requiredDecision href="#_54102d88-d001-47ec-a13b-cec89fca965f"/>
+      </semantic:informationRequirement>
+      <semantic:authorityRequirement id="_89696cfd-0f8f-4e17-b22c-a890d65df513">
+         <semantic:requiredAuthority href="#_dd3d8737-22f5-4ce4-bba0-37774c64db03"/>
+      </semantic:authorityRequirement>
+      <semantic:authorityRequirement id="_e7630fc2-277c-424b-a364-e7c842d37c96">
+         <semantic:requiredAuthority href="#_4ea4bf4c-1bd1-43cb-b52f-b7f291a32584"/>
+      </semantic:authorityRequirement>
+   </semantic:decision>
+   <semantic:decision id="_587988ab-2785-44ff-b45a-21f60a345921"
+                      name="Has Symptomatic Atrial Fibrillation">
+      <semantic:extensionElements>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="defines"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/defines"
+                      tag="defines"/>
+            <surr:ref name="ClinicalSituations - Has Symptomatic Atrial Fibrillationin 'ClinicalSituations'"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                      referentId="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                      resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#6ac002b7-f7fe-3136-b624-a62ef17dcfa6"
+                      tag="_934bdde4-4340-4fbf-9aa7-6e84d8f8d83c"/>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="captures"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      tag="captures"/>
+            <surr:ref name="DecisionTypes - 20190801 - Implicit Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#e0dbe4d9-79b5-390c-91a9-bcc756d68b18"
+                      tag="fb8f3b05-7d23-4276-b0cd-105760777ceb"/>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="captures"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      tag="captures"/>
+            <surr:ref name="DecisionTypes - 20190801 - Aggregation Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"
+                      tag="_fa2b3d41-1175-4fd2-b2e5-d87981506930"/>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="captures"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      tag="captures"/>
+            <surr:ref name="DecisionTypes - 20190801 - Assessment Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
+                      tag="_28be66fe-7c28-456f-a9f2-05b5b8b65608"/>
+         </surr:annotation>
+      </semantic:extensionElements>
+      <semantic:variable id="_df7d2459-e00f-41f7-bcf4-0799d5e354e3"
+                         name="Has Symptomatic Atrial Fibrillation"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_e0fdad63-fcb8-4a80-bab5-99b52d43cc30">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#518d1a67-2859-3d4a-8384-58fb40505613"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_5b0797b0-9648-421a-b461-2f52ee2bc185">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#8c2b5229-e8a7-3b58-8343-30914e6fa5ce"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_c73067d2-9648-4b77-9590-d9624a152b33">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#1e8a9471-269a-3c5b-af9a-328118b3692d"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:decision id="_8633100d-9cbe-4e97-a986-3b1802b761d3"
+                      name="Current Ventricular Response">
+      <semantic:extensionElements>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="defines"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/defines"
+                      tag="defines"/>
+            <surr:ref name="ClinicalSituations - Current Ventricular Responsein 'ClinicalSituations'"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                      referentId="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                      resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#d9850202-f45e-369a-8d99-1b4d998b7587"
+                      tag="_83ba112a-16c9-415c-b2da-be8910f28062"/>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="captures"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      tag="captures"/>
+            <surr:ref name="DecisionTypes - Assessment Decisionin 'DecisionTypes'"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
+                      tag="_4f055897-210c-481c-b37e-35df708ef7c3"/>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel name="captures"
+                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      tag="captures"/>
+            <surr:ref name="DecisionTypes - Aggregation Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"
+                      tag="_6bb00877-4876-4337-a161-23f04fde76cb"/>
+         </surr:annotation>
+      </semantic:extensionElements>
+      <semantic:variable id="_2e5297ac-8c55-4843-b291-403a680511bd"
+                         name="Current Ventricular Response"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_7055d4a0-e317-4daf-8057-77f46145557a">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#e508b236-db45-31ac-bd73-ecc95c4a694a"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_5ef7c417-8807-426f-8380-e78ff4a833e0">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#c2d820cb-aa0a-36a6-8c6b-da052f81a75d"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:knowledgeSource id="_dd3d8737-22f5-4ce4-bba0-37774c64db03"
+                             locationURI="https://clinicalknowledgemanagement.mayo.edu/assets/1f59d1a8-807f-4cb5-94e3-31bbd8d39443/versions/LATEST/carrier"
+                             name="Determine rate or rhythm control">
+      <semantic:extensionElements/>
+      <semantic:type>SEC-20391305</semantic:type>
+      <semantic:owner href="#_f530f46b-96f9-4c18-a26f-5d4705fb37ae"/>
+   </semantic:knowledgeSource>
+   <semantic:knowledgeSource id="_4ea4bf4c-1bd1-43cb-b52f-b7f291a32584"
+                             locationURI="https://clinicalknowledgemanagement.mayo.edu/assets/52855cfa-8eb2-419b-8fe0-b2e4a3c97eac/versions/LATEST/carrier"
+                             name="Determine rate or rhythm control (tabular)">
+      <semantic:extensionElements/>
+      <semantic:type>SEC-20149867</semantic:type>
+      <semantic:owner href="#_f530f46b-96f9-4c18-a26f-5d4705fb37ae"/>
+   </semantic:knowledgeSource>
+   <semantic:decision id="_54102d88-d001-47ec-a13b-cec89fca965f"
+                      name="Has Structural Heart Disease">
+      <semantic:variable id="_0aa2894e-a991-4b43-a965-6848dcd18ba1"
+                         name="Has Structural Heart Disease"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_bae815ab-435a-4eeb-9563-0d4d3ebe61af">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#349c1054-8d3c-3360-9931-dac4f768da48"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:organizationUnit id="_f530f46b-96f9-4c18-a26f-5d4705fb37ae" name="AME"/>
+   <dmndi:DMNDI>
+      <dmndi:DMNDiagram id="_7606aa63-7606-4a80-8eb3-95106e6c7a29" name="Page 1">
+         <di:extension>
+            <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                             xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                             xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                             xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources"/>
+         </di:extension>
+         <dmndi:Size height="1335.9786796569824" width="1485"/>
+         <dmndi:DMNShape dmnElementRef="_6f3689d4-df52-437a-8d70-b65b83c1972e"
+                         id="_46a07751-ce82-4b38-8253-22f4bb78efbf">
+            <dc:Bounds height="60" width="153" x="687" y="354.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_587988ab-2785-44ff-b45a-21f60a345921"
+                         id="_40592449-12c5-4ab6-8122-386412a07a61">
+            <dc:Bounds height="60"
+                       width="153"
+                       x="474.51136942318635"
+                       y="495.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_8633100d-9cbe-4e97-a986-3b1802b761d3"
+                         id="_74a3336d-4ef7-4663-aa90-0e5df6972071">
+            <dc:Bounds height="60" width="153" x="951.5" y="495.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_dd3d8737-22f5-4ce4-bba0-37774c64db03"
+                         id="_ea01e12e-e3ea-4df5-9b7a-b7a6c35cb8a6">
+            <dc:Bounds height="69.95735931396484"
+                       width="100"
+                       x="892.7411708831787"
+                       y="350"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_4ea4bf4c-1bd1-43cb-b52f-b7f291a32584"
+                         id="_2575ccce-ff10-4151-a6e0-e50c314cee55">
+            <dc:Bounds height="69.95735931396484"
+                       width="100"
+                       x="875"
+                       y="234.02132034301758"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include2:_8c2b5229-e8a7-3b58-8343-30914e6fa5ce"
+                         id="_8af4762a-3544-4124-8c1a-29006a59fe55">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="330.27019854000764"
+                       y="606.6477221218515"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include2:_518d1a67-2859-3d4a-8384-58fb40505613"
+                         id="_fae9f662-7dae-4cf4-8d01-87a6c21a862a">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="483.27019854000764"
+                       y="606.6477221218515"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include2:_1e8a9471-269a-3c5b-af9a-328118b3692d"
+                         id="_3bef604a-fb45-4041-a158-729aed6a208c">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="626.2701985400076"
+                       y="606.6477221218515"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include2:_e508b236-db45-31ac-bd73-ecc95c4a694a"
+                         id="_1d9989e8-2f07-456b-9ec1-30aaa573ba4f">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="892.7411708831787"
+                       y="606.6477221218515"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include2:_c2d820cb-aa0a-36a6-8c6b-da052f81a75d"
+                         id="_49152379-a510-4999-b5cc-1fd40b7af806">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="1034.1792833605582"
+                       y="606.6477221218515"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_54102d88-d001-47ec-a13b-cec89fca965f"
+                         id="_1d95ff47-f4af-49bf-bc4f-721d47239b01">
+            <dc:Bounds height="60" width="153" x="724" y="495.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include2:_349c1054-8d3c-3360-9931-dac4f768da48"
+                         id="_5c5bcd3b-94e4-4547-bd53-b2ce8257af4e">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="761"
+                       y="606.6477221218515"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNEdge dmnElementRef="_c6bae929-89d5-4cca-8983-4d3487e07a7a"
+                        id="_fd473d90-f8b9-4b94-9812-3b1ae7391c67">
+            <di:waypoint x="551.0113694231864" y="495.9786796569824"/>
+            <di:waypoint x="713.5" y="414.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_5b0b50a0-0f51-4b8e-b4e6-c2238ab470f2"
+                        id="_9da7aa18-dc2d-4d5a-b2c8-f433a4aa2321">
+            <di:waypoint x="1028" y="495.9786796569824"/>
+            <di:waypoint x="813.5" y="414.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_89696cfd-0f8f-4e17-b22c-a890d65df513"
+                        id="_ed42134f-ecfb-4012-abfd-bb3f0eb6241c">
+            <di:waypoint x="892.7411708831787" y="384.9786796569824"/>
+            <di:waypoint x="840" y="384.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_e7630fc2-277c-424b-a364-e7c842d37c96"
+                        id="_ab8e1e2e-396e-454a-ae7e-b71fcfda0577">
+            <di:waypoint x="925" y="294.0213203430176"/>
+            <di:waypoint x="763.5" y="354.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_e0fdad63-fcb8-4a80-bab5-99b52d43cc30"
+                        id="_55416c07-5ac5-45cc-8872-edde5411d394">
+            <di:waypoint x="551.0081707995291" y="666.6477221218515"/>
+            <di:waypoint x="551.0113694231864" y="495.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_5b0797b0-9648-421a-b461-2f52ee2bc185"
+                        id="_0fddc13f-0fde-4364-b064-1d164b49896c">
+            <di:waypoint x="398.0081707995291" y="606.6477221218515"/>
+            <di:waypoint x="501.01136942318635" y="555.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_c73067d2-9648-4b77-9590-d9624a152b33"
+                        id="_2295ef3a-97fb-450c-a3a8-4d0392de2ead">
+            <di:waypoint x="684.0081707995291" y="606.6477221218515"/>
+            <di:waypoint x="601.0113694231864" y="555.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_7055d4a0-e317-4daf-8057-77f46145557a"
+                        id="_bf1660a9-2ea7-46c3-b0ff-7b615904f274">
+            <di:waypoint x="960.4791431427002" y="666.6477221218515"/>
+            <di:waypoint x="1028" y="495.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_5ef7c417-8807-426f-8380-e78ff4a833e0"
+                        id="_ef0b823b-8e7f-4bee-a09f-d87cff78af13">
+            <di:waypoint x="1101.9172556200797" y="666.6477221218515"/>
+            <di:waypoint x="1028" y="495.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_bae815ab-435a-4eeb-9563-0d4d3ebe61af"
+                        id="_15909a69-ee02-4bee-8816-0711452ef20a">
+            <di:waypoint x="828.7379722595215" y="606.6477221218515"/>
+            <di:waypoint x="810.5" y="555.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_71b1d3d2-e214-465c-9e36-65d3991bc4c1"
+                        id="_a2b74a2f-6c2c-4ce0-8530-a582a56b9255">
+            <di:waypoint x="800.5" y="495.9786796569824"/>
+            <di:waypoint x="763.5" y="414.9786796569824"/>
+            <dmndi:DMNLabel sharedStyle="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+         </dmndi:DMNEdge>
+      </dmndi:DMNDiagram>
+      <dmndi:DMNStyle fontBold="false"
+                      fontFamily="arial,helvetica,sans-serif"
+                      fontItalic="false"
+                      fontSize="11"
+                      fontStrikeThrough="false"
+                      fontUnderline="false"
+                      id="LS_958d9f9c-c84d-4d41-ba98-cda111980202_0"/>
+   </dmndi:DMNDI>
+</semantic:definitions>

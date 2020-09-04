@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+                      xmlns="http://www.trisotech.com/definitions/_ad174bca-8dd1-4e35-8933-e7456e1f3e5c"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:drools="http://www.drools.org/kie/dmn/1.1"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
+                      xmlns:rss="http://purl.org/rss/2.0/"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
+                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      exporter="Trisotech DES API Repository Conversion"
+                      exporterVersion="6.12.3"
+                      id="_ad174bca-8dd1-4e35-8933-e7456e1f3e5c"
+                      name="Operational Definition Model"
+                      namespace="http://www.trisotech.com/definitions/_ad174bca-8dd1-4e35-8933-e7456e1f3e5c"
+                      triso:logoChoice="Default"
+                      triso:state="Pending Approval"
+                      triso:version="0.0.1">
+   <semantic:extensionElements/>
+   <semantic:decisionService id="_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_DS"
+                             name="Whole Model Decision Service"
+                             triso:dynamicDecisionService="true"
+                             triso:wholeModelService="true">
+      <semantic:variable id="_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_DS_VAR"
+                         name="Whole Model Decision Service"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_1f273cd9-f663-430c-b5f7-22c51a924735"/>
+      <semantic:inputData href="#_9d88c493-1c6f-4030-8b65-bfaa0c96b9dc"/>
+      <semantic:inputData href="#_bed1e88b-906a-4010-86f9-261ea7a3d5b8"/>
+      <semantic:inputData href="#_9a0b72b7-4ce4-4681-99b8-c370ba14a4f9"/>
+   </semantic:decisionService>
+   <semantic:decisionService id="_7d1fd159-f79a-4c8b-a0cd-5db2e284060c_DS"
+                             name="Diagram Page 1"
+                             triso:dynamicDecisionService="true">
+      <semantic:variable id="_7d1fd159-f79a-4c8b-a0cd-5db2e284060c_DS_VAR"
+                         name="Diagram Page 1"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_1f273cd9-f663-430c-b5f7-22c51a924735"/>
+      <semantic:inputData href="#_9d88c493-1c6f-4030-8b65-bfaa0c96b9dc"/>
+      <semantic:inputData href="#_bed1e88b-906a-4010-86f9-261ea7a3d5b8"/>
+      <semantic:inputData href="#_9a0b72b7-4ce4-4681-99b8-c370ba14a4f9"/>
+   </semantic:decisionService>
+   <semantic:decision id="_1f273cd9-f663-430c-b5f7-22c51a924735"
+                      name="Aggregating Decision as Operational Definition">
+      <semantic:extensionElements>
+         <triso:semanticLink id="ba553081-523f-401a-9423-ac7df066ad70"
+                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+                             name="DecisionTypes - 20190801 - Aggregation Decisionin 'DecisionTypes - 20190801'"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"/>
+         <triso:semanticLink id="_6071faf5-71ea-4664-9189-e63dbe89fa50"
+                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+                             name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
+         <triso:semanticLink id="d2de0a86-eb7e-44b6-a49c-048c6dd931ef"
+                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetRole/20190801/"
+                             name="KnowledgeAssetRoles - 20190801 - Operational Concept Definition"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetRole#383a42ba-5016-3450-a983-608bd7b56eef"/>
+         <triso:customAttribute id="_beb0aea2-1d05-44b3-9fc5-a15753fa1bbc"
+                                key="knowledgeAssetId"
+                                type="string"
+                                value="https://clinicalknowledgemanagement.mayo.edu/assets/e35a686e-5b72-4feb-b923-b79ac1417613/versions/1.0.0"/>
+         <triso:semanticLink id="_74eddf61-b75e-4f1e-ad71-3d15f9da68c5"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+                             name="PropositionalConcepts - 20190801 - Prior Management of HFrEFin 'PropositionalConcepts - 20190801'"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#27a66bf7-9951-3daa-ab11-b47049ede2ff"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_ebee8817-6b1c-4649-a320-b015ef3d7335"
+                         name="Aggregating Decision as Operational Definition"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_99ae94d3-99bc-4504-ac54-0fe355bfd49e">
+         <semantic:requiredInput href="#_9d88c493-1c6f-4030-8b65-bfaa0c96b9dc"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_30e80dab-2c76-4c8b-bf3e-604e644d850e">
+         <semantic:requiredInput href="#_bed1e88b-906a-4010-86f9-261ea7a3d5b8"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_a085e7af-0170-4278-a939-67f8074ad673">
+         <semantic:requiredInput href="#_9a0b72b7-4ce4-4681-99b8-c370ba14a4f9"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:inputData id="_9d88c493-1c6f-4030-8b65-bfaa0c96b9dc" name="Input A">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_29975799-7c48-433e-8da3-74f759a65fac"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+                             name="PropositionalConcepts - 20190801 - History of Hypertensionin 'PropositionalConcepts - 20190801'"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#1e2a6303-fb74-343a-838c-e0cc8a2ac79f"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_3ab3c77b-2f61-4053-8f42-7517f9923580"
+                         name="Input A"
+                         typeRef="string"/>
+   </semantic:inputData>
+   <semantic:inputData id="_bed1e88b-906a-4010-86f9-261ea7a3d5b8" name="Input B">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_17770b0f-306c-4855-97fb-b4217e2b857d"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+                             name="PropositionalConcepts - 20190801 - History of Cancer Within 5 Yearsin 'PropositionalConcepts - 20190801'"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#bcfd252f-7843-3468-bb9a-5761ab359d85"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_9f5a0663-155a-47ce-a31e-d64d4943ca58"
+                         name="Input B"
+                         typeRef="string"/>
+   </semantic:inputData>
+   <semantic:inputData id="_9a0b72b7-4ce4-4681-99b8-c370ba14a4f9" name="Input C">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_4cafffff-b513-4310-b2b0-9ef76c4c5a34"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+                             name="PropositionalConcepts - 20190801 - History of Pancreatitis"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#25f7f8b5-e208-3375-be4e-f1c3c5b0d978"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_1f60ca42-2f71-4c9a-a8d0-13e23580faf3"
+                         name="Input C"
+                         typeRef="string"/>
+   </semantic:inputData>
+   <semantic:textAnnotation id="_d0f28fd1-3eb7-4264-abba-b6777638f436">
+      <semantic:text>Top level decision annotated with aggregating, semantic decision model, operational definition, and prior management of HFrEF. Has a decision service and a knowledge asset ID</semantic:text>
+   </semantic:textAnnotation>
+   <dmndi:DMNDI>
+      <dmndi:DMNDiagram id="_7d1fd159-f79a-4c8b-a0cd-5db2e284060c"
+                        name="Page 1"
+                        triso:modelElementRef="_d17b0c78-2488-437b-9274-26b803776ce9">
+         <di:extension/>
+         <dmndi:Size height="1050" width="1485"/>
+         <dmndi:DMNShape dmnElementRef="_1f273cd9-f663-430c-b5f7-22c51a924735"
+                         id="_0c21ba2a-a28b-4883-bb16-0470423f0380">
+            <dc:Bounds height="60" width="153" x="637.5" y="158"/>
+            <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_9d88c493-1c6f-4030-8b65-bfaa0c96b9dc"
+                         id="_56ddb080-fc42-4827-861c-9b5b8cc35b6c">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="480.2588291168213"
+                       y="312.99999618530273"/>
+            <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_bed1e88b-906a-4010-86f9-261ea7a3d5b8"
+                         id="_1c2f1ceb-31b2-426e-ae2f-716d0deb1f4c">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="646.2588291168213"
+                       y="312.99999618530273"/>
+            <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_9a0b72b7-4ce4-4681-99b8-c370ba14a4f9"
+                         id="_e6c23071-76c8-491e-adab-1da036f454e6">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="808.2588291168213"
+                       y="312.99999618530273"/>
+            <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_d0f28fd1-3eb7-4264-abba-b6777638f436"
+                         id="_90197be4-ee08-4bd2-a2ad-f9fecb1ec18a">
+            <dc:Bounds height="163" width="100" x="1145" y="134"/>
+            <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNEdge dmnElementRef="_99ae94d3-99bc-4504-ac54-0fe355bfd49e"
+                        id="_6ba44122-1920-4a39-8833-f9e623b7f353">
+            <di:waypoint x="547.9968013763428" y="312.99999618530273"/>
+            <di:waypoint x="694" y="218"/>
+            <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_30e80dab-2c76-4c8b-bf3e-604e644d850e"
+                        id="_c92d1f07-78f4-49e6-aceb-c6a3f7146adc">
+            <di:waypoint x="723.9968013763428" y="312.99999618530273"/>
+            <di:waypoint x="724" y="218"/>
+            <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_a085e7af-0170-4278-a939-67f8074ad673"
+                        id="_73f74f32-3151-4283-a0d2-28d9996cfe48">
+            <di:waypoint x="875.9968013763428" y="312.99999618530273"/>
+            <di:waypoint x="754" y="218"/>
+            <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
+         </dmndi:DMNEdge>
+      </dmndi:DMNDiagram>
+      <dmndi:DMNStyle fontBold="false"
+                      fontFamily="arial,helvetica,sans-serif"
+                      fontItalic="false"
+                      fontSize="11"
+                      fontStrikeThrough="false"
+                      fontUnderline="false"
+                      id="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
+   </dmndi:DMNDI>
+</semantic:definitions>

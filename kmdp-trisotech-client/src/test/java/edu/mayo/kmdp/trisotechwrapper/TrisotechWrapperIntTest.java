@@ -20,6 +20,9 @@ import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
+import static edu.mayo.kmdp.util.DateTimeUtil.isSameDay;
+import static edu.mayo.kmdp.util.DateTimeUtil.parseDate;
+import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -144,16 +147,14 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetModelByIdAndVersionCMMNInvalidVersion() {
     String expectedVersion = "6.5";
-    String expectedVersion_2 = "1.0";
     Optional<Document> dox = client
         .getModelByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion);
     assertEquals(Optional.empty(), dox);
     assertFalse(dox.isPresent());
 
+    String expectedVersion_2 = "1.0"; // not the latest, but existing nevertheless
     dox = client.getModelByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2);
-    assertEquals(Optional.empty(), dox);
-    assertFalse(dox.isPresent());
-
+    assertTrue(dox.isPresent());
   }
 
   @Test
@@ -177,7 +178,6 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetModelInfoByIdAndVersionCMMN() {
     String expectedVersion = "2.0";
-    String expectedVersion_2 = "1.0";
     TrisotechFileInfo fileInfo = client
         .getFileInfoByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion)
         .orElse(null);
@@ -185,10 +185,10 @@ class TrisotechWrapperIntTest {
     assertEquals(expectedVersion, fileInfo.getVersion());
     assertEquals(WEAVE_TEST_1_ID, fileInfo.getId());
 
+    String expectedVersion_2 = "1.0";
     fileInfo = client.getFileInfoByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2)
         .orElse(null);
-    assertNull(fileInfo);
-
+    assertNotNull(fileInfo);
   }
 
   // TODO: add test w/bad repository name CAO
@@ -295,9 +295,8 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionArtifactIdDMN() {
-    String expectedVersion = "2.0.0";
-    Date expectedUpdated = DateTimeUtil
-        .parseDateTime("2020-04-16T20:17:19Z");
+    String expectedVersion = "2.0.1";
+    Date expectedUpdated = parseDateTime("2020-09-02T14:42:36Z");
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "123720a6-9758-45a3-8c5c-5fffab12c494/versions/"
         + expectedVersion;
@@ -309,15 +308,14 @@ class TrisotechWrapperIntTest {
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
     assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
-    assertEquals(expectedUpdated, versionIdentifier.getEstablishedOn());
+    assertTrue(isSameDay(expectedUpdated, versionIdentifier.getEstablishedOn()));
   }
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {
-    String expectedVersion = "2.0.0";
-    String updated = "2020-04-16T20:17:19Z";
-    Date expectedUpdated = DateTimeUtil
-        .parseDateTime(updated);
+    String expectedVersion = "2.0.1";
+    String updated = "2020-09-02";
+    Date expectedUpdated = parseDate(updated);
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "123720a6-9758-45a3-8c5c-5fffab12c494/versions/"
         + expectedVersion;
@@ -330,7 +328,7 @@ class TrisotechWrapperIntTest {
     assertNotNull(versionIdentifier);
     assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
-    assertEquals(expectedUpdated, versionIdentifier.getEstablishedOn());
+    assertTrue(isSameDay(expectedUpdated, versionIdentifier.getEstablishedOn()));
     assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
   }
 
@@ -347,9 +345,8 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetLatestVersionTrisotechFileInfoCMMN() {
     String expectedVersion = "3.0.1";
-    String updated = "2020-04-16T21:10:55Z";
-    Date expectedUpdated = DateTimeUtil
-        .parseDateTime(updated);
+    String updated = "2020-09-03T13:21:00Z";
+    Date expectedUpdated = parseDateTime(updated);
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "93e58aa9-c258-46fd-909d-1cb096e19e64/versions/"
         + expectedVersion;
@@ -362,7 +359,7 @@ class TrisotechWrapperIntTest {
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
-    assertEquals(expectedUpdated, versionIdentifier.getEstablishedOn());
+    assertTrue(DateTimeUtil.isSameDay(expectedUpdated,versionIdentifier.getEstablishedOn()));
     assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
   }
 
@@ -372,7 +369,7 @@ class TrisotechWrapperIntTest {
     // while a file may have multiple versions, no version tag is given to a file until it is published
     ResourceIdentifier version = client.getLatestVersion(WEAVE_TEST_2_ID)
         .orElse(null);
-    assertNull(version);
+    assertNotNull(version);
   }
 
   @Test
@@ -431,9 +428,9 @@ class TrisotechWrapperIntTest {
   }
 
   @Test
-  final void testGetPublishedModelByIdCMMN_Empty() {
+  final void testGetPublishedModelByIdCMMN_NonEmpty() {
     Optional<Document> dox = client.getPublishedModelById(WEAVE_TEST_2_ID);
-    assertFalse(dox.isPresent());
+    assertTrue(dox.isPresent());
   }
 
 
@@ -469,7 +466,7 @@ class TrisotechWrapperIntTest {
   final void testGetPublishedCmmnModels() {
     List<TrisotechFileInfo> publishedModels = client.getPublishedCMMNModelsFileInfo();
     assertNotNull(publishedModels);
-    assertEquals(2, publishedModels.size());
+    assertEquals(4, publishedModels.size());
   }
 
   @Test

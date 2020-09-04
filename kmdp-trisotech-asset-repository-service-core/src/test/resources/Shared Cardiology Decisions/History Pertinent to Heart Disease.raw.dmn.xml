@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+                      xmlns="http://www.trisotech.com/definitions/_e48f0554-09fc-4341-b25c-eed66a72f565"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:drools="http://www.drools.org/kie/dmn/1.1"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:include1="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6"
+                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
+                      xmlns:rss="http://purl.org/rss/2.0/"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
+                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      exporter="Trisotech DES API Repository Conversion"
+                      exporterVersion="6.12.3"
+                      id="_e48f0554-09fc-4341-b25c-eed66a72f565"
+                      name="History Pertinent to Heart Disease"
+                      namespace="http://www.trisotech.com/definitions/_e48f0554-09fc-4341-b25c-eed66a72f565"
+                      triso:logoChoice="Default"
+                      triso:state="Published"
+                      triso:version="1.1.0">
+   <semantic:extensionElements/>
+   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                    name="CS"
+                    namespace="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6"
+                    triso:fileId="eyJmIjp7InBhdGgiOiIvIiwic2t1IjoiMDA0NzU3NDYtNjUzNi00MGE1LWEzODktNWFiZmY5ZmYxZmRhIiwibmFtZSI6ImNzIn0sInIiOnsiYXBpa2V5IjoiMjkyMDAzZjY5ODQwZTcxMiJ9fQ=="
+                    triso:fileName="MEA/cs"/>
+   <semantic:decisionService id="_e48f0554-09fc-4341-b25c-eed66a72f565_DS"
+                             name="Whole Model Decision Service"
+                             triso:dynamicDecisionService="true"
+                             triso:wholeModelService="true">
+      <semantic:variable id="_e48f0554-09fc-4341-b25c-eed66a72f565_DS_VAR"
+                         name="Whole Model Decision Service"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_de66ec00-fb0d-45b0-8d18-32112632d77e"/>
+   </semantic:decisionService>
+   <semantic:decisionService id="_8f77fcb2-6aec-48be-8e2c-9a746e3272c9_DS"
+                             name="Diagram Page 1"
+                             triso:dynamicDecisionService="true">
+      <semantic:variable id="_8f77fcb2-6aec-48be-8e2c-9a746e3272c9_DS_VAR"
+                         name="Diagram Page 1"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_de66ec00-fb0d-45b0-8d18-32112632d77e"/>
+   </semantic:decisionService>
+   <semantic:decision id="_de66ec00-fb0d-45b0-8d18-32112632d77e"
+                      name="History Pertinent to Heart Disease">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_4148dddc-b234-4a53-bea7-f396530c2729"
+                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                             name="DecisionTypes - Assessment Decision"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"/>
+         <triso:semanticLink id="_50d3a3d0-ac50-4515-a2a2-bfd9e85f48e4"
+                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
+                             name="DecisionTypes - Aggregation Decision"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"/>
+         <triso:semanticLink id="_3a7240df-f83f-4ef6-a100-be4d64edb978"
+                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+                             name="KnowledgeAssetTypes - 20190801 - Semantic Decision Model"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
+         <triso:customAttribute id="_523a7ca9-7598-4d2e-bf1b-53bd4be82b67"
+                                key="knowledgeAssetId"
+                                type="string"
+                                value="https://clinicalknowledgemanagement.mayo.edu/assets/256a1db1-4627-46b3-a811-012bf1a4293c/versions/1.0.0"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_64f032f3-3d7b-4c27-af19-f21b0d849449"
+                         name="History Pertinent to Heart Disease"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_cf6856f4-6a3b-49aa-86ad-529e337db60e">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_186b9942-8169-3352-a5bb-d117cb79212e"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_25858420-02ca-4f9f-b7fd-9219c6f0505c">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_49bb5c11-fbab-3566-83b9-edcd6f62f75f"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_b00eb5ca-d735-4ce6-96d5-b27c6161ca1a">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_e3ca75eb-af8e-3406-b0f6-ea65ed6581d4"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_b700615a-7e59-4489-a3c0-d7a2b49689b1">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_e437ed26-638b-38ec-aa81-4c857944ec96"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_e7729521-3fef-465f-b55c-40882ac607b0">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_93f2ad9c-ad71-3ccd-bb7c-1d1b15de5135"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_72cf21a5-fb29-4ea6-8af4-329ad0659156">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_6582d9bd-fbd2-3ad4-bedb-912a701f490b"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <dmndi:DMNDI>
+      <dmndi:DMNDiagram id="_8f77fcb2-6aec-48be-8e2c-9a746e3272c9"
+                        name="Page 1"
+                        triso:modelElementRef="_a7e465e1-cf4d-4c7d-8b41-e676bc20af65">
+         <di:extension>
+            <triso:semanticLink id="_7377924c-add9-498b-bb67-23dbe3d455d0"
+                                modelURI="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
+                                name="ClinicalSituations - Has Exacerbating Factors of Heart Disease"
+                                uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#e235caab-4323-3827-a408-fa069046a75a"/>
+            <triso:semanticLink id="_88b462e6-ecef-4dc5-bfda-94dd9cd05f4f"
+                                modelURI="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType#"
+                                name="KnowledgeAssetType_Scheme - Semantic Decision Modelin 'KnowledgeAssetType_Scheme'"
+                                uri="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType#af76c6c0ed31415aa9fa0f5d7e08bad8"/>
+            <triso:customAttribute id="_f061e276-bf72-4132-a520-3370fd74f569"
+                                   key="knowledgeAssetId"
+                                   type="string"
+                                   value="http://ontology.mayo.edu/ontologies/SituationalConceptOntology/56a3d128-e680-488f-96aa-d3de4e9be0ea"/>
+         </di:extension>
+         <dmndi:Size height="1050" width="1666.5252661209952"/>
+         <dmndi:DMNShape dmnElementRef="_de66ec00-fb0d-45b0-8d18-32112632d77e"
+                         id="_286dc5b1-9fa4-4734-9b8c-e093f0639ed0">
+            <dc:Bounds height="60" width="153" x="403.0252661209952" y="46"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_e437ed26-638b-38ec-aa81-4c857944ec96"
+                         id="_b86c606a-dbe3-4dcb-961e-c5d8a313ce8c">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="137.54292435463776"
+                       y="119.01136333267542"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_e3ca75eb-af8e-3406-b0f6-ea65ed6581d4"
+                         id="_ac31d51d-e433-4f43-a6a1-15f8abd964e4">
+            <dc:Bounds height="60.0000076293945"
+                       width="135.48234176635742"
+                       x="208.24898635584395"
+                       y="196.01136333267542"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_186b9942-8169-3352-a5bb-d117cb79212e"
+                         id="_ba701759-d3fd-414c-a733-6c25a8b30276">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="336.5429243546379"
+                       y="267.0113633326754"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_49bb5c11-fbab-3566-83b9-edcd6f62f75f"
+                         id="_da08e3fc-0821-4059-a406-ff7f06c637c5">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="509.0780332366104"
+                       y="267.0113633326754"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_6582d9bd-fbd2-3ad4-bedb-912a701f490b"
+                         id="_176a6ca8-3c9f-49f4-8e52-ef947131f2bf">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.4823417663573"
+                       x="653.5603750029678"
+                       y="119.01136333267542"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_93f2ad9c-ad71-3ccd-bb7c-1d1b15de5135"
+                         id="_3cd37b2a-700d-46ee-bfb3-24cd5361bd6e">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="619.987120874835"
+                       y="196.0113633326754"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNEdge dmnElementRef="_cf6856f4-6a3b-49aa-86ad-529e337db60e"
+                        id="_df5c53b8-83b4-418d-a5b2-2a244b66d55a">
+            <di:waypoint x="414.28089661415936" y="267.0113633326754"/>
+            <di:waypoint x="469.5252661209952" y="106"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_25858420-02ca-4f9f-b7fd-9219c6f0505c"
+                        id="_7007e23e-ae43-4f09-a188-96f77ec99240">
+            <di:waypoint x="566.8160054961319" y="267.0113633326754"/>
+            <di:waypoint x="479.5252661209952" y="106"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_b00eb5ca-d735-4ce6-96d5-b27c6161ca1a"
+                        id="_3d79b8c7-f051-41a3-9187-33c2e205f752">
+            <di:waypoint x="337.48695861536544" y="206.01136333267542"/>
+            <di:waypoint x="439.5252661209952" y="106"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_b700615a-7e59-4489-a3c0-d7a2b49689b1"
+                        id="_1e78fe9c-6b18-4206-b9fe-de20ae0e551f">
+            <di:waypoint x="271.78089661415925" y="139.01136333267542"/>
+            <di:waypoint x="403.0252661209952" y="96"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_e7729521-3fef-465f-b55c-40882ac607b0"
+                        id="_80ca3b3e-a65e-404f-be75-258575287795">
+            <di:waypoint x="627.2250931343565" y="206.0113633326754"/>
+            <di:waypoint x="519.5252661209952" y="106"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_72cf21a5-fb29-4ea6-8af4-329ad0659156"
+                        id="_e36e9c34-711e-421b-ba30-9f235e04337a">
+            <di:waypoint x="660.7983472624893" y="129.01136333267542"/>
+            <di:waypoint x="556.0252661209952" y="86"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNEdge>
+      </dmndi:DMNDiagram>
+      <dmndi:DMNStyle fontBold="false"
+                      fontFamily="arial,helvetica,sans-serif"
+                      fontItalic="false"
+                      fontSize="11"
+                      fontStrikeThrough="false"
+                      fontUnderline="false"
+                      id="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+   </dmndi:DMNDI>
+</semantic:definitions>

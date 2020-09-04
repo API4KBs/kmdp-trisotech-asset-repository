@@ -22,7 +22,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @ComponentScan
-@Profile({"default"})
 @PropertySource(value={"classpath:application.properties"})
 public class ServerConfig {
 

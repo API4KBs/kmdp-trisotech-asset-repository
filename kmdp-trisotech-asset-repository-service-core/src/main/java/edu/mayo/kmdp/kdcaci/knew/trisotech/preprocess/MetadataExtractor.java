@@ -219,7 +219,7 @@ public class MetadataExtractor {
       throws NotLatestVersionException {
     // need to find the artifactId for this version of assetId
     // ResourceIdentifier built with assetId URI and versionTag; allows for finding the artifact associated with this asset/version
-    ResourceIdentifier id = SemanticIdentifier.newNamespaceId(URI.create(assetId)).withVersionTag(versionTag);
+    ResourceIdentifier id = SemanticIdentifier.newNamespaceId(URI.create(assetId),versionTag);
     return strategy.getArtifactID(id, any);
   }
 

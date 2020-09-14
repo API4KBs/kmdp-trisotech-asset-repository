@@ -17,6 +17,7 @@ import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static java.util.stream.Collectors.toList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.artifactId;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype._20200801.DependencyType.Depends_On;
 import static org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode._20190201.Language.English;
@@ -53,7 +54,6 @@ import java.util.Optional;
 import java.util.UUID;
 import org.apache.jena.shared.NotFoundException;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
-import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.surrogate.Dependency;
@@ -149,9 +149,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
     // for the surrogate, want the version of the artifact
     Date modelDate = Date.from(Instant.parse(model.getUpdated()));
-    ResourceIdentifier artifactId = SemanticIdentifier.newVersionId(URI.create(docId.get()))
-        .withVersionTag(model.getVersion() + "+" + modelDate.getTime())
-        .withEstablishedOn(modelDate);
+    ResourceIdentifier artifactId =
+        newVersionId(URI.create(docId.get()),
+            model.getVersion() + "+" + modelDate.getTime())
+            .withEstablishedOn(modelDate);
 
     // artifact<->artifact relation
     List<ResourceIdentifier> theTargetArtifactId = getArtifactImports(docId.get(), model);

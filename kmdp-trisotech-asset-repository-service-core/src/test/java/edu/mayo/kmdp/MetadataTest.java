@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
@@ -110,7 +110,7 @@ class MetadataTest {
     try {
       Optional<KnowledgeAsset> res = extractor.extract(new ByteArrayInputStream(annotatedDMN),
           MetadataTest.class.getResourceAsStream(metaPath));
-      if (!res.isPresent()) {
+      if (res.isEmpty()) {
         fail("Unable to instantiate metadata object");
       }
       KnowledgeAsset surr = res.get();
@@ -142,7 +142,8 @@ class MetadataTest {
       boolean ans = baos.map(ByteArrayOutputStream::toByteArray)
           .map(ByteArrayInputStream::new)
           .map(StreamSource::new)
-          .map((dox) -> XMLUtil.validate(dox, SurrogateHelper.getSchema().orElseGet(Assertions::fail)))
+          .map((dox) -> XMLUtil
+              .validate(dox, SurrogateHelper.getSchema().orElseGet(Assertions::fail)))
           .orElse(false);
       assertTrue(ans);
     }
@@ -260,7 +261,8 @@ class MetadataTest {
   void testResolveInternalArtifactID() {
     try {
       String artifactId = extractor
-          .resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "1.1.1", false);
+          .resolveInternalArtifactID(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"),
+              "1.1.1", false);
       assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
           artifactId);
     } catch (NotLatestVersionException e) {
@@ -274,26 +276,29 @@ class MetadataTest {
   void testResolveInternalArtifactID_Published_NotLatestVersionException() {
     NotLatestVersionException ave = assertThrows(
         NotLatestVersionException.class,
-        () -> extractor.resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "2.0.0",
-            false));
+        () -> extractor
+            .resolveInternalArtifactID(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"),
+                "2.0.0",
+                false));
     assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
         ave.getMessage());
   }
 
   @Test
   void testResolveInternalArtifactID_Published_NotFound() {
-    String assetId = "abcdef3a-93c4-4e09-b1aa-14088c76adee";
+    UUID assetId = UUID.fromString("abcdef3a-93c4-4e09-b1aa-14088c76adee");
     NotFoundException nfe = assertThrows(NotFoundException.class,
         () -> extractor
             .resolveInternalArtifactID(assetId, "1.0.0-SNAPSHOT", false));
-    assertEquals(assetId, nfe.getMessage());
+    assertEquals(assetId.toString(), nfe.getMessage());
   }
 
   @Test
   void testResolveInternalArtifactID_Any() {
     try {
       String artifactId = extractor
-          .resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "1.1.1", true);
+          .resolveInternalArtifactID(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"),
+              "1.1.1", true);
       assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
           artifactId);
     } catch (NotLatestVersionException e) {
@@ -307,20 +312,22 @@ class MetadataTest {
   void testResolveInternalArtifactID_Any_NotLatestVersionException() {
     NotLatestVersionException ave = assertThrows(
         NotLatestVersionException.class,
-        () -> extractor.resolveInternalArtifactID("3c66cf3a-93c4-4e09-b1aa-14088c76aded", "2.0.0",
-            true));
+        () -> extractor
+            .resolveInternalArtifactID(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"),
+                "2.0.0",
+                true));
     assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
         ave.getMessage());
   }
 
   @Test
   void testResolveInternalArtifactID_Any_NotFound() {
-    String assetId = "abcdef3a-93c4-4e09-b1aa-14088c76adee";
+    UUID assetId = UUID.fromString("abcdef3a-93c4-4e09-b1aa-14088c76adee");
     NotFoundException nfe = assertThrows(NotFoundException.class,
         () -> extractor
             .resolveInternalArtifactID(assetId, "1.0.0-SNAPSHOT",
                 true));
-    assertEquals(assetId, nfe.getMessage());
+    assertEquals(assetId.toString(), nfe.getMessage());
 
   }
 

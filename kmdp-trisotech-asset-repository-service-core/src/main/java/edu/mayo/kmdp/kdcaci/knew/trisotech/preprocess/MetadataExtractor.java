@@ -215,11 +215,11 @@ public class MetadataExtractor {
    * The exception will be thrown if the latest version of the artifact does not
    * map to the requested version of the asset.
    */
-  public String resolveInternalArtifactID(String assetId, String versionTag, boolean any)
+  public String resolveInternalArtifactID(UUID assetId, String versionTag, boolean any)
       throws NotLatestVersionException {
     // need to find the artifactId for this version of assetId
     // ResourceIdentifier built with assetId URI and versionTag; allows for finding the artifact associated with this asset/version
-    ResourceIdentifier id = SemanticIdentifier.newVersionId(URI.create(assetId),versionTag);
+    ResourceIdentifier id = SemanticIdentifier.newId(assetId,versionTag);
     return strategy.getArtifactID(id, any);
   }
 

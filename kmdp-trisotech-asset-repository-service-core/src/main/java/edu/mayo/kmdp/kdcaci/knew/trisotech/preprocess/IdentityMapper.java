@@ -15,6 +15,8 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess;
 
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.tryNewVersionId;
 
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.util.FileUtil;
@@ -227,8 +229,7 @@ public class IdentityMapper {
 
       if (soln.getResource(MODEL).getURI().equals(artifactId.getResourceId().toString())) {
         if (soln.getLiteral(VERSION).getString().equals(versionTag)) {
-          return Optional.of(SemanticIdentifier
-              .newVersionId(URI.create(soln.getLiteral(ASSET_ID).toString())));
+          return Optional.of(newVersionId(URI.create(soln.getLiteral(ASSET_ID).toString())));
         } else { // have the artifact, but not version looking for; more work to see if the version exists
           throw new NotLatestVersionException(soln.getResource(MODEL).getURI());
         }
@@ -254,7 +255,7 @@ public class IdentityMapper {
 
       if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
         return Optional.of(
-            SemanticIdentifier.newVersionId(
+            newVersionId(
                 URI.create(soln.getLiteral(ASSET_ID).toString())));
       }
     }
@@ -335,11 +336,10 @@ public class IdentityMapper {
       String enterpriseAssetVersionId = soln.getLiteral(ASSET_ID).getString();
       if (enterpriseAssetVersionId.contains(assetId.toString())) {
         // found an artifact that has this asset; now check the version
-        String versionFromId = enterpriseAssetVersionId.substring(
-            enterpriseAssetVersionId.lastIndexOf(VERSIONS));
-        if (versionFromId.equals(VERSIONS + "/" + versionTag)) {
-          return Optional.of(
-              URI.create(enterpriseAssetVersionId));
+        SemanticIdentifier versionId
+            = newVersionId(URI.create(enterpriseAssetVersionId));
+        if (versionTag.equals(versionId.getVersionTag())) {
+          return Optional.of(versionId.getVersionId());
         } else {
           // there is an artifact, but the latest does not match the version seeking
           throw new NotLatestVersionException(soln.getResource(MODEL).getURI());
@@ -376,18 +376,25 @@ public class IdentityMapper {
     // this will only match if the exact version of the asset is available on a latest model
     while (theModels.hasNext()) {
       QuerySolution soln = theModels.nextSolution();
+
       if (logger.isDebugEnabled()) {
-        logger.debug("assetId.getResourceId().toString: {}", assetId.getResourceId().toString());
-        logger.debug("assetId.getVersionId().toString: {}", assetId.getVersionId().toString());
+        logger.debug("assetId.getResourceId(): {}", assetId.getResourceId());
+        logger.debug("assetId.getVersionId(): {}", assetId.getVersionId());
         logger.debug("assetId.getTag(): {}", assetId.getTag());
       }
-      // versionId value has the UUID of the asset/versions/versionTag, so this will match id and version
-      if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getVersionId().toString())) {
-        return soln.getResource(MODEL).getURI();
-        // the requested version of the asset doesn't exist on the latest model, check if the
-        // asset is the right asset for the model and if so, throw error with fileId
-      } else if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getTag())) {
-        throw new NotLatestVersionException(soln.getResource(MODEL).getURI());
+
+      Optional<ResourceIdentifier> rid
+          = tryNewVersionId(URI.create(soln.getLiteral(ASSET_ID).toString()));
+
+      if (rid.isPresent()) {
+        // versionId value has the UUID of the asset/versions/versionTag, so this will match id and version
+        if (rid.get().asKey().equals(assetId.asKey())) {
+          return soln.getResource(MODEL).getURI();
+          // the requested version of the asset doesn't exist on the latest model, check if the
+          // asset is the right asset for the model and if so, throw error with fileId
+        } else if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getTag())) {
+          throw new NotLatestVersionException(soln.getResource(MODEL).getURI());
+        }
       }
     }
     throw new NotFoundException(assetId.getTag());
@@ -694,7 +701,7 @@ public class IdentityMapper {
       if (soln.getResource(MODEL).getURI().equals(dependent.getURI())) {
         logger.debug("Asset ID for Model: {}", soln.getLiteral(ASSET_ID));
         return Optional
-            .of(SemanticIdentifier.newVersionId(URI.create(soln.getLiteral(ASSET_ID).getString())));
+            .of(newVersionId(URI.create(soln.getLiteral(ASSET_ID).getString())));
       }
     }
     // if not found, because not published

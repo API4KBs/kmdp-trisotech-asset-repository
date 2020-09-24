@@ -148,7 +148,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
     // For assetId, find artifactId; For assetId/versionTag, is latest artifactId/version a match? if not, get versions of artifactId and weave each one to get assetId/version
     try {
-      internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, false);
+      internalId = extractor.resolveInternalArtifactID(assetId, versionTag, false);
 
       fileId = extractor.getFileId(internalId);
       // the url is available from the extractor, HOWEVER, it is not the correct form to retrieve
@@ -376,7 +376,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   private ResourceIdentifier getInternalIdAndVersion(UUID assetId, String versionTag)
       throws NotLatestVersionException {
-    String internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, false);
+    String internalId = extractor.resolveInternalArtifactID(assetId, versionTag, false);
     Optional<String> version = extractor.getArtifactVersion(assetId);
     Optional<String> updated = extractor.getArtifactIdUpdateTime(assetId);
     return extractor.convertInternalId(internalId,
@@ -424,7 +424,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       }
 
       // asset matches for latest, now check the artifact for asset
-      internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, false);
+      internalId = extractor.resolveInternalArtifactID(assetId, versionTag, false);
       // verify artifact for asset matches the artifactId requested
       if (internalId.contains(artifactId.toString())) {
         // confirm version too
@@ -618,7 +618,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       }
 
       // asset matches for latest, now check the artifact for asset
-      internalId = extractor.resolveInternalArtifactID(assetId.toString(), versionTag, true);
+      internalId = extractor.resolveInternalArtifactID(assetId, versionTag, true);
       Optional<TrisotechFileInfo> tfi =
           fileId
               .flatMap(client::getLatestModelFileInfo);

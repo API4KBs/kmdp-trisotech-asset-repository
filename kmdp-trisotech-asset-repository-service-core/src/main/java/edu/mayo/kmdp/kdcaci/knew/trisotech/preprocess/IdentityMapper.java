@@ -97,7 +97,7 @@ public class IdentityMapper {
   // HierarchySorter will sort in reverse order of use, so an artifact imported by another will be at the top of the tree after the sort
   private HierarchySorter<Resource> hierarchySorter = new HierarchySorter<>();
   // map of artifact relations (artifact = model)
-  private Map<Resource, Set<Resource>> artifactToArtifactIDMap = new HashMap<>();
+  private Map<Resource, Set<Resource>> artifactToArtifactIDMap;
   // make the resultSet rewindable because will need to access it many times; if not rewindable, cannot get back to the beginning
   private ResultSetRewindable allPublishedModels;
   private ResultSetRewindable allModels;
@@ -119,18 +119,18 @@ public class IdentityMapper {
    */
   @PostConstruct
   void init() {
-    String place = client.getConfig().getRepositoryId();
+    String place = getFocusPlace();
     logger.debug("place in init {}", place);
-    createMap(query(getQueryStringRelations(), place));
-    allModels = ResultSetFactory.makeRewindable(query(getQueryStringModels(), place));
-    allPublishedModels = ResultSetFactory
-        .makeRewindable(query(getQueryStringPublishedModels(), place));
     if (config == null) {
       config = new TTWConfig();
     }
     // TODO: orderedModels needed? Not currently used; overflow error from hierarchySorter (infinite loop)
 //    orderedModels = hierarchySorter
 //        .linearize(getModelList(publishedModels), artifactToArtifactIDMap);
+  }
+
+  private String getFocusPlace() {
+    return client.getConfig().getRepositoryId();
   }
 
   private ResultSetRewindable getModelSet() {
@@ -140,17 +140,37 @@ public class IdentityMapper {
 
   private ResultSetRewindable getModelSet(boolean any) {
     return any
-        ? allModels
-        : allPublishedModels;
+        ? getAllModels()
+        : getAllPublishedModels();
   }
 
-  private void createMap(ResultSet results) {
-    while (results.hasNext()) {
-      QuerySolution soln = results.nextSolution();
-      artifactToArtifactIDMap
-          .computeIfAbsent(soln.getResource(MODEL), s -> new HashSet<>())
-          .add(soln.getResource("?dModel"));
+  private ResultSetRewindable getAllPublishedModels() {
+    if (allPublishedModels == null) {
+      allPublishedModels = ResultSetFactory
+          .makeRewindable(query(getQueryStringPublishedModels(), getFocusPlace()));
     }
+    return allPublishedModels;
+  }
+
+  private ResultSetRewindable getAllModels() {
+    if (allModels == null) {
+      allModels = ResultSetFactory.makeRewindable(query(getQueryStringModels(), getFocusPlace()));
+    }
+    return allModels;
+  }
+
+  private Map<Resource,Set<Resource>> getArtifactToArtifactIDMap() {
+    if (artifactToArtifactIDMap == null) {
+      artifactToArtifactIDMap = new HashMap<>();
+      ResultSet results = query(getQueryStringRelations(), getFocusPlace());
+      while (results.hasNext()) {
+        QuerySolution soln = results.nextSolution();
+        artifactToArtifactIDMap
+            .computeIfAbsent(soln.getResource(MODEL), s -> new HashSet<>())
+            .add(soln.getResource("?dModel"));
+      }
+    }
+    return artifactToArtifactIDMap;
   }
 
   /**
@@ -694,10 +714,10 @@ public class IdentityMapper {
     //  artifactToArtifactIDMap is based on latest
     if (!Util.isEmpty(docId)) {
       String id = docId.substring(docId.lastIndexOf('/') + 1);
-      for (Entry<Resource, Set<Resource>> entry : artifactToArtifactIDMap.entrySet()) {
+      for (Entry<Resource, Set<Resource>> entry : getArtifactToArtifactIDMap().entrySet()) {
         Resource k = entry.getKey();
         if (k.getLocalName().substring(1).equals(id)) {
-          resources = artifactToArtifactIDMap.get(k);
+          resources = getArtifactToArtifactIDMap().get(k);
           break;
         }
       }
@@ -759,7 +779,7 @@ public class IdentityMapper {
     if (!Util.isEmpty(artifactId)) {
       // first find the artifact in the artifactToArtifact mapping
       String id = artifactId.substring(artifactId.lastIndexOf('/') + 1);
-      artifactToArtifactIDMap.forEach((k, v) -> {
+      getArtifactToArtifactIDMap().forEach((k, v) -> {
         if (k.getLocalName().substring(1).equals(id)) {
           logger.debug("found id in artifactToArtifactIDMap");
           // once found, for each of the artifacts it is dependent on, find the asset id for those artifacts in the models

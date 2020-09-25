@@ -21,6 +21,7 @@ import static java.util.Collections.singletonList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
@@ -34,6 +35,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
@@ -51,6 +53,9 @@ import org.w3c.dom.Document;
  */
 @Component
 public class MetadataExtractor {
+
+  @Inject
+  TrisotechWrapper client;
 
   private static final Logger logger = LoggerFactory.getLogger(MetadataExtractor.class);
 
@@ -199,8 +204,15 @@ public class MetadataExtractor {
   public ResourceIdentifier resolveEnterpriseAssetID(String fileId) {
     return strategy.getAssetID(fileId)
         // Defensive exception. Published models should have an assetId | CAO | DS
-        .orElseThrow(() -> new IllegalStateException(
-            "Defensive: Unable to resolve internal ID " + fileId + " to a known Enterprise ID"));
+        .orElseThrow(() -> {
+          String modelName = client.getFileInfo(fileId)
+              .map(TrisotechFileInfo::getName)
+              .orElse("(unknown)");
+          return new IllegalStateException(
+              "Defensive: Unable to resolve internal ID " + fileId
+                  + " for model " + modelName
+                  + " to a known Enterprise ID");
+        });
   }
 
 

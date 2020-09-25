@@ -13,6 +13,7 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess;
 
+import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static java.util.stream.Collectors.toList;
@@ -30,7 +31,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.snapshot.KnowledgeRepresentationLanguage.Java_8;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
@@ -38,6 +39,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -53,6 +55,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import org.apache.jena.shared.NotFoundException;
+import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
@@ -118,7 +121,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
       logger.debug("assetID: {}", assetID.isPresent() ? assetID.get() : Optional.empty());
     }
     // Should processing fail if no assetID? don't continue processing; provide warning
-    if (!assetID.isPresent()) {
+    if (assetID.isEmpty()) {
       logger.warn("Asset ID is missing from model. Halting processing for {} ", meta.getName());
       return null; // TODO: better return value? empty?
     }
@@ -140,18 +143,22 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     Publication lifecycle = getPublication(model);
     // Identifiers
     Optional<String> docId = getArtifactID(woven, model);
-    if (!docId.isPresent()) {
+    if (docId.isEmpty()) {
       // error out. Can't proceed w/o Artifact -- How did we get this far?
       throw new IllegalStateException("Failed to have artifact in Document");
     }
 
     logger.debug("docId: {}", docId);
 
-    // for the surrogate, want the version of the artifact
     Date modelDate = Date.from(Instant.parse(model.getUpdated()));
-    ResourceIdentifier artifactId =
-        newVersionId(URI.create(docId.get()),
-            model.getVersion() + "+" + modelDate.getTime())
+    String artifactTag = docId.get();
+    String artifactVersionTag = model.getVersion() == null
+        ? IdentifierConstants.VERSION_LATEST
+        : model.getVersion() + "+" + modelDate.getTime();
+
+    // for the surrogate, want the version of the artifact
+    ResourceIdentifier artifactID =
+        newVersionId(URI.create(artifactTag),artifactVersionTag)
             .withEstablishedOn(modelDate);
 
     // artifact<->artifact relation
@@ -203,7 +210,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         // Some work needed to infer the dependencies
         .withLinks(getRelatedAssets(theTargetAssetId)) // asset - asset relation/dependency
         .withCarriers(new KnowledgeArtifact()
-            .withArtifactId(artifactId)
+            .withArtifactId(artifactID)
             .withName(model.getName())
             .withLifecycle(lifecycle)
             .withLocalization(English)
@@ -214,8 +221,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         )
         .withSurrogate(
             new KnowledgeArtifact()
-                .withArtifactId(artifactId(model.getId(), model.getVersion()))
-                .withRepresentation(rep(Java_8, JSON))
+                // TODO this should be the model fileId...
+                .withArtifactId(artifactId(model.getId(), artifactVersionTag))
+                .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, JSON))
                 .withMimeType(model.getMimetype())
         )
         .withName(model.getName()); // TODO: might want '(DMN)' / '(CMMN)' here
@@ -298,9 +306,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
       TrisotechFileInfo matchVersion = findVersionMatch(importVersions, artifactDate,
           nextVersionDate);
       if (null != matchVersion) { // shouldn't happen
+        String versionTs = DateTimeUtil.dateTimeStrToMillis(matchVersion.getUpdated());
         dependencies.add(convertInternalId(ri.getTag(),
             matchVersion.getVersion(),
-            matchVersion.getUpdated()));
+            versionTs));
       }
     }
     return dependencies;

@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.NotLatestVersionException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -336,9 +337,7 @@ class MetadataTest {
     IllegalStateException ave = assertThrows(
         IllegalStateException.class,
         () -> extractor.resolveEnterpriseAssetID("3c66cf3a-93c4-4e09-b1aa-14088c76aded"));
-    assertEquals(
-        "Defensive: Unable to resolve internal ID 3c66cf3a-93c4-4e09-b1aa-14088c76aded to a known Enterprise ID",
-        ave.getMessage());
+    assertTrue(ave.getMessage().contains("3c66cf3a-93c4-4e09-b1aa-14088c76aded"));
   }
 
   @Test
@@ -414,7 +413,7 @@ class MetadataTest {
     assertEquals(expectedFileId, fileId.getResourceId().toString());
 
     // test w/version
-    fileId = extractor.convertInternalId(internalId, versionTag, updated);
+    fileId = extractor.convertInternalId(internalId, versionTag, DateTimeUtil.dateTimeStrToMillis(updated));
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
     assertEquals(expectedVersionTag, fileId.getVersionTag());

@@ -253,15 +253,15 @@ public class TrisotechWrapper {
    * This method will be used when the mimeType is not provided initially. It will first query all
    * the models, then find the model to be queried and return the appropriate mimetype for that file.
    *
-   * @param fileId the ID in Tristoech for the file to be queried
+   * @param fileId the ID in Trisotech for the file to be queried
    * @return the mimetype for the file to be used to query needed information for download
    */
   private Optional<String> getFileInfoMimeType(String fileId) {
     List<TrisotechFileInfo> fileInfos = getModels(null);
     Optional<TrisotechFileInfo> fileInfo = fileInfos.stream()
-        .filter(f -> f.getId().equals(fileId)
-        ).findAny();
-    if (! fileInfo.isPresent()) {
+        .filter(f -> f.getId().equals(fileId))
+        .findAny();
+    if (fileInfo.isEmpty()) {
       logger.error("Unable to get FileInfo for {}", fileId);
     }
 
@@ -419,6 +419,13 @@ public class TrisotechWrapper {
     return Optional.empty();
   }
 
+  /**
+   * Returns models file info for all models
+   * @return
+   */
+  public List<TrisotechFileInfo> getModelsFileInfo() {
+    return getModels(null);
+  }
 
   /**
    * Retrieve all the models based on the mimetype provided

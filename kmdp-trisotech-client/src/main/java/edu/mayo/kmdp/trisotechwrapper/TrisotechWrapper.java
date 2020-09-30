@@ -23,6 +23,7 @@ import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.REPOSITORY_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.VERSIONS_PATH;
+import static org.omg.spec.api4kp._20200801.id.VersionIdentifier.toSemVer;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -34,6 +35,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
 import edu.mayo.kmdp.util.DateTimeUtil;
+import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -42,8 +44,10 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,6 +56,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.jena.ext.com.google.common.base.Strings;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -301,14 +306,23 @@ public class TrisotechWrapper {
    */
   public Optional<TrisotechFileInfo> getFileInfoByIdAndVersion(
       String fileId, String fileVersion, String mimetype) {
-    List<TrisotechFileInfo> fileInfos = getModelVersions(fileId, mimetype);
-    for (TrisotechFileInfo fileInfo : fileInfos) {
-      if (fileVersion.equals(fileInfo.getVersion())) {
-        return Optional.of(fileInfo);
-      }
+    return getLatestModelFileInfo(fileId).filter(fileInfo -> compareVersion(fileVersion, fileInfo))
+        .or(() ->
+            getModelVersions(fileId, mimetype).stream()
+                .filter(fileInfo -> compareVersion(fileVersion, fileInfo))
+                .findFirst());
+  }
+
+  private boolean compareVersion(String fileVersion, TrisotechFileInfo fileInfo) {
+    if (fileVersion.equals(fileInfo.getVersion())) {
+      return true;
     }
-    logger.error("Unable to resolve {} for version {}", fileId, fileVersion);
-    return Optional.empty();
+    if (fileInfo.getVersion() == null && !Util.isEmpty(fileVersion)) {
+      return false;
+    }
+    Date artifactDate = Date.from(Instant.parse(fileInfo.getUpdated()));
+    String timeStampedVersion = toSemVer(fileInfo.getVersion()) + "+" + artifactDate.getTime();
+    return fileVersion.equals(timeStampedVersion);
   }
 
   /**

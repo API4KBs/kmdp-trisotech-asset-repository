@@ -13,7 +13,6 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess;
 
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
@@ -26,10 +25,10 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.TTWConfig.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.FileUtil;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.graph.HierarchySorter;
 import java.net.URI;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -58,7 +57,6 @@ import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.NotFoundException;
 import org.apache.logging.log4j.util.Strings;
-import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.slf4j.Logger;
@@ -724,9 +722,10 @@ public class IdentityMapper {
     }
 
     if (null != resources) {
-      for (Resource resource : resources) {
-        artifacts.add(getArtifactIdentifier(resource));
-      }
+      resources.stream()
+          .map(this::getArtifactIdentifier)
+          .flatMap(StreamUtil::trimStream)
+          .forEach(artifacts::add);
     }
     return artifacts;
   }
@@ -742,19 +741,21 @@ public class IdentityMapper {
    * @param resource the resource for the artifact desired
    * @return ResourceIdentifier in appropriate format
    */
-  private ResourceIdentifier getArtifactIdentifier(Resource resource) {
+  private Optional<ResourceIdentifier> getArtifactIdentifier(Resource resource) {
     ResultSetRewindable modelSet = getModelSet();
     try {
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
         if (soln.getResource(MODEL).equals(resource)) {
           if (soln.getLiteral(VERSION) != null) {
-            return convertInternalId(soln.getResource(MODEL).getURI(),
+            ResourceIdentifier rid = convertInternalId(soln.getResource(MODEL).getURI(),
                 soln.getLiteral(VERSION).getString(),
                 DateTimeUtil.dateTimeStrToMillis(soln.getLiteral(UPDATED).getString()));
+            return Optional.ofNullable(rid);
           } else {
             // TODO: Still use timestamp?
-            return convertInternalId(soln.getResource(MODEL).getURI(), VERSION_LATEST, "" + new Date().getTime());
+            ResourceIdentifier rid =  convertInternalId(soln.getResource(MODEL).getURI(), VERSION_LATEST, "" + new Date().getTime());
+            return Optional.ofNullable(rid);
           }
         }
       }
@@ -763,7 +764,12 @@ public class IdentityMapper {
     }
     // TODO: return something different? Error? CAO
     logger.warn("Artifact {} is not a published model.", resource);
-    return null;
+    if (config.getTyped(TTWParams.PUBLISHED_ONLY)) {
+      return Optional.empty();
+    } else {
+      ResourceIdentifier rid =  convertInternalId(resource.getURI(), VERSION_LATEST, "" + new Date().getTime());
+      return Optional.ofNullable(rid);
+    }
   }
 
   /**

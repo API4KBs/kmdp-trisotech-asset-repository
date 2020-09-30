@@ -13,7 +13,6 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess;
 
-import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static java.util.stream.Collectors.toList;
@@ -48,15 +47,16 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import org.apache.jena.shared.NotFoundException;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.surrogate.Dependency;
@@ -153,8 +153,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     Date modelDate = Date.from(Instant.parse(model.getUpdated()));
     String artifactTag = docId.get();
     String artifactVersionTag = model.getVersion() == null
-        ? IdentifierConstants.VERSION_LATEST
-        : model.getVersion() + "+" + modelDate.getTime();
+        ? IdentifierConstants.VERSION_LATEST + "+" + modelDate.getTime()
+        : VersionIdentifier.toSemVer(model.getVersion()) + "+" + modelDate.getTime();
 
     // for the surrogate, want the version of the artifact
     ResourceIdentifier artifactID =
@@ -602,9 +602,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     Optional<String> fileId = getFileId(internalId);
     // need mimetype to get the correct URL to download XML
     Optional<String> mimeType = getMimetype(internalId);
-    if (!fileId.isPresent() || !mimeType.isPresent()) {
-      // TODO: throw exception or just return NOT_FOUND? CAO
-      throw new NotFoundException("Error finding fileId or mimetype for internalid " + internalId);
+    if (fileId.isEmpty() || mimeType.isEmpty()) {
+      logger.warn("Error finding fileId or mimetype for internalid "
+          + internalId + " while trying to determine version information");
+      return Collections.emptyList();
     }
     // need to get all versions for the file
     return getTrisotechModelVersions(fileId.get(), mimeType.get());

@@ -32,11 +32,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.DateTimeUtil;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -223,6 +227,30 @@ class TrisotechWrapperIntTest {
     assertNotNull(file);
 
     assertEquals("1.6", file.getVersion());
+  }
+
+  @Test
+  final void testGetLatestVersionInfoDMN() {
+    TrisotechFileInfo latestFileInfo = client.getLatestModelFileInfo(WEAVER_TEST_1_ID)
+        .orElseGet(Assertions::fail);
+    List<TrisotechFileInfo> historyInfos = client.getModelVersions(WEAVER_TEST_1_ID,DMN_XML_MIMETYPE);
+    assertFalse(historyInfos.isEmpty());
+
+    String fileId = latestFileInfo.getId();
+    String version = latestFileInfo.getVersion();
+    Date updateDate = parseDateTime(latestFileInfo.getUpdated());
+
+    assertTrue(historyInfos.stream().allMatch(hx -> fileId.equals(hx.getId())));
+    List<TrisotechFileInfo> versionHistoryInfos = historyInfos.stream()
+        .filter(hx -> version.equals(hx.getVersion()))
+        .collect(Collectors.toList());
+    assertFalse(versionHistoryInfos.isEmpty());
+
+    versionHistoryInfos.sort(Comparator.comparing(i -> parseDateTime(i.getUpdated())));
+    Collections.reverse(versionHistoryInfos);
+    TrisotechFileInfo latestInHistory = versionHistoryInfos.get(0);
+
+    assertTrue(updateDate.after(parseDateTime(latestInHistory.getUpdated())));
   }
 
   // TODO: add test w/bad repository name

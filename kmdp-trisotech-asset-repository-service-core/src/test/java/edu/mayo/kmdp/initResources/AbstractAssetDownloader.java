@@ -20,6 +20,8 @@ import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.Assertions;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.id.Pointer;
@@ -49,6 +51,11 @@ public abstract class AbstractAssetDownloader {
   TrisotechWrapper wrapper;
 
   protected abstract File getTgtFolder();
+
+  protected String getParent() {
+    Path srcPath = Paths.get("src", "test", "resources");
+    return srcPath.toAbsolutePath().toString();
+  }
 
   protected void saveArtifacts(Pointer assetPtr, File tgtFolder) {
     if (! tgtFolder.exists()) {

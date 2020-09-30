@@ -1,208 +1,198 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
-                      xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/d439d9e7-633a-4135-be78-4655f0a63aff"
-                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
-                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
-                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
-                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
-                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
-                      xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6"
-                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
-                      xmlns:rss="http://purl.org/rss/2.0/"
-                      xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
-                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
-                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      id="_d439d9e7-633a-4135-be78-4655f0a63aff"
-                      name="Current Status of Atrial Fibrillation"
-                      namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/d439d9e7-633a-4135-be78-4655f0a63aff"
-                      xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
-   <semantic:extensionElements/>
-   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
-                    name="cs"
-                    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6"/>
-   <semantic:decisionService id="_d439d9e7-633a-4135-be78-4655f0a63aff_DS"
-                             name="Whole Model Decision Service">
-      <semantic:variable id="_d439d9e7-633a-4135-be78-4655f0a63aff_DS_VAR"
-                         name="Whole Model Decision Service"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_69332638-43d8-442f-bd40-634ad54c3158"/>
-      <semantic:inputData href="#_eb82f56d-b2c1-4f9b-87e3-21c62eb1ae6b"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_2a848301-c627-475d-9c3f-f6f3cd6f3a55_DS" name="Diagram Page 1">
-      <semantic:variable id="_2a848301-c627-475d-9c3f-f6f3cd6f3a55_DS_VAR"
-                         name="Diagram Page 1"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_69332638-43d8-442f-bd40-634ad54c3158"/>
-      <semantic:inputData href="#_eb82f56d-b2c1-4f9b-87e3-21c62eb1ae6b"/>
-   </semantic:decisionService>
-   <semantic:decision id="_69332638-43d8-442f-bd40-634ad54c3158"
-                      name="Current Status of Atrial Fibrillation">
-      <semantic:extensionElements>
-         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
-                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
-                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
-                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel name="captures"
-                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
-                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
-                      tag="captures"/>
-            <surr:ref name="DecisionTypes - 20190801 - Assessment Decision"
-                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
-                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
-                      tag="_2ce2180e-e824-4f5a-8861-81f1442ebae8"/>
-         </surr:annotation>
-         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
-                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
-                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
-                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel name="captures"
-                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
-                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
-                      tag="captures"/>
-            <surr:ref name="DecisionTypes - 20190801 - Naturalistic Decision"
-                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
-                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"
-                      tag="_0999daa2-a44e-4703-9fba-8ea4fc429987"/>
-         </surr:annotation>
-         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
-                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
-                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
-                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel name="captures"
-                      namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
-                      resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
-                      tag="captures"/>
-            <surr:ref name="DecisionTypes - 20190801 - Aggregation Decision"
-                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
-                      referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"
-                      tag="_b5271f39-6ace-430d-930a-0e47a3349dae"/>
-         </surr:annotation>
-         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
-                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
-                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
-                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:ref name="KnowledgeAssetTypes - 20190801 - Semantic Decision Model"
-                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#"
-                      referentId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
-                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
-                      tag="_cf4c5b89-6a91-4d66-834e-2c94028bc400"/>
-         </surr:annotation>
-      </semantic:extensionElements>
-      <semantic:variable id="_95fe5e18-4a8b-42a4-9a3c-781df5ef794b"
-                         name="Current Status of Atrial Fibrillation"
-                         typeRef="Any"/>
-      <semantic:informationRequirement id="_68f37555-6397-47dd-8054-ed9776000878">
-         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#5657179d-8405-3122-8d57-a89878b96510"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_5d1720be-2e53-449b-9bf2-765a8547fa0c">
-         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#4f268d0f-72df-364a-9442-2fc7e3c64582"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_1f97b107-cd0d-46c7-b5bf-eabc11bd9384">
-         <semantic:requiredInput href="#_eb82f56d-b2c1-4f9b-87e3-21c62eb1ae6b"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_cc22d78b-9c7d-41a9-a767-8022c27b0fde">
-         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#d22f09f0-efd5-305d-a13c-84f1ba09f261"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_70d1bb17-a833-41a4-aa04-90b1eaffe2be">
-         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#0964ddd7-f29f-3b46-bb82-10e78651750f"/>
-      </semantic:informationRequirement>
-   </semantic:decision>
-   <semantic:inputData id="_eb82f56d-b2c1-4f9b-87e3-21c62eb1ae6b"
-                       name="Most Recent Cardiovascular Investigation">
-      <semantic:variable id="_431a70ce-b375-4e6b-ad78-a3b48a18cd00"
-                         name="Most Recent Cardiovascular Investigation"
-                         typeRef="string"/>
-   </semantic:inputData>
-   <dmndi:DMNDI>
-      <dmndi:DMNDiagram id="_2a848301-c627-475d-9c3f-f6f3cd6f3a55" name="Page 1">
-         <di:extension/>
-         <dmndi:Size height="1050" width="1839.9646835327148"/>
-         <dmndi:DMNShape dmnElementRef="_69332638-43d8-442f-bd40-634ad54c3158"
-                         id="_89cb30ab-3eba-4543-aad1-05914454f85b">
-            <dc:Bounds height="60" width="153" x="252.8156750996908" y="90"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_eb82f56d-b2c1-4f9b-87e3-21c62eb1ae6b"
-                         id="_c398b1a7-5524-4316-80b9-cbcb43aea985">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="163.2411708831787"
-                       y="273.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="include1:_d22f09f0-efd5-305d-a13c-84f1ba09f261"
-                         id="_7a9c7c84-8bca-4c7c-8497-2345d2a8e2b1">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="347.22351264953613"
-                       y="273.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="include1:_0964ddd7-f29f-3b46-bb82-10e78651750f"
-                         id="_01d1e1d5-b1d6-44d2-83d7-5b35c68919be">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="418.188196182251"
-                       y="189.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="include1:_4f268d0f-72df-364a-9442-2fc7e3c64582"
-                         id="_01733dd4-826b-4fac-b5b2-51c8f7e23fe8">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="88.25882911682129"
-                       y="189.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="include1:_5657179d-8405-3122-8d57-a89878b96510"
-                         id="_f0590081-17da-497d-a5c5-650fdf98ec5c">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="261.5745042165121"
-                       y="371.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNEdge dmnElementRef="_68f37555-6397-47dd-8054-ed9776000878"
-                        id="_122e7c12-6f26-4f9f-8cbc-726a573ef3d9">
-            <di:waypoint x="329.31247647603357" y="371.99999618530273"/>
-            <di:waypoint x="329.3156750996908" y="150"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_5d1720be-2e53-449b-9bf2-765a8547fa0c"
-                        id="_e6ffc65e-b57c-4229-bb63-c94cfd97bf35">
-            <di:waypoint x="217.49680137634277" y="199.99999618530273"/>
-            <di:waypoint x="289.3156750996908" y="150"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_1f97b107-cd0d-46c7-b5bf-eabc11bd9384"
-                        id="_3d0c981a-8616-449b-952d-447423ac1576">
-            <di:waypoint x="230.9791431427002" y="273.99999618530273"/>
-            <di:waypoint x="319.3156750996908" y="150"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_cc22d78b-9c7d-41a9-a767-8022c27b0fde"
-                        id="_3a552d13-06b8-415b-bb20-2c082ad3ab85">
-            <di:waypoint x="414.9614849090576" y="273.99999618530273"/>
-            <di:waypoint x="339.3156750996908" y="150"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_70d1bb17-a833-41a4-aa04-90b1eaffe2be"
-                        id="_6a71331f-b80d-43f8-8956-6c3b1307f2c8">
-            <di:waypoint x="425.42616844177246" y="199.99999618530273"/>
-            <di:waypoint x="369.3156750996908" y="150"/>
-            <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-         </dmndi:DMNEdge>
-      </dmndi:DMNDiagram>
-      <dmndi:DMNStyle fontBold="false"
-                      fontFamily="arial,helvetica,sans-serif"
-                      fontItalic="false"
-                      fontSize="11"
-                      fontStrikeThrough="false"
-                      fontUnderline="false"
-                      id="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
-   </dmndi:DMNDI>
+  xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/d439d9e7-633a-4135-be78-4655f0a63aff"
+  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+  xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+  xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  id="_d439d9e7-633a-4135-be78-4655f0a63aff"
+  name="Current Status of Atrial Fibrillation"
+  namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/d439d9e7-633a-4135-be78-4655f0a63aff"
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd">
+  <semantic:extensionElements/>
+  <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+    name="cs"
+    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6"/>
+  <semantic:decisionService id="_d439d9e7-633a-4135-be78-4655f0a63aff_DS"
+    name="Whole Model Decision Service">
+    <semantic:variable id="_d439d9e7-633a-4135-be78-4655f0a63aff_DS_VAR"
+      name="Whole Model Decision Service"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_69332638-43d8-442f-bd40-634ad54c3158"/>
+    <semantic:inputData href="#_eb82f56d-b2c1-4f9b-87e3-21c62eb1ae6b"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_2a848301-c627-475d-9c3f-f6f3cd6f3a55_DS" name="Diagram Page 1">
+    <semantic:variable id="_2a848301-c627-475d-9c3f-f6f3cd6f3a55_DS_VAR"
+      name="Diagram Page 1"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_69332638-43d8-442f-bd40-634ad54c3158"/>
+    <semantic:inputData href="#_eb82f56d-b2c1-4f9b-87e3-21c62eb1ae6b"/>
+  </semantic:decisionService>
+  <semantic:decision id="_69332638-43d8-442f-bd40-634ad54c3158"
+    name="Current Status of Atrial Fibrillation">
+    <semantic:extensionElements>
+      <surr:annotation
+      >
+        <surr:rel name="captures"
+          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+          resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+          tag="captures"/>
+        <surr:ref name="DecisionTypes - 20190801 - Assessment Decision"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
+          referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+          resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
+          tag="_2ce2180e-e824-4f5a-8861-81f1442ebae8"/>
+      </surr:annotation>
+      <surr:annotation
+      >
+        <surr:rel name="captures"
+          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+          resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+          tag="captures"/>
+        <surr:ref name="DecisionTypes - 20190801 - Naturalistic Decision"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
+          referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+          resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"
+          tag="_0999daa2-a44e-4703-9fba-8ea4fc429987"/>
+      </surr:annotation>
+      <surr:annotation
+      >
+        <surr:rel name="captures"
+          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
+          resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
+          tag="captures"/>
+        <surr:ref name="DecisionTypes - 20190801 - Aggregation Decision"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
+          referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+          resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"
+          tag="_b5271f39-6ace-430d-930a-0e47a3349dae"/>
+      </surr:annotation>
+      <surr:annotation
+      >
+        <surr:ref name="KnowledgeAssetTypes - 20190801 - Semantic Decision Model"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType"
+          referentId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+          resourceId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
+          tag="_cf4c5b89-6a91-4d66-834e-2c94028bc400"/>
+      </surr:annotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_95fe5e18-4a8b-42a4-9a3c-781df5ef794b"
+      name="Current Status of Atrial Fibrillation"
+      typeRef="Any"/>
+    <semantic:informationRequirement id="_68f37555-6397-47dd-8054-ed9776000878">
+      <semantic:requiredInput
+        href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#5657179d-8405-3122-8d57-a89878b96510"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_5d1720be-2e53-449b-9bf2-765a8547fa0c">
+      <semantic:requiredInput
+        href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#4f268d0f-72df-364a-9442-2fc7e3c64582"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_1f97b107-cd0d-46c7-b5bf-eabc11bd9384">
+      <semantic:requiredInput href="#_eb82f56d-b2c1-4f9b-87e3-21c62eb1ae6b"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_cc22d78b-9c7d-41a9-a767-8022c27b0fde">
+      <semantic:requiredInput
+        href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#d22f09f0-efd5-305d-a13c-84f1ba09f261"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_70d1bb17-a833-41a4-aa04-90b1eaffe2be">
+      <semantic:requiredInput
+        href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#0964ddd7-f29f-3b46-bb82-10e78651750f"/>
+    </semantic:informationRequirement>
+  </semantic:decision>
+  <semantic:inputData id="_eb82f56d-b2c1-4f9b-87e3-21c62eb1ae6b"
+    name="Most Recent Cardiovascular Investigation">
+    <semantic:variable id="_431a70ce-b375-4e6b-ad78-a3b48a18cd00"
+      name="Most Recent Cardiovascular Investigation"
+      typeRef="string"/>
+  </semantic:inputData>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="_2a848301-c627-475d-9c3f-f6f3cd6f3a55" name="Page 1">
+      <di:extension/>
+      <dmndi:Size height="1050" width="1839.9646835327148"/>
+      <dmndi:DMNShape dmnElementRef="_69332638-43d8-442f-bd40-634ad54c3158"
+        id="_89cb30ab-3eba-4543-aad1-05914454f85b">
+        <dc:Bounds height="60" width="153" x="252.8156750996908" y="90"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_eb82f56d-b2c1-4f9b-87e3-21c62eb1ae6b"
+        id="_c398b1a7-5524-4316-80b9-cbcb43aea985">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="163.2411708831787"
+          y="273.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include1:_d22f09f0-efd5-305d-a13c-84f1ba09f261"
+        id="_7a9c7c84-8bca-4c7c-8497-2345d2a8e2b1">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="347.22351264953613"
+          y="273.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include1:_0964ddd7-f29f-3b46-bb82-10e78651750f"
+        id="_01d1e1d5-b1d6-44d2-83d7-5b35c68919be">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="418.188196182251"
+          y="189.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include1:_4f268d0f-72df-364a-9442-2fc7e3c64582"
+        id="_01733dd4-826b-4fac-b5b2-51c8f7e23fe8">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="88.25882911682129"
+          y="189.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include1:_5657179d-8405-3122-8d57-a89878b96510"
+        id="_f0590081-17da-497d-a5c5-650fdf98ec5c">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="261.5745042165121"
+          y="371.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge dmnElementRef="_68f37555-6397-47dd-8054-ed9776000878"
+        id="_122e7c12-6f26-4f9f-8cbc-726a573ef3d9">
+        <di:waypoint x="329.31247647603357" y="371.99999618530273"/>
+        <di:waypoint x="329.3156750996908" y="150"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_5d1720be-2e53-449b-9bf2-765a8547fa0c"
+        id="_e6ffc65e-b57c-4229-bb63-c94cfd97bf35">
+        <di:waypoint x="217.49680137634277" y="199.99999618530273"/>
+        <di:waypoint x="289.3156750996908" y="150"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_1f97b107-cd0d-46c7-b5bf-eabc11bd9384"
+        id="_3d0c981a-8616-449b-952d-447423ac1576">
+        <di:waypoint x="230.9791431427002" y="273.99999618530273"/>
+        <di:waypoint x="319.3156750996908" y="150"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_cc22d78b-9c7d-41a9-a767-8022c27b0fde"
+        id="_3a552d13-06b8-415b-bb20-2c082ad3ab85">
+        <di:waypoint x="414.9614849090576" y="273.99999618530273"/>
+        <di:waypoint x="339.3156750996908" y="150"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_70d1bb17-a833-41a4-aa04-90b1eaffe2be"
+        id="_6a71331f-b80d-43f8-8956-6c3b1307f2c8">
+        <di:waypoint x="425.42616844177246" y="199.99999618530273"/>
+        <di:waypoint x="369.3156750996908" y="150"/>
+        <dmndi:DMNLabel sharedStyle="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+    <dmndi:DMNStyle fontBold="false"
+      fontFamily="arial,helvetica,sans-serif"
+      fontItalic="false"
+      fontSize="11"
+      fontStrikeThrough="false"
+      fontUnderline="false"
+      id="LS_d439d9e7-633a-4135-be78-4655f0a63aff_0"/>
+  </dmndi:DMNDI>
 </semantic:definitions>

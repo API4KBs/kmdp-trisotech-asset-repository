@@ -1,245 +1,242 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
-                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
-                      xmlns="http://www.trisotech.com/definitions/_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
-                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
-                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
-                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
-                      xmlns:drools="http://www.drools.org/kie/dmn/1.1"
-                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
-                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
-                      xmlns:rss="http://purl.org/rss/2.0/"
-                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
-                      xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
-                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="6.12.3"
-                      id="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
-                      name="Decision Subdecision"
-                      namespace="http://www.trisotech.com/definitions/_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
-                      triso:logoChoice="Default"
-                      triso:state="Published"
-                      triso:version="1.0.1">
-   <semantic:extensionElements/>
-   <semantic:decisionService id="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_DS"
-                             name="Whole Model Decision Service"
-                             triso:dynamicDecisionService="true"
-                             triso:wholeModelService="true">
-      <semantic:variable id="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_DS_VAR"
-                         name="Whole Model Decision Service"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
-      <semantic:encapsulatedDecision href="#_24cb5787-cf05-4464-ba64-7f7cb40128e0"/>
-      <semantic:inputData href="#_458c2a89-3a6c-41b6-a599-136726cb5935"/>
-      <semantic:inputData href="#_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82"/>
-      <semantic:inputData href="#_d93219a2-8ffc-40c0-81a9-968cfff6396d"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_1fb6d4d9-2a75-47c8-82b2-34040a1c0b21_DS"
-                             name="Diagram Page 1"
-                             triso:dynamicDecisionService="true">
-      <semantic:variable id="_1fb6d4d9-2a75-47c8-82b2-34040a1c0b21_DS_VAR"
-                         name="Diagram Page 1"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
-      <semantic:encapsulatedDecision href="#_24cb5787-cf05-4464-ba64-7f7cb40128e0"/>
-      <semantic:inputData href="#_458c2a89-3a6c-41b6-a599-136726cb5935"/>
-      <semantic:inputData href="#_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82"/>
-      <semantic:inputData href="#_d93219a2-8ffc-40c0-81a9-968cfff6396d"/>
-   </semantic:decisionService>
-   <semantic:decision id="_721c22c3-3e27-4065-8f84-9b9ab524fb58"
-                      name="Choice of Management of Condition"
-                      triso:useOutputTypeAsAnswer="true">
-      <semantic:extensionElements>
-         <triso:semanticLink id="_2a02362c-4be7-4a3f-8ddf-c7cb8e088535"
-                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
-                             name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
-         <triso:customAttribute id="_f3ce643c-bb7b-4969-9b74-617d33ba64fe"
-                                key="knowledgeAssetId"
-                                type="string"
-                                value="https://clinicalknowledgemanagement.mayo.edu/assets/22c207d7-36e2-4935-a634-5205699ce6d0/versions/0.0.1"/>
-         <triso:semanticLink id="c35226e8-d216-4744-9ae7-0263d098ac18"
-                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                             name="DecisionTypes - 20190801 - Choice Decision"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"/>
-         <triso:semanticLink id="_de6f8e81-6099-405d-b56e-bd007f49bcb5"
-                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                             name="DecisionTypes - 20190801 - Actionable Decision"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#28d541e1-bd08-3afc-a3f0-3780601576c6"/>
-         <triso:semanticLink id="_71e4977c-a67b-4405-ae72-d1d67a9847a0"
-                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                             name="DecisionTypes - 20190801 - Naturalistic Decision"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"/>
-      </semantic:extensionElements>
-      <semantic:question>&lt;p&gt;What treatment should I use for this patient&lt;/p&gt;</semantic:question>
-      <semantic:allowedAnswers>&lt;p&gt;Treatment A&lt;/p&gt;
-&lt;p&gt;Treatment B&lt;/p&gt;
-&lt;p&gt;Treatment C&lt;/p&gt;</semantic:allowedAnswers>
-      <semantic:variable id="_40c8a0e2-9372-499d-a57e-163adb802c04"
-                         name="Choice of Management of Condition"
-                         typeRef="Any"/>
-      <semantic:informationRequirement id="_9d45c026-f8f4-46b8-b199-c664506b82d9">
-         <semantic:requiredDecision href="#_24cb5787-cf05-4464-ba64-7f7cb40128e0"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_ff951092-f35f-41a2-a532-d8e7404ed57d">
-         <semantic:requiredInput href="#_458c2a89-3a6c-41b6-a599-136726cb5935"/>
-      </semantic:informationRequirement>
-   </semantic:decision>
-   <semantic:decision id="_24cb5787-cf05-4464-ba64-7f7cb40128e0"
-                      name="Assessment Subdecision">
-      <semantic:extensionElements>
-         <triso:semanticLink id="f314bf43-3714-4eaf-9a35-3027e0afecba"
-                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                             name="DecisionTypes - 20190801 - Assessment Decision"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"/>
-         <triso:semanticLink id="_ca7c0654-7eeb-49c0-8596-920918795d3a"
-                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                             name="DecisionTypes - 20190801 - Naturalistic Decision"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"/>
-         <triso:semanticLink id="_0e1db126-d171-494c-9117-4b3ff9bbad13"
-                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                             name="DecisionTypes - 20190801 - Aggregation Decision"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"/>
-      </semantic:extensionElements>
-      <semantic:variable id="_b71b1c75-34f2-4309-aa10-d9bbaee71ae0"
-                         name="Assessment Subdecision"
-                         typeRef="Any"/>
-      <semantic:informationRequirement id="_e450bce7-15ba-4b24-b753-ff368881a7d6">
-         <semantic:requiredInput href="#_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_250e1fbc-5082-4377-9850-fe17c8084ff4">
-         <semantic:requiredInput href="#_d93219a2-8ffc-40c0-81a9-968cfff6396d"/>
-      </semantic:informationRequirement>
-   </semantic:decision>
-   <semantic:inputData id="_458c2a89-3a6c-41b6-a599-136726cb5935"
-                       name="Test Most Recent Observation">
-      <semantic:extensionElements>
-         <triso:semanticLink id="_947cfb5a-80f5-49e1-a52b-330f0236fdb1"
-                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
-                             name="PropositionalConcepts - 20190801 - Most Recent TSH - Value ofin 'PropositionalConcepts - 20190801'"
-                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#f8be45db-22fc-4a17-96ad-6c1b3dfd7ba7"/>
-      </semantic:extensionElements>
-      <semantic:variable id="_04e814c8-ece5-4142-81ea-a5ea2fa28ea1"
-                         name="Test Most Recent Observation"
-                         typeRef="string"/>
-   </semantic:inputData>
-   <semantic:decisionService id="_11e81030-5a26-46ff-898c-835eaa45b946" name="Choice of Management">
-      <semantic:variable id="_211d83d0-7878-4cca-9c8f-442665fa098d"
-                         name="Choice of Management"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
-      <semantic:encapsulatedDecision href="#_24cb5787-cf05-4464-ba64-7f7cb40128e0"/>
-      <semantic:inputData href="#_458c2a89-3a6c-41b6-a599-136726cb5935"/>
-      <semantic:inputData href="#_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82"/>
-      <semantic:inputData href="#_d93219a2-8ffc-40c0-81a9-968cfff6396d"/>
-   </semantic:decisionService>
-   <semantic:inputData id="_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82" name="Test On Medication">
-      <semantic:variable id="_7fc5973b-ae88-426a-bf27-28b5081d253f"
-                         name="Test On Medication"
-                         typeRef="string"/>
-   </semantic:inputData>
-   <semantic:inputData id="_d93219a2-8ffc-40c0-81a9-968cfff6396d" name="Test Has Condition">
-      <semantic:variable id="_06f4cfc4-9350-4acf-b239-285f75de8a90"
-                         name="Test Has Condition"
-                         typeRef="string"/>
-   </semantic:inputData>
-   <semantic:textAnnotation id="_6bb688e4-66fa-4325-91a7-053842afe16a">
-      <semantic:text>top level decision with propositional concept, asset type, and fragment type. Has a decision service
-Has Question and Answers</semantic:text>
-   </semantic:textAnnotation>
-   <semantic:association id="_69ae43ab-a6e2-4ce6-b676-7293baf17a26">
-      <semantic:sourceRef href="#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
-      <semantic:targetRef href="#_6bb688e4-66fa-4325-91a7-053842afe16a"/>
-   </semantic:association>
-   <dmndi:DMNDI>
-      <dmndi:DMNDiagram id="_1fb6d4d9-2a75-47c8-82b2-34040a1c0b21"
-                        name="Page 1"
-                        triso:modelElementRef="_3adae850-05b4-4597-a2e3-ec73901b474c">
-         <di:extension/>
-         <dmndi:Size height="1050" width="1485"/>
-         <dmndi:DMNShape dmnElementRef="_721c22c3-3e27-4065-8f84-9b9ab524fb58"
-                         id="_ffb77e79-f107-4626-bb3f-669cfa8b668a">
-            <dc:Bounds height="60" width="153" x="618.5" y="383"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_24cb5787-cf05-4464-ba64-7f7cb40128e0"
-                         id="_17e05a1d-afcb-4dda-b3ef-584db521b046">
-            <dc:Bounds height="60" width="153" x="531.5" y="506"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_6bb688e4-66fa-4325-91a7-053842afe16a"
-                         id="_525bf0c6-0641-4eb8-95ea-598268612694">
-            <dc:Bounds height="135" width="100" x="893" y="336"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_458c2a89-3a6c-41b6-a599-136726cb5935"
-                         id="_a76ffd95-f390-4c92-b9a9-e8142045a64d">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="712.2588291168213"
-                       y="505.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82"
-                         id="_0b9acd8f-9e8f-4482-b3d6-a03ea0dc7913">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="425.7240982178919"
-                       y="644.6701346680891"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_d93219a2-8ffc-40c0-81a9-968cfff6396d"
-                         id="_94580ca3-f499-4949-bcf1-23dc265c3ab4">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="618.2588291168213"
-                       y="644.6701346680891"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNEdge dmnElementRef="_9d45c026-f8f4-46b8-b199-c664506b82d9"
-                        id="_5e658bfa-5256-4376-91b3-0dca86481208">
-            <di:waypoint x="608" y="506"/>
-            <di:waypoint x="695" y="443"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_ff951092-f35f-41a2-a532-d8e7404ed57d"
-                        id="_44a05a03-a8d6-4962-813b-edfac6d5f29c">
-            <di:waypoint x="779.9968013763428" y="505.99999618530273"/>
-            <di:waypoint x="705" y="443"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_69ae43ab-a6e2-4ce6-b676-7293baf17a26"
-                        id="_6b8ed12b-88de-42c1-bdc7-a1c99a79a8d7">
-            <di:waypoint x="771.5" y="413"/>
-            <di:waypoint x="903" y="388.700559383314"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_e450bce7-15ba-4b24-b753-ff368881a7d6"
-                        id="_b9afda4a-c506-436d-8fa7-52f7f6f5c3a0">
-            <di:waypoint x="493.46207047741336" y="704.6701346680891"/>
-            <di:waypoint x="608" y="506"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_250e1fbc-5082-4377-9850-fe17c8084ff4"
-                        id="_531d6bd5-6811-4069-ad59-739e9df0b849">
-            <di:waypoint x="685.9968013763428" y="704.6701346680891"/>
-            <di:waypoint x="608" y="506"/>
-            <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
-         </dmndi:DMNEdge>
-      </dmndi:DMNDiagram>
-      <dmndi:DMNStyle fontBold="false"
-                      fontFamily="arial,helvetica,sans-serif"
-                      fontItalic="false"
-                      fontSize="11"
-                      fontStrikeThrough="false"
-                      fontUnderline="false"
-                      id="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
-   </dmndi:DMNDI>
+  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+  xmlns="http://www.trisotech.com/definitions/_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
+  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+  xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+  xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
+  exporter="Trisotech DES API Repository Conversion"
+  exporterVersion="6.12.3"
+  id="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
+  name="Decision Subdecision"
+  namespace="http://www.trisotech.com/definitions/_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
+  triso:logoChoice="Default"
+  triso:state="Published"
+  triso:version="1.0.1">
+  <semantic:extensionElements/>
+  <semantic:decisionService id="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_DS"
+    name="Whole Model Decision Service"
+    triso:dynamicDecisionService="true"
+    triso:wholeModelService="true">
+    <semantic:variable id="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_DS_VAR"
+      name="Whole Model Decision Service"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
+    <semantic:encapsulatedDecision href="#_24cb5787-cf05-4464-ba64-7f7cb40128e0"/>
+    <semantic:inputData href="#_458c2a89-3a6c-41b6-a599-136726cb5935"/>
+    <semantic:inputData href="#_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82"/>
+    <semantic:inputData href="#_d93219a2-8ffc-40c0-81a9-968cfff6396d"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_1fb6d4d9-2a75-47c8-82b2-34040a1c0b21_DS"
+    name="Diagram Page 1"
+    triso:dynamicDecisionService="true">
+    <semantic:variable id="_1fb6d4d9-2a75-47c8-82b2-34040a1c0b21_DS_VAR"
+      name="Diagram Page 1"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
+    <semantic:encapsulatedDecision href="#_24cb5787-cf05-4464-ba64-7f7cb40128e0"/>
+    <semantic:inputData href="#_458c2a89-3a6c-41b6-a599-136726cb5935"/>
+    <semantic:inputData href="#_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82"/>
+    <semantic:inputData href="#_d93219a2-8ffc-40c0-81a9-968cfff6396d"/>
+  </semantic:decisionService>
+  <semantic:decision id="_721c22c3-3e27-4065-8f84-9b9ab524fb58"
+    name="Choice of Management of Condition"
+    triso:useOutputTypeAsAnswer="true">
+    <semantic:extensionElements>
+      <triso:semanticLink id="_2a02362c-4be7-4a3f-8ddf-c7cb8e088535"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+        name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
+      <triso:customAttribute id="_f3ce643c-bb7b-4969-9b74-617d33ba64fe"
+        key="knowledgeAssetId"
+        type="string"
+        value="https://clinicalknowledgemanagement.mayo.edu/assets/22c207d7-36e2-4935-a634-5205699ce6d0/versions/0.0.1"/>
+      <triso:semanticLink id="c35226e8-d216-4744-9ae7-0263d098ac18"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        name="DecisionTypes - 20190801 - Choice Decision"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"/>
+      <triso:semanticLink id="_de6f8e81-6099-405d-b56e-bd007f49bcb5"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        name="DecisionTypes - 20190801 - Actionable Decision"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#28d541e1-bd08-3afc-a3f0-3780601576c6"/>
+      <triso:semanticLink id="_71e4977c-a67b-4405-ae72-d1d67a9847a0"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        name="DecisionTypes - 20190801 - Naturalistic Decision"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"/>
+    </semantic:extensionElements>
+    <semantic:question>&lt;p&gt;What treatment should I use for this patient&lt;/p&gt;
+    </semantic:question>
+    <semantic:allowedAnswers>&lt;p&gt;Treatment A&lt;/p&gt;
+      &lt;p&gt;Treatment B&lt;/p&gt;
+      &lt;p&gt;Treatment C&lt;/p&gt;
+    </semantic:allowedAnswers>
+    <semantic:variable id="_40c8a0e2-9372-499d-a57e-163adb802c04"
+      name="Choice of Management of Condition"
+      typeRef="Any"/>
+    <semantic:informationRequirement id="_9d45c026-f8f4-46b8-b199-c664506b82d9">
+      <semantic:requiredDecision href="#_24cb5787-cf05-4464-ba64-7f7cb40128e0"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_ff951092-f35f-41a2-a532-d8e7404ed57d">
+      <semantic:requiredInput href="#_458c2a89-3a6c-41b6-a599-136726cb5935"/>
+    </semantic:informationRequirement>
+  </semantic:decision>
+  <semantic:decision id="_24cb5787-cf05-4464-ba64-7f7cb40128e0"
+    name="Assessment Subdecision">
+    <semantic:extensionElements>
+      <triso:semanticLink id="f314bf43-3714-4eaf-9a35-3027e0afecba"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        name="DecisionTypes - 20190801 - Assessment Decision"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"/>
+      <triso:semanticLink id="_ca7c0654-7eeb-49c0-8596-920918795d3a"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        name="DecisionTypes - 20190801 - Naturalistic Decision"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"/>
+      <triso:semanticLink id="_0e1db126-d171-494c-9117-4b3ff9bbad13"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        name="DecisionTypes - 20190801 - Aggregation Decision"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"/>
+    </semantic:extensionElements>
+    <semantic:variable id="_b71b1c75-34f2-4309-aa10-d9bbaee71ae0"
+      name="Assessment Subdecision"
+      typeRef="Any"/>
+    <semantic:informationRequirement id="_e450bce7-15ba-4b24-b753-ff368881a7d6">
+      <semantic:requiredInput href="#_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_250e1fbc-5082-4377-9850-fe17c8084ff4">
+      <semantic:requiredInput href="#_d93219a2-8ffc-40c0-81a9-968cfff6396d"/>
+    </semantic:informationRequirement>
+  </semantic:decision>
+  <semantic:inputData id="_458c2a89-3a6c-41b6-a599-136726cb5935"
+    name="Test Most Recent Observation">
+    <semantic:extensionElements>
+      <triso:semanticLink id="_947cfb5a-80f5-49e1-a52b-330f0236fdb1"
+        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+        name="PropositionalConcepts - 20190801 - Most Recent TSH - Value ofin 'PropositionalConcepts - 20190801'"
+        uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#f8be45db-22fc-4a17-96ad-6c1b3dfd7ba7"/>
+    </semantic:extensionElements>
+    <semantic:variable id="_04e814c8-ece5-4142-81ea-a5ea2fa28ea1"
+      name="Test Most Recent Observation"
+      typeRef="string"/>
+  </semantic:inputData>
+  <semantic:decisionService id="_11e81030-5a26-46ff-898c-835eaa45b946" name="Choice of Management">
+    <semantic:variable id="_211d83d0-7878-4cca-9c8f-442665fa098d"
+      name="Choice of Management"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
+    <semantic:encapsulatedDecision href="#_24cb5787-cf05-4464-ba64-7f7cb40128e0"/>
+    <semantic:inputData href="#_458c2a89-3a6c-41b6-a599-136726cb5935"/>
+    <semantic:inputData href="#_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82"/>
+    <semantic:inputData href="#_d93219a2-8ffc-40c0-81a9-968cfff6396d"/>
+  </semantic:decisionService>
+  <semantic:inputData id="_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82" name="Test On Medication">
+    <semantic:variable id="_7fc5973b-ae88-426a-bf27-28b5081d253f"
+      name="Test On Medication"
+      typeRef="string"/>
+  </semantic:inputData>
+  <semantic:inputData id="_d93219a2-8ffc-40c0-81a9-968cfff6396d" name="Test Has Condition">
+    <semantic:variable id="_06f4cfc4-9350-4acf-b239-285f75de8a90"
+      name="Test Has Condition"
+      typeRef="string"/>
+  </semantic:inputData>
+  <semantic:textAnnotation id="_6bb688e4-66fa-4325-91a7-053842afe16a">
+    <semantic:text>top level decision with propositional concept, asset type, and fragment type. Has
+      a decision service
+      Has Question and Answers
+    </semantic:text>
+  </semantic:textAnnotation>
+  <semantic:association id="_69ae43ab-a6e2-4ce6-b676-7293baf17a26">
+    <semantic:sourceRef href="#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
+    <semantic:targetRef href="#_6bb688e4-66fa-4325-91a7-053842afe16a"/>
+  </semantic:association>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="_1fb6d4d9-2a75-47c8-82b2-34040a1c0b21"
+      name="Page 1"
+      triso:modelElementRef="_3adae850-05b4-4597-a2e3-ec73901b474c">
+      <di:extension/>
+      <dmndi:Size height="1050" width="1485"/>
+      <dmndi:DMNShape dmnElementRef="_721c22c3-3e27-4065-8f84-9b9ab524fb58"
+        id="_ffb77e79-f107-4626-bb3f-669cfa8b668a">
+        <dc:Bounds height="60" width="153" x="618.5" y="383"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_24cb5787-cf05-4464-ba64-7f7cb40128e0"
+        id="_17e05a1d-afcb-4dda-b3ef-584db521b046">
+        <dc:Bounds height="60" width="153" x="531.5" y="506"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_6bb688e4-66fa-4325-91a7-053842afe16a"
+        id="_525bf0c6-0641-4eb8-95ea-598268612694">
+        <dc:Bounds height="135" width="100" x="893" y="336"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_458c2a89-3a6c-41b6-a599-136726cb5935"
+        id="_a76ffd95-f390-4c92-b9a9-e8142045a64d">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="712.2588291168213"
+          y="505.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82"
+        id="_0b9acd8f-9e8f-4482-b3d6-a03ea0dc7913">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="425.7240982178919"
+          y="644.6701346680891"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_d93219a2-8ffc-40c0-81a9-968cfff6396d"
+        id="_94580ca3-f499-4949-bcf1-23dc265c3ab4">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="618.2588291168213"
+          y="644.6701346680891"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge dmnElementRef="_9d45c026-f8f4-46b8-b199-c664506b82d9"
+        id="_5e658bfa-5256-4376-91b3-0dca86481208">
+        <di:waypoint x="608" y="506"/>
+        <di:waypoint x="695" y="443"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_ff951092-f35f-41a2-a532-d8e7404ed57d"
+        id="_44a05a03-a8d6-4962-813b-edfac6d5f29c">
+        <di:waypoint x="779.9968013763428" y="505.99999618530273"/>
+        <di:waypoint x="705" y="443"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_69ae43ab-a6e2-4ce6-b676-7293baf17a26"
+        id="_6b8ed12b-88de-42c1-bdc7-a1c99a79a8d7">
+        <di:waypoint x="771.5" y="413"/>
+        <di:waypoint x="903" y="388.700559383314"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_e450bce7-15ba-4b24-b753-ff368881a7d6"
+        id="_b9afda4a-c506-436d-8fa7-52f7f6f5c3a0">
+        <di:waypoint x="493.46207047741336" y="704.6701346680891"/>
+        <di:waypoint x="608" y="506"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_250e1fbc-5082-4377-9850-fe17c8084ff4"
+        id="_531d6bd5-6811-4069-ad59-739e9df0b849">
+        <di:waypoint x="685.9968013763428" y="704.6701346680891"/>
+        <di:waypoint x="608" y="506"/>
+        <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+    <dmndi:DMNStyle fontBold="false"
+      fontFamily="arial,helvetica,sans-serif"
+      fontItalic="false"
+      fontSize="11"
+      fontStrikeThrough="false"
+      fontUnderline="false"
+      id="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
+  </dmndi:DMNDI>
 </semantic:definitions>

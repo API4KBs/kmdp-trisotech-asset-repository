@@ -1,12 +1,12 @@
 {
-  "id" : "a0240977-f789-4922-90c8-e6468e59f5c2",
-  "sku" : "a0240977-f789-4922-90c8-e6468e59f5c2",
-  "name" : "Basic Case Model",
-  "path" : "/jls test models",
-  "mimetype" : "application/cmmn-1-1+xml",
-  "updated" : "2020-09-02T19:48:55Z",
-  "updater" : "Sottara, Davide",
-  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&id=a0240977-f789-4922-90c8-e6468e59f5c2&mimetype=application%2Fcmmn-1-1%2Bxml&sku=a0240977-f789-4922-90c8-e6468e59f5c2&version=2020-09-02T19%3A48%3A55Z",
-  "version" : "1.8.1",
-  "state" : "Published"
+  "id": "a0240977-f789-4922-90c8-e6468e59f5c2",
+  "sku": "a0240977-f789-4922-90c8-e6468e59f5c2",
+  "name": "Basic Case Model",
+  "path": "/jls test models",
+  "mimetype": "application/cmmn-1-1+xml",
+  "updated": "2020-09-29T16:56:01Z",
+  "updater": "Sottara, Davide",
+  "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2Fjls%20test%20models&sku=a0240977-f789-4922-90c8-e6468e59f5c2&mimetype=application%2Fcmmn-1-1%2Bxml",
+  "version": "1.8.1",
+  "state": "Published"
 }

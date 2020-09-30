@@ -1,17 +1,15 @@
 package edu.mayo.kmdp.initResources;
 
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 
 import edu.mayo.kmdp.TrisotechAssetRepositoryConfig;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import java.io.File;
-import java.util.Collections;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -39,12 +37,6 @@ public class DownloadCardiologyAssetsTest extends AbstractAssetDownloader {
   @Autowired
   TrisotechWrapper wrapper;
 
-  File tgtFolder = new File(
-      "C:\\Users\\M123110\\Projects\\MEA"
-          + "\\kmdp-trisotech-asset-repository-service"
-          + "\\kmdp-trisotech-asset-repository-service-core"
-          + "\\src\\test\\resources"
-          + "\\Shared Cardiology Decisions");
 
   @Test
   @Disabled
@@ -52,11 +44,12 @@ public class DownloadCardiologyAssetsTest extends AbstractAssetDownloader {
     assertNotNull(assetRepository);
 
     assetRepository.listKnowledgeAssets()
-        .ifPresent(l -> l.forEach(assetPtr -> saveArtifacts(assetPtr,tgtFolder)));
+        .forEach(Pointer.class, assetPtr -> saveArtifacts(assetPtr,getTgtFolder()));
   }
 
   @Override
   protected File getTgtFolder() {
-    return tgtFolder;
+    return new File(getParent(), "Shared Cardiology Decisions");
   }
+
 }

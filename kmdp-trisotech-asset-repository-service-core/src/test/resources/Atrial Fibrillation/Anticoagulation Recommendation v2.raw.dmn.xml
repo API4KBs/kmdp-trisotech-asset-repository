@@ -1,508 +1,519 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
-                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
-                      xmlns="http://www.trisotech.com/definitions/_9c25e3ea-8fef-455b-ad14-c35be6e268f9"
-                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
-                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
-                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
-                      xmlns:drools="http://www.drools.org/kie/dmn/1.1"
-                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
-                      xmlns:include1="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6"
-                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
-                      xmlns:rss="http://purl.org/rss/2.0/"
-                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
-                      xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
-                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="6.12.3"
-                      id="_9c25e3ea-8fef-455b-ad14-c35be6e268f9"
-                      name="Anticoagulation Recommendation v2"
-                      namespace="http://www.trisotech.com/definitions/_9c25e3ea-8fef-455b-ad14-c35be6e268f9"
-                      triso:logoChoice="Default"
-                      triso:state="Draft"
-                      triso:version="1.1.1">
-   <semantic:extensionElements>
-      <rss:rss xmlns:trisofeed="http://trisotech.com/feed" version="2.0">
-         <rss:channel>
-            <rss:item>
-               <rss:category>comment</rss:category>
-               <trisofeed:authorDisplayName>Shellum, Jane L., M.H.A.</trisofeed:authorDisplayName>
-               <rss:author>shellum.jane@mayo.edu</rss:author>
-               <trisofeed:authorImage>https://secure.gravatar.com/avatar/45204106202afee28ade214fa1a2d005?s=32&amp;d=mm</trisofeed:authorImage>
-               <rss:description>&lt;rss:img src="https://secure.gravatar.com/avatar/45204106202afee28ade214fa1a2d005?s=32&amp;d=mm"/&gt;Version updated to reflect additional recommendations for "consider" vs "recommend" and to include left atrial appendage closure device</rss:description>
-               <trisofeed:message>Version updated to reflect additional recommendations for "consider" vs "recommend" and to include left atrial appendage closure device</trisofeed:message>
-               <rss:pubDate>Thu, 23 Apr 2020 15:45:25 -0500</rss:pubDate>
-               <rss:guid>fe47b239-04b9-d1a8-ab66-526168219feb</rss:guid>
-               <trisofeed:bpmElement>_21a54906-b2cc-40cd-b291-1add1bd0adc8</trisofeed:bpmElement>
-            </rss:item>
-         </rss:channel>
-      </rss:rss>
-   </semantic:extensionElements>
-   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
-                    name="cs"
-                    namespace="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6"
-                    triso:fileId="eyJmIjp7InBhdGgiOiIvIiwic2t1IjoiMDA0NzU3NDYtNjUzNi00MGE1LWEzODktNWFiZmY5ZmYxZmRhIiwibmFtZSI6ImNzIn0sInIiOnsiYXBpa2V5IjoiMjkyMDAzZjY5ODQwZTcxMiJ9fQ=="
-                    triso:fileName="MEA/cs"/>
-   <semantic:itemDefinition isCollection="false" label="tSex" name="tSex">
-      <semantic:typeRef>string</semantic:typeRef>
-      <semantic:allowedValues triso:constraintsType="enumeration">
-         <semantic:text>"M","F"</semantic:text>
-      </semantic:allowedValues>
-   </semantic:itemDefinition>
-   <semantic:itemDefinition isCollection="false"
-                            label="tAnticoagulationPlan"
-                            name="tAnticoagulationPlan">
-      <semantic:typeRef>ttAnticoagulationPlan</semantic:typeRef>
-   </semantic:itemDefinition>
-   <semantic:itemDefinition isCollection="false"
-                            label="ttAnticoagulationPlan"
-                            name="ttAnticoagulationPlan">
-      <semantic:typeRef>number</semantic:typeRef>
-      <semantic:allowedValues triso:constraintsType="enumeration">
-         <semantic:text>0,1,2</semantic:text>
-      </semantic:allowedValues>
-   </semantic:itemDefinition>
-   <semantic:itemDefinition label="recommendation" name="recommendation">
-      <semantic:typeRef>trecommendation</semantic:typeRef>
-   </semantic:itemDefinition>
-   <semantic:itemDefinition isCollection="false" label="trecommendation" name="trecommendation">
-      <semantic:typeRef>string</semantic:typeRef>
-      <semantic:allowedValues triso:constraintsType="enumeration">
-         <semantic:text>"A","B","C","D"</semantic:text>
-      </semantic:allowedValues>
-   </semantic:itemDefinition>
-   <semantic:decisionService id="_9c25e3ea-8fef-455b-ad14-c35be6e268f9_DS"
-                             name="Whole Model Decision Service"
-                             triso:dynamicDecisionService="true"
-                             triso:wholeModelService="true">
-      <semantic:variable id="_9c25e3ea-8fef-455b-ad14-c35be6e268f9_DS_VAR"
-                         name="Whole Model Decision Service"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_21a54906-b2cc-40cd-b291-1add1bd0adc8"/>
-      <semantic:encapsulatedDecision href="#_f4f61c6c-93c7-4904-a1d4-93bb2a0c925d"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_d87c0acc-a6e0-4b88-b09e-05a07307c41d_DS"
-                             name="Diagram Page 1"
-                             triso:dynamicDecisionService="true">
-      <semantic:variable id="_d87c0acc-a6e0-4b88-b09e-05a07307c41d_DS_VAR"
-                         name="Diagram Page 1"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_21a54906-b2cc-40cd-b291-1add1bd0adc8"/>
-      <semantic:encapsulatedDecision href="#_f4f61c6c-93c7-4904-a1d4-93bb2a0c925d"/>
-   </semantic:decisionService>
-   <semantic:decision id="_f4f61c6c-93c7-4904-a1d4-93bb2a0c925d"
-                      name="Anticoagulation Indicated">
-      <semantic:extensionElements>
-         <triso:semanticLink id="_52f6b5ba-a041-4314-8acf-f00914a103b2"
-                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                             name="DecisionTypes - 20190801 - Computable Decision"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a"/>
-      </semantic:extensionElements>
-      <semantic:variable id="_47ba58c3-0a72-436d-ab1f-ea26ddd7722e"
-                         name="Anticoagulation Indicated"
-                         typeRef="tAnticoagulationPlan"/>
-      <semantic:informationRequirement id="_20836f2a-ec02-473d-92d2-9b903014213d">
-         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_0b39382d-d8bc-3266-a7e8-c3b734d7291f"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_6c747598-398f-45c8-b1f9-e7e1c90a1903">
-         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_0f88b050-5ec3-321c-9918-98f6b8533e9d"/>
-      </semantic:informationRequirement>
-      <semantic:decisionTable hitPolicy="UNIQUE"
-                              id="_8b3974b2-6ddf-4a97-bb54-945e98e1c83c"
-                              outputLabel="Anticoagulation Indicated"
-                              triso:expressionId="_b405775d-5e88-486a-bd49-345512fbae05"
-                              typeRef="tAnticoagulationPlan">
-         <semantic:input id="_8fa8fc4f-200a-408d-b902-c166c6f868f2"
-                         label="cs.Current CHA2DS2-VASc Score">
-            <semantic:inputExpression typeRef="number">
-               <semantic:text>cs.Current CHA2DS2-VASc Score</semantic:text>
-            </semantic:inputExpression>
-         </semantic:input>
-         <semantic:input id="_e0eba94b-0aa6-4b46-a3ea-3fa3ff484e24"
-                         label="cs.Sex"
-                         triso:allowNull="true">
-            <semantic:inputExpression typeRef="Any">
-               <semantic:text>cs.Sex</semantic:text>
-            </semantic:inputExpression>
-         </semantic:input>
-         <semantic:output id="_e6a13545-3abb-452e-bee9-49d9e318ca5a" triso:allowNull="true"/>
-         <semantic:annotation name="Description"/>
-         <semantic:rule id="_b165f466-e1d1-4d38-a45b-56dbc48d6bee">
-            <semantic:inputEntry id="_2d99cb8b-8a98-43e9-a670-941103d2093c">
-               <semantic:text>&lt;=1</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_b552cf63-aa04-455c-8808-8f4312002750">
-               <semantic:text>"F"</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_21cdfeaa-59eb-41ba-a5cf-006378cbff5f">
-               <semantic:text>0</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>none</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-         <semantic:rule id="_bce3f5c1-b316-4e6d-b84a-918414c350ef">
-            <semantic:inputEntry id="_61170d9c-4205-446d-ad98-eede33750e1f">
-               <semantic:text>&lt;1</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_fd30f666-75c0-4e07-90d7-7a9fe73e1f04">
-               <semantic:text>"M"</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_f54449df-b690-43e2-bf36-41ebd6f9a59a">
-               <semantic:text>0</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>none</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-         <semantic:rule id="_c3419c79-5614-4d6d-9268-fc346f0a02f9">
-            <semantic:inputEntry id="_cc4c1108-1853-45b7-94b2-1ec486e67742">
-               <semantic:text>=2</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_929c97ef-abc0-465e-9af7-cfe9a7a231f4">
-               <semantic:text>"F"</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_d28397aa-99c8-4514-8b91-90ae335729cc">
-               <semantic:text>1</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>consider</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-         <semantic:rule id="_5dedc283-9871-4f62-80e8-8892775c0b57">
-            <semantic:inputEntry id="_b3f89da3-5b03-4efd-b7f0-0f3257c01524">
-               <semantic:text>=1</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_0226ce52-e952-4e8d-8d9b-e260052ec2b6">
-               <semantic:text>"M"</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_7738a891-9464-415f-8d98-87c68cbe9c05">
-               <semantic:text>1</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>consider</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-         <semantic:rule id="_9d9a6a6a-9d22-40dd-886a-c0cd643deb5b">
-            <semantic:inputEntry id="_1b265b37-6d9e-4c2c-917b-7ec65457c1e1">
-               <semantic:text>&gt;=3</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_5a75bcf5-b652-46fa-a011-36c5a521f4b2">
-               <semantic:text>"F"</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_e4f789cb-b2f8-4319-98bb-402cd2eadc2a">
-               <semantic:text>2</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>recommend</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-         <semantic:rule id="_9f3d43b2-84e6-4795-a70a-3c7d2e0bc697">
-            <semantic:inputEntry id="_05a4ea8c-735c-46d8-9d83-799536e18f48">
-               <semantic:text>&gt;=2</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_6b9b40a1-993a-4081-8b4d-443dacc06d76">
-               <semantic:text>"M"</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_5ea7760e-1a20-449e-800b-6b83da4fddc2">
-               <semantic:text>2</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>recommend</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-      </semantic:decisionTable>
-   </semantic:decision>
-   <semantic:decision id="_21a54906-b2cc-40cd-b291-1add1bd0adc8"
-                      name="Anticoagulation Recommendation">
-      <semantic:extensionElements>
-         <triso:semanticLink id="_ea29797a-c18b-4f76-bf73-060e9603a778"
-                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-                             name="DecisionTypes - 20190801 - Computable Decision"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a"/>
-         <triso:customAttribute id="_1667ce29-2bba-4b5c-9d2a-15b9cce6a215"
-                                key="knowledgeAssetId"
-                                type="string"
-                                value="https://clinicalknowledgemanagement.mayo.edu/assets/0b011b9a-d801-4a05-a8ae-aa350e230e2a/versions/3.0.0"/>
-      </semantic:extensionElements>
-      <semantic:variable id="_13fd4dde-cbb1-4962-bf0d-d95f537e4298"
-                         name="Anticoagulation Recommendation"
-                         typeRef="recommendation"/>
-      <semantic:informationRequirement id="_1299d0e4-3484-4b9d-810e-8d43e0a33492">
-         <semantic:requiredDecision href="#_f4f61c6c-93c7-4904-a1d4-93bb2a0c925d"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_414d0b10-dd59-4b57-81f8-bee330c6ccb5">
-         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_d3e86fdb-c0d9-3cb3-b057-d165ebb4dce2"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_8ac2da39-3f55-4d15-89f9-521208ad92e2">
-         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_4fac7efd-92bb-3836-9083-77855be68dc3"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_7e36c40d-74d1-4828-8342-cd7533b7e77b">
-         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_0f88b050-5ec3-321c-9918-98f6b8533e9d"/>
-      </semantic:informationRequirement>
-      <semantic:decisionTable hitPolicy="UNIQUE"
-                              id="_92aff20a-3713-430f-8f35-55147dc27a8b"
-                              outputLabel="Anticoagulation Recommendation"
-                              triso:expressionId="_f5ea7c48-9f3f-4a95-9454-432ff760d49a"
-                              typeRef="recommendation">
-         <semantic:input id="_2491107c-ca54-4233-b69f-7707bcab017f"
-                         label="Anticoagulation Indicated"
-                         triso:allowNull="true">
-            <semantic:inputExpression typeRef="tAnticoagulationPlan">
-               <semantic:text>Anticoagulation Indicated</semantic:text>
-            </semantic:inputExpression>
-         </semantic:input>
-         <semantic:input id="_aa01a6c8-4a06-4f35-8cd6-0b16661eb07b"
-                         label="cs.On Anticoagulant - Is">
-            <semantic:inputExpression typeRef="boolean">
-               <semantic:text>cs.On Anticoagulant - Is</semantic:text>
-            </semantic:inputExpression>
-         </semantic:input>
-         <semantic:input id="_592d12b2-1ce7-43d1-8b23-2d7fb8ed2f45"
-                         label="cs.Prior Left Atrial Appendage Closure Device"
-                         triso:allowNull="true">
-            <semantic:inputExpression typeRef="string">
-               <semantic:text>cs.Prior Left Atrial Appendage Closure Device</semantic:text>
-            </semantic:inputExpression>
-         </semantic:input>
-         <semantic:input id="_65da22c4-f80b-427c-b71c-99159009dcdf"
-                         label="cs.Sex"
-                         triso:allowNull="true">
-            <semantic:inputExpression typeRef="tSex">
-               <semantic:text>cs.Sex</semantic:text>
-            </semantic:inputExpression>
-            <semantic:inputValues triso:constraintsType="enumeration">
-               <semantic:text>"M","F",null</semantic:text>
-            </semantic:inputValues>
-         </semantic:input>
-         <semantic:output id="_55b44335-e1d5-4987-b71d-cf01a14c9057" triso:allowNull="true"/>
-         <semantic:annotation name="Description"/>
-         <semantic:rule id="_43b65162-e7ca-4b17-a9f6-4ab3d2fac185">
-            <semantic:inputEntry id="_f4d2f522-7864-46e2-a83a-ddfbd759385f">
-               <semantic:text>1</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_aa4807f3-acbb-4dd8-9268-643751572678">
-               <semantic:text>false</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_ee418744-2918-4d26-811e-d84b3b8fa60c">
-               <semantic:text>null</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_c4e27dce-a060-49bb-9f8a-71bf4512163a">
-               <semantic:text>"F"</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_7f423a44-4bd0-400b-bd7c-c318554dd071">
-               <semantic:text> "SEC-20485772"</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>consider anticoagulation due to chads = 2</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-         <semantic:rule id="_7417c4ed-432b-4104-bfd5-8cc337518a88">
-            <semantic:inputEntry id="_a2751170-7a31-4936-a373-dd802669f055">
-               <semantic:text>1</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_484f25d6-b402-4315-9ba3-77e5860973d8">
-               <semantic:text>false</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_7c365e30-3b21-4bc2-870a-7e5d07d343ad">
-               <semantic:text>null</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_80215136-ba4e-421c-8415-33fd6afb8c67">
-               <semantic:text>"M"</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_793f2ce5-67c0-447f-8c08-b8bf38402fe5">
-               <semantic:text>"SEC-20485771"</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>consider anticoagulation due to chads = 1</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-         <semantic:rule id="_720cba71-b901-4f29-adb6-78f30b101016">
-            <semantic:inputEntry id="_9fcf2708-699e-42e8-901d-b9e03ed1f951">
-               <semantic:text>2</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_594e6f86-30bc-4890-899c-75c815a85415">
-               <semantic:text>false</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_0c026310-2aa9-4fd2-90ac-81cc8e0e68a2">
-               <semantic:text>null</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_e24a93fe-3e33-4e79-a58e-abdae1b5e038">
-               <semantic:text>"F"</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_d834734c-edc6-47c6-ad23-fc0feb0300c9">
-               <semantic:text>"SEC-20485770"</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>recommend due to chads &gt;=3</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-         <semantic:rule id="_08306eb3-05b8-46b3-88a0-96347cdfdc8f">
-            <semantic:inputEntry id="_27f5d58b-b4b9-43ee-858c-ce035888c2b9">
-               <semantic:text>2</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_7f721b40-a4c3-42ea-b4ef-39c6717cf944">
-               <semantic:text>false</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_0b372cf6-df01-45be-99ef-dbbf2dd41d4e">
-               <semantic:text>null</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_d21fd676-95c9-4eef-877c-968b1eba2c14">
-               <semantic:text>"M"</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_cc027ef0-fb30-440d-8a2b-da12fc49fa6e">
-               <semantic:text>"SEC-20485768"</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>recommend anticoagulation due to chads &gt;=2</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-         <semantic:rule id="_34a33f71-3abe-4f4e-9508-c9813a51e0d4">
-            <semantic:inputEntry id="_21142c07-acae-4153-ab17-0fe16615ca75">
-               <semantic:text>-</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_85f7afca-79df-46c9-a238-8cae21e22824">
-               <semantic:text>true</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_dcb7208a-c058-4e66-8bf8-c697775c3cdf">
-               <semantic:text>-</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_89558857-d28e-43fa-bbde-4b67164a810e">
-               <semantic:text>-</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_4dab6b70-7395-49ae-bff5-7761e7fc83cd">
-               <semantic:text>""</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>""</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-         <semantic:rule id="_34cc4f86-6f0d-4efe-aa7f-315f475988a9">
-            <semantic:inputEntry id="_35dea1bf-8e59-40a6-960f-b9ffdfe616a4">
-               <semantic:text>-</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_998335b7-f0ab-45c9-ab32-1edda9c583bd">
-               <semantic:text>-</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_ece0dee4-fe17-470a-a2c3-b66c54821191">
-               <semantic:text>not(null)</semantic:text>
-            </semantic:inputEntry>
-            <semantic:inputEntry id="_fa08a3c1-75c3-404f-b432-e1fcbe856f72">
-               <semantic:text>-</semantic:text>
-            </semantic:inputEntry>
-            <semantic:outputEntry id="_97acd1dc-9493-4f82-aea9-4276083be874">
-               <semantic:text>""</semantic:text>
-            </semantic:outputEntry>
-            <semantic:annotationEntry>
-               <semantic:text>""</semantic:text>
-            </semantic:annotationEntry>
-         </semantic:rule>
-      </semantic:decisionTable>
-   </semantic:decision>
-   <dmndi:DMNDI>
-      <dmndi:DMNDiagram id="_d87c0acc-a6e0-4b88-b09e-05a07307c41d"
-                        name="Page 1"
-                        triso:modelElementRef="_6a7f19f1-cd88-4d81-bc49-f8e70c873843">
-         <di:extension/>
-         <dmndi:Size height="1050" width="1847"/>
-         <dmndi:DMNShape dmnElementRef="_f4f61c6c-93c7-4904-a1d4-93bb2a0c925d"
-                         id="_08a52499-cc2d-4228-a183-69920204c9ef">
-            <dc:Bounds height="60"
-                       width="153"
-                       x="846.7411708831787"
-                       y="156.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="include1:_0b39382d-d8bc-3266-a7e8-c3b734d7291f"
-                         id="_f2705af4-e22c-4a23-b087-a1337636519a">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="995.5"
-                       y="279.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="include1:_0f88b050-5ec3-321c-9918-98f6b8533e9d"
-                         id="_ddcb1c61-2216-4bfa-b21c-2db96176c015">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="727.2588291168213"
-                       y="279.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_21a54906-b2cc-40cd-b291-1add1bd0adc8"
-                         id="_1baf0b97-ba91-4fde-a4db-5b5d2fd75347">
-            <dc:Bounds height="60"
-                       width="153"
-                       x="846.7411708831787"
-                       y="19.999996185302734"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="include1:_d3e86fdb-c0d9-3cb3-b057-d165ebb4dce2"
-                         id="_28b9a71f-d834-4230-ae75-faba9a44c8d1">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="638.2588291168213"
-                       y="19.999996185302734"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="include1:_4fac7efd-92bb-3836-9083-77855be68dc3"
-                         id="_71b6e713-a367-4d07-8ca6-126e1633ca56">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="1069.7411708831787"
-                       y="19.999996185302734"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
-                            trisodmn:defaultBounds="true"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNEdge dmnElementRef="_20836f2a-ec02-473d-92d2-9b903014213d"
-                        id="_7d6be43b-e44b-47ff-84bf-1cedf62e3344">
-            <di:waypoint x="1063.2379722595215" y="339.99999618530273"/>
-            <di:waypoint x="943.2411708831787" y="216.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_6c747598-398f-45c8-b1f9-e7e1c90a1903"
-                        id="_3af4fe44-de60-4656-ac3d-ef90da6bbdce">
-            <di:waypoint x="834.9968013763428" y="279.99999618530273"/>
-            <di:waypoint x="903.2411708831787" y="216.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_1299d0e4-3484-4b9d-810e-8d43e0a33492"
-                        id="_36c94fac-0ea6-4260-a7d3-7e03e31a50a6">
-            <di:waypoint x="923.2411708831787" y="156.99999618530273"/>
-            <di:waypoint x="923.2411708831787" y="79.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_414d0b10-dd59-4b57-81f8-bee330c6ccb5"
-                        id="_13e3275a-e17c-40f0-9ccd-d33172f01e8c">
-            <di:waypoint x="638.4968013763428" y="49.999996185302734"/>
-            <di:waypoint x="999.7411708831787" y="49.999996185302734"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_8ac2da39-3f55-4d15-89f9-521208ad92e2"
-                        id="_8d847f15-1818-4f6a-ac40-e1e66f8796eb">
-            <di:waypoint x="1069.9791431427002" y="49.999996185302734"/>
-            <di:waypoint x="999.7411708831787" y="49.999996185302734"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
-         </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_7e36c40d-74d1-4828-8342-cd7533b7e77b"
-                        id="_e01a43f3-aaec-4b95-9bb3-4427a93f9135">
-            <di:waypoint x="784.9968013763428" y="279.99999618530273"/>
-            <di:waypoint x="863.2411708831787" y="79.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
-         </dmndi:DMNEdge>
-      </dmndi:DMNDiagram>
-      <dmndi:DMNStyle fontBold="false"
-                      fontFamily="arial,helvetica,sans-serif"
-                      fontItalic="false"
-                      fontSize="11"
-                      fontStrikeThrough="false"
-                      fontUnderline="false"
-                      id="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
-   </dmndi:DMNDI>
+  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+  xmlns="http://www.trisotech.com/definitions/_9c25e3ea-8fef-455b-ad14-c35be6e268f9"
+  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+  xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+  xmlns:include1="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6"
+  xmlns:rss="http://purl.org/rss/2.0/"
+  xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
+  exporter="Trisotech DES API Repository Conversion"
+  exporterVersion="6.12.3"
+  id="_9c25e3ea-8fef-455b-ad14-c35be6e268f9"
+  name="Anticoagulation Recommendation v2"
+  namespace="http://www.trisotech.com/definitions/_9c25e3ea-8fef-455b-ad14-c35be6e268f9"
+  triso:logoChoice="Default"
+  triso:state="Published"
+  triso:version="1.1.1">
+  <semantic:extensionElements>
+    <rss:rss xmlns:trisofeed="http://trisotech.com/feed" version="2.0">
+      <rss:channel>
+        <rss:item>
+          <rss:category>comment</rss:category>
+          <trisofeed:authorDisplayName>Shellum, Jane L., M.H.A.</trisofeed:authorDisplayName>
+          <rss:author>shellum.jane@mayo.edu</rss:author>
+          <trisofeed:authorImage>
+            https://secure.gravatar.com/avatar/45204106202afee28ade214fa1a2d005?s=32&amp;d=mm
+          </trisofeed:authorImage>
+          <rss:description>&lt;rss:img
+            src="https://secure.gravatar.com/avatar/45204106202afee28ade214fa1a2d005?s=32&amp;d=mm"/&gt;Version
+            updated to reflect additional recommendations for "consider" vs "recommend" and to
+            include left atrial appendage closure device
+          </rss:description>
+          <trisofeed:message>Version updated to reflect additional recommendations for "consider" vs
+            "recommend" and to include left atrial appendage closure device
+          </trisofeed:message>
+          <rss:pubDate>Thu, 23 Apr 2020 15:45:25 -0500</rss:pubDate>
+          <rss:guid>fe47b239-04b9-d1a8-ab66-526168219feb</rss:guid>
+          <trisofeed:bpmElement>_21a54906-b2cc-40cd-b291-1add1bd0adc8</trisofeed:bpmElement>
+        </rss:item>
+      </rss:channel>
+    </rss:rss>
+  </semantic:extensionElements>
+  <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+    name="cs"
+    namespace="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6"
+    triso:fileId="eyJmIjp7InBhdGgiOiIvIiwic2t1IjoiMDA0NzU3NDYtNjUzNi00MGE1LWEzODktNWFiZmY5ZmYxZmRhIiwibmFtZSI6ImNzIn0sInIiOnsiYXBpa2V5IjoiMjkyMDAzZjY5ODQwZTcxMiJ9fQ=="
+    triso:fileName="MEA/cs"/>
+  <semantic:itemDefinition isCollection="false" label="tSex" name="tSex">
+    <semantic:typeRef>string</semantic:typeRef>
+    <semantic:allowedValues triso:constraintsType="enumeration">
+      <semantic:text>"M","F"</semantic:text>
+    </semantic:allowedValues>
+  </semantic:itemDefinition>
+  <semantic:itemDefinition isCollection="false"
+    label="tAnticoagulationPlan"
+    name="tAnticoagulationPlan">
+    <semantic:typeRef>ttAnticoagulationPlan</semantic:typeRef>
+  </semantic:itemDefinition>
+  <semantic:itemDefinition isCollection="false"
+    label="ttAnticoagulationPlan"
+    name="ttAnticoagulationPlan">
+    <semantic:typeRef>number</semantic:typeRef>
+    <semantic:allowedValues triso:constraintsType="enumeration">
+      <semantic:text>0,1,2</semantic:text>
+    </semantic:allowedValues>
+  </semantic:itemDefinition>
+  <semantic:itemDefinition label="recommendation" name="recommendation">
+    <semantic:typeRef>trecommendation</semantic:typeRef>
+  </semantic:itemDefinition>
+  <semantic:itemDefinition isCollection="false" label="trecommendation" name="trecommendation">
+    <semantic:typeRef>string</semantic:typeRef>
+    <semantic:allowedValues triso:constraintsType="enumeration">
+      <semantic:text>"A","B","C","D"</semantic:text>
+    </semantic:allowedValues>
+  </semantic:itemDefinition>
+  <semantic:decisionService id="_9c25e3ea-8fef-455b-ad14-c35be6e268f9_DS"
+    name="Whole Model Decision Service"
+    triso:dynamicDecisionService="true"
+    triso:wholeModelService="true">
+    <semantic:variable id="_9c25e3ea-8fef-455b-ad14-c35be6e268f9_DS_VAR"
+      name="Whole Model Decision Service"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_21a54906-b2cc-40cd-b291-1add1bd0adc8"/>
+    <semantic:encapsulatedDecision href="#_f4f61c6c-93c7-4904-a1d4-93bb2a0c925d"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_d87c0acc-a6e0-4b88-b09e-05a07307c41d_DS"
+    name="Diagram Page 1"
+    triso:dynamicDecisionService="true">
+    <semantic:variable id="_d87c0acc-a6e0-4b88-b09e-05a07307c41d_DS_VAR"
+      name="Diagram Page 1"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_21a54906-b2cc-40cd-b291-1add1bd0adc8"/>
+    <semantic:encapsulatedDecision href="#_f4f61c6c-93c7-4904-a1d4-93bb2a0c925d"/>
+  </semantic:decisionService>
+  <semantic:decision id="_f4f61c6c-93c7-4904-a1d4-93bb2a0c925d"
+    name="Anticoagulation Indicated">
+    <semantic:extensionElements>
+      <triso:semanticLink id="_52f6b5ba-a041-4314-8acf-f00914a103b2"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        name="DecisionTypes - 20190801 - Computable Decision"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a"/>
+      <triso:semanticLink id="_01049f4b-6fac-4836-a6a8-8227bed64480"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        name="DecisionTypes - 20190801 - Implicit Decision"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#e0dbe4d9-79b5-390c-91a9-bcc756d68b18"/>
+    </semantic:extensionElements>
+    <semantic:variable id="_47ba58c3-0a72-436d-ab1f-ea26ddd7722e"
+      name="Anticoagulation Indicated"
+      typeRef="tAnticoagulationPlan"/>
+    <semantic:informationRequirement id="_20836f2a-ec02-473d-92d2-9b903014213d">
+      <semantic:requiredInput
+        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_0b39382d-d8bc-3266-a7e8-c3b734d7291f"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_6c747598-398f-45c8-b1f9-e7e1c90a1903">
+      <semantic:requiredInput
+        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_0f88b050-5ec3-321c-9918-98f6b8533e9d"/>
+    </semantic:informationRequirement>
+    <semantic:decisionTable hitPolicy="UNIQUE"
+      id="_8b3974b2-6ddf-4a97-bb54-945e98e1c83c"
+      outputLabel="Anticoagulation Indicated"
+      triso:expressionId="_b405775d-5e88-486a-bd49-345512fbae05"
+      typeRef="tAnticoagulationPlan">
+      <semantic:input id="_8fa8fc4f-200a-408d-b902-c166c6f868f2"
+        label="cs.Current CHA2DS2-VASc Score">
+        <semantic:inputExpression typeRef="number">
+          <semantic:text>cs.Current CHA2DS2-VASc Score</semantic:text>
+        </semantic:inputExpression>
+      </semantic:input>
+      <semantic:input id="_e0eba94b-0aa6-4b46-a3ea-3fa3ff484e24"
+        label="cs.Sex"
+        triso:allowNull="true">
+        <semantic:inputExpression typeRef="Any">
+          <semantic:text>cs.Sex</semantic:text>
+        </semantic:inputExpression>
+      </semantic:input>
+      <semantic:output id="_e6a13545-3abb-452e-bee9-49d9e318ca5a" triso:allowNull="true"/>
+      <semantic:annotation name="Description"/>
+      <semantic:rule id="_b165f466-e1d1-4d38-a45b-56dbc48d6bee">
+        <semantic:inputEntry id="_2d99cb8b-8a98-43e9-a670-941103d2093c">
+          <semantic:text>&lt;=1</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_b552cf63-aa04-455c-8808-8f4312002750">
+          <semantic:text>"F"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_21cdfeaa-59eb-41ba-a5cf-006378cbff5f">
+          <semantic:text>0</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>none</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_bce3f5c1-b316-4e6d-b84a-918414c350ef">
+        <semantic:inputEntry id="_61170d9c-4205-446d-ad98-eede33750e1f">
+          <semantic:text>&lt;1</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_fd30f666-75c0-4e07-90d7-7a9fe73e1f04">
+          <semantic:text>"M"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_f54449df-b690-43e2-bf36-41ebd6f9a59a">
+          <semantic:text>0</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>none</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_c3419c79-5614-4d6d-9268-fc346f0a02f9">
+        <semantic:inputEntry id="_cc4c1108-1853-45b7-94b2-1ec486e67742">
+          <semantic:text>=2</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_929c97ef-abc0-465e-9af7-cfe9a7a231f4">
+          <semantic:text>"F"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_d28397aa-99c8-4514-8b91-90ae335729cc">
+          <semantic:text>1</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>consider</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_5dedc283-9871-4f62-80e8-8892775c0b57">
+        <semantic:inputEntry id="_b3f89da3-5b03-4efd-b7f0-0f3257c01524">
+          <semantic:text>=1</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_0226ce52-e952-4e8d-8d9b-e260052ec2b6">
+          <semantic:text>"M"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_7738a891-9464-415f-8d98-87c68cbe9c05">
+          <semantic:text>1</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>consider</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_9d9a6a6a-9d22-40dd-886a-c0cd643deb5b">
+        <semantic:inputEntry id="_1b265b37-6d9e-4c2c-917b-7ec65457c1e1">
+          <semantic:text>&gt;=3</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_5a75bcf5-b652-46fa-a011-36c5a521f4b2">
+          <semantic:text>"F"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_e4f789cb-b2f8-4319-98bb-402cd2eadc2a">
+          <semantic:text>2</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>recommend</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_9f3d43b2-84e6-4795-a70a-3c7d2e0bc697">
+        <semantic:inputEntry id="_05a4ea8c-735c-46d8-9d83-799536e18f48">
+          <semantic:text>&gt;=2</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_6b9b40a1-993a-4081-8b4d-443dacc06d76">
+          <semantic:text>"M"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_5ea7760e-1a20-449e-800b-6b83da4fddc2">
+          <semantic:text>2</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>recommend</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+    </semantic:decisionTable>
+  </semantic:decision>
+  <semantic:decision id="_21a54906-b2cc-40cd-b291-1add1bd0adc8"
+    name="Anticoagulation Recommendation">
+    <semantic:extensionElements>
+      <triso:semanticLink id="_ea29797a-c18b-4f76-bf73-060e9603a778"
+        modelURI="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
+        name="DecisionTypes - 20190801 - Computable Decision"
+        uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a"/>
+      <triso:customAttribute id="_1667ce29-2bba-4b5c-9d2a-15b9cce6a215"
+        key="knowledgeAssetId"
+        type="string"
+        value="https://clinicalknowledgemanagement.mayo.edu/assets/0b011b9a-d801-4a05-a8ae-aa350e230e2a/versions/3.0.0"/>
+    </semantic:extensionElements>
+    <semantic:variable id="_13fd4dde-cbb1-4962-bf0d-d95f537e4298"
+      name="Anticoagulation Recommendation"
+      typeRef="recommendation"/>
+    <semantic:informationRequirement id="_1299d0e4-3484-4b9d-810e-8d43e0a33492">
+      <semantic:requiredDecision href="#_f4f61c6c-93c7-4904-a1d4-93bb2a0c925d"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_414d0b10-dd59-4b57-81f8-bee330c6ccb5">
+      <semantic:requiredInput
+        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_d3e86fdb-c0d9-3cb3-b057-d165ebb4dce2"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_8ac2da39-3f55-4d15-89f9-521208ad92e2">
+      <semantic:requiredInput
+        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_4fac7efd-92bb-3836-9083-77855be68dc3"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_7e36c40d-74d1-4828-8342-cd7533b7e77b">
+      <semantic:requiredInput
+        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_0f88b050-5ec3-321c-9918-98f6b8533e9d"/>
+    </semantic:informationRequirement>
+    <semantic:decisionTable hitPolicy="UNIQUE"
+      id="_92aff20a-3713-430f-8f35-55147dc27a8b"
+      outputLabel="Anticoagulation Recommendation"
+      triso:expressionId="_f5ea7c48-9f3f-4a95-9454-432ff760d49a"
+      typeRef="recommendation">
+      <semantic:input id="_2491107c-ca54-4233-b69f-7707bcab017f"
+        label="Anticoagulation Indicated"
+        triso:allowNull="true">
+        <semantic:inputExpression typeRef="tAnticoagulationPlan">
+          <semantic:text>Anticoagulation Indicated</semantic:text>
+        </semantic:inputExpression>
+      </semantic:input>
+      <semantic:input id="_aa01a6c8-4a06-4f35-8cd6-0b16661eb07b"
+        label="cs.On Anticoagulant - Is">
+        <semantic:inputExpression typeRef="boolean">
+          <semantic:text>cs.On Anticoagulant - Is</semantic:text>
+        </semantic:inputExpression>
+      </semantic:input>
+      <semantic:input id="_592d12b2-1ce7-43d1-8b23-2d7fb8ed2f45"
+        label="cs.Prior Left Atrial Appendage Closure Device"
+        triso:allowNull="true">
+        <semantic:inputExpression typeRef="string">
+          <semantic:text>cs.Prior Left Atrial Appendage Closure Device</semantic:text>
+        </semantic:inputExpression>
+      </semantic:input>
+      <semantic:input id="_65da22c4-f80b-427c-b71c-99159009dcdf"
+        label="cs.Sex"
+        triso:allowNull="true">
+        <semantic:inputExpression typeRef="tSex">
+          <semantic:text>cs.Sex</semantic:text>
+        </semantic:inputExpression>
+        <semantic:inputValues triso:constraintsType="enumeration">
+          <semantic:text>"M","F",null</semantic:text>
+        </semantic:inputValues>
+      </semantic:input>
+      <semantic:output id="_55b44335-e1d5-4987-b71d-cf01a14c9057" triso:allowNull="true"/>
+      <semantic:annotation name="Description"/>
+      <semantic:rule id="_43b65162-e7ca-4b17-a9f6-4ab3d2fac185">
+        <semantic:inputEntry id="_f4d2f522-7864-46e2-a83a-ddfbd759385f">
+          <semantic:text>1</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_aa4807f3-acbb-4dd8-9268-643751572678">
+          <semantic:text>false</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_ee418744-2918-4d26-811e-d84b3b8fa60c">
+          <semantic:text>null</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_c4e27dce-a060-49bb-9f8a-71bf4512163a">
+          <semantic:text>"F"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_7f423a44-4bd0-400b-bd7c-c318554dd071">
+          <semantic:text>"SEC-20485772"</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>consider anticoagulation due to chads = 2</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_7417c4ed-432b-4104-bfd5-8cc337518a88">
+        <semantic:inputEntry id="_a2751170-7a31-4936-a373-dd802669f055">
+          <semantic:text>1</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_484f25d6-b402-4315-9ba3-77e5860973d8">
+          <semantic:text>false</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_7c365e30-3b21-4bc2-870a-7e5d07d343ad">
+          <semantic:text>null</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_80215136-ba4e-421c-8415-33fd6afb8c67">
+          <semantic:text>"M"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_793f2ce5-67c0-447f-8c08-b8bf38402fe5">
+          <semantic:text>"SEC-20485771"</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>consider anticoagulation due to chads = 1</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_720cba71-b901-4f29-adb6-78f30b101016">
+        <semantic:inputEntry id="_9fcf2708-699e-42e8-901d-b9e03ed1f951">
+          <semantic:text>2</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_594e6f86-30bc-4890-899c-75c815a85415">
+          <semantic:text>false</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_0c026310-2aa9-4fd2-90ac-81cc8e0e68a2">
+          <semantic:text>null</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_e24a93fe-3e33-4e79-a58e-abdae1b5e038">
+          <semantic:text>"F"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_d834734c-edc6-47c6-ad23-fc0feb0300c9">
+          <semantic:text>"SEC-20485770"</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>recommend due to chads &gt;=3</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_08306eb3-05b8-46b3-88a0-96347cdfdc8f">
+        <semantic:inputEntry id="_27f5d58b-b4b9-43ee-858c-ce035888c2b9">
+          <semantic:text>2</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_7f721b40-a4c3-42ea-b4ef-39c6717cf944">
+          <semantic:text>false</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_0b372cf6-df01-45be-99ef-dbbf2dd41d4e">
+          <semantic:text>null</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_d21fd676-95c9-4eef-877c-968b1eba2c14">
+          <semantic:text>"M"</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_cc027ef0-fb30-440d-8a2b-da12fc49fa6e">
+          <semantic:text>"SEC-20485768"</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>recommend anticoagulation due to chads &gt;=2</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_34a33f71-3abe-4f4e-9508-c9813a51e0d4">
+        <semantic:inputEntry id="_21142c07-acae-4153-ab17-0fe16615ca75">
+          <semantic:text>-</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_85f7afca-79df-46c9-a238-8cae21e22824">
+          <semantic:text>true</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_dcb7208a-c058-4e66-8bf8-c697775c3cdf">
+          <semantic:text>-</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_89558857-d28e-43fa-bbde-4b67164a810e">
+          <semantic:text>-</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_4dab6b70-7395-49ae-bff5-7761e7fc83cd">
+          <semantic:text>""</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>""</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+      <semantic:rule id="_34cc4f86-6f0d-4efe-aa7f-315f475988a9">
+        <semantic:inputEntry id="_35dea1bf-8e59-40a6-960f-b9ffdfe616a4">
+          <semantic:text>-</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_998335b7-f0ab-45c9-ab32-1edda9c583bd">
+          <semantic:text>-</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_ece0dee4-fe17-470a-a2c3-b66c54821191">
+          <semantic:text>not(null)</semantic:text>
+        </semantic:inputEntry>
+        <semantic:inputEntry id="_fa08a3c1-75c3-404f-b432-e1fcbe856f72">
+          <semantic:text>-</semantic:text>
+        </semantic:inputEntry>
+        <semantic:outputEntry id="_97acd1dc-9493-4f82-aea9-4276083be874">
+          <semantic:text>""</semantic:text>
+        </semantic:outputEntry>
+        <semantic:annotationEntry>
+          <semantic:text>""</semantic:text>
+        </semantic:annotationEntry>
+      </semantic:rule>
+    </semantic:decisionTable>
+  </semantic:decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="_d87c0acc-a6e0-4b88-b09e-05a07307c41d"
+      name="Page 1"
+      triso:modelElementRef="_6a7f19f1-cd88-4d81-bc49-f8e70c873843">
+      <di:extension/>
+      <dmndi:Size height="1050" width="1847"/>
+      <dmndi:DMNShape dmnElementRef="_f4f61c6c-93c7-4904-a1d4-93bb2a0c925d"
+        id="_08a52499-cc2d-4228-a183-69920204c9ef">
+        <dc:Bounds height="60"
+          width="153"
+          x="846.7411708831787"
+          y="156.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include1:_0b39382d-d8bc-3266-a7e8-c3b734d7291f"
+        id="_f2705af4-e22c-4a23-b087-a1337636519a">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="995.5"
+          y="279.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include1:_0f88b050-5ec3-321c-9918-98f6b8533e9d"
+        id="_ddcb1c61-2216-4bfa-b21c-2db96176c015">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="727.2588291168213"
+          y="279.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_21a54906-b2cc-40cd-b291-1add1bd0adc8"
+        id="_1baf0b97-ba91-4fde-a4db-5b5d2fd75347">
+        <dc:Bounds height="60"
+          width="153"
+          x="846.7411708831787"
+          y="19.999996185302734"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include1:_d3e86fdb-c0d9-3cb3-b057-d165ebb4dce2"
+        id="_28b9a71f-d834-4230-ae75-faba9a44c8d1">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="638.2588291168213"
+          y="19.999996185302734"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include1:_4fac7efd-92bb-3836-9083-77855be68dc3"
+        id="_71b6e713-a367-4d07-8ca6-126e1633ca56">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="1069.7411708831787"
+          y="19.999996185302734"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"
+          trisodmn:defaultBounds="true"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge dmnElementRef="_20836f2a-ec02-473d-92d2-9b903014213d"
+        id="_7d6be43b-e44b-47ff-84bf-1cedf62e3344">
+        <di:waypoint x="1063.2379722595215" y="339.99999618530273"/>
+        <di:waypoint x="943.2411708831787" y="216.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_6c747598-398f-45c8-b1f9-e7e1c90a1903"
+        id="_3af4fe44-de60-4656-ac3d-ef90da6bbdce">
+        <di:waypoint x="834.9968013763428" y="279.99999618530273"/>
+        <di:waypoint x="903.2411708831787" y="216.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_1299d0e4-3484-4b9d-810e-8d43e0a33492"
+        id="_36c94fac-0ea6-4260-a7d3-7e03e31a50a6">
+        <di:waypoint x="923.2411708831787" y="156.99999618530273"/>
+        <di:waypoint x="923.2411708831787" y="79.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_414d0b10-dd59-4b57-81f8-bee330c6ccb5"
+        id="_13e3275a-e17c-40f0-9ccd-d33172f01e8c">
+        <di:waypoint x="638.4968013763428" y="49.999996185302734"/>
+        <di:waypoint x="999.7411708831787" y="49.999996185302734"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_8ac2da39-3f55-4d15-89f9-521208ad92e2"
+        id="_8d847f15-1818-4f6a-ac40-e1e66f8796eb">
+        <di:waypoint x="1069.9791431427002" y="49.999996185302734"/>
+        <di:waypoint x="999.7411708831787" y="49.999996185302734"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_7e36c40d-74d1-4828-8342-cd7533b7e77b"
+        id="_e01a43f3-aaec-4b95-9bb3-4427a93f9135">
+        <di:waypoint x="784.9968013763428" y="279.99999618530273"/>
+        <di:waypoint x="863.2411708831787" y="79.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+    <dmndi:DMNStyle fontBold="false"
+      fontFamily="arial,helvetica,sans-serif"
+      fontItalic="false"
+      fontSize="11"
+      fontStrikeThrough="false"
+      fontUnderline="false"
+      id="LS_9c25e3ea-8fef-455b-ad14-c35be6e268f9_0"/>
+  </dmndi:DMNDI>
 </semantic:definitions>

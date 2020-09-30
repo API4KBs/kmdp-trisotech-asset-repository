@@ -1,12 +1,12 @@
 {
-  "id" : "ffa53262-4d36-4656-890b-4e48ed1cb9c3",
-  "sku" : "ffa53262-4d36-4656-890b-4e48ed1cb9c3",
-  "name" : "Weaver Test 2",
-  "path" : "/",
-  "mimetype" : "application/dmn-1-2+xml",
-  "updated" : "2020-04-16T20:30:44Z",
-  "updater" : "Orcutt, Cheryl A.",
-  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&id=ffa53262-4d36-4656-890b-4e48ed1cb9c3&mimetype=application%2Fdmn-1-2%2Bxml&sku=ffa53262-4d36-4656-890b-4e48ed1cb9c3&version=2020-04-16T20%3A30%3A44Z",
-  "version" : "0.6.0",
-  "state" : "Draft"
+  "id": "ffa53262-4d36-4656-890b-4e48ed1cb9c3",
+  "sku": "ffa53262-4d36-4656-890b-4e48ed1cb9c3",
+  "name": "Weaver Test 2",
+  "path": "/",
+  "mimetype": "application/dmn-1-2+xml",
+  "updated": "2020-09-03T06:44:00Z",
+  "updater": "Sottara, Davide",
+  "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2F&sku=ffa53262-4d36-4656-890b-4e48ed1cb9c3&mimetype=application%2Fdmn-1-2%2Bxml",
+  "version": "0.6.0",
+  "state": "Published"
 }

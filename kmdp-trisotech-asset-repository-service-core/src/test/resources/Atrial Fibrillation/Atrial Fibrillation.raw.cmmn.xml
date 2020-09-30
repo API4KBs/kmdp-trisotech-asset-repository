@@ -1,588 +1,606 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"
-                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
-                      xmlns="http://www.trisotech.com/definitions/_b6a0b05b-25d3-4c93-9ba2-9a5037f4189b"
-                      xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
-                      xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"
-                      xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
-                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
-                      xmlns:ns1="http://www.trisotech.com/definitions/_958d9f9c-c84d-4d41-ba98-cda111980202"
-                      xmlns:ns2="http://www.trisotech.com/definitions/_3b265cd2-431c-4beb-9a18-f7e644d897b2"
-                      xmlns:ns3="http://www.trisotech.com/definitions/_593f49ec-4e1d-44f0-b599-e480a7f885be"
-                      xmlns:ns4="http://www.trisotech.com/definitions/_3220be16-3bc6-4d42-a7d4-13367caedeab"
-                      xmlns:ns5="http://www.trisotech.com/definitions/_4bf42879-7c31-4d3a-bc06-c8308126a82a"
-                      xmlns:ns6="http://www.trisotech.com/definitions/_d439d9e7-633a-4135-be78-4655f0a63aff"
-                      xmlns:ns7="http://www.trisotech.com/definitions/_d192392c-8290-4a58-bf41-ead298054b68"
-                      xmlns:rss="http://purl.org/rss/2.0/"
-                      xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
-                      exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="6.12.3"
-                      expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
-                      id="_b6a0b05b-25d3-4c93-9ba2-9a5037f4189b"
-                      name="Atrial Fibrillation"
-                      targetNamespace="http://www.trisotech.com/definitions/_b6a0b05b-25d3-4c93-9ba2-9a5037f4189b"
-                      triso:logoChoice="Default"
-                      triso:state="Draft"
-                      triso:version="1.0.0">
-   <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument"
-                                    id="_9e595f8e-5117-4e44-b9c0-9da7ae2badb0"
-                                    name="A Fib CPM"
-                                    structureRef="assets:_b3c2ab06-9170-4f30-b712-c0507022dcf6"/>
-   <semantic:case id="Case_46197703-a435-4ece-a8c4-d92347d39836" name="Page 1">
-      <semantic:casePlanModel id="_46197703-a435-4ece-a8c4-d92347d39836" name="Page 1">
-         <semantic:extensionElements>
-            <triso:semanticLink id="_28b29ef1-b334-46c1-8ad9-ea158809373d"
-                                modelURI="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType#"
-                                name="KnowledgeAssetType_Scheme - Cognitive Process Model"
-                                uri="http://terms.kmdp.mayo.edu/KAO/KnowledgeAssetType#682f2a3c7c7e41fbe98c494b58e75c59"/>
-         </semantic:extensionElements>
-      </semantic:casePlanModel>
-   </semantic:case>
-   <semantic:case id="Case_b5d92090-a634-4041-8a66-dfae811cf904"
-                  name="Atrial Fibrillation">
-      <semantic:caseFileModel>
-         <semantic:caseFileItem definitionRef="_9e595f8e-5117-4e44-b9c0-9da7ae2badb0"
-                                id="_0e12bd07-0e37-40e4-9dc1-b14d82a399f6"
-                                name="A Fib CPM">
-            <semantic:extensionElements>
-               <triso:attachment id="_149cb686-4812-465a-ac20-1473a819dc7d"
-                                 name="cpm-20129434"
-                                 play="true"
-                                 type="link"
-                                 url="https://askmayoexpert.mayoclinic.org/topic/clinical-answers/cnt-20133064/cpm-20129434"/>
-               <triso:customAttribute id="_ebe3bed1-6a3b-4d80-a645-ee4a96ec7ca9"
-                                      key="cpm-20129434"
-                                      type="string"
-                                      value="https://askmayoexpert.mayoclinic.org/topic/clinical-answers/cnt-20133064/cpm-20129434"/>
-            </semantic:extensionElements>
-         </semantic:caseFileItem>
-      </semantic:caseFileModel>
-      <semantic:casePlanModel id="_b5d92090-a634-4041-8a66-dfae811cf904" name="Atrial Fibrillation">
-         <semantic:extensionElements>
-            <triso:semanticLink id="ea64c725-3c56-4160-9a47-23f868910d5f"
-                                modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
-                                name="KnowledgeAssetTypes - 20190801 - Cognitive Process Modelin 'KnowledgeAssetTypes - 20190801'"
-                                uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#e12dcd92-f8de-3115-b8ca-4480cfc44d77"/>
-            <triso:customAttribute id="_c398f1b1-14ff-480a-96f1-40afca0b61d4"
-                                   key="knowledgeAssetId"
-                                   type="string"
-                                   value="https://clinicalknowledgemanagement.mayo.edu/assets/cd3df18a-404c-4a0f-8ab2-c022f807442c/versions/1.0.0"/>
-         </semantic:extensionElements>
-         <semantic:planItem definitionRef="PID__f0ba6d34-f0bd-4a34-a4fb-8dc8ae3b4c13"
-                            id="_f0ba6d34-f0bd-4a34-a4fb-8dc8ae3b4c13">
-            <semantic:exitCriterion id="_f4a755f5-826d-46ea-83bd-eda0bc68475d"
-                                    sentryRef="_e26e7697-cb17-45ea-8fde-1ddf99f29699"/>
-         </semantic:planItem>
-         <semantic:planItem definitionRef="PID__dc6b44cf-3f34-46c3-b521-7378c9fd9aa0"
-                            id="_dc6b44cf-3f34-46c3-b521-7378c9fd9aa0">
-            <semantic:entryCriterion id="_404cdf78-a2bf-4ac9-9334-87a2ec7a9707"
-                                     sentryRef="_bcd8a75c-0624-4f99-9f15-17df0f1bcc53"/>
-         </semantic:planItem>
-         <semantic:sentry id="_bf2b6944-fe01-4e9f-b9d0-e61148222a40">
-            <semantic:planItemOnPart id="_263f0550-ba1c-4427-ae1a-b1e0ad85748a"
-                                     sourceRef="_5a55f5f3-a232-4fee-be33-539b406753e0"/>
-            <semantic:planItemOnPart id="_aef355d6-b818-4252-b7f4-c1f38ac5ccd0"
-                                     sourceRef="_b3cd6ba8-5571-4e8b-b8f3-de5bd6d9b203">
-               <semantic:standardEvent>complete</semantic:standardEvent>
-            </semantic:planItemOnPart>
-         </semantic:sentry>
-         <semantic:sentry id="_b3cd6ba8-5571-4e8b-b8f3-de5bd6d9b203">
-            <semantic:planItemOnPart id="_aef355d6-b818-4252-b7f4-c1f38ac5ccd0"
-                                     sourceRef="_bf2b6944-fe01-4e9f-b9d0-e61148222a40">
-               <semantic:standardEvent>complete</semantic:standardEvent>
-            </semantic:planItemOnPart>
-         </semantic:sentry>
-         <semantic:sentry id="_5a55f5f3-a232-4fee-be33-539b406753e0">
-            <semantic:planItemOnPart id="_263f0550-ba1c-4427-ae1a-b1e0ad85748a"
-                                     sourceRef="_bf2b6944-fe01-4e9f-b9d0-e61148222a40"/>
-         </semantic:sentry>
-         <semantic:sentry id="_e26e7697-cb17-45ea-8fde-1ddf99f29699">
-            <semantic:planItemOnPart id="_b3d28232-e25b-4ad5-8878-bd9d314b46f2"
-                                     sourceRef="_bcd8a75c-0624-4f99-9f15-17df0f1bcc53"/>
-         </semantic:sentry>
-         <semantic:sentry id="_bcd8a75c-0624-4f99-9f15-17df0f1bcc53">
-            <semantic:planItemOnPart id="_b3d28232-e25b-4ad5-8878-bd9d314b46f2"
-                                     sourceRef="_e26e7697-cb17-45ea-8fde-1ddf99f29699"/>
-         </semantic:sentry>
-         <semantic:stage id="PID__f0ba6d34-f0bd-4a34-a4fb-8dc8ae3b4c13">
-            <semantic:planItem definitionRef="PID__6e771d20-5a6c-485a-8f02-f4c278639a65"
-                               id="_6e771d20-5a6c-485a-8f02-f4c278639a65"/>
-            <semantic:planItem definitionRef="PID__85d237de-f171-4ced-bfd6-04fe94348a37"
-                               id="_85d237de-f171-4ced-bfd6-04fe94348a37"/>
-            <semantic:planItem definitionRef="PID__76a8751b-40a4-4ebe-9781-990055537347"
-                               id="_76a8751b-40a4-4ebe-9781-990055537347"/>
-            <semantic:decisionTask decisionRef="_dccae600d80daf1723ddbc21a29b2433"
-                                   id="PID__6e771d20-5a6c-485a-8f02-f4c278639a65"
-                                   name="Review History Pertinent to Atrial Fibrillation">
-               <semantic:extensionElements>
-                  <triso:interrelationship elementId="_db28c827-8878-418c-87c2-fba3da7046f2"
-                                           fileId="eyJmIjp7InNrdSI6ImJhYWExMzA4LTk4OGUtNGFjZC05YjE0LWY5NTUyOTYyMmEwNyIsIm5hbWUiOiJIaXN0b3J5IFBlcnRpbmVudCB0byBBdHJpYWwgRmlicmlsbGF0aW9uIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifSwiciI6eyJhcGlrZXkiOiIyOTIwMDNmNjk4NDBlNzEyIn19"
-                                           mimeType="application/vnd.triso-dmn+json"
-                                           modelId="_d192392c-8290-4a58-bf41-ead298054b68"
-                                           name="History Pertinent to Atrial Fibrillation"
-                                           uri="http://www.trisotech.com/definitions/_d192392c-8290-4a58-bf41-ead298054b68#_db28c827-8878-418c-87c2-fba3da7046f2"/>
-               </semantic:extensionElements>
-               <semantic:defaultControl>
-                  <semantic:manualActivationRule/>
-               </semantic:defaultControl>
-            </semantic:decisionTask>
-            <semantic:decisionTask decisionRef="_94922c4c7bcccf45f00cb65ff4a1cef0"
-                                   id="PID__85d237de-f171-4ced-bfd6-04fe94348a37"
-                                   name="Review Prior Management of Atrial Fibrillation">
-               <semantic:extensionElements>
-                  <triso:interrelationship elementId="_4179a536-e75c-417d-9de3-a202ed88c8bf"
-                                           fileId="eyJmIjp7InNrdSI6IjlkZmE4NGQ3LWYzMDItNGJiZC04NDE4LTRhZDgyOWI0YWY5MSIsIm5hbWUiOiJQcmlvciBNYW5hZ2VtZW50IG9mIEF0cmlhbCBGaWJyaWxsYXRpb24iLCJtaW1ldHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC50cmlzby1kbW4ranNvbiJ9LCJyIjp7ImFwaWtleSI6IjI5MjAwM2Y2OTg0MGU3MTIifX0="
-                                           mimeType="application/vnd.triso-dmn+json"
-                                           modelId="_593f49ec-4e1d-44f0-b599-e480a7f885be"
-                                           name="Prior Management of Atrial Fibrillation"
-                                           uri="http://www.trisotech.com/definitions/_593f49ec-4e1d-44f0-b599-e480a7f885be#_4179a536-e75c-417d-9de3-a202ed88c8bf"/>
-               </semantic:extensionElements>
-               <semantic:defaultControl>
-                  <semantic:manualActivationRule/>
-               </semantic:defaultControl>
-            </semantic:decisionTask>
-            <semantic:decisionTask decisionRef="_6c71ade79d75e8ff01d9b535a4d4ab4e"
-                                   id="PID__76a8751b-40a4-4ebe-9781-990055537347"
-                                   name="Review Status of Atrial Fibrillation">
-               <semantic:extensionElements>
-                  <triso:interrelationship elementId="_69332638-43d8-442f-bd40-634ad54c3158"
-                                           fileId="eyJmIjp7InNrdSI6ImM0ZmJiZjBmLWYzZTktNDkzOC1iMGJmLTc0OTdkYjViODRmNiIsIm5hbWUiOiJDdXJyZW50IFN0YXR1cyBvZiBBdHJpYWwgRmlicmlsbGF0aW9uIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifSwiciI6eyJhcGlrZXkiOiIyOTIwMDNmNjk4NDBlNzEyIn19"
-                                           mimeType="application/vnd.triso-dmn+json"
-                                           modelId="_d439d9e7-633a-4135-be78-4655f0a63aff"
-                                           name="Current Status of Atrial Fibrillation"
-                                           uri="http://www.trisotech.com/definitions/_d439d9e7-633a-4135-be78-4655f0a63aff#_69332638-43d8-442f-bd40-634ad54c3158"/>
-               </semantic:extensionElements>
-               <semantic:defaultControl>
-                  <semantic:manualActivationRule/>
-               </semantic:defaultControl>
-            </semantic:decisionTask>
-         </semantic:stage>
-         <semantic:stage id="PID__dc6b44cf-3f34-46c3-b521-7378c9fd9aa0">
-            <semantic:planItem definitionRef="PID__1b79fd17-06e1-4bc8-bb03-0da371e1eb01"
-                               id="_1b79fd17-06e1-4bc8-bb03-0da371e1eb01">
-               <semantic:exitCriterion id="_87bc8088-0c51-4969-88f0-f012a5695dc3"
-                                       sentryRef="_bf2b6944-fe01-4e9f-b9d0-e61148222a40"/>
-            </semantic:planItem>
-            <semantic:planItem definitionRef="PID__295233f4-8bb5-4e59-a87c-43724818ec8a"
-                               id="_295233f4-8bb5-4e59-a87c-43724818ec8a">
-               <semantic:entryCriterion id="_a69111d5-5fb5-4567-90e0-a67d322ca1ce"
-                                        sentryRef="_b3cd6ba8-5571-4e8b-b8f3-de5bd6d9b203"/>
-            </semantic:planItem>
-            <semantic:planItem definitionRef="PID__e4e3a14c-c9b6-41ca-bbb3-abc006c44fd8"
-                               id="_e4e3a14c-c9b6-41ca-bbb3-abc006c44fd8">
-               <semantic:entryCriterion id="_245b6386-3816-428c-8606-b3a4791303d4"
-                                        sentryRef="_5a55f5f3-a232-4fee-be33-539b406753e0"/>
-            </semantic:planItem>
-            <semantic:planItem definitionRef="PID__764ac62a-0afc-4943-9067-38d00fd71aed"
-                               id="_764ac62a-0afc-4943-9067-38d00fd71aed"/>
-            <semantic:decisionTask decisionRef="_dc003b579e05bc072e36f7059879de22"
-                                   id="PID__1b79fd17-06e1-4bc8-bb03-0da371e1eb01"
-                                   isBlocking="false"
-                                   name="Treat Atrial Fibrillation">
-               <semantic:extensionElements>
-                  <triso:interrelationship elementId="_6f3689d4-df52-437a-8d70-b65b83c1972e"
-                                           fileId="eyJmIjp7InNrdSI6Ijc1ZmUxNDE5LWM1NTUtNGQyMS1hMzM1LWVhNWRhMTc4MTFlMyIsIm5hbWUiOiJDaG9pY2Ugb2YgQXRyaWFsIEZpYnJpbGxhdGlvbiBUcmVhdG1lbnQgU3RyYXRlZ3kiLCJtaW1ldHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC50cmlzby1kbW4ranNvbiJ9fQ=="
-                                           mimeType="application/vnd.triso-dmn+json"
-                                           modelId="_958d9f9c-c84d-4d41-ba98-cda111980202"
-                                           name="Choice of Atrial Fibrillation Treatment Strategy"
-                                           uri="http://www.trisotech.com/definitions/_958d9f9c-c84d-4d41-ba98-cda111980202#_6f3689d4-df52-437a-8d70-b65b83c1972e"/>
-               </semantic:extensionElements>
-            </semantic:decisionTask>
-            <semantic:decisionTask decisionRef="_35bcc337a941577e9cd5ed8100feb5d8"
-                                   id="PID__295233f4-8bb5-4e59-a87c-43724818ec8a"
-                                   name="Treat Abnormal Heart Rate">
-               <semantic:extensionElements>
-                  <triso:interrelationship elementId="_05c5d60c-cb29-4b00-ae99-bb39c8cce514"
-                                           fileId="eyJmIjp7InNrdSI6IjU3NjllNzYzLTg0MjktNGQ5YS04ZTBhLTljZTc5OGQ4ODIxMCIsIm5hbWUiOiJDaG9pY2Ugb2YgVHJlYXRtZW50IG9mIEFibm9ybWFsIEhlYXJ0IFJhdGUiLCJtaW1ldHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC50cmlzby1kbW4ranNvbiJ9fQ=="
-                                           mimeType="application/vnd.triso-dmn+json"
-                                           modelId="_3220be16-3bc6-4d42-a7d4-13367caedeab"
-                                           name="Choice of Treatment of Abnormal Heart Rate"
-                                           uri="http://www.trisotech.com/definitions/_3220be16-3bc6-4d42-a7d4-13367caedeab#_05c5d60c-cb29-4b00-ae99-bb39c8cce514"/>
-               </semantic:extensionElements>
-            </semantic:decisionTask>
-            <semantic:decisionTask decisionRef="_9d61675cb3df4b6c7461a9f7626f8c1b"
-                                   id="PID__e4e3a14c-c9b6-41ca-bbb3-abc006c44fd8"
-                                   name="Treat Abnormal Heart Rhythm">
-               <semantic:extensionElements>
-                  <triso:interrelationship elementId="_3df278f2-b688-42c2-b5f7-d5ebf8ecefd6"
-                                           fileId="eyJmIjp7InNrdSI6ImRhNzExN2IyLTZlOGYtNGMxYS1hMTQwLTg4ZGMxZmRhMmQzNSIsIm5hbWUiOiJDaG9pY2Ugb2YgVHJlYXRtZW50IG9mIEFibm9ybWFsIEhlYXJ0IFJoeXRobSIsIm1pbWV0eXBlIjoiYXBwbGljYXRpb24vdm5kLnRyaXNvLWRtbitqc29uIn19"
-                                           mimeType="application/vnd.triso-dmn+json"
-                                           modelId="_4bf42879-7c31-4d3a-bc06-c8308126a82a"
-                                           name="Choice of Treatment of Abnormal Heart Rhythm"
-                                           uri="http://www.trisotech.com/definitions/_4bf42879-7c31-4d3a-bc06-c8308126a82a#_3df278f2-b688-42c2-b5f7-d5ebf8ecefd6"/>
-               </semantic:extensionElements>
-            </semantic:decisionTask>
-            <semantic:decisionTask decisionRef="_378b854986cc8806f2df447a255c2624"
-                                   id="PID__764ac62a-0afc-4943-9067-38d00fd71aed"
-                                   name="Prevent Stroke">
-               <semantic:extensionElements>
-                  <triso:interrelationship elementId="_f2fcd947-6770-42a6-a78b-8fe45450404e"
-                                           fileId="eyJmIjp7InNrdSI6ImMxMDE2YjhiLTE2MTYtNDAzMy05MjUzLTk2NjU2YjFiNDdjYyIsIm5hbWUiOiJDaG9pY2Ugb2YgTG9uZy1UZXJtIE1hbmFnZW1lbnQgb2YgQ29hZ3VsYXRpb24gU3RhdHVzIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifX0="
-                                           mimeType="application/vnd.triso-dmn+json"
-                                           modelId="_3b265cd2-431c-4beb-9a18-f7e644d897b2"
-                                           name="Choice of Long-term Management of Anticoagulation Status"
-                                           uri="http://www.trisotech.com/definitions/_3b265cd2-431c-4beb-9a18-f7e644d897b2#_f2fcd947-6770-42a6-a78b-8fe45450404e"/>
-               </semantic:extensionElements>
-            </semantic:decisionTask>
-         </semantic:stage>
-      </semantic:casePlanModel>
-   </semantic:case>
-   <semantic:decision externalRef="ns2:_f2fcd947-6770-42a6-a78b-8fe45450404e"
-                      id="_378b854986cc8806f2df447a255c2624"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Choice of Long-term Management of Anticoagulation Status"
-                      triso:modelId="_3b265cd2-431c-4beb-9a18-f7e644d897b2"/>
-   <semantic:decision externalRef="ns4:_05c5d60c-cb29-4b00-ae99-bb39c8cce514"
-                      id="_35bcc337a941577e9cd5ed8100feb5d8"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Choice of Treatment of Abnormal Heart Rate"
-                      triso:modelId="_3220be16-3bc6-4d42-a7d4-13367caedeab"/>
-   <semantic:decision externalRef="ns5:_3df278f2-b688-42c2-b5f7-d5ebf8ecefd6"
-                      id="_9d61675cb3df4b6c7461a9f7626f8c1b"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Choice of Treatment of Abnormal Heart Rhythm"
-                      triso:modelId="_4bf42879-7c31-4d3a-bc06-c8308126a82a"/>
-   <semantic:decision externalRef="ns1:_6f3689d4-df52-437a-8d70-b65b83c1972e"
-                      id="_dc003b579e05bc072e36f7059879de22"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Choice of Atrial Fibrillation Treatment Strategy"
-                      triso:modelId="_958d9f9c-c84d-4d41-ba98-cda111980202"/>
-   <semantic:decision externalRef="ns3:_4179a536-e75c-417d-9de3-a202ed88c8bf"
-                      id="_94922c4c7bcccf45f00cb65ff4a1cef0"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Prior Management of Atrial Fibrillation"
-                      triso:modelId="_593f49ec-4e1d-44f0-b599-e480a7f885be"/>
-   <semantic:decision externalRef="ns7:_db28c827-8878-418c-87c2-fba3da7046f2"
-                      id="_dccae600d80daf1723ddbc21a29b2433"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="History Pertinent to Atrial Fibrillation"
-                      triso:modelId="_d192392c-8290-4a58-bf41-ead298054b68"/>
-   <semantic:decision externalRef="ns6:_69332638-43d8-442f-bd40-634ad54c3158"
-                      id="_6c71ade79d75e8ff01d9b535a4d4ab4e"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Current Status of Atrial Fibrillation"
-                      triso:modelId="_d439d9e7-633a-4135-be78-4655f0a63aff"/>
-   <semantic:extensionElements>
-      <triso:itemDefinitions>
-         <triso:itemDefinition label="Prior Management of Atrial Fibrillation"
-                               name="Prior_Management_of_Atrial_Fibrillation">
-            <triso:itemComponent id="_c6a5c0b0-2bbd-4336-ac80-4ea2286ce4b5"
-                                 name="Prior Encounters for Atrial Fibrillation">
-               <triso:itemComponent id="_097868fd-0412-47a9-8e5b-64534db4f689" name="FHIR element 1">
-                  <triso:typeRef>string</triso:typeRef>
-               </triso:itemComponent>
-            </triso:itemComponent>
-         </triso:itemDefinition>
-      </triso:itemDefinitions>
-   </semantic:extensionElements>
-   <semantic:association id="_e686fbaa-1b0c-4c9f-8822-693cdb0c4b62"
-                         sourceRef="_f0ba6d34-f0bd-4a34-a4fb-8dc8ae3b4c13"
-                         targetRef="_0e12bd07-0e37-40e4-9dc1-b14d82a399f6"/>
-   <cmmndi:CMMNDI>
-      <cmmndi:CMMNDiagram cmmnElementRef="_aa353343-c121-4fb6-97dc-754a907bdb91"
-                          id="_74757f8e-9a70-4975-9ad9-de975c3a9bef"
-                          name="Page 1">
-         <cmmndi:Size height="2293.3436268050973" width="2645.4897923880926"/>
-         <cmmndi:CMMNShape cmmnElementRef="_b5d92090-a634-4041-8a66-dfae811cf904"
-                           id="_aa353343-c121-4fb6-97dc-754a907bdb91">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="645.3436268050971"
-                       width="946.4897923880928"
-                       x="0"
-                       y="74"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="12.015625"
-                          width="201"
-                          x="-93.4013265570893"
-                          y="70.14333292268365"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_0e12bd07-0e37-40e4-9dc1-b14d82a399f6"
-                           id="_8c860b39-4e8b-469b-8afe-0bf9e10ddadf"
-                           triso:identificator="https://clinicalknowledgemanagement.mayo.edu/assets/b3c2ab06-9170-4f30-b712-c0507022dcf6">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="40"
-                       width="34"
-                       x="689.7224787213443"
-                       y="198.47187876779952"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="12.015625"
-                          width="54.6875"
-                          x="679.3787287213443"
-                          y="242.47187876779952"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_f0ba6d34-f0bd-4a34-a4fb-8dc8ae3b4c13"
-                           id="_823a0502-478c-4306-9246-954ba0dbbfc2">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="190"
-                       width="388.169410943985"
-                       x="208.41529452800762"
-                       y="109.34362680509707"/>
-            <cmmndi:CMMNLabel/>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_6e771d20-5a6c-485a-8f02-f4c278639a65"
-                           id="_678b9ab1-bf9c-42b0-b9ff-4e5b7ec0b47b">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76"
-                       width="96"
-                       x="233.41529452800762"
-                       y="146.47187876779952"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="68"
-                          width="68"
-                          x="247.41529452800762"
-                          y="150.47187876779952"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_85d237de-f171-4ced-bfd6-04fe94348a37"
-                           id="_cfb04791-46cd-4c45-ab67-2cf639522a60">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76"
-                       width="96"
-                       x="354.5000000000001"
-                       y="146.47187876779952"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="54"
-                          width="68"
-                          x="368.5000000000001"
-                          y="157.47187876779952"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_76a8751b-40a4-4ebe-9781-990055537347"
-                           id="_726ac545-23d7-42ae-a26f-70b1ca80faa2">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76"
-                       width="96"
-                       x="475.5847054719926"
-                       y="146.47187876779952"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="54"
-                          width="68"
-                          x="489.5847054719926"
-                          y="157.47187876779952"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_dc6b44cf-3f34-46c3-b521-7378c9fd9aa0"
-                           id="_d58fc85b-2438-4620-85a5-1d96e6c873ca">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="233.34362680509707"
-                       width="611.3836568333743"
-                       x="96.80817158331297"
-                       y="372"/>
-            <cmmndi:CMMNLabel/>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_1b79fd17-06e1-4bc8-bb03-0da371e1eb01"
-                           id="_33ec037d-4948-4634-84e6-3f20e6408f9a">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76"
-                       width="97"
-                       x="243.80817158331297"
-                       y="423.52061746110564"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="26"
-                          width="68"
-                          x="258.80817158331297"
-                          y="448.52061746110564"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_87bc8088-0c51-4969-88f0-f012a5695dc3"
-                           id="_87bc8088-0c51-4969-88f0-f012a5695dc3_di">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="28"
-                       width="20"
-                       x="331.8081184469384"
-                       y="448.03092619165847"/>
-            <cmmndi:CMMNLabel/>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_295233f4-8bb5-4e59-a87c-43724818ec8a"
-                           id="_92cc8383-adca-448b-b29b-2f2c64f3a7d3">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76" width="97" x="439.19182841668726" y="397"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="40" width="68" x="454.19182841668726" y="415"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_a69111d5-5fb5-4567-90e0-a67d322ca1ce"
-                           id="_a69111d5-5fb5-4567-90e0-a67d322ca1ce_di">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="28"
-                       width="20"
-                       x="428.1937360063853"
-                       y="417.93826232513595"/>
-            <cmmndi:CMMNLabel/>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_e4e3a14c-c9b6-41ca-bbb3-abc006c44fd8"
-                           id="_aa7d513c-a7dd-46b9-8104-d6d360d8b6dc">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76"
-                       width="97"
-                       x="439.19182841668726"
-                       y="479.3436268050971"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="40"
-                          width="68"
-                          x="454.19182841668726"
-                          y="497.3436268050971"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_245b6386-3816-428c-8606-b3a4791303d4"
-                           id="_245b6386-3816-428c-8606-b3a4791303d4_di">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="28"
-                       width="20"
-                       x="428.1981970701177"
-                       y="497.73094696167163"/>
-            <cmmndi:CMMNLabel/>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_764ac62a-0afc-4943-9067-38d00fd71aed"
-                           id="_0bf36a55-0632-43d0-9f5f-f898a22ba2ad">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76"
-                       width="97"
-                       x="121.80817158331297"
-                       y="424.03092619165847"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="26"
-                          width="68"
-                          x="136.80817158331297"
-                          y="449.03092619165847"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_f4a755f5-826d-46ea-83bd-eda0bc68475d"
-                           id="_f4a755f5-826d-46ea-83bd-eda0bc68475d_di">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="28"
-                       width="20"
-                       x="410.26393378727226"
-                       y="286.32692852542397"/>
-            <cmmndi:CMMNLabel/>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_404cdf78-a2bf-4ac9-9334-87a2ec7a9707"
-                           id="_404cdf78-a2bf-4ac9-9334-87a2ec7a9707_di">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="28"
-                       width="20"
-                       x="410.8205099225272"
-                       y="357.01190631892837"/>
-            <cmmndi:CMMNLabel/>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNEdge cmmnElementRef="_263f0550-ba1c-4427-ae1a-b1e0ad85748a"
-                          id="_ca3a1256-ea8b-4749-ba7c-760e04140ea4"
-                          isStandardEventVisible="true">
-            <cmmndi:CMMNStyle>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <di:waypoint x="349.8081184469384" y="462.03092619165847"/>
-            <di:waypoint x="390.003157758528" y="462.0309261916585"/>
-            <di:waypoint x="390.003157758528" y="511.73094696167163"/>
-            <di:waypoint x="430.1981970701177" y="511.73094696167163"/>
-            <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
-         </cmmndi:CMMNEdge>
-         <cmmndi:CMMNEdge cmmnElementRef="_aef355d6-b818-4252-b7f4-c1f38ac5ccd0"
-                          id="_28cc432d-4f18-4587-bfda-549fabf41192"
-                          isStandardEventVisible="true">
-            <cmmndi:CMMNStyle>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <di:waypoint x="349.8081184469384" y="462.03092619165847"/>
-            <di:waypoint x="390.0009272266618" y="462.0309261916585"/>
-            <di:waypoint x="390.0009272266618" y="431.93826232513595"/>
-            <di:waypoint x="430.1937360063853" y="431.93826232513595"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true" triso:labelPosition="midbottom">
-               <dc:Bounds height="12.015625"
-                          width="110"
-                          x="335.0009272266618"
-                          y="451.98459425839724"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNEdge>
-         <cmmndi:CMMNEdge cmmnElementRef="_e686fbaa-1b0c-4c9f-8822-693cdb0c4b62"
-                          id="_442cff22-7382-43b3-bd9d-0dffab2dac5d">
-            <cmmndi:CMMNStyle>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <di:waypoint x="596.5847054719926" y="218.4558472724617"/>
-            <di:waypoint x="689.7224787213443" y="218.47187876779952"/>
-            <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
-         </cmmndi:CMMNEdge>
-         <cmmndi:CMMNEdge cmmnElementRef="_b3d28232-e25b-4ad5-8878-bd9d314b46f2"
-                          id="_cadc86da-361e-442e-8ea3-76e8f9af8a7a"
-                          isStandardEventVisible="true">
-            <cmmndi:CMMNStyle>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <di:waypoint x="420.8197719267371" y="358.0119065912473"/>
-            <di:waypoint x="420.26393378727226" y="313.32692852542397"/>
-            <cmmndi:CMMNLabel triso:labelPosition="startbottom"/>
-         </cmmndi:CMMNEdge>
-      </cmmndi:CMMNDiagram>
-   </cmmndi:CMMNDI>
+  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+  xmlns="http://www.trisotech.com/definitions/_b6a0b05b-25d3-4c93-9ba2-9a5037f4189b"
+  xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
+  xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"
+  xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
+  xmlns:ns1="http://www.trisotech.com/definitions/_958d9f9c-c84d-4d41-ba98-cda111980202"
+  xmlns:ns2="http://www.trisotech.com/definitions/_3b265cd2-431c-4beb-9a18-f7e644d897b2"
+  xmlns:ns3="http://www.trisotech.com/definitions/_593f49ec-4e1d-44f0-b599-e480a7f885be"
+  xmlns:ns4="http://www.trisotech.com/definitions/_3220be16-3bc6-4d42-a7d4-13367caedeab"
+  xmlns:ns5="http://www.trisotech.com/definitions/_4bf42879-7c31-4d3a-bc06-c8308126a82a"
+  xmlns:ns6="http://www.trisotech.com/definitions/_d439d9e7-633a-4135-be78-4655f0a63aff"
+  xmlns:ns7="http://www.trisotech.com/definitions/_d192392c-8290-4a58-bf41-ead298054b68"
+  exporter="Trisotech DES API Repository Conversion"
+  exporterVersion="6.12.3"
+  expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
+  id="_b6a0b05b-25d3-4c93-9ba2-9a5037f4189b"
+  name="Atrial Fibrillation"
+  targetNamespace="http://www.trisotech.com/definitions/_b6a0b05b-25d3-4c93-9ba2-9a5037f4189b"
+  triso:logoChoice="Default"
+  triso:state="Published"
+  triso:version="1.0">
+  <semantic:caseFileItemDefinition
+    definitionType="http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument"
+    id="_9e595f8e-5117-4e44-b9c0-9da7ae2badb0"
+    name="A Fib CPM"
+    structureRef="assets:_b3c2ab06-9170-4f30-b712-c0507022dcf6"/>
+  <semantic:case id="Case_b5d92090-a634-4041-8a66-dfae811cf904"
+    name="Atrial Fibrillation">
+    <semantic:caseFileModel>
+      <semantic:caseFileItem definitionRef="_9e595f8e-5117-4e44-b9c0-9da7ae2badb0"
+        id="_0e12bd07-0e37-40e4-9dc1-b14d82a399f6"
+        name="A Fib CPM">
+        <semantic:extensionElements>
+          <triso:attachment id="_149cb686-4812-465a-ac20-1473a819dc7d"
+            name="cpm-20129434"
+            play="true"
+            type="link"
+            url="https://askmayoexpert.mayoclinic.org/topic/clinical-answers/cnt-20133064/cpm-20129434"/>
+          <triso:customAttribute id="_ebe3bed1-6a3b-4d80-a645-ee4a96ec7ca9"
+            key="cpm-20129434"
+            type="string"
+            value="https://askmayoexpert.mayoclinic.org/topic/clinical-answers/cnt-20133064/cpm-20129434"/>
+        </semantic:extensionElements>
+      </semantic:caseFileItem>
+    </semantic:caseFileModel>
+    <semantic:casePlanModel id="_b5d92090-a634-4041-8a66-dfae811cf904" name="Atrial Fibrillation">
+      <semantic:extensionElements>
+        <triso:semanticLink id="ea64c725-3c56-4160-9a47-23f868910d5f"
+          modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+          name="KnowledgeAssetTypes - 20190801 - Cognitive Process Modelin 'KnowledgeAssetTypes - 20190801'"
+          uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#e12dcd92-f8de-3115-b8ca-4480cfc44d77"/>
+        <triso:customAttribute id="_c398f1b1-14ff-480a-96f1-40afca0b61d4"
+          key="knowledgeAssetId"
+          type="string"
+          value="https://clinicalknowledgemanagement.mayo.edu/assets/cd3df18a-404c-4a0f-8ab2-c022f807442c/versions/1.0.0"/>
+      </semantic:extensionElements>
+      <semantic:planItem definitionRef="PID__f0ba6d34-f0bd-4a34-a4fb-8dc8ae3b4c13"
+        id="_f0ba6d34-f0bd-4a34-a4fb-8dc8ae3b4c13">
+        <semantic:exitCriterion id="_f4a755f5-826d-46ea-83bd-eda0bc68475d"
+          sentryRef="_e26e7697-cb17-45ea-8fde-1ddf99f29699"/>
+      </semantic:planItem>
+      <semantic:planItem definitionRef="PID__dc6b44cf-3f34-46c3-b521-7378c9fd9aa0"
+        id="_dc6b44cf-3f34-46c3-b521-7378c9fd9aa0">
+        <semantic:entryCriterion id="_404cdf78-a2bf-4ac9-9334-87a2ec7a9707"
+          sentryRef="_bcd8a75c-0624-4f99-9f15-17df0f1bcc53"/>
+      </semantic:planItem>
+      <semantic:sentry id="_bf2b6944-fe01-4e9f-b9d0-e61148222a40">
+        <semantic:planItemOnPart id="_263f0550-ba1c-4427-ae1a-b1e0ad85748a"
+          sourceRef="_5a55f5f3-a232-4fee-be33-539b406753e0"/>
+        <semantic:planItemOnPart id="_aef355d6-b818-4252-b7f4-c1f38ac5ccd0"
+          sourceRef="_b3cd6ba8-5571-4e8b-b8f3-de5bd6d9b203">
+          <semantic:standardEvent>complete</semantic:standardEvent>
+        </semantic:planItemOnPart>
+      </semantic:sentry>
+      <semantic:sentry id="_b3cd6ba8-5571-4e8b-b8f3-de5bd6d9b203">
+        <semantic:planItemOnPart id="_aef355d6-b818-4252-b7f4-c1f38ac5ccd0"
+          sourceRef="_bf2b6944-fe01-4e9f-b9d0-e61148222a40">
+          <semantic:standardEvent>complete</semantic:standardEvent>
+        </semantic:planItemOnPart>
+      </semantic:sentry>
+      <semantic:sentry id="_5a55f5f3-a232-4fee-be33-539b406753e0">
+        <semantic:planItemOnPart id="_263f0550-ba1c-4427-ae1a-b1e0ad85748a"
+          sourceRef="_bf2b6944-fe01-4e9f-b9d0-e61148222a40"/>
+      </semantic:sentry>
+      <semantic:sentry id="_e26e7697-cb17-45ea-8fde-1ddf99f29699">
+        <semantic:planItemOnPart id="_b3d28232-e25b-4ad5-8878-bd9d314b46f2"
+          sourceRef="_bcd8a75c-0624-4f99-9f15-17df0f1bcc53"/>
+      </semantic:sentry>
+      <semantic:sentry id="_bcd8a75c-0624-4f99-9f15-17df0f1bcc53">
+        <semantic:planItemOnPart id="_b3d28232-e25b-4ad5-8878-bd9d314b46f2"
+          sourceRef="_e26e7697-cb17-45ea-8fde-1ddf99f29699"/>
+      </semantic:sentry>
+      <semantic:stage id="PID__f0ba6d34-f0bd-4a34-a4fb-8dc8ae3b4c13">
+        <semantic:extensionElements>
+          <triso:semanticLink id="_820239ef-1718-47b8-98cf-7a662cd4c9e2"
+            modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+            name="ClinicalTasks - ClinicalTasks - Assess"
+            uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
+        </semantic:extensionElements>
+        <semantic:planItem definitionRef="PID__6e771d20-5a6c-485a-8f02-f4c278639a65"
+          id="_6e771d20-5a6c-485a-8f02-f4c278639a65"/>
+        <semantic:planItem definitionRef="PID__85d237de-f171-4ced-bfd6-04fe94348a37"
+          id="_85d237de-f171-4ced-bfd6-04fe94348a37"/>
+        <semantic:planItem definitionRef="PID__76a8751b-40a4-4ebe-9781-990055537347"
+          id="_76a8751b-40a4-4ebe-9781-990055537347"/>
+        <semantic:decisionTask decisionRef="_dccae600d80daf1723ddbc21a29b2433"
+          id="PID__6e771d20-5a6c-485a-8f02-f4c278639a65"
+          name="Review History Pertinent to Atrial Fibrillation">
+          <semantic:extensionElements>
+            <triso:interrelationship elementId="_db28c827-8878-418c-87c2-fba3da7046f2"
+              fileId="eyJmIjp7InNrdSI6ImJhYWExMzA4LTk4OGUtNGFjZC05YjE0LWY5NTUyOTYyMmEwNyIsIm5hbWUiOiJIaXN0b3J5IFBlcnRpbmVudCB0byBBdHJpYWwgRmlicmlsbGF0aW9uIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifSwiciI6eyJhcGlrZXkiOiIyOTIwMDNmNjk4NDBlNzEyIn19"
+              mimeType="application/vnd.triso-dmn+json"
+              modelId="_d192392c-8290-4a58-bf41-ead298054b68"
+              name="History Pertinent to Atrial Fibrillation"
+              uri="http://www.trisotech.com/definitions/_d192392c-8290-4a58-bf41-ead298054b68#_db28c827-8878-418c-87c2-fba3da7046f2"/>
+            <triso:semanticLink id="_cc610808-0c6f-47da-9707-ec5ccef37c86"
+              modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+              name="ClinicalTasks - ClinicalTasks - Assess"
+              uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
+          </semantic:extensionElements>
+          <semantic:defaultControl>
+            <semantic:manualActivationRule/>
+          </semantic:defaultControl>
+        </semantic:decisionTask>
+        <semantic:decisionTask decisionRef="_94922c4c7bcccf45f00cb65ff4a1cef0"
+          id="PID__85d237de-f171-4ced-bfd6-04fe94348a37"
+          name="Review Prior Management of Atrial Fibrillation">
+          <semantic:extensionElements>
+            <triso:interrelationship elementId="_4179a536-e75c-417d-9de3-a202ed88c8bf"
+              fileId="eyJmIjp7InNrdSI6IjlkZmE4NGQ3LWYzMDItNGJiZC04NDE4LTRhZDgyOWI0YWY5MSIsIm5hbWUiOiJQcmlvciBNYW5hZ2VtZW50IG9mIEF0cmlhbCBGaWJyaWxsYXRpb24iLCJtaW1ldHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC50cmlzby1kbW4ranNvbiJ9LCJyIjp7ImFwaWtleSI6IjI5MjAwM2Y2OTg0MGU3MTIifX0="
+              mimeType="application/vnd.triso-dmn+json"
+              modelId="_593f49ec-4e1d-44f0-b599-e480a7f885be"
+              name="Prior Management of Atrial Fibrillation"
+              uri="http://www.trisotech.com/definitions/_593f49ec-4e1d-44f0-b599-e480a7f885be#_4179a536-e75c-417d-9de3-a202ed88c8bf"/>
+            <triso:semanticLink id="_31763503-316a-49db-ac8d-5a51f51899d3"
+              modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+              name="ClinicalTasks - ClinicalTasks - Assess"
+              uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
+          </semantic:extensionElements>
+          <semantic:defaultControl>
+            <semantic:manualActivationRule/>
+          </semantic:defaultControl>
+        </semantic:decisionTask>
+        <semantic:decisionTask decisionRef="_6c71ade79d75e8ff01d9b535a4d4ab4e"
+          id="PID__76a8751b-40a4-4ebe-9781-990055537347"
+          name="Review Status of Atrial Fibrillation">
+          <semantic:extensionElements>
+            <triso:interrelationship elementId="_69332638-43d8-442f-bd40-634ad54c3158"
+              fileId="eyJmIjp7InNrdSI6ImM0ZmJiZjBmLWYzZTktNDkzOC1iMGJmLTc0OTdkYjViODRmNiIsIm5hbWUiOiJDdXJyZW50IFN0YXR1cyBvZiBBdHJpYWwgRmlicmlsbGF0aW9uIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifSwiciI6eyJhcGlrZXkiOiIyOTIwMDNmNjk4NDBlNzEyIn19"
+              mimeType="application/vnd.triso-dmn+json"
+              modelId="_d439d9e7-633a-4135-be78-4655f0a63aff"
+              name="Current Status of Atrial Fibrillation"
+              uri="http://www.trisotech.com/definitions/_d439d9e7-633a-4135-be78-4655f0a63aff#_69332638-43d8-442f-bd40-634ad54c3158"/>
+          </semantic:extensionElements>
+          <semantic:defaultControl>
+            <semantic:manualActivationRule/>
+          </semantic:defaultControl>
+        </semantic:decisionTask>
+      </semantic:stage>
+      <semantic:stage id="PID__dc6b44cf-3f34-46c3-b521-7378c9fd9aa0">
+        <semantic:planItem definitionRef="PID__1b79fd17-06e1-4bc8-bb03-0da371e1eb01"
+          id="_1b79fd17-06e1-4bc8-bb03-0da371e1eb01">
+          <semantic:exitCriterion id="_87bc8088-0c51-4969-88f0-f012a5695dc3"
+            sentryRef="_bf2b6944-fe01-4e9f-b9d0-e61148222a40"/>
+        </semantic:planItem>
+        <semantic:planItem definitionRef="PID__295233f4-8bb5-4e59-a87c-43724818ec8a"
+          id="_295233f4-8bb5-4e59-a87c-43724818ec8a">
+          <semantic:entryCriterion id="_a69111d5-5fb5-4567-90e0-a67d322ca1ce"
+            sentryRef="_b3cd6ba8-5571-4e8b-b8f3-de5bd6d9b203"/>
+        </semantic:planItem>
+        <semantic:planItem definitionRef="PID__e4e3a14c-c9b6-41ca-bbb3-abc006c44fd8"
+          id="_e4e3a14c-c9b6-41ca-bbb3-abc006c44fd8">
+          <semantic:entryCriterion id="_245b6386-3816-428c-8606-b3a4791303d4"
+            sentryRef="_5a55f5f3-a232-4fee-be33-539b406753e0"/>
+        </semantic:planItem>
+        <semantic:planItem definitionRef="PID__764ac62a-0afc-4943-9067-38d00fd71aed"
+          id="_764ac62a-0afc-4943-9067-38d00fd71aed"/>
+        <semantic:decisionTask decisionRef="_dc003b579e05bc072e36f7059879de22"
+          id="PID__1b79fd17-06e1-4bc8-bb03-0da371e1eb01"
+          isBlocking="false"
+          name="Treat Atrial Fibrillation">
+          <semantic:extensionElements>
+            <triso:interrelationship elementId="_6f3689d4-df52-437a-8d70-b65b83c1972e"
+              fileId="eyJmIjp7InNrdSI6Ijc1ZmUxNDE5LWM1NTUtNGQyMS1hMzM1LWVhNWRhMTc4MTFlMyIsIm5hbWUiOiJDaG9pY2Ugb2YgQXRyaWFsIEZpYnJpbGxhdGlvbiBUcmVhdG1lbnQgU3RyYXRlZ3kiLCJtaW1ldHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC50cmlzby1kbW4ranNvbiJ9fQ=="
+              mimeType="application/vnd.triso-dmn+json"
+              modelId="_958d9f9c-c84d-4d41-ba98-cda111980202"
+              name="Choice of Atrial Fibrillation Treatment Strategy"
+              uri="http://www.trisotech.com/definitions/_958d9f9c-c84d-4d41-ba98-cda111980202#_6f3689d4-df52-437a-8d70-b65b83c1972e"/>
+            <triso:semanticLink id="_9143d86c-57a5-4300-9175-07fc31d1b165"
+              modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+              name="ClinicalTasks - ClinicalTasks - Plan"
+              uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#408de062-c8b1-3c65-9877-21ddead19bbf"/>
+          </semantic:extensionElements>
+        </semantic:decisionTask>
+        <semantic:decisionTask decisionRef="_35bcc337a941577e9cd5ed8100feb5d8"
+          id="PID__295233f4-8bb5-4e59-a87c-43724818ec8a"
+          name="Treat Abnormal Heart Rate">
+          <semantic:extensionElements>
+            <triso:interrelationship elementId="_05c5d60c-cb29-4b00-ae99-bb39c8cce514"
+              fileId="eyJmIjp7InNrdSI6IjU3NjllNzYzLTg0MjktNGQ5YS04ZTBhLTljZTc5OGQ4ODIxMCIsIm5hbWUiOiJDaG9pY2Ugb2YgVHJlYXRtZW50IG9mIEFibm9ybWFsIEhlYXJ0IFJhdGUiLCJtaW1ldHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC50cmlzby1kbW4ranNvbiJ9fQ=="
+              mimeType="application/vnd.triso-dmn+json"
+              modelId="_3220be16-3bc6-4d42-a7d4-13367caedeab"
+              name="Choice of Treatment of Abnormal Heart Rate"
+              uri="http://www.trisotech.com/definitions/_3220be16-3bc6-4d42-a7d4-13367caedeab#_05c5d60c-cb29-4b00-ae99-bb39c8cce514"/>
+            <triso:semanticLink id="_9bc34c9f-d2da-4d09-834c-d61727e1a307"
+              modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+              name="ClinicalTasks - ClinicalTasks - Plan"
+              uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#408de062-c8b1-3c65-9877-21ddead19bbf"/>
+          </semantic:extensionElements>
+        </semantic:decisionTask>
+        <semantic:decisionTask decisionRef="_9d61675cb3df4b6c7461a9f7626f8c1b"
+          id="PID__e4e3a14c-c9b6-41ca-bbb3-abc006c44fd8"
+          name="Treat Abnormal Heart Rhythm">
+          <semantic:extensionElements>
+            <triso:interrelationship elementId="_3df278f2-b688-42c2-b5f7-d5ebf8ecefd6"
+              fileId="eyJmIjp7InNrdSI6ImRhNzExN2IyLTZlOGYtNGMxYS1hMTQwLTg4ZGMxZmRhMmQzNSIsIm5hbWUiOiJDaG9pY2Ugb2YgVHJlYXRtZW50IG9mIEFibm9ybWFsIEhlYXJ0IFJoeXRobSIsIm1pbWV0eXBlIjoiYXBwbGljYXRpb24vdm5kLnRyaXNvLWRtbitqc29uIn19"
+              mimeType="application/vnd.triso-dmn+json"
+              modelId="_4bf42879-7c31-4d3a-bc06-c8308126a82a"
+              name="Choice of Treatment of Abnormal Heart Rhythm"
+              uri="http://www.trisotech.com/definitions/_4bf42879-7c31-4d3a-bc06-c8308126a82a#_3df278f2-b688-42c2-b5f7-d5ebf8ecefd6"/>
+            <triso:semanticLink id="_f806c0b9-73ac-4be3-9a01-b3afb4785d29"
+              modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+              name="ClinicalTasks - ClinicalTasks - Plan"
+              uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#408de062-c8b1-3c65-9877-21ddead19bbf"/>
+          </semantic:extensionElements>
+        </semantic:decisionTask>
+        <semantic:decisionTask decisionRef="_378b854986cc8806f2df447a255c2624"
+          id="PID__764ac62a-0afc-4943-9067-38d00fd71aed"
+          name="Prevent Stroke">
+          <semantic:extensionElements>
+            <triso:interrelationship elementId="_f2fcd947-6770-42a6-a78b-8fe45450404e"
+              fileId="eyJmIjp7InNrdSI6ImMxMDE2YjhiLTE2MTYtNDAzMy05MjUzLTk2NjU2YjFiNDdjYyIsIm5hbWUiOiJDaG9pY2Ugb2YgTG9uZy1UZXJtIE1hbmFnZW1lbnQgb2YgQ29hZ3VsYXRpb24gU3RhdHVzIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifX0="
+              mimeType="application/vnd.triso-dmn+json"
+              modelId="_3b265cd2-431c-4beb-9a18-f7e644d897b2"
+              name="Choice of Long-term Management of Anticoagulation Status"
+              uri="http://www.trisotech.com/definitions/_3b265cd2-431c-4beb-9a18-f7e644d897b2#_f2fcd947-6770-42a6-a78b-8fe45450404e"/>
+            <triso:semanticLink id="_e061a6eb-8aa4-4eea-b9ce-5014426a68c6"
+              modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+              name="ClinicalTasks - ClinicalTasks - Plan"
+              uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#408de062-c8b1-3c65-9877-21ddead19bbf"/>
+          </semantic:extensionElements>
+        </semantic:decisionTask>
+      </semantic:stage>
+    </semantic:casePlanModel>
+  </semantic:case>
+  <semantic:decision externalRef="ns2:_f2fcd947-6770-42a6-a78b-8fe45450404e"
+    id="_378b854986cc8806f2df447a255c2624"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Choice of Long-term Management of Anticoagulation Status"
+    triso:modelId="_3b265cd2-431c-4beb-9a18-f7e644d897b2"/>
+  <semantic:decision externalRef="ns4:_05c5d60c-cb29-4b00-ae99-bb39c8cce514"
+    id="_35bcc337a941577e9cd5ed8100feb5d8"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Choice of Treatment of Abnormal Heart Rate"
+    triso:modelId="_3220be16-3bc6-4d42-a7d4-13367caedeab"/>
+  <semantic:decision externalRef="ns5:_3df278f2-b688-42c2-b5f7-d5ebf8ecefd6"
+    id="_9d61675cb3df4b6c7461a9f7626f8c1b"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Choice of Treatment of Abnormal Heart Rhythm"
+    triso:modelId="_4bf42879-7c31-4d3a-bc06-c8308126a82a"/>
+  <semantic:decision externalRef="ns1:_6f3689d4-df52-437a-8d70-b65b83c1972e"
+    id="_dc003b579e05bc072e36f7059879de22"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Choice of Atrial Fibrillation Treatment Strategy"
+    triso:modelId="_958d9f9c-c84d-4d41-ba98-cda111980202"/>
+  <semantic:decision externalRef="ns3:_4179a536-e75c-417d-9de3-a202ed88c8bf"
+    id="_94922c4c7bcccf45f00cb65ff4a1cef0"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Prior Management of Atrial Fibrillation"
+    triso:modelId="_593f49ec-4e1d-44f0-b599-e480a7f885be"/>
+  <semantic:decision externalRef="ns7:_db28c827-8878-418c-87c2-fba3da7046f2"
+    id="_dccae600d80daf1723ddbc21a29b2433"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="History Pertinent to Atrial Fibrillation"
+    triso:modelId="_d192392c-8290-4a58-bf41-ead298054b68"/>
+  <semantic:decision externalRef="ns6:_69332638-43d8-442f-bd40-634ad54c3158"
+    id="_6c71ade79d75e8ff01d9b535a4d4ab4e"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Current Status of Atrial Fibrillation"
+    triso:modelId="_d439d9e7-633a-4135-be78-4655f0a63aff"/>
+  <semantic:extensionElements>
+    <triso:itemDefinitions>
+      <triso:itemDefinition label="Prior Management of Atrial Fibrillation"
+        name="Prior_Management_of_Atrial_Fibrillation">
+        <triso:itemComponent id="_c6a5c0b0-2bbd-4336-ac80-4ea2286ce4b5"
+          name="Prior Encounters for Atrial Fibrillation">
+          <triso:itemComponent id="_097868fd-0412-47a9-8e5b-64534db4f689" name="FHIR element 1">
+            <triso:typeRef>string</triso:typeRef>
+          </triso:itemComponent>
+        </triso:itemComponent>
+      </triso:itemDefinition>
+    </triso:itemDefinitions>
+  </semantic:extensionElements>
+  <semantic:association id="_e686fbaa-1b0c-4c9f-8822-693cdb0c4b62"
+    sourceRef="_f0ba6d34-f0bd-4a34-a4fb-8dc8ae3b4c13"
+    targetRef="_0e12bd07-0e37-40e4-9dc1-b14d82a399f6"/>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram cmmnElementRef="_aa353343-c121-4fb6-97dc-754a907bdb91"
+      id="_74757f8e-9a70-4975-9ad9-de975c3a9bef"
+      name="Page 1">
+      <cmmndi:Size height="2293.3436268050973" width="2645.4897923880926"/>
+      <cmmndi:CMMNShape cmmnElementRef="_b5d92090-a634-4041-8a66-dfae811cf904"
+        id="_aa353343-c121-4fb6-97dc-754a907bdb91">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="645.3436268050971"
+          width="946.4897923880928"
+          x="0"
+          y="74"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="12.015625"
+            width="201"
+            x="-93.4013265570893"
+            y="70.14333292268365"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_0e12bd07-0e37-40e4-9dc1-b14d82a399f6"
+        id="_8c860b39-4e8b-469b-8afe-0bf9e10ddadf"
+        triso:identificator="https://clinicalknowledgemanagement.mayo.edu/assets/b3c2ab06-9170-4f30-b712-c0507022dcf6">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="40"
+          width="34"
+          x="689.7224787213443"
+          y="198.47187876779952"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="12.015625"
+            width="54.6875"
+            x="679.3787287213443"
+            y="242.47187876779952"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_f0ba6d34-f0bd-4a34-a4fb-8dc8ae3b4c13"
+        id="_823a0502-478c-4306-9246-954ba0dbbfc2">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="190"
+          width="388.169410943985"
+          x="208.41529452800762"
+          y="109.34362680509707"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_6e771d20-5a6c-485a-8f02-f4c278639a65"
+        id="_678b9ab1-bf9c-42b0-b9ff-4e5b7ec0b47b">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76"
+          width="96"
+          x="233.41529452800762"
+          y="146.47187876779952"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="68"
+            width="68"
+            x="247.41529452800762"
+            y="150.47187876779952"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_85d237de-f171-4ced-bfd6-04fe94348a37"
+        id="_cfb04791-46cd-4c45-ab67-2cf639522a60">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76"
+          width="96"
+          x="354.5000000000001"
+          y="146.47187876779952"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="54"
+            width="68"
+            x="368.5000000000001"
+            y="157.47187876779952"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_76a8751b-40a4-4ebe-9781-990055537347"
+        id="_726ac545-23d7-42ae-a26f-70b1ca80faa2">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76"
+          width="96"
+          x="475.5847054719926"
+          y="146.47187876779952"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="54"
+            width="68"
+            x="489.5847054719926"
+            y="157.47187876779952"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_dc6b44cf-3f34-46c3-b521-7378c9fd9aa0"
+        id="_d58fc85b-2438-4620-85a5-1d96e6c873ca">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="233.34362680509707"
+          width="611.3836568333743"
+          x="96.80817158331297"
+          y="372"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_1b79fd17-06e1-4bc8-bb03-0da371e1eb01"
+        id="_33ec037d-4948-4634-84e6-3f20e6408f9a">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76"
+          width="97"
+          x="243.80817158331297"
+          y="423.52061746110564"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="26"
+            width="68"
+            x="258.80817158331297"
+            y="448.52061746110564"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_87bc8088-0c51-4969-88f0-f012a5695dc3"
+        id="_87bc8088-0c51-4969-88f0-f012a5695dc3_di">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="28"
+          width="20"
+          x="331.8081184469384"
+          y="448.03092619165847"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_295233f4-8bb5-4e59-a87c-43724818ec8a"
+        id="_92cc8383-adca-448b-b29b-2f2c64f3a7d3">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76" width="97" x="439.19182841668726" y="397"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="40" width="68" x="454.19182841668726" y="415"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_a69111d5-5fb5-4567-90e0-a67d322ca1ce"
+        id="_a69111d5-5fb5-4567-90e0-a67d322ca1ce_di">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="28"
+          width="20"
+          x="428.1937360063853"
+          y="417.93826232513595"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_e4e3a14c-c9b6-41ca-bbb3-abc006c44fd8"
+        id="_aa7d513c-a7dd-46b9-8104-d6d360d8b6dc">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76"
+          width="97"
+          x="439.19182841668726"
+          y="479.3436268050971"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="40"
+            width="68"
+            x="454.19182841668726"
+            y="497.3436268050971"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_245b6386-3816-428c-8606-b3a4791303d4"
+        id="_245b6386-3816-428c-8606-b3a4791303d4_di">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="28"
+          width="20"
+          x="428.1981970701177"
+          y="497.73094696167163"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_764ac62a-0afc-4943-9067-38d00fd71aed"
+        id="_0bf36a55-0632-43d0-9f5f-f898a22ba2ad">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76"
+          width="97"
+          x="121.80817158331297"
+          y="424.03092619165847"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="26"
+            width="68"
+            x="136.80817158331297"
+            y="449.03092619165847"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_f4a755f5-826d-46ea-83bd-eda0bc68475d"
+        id="_f4a755f5-826d-46ea-83bd-eda0bc68475d_di">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="28"
+          width="20"
+          x="410.26393378727226"
+          y="286.32692852542397"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_404cdf78-a2bf-4ac9-9334-87a2ec7a9707"
+        id="_404cdf78-a2bf-4ac9-9334-87a2ec7a9707_di">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="28"
+          width="20"
+          x="410.8205099225272"
+          y="357.01190631892837"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge cmmnElementRef="_263f0550-ba1c-4427-ae1a-b1e0ad85748a"
+        id="_ca3a1256-ea8b-4749-ba7c-760e04140ea4"
+        isStandardEventVisible="true">
+        <cmmndi:CMMNStyle>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="349.8081184469384" y="462.03092619165847"/>
+        <di:waypoint x="390.003157758528" y="462.0309261916585"/>
+        <di:waypoint x="390.003157758528" y="511.73094696167163"/>
+        <di:waypoint x="430.1981970701177" y="511.73094696167163"/>
+        <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge cmmnElementRef="_aef355d6-b818-4252-b7f4-c1f38ac5ccd0"
+        id="_28cc432d-4f18-4587-bfda-549fabf41192"
+        isStandardEventVisible="true">
+        <cmmndi:CMMNStyle>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="349.8081184469384" y="462.03092619165847"/>
+        <di:waypoint x="390.0009272266618" y="462.0309261916585"/>
+        <di:waypoint x="390.0009272266618" y="431.93826232513595"/>
+        <di:waypoint x="430.1937360063853" y="431.93826232513595"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true" triso:labelPosition="midbottom">
+          <dc:Bounds height="12.015625"
+            width="110"
+            x="335.0009272266618"
+            y="451.98459425839724"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge cmmnElementRef="_e686fbaa-1b0c-4c9f-8822-693cdb0c4b62"
+        id="_442cff22-7382-43b3-bd9d-0dffab2dac5d">
+        <cmmndi:CMMNStyle>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="596.5847054719926" y="218.4558472724617"/>
+        <di:waypoint x="689.7224787213443" y="218.47187876779952"/>
+        <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge cmmnElementRef="_b3d28232-e25b-4ad5-8878-bd9d314b46f2"
+        id="_cadc86da-361e-442e-8ea3-76e8f9af8a7a"
+        isStandardEventVisible="true">
+        <cmmndi:CMMNStyle>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <di:waypoint x="420.8197719267371" y="358.0119065912473"/>
+        <di:waypoint x="420.26393378727226" y="313.32692852542397"/>
+        <cmmndi:CMMNLabel triso:labelPosition="startbottom"/>
+      </cmmndi:CMMNEdge>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
 </semantic:definitions>

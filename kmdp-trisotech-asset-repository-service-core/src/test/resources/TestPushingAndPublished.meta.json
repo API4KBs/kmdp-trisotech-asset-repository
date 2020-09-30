@@ -1,12 +1,12 @@
 {
-  "id" : "4beba264-d599-4872-b7ad-3713d79b90cd",
-  "sku" : "4beba264-d599-4872-b7ad-3713d79b90cd",
-  "name" : "TestPushingAndPublished",
-  "path" : "/",
-  "mimetype" : "application/dmn-1-2+xml",
-  "updated" : "2019-10-10T19:15:49Z",
-  "updater" : "Orcutt, Cheryl A.",
-  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&id=4beba264-d599-4872-b7ad-3713d79b90cd&mimetype=application%2Fdmn-1-2%2Bxml&sku=4beba264-d599-4872-b7ad-3713d79b90cd&version=2019-10-10T19%3A15%3A49Z",
-  "version" : "1.2.0",
-  "state" : "Draft"
+  "id": "4beba264-d599-4872-b7ad-3713d79b90cd",
+  "sku": "4beba264-d599-4872-b7ad-3713d79b90cd",
+  "name": "TestPushingAndPublished",
+  "path": "/",
+  "mimetype": "application/dmn-1-2+xml",
+  "updated": "2019-10-10T19:15:49Z",
+  "updater": "Orcutt, Cheryl A.",
+  "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&id=4beba264-d599-4872-b7ad-3713d79b90cd&mimetype=application%2Fdmn-1-2%2Bxml&sku=4beba264-d599-4872-b7ad-3713d79b90cd&version=2019-10-10T19%3A15%3A49Z",
+  "version": "1.2.0",
+  "state": "Draft"
 }

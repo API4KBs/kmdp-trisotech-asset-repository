@@ -1,12 +1,12 @@
 {
-  "id" : "fe2e7db2-0642-4d37-b406-d0641e986dcf",
-  "sku" : "fe2e7db2-0642-4d37-b406-d0641e986dcf",
-  "name" : "Test Save As",
-  "path" : "/",
-  "mimetype" : "application/dmn-1-2+xml",
-  "updated" : "2020-09-03T12:55:46Z",
-  "updater" : "Sottara, Davide",
-  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&id=fe2e7db2-0642-4d37-b406-d0641e986dcf&mimetype=application%2Fdmn-1-2%2Bxml&sku=fe2e7db2-0642-4d37-b406-d0641e986dcf&version=2020-09-03T12%3A55%3A46Z",
-  "version" : "1.0.1",
-  "state" : "Pending Approval"
+  "id": "fe2e7db2-0642-4d37-b406-d0641e986dcf",
+  "sku": "fe2e7db2-0642-4d37-b406-d0641e986dcf",
+  "name": "Test Save As",
+  "path": "/",
+  "mimetype": "application/dmn-1-2+xml",
+  "updated": "2020-09-30T02:18:13Z",
+  "updater": "Sottara, Davide",
+  "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2F&sku=fe2e7db2-0642-4d37-b406-d0641e986dcf&mimetype=application%2Fdmn-1-2%2Bxml",
+  "version": "1.0.1",
+  "state": "Pending Approval"
 }

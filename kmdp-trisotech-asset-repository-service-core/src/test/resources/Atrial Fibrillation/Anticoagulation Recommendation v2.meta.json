@@ -1,12 +1,12 @@
 {
-  "id" : "e60804a5-0715-43ab-b985-c18caf174b0f",
-  "sku" : "e60804a5-0715-43ab-b985-c18caf174b0f",
-  "name" : "Anticoagulation Recommendation v2",
-  "path" : "/Shellum/Atrial Fibrillation",
-  "mimetype" : "application/dmn-1-2+xml",
-  "updated" : "2020-09-03T18:48:27Z",
-  "updater" : "Sottara, Davide",
-  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=8773e388-75b7-4061-a489-b788222022d3&id=e60804a5-0715-43ab-b985-c18caf174b0f&mimetype=application%2Fdmn-1-2%2Bxml&sku=e60804a5-0715-43ab-b985-c18caf174b0f&version=2020-09-03T18%3A48%3A27Z",
-  "version" : "1.1.1",
-  "state" : "Draft"
+  "id": "e60804a5-0715-43ab-b985-c18caf174b0f",
+  "sku": "e60804a5-0715-43ab-b985-c18caf174b0f",
+  "name": "Anticoagulation Recommendation v2",
+  "path": "/Shellum/Atrial Fibrillation",
+  "mimetype": "application/dmn-1-2+xml",
+  "updated": "2020-09-29T19:22:00Z",
+  "updater": "Shellum, Jane L., M.H.A.",
+  "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=8773e388-75b7-4061-a489-b788222022d3&path=%2FShellum%2FAtrial%20Fibrillation&sku=e60804a5-0715-43ab-b985-c18caf174b0f&mimetype=application%2Fdmn-1-2%2Bxml",
+  "version": "1.1.1",
+  "state": "Published"
 }

@@ -9,6 +9,7 @@ import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import java.io.File;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,24 +36,18 @@ public class DownloadTestAssetsTest extends AbstractAssetDownloader {
   @Autowired
   TrisotechWrapper wrapper;
 
-  File tgtFolder = new File(
-      "C:\\Users\\M123110\\Projects\\MEA"
-          + "\\kmdp-trisotech-asset-repository-service"
-          + "\\kmdp-trisotech-asset-repository-service-core"
-          + "\\src\\test\\resources");
-
   @Test
   @Disabled
   void testInit() {
     assertNotNull(assetRepository);
 
     assetRepository.listKnowledgeAssets()
-        .ifPresent(l -> l.forEach(assetPtr -> saveArtifacts(assetPtr,tgtFolder)));
+        .forEach(Pointer.class, assetPtr -> saveArtifacts(assetPtr,getTgtFolder()));
   }
 
   @Override
   protected File getTgtFolder() {
-    return tgtFolder;
+    return new File(getParent());
   }
 
 }

@@ -15,13 +15,16 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
+import edu.mayo.kmdp.terms.TermsProvider;
+import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@ComponentScan
+@ComponentScan(basePackageClasses = TermsProvider.class)
 @PropertySource(value={"classpath:application.properties"})
 public class ServerConfig {
 

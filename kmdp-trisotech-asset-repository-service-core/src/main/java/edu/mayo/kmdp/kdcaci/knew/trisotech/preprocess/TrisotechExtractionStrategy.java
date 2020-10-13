@@ -67,6 +67,7 @@ import org.omg.spec.api4kp._20200801.surrogate.Publication;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries;
@@ -548,10 +549,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   @Override
   public Optional<String> getArtifactID(Document dox, TrisotechFileInfo meta) {
-    Optional<KnowledgeRepresentationLanguageSeries> lang = detectRepLanguage(dox);
+    Optional<KnowledgeRepresentationLanguage> lang = detectRepLanguage(dox);
 
     return lang.map(l -> {
-      switch (l) {
+      switch (l.asEnum()) {
         case DMN_1_2:
           return xPathUtil.xString(dox, "//*/@namespace");
         case CMMN_1_1:
@@ -564,7 +565,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   @Override
   public Optional<SyntacticRepresentation> getRepLanguage(Document dox, boolean concrete) {
-
+    if (dox == null) {
+      return Optional.empty();
+    }
     if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
       return Optional.of(new SyntacticRepresentation()
           .withLanguage(CMMN_1_1)
@@ -578,14 +581,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return Optional.empty();
   }
 
-  public Optional<KnowledgeRepresentationLanguageSeries> detectRepLanguage(Document dox) {
-    if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
-      return Optional.of(CMMN_1_1);
-    }
-    if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
-      return Optional.of(DMN_1_2);
-    }
-    return Optional.empty();
+  public Optional<KnowledgeRepresentationLanguage> detectRepLanguage(Document dox) {
+    return getRepLanguage(dox,false)
+        .map(SyntacticRepresentation::getLanguage);
   }
 
   /**

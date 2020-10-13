@@ -2,7 +2,7 @@
 <surr:knowledgeAsset
   xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
   xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
-  xmlns:id="https://www.omg.org/spec/API4KP/20200801/id" name="Weaver Test 2">
+  xmlns:id="https://www.omg.org/spec/API4KP/20200801/id" name="Aggregating Decision A">
   <surr:formalType referentId="https://www.omg.org/spec/API4KP/api4kp-kao/DecisionModel"
     resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#310adb96-1a21-3100-90eb-c7ef4fe270e7"
     versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType/versions/20190801#310adb96-1a21-3100-90eb-c7ef4fe270e7"
@@ -21,14 +21,14 @@
     <id:uuid>d4b0e868-60c8-387d-a139-e3c35427bfb6</id:uuid>
   </surr:formalCategory>
   <surr:assetId
-    resourceId="https://clinicalknowledgemanagement.mayo.edu/assets/3c88cf3a-93c4-4e09-b1aa-14088c76aded"
-    versionId="https://clinicalknowledgemanagement.mayo.edu/assets/3c88cf3a-93c4-4e09-b1aa-14088c76aded/versions/2.0.0"
-    tag="3c88cf3a-93c4-4e09-b1aa-14088c76aded" versionTag="2.0.0"
+    resourceId="https://clinicalknowledgemanagement.mayo.edu/assets/b0764bf2-4529-4869-9ddc-92dc22d521de"
+    versionId="https://clinicalknowledgemanagement.mayo.edu/assets/b0764bf2-4529-4869-9ddc-92dc22d521de/versions/1.0.0"
+    tag="b0764bf2-4529-4869-9ddc-92dc22d521de" versionTag="1.0.0"
     namespaceUri="https://clinicalknowledgemanagement.mayo.edu/assets/"
     establishedOn="2020-10-13T00:00:00">
-    <id:uuid>3c88cf3a-93c4-4e09-b1aa-14088c76aded</id:uuid>
+    <id:uuid>b0764bf2-4529-4869-9ddc-92dc22d521de</id:uuid>
   </surr:assetId>
-  <surr:carriers name="Weaver Test 2">
+  <surr:carriers name="Aggregating Decision A">
     <surr:localization
       referentId="https://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/English"
       resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/ISO639-2-LanguageCode#78463a38-4a5a-34fa-95fa-73e2f506ecfc"
@@ -39,12 +39,12 @@
       <id:uuid>78463a38-4a5a-34fa-95fa-73e2f506ecfc</id:uuid>
     </surr:localization>
     <surr:artifactId
-      resourceId="https://clinicalknowledgemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"
-      versionId="https://clinicalknowledgemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21/versions/0.6.0+1599115440000"
-      tag="ede3b331-7b10-4580-98be-66ebff344c21" versionTag="0.6.0+1599115440000"
+      resourceId="https://clinicalknowledgemanagement.mayo.edu/artifacts/fbf2ed55-80ac-4fea-8929-51b19d396728"
+      versionId="https://clinicalknowledgemanagement.mayo.edu/artifacts/fbf2ed55-80ac-4fea-8929-51b19d396728/versions/1.0.0+1602260445000"
+      tag="fbf2ed55-80ac-4fea-8929-51b19d396728" versionTag="1.0.0+1602260445000"
       namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/"
-      establishedOn="2020-09-03T01:44:00">
-      <id:uuid>ede3b331-7b10-4580-98be-66ebff344c21</id:uuid>
+      establishedOn="2020-10-09T11:20:45">
+      <id:uuid>fbf2ed55-80ac-4fea-8929-51b19d396728</id:uuid>
     </surr:artifactId>
     <surr:expressionCategory referentId="http://purl.org/dc/dcmitype/Software"
       resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeArtifactCategory#719d067b-2291-38f0-bbcf-a1da4ac4dede"
@@ -54,24 +54,6 @@
       establishedOn="2020-10-06T00:00:00">
       <id:uuid>719d067b-2291-38f0-bbcf-a1da4ac4dede</id:uuid>
     </surr:expressionCategory>
-    <surr:links xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="surr:Dependency">
-      <surr:rel referentId="https://www.omg.org/spec/API4KP/api4kp-rel/imports"
-        resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/DependencyRelType#a6878bf5-d858-3676-83a1-ef2871d36f47"
-        versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/DependencyRelType/versions/20201006-224513#a6878bf5-d858-3676-83a1-ef2871d36f47"
-        tag="imports" versionTag="20201006-224513" name="imports"
-        namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/DependencyRelType"
-        establishedOn="2020-08-01T00:00:00">
-        <id:uuid>a6878bf5-d858-3676-83a1-ef2871d36f47</id:uuid>
-      </surr:rel>
-      <surr:href
-        resourceId="https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
-        versionId="https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068/versions/2.0.1+1599083058000"
-        tag="5682fa26-b064-43c8-9475-1e4281e74068" versionTag="2.0.1+1599083058000"
-        namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/"
-        establishedOn="2020-10-13T00:00:00">
-        <id:uuid>5682fa26-b064-43c8-9475-1e4281e74068</id:uuid>
-      </surr:href>
-    </surr:links>
     <surr:representation>
       <api:language referentId="https://www.omg.org/spec/DMN/1.2/"
         resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KRLanguage#0bf050a2-fbd6-38c2-a4ce-323fd91c7b24"
@@ -99,24 +81,24 @@
       </api:serialization>
     </surr:representation>
     <surr:lifecycle>
-      <surr:publicationStatus referentId="http://purl.org/spar/pso/published"
-        resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus#8f888fed-f6bd-3ff7-893c-6d76bb8dc21c"
-        versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus/versions/2014-02-01#8f888fed-f6bd-3ff7-893c-6d76bb8dc21c"
-        tag="published" versionTag="2014-02-01" name="published"
+      <surr:publicationStatus referentId="http://purl.org/spar/pso/draft"
+        resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus#f91b2829-bf86-33e3-9809-4e1dedb6f947"
+        versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus/versions/2014-02-01#f91b2829-bf86-33e3-9809-4e1dedb6f947"
+        tag="draft" versionTag="2014-02-01" name="draft"
         namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus"
         establishedOn="2020-10-06T00:00:00">
-        <id:uuid>8f888fed-f6bd-3ff7-893c-6d76bb8dc21c</id:uuid>
+        <id:uuid>f91b2829-bf86-33e3-9809-4e1dedb6f947</id:uuid>
       </surr:publicationStatus>
     </surr:lifecycle>
   </surr:carriers>
   <surr:surrogate mimeType="application/dmn-1-2+xml">
     <surr:artifactId
-      resourceId="https://clinicalknowledgemanagement.mayo.edu/artifacts/ffa53262-4d36-4656-890b-4e48ed1cb9c3"
-      versionId="https://clinicalknowledgemanagement.mayo.edu/artifacts/ffa53262-4d36-4656-890b-4e48ed1cb9c3/versions/0.6.0+1599115440000"
-      tag="ffa53262-4d36-4656-890b-4e48ed1cb9c3" versionTag="0.6.0+1599115440000"
+      resourceId="https://clinicalknowledgemanagement.mayo.edu/artifacts/9311298d-2d54-419e-ba14-c80cb3ca1595"
+      versionId="https://clinicalknowledgemanagement.mayo.edu/artifacts/9311298d-2d54-419e-ba14-c80cb3ca1595/versions/1.0.0+1602260445000"
+      tag="9311298d-2d54-419e-ba14-c80cb3ca1595" versionTag="1.0.0+1602260445000"
       namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/"
       establishedOn="2020-10-13T00:00:00">
-      <id:uuid>ffa53262-4d36-4656-890b-4e48ed1cb9c3</id:uuid>
+      <id:uuid>9311298d-2d54-419e-ba14-c80cb3ca1595</id:uuid>
     </surr:artifactId>
     <surr:representation>
       <api:language referentId="https://www.omg.org/spec/API4KP/20200801/metadata"
@@ -137,32 +119,14 @@
       </api:format>
     </surr:representation>
   </surr:surrogate>
-  <surr:links xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="surr:Dependency">
-    <surr:rel referentId="https://www.omg.org/spec/API4KP/api4kp/dependsOn"
-      resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/DependencyRelType#fdc5cdcb-de66-3674-8607-2a8ae01b6c38"
-      versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/DependencyRelType/versions/20200801#fdc5cdcb-de66-3674-8607-2a8ae01b6c38"
-      tag="dependsOn" versionTag="20200801" name="depends on"
-      namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/DependencyRelType"
-      establishedOn="2020-08-01T00:00:00">
-      <id:uuid>fdc5cdcb-de66-3674-8607-2a8ae01b6c38</id:uuid>
-    </surr:rel>
-    <surr:href
-      resourceId="https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded"
-      versionId="https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.1.1"
-      tag="3c66cf3a-93c4-4e09-b1aa-14088c76aded" versionTag="1.1.1"
-      namespaceUri="https://clinicalknowledgemanagement.mayo.edu/assets/"
-      establishedOn="2020-10-13T00:00:00">
-      <id:uuid>3c66cf3a-93c4-4e09-b1aa-14088c76aded</id:uuid>
-    </surr:href>
-  </surr:links>
   <surr:lifecycle>
-    <surr:publicationStatus referentId="http://purl.org/spar/pso/published"
-      resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus#8f888fed-f6bd-3ff7-893c-6d76bb8dc21c"
-      versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus/versions/2014-02-01#8f888fed-f6bd-3ff7-893c-6d76bb8dc21c"
-      tag="published" versionTag="2014-02-01" name="published"
+    <surr:publicationStatus referentId="http://purl.org/spar/pso/draft"
+      resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus#f91b2829-bf86-33e3-9809-4e1dedb6f947"
+      versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus/versions/2014-02-01#f91b2829-bf86-33e3-9809-4e1dedb6f947"
+      tag="draft" versionTag="2014-02-01" name="draft"
       namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus"
       establishedOn="2020-10-06T00:00:00">
-      <id:uuid>8f888fed-f6bd-3ff7-893c-6d76bb8dc21c</id:uuid>
+      <id:uuid>f91b2829-bf86-33e3-9809-4e1dedb6f947</id:uuid>
     </surr:publicationStatus>
   </surr:lifecycle>
 </surr:knowledgeAsset>

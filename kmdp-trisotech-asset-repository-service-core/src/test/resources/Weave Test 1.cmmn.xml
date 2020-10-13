@@ -116,8 +116,8 @@
         id="PID__6088d90d-bc64-40e0-93ca-950552bd4f98"
         name="Test Decision 2">
         <semantic:extensionElements>
-          <surr:annotation
-          >
+           <surr:annotation
+           >
             <surr:ref name="Weaver Test 2 - Test Decision 2"
               namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"
               referentId="https://clinicalknowledgemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"

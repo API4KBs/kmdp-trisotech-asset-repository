@@ -47,6 +47,7 @@ import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.surrogate.ObjectFactory;
+import org.omg.spec.api4kp._20200801.terms.model.ConceptDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -257,10 +258,17 @@ public class Weaver {
   private boolean isDomainConcept(String uriStr) {
     // the Terms service needs a UUID...
     URI uri = URI.create(uriStr);
-    return Answer.of(Optional.ofNullable(uri.getFragment()))
+    Answer<ConceptDescriptor> cdAns
+        = Answer.of(Optional.ofNullable(uri.getFragment()))
         .flatOpt(Util::ensureUUID)
-        .flatMap(id -> terms.lookupTerm(id.toString()))
-        .isSuccess();
+        .flatMap(id -> terms.lookupTerm(id.toString())) ;
+    if (!cdAns.isSuccess()) {
+      return false;
+    }
+    String ns = cdAns.map(ConceptIdentifier::getNamespaceUri)
+        .map(URI::toString)
+        .orElse("");
+    return ns.toLowerCase().contains("clinicalsituations");
   }
 
   private void verifyAndRemoveInvalidCaseFileItemDefinition(Document dox) {

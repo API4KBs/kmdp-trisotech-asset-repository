@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.w3c.dom.Document;
 
@@ -130,15 +131,15 @@ class TrisotechExtractionStrategyTest {
 
   @Test
   void detectRepLanguage() {
-    Optional<KnowledgeRepresentationLanguageSeries> dmnRep = this.tes.detectRepLanguage(dmnDox);
+    Optional<KnowledgeRepresentationLanguage> dmnRep = this.tes.detectRepLanguage(dmnDox);
     assertEquals("DMN 1.2", dmnRep.orElseGet(Assertions::fail).getLabel());
     assertEquals(KnowledgeRepresentationLanguageSeries.DMN_1_2, dmnRep.orElseGet(Assertions::fail));
 
-    Optional<KnowledgeRepresentationLanguageSeries> cmmnRep = this.tes.detectRepLanguage(cmmnDox);
+    Optional<KnowledgeRepresentationLanguage> cmmnRep = this.tes.detectRepLanguage(cmmnDox);
     assertEquals("CMMN 1.1", cmmnRep.orElseGet(Assertions::fail).getLabel());
     assertEquals(KnowledgeRepresentationLanguageSeries.CMMN_1_1, cmmnRep.orElseGet(Assertions::fail));
 
-    Optional<KnowledgeRepresentationLanguageSeries> badRep = this.tes.detectRepLanguage(badDox);
+    Optional<KnowledgeRepresentationLanguage> badRep = this.tes.detectRepLanguage(badDox);
     assertEquals(Optional.empty(), badRep);
   }
 

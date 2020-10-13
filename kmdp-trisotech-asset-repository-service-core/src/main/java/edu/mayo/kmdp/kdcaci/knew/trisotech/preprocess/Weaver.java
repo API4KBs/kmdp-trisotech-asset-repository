@@ -21,10 +21,10 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRe
 
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.JaxbUtil;
+import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.clinicaltasks.ClinicalTaskSeries;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
-import edu.mayo.ontology.taxonomies.propositionalconcepts.PropositionalConceptsSeries;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
@@ -40,6 +40,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
+import org.omg.spec.api4kp._20200801.Answer;
+import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
@@ -76,6 +78,9 @@ public class Weaver {
 
   @Autowired
   private ReaderConfig config;
+
+  @Autowired
+  private TermsApiInternal terms;
 
   private String decisionEl;
   private String elExporter;
@@ -235,7 +240,7 @@ public class Weaver {
       return KnownAttributes.CAPTURES;
     } else if (ClinicalTaskSeries.resolveId(uri).isPresent()) {
       return KnownAttributes.CAPTURES;
-    } else if (PropositionalConceptsSeries.resolveId(uri).isPresent()) {
+    } else if (isDomainConcept(uri)) {
       String grandparent = el.getParentNode().getParentNode().getNodeName();
       if (grandparent.equals("semantic:decision")) {
         return KnownAttributes.DEFINES;
@@ -247,6 +252,15 @@ public class Weaver {
     }
 
     return null;
+  }
+
+  private boolean isDomainConcept(String uriStr) {
+    // the Terms service needs a UUID...
+    URI uri = URI.create(uriStr);
+    return Answer.of(Optional.ofNullable(uri.getFragment()))
+        .flatOpt(Util::ensureUUID)
+        .flatMap(id -> terms.lookupTerm(id.toString()))
+        .isSuccess();
   }
 
   private void verifyAndRemoveInvalidCaseFileItemDefinition(Document dox) {

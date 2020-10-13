@@ -19,6 +19,8 @@ import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.validate;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,9 +40,9 @@ import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -48,7 +50,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 
-@SpringJUnitConfig(classes = {TrisotechAssetRepositoryConfig.class})
+@SpringBootTest
+@ContextConfiguration(classes = {TrisotechAssetRepositoryConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
@@ -152,8 +155,7 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     assertTrue(true); // dummy
-    // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
-//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getReferentId() ) );
+		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
     try {
       weaver.weave(dox);
@@ -171,22 +173,11 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
-      // TODO: Check with Davide if this is still needed, and if so, what replaces IS_A in RelTypeSeries - CAO
-//      SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
-//          .iterator().next();
-//      assertEquals(AnnotationRelTypeSeries.Is_A.getLabel(),
-//          type.getRel().getLabel());
 
-      // TODO: no examples of CAPTURES in sample models, provide? CAO
-//			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
-//			assertTrue( props.stream()
-//			                 .anyMatch( (ann) -> ann instanceof SimpleAnnotation
-//					                 && ( ( SimpleAnnotation ) ann ).getExpr().getLabel().contains( "Blood Pressure" ) ) );
-//
+			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
+			assertTrue( props.stream()
+			                 .anyMatch( ann -> ann.getRef().getLabel().contains( "Blood Pressure" ) ) );
 
-      // TODO: is this something else in Trisotech? CAO
-//		assertEquals( "http://www.foo.bar",
-//			              xString( dox, "//dmn:knowledgeSource[@name='all']/@locationURI" ) );
 
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(),ie);
@@ -201,8 +192,7 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     assertTrue(true); // dummy
-    // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
-//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getReferentId() ) );
+		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
     try {
       weaver.weave(dox);
@@ -251,22 +241,10 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
-      // TODO: Check with Davide if this is still needed, and if so, what replaces IS_A in RelTypeSeries - CAO
-//      SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
-//          .iterator().next();
-//      assertEquals(AnnotationRelTypeSeries.Is_A.getLabel(),
-//          type.getRel().getLabel());
+      List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
+      assertTrue( props.stream()
+          .anyMatch( ann -> ann.getRef().getLabel().contains( "Blood Pressure" ) ) );
 
-      // TODO: No example of CAPTURES in test models. provide? CAO
-//			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
-//			assertTrue( props.stream()
-//			                 .anyMatch( (ann) -> ann instanceof SimpleAnnotation
-//					                 && ( ( SimpleAnnotation ) ann ).getExpr().getLabel().contains( "Blood Pressure" ) ) );
-//
-
-      // TODO: is this something else in Trisotech? CAO
-//		assertEquals( "http://www.foo.bar",
-//			              xString( dox, "//dmn:knowledgeSource[@name='all']/@locationURI" ) );
 
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(),ie);
@@ -281,8 +259,7 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     assertTrue(true); // dummy
-    // TODO: the following is currently failing due to the new way DMN 1.2 handles the reference; fix once validation fixed for support CAO
-//		assertTrue( validate( dox, KnowledgeRepresentationLanguage.DMN_1_2.getReferentId() ) );
+ 		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
     try {
       weaver.weave(dox);
@@ -300,33 +277,20 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
-      // TODO: Check with Davide if this is still needed, and if so, what replaces IS_A in RelTypeSeries - CAO
-//      SimpleAnnotation type = loadAnnotations(dox, KnownAttributes.TYPE, SimpleAnnotation.class)
-//          .iterator().next();
-//      assertEquals(AnnotationRelTypeSeries.Is_A.getLabel(),
-//          type.getRel().getLabel());
 
-//      Annotation type = loadAnnotations(dox, KnownAttributes.DEFINES, Annotation.class).iterator()
-//          .next();
-//      assertEquals(AnnotationRelTypeSeries.Defines.getLabel(),
-//          type.getRel().getPrefLabel());
-//
-//      List<Annotation> props = loadAnnotations(dox, KnownAttributes.INPUTS, Annotation.class);
-//      assertTrue(props.stream()
-//          .anyMatch(ann -> ann instanceof Annotation
-//              && (ann).getRel().getPrefLabel()
-//              .equals(AnnotationRelTypeSeries.In_Terms_Of.getLabel())));
+      Annotation type = loadAnnotations(dox, KnownAttributes.DEFINES, Annotation.class).iterator()
+          .next();
+      assertEquals(Defines.getLabel(),
+          type.getRel().getPrefLabel());
 
-// TODO: No example of CAPTURES in test models. Need one? CAO
-//			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
-//			assertTrue( props.stream()
-//			                 .anyMatch( (ann) -> ann instanceof SimpleAnnotation
-//					                 && ( ( SimpleAnnotation ) ann ).getExpr().getLabel().contains( "Blood Pressure" ) ) );
-//
+      List<Annotation> props = loadAnnotations(dox, KnownAttributes.INPUTS, Annotation.class);
+      assertTrue(props.stream()
+          .anyMatch(ann -> ann.getRel().getPrefLabel()
+              .equals(In_Terms_Of.getLabel())));
 
-      // TODO: is this something else in Trisotech? CAO
-//		assertEquals( "http://www.foo.bar",
-//			              xString( dox, "//dmn:knowledgeSource[@name='all']/@locationURI" ) );
+      List<Annotation> props2 = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
+      assertTrue( props2.stream()
+          .anyMatch( ann -> ann.getRef().getLabel().contains( "Blood Pressure" ) ) );
 
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(),ie);
@@ -475,7 +439,6 @@ class WeaverTest {
    * 'trisotech.com' and are KMDP namespaces
    */
   private boolean verifyHrefs(Document dox) {
-    // TODO: check each tag, or just get all href attributes and modify?  use KnownAttributes? CAO
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         .filter(el -> (el.getLocalName().equals("inputData")
             || el.getLocalName().equals("requiredInput")
@@ -484,12 +447,12 @@ class WeaverTest {
             || el.getLocalName().equals("requiredDecision"))
             && (el.hasAttribute("href")))
         .forEach(element -> {
+          // TODO: check each tag, or just get all href attributes and modify?  use KnownAttributes? CAO
           Attr attr = element.getAttributeNode("href");
           checkAttribute(attr, "href");
-          // TODO: Fix this, not all hrefs have KMDP namespace CAO
-//          if(!confirmKMDPnamespace(attr)) {
-//            fail("expect BASE_URI in attribute: " + attr.getName() + " : " + attr.getValue());
-//          }
+          if(!confirmKMDPnamespace(attr)) {
+            fail("expect BASE_URI in attribute: " + attr.getName() + " : " + attr.getValue());
+          }
         });
     return true;
   }
@@ -526,9 +489,10 @@ class WeaverTest {
       if (!checkContainsAttribute(attr, "ns")) {
         return false;
       }
-      // confirm KMDP namespaces
-      // TODO: fix this .. not all namespaces have KMDP CAO
-      confirmKMDPnamespace(attr);
+
+      if (!confirmKMDPnamespace(attr)) {
+        return false;
+      }
 
     }
     return true;
@@ -633,7 +597,6 @@ class WeaverTest {
   }
 
 
-  // TODO: need more capability? CAO
   private <T extends Annotation> List<T> loadAnnotations(Document dox, KnownAttributes att,
       Class<T> type) {
 

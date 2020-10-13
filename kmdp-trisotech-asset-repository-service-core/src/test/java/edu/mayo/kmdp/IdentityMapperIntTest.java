@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -46,7 +47,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  * the Trisotech server through SPARQL queries.
  */
 @SpringBootTest
-@SpringJUnitConfig(classes = {TrisotechAssetRepositoryConfig.class})
+@ContextConfiguration(classes = {TrisotechAssetRepositoryConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})

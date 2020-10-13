@@ -69,10 +69,6 @@
     <semantic:extensionElements>
       <surr:annotation
       >
-        <surr:rel name="in terms of"
-          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
-          resourceId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
-          tag="defined-in-terms-of"/>
         <surr:ref name="PropositionalConcepts - 20200415 - Current Weight"
           namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
           referentId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
@@ -88,10 +84,6 @@
     <semantic:extensionElements>
       <surr:annotation
       >
-        <surr:rel name="in terms of"
-          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
-          resourceId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
-          tag="defined-in-terms-of"/>
         <surr:ref name="PropositionalConcepts - 20200415 - Most Recent Height"
           namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
           referentId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"

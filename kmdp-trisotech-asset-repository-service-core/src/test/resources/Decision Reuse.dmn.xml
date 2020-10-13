@@ -32,10 +32,6 @@
     <semantic:extensionElements>
       <surr:annotation
       >
-        <surr:rel name="defines"
-          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
-          resourceId="https://www.omg.org/spec/API4KP/api4kp/defines"
-          tag="defines"/>
         <surr:ref
           name="PropositionalConcepts - 20190801 - Management of Atrial Fibrillationin 'PropositionalConcepts - 20190801'"
           namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"

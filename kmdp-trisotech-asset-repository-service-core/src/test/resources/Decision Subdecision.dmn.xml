@@ -156,12 +156,11 @@
           namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
           resourceId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
           tag="defined-in-terms-of"/>
-        <surr:ref
-          name="PropositionalConcepts - 20190801 - Most Recent TSH - Value ofin 'PropositionalConcepts - 20190801'"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/propositionalconcepts"
-          referentId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
-          resourceId="https://ontology.mayo.edu/taxonomies/propositionalconcepts#f8be45db-22fc-4a17-96ad-6c1b3dfd7ba7"
-          tag="_947cfb5a-80f5-49e1-a52b-330f0236fdb1"/>
+        <surr:ref name="testClinicalSituations - 20201015 - Test Most Recent Observation"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
+          referentId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201015"
+          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#102f5949-fa9b-3531-85ba-28fafde21c2d"
+          tag="_2323b26f-e825-4a95-b700-24dfbc8e6185"/>
       </surr:annotation>
     </semantic:extensionElements>
     <semantic:variable id="_04e814c8-ece5-4142-81ea-a5ea2fa28ea1"
@@ -179,11 +178,35 @@
     <semantic:inputData href="#_d93219a2-8ffc-40c0-81a9-968cfff6396d"/>
   </semantic:decisionService>
   <semantic:inputData id="_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82" name="Test On Medication">
+    <semantic:extensionElements>
+      <surr:annotation
+      >
+        <surr:rel name="in terms of"
+          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          resourceId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
+          tag="defined-in-terms-of"/>
+        <surr:ref name="testClinicalSituations - 20201015 - Test On Medication"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
+          referentId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201015"
+          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#13a3e25c-6848-373e-9676-8ecb62ab3e6a"
+          tag="_a7f36632-841f-4c8d-8f68-ffcf7ade6666"/>
+      </surr:annotation>
+    </semantic:extensionElements>
     <semantic:variable id="_7fc5973b-ae88-426a-bf27-28b5081d253f"
       name="Test On Medication"
       typeRef="string"/>
   </semantic:inputData>
   <semantic:inputData id="_d93219a2-8ffc-40c0-81a9-968cfff6396d" name="Test Has Condition">
+    <semantic:extensionElements>
+      <surr:annotation
+      >
+        <surr:ref name="testClinicalSituations - 20201015 - testClinicalSituations - 20201015"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions"
+          referentId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201015"
+          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201015"
+          tag="_d27372e3-82b3-4931-9f00-bbdb9953c899"/>
+      </surr:annotation>
+    </semantic:extensionElements>
     <semantic:variable id="_06f4cfc4-9350-4acf-b239-285f75de8a90"
       name="Test Has Condition"
       typeRef="string"/>
@@ -214,7 +237,7 @@
       </dmndi:DMNShape>
       <dmndi:DMNShape dmnElementRef="_6bb688e4-66fa-4325-91a7-053842afe16a"
         id="_525bf0c6-0641-4eb8-95ea-598268612694">
-        <dc:Bounds height="135" width="100" x="893" y="336"/>
+        <dc:Bounds height="137" width="100" x="893" y="336"/>
         <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
       </dmndi:DMNShape>
       <dmndi:DMNShape dmnElementRef="_458c2a89-3a6c-41b6-a599-136726cb5935"
@@ -256,7 +279,7 @@
       <dmndi:DMNEdge dmnElementRef="_69ae43ab-a6e2-4ce6-b676-7293baf17a26"
         id="_6b8ed12b-88de-42c1-bdc7-a1c99a79a8d7">
         <di:waypoint x="771.5" y="413"/>
-        <di:waypoint x="903" y="388.700559383314"/>
+        <di:waypoint x="903" y="389.48130841121497"/>
         <dmndi:DMNLabel sharedStyle="LS_5d4a2642-c38a-47bb-aac5-79c9c567ecd4_0"/>
       </dmndi:DMNEdge>
       <dmndi:DMNEdge dmnElementRef="_e450bce7-15ba-4b24-b753-ff368881a7d6"

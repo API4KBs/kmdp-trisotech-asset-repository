@@ -12,7 +12,7 @@
   name="Basic Decision Model"
   namespace="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
   triso:logoChoice="Default"
-  triso:state="Published"
+  triso:state="Draft"
   triso:version="1.4.0">
   <semantic:extensionElements/>
   <semantic:decisionService id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356_DS"
@@ -133,10 +133,10 @@
   <semantic:inputData id="_c8828c20-d075-42bf-bc5e-ad5b4e52ef1d"
     name="Test History of Medication Therapy">
     <semantic:extensionElements>
-      <triso:semanticLink id="_899d6481-b87f-4fab-90c1-34ab84b19878"
-        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
-        name="PropositionalConcepts - 20190801 - Has Hypertension - Isin 'PropositionalConcepts - 20190801'"
-        uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#a34c157c-4495-4039-92a5-7bf2ddece5a8"/>
+      <triso:semanticLink id="_871528b5-012c-42e4-8371-8d62d405c4c6"
+        modelURI="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201015"
+        name="testClinicalSituations - 20201015 - Test History of Medication Therapy"
+        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#34502d34-f583-3a0f-979c-598680c2bacc"/>
     </semantic:extensionElements>
     <semantic:variable id="_c52decf4-65c7-49d3-8cc8-8dda5a2580ce"
       name="Test History of Medication Therapy"
@@ -145,10 +145,10 @@
   <semantic:inputData id="_ffc7572a-2d99-4721-8cf0-a0f2f0aa5f13"
     name="Test History of Condition">
     <semantic:extensionElements>
-      <triso:semanticLink id="b9c64c5c-3e82-4658-811b-372d35db9369"
-        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
-        name="PropositionalConcepts - 20190801 - Has Diabetes Mellitus - Isin 'PropositionalConcepts - 20190801'"
-        uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#31f92480-1ed8-4b26-81e1-f402df21235b"/>
+      <triso:semanticLink id="_8bcf8dca-728c-4a17-83db-3017f1db5e45"
+        modelURI="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201015"
+        name="testClinicalSituations - 20201015 - Test History of Condition"
+        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#7a613331-ebcf-3b29-b920-fc52284ae909"/>
     </semantic:extensionElements>
     <semantic:variable id="_5445c35a-23e6-4791-ada7-58ea4311b339"
       name="Test History of Condition"

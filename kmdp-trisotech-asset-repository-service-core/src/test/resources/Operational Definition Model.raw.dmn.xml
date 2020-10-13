@@ -77,10 +77,10 @@
   </semantic:decision>
   <semantic:inputData id="_9d88c493-1c6f-4030-8b65-bfaa0c96b9dc" name="Input A">
     <semantic:extensionElements>
-      <triso:semanticLink id="_29975799-7c48-433e-8da3-74f759a65fac"
-        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
-        name="PropositionalConcepts - 20190801 - History of Hypertensionin 'PropositionalConcepts - 20190801'"
-        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#1e2a6303-fb74-343a-838c-e0cc8a2ac79f"/>
+      <triso:semanticLink id="_0c7b99b5-18fa-497b-bc26-e1fc202f05b1"
+        modelURI="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201015"
+        name="testClinicalSituations - 20201015 - Test History of Condition"
+        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#7a613331-ebcf-3b29-b920-fc52284ae909"/>
     </semantic:extensionElements>
     <semantic:variable id="_3ab3c77b-2f61-4053-8f42-7517f9923580"
       name="Input A"
@@ -88,10 +88,10 @@
   </semantic:inputData>
   <semantic:inputData id="_bed1e88b-906a-4010-86f9-261ea7a3d5b8" name="Input B">
     <semantic:extensionElements>
-      <triso:semanticLink id="_17770b0f-306c-4855-97fb-b4217e2b857d"
-        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
-        name="PropositionalConcepts - 20190801 - History of Cancer Within 5 Yearsin 'PropositionalConcepts - 20190801'"
-        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#bcfd252f-7843-3468-bb9a-5761ab359d85"/>
+      <triso:semanticLink id="_b2081913-6e94-49b2-b179-1115c15be717"
+        modelURI="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201015"
+        name="testClinicalSituations - 20201015 - Test History of Condition"
+        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#7a613331-ebcf-3b29-b920-fc52284ae909"/>
     </semantic:extensionElements>
     <semantic:variable id="_9f5a0663-155a-47ce-a31e-d64d4943ca58"
       name="Input B"
@@ -99,10 +99,10 @@
   </semantic:inputData>
   <semantic:inputData id="_9a0b72b7-4ce4-4681-99b8-c370ba14a4f9" name="Input C">
     <semantic:extensionElements>
-      <triso:semanticLink id="_4cafffff-b513-4310-b2b0-9ef76c4c5a34"
-        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
-        name="PropositionalConcepts - 20190801 - History of Pancreatitis"
-        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#25f7f8b5-e208-3375-be4e-f1c3c5b0d978"/>
+      <triso:semanticLink id="_6b781326-6626-48cc-9f2b-b845d9a5eb0e"
+        modelURI="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201015"
+        name="testClinicalSituations - 20201015 - testClinicalSituations - 20201015"
+        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201015"/>
     </semantic:extensionElements>
     <semantic:variable id="_1f60ca42-2f71-4c9a-a8d0-13e23580faf3"
       name="Input C"

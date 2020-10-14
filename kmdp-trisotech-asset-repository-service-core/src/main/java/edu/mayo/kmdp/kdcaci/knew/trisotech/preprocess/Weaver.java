@@ -324,6 +324,15 @@ public class Weaver {
                   element.getLocalName()));
           element.getParentNode().removeChild(element);
         });
+
+    // if any meta items were invalid, want to strip them from the file
+    // all valid items should have been converted
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, metadataEl))
+        .forEach(element -> {
+          logger.warn(String.format("WARNING: Removing element as it was not found. %s",
+              element.getAttribute("uri")));
+          element.getParentNode().removeChild(element);
+        });
   }
 
   /**
@@ -451,29 +460,25 @@ public class Weaver {
     }
 
     // TODO: would there ever be more than one? CAO maybe
-    List conceptIdentifiers = new ArrayList<ConceptIdentifier>();
+    List<ConceptIdentifier> conceptIdentifiers = new ArrayList<>();
     ConceptIdentifier concept = null;
     try {
       ResourceIdentifier resourceIdentifier = SemanticIdentifier
           .newId(new URI(el.getAttribute("uri")));
-      concept = new ConceptIdentifier().withName(el.getAttribute("name"))
-          .withTag(el.getAttribute("id"))
-          .withReferentId(new URI(el.getAttribute(MODEL_URI)))
-          .withResourceId(resourceIdentifier.getResourceId())
-          .withNamespaceUri(resourceIdentifier.getNamespaceUri());
+
+      Answer<ConceptDescriptor> term  = terms.lookupTerm(resourceIdentifier.getUuid().toString());
+      if(term.getOptionalValue().isPresent()) {
+        concept = term.get()
+            .asConceptIdentifier();
+      } else {
+        logger.warn("WARNING: resource ID {} failed in lookupTerm and will be removed from the file", resourceIdentifier.getUuid().toString());
+        return conceptIdentifiers;
+      }
+
     } catch (URISyntaxException | IllegalArgumentException e) {
       logger.error(String.format("%s%s", e.getMessage(), Arrays.toString(e.getStackTrace())));
     }
     conceptIdentifiers.add(concept);
-
-    // TODO: shouldn't assume here? id might not have leading '_'? or is that just because of test file? CAO
-    //  String tag = el.getAttribute("id").substring(1)
-    // TODO: discuss with Davide -- which of the two examples given below are needed? both? for different reasons? How to tell? CAO
-    // TODO: This is failing -- should it work? CAO
-//    ConceptIdentifier ciFromCS = ClinicalSituation.resolve(tag).orElseThrow(IllegalStateException::new).?? // CAO -- for now: TODO: fix this -- there will be more support coming
-
-    // TODO: fix this CAO -- this replaces the 'new ConceptIdentifer' code above (need the above statement working first???) this currently FAILS
-//   TODO: ConceptIdentifier cid = KnowledgeRepresentationLanguage.resolve(tag).orElseThrow(IllegalStateException::new).asConcept()
 
     return conceptIdentifiers;
   }

@@ -34,8 +34,14 @@ import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import edu.mayo.ontology.taxonomies.clinicalsituations.CommonclinicalClinicalSituation;
+import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionType;
+import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +138,7 @@ class WeaverTest {
 
   @Test
   void testWeaveDefault() {
-    String path = "/Weaver Test 1.raw.dmn.xml";
+    String path = "/Basic Decision Model.raw.dmn.xml";
     Document dox = loadXMLDocument(resolveResource(path))
         .orElseGet(() -> fail("Unable to load document " + path));
 
@@ -175,8 +181,17 @@ class WeaverTest {
 
 
 			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
-			assertTrue( props.stream()
-			                 .anyMatch( ann -> ann.getRef().getLabel().contains( "Blood Pressure" ) ) );
+			assertEquals(3, props.size());
+			Set<DecisionType> decisions = props.stream()
+            .map(Annotation::getRef)
+            .map(ConceptIdentifier::getUuid)
+            .map(DecisionTypeSeries::resolveUUID)
+            .flatMap(StreamUtil::trimStream)
+            .collect(Collectors.toSet());
+			assertEquals(3, decisions.size());
+			assertTrue(decisions.contains(DecisionTypeSeries.Aggregation_Decision));
+      assertTrue(decisions.contains(DecisionTypeSeries.Assessment_Decision));
+      assertTrue(decisions.contains(DecisionTypeSeries.Naturalistic_Decision));
 
 
     } catch (IllegalStateException ie) {
@@ -242,9 +257,32 @@ class WeaverTest {
       assertTrue(verifyHrefs(dox));
 
       List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
-      assertTrue( props.stream()
-          .anyMatch( ann -> ann.getRef().getLabel().contains( "Blood Pressure" ) ) );
+      assertEquals(6, props.size());
+      Set<DecisionType> decisions = props.stream()
+          .map(Annotation::getRef)
+          .map(ConceptIdentifier::getUuid)
+          .map(DecisionTypeSeries::resolveUUID)
+          .flatMap(StreamUtil::trimStream)
+          .collect(Collectors.toSet());
+      assertEquals(5, decisions.size());
+      // there are 2 Naturalistic_Decision, that's why only 5 are asserted here
+      assertTrue(decisions.contains(DecisionTypeSeries.Aggregation_Decision));
+      assertTrue(decisions.contains(DecisionTypeSeries.Assessment_Decision));
+      assertTrue(decisions.contains(DecisionTypeSeries.Naturalistic_Decision));
+      assertTrue(decisions.contains(DecisionTypeSeries.Choice_Decision));
+      assertTrue(decisions.contains(DecisionTypeSeries.Actionable_Decision));
 
+      props = loadAnnotations(dox, KnownAttributes.INPUTS, Annotation.class);
+      assertTrue(props.stream()
+          .anyMatch(ann -> ann.getRel().getPrefLabel()
+              .equals(In_Terms_Of.getLabel())));
+      assertEquals(2, props.size());
+
+      assertTrue( props.stream()
+          .anyMatch( ann -> ann.getRef().getName().contains("Test On Medication")));
+
+      assertTrue( props.stream()
+          .anyMatch( ann -> ann.getRef().getName().contains("Test Most Recent Observation")));
 
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(),ie);
@@ -277,20 +315,26 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
-
-      Annotation type = loadAnnotations(dox, KnownAttributes.DEFINES, Annotation.class).iterator()
-          .next();
-      assertEquals(Defines.getLabel(),
-          type.getRel().getPrefLabel());
+// TODO: Confirm if this should be there. currently is not in the model. CAO
+//      Annotation type = loadAnnotations(dox, KnownAttributes.DEFINES, Annotation.class).iterator()
+//          .next();
+//      assertEquals(Defines.getLabel(),
+//          type.getRel().getPrefLabel());
 
       List<Annotation> props = loadAnnotations(dox, KnownAttributes.INPUTS, Annotation.class);
       assertTrue(props.stream()
           .anyMatch(ann -> ann.getRel().getPrefLabel()
               .equals(In_Terms_Of.getLabel())));
+      assertEquals(2, props.size());
+
+      assertTrue( props.stream()
+          .anyMatch( ann -> ann.getRef().getName().contains("Most Recent Bilirubin")));
+      assertTrue(props.stream()
+          .anyMatch( ann -> ann.getRef().getName().contains("Situation with Known Patient Age")));
 
       List<Annotation> props2 = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
       assertTrue( props2.stream()
-          .anyMatch( ann -> ann.getRef().getLabel().contains( "Blood Pressure" ) ) );
+          .anyMatch( ann -> ann.getRef().getLabel().contains( "Computable Decision" ) ) );
 
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(),ie);
@@ -450,8 +494,8 @@ class WeaverTest {
           // TODO: check each tag, or just get all href attributes and modify?  use KnownAttributes? CAO
           Attr attr = element.getAttributeNode("href");
           checkAttribute(attr, "href");
-          if(!confirmKMDPnamespace(attr)) {
-            fail("expect BASE_URI in attribute: " + attr.getName() + " : " + attr.getValue());
+          if(containsTrisotechNamespace(attr)) {
+            fail("should NOT contain trisotech in attribute: " + attr.getName() + " : " + attr.getValue());
           }
         });
     return true;
@@ -490,7 +534,7 @@ class WeaverTest {
         return false;
       }
 
-      if (!confirmKMDPnamespace(attr)) {
+      if (containsTrisotechNamespace(attr)) {
         return false;
       }
 
@@ -508,9 +552,8 @@ class WeaverTest {
     return true;
   }
 
-  private boolean confirmKMDPnamespace(Attr attr) {
-    return attr.getValue()
-        .contains(MAYO_ARTIFACTS_BASE_URI);
+  private boolean containsTrisotechNamespace(Attr attr) {
+    return attr.getValue().toLowerCase().contains("trisotech");
   }
 
 

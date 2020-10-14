@@ -456,11 +456,10 @@ public class Weaver {
     try {
       ResourceIdentifier resourceIdentifier = SemanticIdentifier
           .newId(new URI(el.getAttribute("uri")));
-      concept = new ConceptIdentifier().withName(el.getAttribute("name"))
-          .withTag(el.getAttribute("id"))
-          .withReferentId(new URI(el.getAttribute(MODEL_URI)))
-          .withResourceId(resourceIdentifier.getResourceId())
-          .withNamespaceUri(resourceIdentifier.getNamespaceUri());
+      concept = terms.lookupTerm(resourceIdentifier.getUuid().toString())
+          .get()
+          .asConceptIdentifier();
+
     } catch (URISyntaxException | IllegalArgumentException e) {
       logger.error(String.format("%s%s", e.getMessage(), Arrays.toString(e.getStackTrace())));
     }

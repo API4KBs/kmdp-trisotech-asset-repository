@@ -19,6 +19,8 @@ import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.Dependenc
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
@@ -38,10 +40,13 @@ public abstract class BaseAnnotationHandler {
   }
 
   public List<Annotation> getAnnotation(String name,
-      KnownAttributes defaultRel,
+      SemanticAnnotationRelTypeSeries defaultRel,
       List<ConceptIdentifier> rows) {
+    ConceptIdentifier rel = null;
 
-    KnownAttributes rel = KnownAttributes.resolve(name).orElse(defaultRel);
+    if(null != defaultRel) {
+      rel = defaultRel.asConceptIdentifier();
+    }
 
     return
         Collections.singletonList(
@@ -71,7 +76,7 @@ public abstract class BaseAnnotationHandler {
     return anno;
   }
 
-  protected Annotation newAnnotation(KnownAttributes rel, List<ConceptIdentifier> rows) {
+  protected Annotation newAnnotation(ConceptIdentifier rel, List<ConceptIdentifier> rows) {
     Annotation anno;
     switch (rows.size()) {
       case 0:
@@ -82,16 +87,11 @@ public abstract class BaseAnnotationHandler {
             .withRef(rows.get(0));
     }
     if (null != rel) {
-      return anno.withRel(rel.asConcept());
+      ConceptIdentifier ci = SemanticAnnotationRelTypeSeries.In_Terms_Of.asConceptIdentifier();
+      return anno.withRel(rel);
     } else {
       return anno;
     }
-  }
-
-  public Annotation getBasicAnnotation(KnownAttributes attr, String v) {
-    return new Annotation()
-        .withRel(attr.asConcept())
-        .withRef(Term.newTerm(v).asConceptIdentifier());
   }
 
 }

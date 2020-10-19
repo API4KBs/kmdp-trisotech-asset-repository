@@ -13,14 +13,12 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.util.Util.resolveResource;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.validate;
-import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
-import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.KnownAttributes;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.StreamUtil;
@@ -37,9 +34,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import edu.mayo.ontology.taxonomies.clinicalsituations.CommonclinicalClinicalSituation;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
@@ -180,7 +177,7 @@ class WeaverTest {
       assertTrue(verifyHrefs(dox));
 
 
-			List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
+			List<Annotation> props = loadAnnotations( dox, Captures, Annotation.class );
 			assertEquals(3, props.size());
 			Set<DecisionType> decisions = props.stream()
             .map(Annotation::getRef)
@@ -256,7 +253,7 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
-      List<Annotation> props = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
+      List<Annotation> props = loadAnnotations( dox, Captures, Annotation.class );
       assertEquals(6, props.size());
       Set<DecisionType> decisions = props.stream()
           .map(Annotation::getRef)
@@ -272,7 +269,7 @@ class WeaverTest {
       assertTrue(decisions.contains(DecisionTypeSeries.Choice_Decision));
       assertTrue(decisions.contains(DecisionTypeSeries.Actionable_Decision));
 
-      props = loadAnnotations(dox, KnownAttributes.INPUTS, Annotation.class);
+      props = loadAnnotations(dox, In_Terms_Of, Annotation.class);
       assertTrue(props.stream()
           .anyMatch(ann -> ann.getRel().getPrefLabel()
               .equals(In_Terms_Of.getLabel())));
@@ -315,13 +312,7 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
-// TODO: Confirm if this should be there. currently is not in the model. CAO
-//      Annotation type = loadAnnotations(dox, KnownAttributes.DEFINES, Annotation.class).iterator()
-//          .next();
-//      assertEquals(Defines.getLabel(),
-//          type.getRel().getPrefLabel());
-
-      List<Annotation> props = loadAnnotations(dox, KnownAttributes.INPUTS, Annotation.class);
+      List<Annotation> props = loadAnnotations(dox, In_Terms_Of, Annotation.class);
       assertTrue(props.stream()
           .anyMatch(ann -> ann.getRel().getPrefLabel()
               .equals(In_Terms_Of.getLabel())));
@@ -332,7 +323,7 @@ class WeaverTest {
       assertTrue(props.stream()
           .anyMatch( ann -> ann.getRef().getName().contains("Situation with Known Patient Age")));
 
-      List<Annotation> props2 = loadAnnotations( dox, KnownAttributes.CAPTURES, Annotation.class );
+      List<Annotation> props2 = loadAnnotations( dox, Captures, Annotation.class );
       assertTrue( props2.stream()
           .anyMatch( ann -> ann.getRef().getLabel().contains( "Computable Decision" ) ) );
 
@@ -491,7 +482,6 @@ class WeaverTest {
             || el.getLocalName().equals("requiredDecision"))
             && (el.hasAttribute("href")))
         .forEach(element -> {
-          // TODO: check each tag, or just get all href attributes and modify?  use KnownAttributes? CAO
           Attr attr = element.getAttributeNode("href");
           checkAttribute(attr, "href");
           if(containsTrisotechNamespace(attr)) {
@@ -639,9 +629,8 @@ class WeaverTest {
     return true;
   }
 
-
-  private <T extends Annotation> List<T> loadAnnotations(Document dox, KnownAttributes att,
-      Class<T> type) {
+  private <T extends Annotation> List<T> loadAnnotations(Document dox, SemanticAnnotationRelTypeSeries att,
+                                                         Class<T> type) {
 
     return XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         .filter(el -> el.getLocalName().equals("extensionElements"))
@@ -649,9 +638,10 @@ class WeaverTest {
         .flatMap(XMLUtil::asElementStream)
         .map(el -> JaxbUtil.unmarshall(Annotation.class,el))
         .flatMap(StreamUtil::trimStream)
-        .filter(a -> att.asConcept().equals(a.getRel()))
+        .filter(a -> att.asConceptIdentifier().equals(a.getRel()))
         .map(type::cast)
         .collect(Collectors.toList());
 
   }
+
 }

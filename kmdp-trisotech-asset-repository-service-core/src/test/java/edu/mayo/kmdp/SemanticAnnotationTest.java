@@ -15,6 +15,8 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -39,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.w3c.dom.Document;
 
 @SpringBootTest
 @ContextConfiguration(classes = TrisotechAssetRepositoryConfig.class)
@@ -57,12 +60,12 @@ class SemanticAnnotationTest {
 	TermsApiInternal terms;
 
 
-	@Disabled("testExtraction: Current_Chronological_Age no longer exists...need input files updated to Trisotech")
+//	@Disabled("testExtraction: Current_Chronological_Age no longer exists...need input files updated to Trisotech")
 	@Test
 	void testExtraction() {
 		// TODO: when have more annotations and examples CAO
 		assertTrue(true); // dummy to keep sonarlint happy
-		String dmnPath = "/Computable Decision Model.dmn";
+		String dmnPath = "/Computable Decision Model.raw.dmn.xml";
 		String metaPath = "/Computable Decision Model.meta.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
@@ -78,13 +81,29 @@ class SemanticAnnotationTest {
 				fail( "Unable to instantiate metadata object" );
 			}
 			KnowledgeAsset surr = res.get();
-			assertEquals( 1, surr.getAnnotation().size() );
-			assertEquals(
-					SemanticAnnotationRelTypeSeries.In_Terms_Of.asConceptIdentifier(), surr.getAnnotation().get(0).getRel() );
+			assertEquals( 3, surr.getAnnotation().size() );
+			List<ConceptDescriptor> inputs = surr.getAnnotation().stream()
+					.filter( annotation -> In_Terms_Of.isSameEntity(annotation.getRel()) )
+					.map( annotation -> annotation.getRef().getUuid().toString())
+					.map(terms::lookupTerm)
+					.collect(Answer.toList())
+					.orElse(Collections.emptyList());
+			assertEquals(2, inputs.size());
+			assertTrue( inputs.stream()
+					.anyMatch( input -> input.getName().contains("Most Recent Bilirubin")));
+			assertTrue(inputs.stream()
+					.anyMatch( input -> input.getName().contains("Situation with Known Patient Age")));
 
-			assertEquals(CommonclinicalClinicalSituationSeries.Situation_With_Known_Patient_Age.getUuid(),
-					surr.getAnnotation().get(0).getRef().getUuid());
+			List<ConceptDescriptor> decisions = surr.getAnnotation().stream()
+					.filter( annotation -> Captures.isSameEntity(annotation.getRel()) )
+					.map( annotation -> annotation.getRef().getUuid().toString())
+					.map(terms::lookupTerm)
+					.collect(Answer.toList())
+					.orElse(Collections.emptyList());
 
+			assertEquals(1, decisions.size());
+			assertTrue( decisions.stream()
+					.anyMatch( decision -> decision.getName().contains( "Computable Decision" ) ) );
 
 		} catch ( Exception e ) {
 			e.printStackTrace();
@@ -93,17 +112,19 @@ class SemanticAnnotationTest {
 	}
 
 
-
-
 	@Test
 	void testExtractionFull() {
-		String dmnPath = "/Weaver Test 1.dmn.xml";
+		String dmnPath = "/Weaver Test 1.raw.dmn.xml";
 		String metaPath = "/Weaver Test 1.meta.json";
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
 				.map( dmnWeaver::weave )
 				.map( XMLUtil::toByteArray );
 		assertTrue( dmn.isPresent() );
+		Optional<Document> dox = (XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath)));
+		dmnWeaver.weave(dox.get());
+		XMLUtil.streamXMLDocument(dox.get(), System.out);
+
 		try {
 			Optional<KnowledgeAsset> res = extractor.extract(new ByteArrayInputStream(dmn.get()),
 					SemanticAnnotationTest.class.getResourceAsStream(metaPath));
@@ -120,8 +141,7 @@ class SemanticAnnotationTest {
 					.orElse(Collections.emptyList());
 
 			// FIXME "Dictionary inputs are not resolved (sex, race)"
-			// FIXME Known concepts are not resolved "height, weight"
-			assertEquals(4, inputs.size());
+			assertEquals(2, inputs.size());
 
 		} catch ( Exception e ) {
 			e.printStackTrace();

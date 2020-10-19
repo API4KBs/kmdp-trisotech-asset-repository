@@ -54,6 +54,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
@@ -229,9 +231,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         )
         .withName(model.getName()); // TODO: might want '(DMN)' / '(CMMN)' here
 
-//
-//    // TODO: Needed? yes CAO Is it? annotations are added above in .withSubject [withSubject has been removed per Davide notes in surrogate]
-//    // Annotations
+    // Annotations
     addSemanticAnnotations(surr, annotations);
 
     logger.debug(
@@ -434,15 +434,12 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
 
-  // TODO: Is this needed? Yes (eventually) -- need example models to work from CAO
-  // 02/10/2020: pulls annotations up; may not be needed - replace with terminology service
   protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
-//    annotations.stream()
-//        .filter(ann -> ann.getRel().equals(AnnotationRelTypeSeries.Captures.asConcept())
-//            || ann.getRel().equals(AnnotationRelTypeSeries.Defines.asConcept())
-//            || ann.getRel().equals(AnnotationRelTypeSeries.In_Terms_Of.asConcept()))
-//        .forEach(surr::withSubject);
-
+    annotations.stream()
+        .filter(ann -> SemanticAnnotationRelTypeSeries.Captures.isSameEntity(ann.getRel())
+            || SemanticAnnotationRelTypeSeries.Defines.isSameEntity(ann.getRel())
+            || SemanticAnnotationRelTypeSeries.In_Terms_Of.isSameEntity(ann.getRel()))
+        .forEach(surr::withAnnotation);
   }
 
 
@@ -455,7 +452,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .filter(Objects::nonNull)
         .filter(el -> el.getLocalName().equals("extensionElements"))
         .flatMap(el -> XMLUtil.asElementStream(el.getChildNodes()))
-        .filter(child -> child.getTagName().equals("annotation"))
+        .filter(child -> child.getLocalName().equals("annotation"))
         .map(child -> JaxbUtil.unmarshall(Annotation.class, Annotation.class, child))
         .filter(Optional::isPresent)
         .map(Optional::get)
@@ -483,7 +480,6 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         }
 
         Annotation inputAnno = inputAnnos.stream()
-//                .filter(ann -> KnownAttributes.CAPTURES.asConcept().equals(ann.getRel())) // TODO: Needed? yes needed, but need better example files, no sample files have CAPTURES CAO
             .map(Annotation.class::cast)
             .map(sa -> new Annotation()
                 .withRel(In_Terms_Of.asConceptIdentifier())

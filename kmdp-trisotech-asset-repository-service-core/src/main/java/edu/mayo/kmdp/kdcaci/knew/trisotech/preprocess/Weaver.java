@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess;
 
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.*;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
@@ -29,17 +30,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
+
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelType;
+import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
@@ -226,27 +224,26 @@ public class Weaver {
   }
 
   /**
-   * Determine the KnownAttribute based on the key. TODO: this can probably be reworked. wanted to
-   * get something working to discuss results with Davide CAO
+   * Determine the KnownAttribute based on the key.
    *
    * Can get rid of - was a Signavio use
    *
    * @param el the document element under examination
    * @return the KnownAttribute to be used in rewriting this element
    */
-  private KnownAttributes getKnownAttribute(Element el) {
+  private SemanticAnnotationRelTypeSeries getKnownAttribute(Element el) {
     String uri = el.getAttribute("uri");
 
     if (DecisionTypeSeries.resolveId(uri).isPresent()) {
-      return KnownAttributes.CAPTURES;
+      return Captures;
     } else if (ClinicalTaskSeries.resolveId(uri).isPresent()) {
-      return KnownAttributes.CAPTURES;
+      return Captures;
     } else if (isDomainConcept(uri)) {
       String grandparent = el.getParentNode().getParentNode().getNodeName();
       if (grandparent.equals("semantic:decision")) {
-        return KnownAttributes.DEFINES;
+        return Defines;
       } else if (grandparent.equals("semantic:inputData")) {
-        return KnownAttributes.INPUTS;
+        return In_Terms_Of;
       } else {
         return null;
       }
@@ -268,7 +265,8 @@ public class Weaver {
     String ns = cdAns.map(ConceptIdentifier::getNamespaceUri)
         .map(URI::toString)
         .orElse("");
-    return ns.toLowerCase().contains("clinicalsituations");
+    return (ns.toLowerCase().contains("clinicalsituations") ||
+        ns.toLowerCase().contains("propositionalconcepts"));
   }
 
   private void verifyAndRemoveInvalidCaseFileItemDefinition(Document dox) {
@@ -496,11 +494,11 @@ public class Weaver {
 
 
   private void doInjectTerm(Element el,
-      KnownAttributes defaultRel,
+      SemanticAnnotationRelTypeSeries defaultRel,
       List<ConceptIdentifier> rows) {
     BaseAnnotationHandler handler = handler(el);
 
-    if (!rows.isEmpty()) {
+    if (!rows.isEmpty() && !rows.stream().noneMatch(Objects::nonNull)) {
       List<Annotation> annos = handler.getAnnotation(el.getLocalName(), defaultRel, rows);
       handler.replaceProprietaryElement(el,
           handler.wrap(toChildElements(annos, el)));

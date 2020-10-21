@@ -57,24 +57,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Assessment Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
                       tag="AssessmentDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AssessmentDecision"
+                      versionTag="20201006-224599">
                <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -82,24 +82,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Temporal Correlation Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/CorrelationDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#cc45cb9e-0a9e-396e-90a4-79a8a632901d"
                       tag="CorrelationDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#CorrelationDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#CorrelationDecision"
+                      versionTag="20201006-224599">
                <id:uuid>cc45cb9e-0a9e-396e-90a4-79a8a632901d</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -107,24 +107,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Naturalistic Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/NaturalisticDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"
                       tag="NaturalisticDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#NaturalisticDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#NaturalisticDecision"
+                      versionTag="20201006-224599">
                <id:uuid>20953273-18b7-3ec2-813f-1e71808e9823</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -146,24 +146,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Temporal Correlation Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/CorrelationDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#cc45cb9e-0a9e-396e-90a4-79a8a632901d"
                       tag="CorrelationDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#CorrelationDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#CorrelationDecision"
+                      versionTag="20201006-224599">
                <id:uuid>cc45cb9e-0a9e-396e-90a4-79a8a632901d</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -171,24 +171,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Assessment Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
                       tag="AssessmentDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AssessmentDecision"
+                      versionTag="20201006-224599">
                <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -196,24 +196,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Implicit Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ImplicitDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#e0dbe4d9-79b5-390c-91a9-bcc756d68b18"
                       tag="ImplicitDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#ImplicitDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#ImplicitDecision"
+                      versionTag="20201006-224599">
                <id:uuid>e0dbe4d9-79b5-390c-91a9-bcc756d68b18</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -253,24 +253,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Assessment Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
                       tag="AssessmentDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AssessmentDecision"
+                      versionTag="20201006-224599">
                <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -278,24 +278,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Temporal Correlation Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/CorrelationDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#cc45cb9e-0a9e-396e-90a4-79a8a632901d"
                       tag="CorrelationDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#CorrelationDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#CorrelationDecision"
+                      versionTag="20201006-224599">
                <id:uuid>cc45cb9e-0a9e-396e-90a4-79a8a632901d</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -303,24 +303,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Naturalistic Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/NaturalisticDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"
                       tag="NaturalisticDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#NaturalisticDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#NaturalisticDecision"
+                      versionTag="20201006-224599">
                <id:uuid>20953273-18b7-3ec2-813f-1e71808e9823</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -345,24 +345,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Assessment Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
                       tag="AssessmentDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AssessmentDecision"
+                      versionTag="20201006-224599">
                <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -370,24 +370,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Naturalistic Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/NaturalisticDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"
                       tag="NaturalisticDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#NaturalisticDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#NaturalisticDecision"
+                      versionTag="20201006-224599">
                <id:uuid>20953273-18b7-3ec2-813f-1e71808e9823</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -395,24 +395,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Implicit Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ImplicitDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#e0dbe4d9-79b5-390c-91a9-bcc756d68b18"
                       tag="ImplicitDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#ImplicitDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#ImplicitDecision"
+                      versionTag="20201006-224599">
                <id:uuid>e0dbe4d9-79b5-390c-91a9-bcc756d68b18</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -434,24 +434,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Implicit Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ImplicitDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#e0dbe4d9-79b5-390c-91a9-bcc756d68b18"
                       tag="ImplicitDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#ImplicitDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#ImplicitDecision"
+                      versionTag="20201006-224599">
                <id:uuid>e0dbe4d9-79b5-390c-91a9-bcc756d68b18</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -459,24 +459,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Assessment Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
                       tag="AssessmentDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AssessmentDecision"
+                      versionTag="20201006-224599">
                <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -484,24 +484,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Naturalistic Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/NaturalisticDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"
                       tag="NaturalisticDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#NaturalisticDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#NaturalisticDecision"
+                      versionTag="20201006-224599">
                <id:uuid>20953273-18b7-3ec2-813f-1e71808e9823</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -526,24 +526,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Implicit Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ImplicitDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#e0dbe4d9-79b5-390c-91a9-bcc756d68b18"
                       tag="ImplicitDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#ImplicitDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#ImplicitDecision"
+                      versionTag="20201006-224599">
                <id:uuid>e0dbe4d9-79b5-390c-91a9-bcc756d68b18</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -551,24 +551,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Assessment Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
                       tag="AssessmentDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AssessmentDecision"
+                      versionTag="20201006-224599">
                <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -576,24 +576,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Naturalistic Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/NaturalisticDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"
                       tag="NaturalisticDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#NaturalisticDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#NaturalisticDecision"
+                      versionTag="20201006-224599">
                <id:uuid>20953273-18b7-3ec2-813f-1e71808e9823</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -624,24 +624,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Implicit Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ImplicitDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#e0dbe4d9-79b5-390c-91a9-bcc756d68b18"
                       tag="ImplicitDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#ImplicitDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#ImplicitDecision"
+                      versionTag="20201006-224599">
                <id:uuid>e0dbe4d9-79b5-390c-91a9-bcc756d68b18</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -649,24 +649,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Assessment Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
                       tag="AssessmentDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AssessmentDecision"
+                      versionTag="20201006-224599">
                <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -674,24 +674,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Naturalistic Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/NaturalisticDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"
                       tag="NaturalisticDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#NaturalisticDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#NaturalisticDecision"
+                      versionTag="20201006-224599">
                <id:uuid>20953273-18b7-3ec2-813f-1e71808e9823</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -699,24 +699,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Temporal Correlation Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/CorrelationDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#cc45cb9e-0a9e-396e-90a4-79a8a632901d"
                       tag="CorrelationDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#CorrelationDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#CorrelationDecision"
+                      versionTag="20201006-224599">
                <id:uuid>cc45cb9e-0a9e-396e-90a4-79a8a632901d</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -741,24 +741,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Temporal Correlation Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/CorrelationDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#cc45cb9e-0a9e-396e-90a4-79a8a632901d"
                       tag="CorrelationDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#CorrelationDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#CorrelationDecision"
+                      versionTag="20201006-224599">
                <id:uuid>cc45cb9e-0a9e-396e-90a4-79a8a632901d</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -766,24 +766,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Assessment Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
                       tag="AssessmentDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AssessmentDecision"
+                      versionTag="20201006-224599">
                <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -791,24 +791,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Naturalistic Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/NaturalisticDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#20953273-18b7-3ec2-813f-1e71808e9823"
                       tag="NaturalisticDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#NaturalisticDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#NaturalisticDecision"
+                      versionTag="20201006-224599">
                <id:uuid>20953273-18b7-3ec2-813f-1e71808e9823</id:uuid>
             </surr:ref>
          </surr:annotation>

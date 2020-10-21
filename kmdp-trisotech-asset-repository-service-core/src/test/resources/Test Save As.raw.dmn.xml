@@ -2,6 +2,7 @@
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
                       xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
                       xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/e36338e7-500c-43a0-881d-22aa5dc538df"
+                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
                       xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
                       xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
                       xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
@@ -48,34 +49,40 @@
       <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
    </semantic:decisionService>
    <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_76253d3b-ea76-4644-b32b-2f294d2d8395" name="" typeRef="Any"/>
+      <semantic:variable id="_b758cc8b-4635-4f81-b7ef-716e2fa8169f" name="" typeRef="Any"/>
    </semantic:decisionService>
    <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_3facc2c7-31c1-4c8c-83cd-17f483393090" name="" typeRef="Any"/>
+      <semantic:variable id="_10b6c3c0-4064-4714-aa83-91b353fec78a" name="" typeRef="Any"/>
    </semantic:decisionService>
    <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_32673608-a455-4601-a9ad-f9f5a48f9bce" name="" typeRef="Any"/>
+      <semantic:variable id="_f005cc26-4044-47cc-8c79-f3994132590b" name="" typeRef="Any"/>
    </semantic:decisionService>
    <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_cd733eec-1f5c-44d2-bc37-4b917cb364e6" name="" typeRef="Any"/>
+      <semantic:variable id="_ec93e0bb-422b-4948-a557-c7955ae23a7e" name="" typeRef="Any"/>
    </semantic:decisionService>
    <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_9fc55f81-b5f6-4b0d-b00f-c320761a6f97" name="" typeRef="Any"/>
+      <semantic:variable id="_ce870c08-5c3b-4c14-832d-8f3a7d13c5b2" name="" typeRef="Any"/>
    </semantic:decisionService>
    <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_b0d81421-ee9d-492d-85cc-cce68d809658" name="" typeRef="Any"/>
+      <semantic:variable id="_47f1df52-794e-433f-bb79-fe1adf64ec9d" name="" typeRef="Any"/>
    </semantic:decisionService>
    <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_6a1f0a7f-9241-4f4d-8ecc-30468e3c0f35" name="" typeRef="Any"/>
+      <semantic:variable id="_099d2592-722d-4049-9cf8-7808c617640b" name="" typeRef="Any"/>
    </semantic:decisionService>
    <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_c3eac375-d41a-4cdf-b28c-6fadbbf3a8c7" name="" typeRef="Any"/>
+      <semantic:variable id="_cf9eab2f-5733-4169-b11e-aa212b7289c1" name="" typeRef="Any"/>
    </semantic:decisionService>
    <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_7774166b-8a0a-4051-8a52-6838d15c9ed2" name="" typeRef="Any"/>
+      <semantic:variable id="_4f603bc4-a3ef-4f20-93c3-5ded2e3817b4" name="" typeRef="Any"/>
    </semantic:decisionService>
    <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_399d066b-5630-436d-a2e3-a51b4ebc851f" name="" typeRef="Any"/>
+      <semantic:variable id="_2178fe33-379c-4766-8701-96e2748510b3" name="" typeRef="Any"/>
+   </semantic:decisionService>
+   <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
+      <semantic:variable id="_1f88d5de-f087-4cd6-b4b3-fceed81b1c71" name="" typeRef="Any"/>
+   </semantic:decisionService>
+   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
+      <semantic:variable id="_844a10b0-8b12-40ee-a7d2-30c48a47186f" name="" typeRef="Any"/>
    </semantic:decisionService>
    <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS"
                              name="Whole Model Decision Service">
@@ -123,7 +130,7 @@
          <semantic:requiredInput href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
       </semantic:informationRequirement>
       <semantic:literalExpression id="_e38ca61b-db31-4025-9b58-2c7ca2d1ce4e"
-                                  triso:expressionId="_b37ee63e-f1f0-46fc-b9a6-55d23ad3c8ce"
+                                  triso:expressionId="_a4eb6964-7f6c-44e9-a0cf-a763e84ae601"
                                   typeRef="string">
          <semantic:text>42</semantic:text>
       </semantic:literalExpression>
@@ -162,7 +169,7 @@
    <dmndi:DMNDI>
       <dmndi:DMNDiagram id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe"
                         name="Page 1"
-                        triso:modelElementRef="_be40f3b1-f029-49b0-89c3-fb0e7d380abc">
+                        triso:modelElementRef="_5156199f-9459-4609-9007-9e4b28c0c8ff">
          <di:extension>
             <surr:annotation/>
          </di:extension>

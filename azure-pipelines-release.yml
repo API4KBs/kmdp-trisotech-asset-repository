@@ -1,25 +1,31 @@
-## KMDP Release Candidate Pipeline
-## kmdp-trisotech-asset-repository-service
+### Release Candidate Pipeline
+### Project :: kmdp-trisotech-asset-repository-service
 
+# Sets Virtual Machine to Run Pipeline on
 pool:
   vmImage: 'ubuntu-latest'
 
+# Gets Variables from Azure DevOps Library
 variables: 
   - group: kmdp-platform-variables
   - group: kmdp-platform-dev-variables
 
-steps:
-
 # ------------------ PIPELINE STEPS  ------------------
+steps:
+# Outputs pipeline steps have started
 - script: |
-    echo Starting KMDP Release Candidate kmdp-trisotech-asset-repository-service Branch!
-  displayName: 'Pipeline Steps Started'
+    echo Starting Develop Branch Build Pipeline!
+    echo Project :: knew-job-runner
+  displayName: 'Starting Pipeline Steps'
 
+# Sets Git Credentials on the VM set from variable group
+# $env:GIT_REDIRECT_STDERR = '2>&1' prevents unwanted errors
 - task: PowerShell@2
   displayName: 'Git Config User'
   inputs:
     targetType: 'inline'
     script: |
+      $env:GIT_REDIRECT_STDERR = '2>&1'
       git config --global user.email "$env:GIT_USER_EMAIL"
       git config --global user.name "$env:GIT_USER_NAME"
       Write-Host Email: "$env:GIT_USER_EMAIL"
@@ -28,9 +34,10 @@ steps:
     GIT_USER_EMAIL: $(gitUserEmail)
     GIT_USER_NAME: $(gitUserName)
 
-# Download Secure Settings m2 File
+# Gets .m2 Settings File from Azure DevOps Library
+# Downloads File for use in Pipeline
 - task: DownloadSecureFile@1
-  displayName: 'Download Secure m2'
+  displayName: 'Downloads Secure .m2 Settings File'
   name: settingsxml
   inputs:
     secureFile: settings-dev.xml
@@ -50,6 +57,17 @@ steps:
   inputs:
     artifactsFeeds: 'KMD'
 
+# Sets JDK 11 for Pipeline
+# Runs Maven Goal: validate
+- task: Maven@3
+  displayName: 'Sets Pipeline to JDK 11'
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'validate'
+    options: '-ntp'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+
 # Create Release Branch 
 - task: PowerShell@2
   displayName: 'Triso Checkout Release Candidate'
@@ -62,7 +80,10 @@ steps:
       # Create release version
       git checkout -b "release-$env:TRISO_RELEASE_VERSION"
       # mvn set version of release branch root pom and then clean install
-      mvn versions:set "-DnewVersion=$env:TRISO_RELEASE_VERSION" -ntp
+      mvn versions:set "-DnewVersion=$env:TRISO_RELEASE_VERSION" -DprocessAllModules -ntp
+      mvn versions:set-property "-Dproperty=kmdp.servers.version" "-DnewVersion=$env:TIER2_RELEASE_VERSION" -ntp
+      mvn versions:set-property "-Dproperty=clinical.terms.version" "-DnewVersion=$env:TERM_CONTENT_RELEASE_VERSION" -ntp
+      mvn versions:update-parent "-DparentVersion=$env:TIER1_RELEASE_VERSION" -ntp
       mvn clean package "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
       type pom.xml
       mvn clean install "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
@@ -72,6 +93,9 @@ steps:
     TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
     TRISO_REPO_DEV_ID: $(trisoRepoDevId)
     TRISO_DEV_TOKEN: $(trisoDevToken)
+    TIER1_RELEASE_VERSION: $(tier1ReleaseVersion)
+    TIER2_RELEASE_VERSION: $(tier2ReleaseVersion)
+    TERM_CONTENT_RELEASE_VERSION: $(termsContentReleaseVersion)
 
 ## Check New Develop Version
 - task: PowerShell@2
@@ -86,7 +110,10 @@ steps:
       # Check develop branch to rebase
       git checkout develop
       git rebase "release-$env:TRISO_RELEASE_VERSION"
-      mvn versions:set "-DnewVersion=$env:TRISO_DEVELOP_VERSION" -DallowSnapshots=true -ntp
+      mvn versions:set "-DnewVersion=$env:TRISO_DEVELOP_VERSION" -DprocessAllModules -DallowSnapshots=true -ntp
+      mvn versions:set-property "-Dproperty=kmdp.servers.version" "-DnewVersion=$env:TIER2_DEVELOP_VERSION" -DallowSnapshots=true -ntp
+      mvn versions:set-property "-Dproperty=clinical.terms.version" "-DnewVersion=$env:TERM_CONTENT_DEVELOP_VERSION" -DallowSnapshots=true -ntp
+      mvn versions:update-parent "-DparentVersion=$env:TIER1_DEVELOP_VERSION" -DallowSnapshots=true  -ntp
       mvn clean package "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
       type pom.xml
       mvn clean install "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
@@ -97,6 +124,9 @@ steps:
     TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
     TRISO_REPO_DEV_ID: $(trisoRepoDevId)
     TRISO_DEV_TOKEN: $(trisoDevToken)
+    TIER1_DEVELOP_VERSION: $(tier1NewDevelopVersion)
+    TIER2_DEVELOP_VERSION: $(tier2NewDevelopVersion)
+    TERM_CONTENT_DEVELOP_VERSION: $(termsContentNewDevelopVersion)
 
 # Push to develop branches/release candidate branches
 - task: PowerShell@2

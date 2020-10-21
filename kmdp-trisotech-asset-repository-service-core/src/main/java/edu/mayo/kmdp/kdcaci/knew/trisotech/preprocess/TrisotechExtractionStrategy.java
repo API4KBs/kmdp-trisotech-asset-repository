@@ -440,6 +440,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .filter(ann -> SemanticAnnotationRelTypeSeries.Captures.isSameEntity(ann.getRel())
             || SemanticAnnotationRelTypeSeries.Defines.isSameEntity(ann.getRel())
             || SemanticAnnotationRelTypeSeries.In_Terms_Of.isSameEntity(ann.getRel()))
+        .map(ann -> (Annotation) ann.copyTo(new Annotation()))
         .forEach(surr::withAnnotation);
   }
 

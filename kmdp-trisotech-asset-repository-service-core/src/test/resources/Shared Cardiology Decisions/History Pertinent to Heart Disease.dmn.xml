@@ -41,24 +41,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Assessment Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
                       tag="AssessmentDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AssessmentDecision"
+                      versionTag="20201006-224599">
                <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -66,24 +66,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Aggregation Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AggregationDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"
                       tag="AggregationDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AggregationDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AggregationDecision"
+                      versionTag="20201006-224599">
                <id:uuid>7a42c227-08ed-36af-a332-b6f04cc457b3</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -123,6 +123,15 @@
       </semantic:informationRequirement>
       <semantic:informationRequirement id="_72cf21a5-fb29-4ea6-8af4-329ad0659156">
          <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#6582d9bd-fbd2-3ad4-bedb-912a701f490b"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_d6c4e1fa-4943-4bd0-aa6c-ebdf02f818df">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#2034f0e2-e49f-34e6-be0e-b431a193dff1"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_0d2d7dcc-6cc2-4a0c-8388-4ab0828111eb">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#8595ed8d-a96c-387e-98cd-dd1fcb11dde1"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_4fc1671a-e6c3-4dc8-ab70-a46bd039a0bc">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#bcdc9c28-5ad3-30ee-90b8-6609b52063c6"/>
       </semantic:informationRequirement>
    </semantic:decision>
    <dmndi:DMNDI>
@@ -186,8 +195,8 @@
                          id="_3cd37b2a-700d-46ee-bfb3-24cd5361bd6e">
             <dc:Bounds height="60.00000762939453"
                        width="135.48234176635742"
-                       x="653.1992491930571"
-                       y="196.0113633326754"/>
+                       x="673.1992491930571"
+                       y="196.01136333267544"/>
             <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
          </dmndi:DMNShape>
          <dmndi:DMNShape dmnElementRef="include1:_6dd4293f-8563-3a9f-85fc-872f0c8a9044"
@@ -196,6 +205,30 @@
                        width="135.48234176635745"
                        x="236.2727109065025"
                        y="196.01136333267542"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_8595ed8d-a96c-387e-98cd-dd1fcb11dde1"
+                         id="_4d1d9185-9b6b-4bd8-ba9b-9fd4b9d9bbde">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635748"
+                       x="444.9962235560385"
+                       y="357.0034641160825"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_bcdc9c28-5ad3-30ee-90b8-6609b52063c6"
+                         id="_5e2b9135-a703-4791-8007-346059aaa441">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="700.75505267286"
+                       y="293.00346411608257"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_2034f0e2-e49f-34e6-be0e-b431a193dff1"
+                         id="_ddb1c3e6-fcd3-4531-bd65-08785e0cc5fb">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.4823417663574"
+                       x="213.27271514505517"
+                       y="293.0034641160826"/>
             <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
          </dmndi:DMNShape>
          <dmndi:DMNEdge dmnElementRef="_cf6856f4-6a3b-49aa-86ad-529e337db60e"
@@ -207,7 +240,7 @@
          <dmndi:DMNEdge dmnElementRef="_25858420-02ca-4f9f-b7fd-9219c6f0505c"
                         id="_7007e23e-ae43-4f09-a188-96f77ec99240">
             <di:waypoint x="600.028133814354" y="267.0113633326754"/>
-            <di:waypoint x="512.7373944392173" y="106"/>
+            <di:waypoint x="522.7373944392173" y="106"/>
             <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
          </dmndi:DMNEdge>
          <dmndi:DMNEdge dmnElementRef="_b00eb5ca-d735-4ce6-96d5-b27c6161ca1a"
@@ -224,14 +257,32 @@
          </dmndi:DMNEdge>
          <dmndi:DMNEdge dmnElementRef="_e7729521-3fef-465f-b55c-40882ac607b0"
                         id="_80ca3b3e-a65e-404f-be75-258575287795">
-            <di:waypoint x="660.4372214525786" y="206.0113633326754"/>
-            <di:waypoint x="552.7373944392173" y="106"/>
+            <di:waypoint x="680.4372214525786" y="206.01136333267544"/>
+            <di:waypoint x="562.7373944392173" y="106"/>
             <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
          </dmndi:DMNEdge>
          <dmndi:DMNEdge dmnElementRef="_72cf21a5-fb29-4ea6-8af4-329ad0659156"
                         id="_e36e9c34-711e-421b-ba30-9f235e04337a">
             <di:waypoint x="694.0104755807114" y="129.01136333267542"/>
             <di:waypoint x="589.2373944392173" y="86"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_d6c4e1fa-4943-4bd0-aa6c-ebdf02f818df"
+                        id="_723b337e-5c0c-4a6c-b8f4-df40b093eb49">
+            <di:waypoint x="342.51068740457663" y="303.0034641160826"/>
+            <di:waypoint x="482.73739443921727" y="106"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_0d2d7dcc-6cc2-4a0c-8388-4ab0828111eb"
+                        id="_ae4878c7-1020-402d-a706-d9b330dceff6">
+            <di:waypoint x="512.73419581556" y="357.0034641160825"/>
+            <di:waypoint x="512.7373944392173" y="106"/>
+            <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_4fc1671a-e6c3-4dc8-ab70-a46bd039a0bc"
+                        id="_0546052b-588c-467e-a912-7bdc22d88cc9">
+            <di:waypoint x="707.9930249323814" y="303.00346411608257"/>
+            <di:waypoint x="542.7373944392173" y="106"/>
             <dmndi:DMNLabel sharedStyle="LS_e48f0554-09fc-4341-b25c-eed66a72f565_0"/>
          </dmndi:DMNEdge>
       </dmndi:DMNDiagram>

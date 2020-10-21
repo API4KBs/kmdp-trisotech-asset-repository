@@ -95,14 +95,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -155,14 +155,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -191,14 +191,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -216,24 +216,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Computable Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ComputableDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a"
                       tag="ComputableDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#ComputableDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#ComputableDecision"
+                      versionTag="20201006-224599">
                <id:uuid>8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -241,24 +241,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Assessment Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
                       tag="AssessmentDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#AssessmentDecision"
+                      versionTag="20201006-224599">
                <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -690,14 +690,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -737,14 +737,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -776,14 +776,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -875,14 +875,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -974,14 +974,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1100,14 +1100,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1125,24 +1125,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201006-224572">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-10-07T00:00:00"
+            <surr:ref establishedOn="2020-10-06T00:00:00"
                       name="Implicit Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ImplicitDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#e0dbe4d9-79b5-390c-91a9-bcc756d68b18"
                       tag="ImplicitDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#ImplicitDecision"
-                      versionTag="20201007-104264">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#ImplicitDecision"
+                      versionTag="20201006-224599">
                <id:uuid>e0dbe4d9-79b5-390c-91a9-bcc756d68b18</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -1161,14 +1161,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1197,14 +1197,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1233,14 +1233,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1268,14 +1268,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1304,14 +1304,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1340,14 +1340,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1375,14 +1375,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1438,14 +1438,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1483,14 +1483,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1518,14 +1518,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1553,14 +1553,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1589,14 +1589,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"
@@ -1624,14 +1624,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-10-07T00:00:00"
+            <surr:rel establishedOn="2020-10-06T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201007-104206">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201006-224572">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-09-21T00:00:00"

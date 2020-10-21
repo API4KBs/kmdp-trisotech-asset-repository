@@ -1,12 +1,12 @@
 {
-  "id": "dbc4927c-fb6b-4373-b620-2aab50dfa7e7",
-  "sku": "dbc4927c-fb6b-4373-b620-2aab50dfa7e7",
-  "name": "Atrial Fibrillation",
-  "path": "/Shellum/Atrial Fibrillation",
-  "mimetype": "application/cmmn-1-1+xml",
-  "updated": "2020-09-29T19:18:56Z",
-  "updater": "Shellum, Jane L., M.H.A.",
-  "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=8773e388-75b7-4061-a489-b788222022d3&path=%2FShellum%2FAtrial%20Fibrillation&sku=dbc4927c-fb6b-4373-b620-2aab50dfa7e7&mimetype=application%2Fcmmn-1-1%2Bxml",
-  "version": "1.0",
-  "state": "Published"
+  "id" : "dbc4927c-fb6b-4373-b620-2aab50dfa7e7",
+  "sku" : "dbc4927c-fb6b-4373-b620-2aab50dfa7e7",
+  "name" : "Atrial Fibrillation",
+  "path" : "/Shellum/Atrial Fibrillation",
+  "mimetype" : "application/cmmn-1-1+xml",
+  "updated" : "2020-10-15T19:55:47Z",
+  "updater" : "Shellum, Jane L., M.H.A.",
+  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=8773e388-75b7-4061-a489-b788222022d3&path=%2FShellum%2FAtrial%20Fibrillation&sku=dbc4927c-fb6b-4373-b620-2aab50dfa7e7&mimetype=application%2Fcmmn-1-1%2Bxml",
+  "version" : "1.0.0",
+  "state" : "Draft"
 }

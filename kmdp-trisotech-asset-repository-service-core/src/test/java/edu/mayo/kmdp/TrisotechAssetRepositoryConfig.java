@@ -16,17 +16,8 @@
 package edu.mayo.kmdp;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.IdentityMapper;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.ModelReader;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.ReaderConfig;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.TrisotechExtractionStrategy;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
 import edu.mayo.kmdp.terms.TermsProvider;
-import edu.mayo.kmdp.trisotechwrapper.StaticContextInitializer;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
-import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 

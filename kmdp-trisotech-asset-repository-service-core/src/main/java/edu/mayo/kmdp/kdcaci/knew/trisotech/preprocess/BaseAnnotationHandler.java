@@ -87,7 +87,6 @@ public abstract class BaseAnnotationHandler {
             .withRef(rows.get(0));
     }
     if (null != rel) {
-      ConceptIdentifier ci = SemanticAnnotationRelTypeSeries.In_Terms_Of.asConceptIdentifier();
       return anno.withRel(rel);
     } else {
       return anno;

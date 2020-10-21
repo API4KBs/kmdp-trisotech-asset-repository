@@ -1,12 +1,12 @@
 {
-  "id": "02e206e5-57b4-4102-827e-dffdaffd49e9",
-  "sku": "02e206e5-57b4-4102-827e-dffdaffd49e9",
-  "name": "HAS-BLED Score Model",
-  "path": "/Shellum/Atrial Fibrillation",
-  "mimetype": "application/dmn-1-2+xml",
-  "updated": "2020-09-03T17:38:25Z",
-  "updater": "Sottara, Davide",
-  "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=8773e388-75b7-4061-a489-b788222022d3&path=%2FShellum%2FAtrial%20Fibrillation&sku=02e206e5-57b4-4102-827e-dffdaffd49e9&mimetype=application%2Fdmn-1-2%2Bxml",
-  "version": "1.1.0",
-  "state": "Published"
+  "id" : "ac449e73-a82f-4e4c-b6ca-f0ebea72bdc6",
+  "sku" : "ac449e73-a82f-4e4c-b6ca-f0ebea72bdc6",
+  "name" : "HAS-BLED Score Model",
+  "path" : "/Shellum/Atrial Fibrillation",
+  "mimetype" : "application/dmn-1-2+xml",
+  "updated" : "2020-10-20T22:36:11Z",
+  "updater" : "Shellum, Jane L., M.H.A.",
+  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=8773e388-75b7-4061-a489-b788222022d3&path=%2FShellum%2FAtrial%20Fibrillation&sku=ac449e73-a82f-4e4c-b6ca-f0ebea72bdc6&mimetype=application%2Fdmn-1-2%2Bxml",
+  "version" : "1.0.1",
+  "state" : "Published"
 }

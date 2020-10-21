@@ -79,6 +79,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Extract the data from the woven (by the Weaver) document to create KnowledgeAsset from model
@@ -462,30 +463,36 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .anyMatch(ann -> KnowledgeAssetTypeSeries.Computable_Decision_Model.getTag()
             .equals(ann.getRef().getTag()))) {
 
-      List<Node> itemDefs = asAttributeStream(
-          xPathUtil.xList(dox, "//semantic:inputData/@name"))
+      NodeList list = xPathUtil.xList(dox, "//semantic:inputData/@name");
+      List<Node> itemDefs = null;
+      if(null != list) {
+        itemDefs = asAttributeStream(list)
 //					.map( in -> xNode( dox, "//dmn:itemDefinition[@name='"+ in.getValue()+"']" ) ) CAO
           .collect(toList());
-      for (Node itemDef : itemDefs) {
-        List<Annotation> inputAnnos = XMLUtil.asElementStream(itemDef.getChildNodes())
-            .filter(Objects::nonNull)
-            .filter(el -> el.getLocalName().equals(SEMANTIC_EXTENSION_ELEMENTS))
-            .flatMap(el -> XMLUtil.asElementStream(el.getChildNodes()))
-            .map(child -> JaxbUtil.unmarshall(Annotation.class, Annotation.class, child))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .collect(toList());
-        if (inputAnnos.isEmpty() || inputAnnos.size() > 2) {
-          throw new IllegalStateException("Missing or duplicated input concept");
-        }
+      }
 
-        Annotation inputAnno = inputAnnos.stream()
-            .map(Annotation.class::cast)
-            .map(sa -> new Annotation()
-                .withRel(In_Terms_Of.asConceptIdentifier())
-                .withRef(sa.getRef())) //.getExpr()))
-            .collect(toList()).get(0);
-        annos.add(inputAnno);
+      if(null != itemDefs) {
+        for (Node itemDef : itemDefs) {
+          List<Annotation> inputAnnos = XMLUtil.asElementStream(itemDef.getChildNodes())
+              .filter(Objects::nonNull)
+              .filter(el -> el.getLocalName().equals(SEMANTIC_EXTENSION_ELEMENTS))
+              .flatMap(el -> XMLUtil.asElementStream(el.getChildNodes()))
+              .map(child -> JaxbUtil.unmarshall(Annotation.class, Annotation.class, child))
+              .filter(Optional::isPresent)
+              .map(Optional::get)
+              .collect(toList());
+          if (inputAnnos.isEmpty() || inputAnnos.size() > 2) {
+            throw new IllegalStateException("Missing or duplicated input concept");
+          }
+
+          Annotation inputAnno = inputAnnos.stream()
+              .map(Annotation.class::cast)
+              .map(sa -> new Annotation()
+                  .withRel(In_Terms_Of.asConceptIdentifier())
+                  .withRef(sa.getRef())) //.getExpr()))
+              .collect(toList()).get(0);
+          annos.add(inputAnno);
+        }
       }
     }
 

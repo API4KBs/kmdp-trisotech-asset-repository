@@ -1,625 +1,842 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
-  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
-  xmlns="http://www.trisotech.com/definitions/_2bd19257-eed5-4ba2-9d2b-a608614afdf8"
-  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
-  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
-  xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
-  xmlns:include1="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6"
-  xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
-  exporter="Trisotech DES API Repository Conversion"
-  exporterVersion="6.12.3"
-  id="_2bd19257-eed5-4ba2-9d2b-a608614afdf8"
-  name="CHA2DS2Vasc Score Model"
-  namespace="http://www.trisotech.com/definitions/_2bd19257-eed5-4ba2-9d2b-a608614afdf8"
-  triso:logoChoice="Default"
-  triso:state="Published"
-  triso:version="1.0.0">
-  <semantic:extensionElements/>
-  <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
-    name="cs"
-    namespace="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6"
-    triso:fileId="eyJmIjp7InBhdGgiOiIvIiwic2t1IjoiMDA0NzU3NDYtNjUzNi00MGE1LWEzODktNWFiZmY5ZmYxZmRhIiwibmFtZSI6ImNzIn0sInIiOnsiYXBpa2V5IjoiMjkyMDAzZjY5ODQwZTcxMiJ9fQ=="
-    triso:fileName="MEA/cs"/>
-  <semantic:itemDefinition label="Age in Years" name="Age_in_Years">
-    <semantic:typeRef>yearMonthDuration</semantic:typeRef>
-  </semantic:itemDefinition>
-  <semantic:itemDefinition label="tAgewithinDefinedRange" name="tAgewithinDefinedRange">
-    <semantic:typeRef>string</semantic:typeRef>
-    <semantic:allowedValues triso:constraintsType="enumeration">
-      <semantic:text>"&lt;65","65-74","&gt;=75"</semantic:text>
-    </semantic:allowedValues>
-  </semantic:itemDefinition>
-  <semantic:itemDefinition label="tSex-Kindof" name="tSex-Kindof">
-    <semantic:typeRef>string</semantic:typeRef>
-    <semantic:allowedValues triso:constraintsType="enumeration">
-      <semantic:text>"female","male"</semantic:text>
-    </semantic:allowedValues>
-  </semantic:itemDefinition>
-  <semantic:decisionService id="_2bd19257-eed5-4ba2-9d2b-a608614afdf8_DS"
-    name="Whole Model Decision Service"
-    triso:dynamicDecisionService="true"
-    triso:wholeModelService="true">
-    <semantic:variable id="_2bd19257-eed5-4ba2-9d2b-a608614afdf8_DS_VAR"
-      name="Whole Model Decision Service"
-      typeRef="Any"/>
-    <semantic:outputDecision href="#_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"/>
-    <semantic:encapsulatedDecision href="#_ad72f2d8-a104-4a22-a509-1995b94507f3"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_9346c724-2ea4-442c-9536-4f17992a4fce_DS"
-    name="Diagram Page 1"
-    triso:dynamicDecisionService="true">
-    <semantic:variable id="_9346c724-2ea4-442c-9536-4f17992a4fce_DS_VAR"
-      name="Diagram Page 1"
-      typeRef="Any"/>
-    <semantic:outputDecision href="#_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"/>
-    <semantic:encapsulatedDecision href="#_ad72f2d8-a104-4a22-a509-1995b94507f3"/>
-  </semantic:decisionService>
-  <semantic:decision id="_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"
-    name="Current CHA2DS2Vasc Score - Value Of"
-    triso:flag="#397d2a">
-    <semantic:extensionElements>
-      <triso:semanticLink id="_915c8951-5e75-4ded-a0f6-f511b787685c"
-        modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
-        name="KnowledgeAssetTypes - 20190801 - Computable Decision Model"
-        uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#34de94f3-e2fe-3803-bc24-e508dfff3821"/>
-      <triso:semanticLink id="_9f3aecbc-2b96-45a8-be90-c97c242d5cfb"
-        modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
-        name="KnowledgeAssetTypes - 20190801 - Assessment Model"
-        uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#18f58ef5-b603-3013-b61b-df1f8231e354"/>
-      <triso:semanticLink id="df549e45-744b-4b47-bb89-03564db73077"
-        modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetRole/20190801/"
-        name="KnowledgeAssetRoles - 20190801 - Operational Concept Definition"
-        uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetRole#383a42ba-5016-3450-a983-608bd7b56eef"/>
-      <triso:semanticLink id="_1fa30646-eb1c-49ba-af2f-0e0fa56ec053"
-        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
-        name="PropositionalConcepts - 20190801 - Current CHA2DS2-VASc Score - Value of"
-        uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#9babf369-5746-4eb9-a0cf-d911493ce45f"/>
-      <triso:customAttribute id="_b6fac4fb-dedf-470f-8e5c-da360ec09aee"
-        key="knowledgeAssetId"
-        type="string"
-        value="https://clinicalknowledgemanagement.mayo.edu/assets/171bcff6-9728-4d56-93db-3de4f9d0b698/versions/1.0.0"/>
-    </semantic:extensionElements>
-    <semantic:variable id="_dc73dec2-1e3e-4d02-b1bb-cb56e4c4a5d2"
-      name="Current CHA2DS2Vasc Score - Value Of"
-      typeRef="number"/>
-    <semantic:informationRequirement id="_e6c3530d-23f9-416c-b2c8-f7419b2bcd37">
-      <semantic:requiredDecision href="#_ad72f2d8-a104-4a22-a509-1995b94507f3"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_281567b7-446b-4b16-a167-225826646f78">
-      <semantic:requiredInput
-        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_ea83bc01-cd84-30b3-b0c8-a729118fc86a"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_997c2ac8-c96c-4bf3-a273-169ac8b332bc">
-      <semantic:requiredInput
-        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_fca2cfe7-7a4a-3a61-8ade-2f12a72107c6"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_1367ed3b-4238-4a42-9561-bf01c04ff6c1">
-      <semantic:requiredInput
-        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_4dc1e0a9-b3e8-36f7-9941-08a4cd58dba6"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_18e08b19-b9d6-489c-9d0e-9fbf0d1e1919">
-      <semantic:requiredInput
-        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_fec8e422-20dd-33d0-ae83-adaff9e6549b"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_867ad6fb-4f15-4b44-b273-f826a5126b55">
-      <semantic:requiredInput
-        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_9c0d4af6-dc00-32c2-9c6b-6a8dd0c8846f"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_aa86e77d-f535-478d-b51c-2b56825aa9f5">
-      <semantic:requiredInput
-        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_6102f2c8-a8be-3b80-be98-ab9596c3a974"/>
-    </semantic:informationRequirement>
-    <semantic:decisionTable aggregation="SUM"
-      hitPolicy="COLLECT"
-      id="_030cbaa2-0dbb-45cb-87f4-e7ac78e51ba9"
-      outputLabel="Current CHA2DS2Vasc Score - Value Of"
-      triso:expressionId="_4f7a119f-3fbd-482c-920e-d488b57fc8c4"
-      typeRef="number">
-      <semantic:input id="_7cd302de-350b-400a-8c7e-16a3196606dc"
-        label="cs.Has Congestive Heart Failure - Is"
-        triso:allowNull="true">
-        <semantic:inputExpression typeRef="boolean">
-          <semantic:text>cs.Has Congestive Heart Failure - Is</semantic:text>
-        </semantic:inputExpression>
-      </semantic:input>
-      <semantic:input id="_07851c75-20d2-4af7-8d4d-d15e0778794f"
-        label="cs.History of Hypertension-Is"
-        triso:allowNull="true">
-        <semantic:inputExpression typeRef="boolean">
-          <semantic:text>cs.History of Hypertension-Is</semantic:text>
-        </semantic:inputExpression>
-      </semantic:input>
-      <semantic:input id="_70809c1d-0e8d-472d-af4c-3e0ad0ea447d"
-        label="cs.Age - Value of"
-        triso:allowNull="true">
-        <semantic:inputExpression typeRef="number">
-          <semantic:text>cs.Age - Value of</semantic:text>
-        </semantic:inputExpression>
-      </semantic:input>
-      <semantic:input id="_c9cd0a9a-caf5-402d-a8ec-0cd3f6ab8e61"
-        label="cs.Has Diabetes Mellitus - Is"
-        triso:allowNull="true">
-        <semantic:inputExpression typeRef="boolean">
-          <semantic:text>cs.Has Diabetes Mellitus - Is</semantic:text>
-        </semantic:inputExpression>
-      </semantic:input>
-      <semantic:input id="_f5d2ab89-54af-408b-bdfd-6fcade6936d7"
-        label="History of Stroke/TIA/ Thromboembolism"
-        triso:allowNull="true">
-        <semantic:inputExpression typeRef="boolean">
-          <semantic:text>History of Stroke/TIA/ Thromboembolism</semantic:text>
-        </semantic:inputExpression>
-      </semantic:input>
-      <semantic:input id="_b7346112-1e80-4d9f-873f-5338add0cb19"
-        label="cs.History of Vascular Disease - Is"
-        triso:allowNull="true">
-        <semantic:inputExpression typeRef="boolean">
-          <semantic:text>cs.History of Vascular Disease - Is</semantic:text>
-        </semantic:inputExpression>
-      </semantic:input>
-      <semantic:input id="_dc10a791-5b62-4e5e-a410-82e68a624778"
-        label="cs.Sex - Kind of"
-        triso:allowNull="true">
-        <semantic:inputExpression typeRef="tSex-Kindof">
-          <semantic:text>cs.Sex - Kind of</semantic:text>
-        </semantic:inputExpression>
-        <semantic:inputValues triso:constraintsType="enumeration">
-          <semantic:text>"female","male",null</semantic:text>
-        </semantic:inputValues>
-      </semantic:input>
-      <semantic:output id="_b2374ec4-c608-45db-9b45-4d2efa20facc" triso:allowNull="true"/>
-      <semantic:annotation name="Description"/>
-      <semantic:rule id="_fbfd1554-d721-4eb7-975e-c2b62fb7f79d">
-        <semantic:inputEntry id="_e37ddc45-b9fe-43a8-8bb2-49a4fd8767e6">
-          <semantic:text>true</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_0450798b-9075-4ba2-8024-0d0acc772e0b">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_86fa4a4e-f487-412d-b9f4-21748355f679">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_d98f64b1-a440-47ca-af47-2daa158769e7">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_c14f26b9-33eb-4188-b2e8-05fad98c577a">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_76b12b34-eea1-4817-beaf-74591c34662b">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_d804485d-432c-4f02-8a3b-bfa688b249ea">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:outputEntry id="_fcd1cea9-a788-4acb-8303-a058ff2610ad">
-          <semantic:text>1</semantic:text>
-        </semantic:outputEntry>
-        <semantic:annotationEntry>
-          <semantic:text/>
-        </semantic:annotationEntry>
-      </semantic:rule>
-      <semantic:rule id="_0beb2705-5100-4a6c-b58e-ab3c7b5795c0">
-        <semantic:inputEntry id="_5a824ed1-2ec6-45f7-b26e-3227bf7c9622">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_d53ed7cd-d926-4bab-afd8-f72b392f3179">
-          <semantic:text>true</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_c65c369f-def1-450a-8f16-a80a6998959b">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_770d26ad-94b1-4dcf-b531-43ca7d8975de">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_04a1682c-32b6-4cca-879c-d1ff81adda4d">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_98d6b7e3-b81f-486d-b1e1-2f2032e17e60">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_214f4195-469f-41eb-98b9-576a609ba606">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:outputEntry id="_b555c3c6-d3b9-46f4-bf14-528067b89f14">
-          <semantic:text>1</semantic:text>
-        </semantic:outputEntry>
-        <semantic:annotationEntry>
-          <semantic:text/>
-        </semantic:annotationEntry>
-      </semantic:rule>
-      <semantic:rule id="_1280aaf3-9699-4b22-bdcb-9f45b6141480">
-        <semantic:inputEntry id="_66ca28d9-4253-4e50-8d91-04a9c5d04b8c">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_9c1887ae-2725-4d8b-bde7-87f668d86188">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_529cd614-5291-49db-9208-ea92fb2b4c46">
-          <semantic:text>&gt;=75</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_3ab53746-58c1-47b1-9bf2-33bef70aa32b">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_04c6c691-0f3d-47cd-be37-b71c2daaddac">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_3a6836dc-4028-44ed-bdd3-c90e8644d6d0">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_847163bc-c525-421c-89d2-46821e1076e9">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:outputEntry id="_2a460aa2-2292-4cb3-9f65-21e3d74f0104">
-          <semantic:text>2</semantic:text>
-        </semantic:outputEntry>
-        <semantic:annotationEntry>
-          <semantic:text/>
-        </semantic:annotationEntry>
-      </semantic:rule>
-      <semantic:rule id="_79de81b2-0b36-4eff-9dbd-6772552fa894">
-        <semantic:inputEntry id="_be453750-e01a-4c10-9450-39dec462738b">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_02704243-5dbb-410b-9681-163c9576af2a">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_ea77fd9c-9fe6-40c2-8ccd-190286aef5f6">
-          <semantic:text>[65-74]</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_60b30fb9-7825-412c-b8c7-604e900397b3">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_4c98d1b5-58cc-494f-a5d9-a06e82387e70">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_305866c6-c2b9-4fc4-b1f1-97b6e30633c4">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_0376f57a-6102-4fb7-8696-7467e48649ce">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:outputEntry id="_91edb3f4-3427-460e-9952-1f7b3afbce25">
-          <semantic:text>1</semantic:text>
-        </semantic:outputEntry>
-        <semantic:annotationEntry>
-          <semantic:text/>
-        </semantic:annotationEntry>
-      </semantic:rule>
-      <semantic:rule id="_cdaff0a7-8f19-42c5-8caf-6092aca4d1c5">
-        <semantic:inputEntry id="_0c3b7604-918c-4e4f-95e2-9a9e05dd59b1">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_4b0ecbc9-23b2-43ba-8ee4-a6adafd49880">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_3488e8b2-7c67-406d-8530-1bad4214f00f">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_04fdcdff-7927-493f-b7ab-2b0b66da43ec">
-          <semantic:text>true</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_874e9a3e-faa2-400d-8efd-1558acc189c6">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_5e95e207-0b37-4e7c-bf0e-eb0c6e98429d">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_56199cea-4bb0-4e40-a635-f0c6c439c2fb">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:outputEntry id="_da2bb372-8113-420f-ac00-b67ddb91db5b">
-          <semantic:text>1</semantic:text>
-        </semantic:outputEntry>
-        <semantic:annotationEntry>
-          <semantic:text/>
-        </semantic:annotationEntry>
-      </semantic:rule>
-      <semantic:rule id="_91f14b72-7bac-49a4-8ede-94c1838fcc25">
-        <semantic:inputEntry id="_e0a574b3-4c9f-440a-91f4-7a3cd2a9ff30">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_ba2b7601-445a-42d0-b45f-57f3b19be408">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_ac693154-4ed3-415b-8771-3367e5a7414e">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_cc7f263a-d765-489d-9ca1-5df246d78f04">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_744b9bbe-ccac-465c-91ec-b779b2b6d2b3">
-          <semantic:text>true</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_91e977fe-1b74-4453-beab-b85bb025d22a">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_565d37e7-6ff1-46b9-8d39-04bcefcf91c2">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:outputEntry id="_95313a3e-f46e-4d95-8c19-503b84631703">
-          <semantic:text>1</semantic:text>
-        </semantic:outputEntry>
-        <semantic:annotationEntry>
-          <semantic:text/>
-        </semantic:annotationEntry>
-      </semantic:rule>
-      <semantic:rule id="_837be287-33a4-4533-92df-ce56ebb584a9">
-        <semantic:inputEntry id="_7d5af883-083c-4470-8baa-c831446b5bb8">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_6aa21eda-d52d-4ce8-a6a2-ee5543dc47d2">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_1898f8f8-fa3d-49f2-ab3c-a7afc4556a58">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_c859793a-f875-4edf-b1e2-75499a2bed9d">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_e3cb284e-fc0a-4d73-9ee7-4ba1bbef04da">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_ab0372af-ea50-4e57-9105-5ebabd3c44ee">
-          <semantic:text>true</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_ca99e097-d61a-41ca-9d71-1b854dbacee1">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:outputEntry id="_bf594af3-fc99-453f-b36e-c921295ce3cb">
-          <semantic:text>1</semantic:text>
-        </semantic:outputEntry>
-        <semantic:annotationEntry>
-          <semantic:text/>
-        </semantic:annotationEntry>
-      </semantic:rule>
-      <semantic:rule id="_cba35112-6eda-4360-a666-6731894579b0">
-        <semantic:inputEntry id="_97e2d923-da5f-4fef-bf05-afd24690d8d3">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_3f7a945f-f06d-4d01-a2f1-ee20af8cc871">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_457cfe7f-51db-419b-9d62-d8db2a2497fc">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_e1e7da19-2e8b-4e50-9095-a4daef15769b">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_4f8e9572-5387-46ad-8a16-b2f8d15df31d">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_5f6c2088-f1f9-45c6-9c21-373068f327e7">
-          <semantic:text>-</semantic:text>
-        </semantic:inputEntry>
-        <semantic:inputEntry id="_9fc3617e-4891-4e36-830c-3dc203aca7d5">
-          <semantic:text>"female"</semantic:text>
-        </semantic:inputEntry>
-        <semantic:outputEntry id="_c3b875fe-c218-4d9c-833e-3bda2bc051a8">
-          <semantic:text>1</semantic:text>
-        </semantic:outputEntry>
-        <semantic:annotationEntry>
-          <semantic:text/>
-        </semantic:annotationEntry>
-      </semantic:rule>
-    </semantic:decisionTable>
-  </semantic:decision>
-  <semantic:decision id="_ad72f2d8-a104-4a22-a509-1995b94507f3"
-    name="History of Stroke/TIA/ Thromboembolism">
-    <semantic:extensionElements>
-      <triso:semanticLink id="a690ef75-0f46-447c-a39e-5f115acb4832"
-        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
-        name="PropositionalConcepts - 20190801 - History of Stroke, Transient Ischemic Attack, or Thromboembolism"
-        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#0ca8adf1-24aa-3118-8c53-0d485ef96897"/>
-    </semantic:extensionElements>
-    <semantic:variable id="_d29dffcb-43b9-4ee8-9baa-e2c5d9312063"
-      name="History of Stroke/TIA/ Thromboembolism"
-      typeRef="boolean"/>
-    <semantic:informationRequirement id="_cd8c9318-1f2b-4819-b0de-71c4ef126107">
-      <semantic:requiredInput
-        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_f2954838-ea54-35eb-861f-43d6ae4f5e18"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_63069d6f-38a4-42c3-85ff-efe886974c0f">
-      <semantic:requiredInput
-        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_32aaf16a-a312-39fb-babc-63fe6cd46576"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_b2f91a97-8f55-41b5-ae1a-9563c98b5caa">
-      <semantic:requiredInput
-        href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_3dc220a7-a9e5-35e6-8db5-835e024fd0e5"/>
-    </semantic:informationRequirement>
-  </semantic:decision>
-  <semantic:decisionService id="_f6e12b40-abbc-4130-8612-bce9421221ef" name="Questionnaire">
-    <semantic:variable id="_093fd16c-be1f-4b3d-9b9f-9f2c91138872"
-      name="Questionnaire"
-      typeRef="Any"/>
-    <semantic:outputDecision href="#_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"/>
-    <semantic:inputDecision href="#_ad72f2d8-a104-4a22-a509-1995b94507f3"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_a115cc80-3d8e-49a8-b113-1ad92b738073" name="Populate">
-    <semantic:variable id="_e4c221d9-4ab0-4317-92e5-757ed2a3a5de"
-      name="Populate"
-      typeRef="Any"/>
-    <semantic:outputDecision href="#_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"/>
-    <semantic:encapsulatedDecision href="#_ad72f2d8-a104-4a22-a509-1995b94507f3"/>
-  </semantic:decisionService>
-  <semantic:organizationUnit id="_1f083631-9bd3-45b2-ab47-6addc3cf551b" name="AME"/>
-  <dmndi:DMNDI>
-    <dmndi:DMNDiagram id="_9346c724-2ea4-442c-9536-4f17992a4fce"
-      name="Page 1"
-      triso:modelElementRef="_494462ef-6d64-48d6-8804-ed0342dc33bd">
-      <di:extension>
-        <triso:semanticLink id="_4e11df80-c108-4f31-ae88-63bb6e147a5f"
-          modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
-          name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
-          uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
-      </di:extension>
-      <dmndi:Size height="1050" width="2310.4647584154127"/>
-      <dmndi:DMNShape dmnElementRef="_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"
-        id="_3e5bdfe8-cfe2-4210-ae31-1cac3d9ea0f2">
-        <dc:Bounds height="60"
-          width="153"
-          x="823.3484377668381"
-          y="332.61386342590936"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="_ad72f2d8-a104-4a22-a509-1995b94507f3"
-        id="_34663b01-ba9c-4a1a-8940-9eb8796b2ef9">
-        <dc:Bounds height="60"
-          width="153"
-          x="1005.3157294061427"
-          y="511.8638669835616"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include1:_3dc220a7-a9e5-35e6-8db5-835e024fd0e5"
-        id="_b42c66b4-0c12-4fb3-b729-876035841842">
-        <dc:Bounds height="60.00000762939453"
-          width="135.48234176635742"
-          x="1103.574558522964"
-          y="615.6060484226307"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include1:_f2954838-ea54-35eb-861f-43d6ae4f5e18"
-        id="_65ed9327-5b90-4296-896e-9a4b5df4e2f9">
-        <dc:Bounds height="60.00000762939453"
-          width="135.48234176635742"
-          x="927.574558522964"
-          y="615.6060484226307"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include1:_32aaf16a-a312-39fb-babc-63fe6cd46576"
-        id="_8009565b-1827-4b22-9e9d-c02751dd8b88">
-        <dc:Bounds height="60.00000762939453"
-          width="135.48234176635742"
-          x="1014.074558522964"
-          y="677.6060484226307"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include1:_ea83bc01-cd84-30b3-b0c8-a729118fc86a"
-        id="_8bb7f062-2bb1-49ee-9c7c-830700bc31eb">
-        <dc:Bounds height="60.00000762939453"
-          width="135.48234176635742"
-          x="1176.574558522964"
-          y="511.8638631688643"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include1:_fca2cfe7-7a4a-3a61-8ade-2f12a72107c6"
-        id="_f2cea19f-6182-4e55-9256-6fa17d9302c9">
-        <dc:Bounds height="60.00000762939453"
-          width="135.48234176635742"
-          x="411.94065452344466"
-          y="511.8638631688643"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include1:_4dc1e0a9-b3e8-36f7-9941-08a4cd58dba6"
-        id="_6214a41c-72a6-4617-89d7-f43ee77d8734">
-        <dc:Bounds height="60.00000762939453"
-          width="135.48234176635742"
-          x="859.7411708831787"
-          y="511.8638555394698"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include1:_fec8e422-20dd-33d0-ae83-adaff9e6549b"
-        id="_e6e952ed-93ec-4512-98e5-8f460ec5cfe2">
-        <dc:Bounds height="60.00000762939453"
-          width="135.48234176635742"
-          x="561.4406545234447"
-          y="511.8638631688643"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include1:_9c0d4af6-dc00-32c2-9c6b-6a8dd0c8846f"
-        id="_99745ba4-123d-44ff-8b2b-50f165858e2e">
-        <dc:Bounds height="60.00000762939453"
-          width="135.48234176635742"
-          x="1327.7411708831787"
-          y="511.8638631688643"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include1:_6102f2c8-a8be-3b80-be98-ab9596c3a974"
-        id="_8435b6de-699d-482c-a437-46f613ea6f7c">
-        <dc:Bounds height="60.00000762939453"
-          width="135.48234176635742"
-          x="710.2588291168213"
-          y="511.8638631688643"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
-          trisodmn:defaultBounds="true"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNEdge dmnElementRef="_e6c3530d-23f9-416c-b2c8-f7419b2bcd37"
-        id="_d0a21cf5-0852-41bd-b07e-eca765965ba5">
-        <di:waypoint x="1071.8157294061427" y="511.8638669835616"/>
-        <di:waypoint x="929.8484377668381" y="392.61386342590936"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_cd8c9318-1f2b-4819-b0de-71c4ef126107"
-        id="_225118e3-8d94-4cfd-9e72-02c0f1b0ddaf">
-        <di:waypoint x="1025.3125307824855" y="615.6060484226307"/>
-        <di:waypoint x="1081.8157294061427" y="571.8638669835616"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_63069d6f-38a4-42c3-85ff-efe886974c0f"
-        id="_6531733a-e7c8-4f8e-be44-3c651558abbf">
-        <di:waypoint x="1081.8125307824855" y="677.6060484226307"/>
-        <di:waypoint x="1081.8157294061427" y="571.8638669835616"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_b2f91a97-8f55-41b5-ae1a-9563c98b5caa"
-        id="_8c381bb6-8e3f-4469-b7c0-b00ea8c43031">
-        <di:waypoint x="1151.3125307824855" y="615.6060484226307"/>
-        <di:waypoint x="1081.8157294061427" y="571.8638669835616"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_281567b7-446b-4b16-a167-225826646f78"
-        id="_17d3ed74-3509-46c6-979d-9f6230d149f7">
-        <di:waypoint x="1234.3125307824855" y="511.8638631688643"/>
-        <di:waypoint x="949.8484377668381" y="392.61386342590936"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_997c2ac8-c96c-4bf3-a273-169ac8b332bc"
-        id="_f5be41c3-a875-4195-825a-1a006bfe54b8">
-        <di:waypoint x="479.67862678296615" y="511.8638631688643"/>
-        <di:waypoint x="829.8484377668381" y="392.61386342590936"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_1367ed3b-4238-4a42-9561-bf01c04ff6c1"
-        id="_cd7f088f-005a-4c2f-886e-8c4d78bda06f">
-        <di:waypoint x="927.4791431427002" y="511.8638555394698"/>
-        <di:waypoint x="899.8484377668381" y="392.61386342590936"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_18e08b19-b9d6-489c-9d0e-9fbf0d1e1919"
-        id="_173775a3-4b89-46d4-a446-4f48dafc3085">
-        <di:waypoint x="629.1786267829661" y="511.8638631688643"/>
-        <di:waypoint x="859.8484377668381" y="392.61386342590936"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_867ad6fb-4f15-4b44-b273-f826a5126b55"
-        id="_509b7135-813b-49be-b502-c82e494a0d79">
-        <di:waypoint x="1395.4791431427002" y="511.8638631688643"/>
-        <di:waypoint x="969.8484377668381" y="392.61386342590936"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_aa86e77d-f535-478d-b51c-2b56825aa9f5"
-        id="_e15f1a6d-d10b-4f35-8a74-6704ad51cd28">
-        <di:waypoint x="787.9968013763428" y="511.8638631688643"/>
-        <di:waypoint x="879.8484377668381" y="392.61386342590936"/>
-        <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-      </dmndi:DMNEdge>
-    </dmndi:DMNDiagram>
-    <dmndi:DMNStyle fontBold="false"
-      fontFamily="arial,helvetica,sans-serif"
-      fontItalic="false"
-      fontSize="11"
-      fontStrikeThrough="false"
-      fontUnderline="false"
-      id="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
-  </dmndi:DMNDI>
+                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+                      xmlns="http://www.trisotech.com/definitions/_2bd19257-eed5-4ba2-9d2b-a608614afdf8"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:drools="http://www.drools.org/kie/dmn/1.1"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:include1="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6"
+                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
+                      xmlns:rss="http://purl.org/rss/2.0/"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:trisodmn="http://www.trisotech.com/2016/triso/dmn"
+                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      exporter="Trisotech DES API Repository Conversion"
+                      exporterVersion="6.12.3"
+                      id="_2bd19257-eed5-4ba2-9d2b-a608614afdf8"
+                      name="CHA2DS2Vasc Score Model"
+                      namespace="http://www.trisotech.com/definitions/_2bd19257-eed5-4ba2-9d2b-a608614afdf8"
+                      triso:logoChoice="Default"
+                      triso:state="Published"
+                      triso:version="1.0.2">
+   <semantic:extensionElements/>
+   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                    name="cs"
+                    namespace="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6"
+                    triso:fileId="eyJmIjp7InBhdGgiOiIvIiwic2t1IjoiMDA0NzU3NDYtNjUzNi00MGE1LWEzODktNWFiZmY5ZmYxZmRhIiwibmFtZSI6ImNzIn0sInIiOnsiYXBpa2V5IjoiMjkyMDAzZjY5ODQwZTcxMiJ9fQ=="
+                    triso:fileName="MEA/cs"/>
+   <semantic:itemDefinition label="Age in Years" name="Age_in_Years">
+      <semantic:typeRef>yearMonthDuration</semantic:typeRef>
+   </semantic:itemDefinition>
+   <semantic:itemDefinition label="tAgewithinDefinedRange" name="tAgewithinDefinedRange">
+      <semantic:typeRef>string</semantic:typeRef>
+      <semantic:allowedValues triso:constraintsType="enumeration">
+         <semantic:text>"&lt;65","65-74","&gt;=75"</semantic:text>
+      </semantic:allowedValues>
+   </semantic:itemDefinition>
+   <semantic:itemDefinition label="tSex-Kindof" name="tSex-Kindof">
+      <semantic:typeRef>string</semantic:typeRef>
+      <semantic:allowedValues triso:constraintsType="enumeration">
+         <semantic:text>"female","male"</semantic:text>
+      </semantic:allowedValues>
+   </semantic:itemDefinition>
+   <semantic:decisionService id="_2bd19257-eed5-4ba2-9d2b-a608614afdf8_DS"
+                             name="Whole Model Decision Service"
+                             triso:dynamicDecisionService="true"
+                             triso:wholeModelService="true">
+      <semantic:variable id="_2bd19257-eed5-4ba2-9d2b-a608614afdf8_DS_VAR"
+                         name="Whole Model Decision Service"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"/>
+      <semantic:encapsulatedDecision href="#_ad72f2d8-a104-4a22-a509-1995b94507f3"/>
+      <semantic:encapsulatedDecision href="#_b583c4fb-b04f-426c-9def-f3265f268024"/>
+      <semantic:encapsulatedDecision href="#_63cf2f2c-d9d9-47ce-8d29-21401603d074"/>
+      <semantic:encapsulatedDecision href="#_4467545d-bb6c-4fd6-af88-6dac322ee8a7"/>
+      <semantic:encapsulatedDecision href="#_665b8d29-c504-4ac3-8063-c95e3ca03793"/>
+      <semantic:encapsulatedDecision href="#_198d9a45-f8b6-42af-ae82-84dc55c268cb"/>
+      <semantic:encapsulatedDecision href="#_928ee547-b683-4dc5-84a9-ac70672d195b"/>
+   </semantic:decisionService>
+   <semantic:decisionService id="_9346c724-2ea4-442c-9536-4f17992a4fce_DS"
+                             name="Diagram Page 1"
+                             triso:dynamicDecisionService="true">
+      <semantic:variable id="_9346c724-2ea4-442c-9536-4f17992a4fce_DS_VAR"
+                         name="Diagram Page 1"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"/>
+      <semantic:encapsulatedDecision href="#_ad72f2d8-a104-4a22-a509-1995b94507f3"/>
+      <semantic:encapsulatedDecision href="#_b583c4fb-b04f-426c-9def-f3265f268024"/>
+      <semantic:encapsulatedDecision href="#_63cf2f2c-d9d9-47ce-8d29-21401603d074"/>
+      <semantic:encapsulatedDecision href="#_4467545d-bb6c-4fd6-af88-6dac322ee8a7"/>
+      <semantic:encapsulatedDecision href="#_665b8d29-c504-4ac3-8063-c95e3ca03793"/>
+      <semantic:encapsulatedDecision href="#_198d9a45-f8b6-42af-ae82-84dc55c268cb"/>
+      <semantic:encapsulatedDecision href="#_928ee547-b683-4dc5-84a9-ac70672d195b"/>
+   </semantic:decisionService>
+   <semantic:decision id="_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"
+                      name="Current CHA2DS2Vasc Score - Value Of">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_915c8951-5e75-4ded-a0f6-f511b787685c"
+                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+                             name="KnowledgeAssetTypes - 20190801 - Computable Decision Model"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#34de94f3-e2fe-3803-bc24-e508dfff3821"/>
+         <triso:semanticLink id="_9f3aecbc-2b96-45a8-be90-c97c242d5cfb"
+                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+                             name="KnowledgeAssetTypes - 20190801 - Assessment Model"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#18f58ef5-b603-3013-b61b-df1f8231e354"/>
+         <triso:semanticLink id="df549e45-744b-4b47-bb89-03564db73077"
+                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetRole/20190801/"
+                             name="KnowledgeAssetRoles - 20190801 - Operational Concept Definition"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetRole#383a42ba-5016-3450-a983-608bd7b56eef"/>
+         <triso:semanticLink id="_1fa30646-eb1c-49ba-af2f-0e0fa56ec053"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20190801/"
+                             name="PropositionalConcepts - 20190801 - Current CHA2DS2-VASc Score - Value of"
+                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#9babf369-5746-4eb9-a0cf-d911493ce45f"/>
+         <triso:customAttribute id="_b6fac4fb-dedf-470f-8e5c-da360ec09aee"
+                                key="knowledgeAssetId"
+                                type="string"
+                                value="https://clinicalknowledgemanagement.mayo.edu/assets/171bcff6-9728-4d56-93db-3de4f9d0b698/versions/1.0.0"/>
+         <triso:semanticLink id="_406dbe9c-e7a7-4c00-a869-c2d0b51c83a8"
+                             modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+                             name="KnowledgeAssetTypes - 20190801 - Semantic Decision Model"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_dc73dec2-1e3e-4d02-b1bb-cb56e4c4a5d2"
+                         name="Current CHA2DS2Vasc Score - Value Of"
+                         typeRef="number"/>
+      <semantic:informationRequirement id="_e6c3530d-23f9-416c-b2c8-f7419b2bcd37">
+         <semantic:requiredDecision href="#_ad72f2d8-a104-4a22-a509-1995b94507f3"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_281567b7-446b-4b16-a167-225826646f78">
+         <semantic:requiredDecision href="#_198d9a45-f8b6-42af-ae82-84dc55c268cb"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_997c2ac8-c96c-4bf3-a273-169ac8b332bc">
+         <semantic:requiredDecision href="#_b583c4fb-b04f-426c-9def-f3265f268024"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_1367ed3b-4238-4a42-9561-bf01c04ff6c1">
+         <semantic:requiredDecision href="#_665b8d29-c504-4ac3-8063-c95e3ca03793"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_18e08b19-b9d6-489c-9d0e-9fbf0d1e1919">
+         <semantic:requiredDecision href="#_63cf2f2c-d9d9-47ce-8d29-21401603d074"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_867ad6fb-4f15-4b44-b273-f826a5126b55">
+         <semantic:requiredDecision href="#_928ee547-b683-4dc5-84a9-ac70672d195b"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_ad8b3a24-7b14-402d-9d2c-2dcfd9f89fa7">
+         <semantic:requiredDecision href="#_4467545d-bb6c-4fd6-af88-6dac322ee8a7"/>
+      </semantic:informationRequirement>
+      <semantic:decisionTable aggregation="SUM"
+                              hitPolicy="COLLECT"
+                              id="_030cbaa2-0dbb-45cb-87f4-e7ac78e51ba9"
+                              outputLabel="Current CHA2DS2Vasc Score - Value Of"
+                              triso:expressionId="_4f7a119f-3fbd-482c-920e-d488b57fc8c4"
+                              typeRef="number">
+         <semantic:input id="_986e7807-daf0-467a-9353-b6ec116ecef9"
+                         label="History of Congestive Heart Failure - Is"
+                         triso:allowNull="true">
+            <semantic:inputExpression typeRef="boolean">
+               <semantic:text>History of Congestive Heart Failure - Is</semantic:text>
+            </semantic:inputExpression>
+         </semantic:input>
+         <semantic:input id="_07851c75-20d2-4af7-8d4d-d15e0778794f"
+                         label="cs.History of Hypertension-Is"
+                         triso:allowNull="true">
+            <semantic:inputExpression typeRef="boolean">
+               <semantic:text>cs.History of Hypertension-Is</semantic:text>
+            </semantic:inputExpression>
+         </semantic:input>
+         <semantic:input id="_70809c1d-0e8d-472d-af4c-3e0ad0ea447d"
+                         label="cs.Age - Value of"
+                         triso:allowNull="true">
+            <semantic:inputExpression typeRef="number">
+               <semantic:text>cs.Age - Value of</semantic:text>
+            </semantic:inputExpression>
+         </semantic:input>
+         <semantic:input id="_c9cd0a9a-caf5-402d-a8ec-0cd3f6ab8e61"
+                         label="cs.Has Diabetes Mellitus - Is"
+                         triso:allowNull="true">
+            <semantic:inputExpression typeRef="boolean">
+               <semantic:text>cs.Has Diabetes Mellitus - Is</semantic:text>
+            </semantic:inputExpression>
+         </semantic:input>
+         <semantic:input id="_f5d2ab89-54af-408b-bdfd-6fcade6936d7"
+                         label="History of Stroke/TIA/ Thromboembolism - is"
+                         triso:allowNull="true">
+            <semantic:inputExpression typeRef="boolean">
+               <semantic:text>History of Stroke/TIA/ Thromboembolism - is</semantic:text>
+            </semantic:inputExpression>
+         </semantic:input>
+         <semantic:input id="_b7346112-1e80-4d9f-873f-5338add0cb19"
+                         label="cs.History of Vascular Disease - Is"
+                         triso:allowNull="true">
+            <semantic:inputExpression typeRef="boolean">
+               <semantic:text>cs.History of Vascular Disease - Is</semantic:text>
+            </semantic:inputExpression>
+         </semantic:input>
+         <semantic:input id="_dc10a791-5b62-4e5e-a410-82e68a624778"
+                         label="cs.Sex - Kind of"
+                         triso:allowNull="true">
+            <semantic:inputExpression typeRef="tSex-Kindof">
+               <semantic:text>cs.Sex - Kind of</semantic:text>
+            </semantic:inputExpression>
+            <semantic:inputValues triso:constraintsType="enumeration">
+               <semantic:text>"female","male",null</semantic:text>
+            </semantic:inputValues>
+         </semantic:input>
+         <semantic:output id="_b2374ec4-c608-45db-9b45-4d2efa20facc" triso:allowNull="true"/>
+         <semantic:annotation name="Description"/>
+         <semantic:rule id="_fbfd1554-d721-4eb7-975e-c2b62fb7f79d">
+            <semantic:inputEntry id="_a7bad065-b525-450b-96c6-bff2e9ea0a06">
+               <semantic:text>true</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_0450798b-9075-4ba2-8024-0d0acc772e0b">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_86fa4a4e-f487-412d-b9f4-21748355f679">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_d98f64b1-a440-47ca-af47-2daa158769e7">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_c14f26b9-33eb-4188-b2e8-05fad98c577a">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_76b12b34-eea1-4817-beaf-74591c34662b">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_d804485d-432c-4f02-8a3b-bfa688b249ea">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:outputEntry id="_fcd1cea9-a788-4acb-8303-a058ff2610ad">
+               <semantic:text>1</semantic:text>
+            </semantic:outputEntry>
+            <semantic:annotationEntry>
+               <semantic:text/>
+            </semantic:annotationEntry>
+         </semantic:rule>
+         <semantic:rule id="_0beb2705-5100-4a6c-b58e-ab3c7b5795c0">
+            <semantic:inputEntry id="_ea67c138-31e6-4e0a-b178-581a5dee2a2d">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_d53ed7cd-d926-4bab-afd8-f72b392f3179">
+               <semantic:text>true</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_c65c369f-def1-450a-8f16-a80a6998959b">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_770d26ad-94b1-4dcf-b531-43ca7d8975de">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_04a1682c-32b6-4cca-879c-d1ff81adda4d">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_98d6b7e3-b81f-486d-b1e1-2f2032e17e60">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_214f4195-469f-41eb-98b9-576a609ba606">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:outputEntry id="_b555c3c6-d3b9-46f4-bf14-528067b89f14">
+               <semantic:text>1</semantic:text>
+            </semantic:outputEntry>
+            <semantic:annotationEntry>
+               <semantic:text/>
+            </semantic:annotationEntry>
+         </semantic:rule>
+         <semantic:rule id="_1280aaf3-9699-4b22-bdcb-9f45b6141480">
+            <semantic:inputEntry id="_395657ca-1c8b-4ff9-a407-abea679d0878">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_9c1887ae-2725-4d8b-bde7-87f668d86188">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_529cd614-5291-49db-9208-ea92fb2b4c46">
+               <semantic:text>&gt;=75</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_3ab53746-58c1-47b1-9bf2-33bef70aa32b">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_04c6c691-0f3d-47cd-be37-b71c2daaddac">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_3a6836dc-4028-44ed-bdd3-c90e8644d6d0">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_847163bc-c525-421c-89d2-46821e1076e9">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:outputEntry id="_2a460aa2-2292-4cb3-9f65-21e3d74f0104">
+               <semantic:text>2</semantic:text>
+            </semantic:outputEntry>
+            <semantic:annotationEntry>
+               <semantic:text/>
+            </semantic:annotationEntry>
+         </semantic:rule>
+         <semantic:rule id="_79de81b2-0b36-4eff-9dbd-6772552fa894">
+            <semantic:inputEntry id="_35f664bc-09bd-4ee2-94dc-d705e6c64b47">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_02704243-5dbb-410b-9681-163c9576af2a">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_ea77fd9c-9fe6-40c2-8ccd-190286aef5f6">
+               <semantic:text>[65-74]</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_60b30fb9-7825-412c-b8c7-604e900397b3">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_4c98d1b5-58cc-494f-a5d9-a06e82387e70">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_305866c6-c2b9-4fc4-b1f1-97b6e30633c4">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_0376f57a-6102-4fb7-8696-7467e48649ce">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:outputEntry id="_91edb3f4-3427-460e-9952-1f7b3afbce25">
+               <semantic:text>1</semantic:text>
+            </semantic:outputEntry>
+            <semantic:annotationEntry>
+               <semantic:text/>
+            </semantic:annotationEntry>
+         </semantic:rule>
+         <semantic:rule id="_cdaff0a7-8f19-42c5-8caf-6092aca4d1c5">
+            <semantic:inputEntry id="_2e4d336e-234e-4a66-b30f-900f56ef6991">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_4b0ecbc9-23b2-43ba-8ee4-a6adafd49880">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_3488e8b2-7c67-406d-8530-1bad4214f00f">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_04fdcdff-7927-493f-b7ab-2b0b66da43ec">
+               <semantic:text>true</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_874e9a3e-faa2-400d-8efd-1558acc189c6">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_5e95e207-0b37-4e7c-bf0e-eb0c6e98429d">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_56199cea-4bb0-4e40-a635-f0c6c439c2fb">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:outputEntry id="_da2bb372-8113-420f-ac00-b67ddb91db5b">
+               <semantic:text>1</semantic:text>
+            </semantic:outputEntry>
+            <semantic:annotationEntry>
+               <semantic:text/>
+            </semantic:annotationEntry>
+         </semantic:rule>
+         <semantic:rule id="_91f14b72-7bac-49a4-8ede-94c1838fcc25">
+            <semantic:inputEntry id="_537a9be5-ef47-4c83-a5ba-de376abf306d">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_ba2b7601-445a-42d0-b45f-57f3b19be408">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_ac693154-4ed3-415b-8771-3367e5a7414e">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_cc7f263a-d765-489d-9ca1-5df246d78f04">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_744b9bbe-ccac-465c-91ec-b779b2b6d2b3">
+               <semantic:text>true</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_91e977fe-1b74-4453-beab-b85bb025d22a">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_565d37e7-6ff1-46b9-8d39-04bcefcf91c2">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:outputEntry id="_95313a3e-f46e-4d95-8c19-503b84631703">
+               <semantic:text>1</semantic:text>
+            </semantic:outputEntry>
+            <semantic:annotationEntry>
+               <semantic:text/>
+            </semantic:annotationEntry>
+         </semantic:rule>
+         <semantic:rule id="_837be287-33a4-4533-92df-ce56ebb584a9">
+            <semantic:inputEntry id="_7dd2b451-745a-4575-9422-5a177fb2d605">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_6aa21eda-d52d-4ce8-a6a2-ee5543dc47d2">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_1898f8f8-fa3d-49f2-ab3c-a7afc4556a58">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_c859793a-f875-4edf-b1e2-75499a2bed9d">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_e3cb284e-fc0a-4d73-9ee7-4ba1bbef04da">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_ab0372af-ea50-4e57-9105-5ebabd3c44ee">
+               <semantic:text>true</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_ca99e097-d61a-41ca-9d71-1b854dbacee1">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:outputEntry id="_bf594af3-fc99-453f-b36e-c921295ce3cb">
+               <semantic:text>1</semantic:text>
+            </semantic:outputEntry>
+            <semantic:annotationEntry>
+               <semantic:text/>
+            </semantic:annotationEntry>
+         </semantic:rule>
+         <semantic:rule id="_cba35112-6eda-4360-a666-6731894579b0">
+            <semantic:inputEntry id="_73c875ba-7f9c-4fb3-b944-85987d92fd7b">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_3f7a945f-f06d-4d01-a2f1-ee20af8cc871">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_457cfe7f-51db-419b-9d62-d8db2a2497fc">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_e1e7da19-2e8b-4e50-9095-a4daef15769b">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_4f8e9572-5387-46ad-8a16-b2f8d15df31d">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_5f6c2088-f1f9-45c6-9c21-373068f327e7">
+               <semantic:text>-</semantic:text>
+            </semantic:inputEntry>
+            <semantic:inputEntry id="_9fc3617e-4891-4e36-830c-3dc203aca7d5">
+               <semantic:text>"female"</semantic:text>
+            </semantic:inputEntry>
+            <semantic:outputEntry id="_c3b875fe-c218-4d9c-833e-3bda2bc051a8">
+               <semantic:text>1</semantic:text>
+            </semantic:outputEntry>
+            <semantic:annotationEntry>
+               <semantic:text/>
+            </semantic:annotationEntry>
+         </semantic:rule>
+      </semantic:decisionTable>
+   </semantic:decision>
+   <semantic:decision id="_ad72f2d8-a104-4a22-a509-1995b94507f3"
+                      name="History of Stroke/TIA/ Thromboembolism - is">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_a0c8fc2a-d115-4c05-8794-a3ea3ce67a9e"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
+                             name="PropositionalConcepts - 20200415 - History of Stroke, Transient Ischemic Attack, or Thromboembolism - Is"
+                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#dbb66fce-1655-41f3-bc19-44d309d33355"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_d29dffcb-43b9-4ee8-9baa-e2c5d9312063"
+                         name="History of Stroke/TIA/ Thromboembolism - is"
+                         typeRef="boolean"/>
+      <semantic:informationRequirement id="_cd8c9318-1f2b-4819-b0de-71c4ef126107">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_47383547-8d2e-32a9-93c5-4df732075567"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_b2f91a97-8f55-41b5-ae1a-9563c98b5caa">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_0fb2ee5f-32ac-37c6-8e8e-66905979240a"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_ab60a070-c9a2-4b2a-9a67-08b827d1a5cf">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_3272e195-3302-3baa-ad4c-2eeb43cb62d0"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:decisionService id="_f6e12b40-abbc-4130-8612-bce9421221ef"
+                             name="Evaluate Current CHA2DS2Vasc Score - Value of">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_f519f7b7-93bc-4341-8c1d-52666e107c0d"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
+                             name="PropositionalConcepts - 20200415 - Current CHA2DS2-VASc Score - Value of"
+                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#9babf369-5746-4eb9-a0cf-d911493ce45f"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_093fd16c-be1f-4b3d-9b9f-9f2c91138872"
+                         name="Evaluate Current CHA2DS2Vasc Score - Value of"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"/>
+      <semantic:inputDecision href="#_ad72f2d8-a104-4a22-a509-1995b94507f3"/>
+      <semantic:inputDecision href="#_b583c4fb-b04f-426c-9def-f3265f268024"/>
+      <semantic:inputDecision href="#_63cf2f2c-d9d9-47ce-8d29-21401603d074"/>
+      <semantic:inputDecision href="#_4467545d-bb6c-4fd6-af88-6dac322ee8a7"/>
+      <semantic:inputDecision href="#_665b8d29-c504-4ac3-8063-c95e3ca03793"/>
+      <semantic:inputDecision href="#_198d9a45-f8b6-42af-ae82-84dc55c268cb"/>
+      <semantic:inputDecision href="#_928ee547-b683-4dc5-84a9-ac70672d195b"/>
+   </semantic:decisionService>
+   <semantic:decisionService id="_a115cc80-3d8e-49a8-b113-1ad92b738073"
+                             name="Infer Current CHA2DS2Vasc Score - Value of">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_840e02af-a7a9-442b-9aa9-90713ec13777"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
+                             name="PropositionalConcepts - 20200415 - Current CHA2DS2-VASc Score - Value of"
+                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#9babf369-5746-4eb9-a0cf-d911493ce45f"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_e4c221d9-4ab0-4317-92e5-757ed2a3a5de"
+                         name="Infer Current CHA2DS2Vasc Score - Value of"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"/>
+      <semantic:encapsulatedDecision href="#_ad72f2d8-a104-4a22-a509-1995b94507f3"/>
+      <semantic:encapsulatedDecision href="#_63cf2f2c-d9d9-47ce-8d29-21401603d074"/>
+      <semantic:encapsulatedDecision href="#_b583c4fb-b04f-426c-9def-f3265f268024"/>
+      <semantic:encapsulatedDecision href="#_4467545d-bb6c-4fd6-af88-6dac322ee8a7"/>
+      <semantic:encapsulatedDecision href="#_665b8d29-c504-4ac3-8063-c95e3ca03793"/>
+      <semantic:encapsulatedDecision href="#_198d9a45-f8b6-42af-ae82-84dc55c268cb"/>
+      <semantic:encapsulatedDecision href="#_928ee547-b683-4dc5-84a9-ac70672d195b"/>
+   </semantic:decisionService>
+   <semantic:decision id="_b583c4fb-b04f-426c-9def-f3265f268024"
+                      name="History of Congestive Heart Failure - Is">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_1ad20e4d-0687-4bdc-b552-48068829da39"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
+                             name="PropositionalConcepts - 20200415 - History of Congestive Heart Failure - Is"
+                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#2e85b92c-8cb9-459d-87eb-5f9e51e0b0d9"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_c7e24d9f-61e1-44ef-ad41-6e57a800aa15"
+                         name="History of Congestive Heart Failure - Is"
+                         typeRef="boolean"/>
+      <semantic:informationRequirement id="_38a0ef6c-030d-4678-8d04-bc45723ec3aa">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_1f85c90d-b548-3121-8e6c-0f4197676d58"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:decision id="_63cf2f2c-d9d9-47ce-8d29-21401603d074"
+                      name="History of Hypertension - Is">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_5805282f-d856-4f00-927f-9cd6432e61f3"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
+                             name="PropositionalConcepts - 20200415 - History of Hypertension - Is"
+                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#32ccebda-1c60-4eb8-8814-851faa4bf373"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_825a22ae-f75e-42ae-a4ee-4ff4e2df3edf"
+                         name="History of Hypertension - Is"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_cda65b0c-ab8d-4568-901f-512080dadb53">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_6815ef44-d6f3-3007-ad22-869b5e1dca81"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:decision id="_4467545d-bb6c-4fd6-af88-6dac322ee8a7" name="Age - value of">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_bb3c440f-8251-4561-a45d-932d929fb61f"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
+                             name="PropositionalConcepts - 20200415 - Age - Value of"
+                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#01aaaf22-ca7f-42d0-a1a2-f027fbf81fa6"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_d6a284fb-0b98-4308-a2dd-14ed4a46af9a"
+                         name="Age - value of"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_94b26871-0255-49c6-9fd1-0aed7a702748">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_c81bd1ed-95ff-3484-ad02-1d5f25516096"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:decision id="_665b8d29-c504-4ac3-8063-c95e3ca03793"
+                      name="Has Diabetes Mellitus - Is">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_463d73f7-d6b5-4f59-a269-088fe4dcd9b2"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
+                             name="PropositionalConcepts - 20200415 - Has Diabetes Mellitus - Is"
+                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#31f92480-1ed8-4b26-81e1-f402df21235b"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_f64f5707-2be3-4d91-92a2-0f04afd680d6"
+                         name="Has Diabetes Mellitus - Is"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_56330ce3-e0d3-4d62-88be-826be64a7bb8">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_8595ed8d-a96c-387e-98cd-dd1fcb11dde1"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:decision id="_198d9a45-f8b6-42af-ae82-84dc55c268cb" name="Sex - Kind of">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_8f3261c1-08c5-4494-a115-d0427f8214a1"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
+                             name="PropositionalConcepts - 20200415 - Sex - Kind of"
+                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#536bef0d-a076-42dd-affe-84d0a9e2d48f"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_10b76d2b-4443-4b3b-a089-4d2d276670de"
+                         name="Sex - Kind of"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_a5b1d13a-db38-4f9a-b5ed-27967f56c827">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_0f88b050-5ec3-321c-9918-98f6b8533e9d"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:decision id="_928ee547-b683-4dc5-84a9-ac70672d195b"
+                      name="History of Vascular Disease - Is">
+      <semantic:extensionElements>
+         <triso:semanticLink id="_c72a12a0-d620-45fd-90c8-067c552f74b7"
+                             modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
+                             name="PropositionalConcepts - 20200415 - History of Vascular Disease - Is"
+                             uri="https://ontology.mayo.edu/taxonomies/propositionalconcepts#64a1b962-cafe-467e-845b-c9f78031c94e"/>
+      </semantic:extensionElements>
+      <semantic:variable id="_ae42d989-b388-4019-838b-c12aa58c80dc"
+                         name="History of Vascular Disease - Is"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_db38d920-50d7-45e9-8bfd-4aabd25b0efe">
+         <semantic:requiredInput href="http://www.trisotech.com/definitions/_9710fc08-724d-4d0a-8063-20823b8765c6#_23b0def9-c0ff-3d0c-8c41-50447ba44d29"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:organizationUnit id="_1f083631-9bd3-45b2-ab47-6addc3cf551b" name="AME"/>
+   <dmndi:DMNDI>
+      <dmndi:DMNDiagram id="_9346c724-2ea4-442c-9536-4f17992a4fce"
+                        name="Page 1"
+                        triso:modelElementRef="_494462ef-6d64-48d6-8804-ed0342dc33bd">
+         <di:extension>
+            <triso:semanticLink id="_4e11df80-c108-4f31-ae88-63bb6e147a5f"
+                                modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+                                name="KnowledgeAssetTypes - 20190801 - Semantic Decision Modelin 'KnowledgeAssetTypes - 20190801'"
+                                uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
+         </di:extension>
+         <dmndi:Size height="1050" width="2746.5530995635945"/>
+         <dmndi:DMNShape dmnElementRef="_ebb0b8dc-afb7-40a3-917e-7e22b23dba8e"
+                         id="_3e5bdfe8-cfe2-4210-ae31-1cac3d9ea0f2">
+            <dc:Bounds height="60"
+                       width="153"
+                       x="993.0896086500168"
+                       y="332.61386342590936"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_ad72f2d8-a104-4a22-a509-1995b94507f3"
+                         id="_34663b01-ba9c-4a1a-8940-9eb8796b2ef9">
+            <dc:Bounds height="60"
+                       width="153"
+                       x="1255.9217287879671"
+                       y="598.3368034716927"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_b583c4fb-b04f-426c-9def-f3265f268024"
+                         id="_06685fd7-3937-4ee0-9064-97ad9da82e8e">
+            <dc:Bounds height="60"
+                       width="153"
+                       x="403.1818254066234"
+                       y="598.3368034716926"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_6815ef44-d6f3-3007-ad22-869b5e1dca81"
+                         id="_3a8b77bd-15b0-42a7-a324-7a2b61312a7d">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="616.9393870216095"
+                       y="694.3367996569955"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_63cf2f2c-d9d9-47ce-8d29-21401603d074"
+                         id="_7a8a0ba6-ca7d-428f-9623-a718b801b678">
+            <dc:Bounds height="60"
+                       width="153"
+                       x="608.1805579047882"
+                       y="598.3368034716926"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_c81bd1ed-95ff-3484-ad02-1d5f25516096"
+                         id="_0949f99c-7053-478c-9485-1d2d6f71a99a">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="806.9393870216095"
+                       y="694.3367996569955"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_4467545d-bb6c-4fd6-af88-6dac322ee8a7"
+                         id="_2945467d-1ef4-4683-a724-b5a1e44e85c5">
+            <dc:Bounds height="60"
+                       width="153"
+                       x="798.1805579047882"
+                       y="598.3368034716926"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_8595ed8d-a96c-387e-98cd-dd1fcb11dde1"
+                         id="_601844d7-079c-49ef-abe4-7832f30bfe13">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="983.9393870216095"
+                       y="694.3367996569955"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_665b8d29-c504-4ac3-8063-c95e3ca03793"
+                         id="_a2ce8318-c001-4181-a4f7-870895dd9984">
+            <dc:Bounds height="60"
+                       width="153"
+                       x="975.1805579047882"
+                       y="598.3368034716926"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_47383547-8d2e-32a9-93c5-4df732075567"
+                         id="_4d4eef2a-3a1f-45fc-9da0-7b3e24599ab8">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="1151.9393870216095"
+                       y="694.3367996569956"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_3272e195-3302-3baa-ad4c-2eeb43cb62d0"
+                         id="_25686795-e105-4ac3-911c-141107b2fc8b">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="1264.6805579047882"
+                       y="776.3367996569954"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_0fb2ee5f-32ac-37c6-8e8e-66905979240a"
+                         id="_216de2f2-ba48-4001-96a9-7f039dd2c76b">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="1378.1628996711459"
+                       y="694.3367996569956"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_0f88b050-5ec3-321c-9918-98f6b8533e9d"
+                         id="_865621ec-f8b4-4b0a-a0d7-cc1ed3e11ed5">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="1532.383834762706"
+                       y="694.3367996569958"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_198d9a45-f8b6-42af-ae82-84dc55c268cb"
+                         id="_642ee0be-75a5-4de2-b768-52742ef91dd8">
+            <dc:Bounds height="60"
+                       width="153"
+                       x="1523.6250056458848"
+                       y="598.3368034716929"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_23b0def9-c0ff-3d0c-8c41-50447ba44d29"
+                         id="_e2618133-7316-4e92-be14-f74ee3f6735f">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="1703.383834762706"
+                       y="694.3367996569958"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_928ee547-b683-4dc5-84a9-ac70672d195b"
+                         id="_bece8a3a-13e3-480c-be1a-adfbcf9274c6">
+            <dc:Bounds height="60"
+                       width="153"
+                       x="1694.6250056458848"
+                       y="598.3368034716929"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_1f85c90d-b548-3121-8e6c-0f4197676d58"
+                         id="_35c330c3-6e6d-4aa8-a094-e9a8591d8978">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="411.9406545234448"
+                       y="694.3367996569956"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"
+                            trisodmn:defaultBounds="true"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNEdge dmnElementRef="_e6c3530d-23f9-416c-b2c8-f7419b2bcd37"
+                        id="_d0a21cf5-0852-41bd-b07e-eca765965ba5">
+            <di:waypoint x="1322.4217287879671" y="598.3368034716927"/>
+            <di:waypoint x="1099.5896086500168" y="392.61386342590936"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_cd8c9318-1f2b-4819-b0de-71c4ef126107"
+                        id="_225118e3-8d94-4cfd-9e72-02c0f1b0ddaf">
+            <di:waypoint x="1219.677359281131" y="694.3367996569956"/>
+            <di:waypoint x="1332.4217287879671" y="658.3368034716927"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_b2f91a97-8f55-41b5-ae1a-9563c98b5caa"
+                        id="_8c381bb6-8e3f-4469-b7c0-b00ea8c43031">
+            <di:waypoint x="1445.9008719306673" y="694.3367996569956"/>
+            <di:waypoint x="1332.4217287879671" y="658.3368034716927"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_281567b7-446b-4b16-a167-225826646f78"
+                        id="_17d3ed74-3509-46c6-979d-9f6230d149f7">
+            <di:waypoint x="1600.1250056458848" y="598.3368034716929"/>
+            <di:waypoint x="1119.5896086500168" y="392.61386342590936"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_997c2ac8-c96c-4bf3-a273-169ac8b332bc"
+                        id="_f5be41c3-a875-4195-825a-1a006bfe54b8">
+            <di:waypoint x="479.6818254066234" y="598.3368034716926"/>
+            <di:waypoint x="999.5896086500168" y="392.61386342590936"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_1367ed3b-4238-4a42-9561-bf01c04ff6c1"
+                        id="_cd7f088f-005a-4c2f-886e-8c4d78bda06f">
+            <di:waypoint x="1051.6805579047882" y="598.3368034716926"/>
+            <di:waypoint x="1069.5896086500168" y="392.61386342590936"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_18e08b19-b9d6-489c-9d0e-9fbf0d1e1919"
+                        id="_173775a3-4b89-46d4-a446-4f48dafc3085">
+            <di:waypoint x="684.6805579047882" y="598.3368034716926"/>
+            <di:waypoint x="1029.5896086500168" y="392.61386342590936"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_867ad6fb-4f15-4b44-b273-f826a5126b55"
+                        id="_509b7135-813b-49be-b502-c82e494a0d79">
+            <di:waypoint x="1771.1250056458848" y="598.336803471693"/>
+            <di:waypoint x="1139.5896086500168" y="392.61386342590936"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_ab60a070-c9a2-4b2a-9a67-08b827d1a5cf"
+                        id="_6b872f50-5c52-41d9-9aee-ebc3bb2ce6ad">
+            <di:waypoint x="1332.4185301643097" y="776.3367996569954"/>
+            <di:waypoint x="1332.4217287879671" y="658.3368034716927"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_cda65b0c-ab8d-4568-901f-512080dadb53"
+                        id="_428d723e-90bc-408a-b4c6-96eb50033a30">
+            <di:waypoint x="684.677359281131" y="754.3367996569955"/>
+            <di:waypoint x="684.6805579047882" y="598.3368034716926"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_94b26871-0255-49c6-9fd1-0aed7a702748"
+                        id="_b52eb534-5361-4a1c-a108-10c00a153e72">
+            <di:waypoint x="874.677359281131" y="754.3367996569955"/>
+            <di:waypoint x="874.6805579047882" y="598.3368034716926"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_56330ce3-e0d3-4d62-88be-826be64a7bb8"
+                        id="_258fe523-53f4-4880-9a5a-7cb80f08a17a">
+            <di:waypoint x="1051.677359281131" y="754.3367996569955"/>
+            <di:waypoint x="1051.6805579047882" y="598.3368034716926"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_ad8b3a24-7b14-402d-9d2c-2dcfd9f89fa7"
+                        id="_a6bae40c-f115-4212-95c3-66c88da03d8c">
+            <di:waypoint x="874.6805579047882" y="598.3368034716926"/>
+            <di:waypoint x="1049.5896086500168" y="392.61386342590936"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_a5b1d13a-db38-4f9a-b5ed-27967f56c827"
+                        id="_6d65b91c-63f8-414d-8a93-4d686ebfab13">
+            <di:waypoint x="1600.1218070222276" y="754.3367996569958"/>
+            <di:waypoint x="1600.1250056458848" y="598.3368034716929"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_38a0ef6c-030d-4678-8d04-bc45723ec3aa"
+                        id="_594fbe78-21ae-4d6c-8dc3-4c7fe1887eb6">
+            <di:waypoint x="479.67862678296626" y="694.3367996569956"/>
+            <di:waypoint x="479.6818254066234" y="658.3368034716926"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_db38d920-50d7-45e9-8bfd-4aabd25b0efe"
+                        id="_1db25e5f-4168-4df6-9510-81db169c7b68">
+            <di:waypoint x="1771.1218070222276" y="754.3367996569958"/>
+            <di:waypoint x="1771.1250056458848" y="598.3368034716929"/>
+            <dmndi:DMNLabel sharedStyle="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+         </dmndi:DMNEdge>
+      </dmndi:DMNDiagram>
+      <dmndi:DMNStyle fontBold="false"
+                      fontFamily="arial,helvetica,sans-serif"
+                      fontItalic="false"
+                      fontSize="11"
+                      fontStrikeThrough="false"
+                      fontUnderline="false"
+                      id="LS_2bd19257-eed5-4ba2-9d2b-a608614afdf8_0"/>
+   </dmndi:DMNDI>
 </semantic:definitions>

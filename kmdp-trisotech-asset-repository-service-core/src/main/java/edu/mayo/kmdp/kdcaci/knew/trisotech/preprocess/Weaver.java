@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
 
-import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelType;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
@@ -224,14 +223,12 @@ public class Weaver {
   }
 
   /**
-   * Determine the KnownAttribute based on the key.
-   *
-   * Can get rid of - was a Signavio use
+   * Determine the SemanticAnnotatoin based on the uri.
    *
    * @param el the document element under examination
-   * @return the KnownAttribute to be used in rewriting this element
+   * @return the SemanticAnnotationRelTypeSeries to be used in rewriting this element
    */
-  private SemanticAnnotationRelTypeSeries getKnownAttribute(Element el) {
+  private SemanticAnnotationRelTypeSeries getSemanticAnnotation(Element el) {
     String uri = el.getAttribute("uri");
 
     if (DecisionTypeSeries.resolveId(uri).isPresent()) {
@@ -441,7 +438,7 @@ public class Weaver {
     asElementStream(metas)
         .forEach(
             el -> doInjectTerm(el,
-                getKnownAttribute(el),
+                getSemanticAnnotation(el),
                 getConceptIdentifiers(el))
         );
   }

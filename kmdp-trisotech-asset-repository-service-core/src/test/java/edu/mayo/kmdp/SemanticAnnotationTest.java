@@ -60,10 +60,8 @@ class SemanticAnnotationTest {
 	TermsApiInternal terms;
 
 
-//	@Disabled("testExtraction: Current_Chronological_Age no longer exists...need input files updated to Trisotech")
 	@Test
 	void testExtraction() {
-		// TODO: when have more annotations and examples CAO
 		assertTrue(true); // dummy to keep sonarlint happy
 		String dmnPath = "/Computable Decision Model.raw.dmn.xml";
 		String metaPath = "/Computable Decision Model.meta.json";

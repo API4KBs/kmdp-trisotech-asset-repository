@@ -1,12 +1,12 @@
 {
-  "id": "b96a5875-9e0b-4e62-851a-df4824054203",
-  "sku": "b96a5875-9e0b-4e62-851a-df4824054203",
-  "name": "Basic Test Model",
-  "path": "/jls test models",
-  "mimetype": "application/cmmn-1-1+xml",
-  "updated": "2020-09-29T13:24:52Z",
-  "updater": "Sottara, Davide",
-  "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2Fjls%20test%20models&sku=b96a5875-9e0b-4e62-851a-df4824054203&mimetype=application%2Fcmmn-1-1%2Bxml",
-  "version": "1.0.0",
-  "state": "Draft"
+  "id" : "b96a5875-9e0b-4e62-851a-df4824054203",
+  "sku" : "b96a5875-9e0b-4e62-851a-df4824054203",
+  "name" : "Basic Test Model",
+  "path" : "/jls test models",
+  "mimetype" : "application/cmmn-1-1+xml",
+  "updated" : "2020-09-29T13:24:52Z",
+  "updater" : "Sottara, Davide",
+  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2Fjls%20test%20models&sku=b96a5875-9e0b-4e62-851a-df4824054203&mimetype=application%2Fcmmn-1-1%2Bxml",
+  "version" : "1.0.0",
+  "state" : "Draft"
 }

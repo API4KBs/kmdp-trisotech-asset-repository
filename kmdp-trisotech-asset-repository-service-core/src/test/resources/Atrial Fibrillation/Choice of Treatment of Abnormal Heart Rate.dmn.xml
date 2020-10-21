@@ -1,373 +1,468 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
-  xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/3220be16-3bc6-4d42-a7d4-13367caedeab"
-  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
-  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
-  xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
-  xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be"
-  xmlns:include2="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6"
-  xmlns:include3="https://clinicalknowledgemanagement.mayo.edu/artifacts/49c65b3e-ed28-4043-a76e-6ea78d44952f"
-  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  id="_3220be16-3bc6-4d42-a7d4-13367caedeab"
-  name="Choice of Treatment of Abnormal Heart Rate"
-  namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/3220be16-3bc6-4d42-a7d4-13367caedeab"
-  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd">
-  <semantic:extensionElements/>
-  <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
-    name="Prior Management of Atrial Fibrillation"
-    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be"/>
-  <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
-    name="CS"
-    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6"/>
-  <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
-    name="Current Cardiac Status"
-    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/49c65b3e-ed28-4043-a76e-6ea78d44952f"/>
-  <semantic:decisionService id="_3220be16-3bc6-4d42-a7d4-13367caedeab_DS"
-    name="Whole Model Decision Service">
-    <semantic:variable id="_3220be16-3bc6-4d42-a7d4-13367caedeab_DS_VAR"
-      name="Whole Model Decision Service"
-      typeRef="Any"/>
-    <semantic:outputDecision href="#_05c5d60c-cb29-4b00-ae99-bb39c8cce514"/>
-    <semantic:encapsulatedDecision href="#_99adabae-78db-4c55-a0f5-aa119ffb6938"/>
-    <semantic:encapsulatedDecision href="#_56e7e94b-fc74-438e-8f62-b401671126ce"/>
-    <semantic:encapsulatedDecision href="#_6b3f85de-b40d-4947-9020-643a780bb76a"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_bef0f40b-99e2-41e0-b3c8-07446cac2a8f_DS" name="Diagram Page 1">
-    <semantic:variable id="_bef0f40b-99e2-41e0-b3c8-07446cac2a8f_DS_VAR"
-      name="Diagram Page 1"
-      typeRef="Any"/>
-    <semantic:outputDecision href="#_05c5d60c-cb29-4b00-ae99-bb39c8cce514"/>
-    <semantic:encapsulatedDecision href="#_99adabae-78db-4c55-a0f5-aa119ffb6938"/>
-    <semantic:encapsulatedDecision href="#_56e7e94b-fc74-438e-8f62-b401671126ce"/>
-    <semantic:encapsulatedDecision href="#_6b3f85de-b40d-4947-9020-643a780bb76a"/>
-  </semantic:decisionService>
-  <semantic:decision id="_05c5d60c-cb29-4b00-ae99-bb39c8cce514"
-    name="Choice of Treatment of Abnormal Heart Rate">
-    <semantic:extensionElements>
-      <surr:annotation
-      >
-        <surr:rel name="defines"
-          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
-          resourceId="https://www.omg.org/spec/API4KP/api4kp/defines"
-          tag="defines"/>
-        <surr:ref
-          name="ClinicalSituations - Treatment of Abnormal Heart Ratein 'ClinicalSituations'"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
-          referentId="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
-          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#283371db-649d-311d-aed6-525ce3755159"
-          tag="_724ceb2d-6873-4ee8-bc60-68f53b2b071a"/>
-      </surr:annotation>
-      <surr:annotation
-      >
-        <surr:rel name="captures"
-          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
-          resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
-          tag="captures"/>
-        <surr:ref name="DecisionTypes - Actionable Decisionin 'DecisionTypes'"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
-          referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
-          resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#28d541e1-bd08-3afc-a3f0-3780601576c6"
-          tag="_03823911-4a49-4dcc-baf7-bebe5fb42b5f"/>
-      </surr:annotation>
-      <surr:annotation
-      >
-        <surr:rel name="captures"
-          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
-          resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
-          tag="captures"/>
-        <surr:ref name="DecisionTypes - Choice Decisionin 'DecisionTypes'"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
-          referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
-          resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"
-          tag="f5722c6b-176f-46db-bc9d-baa271575612"/>
-      </surr:annotation>
-      <surr:annotation
-      >
-        <surr:ref name="KnowledgeAssetTypes - 20190801 - Semantic Decision Model"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType"
-          referentId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
-          resourceId="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
-          tag="_00c67b63-9713-4101-99de-7b6375a191e1"/>
-      </surr:annotation>
-    </semantic:extensionElements>
-    <semantic:variable id="_e7e1d17d-d872-4983-b42b-86171f87a22c"
-      name="Choice of Treatment of Abnormal Heart Rate"
-      typeRef="Any"/>
-    <semantic:informationRequirement id="_a9038561-dd91-4133-92af-892f24882b71">
-      <semantic:requiredDecision href="#_99adabae-78db-4c55-a0f5-aa119ffb6938"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_c4cb78f7-3dcf-46a9-a368-0b9dd95a7b70">
-      <semantic:requiredDecision
-        href="https://clinicalknowledgemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be#cd02833b-5523-4a30-afd6-26826c34f772"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_88253789-2f2f-4f3d-8374-d17e9893f013">
-      <semantic:requiredDecision href="#_6b3f85de-b40d-4947-9020-643a780bb76a"/>
-    </semantic:informationRequirement>
-  </semantic:decision>
-  <semantic:decision id="_99adabae-78db-4c55-a0f5-aa119ffb6938"
-    name="Ablation of AV Node and Permanent Pacemaker Indicated">
-    <semantic:extensionElements>
-      <surr:annotation
-      >
-        <surr:rel name="defines"
-          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/defines"
-          resourceId="https://www.omg.org/spec/API4KP/api4kp/defines"
-          tag="defines"/>
-        <surr:ref
-          name="ClinicalSituations - Ablation of AV Node adn Permanent Pacemaker Indicatedin 'ClinicalSituations'"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
-          referentId="https://ontology.mayo.edu/taxonomies/clinicalsituations#"
-          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#7361c9dc-8a7c-3915-a53f-161db0878c30"
-          tag="a38cc688-e104-468c-aab4-92aecbaec346"/>
-      </surr:annotation>
-      <surr:annotation
-      >
-        <surr:rel name="captures"
-          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
-          resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
-          tag="captures"/>
-        <surr:ref name="DecisionTypes - Assessment Decisionin 'DecisionTypes'"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
-          referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#"
-          resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
-          tag="_1c059645-d35e-480d-8ea1-9f9d75dab932"/>
-      </surr:annotation>
-    </semantic:extensionElements>
-    <semantic:variable id="_1baf165c-9d10-49bc-b7e7-b15886d3c981"
-      name="Ablation of AV Node and Permanent Pacemaker Indicated"
-      typeRef="Any"/>
-    <semantic:authorityRequirement id="_9b3f2b08-00d4-4994-ac95-3d12e3bafb03">
-      <semantic:requiredAuthority href="#_c17e7d9e-3d5d-4c2e-8bb5-c9420b663d6e"/>
-    </semantic:authorityRequirement>
-  </semantic:decision>
-  <semantic:decision id="_56e7e94b-fc74-438e-8f62-b401671126ce"
-    name="Rate Control Drug Indicated">
-    <semantic:extensionElements>
-      <surr:annotation
-      >
-        <surr:rel name="captures"
-          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
-          resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
-          tag="captures"/>
-        <surr:ref name="DecisionTypes - 20190801 - Assessment Decision"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
-          referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-          resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
-          tag="_8ef5ace8-8700-4e44-a76c-41bb8a692f22"/>
-      </surr:annotation>
-      <surr:annotation
-      >
-        <surr:rel name="captures"
-          namespaceUri="https://www.omg.org/spec/API4KP/api4kp/captures"
-          resourceId="https://www.omg.org/spec/API4KP/api4kp/captures"
-          tag="captures"/>
-        <surr:ref name="DecisionTypes - 20190801 - Implicit Decision"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
-          referentId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/20190801/"
-          resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#e0dbe4d9-79b5-390c-91a9-bcc756d68b18"
-          tag="_124d653d-6346-4b19-a3ac-8c6f16d56af1"/>
-      </surr:annotation>
-    </semantic:extensionElements>
-    <semantic:variable id="_5b815b42-ce7b-49bb-b042-cd42bcc3abe4"
-      name="Rate Control Drug Indicated"
-      typeRef="Any"/>
-    <semantic:informationRequirement id="_8ff0899d-b25e-4584-8f9b-aac09bae1822">
-      <semantic:requiredInput
-        href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#8cbebd85-e58a-3827-9e3b-b3d61e432634"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_d584cc03-65c4-4f58-9316-ee8d702dfefb">
-      <semantic:requiredInput
-        href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#ac52d95a-becb-3574-af2d-3745b247cbc8"/>
-    </semantic:informationRequirement>
-    <semantic:informationRequirement id="_c41222d5-0c90-4cad-87c2-8c20cf8cff1a">
-      <semantic:requiredDecision
-        href="https://clinicalknowledgemanagement.mayo.edu/artifacts/49c65b3e-ed28-4043-a76e-6ea78d44952f#a5ed6f2f-cb29-430e-be41-d987221acff9"/>
-    </semantic:informationRequirement>
-  </semantic:decision>
-  <semantic:decision id="_6b3f85de-b40d-4947-9020-643a780bb76a"
-    name="Choice of Rate Control Drug">
-    <semantic:variable id="_91a48afe-382d-4c9d-ba0b-5d86652df963"
-      name="Choice of Rate Control Drug"
-      typeRef="Any"/>
-    <semantic:informationRequirement id="_8d604c43-9b84-4f6e-9dbe-22cacbac65e2">
-      <semantic:requiredDecision href="#_56e7e94b-fc74-438e-8f62-b401671126ce"/>
-    </semantic:informationRequirement>
-    <semantic:authorityRequirement id="_80bc5435-d4f6-4d21-9a0a-09599b6cc58f">
-      <semantic:requiredAuthority href="#_7712523b-9c14-46a9-9d5f-6f7a3b01d275"/>
-    </semantic:authorityRequirement>
-    <semantic:authorityRequirement id="_f568a072-b99c-4e15-8f36-338c7ecf8eb0">
-      <semantic:requiredAuthority href="#_7f93bc0a-f853-4d68-bd65-02b112a1aa7e"/>
-    </semantic:authorityRequirement>
-  </semantic:decision>
-  <semantic:knowledgeSource id="_7712523b-9c14-46a9-9d5f-6f7a3b01d275"
-    name="Rate Control Drug Table">
-    <semantic:extensionElements/>
-  </semantic:knowledgeSource>
-  <semantic:knowledgeSource id="_7f93bc0a-f853-4d68-bd65-02b112a1aa7e"
-    name="Rate Control Drug Considerations">
-    <semantic:extensionElements/>
-  </semantic:knowledgeSource>
-  <semantic:knowledgeSource id="_c17e7d9e-3d5d-4c2e-8bb5-c9420b663d6e"
-    name="PPM and AV node ablation">
-    <semantic:extensionElements/>
-  </semantic:knowledgeSource>
-  <dmndi:DMNDI>
-    <dmndi:DMNDiagram id="_bef0f40b-99e2-41e0-b3c8-07446cac2a8f" name="Page 1">
-      <di:extension>
-        <surr:annotation
-        />
-      </di:extension>
-      <dmndi:Size height="1050" width="1911.4470252990723"/>
-      <dmndi:DMNShape dmnElementRef="_05c5d60c-cb29-4b00-ae99-bb39c8cce514"
-        id="_093d5a23-14ec-43e1-827d-f71f5e606cf7">
-        <dc:Bounds height="60"
-          width="152.9999999999999"
-          x="987.2411708831788"
-          y="41"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="_99adabae-78db-4c55-a0f5-aa119ffb6938"
-        id="_f1e221c0-d703-410c-ad1a-1bc8fe28dac0">
-        <dc:Bounds height="60" width="153" x="1087.2411708831787" y="182"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="_56e7e94b-fc74-438e-8f62-b401671126ce"
-        id="_3f79173f-e525-4cd3-80cd-f9e2d87a1cc9">
-        <dc:Bounds height="60"
-          width="152.9999999999999"
-          x="895.2411708831788"
-          y="306.00000000000006"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="_6b3f85de-b40d-4947-9020-643a780bb76a"
-        id="_e267eb0a-4cbf-4089-9877-4b9e7b8ac551">
-        <dc:Bounds height="60"
-          width="152.9999999999999"
-          x="895.2411708831788"
-          y="182.00000000000006"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include1:_cd02833b-5523-4a30-afd6-26826c34f772"
-        id="_f773fc64-da14-4ed0-bb5b-378b19a54874">
-        <dc:Bounds height="60" width="153" x="1228.2411708831787" y="41"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include2:_8cbebd85-e58a-3827-9e3b-b3d61e432634"
-        id="_62e1fb57-24df-451b-914d-d2c18fcb9739">
-        <dc:Bounds height="60.00000762939459"
-          width="135.4823417663572"
-          x="753.2701961558221"
-          y="427.01136333267544"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include2:_ac52d95a-becb-3574-af2d-3745b247cbc8"
-        id="_9f2ae9d5-5e97-48bf-987a-7e5a049fb64a">
-        <dc:Bounds height="60.00000762939453"
-          width="135.4823417663572"
-          x="1057.270196155822"
-          y="396.01136333267544"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="_7712523b-9c14-46a9-9d5f-6f7a3b01d275"
-        id="_33f5ce84-8d3b-4eb0-81e4-aba53d9f2d48">
-        <dc:Bounds height="69.95735931396484"
-          width="100"
-          x="723.2411708831788"
-          y="157.02132034301763"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="_7f93bc0a-f853-4d68-bd65-02b112a1aa7e"
-        id="_4156e922-a5e3-434a-bf35-0a178dca7aa8">
-        <dc:Bounds height="69.95735931396484"
-          width="100"
-          x="723.2411708831788"
-          y="76.02132034301758"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="include3:_a5ed6f2f-cb29-430e-be41-d987221acff9"
-        id="_3ede7d78-4a2a-462f-91fc-fc0d250015cc">
-        <dc:Bounds height="60"
-          width="152.9999999999999"
-          x="895.2411708831788"
-          y="543.0113671473728"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNShape dmnElementRef="_c17e7d9e-3d5d-4c2e-8bb5-c9420b663d6e"
-        id="_34b6a90d-fcbf-469f-9ea6-79de3f1cb07b">
-        <dc:Bounds height="69.95735931396484"
-          width="100"
-          x="1295.2411708831787"
-          y="177.02132034301758"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNShape>
-      <dmndi:DMNEdge dmnElementRef="_a9038561-dd91-4133-92af-892f24882b71"
-        id="_8ae2d9e5-2531-4379-bc8d-d0eea9f3ff00">
-        <di:waypoint x="1163.7411708831787" y="182"/>
-        <di:waypoint x="1093.7411708831787" y="101"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_8d604c43-9b84-4f6e-9dbe-22cacbac65e2"
-        id="_8f984abe-6923-4827-bdf1-69576771242f">
-        <di:waypoint x="971.7411708831787" y="306.00000000000006"/>
-        <di:waypoint x="971.7411708831788" y="242.00000000000006"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_c4cb78f7-3dcf-46a9-a368-0b9dd95a7b70"
-        id="_0280c0e3-b576-4ed1-bce1-fd61bf25c3f1">
-        <di:waypoint x="1228.2411708831787" y="71"/>
-        <di:waypoint x="1140.2411708831787" y="71"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_8ff0899d-b25e-4584-8f9b-aac09bae1822"
-        id="_568ab95f-1cef-4458-a206-f4b00e9af8c3">
-        <di:waypoint x="760.5081684153436" y="437.01136333267544"/>
-        <di:waypoint x="951.7411708831788" y="366.00000000000006"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_d584cc03-65c4-4f58-9316-ee8d702dfefb"
-        id="_aab43223-8981-4e44-b32b-675f5a36a6bc">
-        <di:waypoint x="1125.0081684153436" y="396.01136333267544"/>
-        <di:waypoint x="1011.7411708831788" y="366"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_80bc5435-d4f6-4d21-9a0a-09599b6cc58f"
-        id="_e001798c-8740-4b30-9c16-63416e97f32b">
-        <di:waypoint x="823.2411708831788" y="201.52132034301763"/>
-        <di:waypoint x="895.2411708831788" y="212.00000000000006"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_f568a072-b99c-4e15-8f36-338c7ecf8eb0"
-        id="_f3ef2fb8-7dd0-4053-bbb7-2c17026f0760">
-        <di:waypoint x="773.2411708831788" y="76.02132034301758"/>
-        <di:waypoint x="971.7411708831787" y="242.00000000000006"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_c41222d5-0c90-4cad-87c2-8c20cf8cff1a"
-        id="_dbf34d08-faa0-42a8-aa62-90a8b59790f7">
-        <di:waypoint x="971.7411708831788" y="543.0113671473728"/>
-        <di:waypoint x="971.7411708831788" y="366.00000000000006"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_88253789-2f2f-4f3d-8374-d17e9893f013"
-        id="_78588d71-7a7f-49b3-89c6-59fa11d0fec2">
-        <di:waypoint x="981.7411708831788" y="182.00000000000006"/>
-        <di:waypoint x="1033.7411708831787" y="101"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNEdge>
-      <dmndi:DMNEdge dmnElementRef="_9b3f2b08-00d4-4994-ac95-3d12e3bafb03"
-        id="_3b5b859e-4936-4606-828d-17146459b62d">
-        <di:waypoint x="1295.2411708831787" y="212"/>
-        <di:waypoint x="1240.2411708831787" y="212"/>
-        <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-      </dmndi:DMNEdge>
-    </dmndi:DMNDiagram>
-    <dmndi:DMNStyle fontBold="false"
-      fontFamily="arial,helvetica,sans-serif"
-      fontItalic="false"
-      fontSize="11"
-      fontStrikeThrough="false"
-      fontUnderline="false"
-      id="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
-  </dmndi:DMNDI>
+                      xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/3220be16-3bc6-4d42-a7d4-13367caedeab"
+                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be"
+                      xmlns:include2="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6"
+                      xmlns:include3="https://clinicalknowledgemanagement.mayo.edu/artifacts/49c65b3e-ed28-4043-a76e-6ea78d44952f"
+                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
+                      xmlns:rss="http://purl.org/rss/2.0/"
+                      xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      id="_3220be16-3bc6-4d42-a7d4-13367caedeab"
+                      name="Choice of Treatment of Abnormal Heart Rate"
+                      namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/3220be16-3bc6-4d42-a7d4-13367caedeab"
+                      xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+   <semantic:extensionElements/>
+   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                    name="Prior Management of Atrial Fibrillation"
+                    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be"/>
+   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                    name="CS"
+                    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6"/>
+   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                    name="Current Cardiac Status"
+                    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/49c65b3e-ed28-4043-a76e-6ea78d44952f"/>
+   <semantic:decisionService id="_3220be16-3bc6-4d42-a7d4-13367caedeab_DS"
+                             name="Whole Model Decision Service">
+      <semantic:variable id="_3220be16-3bc6-4d42-a7d4-13367caedeab_DS_VAR"
+                         name="Whole Model Decision Service"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_05c5d60c-cb29-4b00-ae99-bb39c8cce514"/>
+      <semantic:encapsulatedDecision href="#_99adabae-78db-4c55-a0f5-aa119ffb6938"/>
+      <semantic:encapsulatedDecision href="#_56e7e94b-fc74-438e-8f62-b401671126ce"/>
+      <semantic:encapsulatedDecision href="#_6b3f85de-b40d-4947-9020-643a780bb76a"/>
+   </semantic:decisionService>
+   <semantic:decisionService id="_bef0f40b-99e2-41e0-b3c8-07446cac2a8f_DS" name="Diagram Page 1">
+      <semantic:variable id="_bef0f40b-99e2-41e0-b3c8-07446cac2a8f_DS_VAR"
+                         name="Diagram Page 1"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_05c5d60c-cb29-4b00-ae99-bb39c8cce514"/>
+      <semantic:encapsulatedDecision href="#_99adabae-78db-4c55-a0f5-aa119ffb6938"/>
+      <semantic:encapsulatedDecision href="#_56e7e94b-fc74-438e-8f62-b401671126ce"/>
+      <semantic:encapsulatedDecision href="#_6b3f85de-b40d-4947-9020-643a780bb76a"/>
+   </semantic:decisionService>
+   <semantic:decision id="_05c5d60c-cb29-4b00-ae99-bb39c8cce514"
+                      name="Choice of Treatment of Abnormal Heart Rate">
+      <semantic:extensionElements>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel establishedOn="2020-10-07T00:00:00"
+                      name="defines"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
+                      referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      tag="defines"
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201007-104206">
+               <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
+            </surr:rel>
+            <surr:ref establishedOn="2020-09-21T00:00:00"
+                      name="Treatment of Abnormal Heart Rate"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/propositionalconcepts"
+                      referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/2da878e4-961b-45bd-8555-059e327b2c13"
+                      resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#283371db-649d-311d-aed6-525ce3755159"
+                      tag="2da878e4-961b-45bd-8555-059e327b2c13"
+                      versionId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/versions/20200921-175977#2da878e4-961b-45bd-8555-059e327b2c13"
+                      versionTag="20200921-175977">
+               <id:uuid>283371db-649d-311d-aed6-525ce3755159</id:uuid>
+            </surr:ref>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel establishedOn="2020-10-07T00:00:00"
+                      name="captures"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
+                      referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      tag="captures"
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201007-104206">
+               <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
+            </surr:rel>
+            <surr:ref establishedOn="2020-10-07T00:00:00"
+                      name="Actionable Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
+                      referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ActionableDecision"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#28d541e1-bd08-3afc-a3f0-3780601576c6"
+                      tag="ActionableDecision"
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#ActionableDecision"
+                      versionTag="20201007-104264">
+               <id:uuid>28d541e1-bd08-3afc-a3f0-3780601576c6</id:uuid>
+            </surr:ref>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel establishedOn="2020-10-07T00:00:00"
+                      name="captures"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
+                      referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      tag="captures"
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201007-104206">
+               <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
+            </surr:rel>
+            <surr:ref establishedOn="2020-10-07T00:00:00"
+                      name="Choice Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
+                      referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ChoiceDecision"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"
+                      tag="ChoiceDecision"
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#ChoiceDecision"
+                      versionTag="20201007-104264">
+               <id:uuid>21d77342-d120-324b-9ac6-11562e52c4cd</id:uuid>
+            </surr:ref>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:ref establishedOn="2019-08-01T00:00:00"
+                      name="Semantic Decision Model"
+                      namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType"
+                      referentId="https://www.omg.org/spec/API4KP/api4kp-kao/SemanticDecisionModel"
+                      resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
+                      tag="SemanticDecisionModel"
+                      versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType/versions/20190801#SemanticDecisionModel"
+                      versionTag="20190801">
+               <id:uuid>56b58fc2-b66f-3175-878e-bc3ef01cb916</id:uuid>
+            </surr:ref>
+         </surr:annotation>
+      </semantic:extensionElements>
+      <semantic:variable id="_e7e1d17d-d872-4983-b42b-86171f87a22c"
+                         name="Choice of Treatment of Abnormal Heart Rate"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_a9038561-dd91-4133-92af-892f24882b71">
+         <semantic:requiredDecision href="#_99adabae-78db-4c55-a0f5-aa119ffb6938"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_c4cb78f7-3dcf-46a9-a368-0b9dd95a7b70">
+         <semantic:requiredDecision href="https://clinicalknowledgemanagement.mayo.edu/artifacts/593f49ec-4e1d-44f0-b599-e480a7f885be#cd02833b-5523-4a30-afd6-26826c34f772"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_88253789-2f2f-4f3d-8374-d17e9893f013">
+         <semantic:requiredDecision href="#_6b3f85de-b40d-4947-9020-643a780bb76a"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:decision id="_99adabae-78db-4c55-a0f5-aa119ffb6938"
+                      name="Ablation of AV Node and Permanent Pacemaker Indicated">
+      <semantic:extensionElements>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel establishedOn="2020-10-07T00:00:00"
+                      name="defines"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
+                      referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      tag="defines"
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201007-104206">
+               <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
+            </surr:rel>
+            <surr:ref establishedOn="2020-09-21T00:00:00"
+                      name="Ablation of AV Node and Permanent Pacemaker Indicated"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/propositionalconcepts"
+                      referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/fb67896a-8e68-447c-9adf-230338fd6942"
+                      resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#7361c9dc-8a7c-3915-a53f-161db0878c30"
+                      tag="fb67896a-8e68-447c-9adf-230338fd6942"
+                      versionId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/versions/20200921-175977#fb67896a-8e68-447c-9adf-230338fd6942"
+                      versionTag="20200921-175977">
+               <id:uuid>7361c9dc-8a7c-3915-a53f-161db0878c30</id:uuid>
+            </surr:ref>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel establishedOn="2020-10-07T00:00:00"
+                      name="captures"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
+                      referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      tag="captures"
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201007-104206">
+               <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
+            </surr:rel>
+            <surr:ref establishedOn="2020-10-07T00:00:00"
+                      name="Assessment Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
+                      referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
+                      tag="AssessmentDecision"
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
+                      versionTag="20201007-104264">
+               <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
+            </surr:ref>
+         </surr:annotation>
+      </semantic:extensionElements>
+      <semantic:variable id="_1baf165c-9d10-49bc-b7e7-b15886d3c981"
+                         name="Ablation of AV Node and Permanent Pacemaker Indicated"
+                         typeRef="Any"/>
+      <semantic:authorityRequirement id="_9b3f2b08-00d4-4994-ac95-3d12e3bafb03">
+         <semantic:requiredAuthority href="#_c17e7d9e-3d5d-4c2e-8bb5-c9420b663d6e"/>
+      </semantic:authorityRequirement>
+   </semantic:decision>
+   <semantic:decision id="_56e7e94b-fc74-438e-8f62-b401671126ce"
+                      name="Rate Control Drug Indicated">
+      <semantic:extensionElements>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel establishedOn="2020-10-07T00:00:00"
+                      name="captures"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
+                      referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      tag="captures"
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201007-104206">
+               <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
+            </surr:rel>
+            <surr:ref establishedOn="2020-10-07T00:00:00"
+                      name="Assessment Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
+                      referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AssessmentDecision"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#d03ea564-0d31-3e72-a98b-cb93aa4c5cce"
+                      tag="AssessmentDecision"
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#AssessmentDecision"
+                      versionTag="20201007-104264">
+               <id:uuid>d03ea564-0d31-3e72-a98b-cb93aa4c5cce</id:uuid>
+            </surr:ref>
+         </surr:annotation>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:rel establishedOn="2020-10-07T00:00:00"
+                      name="captures"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
+                      referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      tag="captures"
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201007-104206#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201007-104206">
+               <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
+            </surr:rel>
+            <surr:ref establishedOn="2020-10-07T00:00:00"
+                      name="Implicit Decision"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
+                      referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ImplicitDecision"
+                      resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#e0dbe4d9-79b5-390c-91a9-bcc756d68b18"
+                      tag="ImplicitDecision"
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201007-104264#ImplicitDecision"
+                      versionTag="20201007-104264">
+               <id:uuid>e0dbe4d9-79b5-390c-91a9-bcc756d68b18</id:uuid>
+            </surr:ref>
+         </surr:annotation>
+      </semantic:extensionElements>
+      <semantic:variable id="_5b815b42-ce7b-49bb-b042-cd42bcc3abe4"
+                         name="Rate Control Drug Indicated"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_8ff0899d-b25e-4584-8f9b-aac09bae1822">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#8cbebd85-e58a-3827-9e3b-b3d61e432634"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_d584cc03-65c4-4f58-9316-ee8d702dfefb">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/9710fc08-724d-4d0a-8063-20823b8765c6#ac52d95a-becb-3574-af2d-3745b247cbc8"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_c41222d5-0c90-4cad-87c2-8c20cf8cff1a">
+         <semantic:requiredDecision href="https://clinicalknowledgemanagement.mayo.edu/artifacts/49c65b3e-ed28-4043-a76e-6ea78d44952f#a5ed6f2f-cb29-430e-be41-d987221acff9"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:decision id="_6b3f85de-b40d-4947-9020-643a780bb76a"
+                      name="Choice of Rate Control Drug">
+      <semantic:variable id="_91a48afe-382d-4c9d-ba0b-5d86652df963"
+                         name="Choice of Rate Control Drug"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_8d604c43-9b84-4f6e-9dbe-22cacbac65e2">
+         <semantic:requiredDecision href="#_56e7e94b-fc74-438e-8f62-b401671126ce"/>
+      </semantic:informationRequirement>
+      <semantic:authorityRequirement id="_80bc5435-d4f6-4d21-9a0a-09599b6cc58f">
+         <semantic:requiredAuthority href="#_7712523b-9c14-46a9-9d5f-6f7a3b01d275"/>
+      </semantic:authorityRequirement>
+      <semantic:authorityRequirement id="_f568a072-b99c-4e15-8f36-338c7ecf8eb0">
+         <semantic:requiredAuthority href="#_7f93bc0a-f853-4d68-bd65-02b112a1aa7e"/>
+      </semantic:authorityRequirement>
+   </semantic:decision>
+   <semantic:knowledgeSource id="_7712523b-9c14-46a9-9d5f-6f7a3b01d275"
+                             name="Rate Control Drug Table">
+      <semantic:extensionElements/>
+   </semantic:knowledgeSource>
+   <semantic:knowledgeSource id="_7f93bc0a-f853-4d68-bd65-02b112a1aa7e"
+                             name="Rate Control Drug Considerations">
+      <semantic:extensionElements/>
+   </semantic:knowledgeSource>
+   <semantic:knowledgeSource id="_c17e7d9e-3d5d-4c2e-8bb5-c9420b663d6e"
+                             name="PPM and AV node ablation">
+      <semantic:extensionElements/>
+   </semantic:knowledgeSource>
+   <dmndi:DMNDI>
+      <dmndi:DMNDiagram id="_bef0f40b-99e2-41e0-b3c8-07446cac2a8f" name="Page 1">
+         <di:extension/>
+         <dmndi:Size height="1050" width="1911.4470252990723"/>
+         <dmndi:DMNShape dmnElementRef="_05c5d60c-cb29-4b00-ae99-bb39c8cce514"
+                         id="_093d5a23-14ec-43e1-827d-f71f5e606cf7">
+            <dc:Bounds height="60"
+                       width="152.9999999999999"
+                       x="987.2411708831788"
+                       y="41"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_99adabae-78db-4c55-a0f5-aa119ffb6938"
+                         id="_f1e221c0-d703-410c-ad1a-1bc8fe28dac0">
+            <dc:Bounds height="60" width="153" x="1087.2411708831787" y="182"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_56e7e94b-fc74-438e-8f62-b401671126ce"
+                         id="_3f79173f-e525-4cd3-80cd-f9e2d87a1cc9">
+            <dc:Bounds height="60"
+                       width="152.9999999999999"
+                       x="895.2411708831788"
+                       y="306.00000000000006"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_6b3f85de-b40d-4947-9020-643a780bb76a"
+                         id="_e267eb0a-4cbf-4089-9877-4b9e7b8ac551">
+            <dc:Bounds height="60"
+                       width="152.9999999999999"
+                       x="895.2411708831788"
+                       y="182.00000000000006"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include1:_cd02833b-5523-4a30-afd6-26826c34f772"
+                         id="_f773fc64-da14-4ed0-bb5b-378b19a54874">
+            <dc:Bounds height="60" width="153" x="1228.2411708831787" y="41"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include2:_8cbebd85-e58a-3827-9e3b-b3d61e432634"
+                         id="_62e1fb57-24df-451b-914d-d2c18fcb9739">
+            <dc:Bounds height="60.00000762939459"
+                       width="135.4823417663572"
+                       x="753.2701961558221"
+                       y="427.01136333267544"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include2:_ac52d95a-becb-3574-af2d-3745b247cbc8"
+                         id="_9f2ae9d5-5e97-48bf-987a-7e5a049fb64a">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.4823417663572"
+                       x="1057.270196155822"
+                       y="396.01136333267544"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_7712523b-9c14-46a9-9d5f-6f7a3b01d275"
+                         id="_33f5ce84-8d3b-4eb0-81e4-aba53d9f2d48">
+            <dc:Bounds height="69.95735931396484"
+                       width="100"
+                       x="723.2411708831788"
+                       y="157.02132034301763"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_7f93bc0a-f853-4d68-bd65-02b112a1aa7e"
+                         id="_4156e922-a5e3-434a-bf35-0a178dca7aa8">
+            <dc:Bounds height="69.95735931396484"
+                       width="100"
+                       x="723.2411708831788"
+                       y="76.02132034301758"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="include3:_a5ed6f2f-cb29-430e-be41-d987221acff9"
+                         id="_3ede7d78-4a2a-462f-91fc-fc0d250015cc">
+            <dc:Bounds height="60"
+                       width="152.9999999999999"
+                       x="895.2411708831788"
+                       y="543.0113671473728"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_c17e7d9e-3d5d-4c2e-8bb5-c9420b663d6e"
+                         id="_34b6a90d-fcbf-469f-9ea6-79de3f1cb07b">
+            <dc:Bounds height="69.95735931396484"
+                       width="100"
+                       x="1295.2411708831787"
+                       y="177.02132034301758"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNEdge dmnElementRef="_a9038561-dd91-4133-92af-892f24882b71"
+                        id="_8ae2d9e5-2531-4379-bc8d-d0eea9f3ff00">
+            <di:waypoint x="1163.7411708831787" y="182"/>
+            <di:waypoint x="1093.7411708831787" y="101"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_8d604c43-9b84-4f6e-9dbe-22cacbac65e2"
+                        id="_8f984abe-6923-4827-bdf1-69576771242f">
+            <di:waypoint x="971.7411708831787" y="306.00000000000006"/>
+            <di:waypoint x="971.7411708831788" y="242.00000000000006"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_c4cb78f7-3dcf-46a9-a368-0b9dd95a7b70"
+                        id="_0280c0e3-b576-4ed1-bce1-fd61bf25c3f1">
+            <di:waypoint x="1228.2411708831787" y="71"/>
+            <di:waypoint x="1140.2411708831787" y="71"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_8ff0899d-b25e-4584-8f9b-aac09bae1822"
+                        id="_568ab95f-1cef-4458-a206-f4b00e9af8c3">
+            <di:waypoint x="760.5081684153436" y="437.01136333267544"/>
+            <di:waypoint x="951.7411708831788" y="366.00000000000006"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_d584cc03-65c4-4f58-9316-ee8d702dfefb"
+                        id="_aab43223-8981-4e44-b32b-675f5a36a6bc">
+            <di:waypoint x="1125.0081684153436" y="396.01136333267544"/>
+            <di:waypoint x="1011.7411708831788" y="366"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_80bc5435-d4f6-4d21-9a0a-09599b6cc58f"
+                        id="_e001798c-8740-4b30-9c16-63416e97f32b">
+            <di:waypoint x="823.2411708831788" y="201.52132034301763"/>
+            <di:waypoint x="895.2411708831788" y="212.00000000000006"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_f568a072-b99c-4e15-8f36-338c7ecf8eb0"
+                        id="_f3ef2fb8-7dd0-4053-bbb7-2c17026f0760">
+            <di:waypoint x="773.2411708831788" y="76.02132034301758"/>
+            <di:waypoint x="971.7411708831787" y="242.00000000000006"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_c41222d5-0c90-4cad-87c2-8c20cf8cff1a"
+                        id="_dbf34d08-faa0-42a8-aa62-90a8b59790f7">
+            <di:waypoint x="971.7411708831788" y="543.0113671473728"/>
+            <di:waypoint x="971.7411708831788" y="366.00000000000006"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_88253789-2f2f-4f3d-8374-d17e9893f013"
+                        id="_78588d71-7a7f-49b3-89c6-59fa11d0fec2">
+            <di:waypoint x="981.7411708831788" y="182.00000000000006"/>
+            <di:waypoint x="1033.7411708831787" y="101"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_9b3f2b08-00d4-4994-ac95-3d12e3bafb03"
+                        id="_3b5b859e-4936-4606-828d-17146459b62d">
+            <di:waypoint x="1295.2411708831787" y="212"/>
+            <di:waypoint x="1240.2411708831787" y="212"/>
+            <dmndi:DMNLabel sharedStyle="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+         </dmndi:DMNEdge>
+      </dmndi:DMNDiagram>
+      <dmndi:DMNStyle fontBold="false"
+                      fontFamily="arial,helvetica,sans-serif"
+                      fontItalic="false"
+                      fontSize="11"
+                      fontStrikeThrough="false"
+                      fontUnderline="false"
+                      id="LS_3220be16-3bc6-4d42-a7d4-13367caedeab_0"/>
+   </dmndi:DMNDI>
 </semantic:definitions>

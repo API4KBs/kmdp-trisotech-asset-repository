@@ -273,7 +273,7 @@ class WeaverTest {
       assertTrue(props.stream()
           .anyMatch(ann -> ann.getRel().getPrefLabel()
               .equals(In_Terms_Of.getLabel())));
-      assertEquals(2, props.size());
+      assertEquals(3, props.size());
 
       assertTrue( props.stream()
           .anyMatch( ann -> ann.getRef().getName().contains("Test On Medication")));

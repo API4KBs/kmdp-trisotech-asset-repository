@@ -1,208 +1,205 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
-                      xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/e36338e7-500c-43a0-881d-22aa5dc538df"
-                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
-                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
-                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
-                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
-                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
-                      xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"
-                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
-                      xmlns:rss="http://purl.org/rss/2.0/"
-                      xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
-                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
-                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      id="_e36338e7-500c-43a0-881d-22aa5dc538df"
-                      name="Test Save As"
-                      namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/e36338e7-500c-43a0-881d-22aa5dc538df"
-                      xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
-   <semantic:extensionElements/>
-   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
-                    name="Test Dictionary"
-                    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"/>
-   <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS"
-                             name="Whole Model Decision Service">
-      <semantic:variable id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS_VAR"
-                         name="Whole Model Decision Service"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-      <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
-      <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="Diagram Page 1">
-      <semantic:variable id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS_VAR"
-                         name="Diagram Page 1"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-      <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
-      <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_cde1daf9-d08a-47b7-9691-1737343b91fa" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_12ea461c-8ead-434a-98c7-f784c36d7185" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_af5f7bec-1ce7-486f-9610-3f6956b15340" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_c7da9952-cfd2-42f8-bf47-e048379bbedc" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_61279030-bd99-42b0-b92f-ba3a37248c8d" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_4c828d68-ca5c-4101-b77d-61ac93d38d0c" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_4da5958a-1782-41af-8b77-5fa83ca230fb" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_f39317ef-34ea-4ff8-84b2-0640289b37a6" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_e4bd3764-630e-4801-97ea-5c7d05378031" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_7a63bd35-f0ff-40aa-a3a2-cd62d267451f" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-      <semantic:variable id="_9789c2a6-0155-49e5-8cd0-7ae05bfe28b1" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-      <semantic:variable id="_5ec39f37-fc1c-41ea-aeaf-283f736c5553" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS"
-                             name="Whole Model Decision Service">
-      <semantic:variable id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS_VAR"
-                         name="Whole Model Decision Service"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-      <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
-      <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="Diagram Page 1">
-      <semantic:variable id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS_VAR"
-                         name="Diagram Page 1"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-      <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
-      <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
-   </semantic:decisionService>
-   <semantic:decision id="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
-                      name="Weaver Test 1 Decision">
-      <semantic:extensionElements>
-         <surr:annotation>
-            <surr:ref id="http://foo.mayo.edu/test#Entity1"
-                      name="Test Entity Set - My Test Entity 1"
-                      namespaceUri="http://foo.mayo.edu/test#"
-                      referentId="http://foo.mayo.edu/test#EntitySet"
-                      resourceId="http://foo.mayo.edu/test#Entity1"
-                      tag="e63052a5-1203-4967-8f7f-abf05c63cdf0"/>
-         </surr:annotation>
-      </semantic:extensionElements>
-      <semantic:variable id="_aeba48e7-a5e2-4a2f-a591-f5ddd5dc41cc"
-                         name="Weaver Test 1 Decision"
-                         typeRef="string"/>
-      <semantic:informationRequirement id="_08ec80f6-9032-4d91-8d39-fd28cfbba734">
-         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_c17fd570-09f2-48d8-8d8a-50cb3893b689">
-         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_4c4342d3-72a2-4786-b776-b24e6f1a274c">
-         <semantic:requiredInput href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
-      </semantic:informationRequirement>
-      <semantic:informationRequirement id="_1a77ec46-68eb-4000-8387-9564c688a4da">
-         <semantic:requiredInput href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
-      </semantic:informationRequirement>
-      <semantic:literalExpression id="_e38ca61b-db31-4025-9b58-2c7ca2d1ce4e" typeRef="string">
-         <semantic:text>42</semantic:text>
-      </semantic:literalExpression>
-   </semantic:decision>
-   <semantic:inputData id="_12873790-73be-4484-bec7-72cb8a6af004" name="Current Weight">
-      <semantic:extensionElements>
-         <surr:annotation>
-            <surr:ref id="https://ontology.mayo.edu/propositionalconceptvocabulary/db9955-c472-491e-a4d3-55837cd99694"
-                      name="propositionalconceptvocabulary_Scheme - Current Weight"
-                      namespaceUri="https://ontology.mayo.edu/propositionalconceptvocabulary/"
-                      referentId="https://ontology.mayo.edu/propositionalconceptvocabulary/"
-                      resourceId="https://ontology.mayo.edu/propositionalconceptvocabulary/db9955-c472-491e-a4d3-55837cd99694"
-                      tag="_8fdc5119-4263-418f-acaa-17ce32844e7d"/>
-         </surr:annotation>
-      </semantic:extensionElements>
-      <semantic:variable id="_9b022735-4f62-4f8b-987c-b60ffce1f17b"
-                         name="Current Weight"
-                         typeRef="string"/>
-   </semantic:inputData>
-   <semantic:inputData id="_e6d4f102-4f65-40d1-bb1c-9d5b43799157" name="Current Height">
-      <semantic:variable id="_6b582b8c-1d76-4f34-9d74-553988d220c4"
-                         name="Current Height"
-                         typeRef="string"/>
-   </semantic:inputData>
-   <semantic:decisionService id="_cb8b0829-ebaa-465a-a654-8ba8a53c8793" name="Decision">
-      <semantic:variable id="_e4e11291-684f-4287-9cd4-dbfe2ffe1dc2"
-                         name="Decision"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-      <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
-      <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_2d9e4438-b341-432f-a081-fa4082003e68" name="">
-      <semantic:variable id="_497e538f-b91c-4daa-8cda-a690fb7596ce" name="" typeRef="Any"/>
-   </semantic:decisionService>
-   <dmndi:DMNDI>
-      <dmndi:DMNDiagram id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe" name="Page 1">
-         <di:extension>
-            <surr:annotation/>
-         </di:extension>
-         <dmndi:Size height="1050" width="1485"/>
-         <dmndi:DMNShape dmnElementRef="include1:_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"
-                         id="_94ecd10b-0aad-44d2-a870-b4fd3ea5fefb">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="783.2588291168213"
-                       y="291.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="include1:_c037dd05-6ace-4c38-89f6-4f613cf7f671"
-                         id="_31c0dd83-2270-4081-8fb0-acc56db783d1">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="532.2588291168213"
-                       y="312.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
-                         id="_198b5ba3-0c1a-4dd1-ba19-6b9a21fa7e3d">
-            <dc:Bounds height="60" width="153" x="677.5" y="133"/>
-            <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_12873790-73be-4484-bec7-72cb8a6af004"
-                         id="_bec1c5a3-b924-4048-acbc-677e0effc9fe">
-            <dc:Bounds height="60"
-                       width="153"
-                       x="429.2588291168213"
-                       y="212.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_e6d4f102-4f65-40d1-bb1c-9d5b43799157"
-                         id="_3574416a-2a4d-46ec-b709-9e8533f9a85e">
-            <dc:Bounds height="60.00000762939453"
-                       width="135.48234176635742"
-                       x="931.2588291168213"
-                       y="146.99999618530273"/>
-            <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
-         </dmndi:DMNShape>
-      </dmndi:DMNDiagram>
-      <dmndi:DMNStyle fontBold="false"
-                      fontFamily="arial,helvetica,sans-serif"
-                      fontItalic="false"
-                      fontSize="11"
-                      fontStrikeThrough="false"
-                      fontUnderline="false"
-                      id="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
-   </dmndi:DMNDI>
+  xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/e36338e7-500c-43a0-881d-22aa5dc538df"
+  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+  xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+  xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  id="_e36338e7-500c-43a0-881d-22aa5dc538df"
+  name="Test Save As"
+  namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/e36338e7-500c-43a0-881d-22aa5dc538df"
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd">
+  <semantic:extensionElements/>
+  <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+    name="Test Dictionary"
+    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"/>
+  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS"
+    name="Whole Model Decision Service">
+    <semantic:variable id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS_VAR"
+      name="Whole Model Decision Service"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+    <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
+    <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="Diagram Page 1">
+    <semantic:variable id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS_VAR"
+      name="Diagram Page 1"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+    <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
+    <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
+    <semantic:variable id="_cde1daf9-d08a-47b7-9691-1737343b91fa" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
+    <semantic:variable id="_12ea461c-8ead-434a-98c7-f784c36d7185" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
+    <semantic:variable id="_af5f7bec-1ce7-486f-9610-3f6956b15340" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
+    <semantic:variable id="_c7da9952-cfd2-42f8-bf47-e048379bbedc" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
+    <semantic:variable id="_61279030-bd99-42b0-b92f-ba3a37248c8d" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
+    <semantic:variable id="_4c828d68-ca5c-4101-b77d-61ac93d38d0c" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
+    <semantic:variable id="_4da5958a-1782-41af-8b77-5fa83ca230fb" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
+    <semantic:variable id="_f39317ef-34ea-4ff8-84b2-0640289b37a6" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
+    <semantic:variable id="_e4bd3764-630e-4801-97ea-5c7d05378031" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
+    <semantic:variable id="_7a63bd35-f0ff-40aa-a3a2-cd62d267451f" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
+    <semantic:variable id="_9789c2a6-0155-49e5-8cd0-7ae05bfe28b1" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
+    <semantic:variable id="_5ec39f37-fc1c-41ea-aeaf-283f736c5553" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS"
+    name="Whole Model Decision Service">
+    <semantic:variable id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS_VAR"
+      name="Whole Model Decision Service"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+    <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
+    <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="Diagram Page 1">
+    <semantic:variable id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS_VAR"
+      name="Diagram Page 1"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+    <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
+    <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
+  </semantic:decisionService>
+  <semantic:decision id="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+    name="Weaver Test 1 Decision">
+    <semantic:extensionElements>
+      <surr:annotation>
+        <surr:ref id="http://foo.mayo.edu/test#Entity1"
+          name="Test Entity Set - My Test Entity 1"
+          namespaceUri="http://foo.mayo.edu/test#"
+          referentId="http://foo.mayo.edu/test#EntitySet"
+          resourceId="http://foo.mayo.edu/test#Entity1"
+          tag="e63052a5-1203-4967-8f7f-abf05c63cdf0"/>
+      </surr:annotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_aeba48e7-a5e2-4a2f-a591-f5ddd5dc41cc"
+      name="Weaver Test 1 Decision"
+      typeRef="string"/>
+    <semantic:informationRequirement id="_08ec80f6-9032-4d91-8d39-fd28cfbba734">
+      <semantic:requiredInput
+        href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#3def24f5-3f86-4c56-99a2-bc3ffce1ead1"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_c17fd570-09f2-48d8-8d8a-50cb3893b689">
+      <semantic:requiredInput
+        href="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f#c037dd05-6ace-4c38-89f6-4f613cf7f671"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_4c4342d3-72a2-4786-b776-b24e6f1a274c">
+      <semantic:requiredInput href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
+    </semantic:informationRequirement>
+    <semantic:informationRequirement id="_1a77ec46-68eb-4000-8387-9564c688a4da">
+      <semantic:requiredInput href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
+    </semantic:informationRequirement>
+    <semantic:literalExpression id="_e38ca61b-db31-4025-9b58-2c7ca2d1ce4e" typeRef="string">
+      <semantic:text>42</semantic:text>
+    </semantic:literalExpression>
+  </semantic:decision>
+  <semantic:inputData id="_12873790-73be-4484-bec7-72cb8a6af004" name="Current Weight">
+    <semantic:extensionElements>
+      <surr:annotation>
+        <surr:ref
+          id="https://ontology.mayo.edu/propositionalconceptvocabulary/db9955-c472-491e-a4d3-55837cd99694"
+          name="propositionalconceptvocabulary_Scheme - Current Weight"
+          namespaceUri="https://ontology.mayo.edu/propositionalconceptvocabulary/"
+          referentId="https://ontology.mayo.edu/propositionalconceptvocabulary/"
+          resourceId="https://ontology.mayo.edu/propositionalconceptvocabulary/db9955-c472-491e-a4d3-55837cd99694"
+          tag="_8fdc5119-4263-418f-acaa-17ce32844e7d"/>
+      </surr:annotation>
+    </semantic:extensionElements>
+    <semantic:variable id="_9b022735-4f62-4f8b-987c-b60ffce1f17b"
+      name="Current Weight"
+      typeRef="string"/>
+  </semantic:inputData>
+  <semantic:inputData id="_e6d4f102-4f65-40d1-bb1c-9d5b43799157" name="Current Height">
+    <semantic:variable id="_6b582b8c-1d76-4f34-9d74-553988d220c4"
+      name="Current Height"
+      typeRef="string"/>
+  </semantic:inputData>
+  <semantic:decisionService id="_cb8b0829-ebaa-465a-a654-8ba8a53c8793" name="Decision">
+    <semantic:variable id="_e4e11291-684f-4287-9cd4-dbfe2ffe1dc2"
+      name="Decision"
+      typeRef="Any"/>
+    <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+    <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
+    <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
+  </semantic:decisionService>
+  <semantic:decisionService id="_2d9e4438-b341-432f-a081-fa4082003e68" name="">
+    <semantic:variable id="_497e538f-b91c-4daa-8cda-a690fb7596ce" name="" typeRef="Any"/>
+  </semantic:decisionService>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe" name="Page 1">
+      <di:extension>
+        <surr:annotation/>
+      </di:extension>
+      <dmndi:Size height="1050" width="1485"/>
+      <dmndi:DMNShape dmnElementRef="include1:_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"
+        id="_94ecd10b-0aad-44d2-a870-b4fd3ea5fefb">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="783.2588291168213"
+          y="291.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="include1:_c037dd05-6ace-4c38-89f6-4f613cf7f671"
+        id="_31c0dd83-2270-4081-8fb0-acc56db783d1">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="532.2588291168213"
+          y="312.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+        id="_198b5ba3-0c1a-4dd1-ba19-6b9a21fa7e3d">
+        <dc:Bounds height="60" width="153" x="677.5" y="133"/>
+        <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_12873790-73be-4484-bec7-72cb8a6af004"
+        id="_bec1c5a3-b924-4048-acbc-677e0effc9fe">
+        <dc:Bounds height="60"
+          width="153"
+          x="429.2588291168213"
+          y="212.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape dmnElementRef="_e6d4f102-4f65-40d1-bb1c-9d5b43799157"
+        id="_3574416a-2a4d-46ec-b709-9e8533f9a85e">
+        <dc:Bounds height="60.00000762939453"
+          width="135.48234176635742"
+          x="931.2588291168213"
+          y="146.99999618530273"/>
+        <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+    <dmndi:DMNStyle fontBold="false"
+      fontFamily="arial,helvetica,sans-serif"
+      fontItalic="false"
+      fontSize="11"
+      fontStrikeThrough="false"
+      fontUnderline="false"
+      id="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
+  </dmndi:DMNDI>
 </semantic:definitions>

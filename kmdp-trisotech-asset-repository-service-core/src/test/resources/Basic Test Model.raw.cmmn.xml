@@ -1,318 +1,315 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"
-                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
-                      xmlns="http://www.trisotech.com/definitions/_81303f27-68f0-46ca-94ee-3be1f3605d77"
-                      xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
-                      xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"
-                      xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
-                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
-                      xmlns:ns1="http://www.trisotech.com/definitions/_fbf2ed55-80ac-4fea-8929-51b19d396728"
-                      xmlns:ns2="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
-                      xmlns:ns3="http://www.trisotech.com/definitions/_c5da16dc-c17e-4e43-81b7-4bd73749d9fe"
-                      xmlns:ns4="http://www.trisotech.com/definitions/_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
-                      xmlns:rss="http://purl.org/rss/2.0/"
-                      xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
-                      exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="6.12.3"
-                      expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
-                      id="_81303f27-68f0-46ca-94ee-3be1f3605d77"
-                      name="Basic Test Model"
-                      targetNamespace="http://www.trisotech.com/definitions/_81303f27-68f0-46ca-94ee-3be1f3605d77"
-                      triso:logoChoice="Default"
-                      triso:state="Draft"
-                      triso:version="1.0.0">
-   <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument"
-                                    id="_cc8f8a61-5f42-4747-86e4-a2db92a8a79a"
-                                    name="Knowledge - ICD Indications in HCM"/>
-   <semantic:case id="Case_3fd13f37-b0e4-46dc-bc43-027ce1a9ece8">
-      <semantic:caseFileModel>
-         <semantic:caseFileItem definitionRef="_cc8f8a61-5f42-4747-86e4-a2db92a8a79a"
-                                id="_e49b249f-f3a3-4399-bab4-56f9dca301f8"
-                                name="Knowledge - ICD Indications in HCM">
-            <semantic:extensionElements>
-               <triso:attachment id="_c181a29f-e331-411f-b565-e65a604aa595"
-                                 name="SEC-20145805"
-                                 play="true"
-                                 type="link"
-                                 url="http://kcms.mayo.edu/api/V1/Provider/Section/ByPocId?pocId=SEC-20145805"/>
-            </semantic:extensionElements>
-         </semantic:caseFileItem>
-      </semantic:caseFileModel>
-      <semantic:casePlanModel id="_3fd13f37-b0e4-46dc-bc43-027ce1a9ece8">
-         <semantic:extensionElements>
-            <triso:customAttribute id="_2ca5f1a9-553e-4319-aad2-8fbcf5342c0c"
-                                   key="knowledgeAssetId"
-                                   type="string"
-                                   value="https://clinicalknowledgemanagement.mayo.edu/assets/34b7ae5e-0fb4-4be3-9a5c-5fa7f1b16c44/versions/1.0.0"/>
-            <triso:semanticLink id="_45e96bf9-c27b-404d-9651-c8c508eaa579"
-                                modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
-                                name="KnowledgeAssetTypes - 20190801 - Cognitive Process Model"
-                                uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#e12dcd92-f8de-3115-b8ca-4480cfc44d77"/>
-         </semantic:extensionElements>
-         <semantic:planItem definitionRef="PID__e90b4aa8-1ce2-4781-90a2-bba2a4b6d85d"
-                            id="_e90b4aa8-1ce2-4781-90a2-bba2a4b6d85d"/>
-         <semantic:planItem definitionRef="PID__585e9112-8512-4304-996e-b125a2a6c96f"
-                            id="_585e9112-8512-4304-996e-b125a2a6c96f"/>
-         <semantic:planItem definitionRef="PID__70ccfe8f-a082-4822-8e59-8e3cdbce2d7a"
-                            id="_70ccfe8f-a082-4822-8e59-8e3cdbce2d7a"/>
-         <semantic:stage id="PID__e90b4aa8-1ce2-4781-90a2-bba2a4b6d85d">
-            <semantic:planItem definitionRef="PID__fb349180-8908-46f6-ac95-7a9a88731fe9"
-                               id="_fb349180-8908-46f6-ac95-7a9a88731fe9"/>
-            <semantic:planItem definitionRef="PID__7eeaa027-8608-426e-bcae-54f8cfae2993"
-                               id="_7eeaa027-8608-426e-bcae-54f8cfae2993"/>
-            <semantic:planItem definitionRef="PID__306a1689-5d73-4984-b142-54a3b0f5858e"
-                               id="_306a1689-5d73-4984-b142-54a3b0f5858e"/>
-            <semantic:decisionTask decisionRef="_de8da6b254679465ec6d65bfde16577c"
-                                   id="PID__fb349180-8908-46f6-ac95-7a9a88731fe9"
-                                   name="Review Current Status of Condition">
-               <semantic:extensionElements>
-                  <triso:interrelationship elementId="_d73a2ccc-8c66-4cc8-a518-e734d5e23f56"
-                                           fileId="eyJmIjp7InNrdSI6IjkzMTEyOThkLTJkNTQtNDE5ZS1iYTE0LWM4MGNiM2NhMTU5NSIsIm5hbWUiOiJBZ2dyZWdhdGluZyBEZWNpc2lvbiBBIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifX0="
-                                           mimeType="application/vnd.triso-dmn+json"
-                                           modelId="_fbf2ed55-80ac-4fea-8929-51b19d396728"
-                                           name="Aggregating Naturalistic Assessment Decision A"
-                                           uri="http://www.trisotech.com/definitions/_fbf2ed55-80ac-4fea-8929-51b19d396728#_d73a2ccc-8c66-4cc8-a518-e734d5e23f56"/>
-                  <triso:semanticLink id="_2a39e1a4-bbc5-4964-8999-acc5ef2cb9f4"
-                                      modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
-                                      name="ClinicalTasks - ClinicalTasks - Assess"
-                                      uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
-               </semantic:extensionElements>
-               <semantic:defaultControl>
-                  <semantic:manualActivationRule/>
-               </semantic:defaultControl>
-            </semantic:decisionTask>
-            <semantic:decisionTask decisionRef="_e4552ef8db589b374116d1c21ea97b9a"
-                                   id="PID__7eeaa027-8608-426e-bcae-54f8cfae2993"
-                                   name="Review Prior Management of Condition">
-               <semantic:extensionElements>
-                  <triso:interrelationship elementId="_3d782d62-e3cd-4e57-9157-fcb7c633c02a"
-                                           fileId="eyJmIjp7InNrdSI6ImE1NmE1NWQxLTM4NzAtNGYwMy05MmZjLTI4ZTVlZGYyYmMzZCIsIm5hbWUiOiJUZW1wb3JhbCBDb3JyZWxhdGluZyBEZWNpc2lvbiIsIm1pbWV0eXBlIjoiYXBwbGljYXRpb24vdm5kLnRyaXNvLWRtbitqc29uIn19"
-                                           mimeType="application/vnd.triso-dmn+json"
-                                           modelId="_c5da16dc-c17e-4e43-81b7-4bd73749d9fe"
-                                           name="Temporal Correlating Decision"
-                                           uri="http://www.trisotech.com/definitions/_c5da16dc-c17e-4e43-81b7-4bd73749d9fe#_3d782d62-e3cd-4e57-9157-fcb7c633c02a"/>
-                  <triso:semanticLink id="_dd821e90-44c1-45ef-9032-fcf5889600ff"
-                                      modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
-                                      name="ClinicalTasks - ClinicalTasks - Assess"
-                                      uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
-               </semantic:extensionElements>
-               <semantic:defaultControl>
-                  <semantic:manualActivationRule/>
-               </semantic:defaultControl>
-            </semantic:decisionTask>
-            <semantic:decisionTask decisionRef="_7dfe244c35cffbd4efa07be80b4df2be"
-                                   id="PID__306a1689-5d73-4984-b142-54a3b0f5858e"
-                                   name="Review History Pertinent to Condition">
-               <semantic:extensionElements>
-                  <triso:interrelationship elementId="_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"
-                                           fileId="eyJmIjp7InNrdSI6Ijc3Mjg5NDAyLWZkNDAtNDYwMy05MDMxLWQyN2VlNmVjNTY4OSIsIm5hbWUiOiJCYXNpYyBEZWNpc2lvbiBNb2RlbCIsIm1pbWV0eXBlIjoiYXBwbGljYXRpb24vdm5kLnRyaXNvLWRtbitqc29uIn19"
-                                           mimeType="application/vnd.triso-dmn+json"
-                                           modelId="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
-                                           name="Basic Decision - History Pertinent to Condition"
-                                           uri="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"/>
-                  <triso:semanticLink id="_94ae39c0-e7b3-4f9f-85c0-7396a87c878a"
-                                      modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
-                                      name="ClinicalTasks - ClinicalTasks - Assess"
-                                      uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
-               </semantic:extensionElements>
-               <semantic:defaultControl>
-                  <semantic:manualActivationRule/>
-               </semantic:defaultControl>
-            </semantic:decisionTask>
-         </semantic:stage>
-         <semantic:decisionTask decisionRef="_41317b0aa1f17364f72c17570edc579b"
-                                id="PID__585e9112-8512-4304-996e-b125a2a6c96f"
-                                name="Choose Management of Condition">
-            <semantic:extensionElements>
-               <triso:interrelationship elementId="_721c22c3-3e27-4065-8f84-9b9ab524fb58"
-                                        fileId="eyJmIjp7InNrdSI6ImYzMGFmMGM4LTQ3MzQtNDgxNy04MjBhLTE2ZDdkYjA4MGNkNCIsIm5hbWUiOiJEZWNpc2lvbiBTdWJkZWNpc2lvbiIsIm1pbWV0eXBlIjoiYXBwbGljYXRpb24vdm5kLnRyaXNvLWRtbitqc29uIn19"
-                                        mimeType="application/vnd.triso-dmn+json"
-                                        modelId="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
-                                        name="Choice of Management of Condition"
-                                        uri="http://www.trisotech.com/definitions/_5d4a2642-c38a-47bb-aac5-79c9c567ecd4#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
-               <triso:semanticLink id="_b5faee48-61df-4c69-b93b-552a04465467"
-                                   modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
-                                   name="ClinicalTasks - ClinicalTasks - Plan"
-                                   uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#408de062-c8b1-3c65-9877-21ddead19bbf"/>
-            </semantic:extensionElements>
-            <semantic:defaultControl>
-               <semantic:manualActivationRule/>
-            </semantic:defaultControl>
-         </semantic:decisionTask>
-         <semantic:humanTask id="PID__70ccfe8f-a082-4822-8e59-8e3cdbce2d7a"
-                             isBlocking="false"
-                             name="Educate Patient on Condition">
-            <semantic:extensionElements>
-               <triso:semanticLink id="_53e64c13-aa6c-44f8-9c57-bcf63590f087"
-                                   modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
-                                   name="ClinicalTasks - ClinicalTasks - Educate"
-                                   uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#14e929a2-a22a-3107-8a38-692107b0f7c5"/>
-            </semantic:extensionElements>
-            <semantic:defaultControl>
-               <semantic:manualActivationRule/>
-            </semantic:defaultControl>
-         </semantic:humanTask>
-      </semantic:casePlanModel>
-   </semantic:case>
-   <semantic:decision externalRef="ns1:_d73a2ccc-8c66-4cc8-a518-e734d5e23f56"
-                      id="_de8da6b254679465ec6d65bfde16577c"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Aggregating Naturalistic Assessment Decision A"
-                      triso:modelId="_fbf2ed55-80ac-4fea-8929-51b19d396728"/>
-   <semantic:decision externalRef="ns2:_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"
-                      id="_7dfe244c35cffbd4efa07be80b4df2be"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Basic Decision - History Pertinent to Condition"
-                      triso:modelId="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"/>
-   <semantic:decision externalRef="ns3:_3d782d62-e3cd-4e57-9157-fcb7c633c02a"
-                      id="_e4552ef8db589b374116d1c21ea97b9a"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Temporal Correlating Decision"
-                      triso:modelId="_c5da16dc-c17e-4e43-81b7-4bd73749d9fe"/>
-   <semantic:decision externalRef="ns4:_721c22c3-3e27-4065-8f84-9b9ab524fb58"
-                      id="_41317b0aa1f17364f72c17570edc579b"
-                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Choice of Management of Condition"
-                      triso:modelId="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"/>
-   <cmmndi:CMMNDI>
-      <cmmndi:CMMNDiagram cmmnElementRef="_996646f5-de5e-4563-ad19-bfa1ddd6cc98"
-                          id="_c4d3340b-ef34-42d5-8ad5-b2e573f62225"
-                          name="Page 1">
-         <cmmndi:Size height="1074" width="1611"/>
-         <cmmndi:CMMNShape cmmnElementRef="_3fd13f37-b0e4-46dc-bc43-027ce1a9ece8"
-                           id="_996646f5-de5e-4563-ad19-bfa1ddd6cc98">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="624"
-                       width="926.0000000000001"
-                       x="150.95485345402983"
-                       y="135.00346793077972"/>
-            <cmmndi:CMMNLabel/>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_e90b4aa8-1ce2-4781-90a2-bba2a4b6d85d"
-                           id="_dffc79aa-91db-4ab1-bb83-981f529c7894">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="451"
-                       width="210"
-                       x="202.95485345402972"
-                       y="221.5034679307797"/>
-            <cmmndi:CMMNLabel/>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_fb349180-8908-46f6-ac95-7a9a88731fe9"
-                           id="_490e0bcd-623a-497b-bc67-dc7216edc51a">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76.00000000000003"
-                       width="96"
-                       x="262.95485345402966"
-                       y="250.5034679307797"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="54.90625"
-                          width="68"
-                          x="276.95485345402966"
-                          y="261.0503429307797"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_7eeaa027-8608-426e-bcae-54f8cfae2993"
-                           id="_e411b3dd-5fc1-4b58-bc71-b36f9698b56e">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76"
-                       width="96"
-                       x="262.9548534540298"
-                       y="370.00346793077983"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="40.671875"
-                          width="68"
-                          x="276.9548534540298"
-                          y="387.66753043077983"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_306a1689-5d73-4984-b142-54a3b0f5858e"
-                           id="_7cfb7c0b-e5fd-4b41-b010-045523802389">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76"
-                       width="96"
-                       x="262.95485345402966"
-                       y="493.50346793077983"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="54.90625"
-                          width="68"
-                          x="276.95485345402966"
-                          y="504.05034293077983"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_585e9112-8512-4304-996e-b125a2a6c96f"
-                           id="_34e9ee3e-158c-4059-85e2-ec99fba8d92c">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76"
-                       width="96"
-                       x="610.9583129882812"
-                       y="293.5034679307798"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="40.671875"
-                          width="68"
-                          x="624.9583129882812"
-                          y="311.1675304307798"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_70ccfe8f-a082-4822-8e59-8e3cdbce2d7a"
-                           id="_5b46e08a-4b4e-46aa-9703-e8bd1fb93af6">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="76"
-                       width="96"
-                       x="610.9583129882811"
-                       y="546.0034790039062"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="40.671875"
-                          width="68"
-                          x="624.9583129882811"
-                          y="563.6675415039062"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_e49b249f-f3a3-4399-bab4-56f9dca301f8"
-                           id="_4b76a3ef-1717-4ed6-8555-394e792550f1">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="39.99999999999994"
-                       width="34"
-                       x="798.9583129882814"
-                       y="493.5034679307799"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="26.46875"
-                          width="110"
-                          x="760.9583129882814"
-                          y="524.2690929307798"/>
-            </cmmndi:CMMNLabel>
-         </cmmndi:CMMNShape>
-      </cmmndi:CMMNDiagram>
-   </cmmndi:CMMNDI>
+  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+  xmlns="http://www.trisotech.com/definitions/_81303f27-68f0-46ca-94ee-3be1f3605d77"
+  xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
+  xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"
+  xmlns:ns1="http://www.trisotech.com/definitions/_fbf2ed55-80ac-4fea-8929-51b19d396728"
+  xmlns:ns2="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
+  xmlns:ns3="http://www.trisotech.com/definitions/_c5da16dc-c17e-4e43-81b7-4bd73749d9fe"
+  xmlns:ns4="http://www.trisotech.com/definitions/_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
+  exporter="Trisotech DES API Repository Conversion"
+  exporterVersion="6.12.3"
+  expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
+  id="_81303f27-68f0-46ca-94ee-3be1f3605d77"
+  name="Basic Test Model"
+  targetNamespace="http://www.trisotech.com/definitions/_81303f27-68f0-46ca-94ee-3be1f3605d77"
+  triso:logoChoice="Default"
+  triso:state="Draft"
+  triso:version="1.0.0">
+  <semantic:caseFileItemDefinition
+    definitionType="http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument"
+    id="_cc8f8a61-5f42-4747-86e4-a2db92a8a79a"
+    name="Knowledge - ICD Indications in HCM"/>
+  <semantic:case id="Case_3fd13f37-b0e4-46dc-bc43-027ce1a9ece8">
+    <semantic:caseFileModel>
+      <semantic:caseFileItem definitionRef="_cc8f8a61-5f42-4747-86e4-a2db92a8a79a"
+        id="_e49b249f-f3a3-4399-bab4-56f9dca301f8"
+        name="Knowledge - ICD Indications in HCM">
+        <semantic:extensionElements>
+          <triso:attachment id="_c181a29f-e331-411f-b565-e65a604aa595"
+            name="SEC-20145805"
+            play="true"
+            type="link"
+            url="http://kcms.mayo.edu/api/V1/Provider/Section/ByPocId?pocId=SEC-20145805"/>
+        </semantic:extensionElements>
+      </semantic:caseFileItem>
+    </semantic:caseFileModel>
+    <semantic:casePlanModel id="_3fd13f37-b0e4-46dc-bc43-027ce1a9ece8">
+      <semantic:extensionElements>
+        <triso:customAttribute id="_2ca5f1a9-553e-4319-aad2-8fbcf5342c0c"
+          key="knowledgeAssetId"
+          type="string"
+          value="https://clinicalknowledgemanagement.mayo.edu/assets/34b7ae5e-0fb4-4be3-9a5c-5fa7f1b16c44/versions/1.0.0"/>
+        <triso:semanticLink id="_45e96bf9-c27b-404d-9651-c8c508eaa579"
+          modelURI="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType/20190801/"
+          name="KnowledgeAssetTypes - 20190801 - Cognitive Process Model"
+          uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#e12dcd92-f8de-3115-b8ca-4480cfc44d77"/>
+      </semantic:extensionElements>
+      <semantic:planItem definitionRef="PID__e90b4aa8-1ce2-4781-90a2-bba2a4b6d85d"
+        id="_e90b4aa8-1ce2-4781-90a2-bba2a4b6d85d"/>
+      <semantic:planItem definitionRef="PID__585e9112-8512-4304-996e-b125a2a6c96f"
+        id="_585e9112-8512-4304-996e-b125a2a6c96f"/>
+      <semantic:planItem definitionRef="PID__70ccfe8f-a082-4822-8e59-8e3cdbce2d7a"
+        id="_70ccfe8f-a082-4822-8e59-8e3cdbce2d7a"/>
+      <semantic:stage id="PID__e90b4aa8-1ce2-4781-90a2-bba2a4b6d85d">
+        <semantic:planItem definitionRef="PID__fb349180-8908-46f6-ac95-7a9a88731fe9"
+          id="_fb349180-8908-46f6-ac95-7a9a88731fe9"/>
+        <semantic:planItem definitionRef="PID__7eeaa027-8608-426e-bcae-54f8cfae2993"
+          id="_7eeaa027-8608-426e-bcae-54f8cfae2993"/>
+        <semantic:planItem definitionRef="PID__306a1689-5d73-4984-b142-54a3b0f5858e"
+          id="_306a1689-5d73-4984-b142-54a3b0f5858e"/>
+        <semantic:decisionTask decisionRef="_de8da6b254679465ec6d65bfde16577c"
+          id="PID__fb349180-8908-46f6-ac95-7a9a88731fe9"
+          name="Review Current Status of Condition">
+          <semantic:extensionElements>
+            <triso:interrelationship elementId="_d73a2ccc-8c66-4cc8-a518-e734d5e23f56"
+              fileId="eyJmIjp7InNrdSI6IjkzMTEyOThkLTJkNTQtNDE5ZS1iYTE0LWM4MGNiM2NhMTU5NSIsIm5hbWUiOiJBZ2dyZWdhdGluZyBEZWNpc2lvbiBBIiwibWltZXR5cGUiOiJhcHBsaWNhdGlvbi92bmQudHJpc28tZG1uK2pzb24ifX0="
+              mimeType="application/vnd.triso-dmn+json"
+              modelId="_fbf2ed55-80ac-4fea-8929-51b19d396728"
+              name="Aggregating Naturalistic Assessment Decision A"
+              uri="http://www.trisotech.com/definitions/_fbf2ed55-80ac-4fea-8929-51b19d396728#_d73a2ccc-8c66-4cc8-a518-e734d5e23f56"/>
+            <triso:semanticLink id="_2a39e1a4-bbc5-4964-8999-acc5ef2cb9f4"
+              modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+              name="ClinicalTasks - ClinicalTasks - Assess"
+              uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
+          </semantic:extensionElements>
+          <semantic:defaultControl>
+            <semantic:manualActivationRule/>
+          </semantic:defaultControl>
+        </semantic:decisionTask>
+        <semantic:decisionTask decisionRef="_e4552ef8db589b374116d1c21ea97b9a"
+          id="PID__7eeaa027-8608-426e-bcae-54f8cfae2993"
+          name="Review Prior Management of Condition">
+          <semantic:extensionElements>
+            <triso:interrelationship elementId="_3d782d62-e3cd-4e57-9157-fcb7c633c02a"
+              fileId="eyJmIjp7InNrdSI6ImE1NmE1NWQxLTM4NzAtNGYwMy05MmZjLTI4ZTVlZGYyYmMzZCIsIm5hbWUiOiJUZW1wb3JhbCBDb3JyZWxhdGluZyBEZWNpc2lvbiIsIm1pbWV0eXBlIjoiYXBwbGljYXRpb24vdm5kLnRyaXNvLWRtbitqc29uIn19"
+              mimeType="application/vnd.triso-dmn+json"
+              modelId="_c5da16dc-c17e-4e43-81b7-4bd73749d9fe"
+              name="Temporal Correlating Decision"
+              uri="http://www.trisotech.com/definitions/_c5da16dc-c17e-4e43-81b7-4bd73749d9fe#_3d782d62-e3cd-4e57-9157-fcb7c633c02a"/>
+            <triso:semanticLink id="_dd821e90-44c1-45ef-9032-fcf5889600ff"
+              modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+              name="ClinicalTasks - ClinicalTasks - Assess"
+              uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
+          </semantic:extensionElements>
+          <semantic:defaultControl>
+            <semantic:manualActivationRule/>
+          </semantic:defaultControl>
+        </semantic:decisionTask>
+        <semantic:decisionTask decisionRef="_7dfe244c35cffbd4efa07be80b4df2be"
+          id="PID__306a1689-5d73-4984-b142-54a3b0f5858e"
+          name="Review History Pertinent to Condition">
+          <semantic:extensionElements>
+            <triso:interrelationship elementId="_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"
+              fileId="eyJmIjp7InNrdSI6Ijc3Mjg5NDAyLWZkNDAtNDYwMy05MDMxLWQyN2VlNmVjNTY4OSIsIm5hbWUiOiJCYXNpYyBEZWNpc2lvbiBNb2RlbCIsIm1pbWV0eXBlIjoiYXBwbGljYXRpb24vdm5kLnRyaXNvLWRtbitqc29uIn19"
+              mimeType="application/vnd.triso-dmn+json"
+              modelId="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
+              name="Basic Decision - History Pertinent to Condition"
+              uri="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"/>
+            <triso:semanticLink id="_94ae39c0-e7b3-4f9f-85c0-7396a87c878a"
+              modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+              name="ClinicalTasks - ClinicalTasks - Assess"
+              uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
+          </semantic:extensionElements>
+          <semantic:defaultControl>
+            <semantic:manualActivationRule/>
+          </semantic:defaultControl>
+        </semantic:decisionTask>
+      </semantic:stage>
+      <semantic:decisionTask decisionRef="_41317b0aa1f17364f72c17570edc579b"
+        id="PID__585e9112-8512-4304-996e-b125a2a6c96f"
+        name="Choose Management of Condition">
+        <semantic:extensionElements>
+          <triso:interrelationship elementId="_721c22c3-3e27-4065-8f84-9b9ab524fb58"
+            fileId="eyJmIjp7InNrdSI6ImYzMGFmMGM4LTQ3MzQtNDgxNy04MjBhLTE2ZDdkYjA4MGNkNCIsIm5hbWUiOiJEZWNpc2lvbiBTdWJkZWNpc2lvbiIsIm1pbWV0eXBlIjoiYXBwbGljYXRpb24vdm5kLnRyaXNvLWRtbitqc29uIn19"
+            mimeType="application/vnd.triso-dmn+json"
+            modelId="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
+            name="Choice of Management of Condition"
+            uri="http://www.trisotech.com/definitions/_5d4a2642-c38a-47bb-aac5-79c9c567ecd4#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
+          <triso:semanticLink id="_b5faee48-61df-4c69-b93b-552a04465467"
+            modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+            name="ClinicalTasks - ClinicalTasks - Plan"
+            uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#408de062-c8b1-3c65-9877-21ddead19bbf"/>
+        </semantic:extensionElements>
+        <semantic:defaultControl>
+          <semantic:manualActivationRule/>
+        </semantic:defaultControl>
+      </semantic:decisionTask>
+      <semantic:humanTask id="PID__70ccfe8f-a082-4822-8e59-8e3cdbce2d7a"
+        isBlocking="false"
+        name="Educate Patient on Condition">
+        <semantic:extensionElements>
+          <triso:semanticLink id="_53e64c13-aa6c-44f8-9c57-bcf63590f087"
+            modelURI="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
+            name="ClinicalTasks - ClinicalTasks - Educate"
+            uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#14e929a2-a22a-3107-8a38-692107b0f7c5"/>
+        </semantic:extensionElements>
+        <semantic:defaultControl>
+          <semantic:manualActivationRule/>
+        </semantic:defaultControl>
+      </semantic:humanTask>
+    </semantic:casePlanModel>
+  </semantic:case>
+  <semantic:decision externalRef="ns1:_d73a2ccc-8c66-4cc8-a518-e734d5e23f56"
+    id="_de8da6b254679465ec6d65bfde16577c"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Aggregating Naturalistic Assessment Decision A"
+    triso:modelId="_fbf2ed55-80ac-4fea-8929-51b19d396728"/>
+  <semantic:decision externalRef="ns2:_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"
+    id="_7dfe244c35cffbd4efa07be80b4df2be"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Basic Decision - History Pertinent to Condition"
+    triso:modelId="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"/>
+  <semantic:decision externalRef="ns3:_3d782d62-e3cd-4e57-9157-fcb7c633c02a"
+    id="_e4552ef8db589b374116d1c21ea97b9a"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Temporal Correlating Decision"
+    triso:modelId="_c5da16dc-c17e-4e43-81b7-4bd73749d9fe"/>
+  <semantic:decision externalRef="ns4:_721c22c3-3e27-4065-8f84-9b9ab524fb58"
+    id="_41317b0aa1f17364f72c17570edc579b"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Choice of Management of Condition"
+    triso:modelId="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"/>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram cmmnElementRef="_996646f5-de5e-4563-ad19-bfa1ddd6cc98"
+      id="_c4d3340b-ef34-42d5-8ad5-b2e573f62225"
+      name="Page 1">
+      <cmmndi:Size height="1074" width="1611"/>
+      <cmmndi:CMMNShape cmmnElementRef="_3fd13f37-b0e4-46dc-bc43-027ce1a9ece8"
+        id="_996646f5-de5e-4563-ad19-bfa1ddd6cc98">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="624"
+          width="926.0000000000001"
+          x="150.95485345402983"
+          y="135.00346793077972"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_e90b4aa8-1ce2-4781-90a2-bba2a4b6d85d"
+        id="_dffc79aa-91db-4ab1-bb83-981f529c7894">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="451"
+          width="210"
+          x="202.95485345402972"
+          y="221.5034679307797"/>
+        <cmmndi:CMMNLabel/>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_fb349180-8908-46f6-ac95-7a9a88731fe9"
+        id="_490e0bcd-623a-497b-bc67-dc7216edc51a">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76.00000000000003"
+          width="96"
+          x="262.95485345402966"
+          y="250.5034679307797"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="54.90625"
+            width="68"
+            x="276.95485345402966"
+            y="261.0503429307797"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_7eeaa027-8608-426e-bcae-54f8cfae2993"
+        id="_e411b3dd-5fc1-4b58-bc71-b36f9698b56e">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76"
+          width="96"
+          x="262.9548534540298"
+          y="370.00346793077983"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="40.671875"
+            width="68"
+            x="276.9548534540298"
+            y="387.66753043077983"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_306a1689-5d73-4984-b142-54a3b0f5858e"
+        id="_7cfb7c0b-e5fd-4b41-b010-045523802389">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76"
+          width="96"
+          x="262.95485345402966"
+          y="493.50346793077983"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="54.90625"
+            width="68"
+            x="276.95485345402966"
+            y="504.05034293077983"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_585e9112-8512-4304-996e-b125a2a6c96f"
+        id="_34e9ee3e-158c-4059-85e2-ec99fba8d92c">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76"
+          width="96"
+          x="610.9583129882812"
+          y="293.5034679307798"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="40.671875"
+            width="68"
+            x="624.9583129882812"
+            y="311.1675304307798"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_70ccfe8f-a082-4822-8e59-8e3cdbce2d7a"
+        id="_5b46e08a-4b4e-46aa-9703-e8bd1fb93af6">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="76"
+          width="96"
+          x="610.9583129882811"
+          y="546.0034790039062"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="40.671875"
+            width="68"
+            x="624.9583129882811"
+            y="563.6675415039062"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape cmmnElementRef="_e49b249f-f3a3-4399-bab4-56f9dca301f8"
+        id="_4b76a3ef-1717-4ed6-8555-394e792550f1">
+        <cmmndi:CMMNStyle>
+          <cmmndi:FillColor blue="255" green="255" red="255"/>
+          <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+          <cmmndi:FontColor blue="0" green="0" red="0"/>
+        </cmmndi:CMMNStyle>
+        <dc:Bounds height="39.99999999999994"
+          width="34"
+          x="798.9583129882814"
+          y="493.5034679307799"/>
+        <cmmndi:CMMNLabel triso:defaultBounds="true">
+          <dc:Bounds height="26.46875"
+            width="110"
+            x="760.9583129882814"
+            y="524.2690929307798"/>
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
 </semantic:definitions>

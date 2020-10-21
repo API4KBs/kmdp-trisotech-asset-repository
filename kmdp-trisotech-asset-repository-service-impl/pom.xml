@@ -7,11 +7,11 @@
   <parent>
     <artifactId>kmdp-trisotech-asset-repository-service</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
-    <version>4.8.0-SNAPSHOT</version>
+    <version>4.8.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>kmdp-knowledge-asset-repository-trisotech-server</artifactId>
-  <version>4.8.0-SNAPSHOT</version>
+  <version>4.8.5-SNAPSHOT</version>
 
   <packaging>war</packaging>
 

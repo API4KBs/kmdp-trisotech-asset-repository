@@ -2,6 +2,14 @@
 ### Develop Snapshot Branch X.X.X-SNAPSHOT
 ### Project :: KMDP TRISOTECH ASSET REPO SERVICE
 
+resources:
+  pipelines:
+  - pipeline: kmdpTrisotechAssetRepositoryServiceDevelop
+    source: kmdpTrisotechAssetRepositoryServiceMaster
+    trigger: 
+      branches:
+      - develop
+
 trigger:
 - develop
 

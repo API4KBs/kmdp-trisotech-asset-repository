@@ -72,48 +72,6 @@ class WeaverTest {
 
 
   @Test
-  void testAfibCMMN() {
-
-    String path = "/Atrial Fibrillation/Atrial Fibrillation.cmmn.xml";
-
-    // using XMLUtil loadXMLDocument to load the XML Document properly
-    // sets up the document for conversion by setting namespaceaware
-    Document dox = loadXMLDocument(resolveResource(path))
-        .orElseGet(() -> fail("Unable to load document " + path));
-    try {
-      weaver.weave(dox);
-      streamXMLDocument(dox, System.out);
-      assertTrue(confirmNoTrisoNameSpace(dox));
-      assertTrue(confirmNoTrisotechTags(dox));
-
-    } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
-      fail(ie.getMessage());
-    }
-  }
-
-  @Test
-  void testAfibDMN() {
-
-    String path = "/Atrial Fibrillation/Choice of Long-Term Management of Coagulation Status.dmn.xml";
-
-    // using XMLUtil loadXMLDocument to load the XML Document properly
-    // sets up the document for conversion by setting namespaceaware
-    Document dox = loadXMLDocument(resolveResource(path))
-        .orElseGet(() -> fail("Unable to load document " + path));
-    try {
-      weaver.weave(dox);
-      streamXMLDocument(dox, System.out);
-      assertTrue(confirmNoTrisoNameSpace(dox));
-      assertTrue(confirmNoTrisotechTags(dox));
-
-    } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
-      fail(ie.getMessage());
-    }
-  }
-
-  @Test
   void testWeave() {
 
     String path = "/Weaver Test 1.dmn.xml";

@@ -469,7 +469,6 @@ public class Weaver {
         logger.warn("WARNING: resource ID {} failed in lookupTerm and will be removed from the file", resourceIdentifier.getUuid().toString());
         return conceptIdentifiers;
       }
-
     } catch (URISyntaxException | IllegalArgumentException e) {
       logger.error(String.format("%s%s", e.getMessage(), Arrays.toString(e.getStackTrace())));
     }

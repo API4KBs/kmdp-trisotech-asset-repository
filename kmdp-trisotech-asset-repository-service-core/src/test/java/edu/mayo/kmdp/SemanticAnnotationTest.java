@@ -59,7 +59,6 @@ class SemanticAnnotationTest {
 	@Autowired
 	TermsApiInternal terms;
 
-
 	@Test
 	void testExtraction() {
 		assertTrue(true); // dummy to keep sonarlint happy
@@ -88,9 +87,9 @@ class SemanticAnnotationTest {
 					.orElse(Collections.emptyList());
 			assertEquals(2, inputs.size());
 			assertTrue( inputs.stream()
-					.anyMatch( input -> input.getName().contains("Most Recent Bilirubin")));
+					.anyMatch( input -> input.getUuid().toString().equals("6c14a53a-7ce2-34aa-9cf1-a800317bebef")));
 			assertTrue(inputs.stream()
-					.anyMatch( input -> input.getName().contains("Situation with Known Patient Age")));
+					.anyMatch( input -> input.getUuid().toString().equals("9296f375-a7ed-3c59-a972-4a7eb40c8820")));
 
 			List<ConceptDescriptor> decisions = surr.getAnnotation().stream()
 					.filter( annotation -> Captures.isSameEntity(annotation.getRel()) )

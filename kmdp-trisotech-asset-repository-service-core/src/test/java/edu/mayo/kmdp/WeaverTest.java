@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
@@ -277,9 +278,9 @@ class WeaverTest {
       assertEquals(2, props.size());
 
       assertTrue( props.stream()
-          .anyMatch( ann -> ann.getRef().getName().contains("Most Recent Bilirubin")));
+          .anyMatch( ann -> ann.getRef().getUuid().toString().equals("6c14a53a-7ce2-34aa-9cf1-a800317bebef")));
       assertTrue(props.stream()
-          .anyMatch( ann -> ann.getRef().getName().contains("Situation with Known Patient Age")));
+          .anyMatch( ann -> ann.getRef().getUuid().toString().equals("9296f375-a7ed-3c59-a972-4a7eb40c8820")));
 
       List<Annotation> props2 = loadAnnotations( dox, Captures, Annotation.class );
       assertTrue( props2.stream()

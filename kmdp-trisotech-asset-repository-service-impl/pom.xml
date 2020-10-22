@@ -10,7 +10,7 @@
     <version>4.8.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>kmdp-knowledge-asset-repository-trisotech-server</artifactId>
+  <artifactId>kmdp-knowledge-asset-repository-trisotech</artifactId>
   <version>4.8.6-SNAPSHOT</version>
 
   <packaging>war</packaging>

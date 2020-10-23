@@ -86,7 +86,7 @@ steps:
       mvn versions:update-parent "-DparentVersion=$env:TIER1_RELEASE_VERSION" -ntp
       mvn clean package "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_TEST_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_TEST_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
       type pom.xml
-      mvn clean install -Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_TEST_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_TEST_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
+      mvn clean install "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_TEST_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_TEST_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
       Write-Host ------ Ending Checkout ------
   env:
     TRISO_RELEASE_VERSION: $(trisoReleaseVersion)

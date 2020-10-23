@@ -51,6 +51,11 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -68,11 +73,5 @@
       </plugin>
     </plugins>
   </build>
-
-  <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-actuator</artifactId>
-    <version>${springframework.boot.version}</version>
-  </dependency>
 
 </project>

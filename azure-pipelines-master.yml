@@ -16,6 +16,7 @@ pool:
 # Gets Variables from Azure DevOps Library
 variables: 
   - group: kmdp-platform-variables
+  - group: kmdp-platform-dev-variables
 
 steps:
 # ------------------ PIPELINE STEPS  ------------------

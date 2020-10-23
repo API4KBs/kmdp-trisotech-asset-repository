@@ -109,15 +109,15 @@ steps:
     script: |
       Write-Host ------ Starting Checkout ------
       # maven clean install
-      mvn clean install -Prelease "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
-      mvn deploy "-DaltDeploymentRepository=KMD::default::https://pkgs.dev.azure.com/mclm/_packaging/KMD/maven/v1" "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
+      mvn clean install -Prelease "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_TEST_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_TEST_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
+      mvn deploy "-DaltDeploymentRepository=KMD::default::https://pkgs.dev.azure.com/mclm/_packaging/KMD/maven/v1" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_TEST_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_TEST_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
       git push "https://kmd:$env:SYSTEM_ACCESSTOKEN@dev.azure.com/mclm/KMD/_git/kmdp-trisotech-asset-repository-service"
       git push "https://kmd:$env:SYSTEM_ACCESSTOKEN@dev.azure.com/mclm/KMD/_git/kmdp-trisotech-asset-repository-service" -d "release-$env:TRISO_RELEASE_VERSION"
       Write-Host ------ Ending Checkout ------
   env:
     TRISO_RELEASE_VERSION: $(trisoReleaseVersion)
-    TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
-    TRISO_REPO_DEV_ID: $(trisoRepoDevId)
+    TRISO_REPO_TEST_NAME: $(trisoRepoTestName)
+    TRISO_REPO_TEST_ID: $(trisoRepoTestId)
     TRISO_DEV_TOKEN: $(trisoDevToken)
     SYSTEM_ACCESSTOKEN: $(system.accesstoken)
 

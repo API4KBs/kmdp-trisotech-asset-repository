@@ -84,14 +84,14 @@ steps:
       mvn versions:set-property "-Dproperty=kmdp.servers.version" "-DnewVersion=$env:TIER2_RELEASE_VERSION" -ntp
       mvn versions:set-property "-Dproperty=clinical.terms.version" "-DnewVersion=$env:TERM_CONTENT_RELEASE_VERSION" -ntp
       mvn versions:update-parent "-DparentVersion=$env:TIER1_RELEASE_VERSION" -ntp
-      mvn clean package "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
+      mvn clean package "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_TEST_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_TEST_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
       type pom.xml
-      mvn clean install "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
+      mvn clean install -Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_TEST_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_TEST_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
       Write-Host ------ Ending Checkout ------
   env:
     TRISO_RELEASE_VERSION: $(trisoReleaseVersion)
-    TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
-    TRISO_REPO_DEV_ID: $(trisoRepoDevId)
+    TRISO_REPO_TEST_NAME: $(trisoRepoTestName)
+    TRISO_REPO_TEST_ID: $(trisoRepoTestId)
     TRISO_DEV_TOKEN: $(trisoDevToken)
     TIER1_RELEASE_VERSION: $(tier1ReleaseVersion)
     TIER2_RELEASE_VERSION: $(tier2ReleaseVersion)

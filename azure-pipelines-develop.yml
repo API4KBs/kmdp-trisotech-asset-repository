@@ -21,7 +21,12 @@ trigger:
 resources:
   pipelines:
   - pipeline: kmdpTrisotechAssetRepositoryServiceDevelop
-    source: kmdpConceptResolutionServiceStu3Develop2
+    source: knewServiceprofileEditorImplDevelop
+    trigger: 
+      branches:
+      - develop
+  - pipeline: kmdpTrisotechAssetRepositoryServiceDevelop
+    source: kmdpTrisotechAssetRepositoryServiceMaster
     trigger: 
       branches:
       - develop

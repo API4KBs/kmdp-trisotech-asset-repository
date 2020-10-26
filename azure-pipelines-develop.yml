@@ -2,7 +2,7 @@
 ### Snapshot Branch Versioning Stategy: X.X.X-SNAPSHOT
 ### Project :: kmdp-trisotech-asset-repository-service
 
-# !! Downstream Build: knew-serviceprofile-editor-impl !! #
+# !! Downstream Build: knew-asset-factory !! #
 
 trigger: 
   branches:

@@ -464,7 +464,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         .anyMatch(ann -> KnowledgeAssetTypeSeries.Computable_Decision_Model.getTag()
             .equals(ann.getRef().getTag()))) {
 
-      NodeList list = xPathUtil.xList(dox, "//semantic:inputData/@name");
+      NodeList list = xPathUtil.xList(dox, "//dmn:inputData/@name");
       List<Node> itemDefs = null;
       if(null != list) {
         itemDefs = asAttributeStream(list)

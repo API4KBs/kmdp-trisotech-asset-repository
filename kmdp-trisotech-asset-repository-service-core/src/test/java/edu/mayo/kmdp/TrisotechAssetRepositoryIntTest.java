@@ -602,7 +602,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void setKnowledgeAssetCarrierVersion_NotFound_InvalidVersion() {
     InputStream testFile = TrisotechAssetRepositoryIntTest.class.getResourceAsStream(
-        "/Test Save As.dmn.xml");
+        "/Test Save As.raw.dmn.xml");
     Answer<Void> answer = tar
         .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
             "1.0.0",
@@ -614,7 +614,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void setKnowledgeAssetCarrierVersion_NotFound_InvalidArtifactid() {
     InputStream testFile = TrisotechAssetRepositoryIntTest.class
-        .getResourceAsStream("/Test Save As.dmn.xml");
+        .getResourceAsStream("/Test Save As.raw.dmn.xml");
     Answer<Void> answer = tar
         .setKnowledgeAssetCarrierVersion(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
             "1.0.0-SNAPSHOT", UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc53abc"), "",
@@ -625,7 +625,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void setKnowledgeAssetCarrierVersion_not_found() {
     InputStream testFile = TrisotechAssetRepositoryIntTest.class
-        .getResourceAsStream("/Test Save As.dmn.xml");
+        .getResourceAsStream("/Test Save As.raw.dmn.xml");
     Answer<Void> answer = tar
         .setKnowledgeAssetCarrierVersion(
             UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
@@ -641,7 +641,7 @@ class TrisotechAssetRepositoryIntTest {
   void setKnowledgeAssetCarrierVersion_published_found() {
     // not planning on uploading published versions, but test that it works until further notice
     InputStream publishedFile = TrisotechAssetRepositoryIntTest.class
-        .getResourceAsStream("/Test Save As.dmn.xml");
+        .getResourceAsStream("/Test Save As.raw.dmn.xml");
     Answer<Void> answer = tar.setKnowledgeAssetCarrierVersion(
         UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
         "1.0.0-SNAPSHOT",

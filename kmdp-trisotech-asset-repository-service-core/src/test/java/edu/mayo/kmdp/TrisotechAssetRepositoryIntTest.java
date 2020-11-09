@@ -646,7 +646,7 @@ class TrisotechAssetRepositoryIntTest {
         UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
         "1.0.0-SNAPSHOT",
         UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"),
-        "1.0.1",
+        "1.0.3",
         XMLUtil.loadXMLDocument(publishedFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
     assertTrue(answer.isSuccess());
   }

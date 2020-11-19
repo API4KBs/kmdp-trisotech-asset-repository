@@ -13,7 +13,7 @@
   name="Weaver Test 1"
   namespace="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068"
   triso:logoChoice="Default"
-  triso:state="Published"
+  triso:state="Draft"
   triso:version="2.0.1">
   <semantic:extensionElements/>
   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
@@ -80,24 +80,25 @@
   </semantic:decision>
   <semantic:inputData id="_12873790-73be-4484-bec7-72cb8a6af004" name="Current Weight">
     <semantic:extensionElements>
-      <triso:semanticLink id="_223eaa87-81e3-4bb4-ba09-74c11cf13b36"
-        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
-        name="PropositionalConcepts - 20200415 - Current Weight"
-        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#62843231-7a0f-3b2c-a092-bb184c1a392e"/>
+      <triso:semanticLink id="_c6ea7ed3-f513-43ac-a981-40056221d11d"
+        modelURI="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201101"
+        name="Clinical Situations - 20201101 - Most Recent Weight"
+        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#2d0e15f2-7676-3288-bfd1-3465eb5efff9"/>
     </semantic:extensionElements>
     <semantic:variable id="_9b022735-4f62-4f8b-987c-b60ffce1f17b"
       name="Current Weight"
       typeRef="string"/>
   </semantic:inputData>
-  <semantic:inputData id="_e6d4f102-4f65-40d1-bb1c-9d5b43799157" name="Current Height">
+  <semantic:inputData id="_e6d4f102-4f65-40d1-bb1c-9d5b43799157"
+    name="Most Recent Blood Pressuer">
     <semantic:extensionElements>
-      <triso:semanticLink id="_1e725ded-d90b-452b-bf35-edfa02d52aa9"
-        modelURI="https://ontology.mayo.edu/taxonomies/propositionalconcepts/20200415/"
-        name="PropositionalConcepts - 20200415 - Most Recent Height"
-        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#1cd878ed-54ff-3fd7-9cda-d275312c0103"/>
+      <triso:semanticLink id="_98f0c5f8-ecb2-490e-92fa-f8c5b72654e0"
+        modelURI="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201101"
+        name="Clinical Situations - 20201101 - Most Recent Blood Pressure"
+        uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#ffed935c-4a64-3666-880a-aa0d4a2ca507"/>
     </semantic:extensionElements>
     <semantic:variable id="_6b582b8c-1d76-4f34-9d74-553988d220c4"
-      name="Current Height"
+      name="Most Recent Blood Pressuer"
       typeRef="string"/>
   </semantic:inputData>
   <semantic:decisionService id="_cb8b0829-ebaa-465a-a654-8ba8a53c8793" name="Decision">

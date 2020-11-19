@@ -334,7 +334,7 @@ class IdentityMapperIntTest {
   void getState() {
     // valid
     String fileId = "123720a6-9758-45a3-8c5c-5fffab12c494";
-    String expectedState = "Published";
+    String expectedState = "Draft";
     Optional<String> state = identityMapper.getState(fileId);
     assertNotNull(state);
     assertTrue(state.isPresent());

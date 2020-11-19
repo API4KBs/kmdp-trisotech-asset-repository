@@ -5,12 +5,11 @@
   xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
   xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
   xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"
-  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   id="_e36338e7-500c-43a0-881d-22aa5dc538df"
   name="Test Save As"
   namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/e36338e7-500c-43a0-881d-22aa5dc538df"
-  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd">
+>
   <semantic:extensionElements/>
   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
     name="Test Dictionary"
@@ -32,71 +31,9 @@
     <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
     <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
   </semantic:decisionService>
-  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-    <semantic:variable id="_cde1daf9-d08a-47b7-9691-1737343b91fa" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-    <semantic:variable id="_12ea461c-8ead-434a-98c7-f784c36d7185" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-    <semantic:variable id="_af5f7bec-1ce7-486f-9610-3f6956b15340" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-    <semantic:variable id="_c7da9952-cfd2-42f8-bf47-e048379bbedc" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-    <semantic:variable id="_61279030-bd99-42b0-b92f-ba3a37248c8d" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-    <semantic:variable id="_4c828d68-ca5c-4101-b77d-61ac93d38d0c" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-    <semantic:variable id="_4da5958a-1782-41af-8b77-5fa83ca230fb" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-    <semantic:variable id="_f39317ef-34ea-4ff8-84b2-0640289b37a6" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-    <semantic:variable id="_e4bd3764-630e-4801-97ea-5c7d05378031" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-    <semantic:variable id="_7a63bd35-f0ff-40aa-a3a2-cd62d267451f" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS" name="">
-    <semantic:variable id="_9789c2a6-0155-49e5-8cd0-7ae05bfe28b1" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="">
-    <semantic:variable id="_5ec39f37-fc1c-41ea-aeaf-283f736c5553" name="" typeRef="Any"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS"
-    name="Whole Model Decision Service">
-    <semantic:variable id="_e36338e7-500c-43a0-881d-22aa5dc538df_DS_VAR"
-      name="Whole Model Decision Service"
-      typeRef="Any"/>
-    <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-    <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
-    <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
-  </semantic:decisionService>
-  <semantic:decisionService id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS" name="Diagram Page 1">
-    <semantic:variable id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe_DS_VAR"
-      name="Diagram Page 1"
-      typeRef="Any"/>
-    <semantic:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-    <semantic:inputData href="#_12873790-73be-4484-bec7-72cb8a6af004"/>
-    <semantic:inputData href="#_e6d4f102-4f65-40d1-bb1c-9d5b43799157"/>
-  </semantic:decisionService>
   <semantic:decision id="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
     name="Weaver Test 1 Decision">
-    <semantic:extensionElements>
-      <surr:annotation>
-        <surr:ref id="http://foo.mayo.edu/test#Entity1"
-          name="Test Entity Set - My Test Entity 1"
-          namespaceUri="http://foo.mayo.edu/test#"
-          referentId="http://foo.mayo.edu/test#EntitySet"
-          resourceId="http://foo.mayo.edu/test#Entity1"
-          tag="e63052a5-1203-4967-8f7f-abf05c63cdf0"/>
-      </surr:annotation>
-    </semantic:extensionElements>
+    <semantic:extensionElements/>
     <semantic:variable id="_aeba48e7-a5e2-4a2f-a591-f5ddd5dc41cc"
       name="Weaver Test 1 Decision"
       typeRef="string"/>
@@ -119,17 +56,7 @@
     </semantic:literalExpression>
   </semantic:decision>
   <semantic:inputData id="_12873790-73be-4484-bec7-72cb8a6af004" name="Current Weight">
-    <semantic:extensionElements>
-      <surr:annotation>
-        <surr:ref
-          id="https://ontology.mayo.edu/propositionalconceptvocabulary/db9955-c472-491e-a4d3-55837cd99694"
-          name="propositionalconceptvocabulary_Scheme - Current Weight"
-          namespaceUri="https://ontology.mayo.edu/propositionalconceptvocabulary/"
-          referentId="https://ontology.mayo.edu/propositionalconceptvocabulary/"
-          resourceId="https://ontology.mayo.edu/propositionalconceptvocabulary/db9955-c472-491e-a4d3-55837cd99694"
-          tag="_8fdc5119-4263-418f-acaa-17ce32844e7d"/>
-      </surr:annotation>
-    </semantic:extensionElements>
+    <semantic:extensionElements/>
     <semantic:variable id="_9b022735-4f62-4f8b-987c-b60ffce1f17b"
       name="Current Weight"
       typeRef="string"/>
@@ -152,9 +79,7 @@
   </semantic:decisionService>
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="_12a67bc9-bb3b-4b4d-843d-ad7323c593fe" name="Page 1">
-      <di:extension>
-        <surr:annotation/>
-      </di:extension>
+      <di:extension/>
       <dmndi:Size height="1050" width="1485"/>
       <dmndi:DMNShape dmnElementRef="include1:_3def24f5-3f86-4c56-99a2-bc3ffce1ead1"
         id="_94ecd10b-0aad-44d2-a870-b4fd3ea5fefb">
@@ -193,6 +118,30 @@
           y="146.99999618530273"/>
         <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
       </dmndi:DMNShape>
+      <dmndi:DMNEdge dmnElementRef="_08ec80f6-9032-4d91-8d39-fd28cfbba734"
+        id="_785d65aa-2d56-4493-9249-012cce9b1968">
+        <di:waypoint x="850.9968013763428" y="351.99999618530273"/>
+        <di:waypoint x="754" y="133"/>
+        <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_c17fd570-09f2-48d8-8d8a-50cb3893b689"
+        id="_994f762d-7b7e-4c98-854a-3a155352c3ec">
+        <di:waypoint x="579.9968013763428" y="312.99999618530273"/>
+        <di:waypoint x="744" y="193"/>
+        <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_4c4342d3-72a2-4786-b776-b24e6f1a274c"
+        id="_e844e4fe-871b-4e1d-b426-3dca7de2d7aa">
+        <di:waypoint x="581.0144596099854" y="232.99999364217155"/>
+        <di:waypoint x="677.5" y="173"/>
+        <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge dmnElementRef="_1a77ec46-68eb-4000-8387-9564c688a4da"
+        id="_864b0c49-b758-440d-8043-eb4c4703a3a6">
+        <di:waypoint x="931.4968013763428" y="176.99999618530273"/>
+        <di:waypoint x="830.5" y="163"/>
+        <dmndi:DMNLabel sharedStyle="LS_e36338e7-500c-43a0-881d-22aa5dc538df_0"/>
+      </dmndi:DMNEdge>
     </dmndi:DMNDiagram>
     <dmndi:DMNStyle fontBold="false"
       fontFamily="arial,helvetica,sans-serif"

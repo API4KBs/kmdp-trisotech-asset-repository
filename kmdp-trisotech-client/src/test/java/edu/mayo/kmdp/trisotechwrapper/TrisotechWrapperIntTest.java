@@ -324,7 +324,7 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetLatestVersionArtifactIdDMN() {
     String expectedVersion = "2.0.1";
-    Date expectedUpdated = parseDateTime("2020-09-02T14:42:36Z");
+    Date expectedUpdated = parseDateTime("2020-11-18T17:00:00Z");
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "123720a6-9758-45a3-8c5c-5fffab12c494/versions/"
         + expectedVersion;
@@ -342,7 +342,7 @@ class TrisotechWrapperIntTest {
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {
     String expectedVersion = "2.0.1";
-    String updated = "2020-09-02";
+    String updated = "2020-11-18";
     Date expectedUpdated = parseDate(updated);
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "123720a6-9758-45a3-8c5c-5fffab12c494/versions/"

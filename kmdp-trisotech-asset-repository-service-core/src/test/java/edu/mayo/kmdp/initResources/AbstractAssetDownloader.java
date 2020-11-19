@@ -5,6 +5,7 @@ import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.snapshot.SerializationFormat.XML_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.asEnum;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.snapshot.KnowledgeRepresentationLanguage.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.snapshot.KnowledgeRepresentationLanguage.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.snapshot.KnowledgeRepresentationLanguage.Knowledge_Asset_Surrogate_2_0;
@@ -145,7 +146,7 @@ public abstract class AbstractAssetDownloader {
   private String getLanguageExtension(KnowledgeAsset surrogate) {
     KnowledgeRepresentationLanguage lang = surrogate.getCarriers().get(0).getRepresentation()
         .getLanguage();
-    switch (lang.asEnum()) {
+    switch (asEnum(lang)) {
       case CMMN_1_1:
         return ".cmmn";
       case DMN_1_2:

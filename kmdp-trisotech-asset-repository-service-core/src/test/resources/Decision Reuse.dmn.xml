@@ -33,48 +33,24 @@
       <surr:annotation
         xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
       >
-        <surr:rel establishedOn="2020-10-06T00:00:00"
-          name="defines"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
-          referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
-          resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-          tag="defines"
-          versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-          versionTag="20201006-224572">
-          <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
-        </surr:rel>
-        <surr:ref establishedOn="2020-09-21T00:00:00"
-          name="Management of Atrial Fibrillation"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/propositionalconcepts"
-          referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/7daa02f3-bac5-44b7-b151-4ef12ce3259e"
-          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#d58d78d9-2f92-307e-b568-2ced074715a2"
-          tag="7daa02f3-bac5-44b7-b151-4ef12ce3259e"
-          versionId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/versions/20200921-175977#7daa02f3-bac5-44b7-b151-4ef12ce3259e"
-          versionTag="20200921-175977">
-          <id:uuid>d58d78d9-2f92-307e-b568-2ced074715a2</id:uuid>
-        </surr:ref>
-      </surr:annotation>
-      <surr:annotation
-        xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
-      >
-        <surr:rel establishedOn="2020-10-06T00:00:00"
+        <surr:rel establishedOn="2020-11-18T00:00:00"
           name="captures"
           namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
           referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
           resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
           tag="captures"
-          versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#8856ffdd-044d-37cd-8124-a6be5dcea329"
-          versionTag="20201006-224572">
+          versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201118-154414#8856ffdd-044d-37cd-8124-a6be5dcea329"
+          versionTag="20201118-154414">
           <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
         </surr:rel>
-        <surr:ref establishedOn="2020-10-06T00:00:00"
+        <surr:ref establishedOn="2020-11-18T00:00:00"
           name="Choice Decision"
           namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
           referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ChoiceDecision"
           resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"
           tag="ChoiceDecision"
-          versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201006-224599#ChoiceDecision"
-          versionTag="20201006-224599">
+          versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201118-154433#21d77342-d120-324b-9ac6-11562e52c4cd"
+          versionTag="20201118-154433">
           <id:uuid>21d77342-d120-324b-9ac6-11562e52c4cd</id:uuid>
         </surr:ref>
       </surr:annotation>
@@ -87,7 +63,7 @@
           referentId="https://www.omg.org/spec/API4KP/api4kp-kao/SemanticDecisionModel"
           resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"
           tag="SemanticDecisionModel"
-          versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType/versions/20190801#SemanticDecisionModel"
+          versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType/versions/20190801#56b58fc2-b66f-3175-878e-bc3ef01cb916"
           versionTag="20190801">
           <id:uuid>56b58fc2-b66f-3175-878e-bc3ef01cb916</id:uuid>
         </surr:ref>

@@ -26,6 +26,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.asEnum;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
@@ -522,7 +523,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           = extractor.getRepLanguage(dox.get());
 
       if (rep.isPresent()) {
-        switch (rep.get().getLanguage().asEnum()) {
+        switch (asEnum(rep.get().getLanguage())) {
           case DMN_1_2:
             return rep(DMN_1_2,DMN_1_2_XML_Syntax,XML_1_1,defaultCharset(), Encodings.DEFAULT);
           case CMMN_1_1:

@@ -61,25 +61,25 @@
       <surr:annotation
         xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
       >
-        <surr:rel establishedOn="2020-10-06T00:00:00"
+        <surr:rel establishedOn="2020-11-18T00:00:00"
           name="in terms of"
           namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
           referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
           resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
           tag="defined-in-terms-of"
-          versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#6e1048ea-46da-39b1-b650-445f31a17fc1"
-          versionTag="20201006-224572">
+          versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201118-154414#6e1048ea-46da-39b1-b650-445f31a17fc1"
+          versionTag="20201118-154414">
           <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
         </surr:rel>
-        <surr:ref establishedOn="2020-09-21T00:00:00"
-          name="Current Weight"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/propositionalconcepts"
-          referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/94db9955-c472-491e-a4d3-55837cd99694"
-          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#62843231-7a0f-3b2c-a092-bb184c1a392e"
-          tag="94db9955-c472-491e-a4d3-55837cd99694"
-          versionId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/versions/20200921-175977#94db9955-c472-491e-a4d3-55837cd99694"
-          versionTag="20200921-175977">
-          <id:uuid>62843231-7a0f-3b2c-a092-bb184c1a392e</id:uuid>
+        <surr:ref establishedOn="2020-11-01T00:00:00"
+          name="Most Recent Weight"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
+          referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/2d0e15f2-7676-3288-bfd1-3465eb5efff9"
+          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#2d0e15f2-7676-3288-bfd1-3465eb5efff9"
+          tag="2d0e15f2-7676-3288-bfd1-3465eb5efff9"
+          versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201118-155079#2d0e15f2-7676-3288-bfd1-3465eb5efff9"
+          versionTag="20201118-155079">
+          <id:uuid>2d0e15f2-7676-3288-bfd1-3465eb5efff9</id:uuid>
         </surr:ref>
       </surr:annotation>
     </semantic:extensionElements>
@@ -87,35 +87,36 @@
       name="Current Weight"
       typeRef="string"/>
   </semantic:inputData>
-  <semantic:inputData id="_e6d4f102-4f65-40d1-bb1c-9d5b43799157" name="Current Height">
+  <semantic:inputData id="_e6d4f102-4f65-40d1-bb1c-9d5b43799157"
+    name="Most Recent Blood Pressuer">
     <semantic:extensionElements>
       <surr:annotation
         xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
       >
-        <surr:rel establishedOn="2020-10-06T00:00:00"
+        <surr:rel establishedOn="2020-11-18T00:00:00"
           name="in terms of"
           namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
           referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
           resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
           tag="defined-in-terms-of"
-          versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201006-224572#6e1048ea-46da-39b1-b650-445f31a17fc1"
-          versionTag="20201006-224572">
+          versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201118-154414#6e1048ea-46da-39b1-b650-445f31a17fc1"
+          versionTag="20201118-154414">
           <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
         </surr:rel>
-        <surr:ref establishedOn="2020-09-21T00:00:00"
-          name="Most Recent Height"
-          namespaceUri="https://ontology.mayo.edu/taxonomies/propositionalconcepts"
-          referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/d15103b3-d6b4-4ce1-9751-ccfa1ee132ed"
-          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#1cd878ed-54ff-3fd7-9cda-d275312c0103"
-          tag="d15103b3-d6b4-4ce1-9751-ccfa1ee132ed"
-          versionId="https://ontology.mayo.edu/taxonomies/propositionalconcepts/versions/20200921-175977#d15103b3-d6b4-4ce1-9751-ccfa1ee132ed"
-          versionTag="20200921-175977">
-          <id:uuid>1cd878ed-54ff-3fd7-9cda-d275312c0103</id:uuid>
+        <surr:ref establishedOn="2020-11-01T00:00:00"
+          name="Most Recent Blood Pressure"
+          namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
+          referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/ffed935c-4a64-3666-880a-aa0d4a2ca507"
+          resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#ffed935c-4a64-3666-880a-aa0d4a2ca507"
+          tag="ffed935c-4a64-3666-880a-aa0d4a2ca507"
+          versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201118-155079#ffed935c-4a64-3666-880a-aa0d4a2ca507"
+          versionTag="20201118-155079">
+          <id:uuid>ffed935c-4a64-3666-880a-aa0d4a2ca507</id:uuid>
         </surr:ref>
       </surr:annotation>
     </semantic:extensionElements>
     <semantic:variable id="_6b582b8c-1d76-4f34-9d74-553988d220c4"
-      name="Current Height"
+      name="Most Recent Blood Pressuer"
       typeRef="string"/>
   </semantic:inputData>
   <semantic:decisionService id="_cb8b0829-ebaa-465a-a654-8ba8a53c8793" name="Decision">

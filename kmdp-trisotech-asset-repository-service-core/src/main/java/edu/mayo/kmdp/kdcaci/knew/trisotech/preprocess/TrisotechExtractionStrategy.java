@@ -14,6 +14,8 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess;
 
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static java.util.stream.Collectors.toList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
@@ -31,6 +33,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.asEnum;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
@@ -54,8 +57,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-
-import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
@@ -70,7 +71,6 @@ import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSe
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
-import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries;
 import org.slf4j.Logger;
@@ -180,7 +180,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     // get the language for the document to set the appropriate values
     Optional<SyntacticRepresentation> synRep = getRepLanguage(woven, false);
     if (synRep.isPresent()) {
-      switch (synRep.get().getLanguage().asEnum()) {
+      switch (asEnum(synRep.get().getLanguage())) {
         case DMN_1_2:
           formalCategory = Assessment_Predictive_And_Inferential_Models;
           // default value
@@ -437,9 +437,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
   protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
     annotations.stream()
-        .filter(ann -> SemanticAnnotationRelTypeSeries.Captures.isSameEntity(ann.getRel())
-            || SemanticAnnotationRelTypeSeries.Defines.isSameEntity(ann.getRel())
-            || SemanticAnnotationRelTypeSeries.In_Terms_Of.isSameEntity(ann.getRel()))
+        .filter(ann -> Captures.sameTermAs(ann.getRel())
+            || Defines.sameTermAs(ann.getRel())
+            || In_Terms_Of.sameTermAs(ann.getRel()))
         .map(ann -> (Annotation) ann.copyTo(new Annotation()))
         .forEach(surr::withAnnotation);
   }
@@ -556,7 +556,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     Optional<KnowledgeRepresentationLanguage> lang = detectRepLanguage(dox);
 
     return lang.map(l -> {
-      switch (l.asEnum()) {
+      switch (asEnum(l)) {
         case DMN_1_2:
           return xPathUtil.xString(dox, "//*/@namespace");
         case CMMN_1_1:

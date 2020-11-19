@@ -15,7 +15,6 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,13 +24,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
 import edu.mayo.kmdp.util.XMLUtil;
-import edu.mayo.ontology.taxonomies.clinicalsituations.CommonclinicalClinicalSituationSeries;
-import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
@@ -80,7 +76,7 @@ class SemanticAnnotationTest {
 			KnowledgeAsset surr = res.get();
 			assertEquals( 3, surr.getAnnotation().size() );
 			List<ConceptDescriptor> inputs = surr.getAnnotation().stream()
-					.filter( annotation -> In_Terms_Of.isSameEntity(annotation.getRel()) )
+					.filter( annotation -> In_Terms_Of.sameTermAs(annotation.getRel()) )
 					.map( annotation -> annotation.getRef().getUuid().toString())
 					.map(terms::lookupTerm)
 					.collect(Answer.toList())
@@ -92,7 +88,7 @@ class SemanticAnnotationTest {
 					.anyMatch( input -> input.getUuid().toString().equals("9296f375-a7ed-3c59-a972-4a7eb40c8820")));
 
 			List<ConceptDescriptor> decisions = surr.getAnnotation().stream()
-					.filter( annotation -> Captures.isSameEntity(annotation.getRel()) )
+					.filter( annotation -> Captures.sameTermAs(annotation.getRel()) )
 					.map( annotation -> annotation.getRef().getUuid().toString())
 					.map(terms::lookupTerm)
 					.collect(Answer.toList())
@@ -131,7 +127,7 @@ class SemanticAnnotationTest {
 			KnowledgeAsset surr = res.get();
 
 			List<ConceptDescriptor> inputs = surr.getAnnotation().stream()
-					.filter( annotation -> In_Terms_Of.isSameEntity(annotation.getRel()) )
+					.filter( annotation -> In_Terms_Of.sameTermAs(annotation.getRel()) )
 					.map( annotation -> annotation.getRef().getUuid().toString())
 					.map(terms::lookupTerm)
 					.collect(Answer.toList())

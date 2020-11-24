@@ -43,6 +43,13 @@ To compile locally requires using the token. From the commandline, this is easie
 
 The file can be named anything as long as it ends in .properties.
 
+The above may not work in all cases. With some changes made, the code will work with a environment variable for the token.
+
+Create a user environment variable with the name:
+`edu.mayo.kmdp.trisotechwrapper.trisotechToken`
+
+Give it the token value for its value.
+
 From within IntelliJ, the appropriate properties files need to be modified to include the token.
 This is needed to be able to debug within IntelliJ.
  

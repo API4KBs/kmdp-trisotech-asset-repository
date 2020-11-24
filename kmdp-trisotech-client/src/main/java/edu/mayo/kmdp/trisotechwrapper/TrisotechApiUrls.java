@@ -24,15 +24,13 @@ public class TrisotechApiUrls {
 
   private TrisotechApiUrls() { throw new IllegalStateException("Utility class"); }
 
-  //TODO FIXME This should be configurable
-  public static final String BASE_URL = "https://mc.trisotech.com/publicapi/";
-
   // List of repositories
   public static final String REPOSITORY_PATH = "repository";
   // content of specified repository; set up for URIComponentsBuilder; mimetype and path are optional
   public static final String CONTENT_PATH = "repositorycontent?repository={repo}&mimetype={mime}&path={path}";
   // path for POST to specified repository; mimetype is required; at this time version and state are not used
-  public static final String CONTENT_PATH_POST = "repositorycontent?repository={repo}&mimetype={mime}&path={path}&version={version}&state={state}";
+  public static final String CONTENT_PATH_POST = "repositorycontent?repository={repo}&name={name}&mimetype={mime}&path={path}";
+  public static final String CONTENT_PATH_POST_WITH_VERSION = "repositorycontent?repository={repo}&name={name}&mimetype={mime}&path={path}&version={version}&state={state}";
   // versions of specific file within specified repository
   public static final String VERSIONS_PATH = "repositoryfileversion?repository={repo}&id={fileId}&mimetype={mime}";
 

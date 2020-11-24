@@ -32,10 +32,10 @@ import org.springframework.stereotype.Component;
 public class StaticContextInitializer {
   private static final Logger logger = LoggerFactory.getLogger(StaticContextInitializer.class);
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.baseUrl:https://mc.trisotech.com/publicapi}")
+  @Value("${edu.mayo.kmdp.trisotechwrapper.baseUrl:https://test-mc.trisotech.com/publicapi/}")
   private String baseURL;
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.trisotechToken}")
+  @Value("${edu.mayo.kmdp.trisotechwrapper.test.trisotechToken}")
   private String token;
 
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName:}")
@@ -51,7 +51,8 @@ public class StaticContextInitializer {
   public void init() {
     if(logger.isDebugEnabled()) {
       logger.debug("\n\n****token in PostConstruct is {} ", token);
-      logger.debug("repositoryName in PostConstruct is: {}", repositoryName + "*****\n\n");
+      logger.debug("repositoryName in PostConstruct is: {}", repositoryName);
+      logger.debug("baseUrl in PostConstruct is: {}", baseURL + "*****\n\n");
     }
 
     if (Util.isEmpty(token)) {

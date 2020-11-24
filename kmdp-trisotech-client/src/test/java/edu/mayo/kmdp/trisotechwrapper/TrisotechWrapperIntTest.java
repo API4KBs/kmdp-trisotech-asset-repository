@@ -78,15 +78,17 @@ class TrisotechWrapperIntTest {
 
   // Test files
   // DMN Published
-  private static final String WEAVER_TEST_1_ID = "123720a6-9758-45a3-8c5c-5fffab12c494";
+  private static final String WEAVER_TEST_1_ID = "http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068";
+  private static final String WEAVER_TEST_1_ID_TAG = "5682fa26-b064-43c8-9475-1e4281e74068" ;
   // DMN published 'Draft'
-  private static final String WEAVER_TEST_2_ID = "ffa53262-4d36-4656-890b-4e48ed1cb9c3";
-  // DMN unpublished
-  private static final String DMN_UNPUBLISHED = "1dd05040-0bc8-4f3f-85b2-a06026c2cdc6";
+  private static final String WEAVER_TEST_2_ID = "http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21";
+  // DMN unpublished (Hyperlipidemia - ASCVD High Risk)
+  private static final String DMN_UNPUBLISHED = "http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89";
   // CMMN Published
-  private static final String WEAVE_TEST_1_ID = "93e58aa9-c258-46fd-909d-1cb096e19e64";
+  private static final String WEAVE_TEST_1_ID = "http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9";
+  private static final String WEAVE_TEST_1_ID_TAG = "f59708b6-96c0-4aa3-be4a-31e075d76ec9";
   // CMMN unpublished
-  private static final String WEAVE_TEST_2_ID = "84da9f52-44f5-46d1-ae3f-c5599f78ad1f";
+  private static final String WEAVE_TEST_2_ID = "http://www.trisotech.com/definitions/_a4172970-dc92-415e-9921-5e0c78af501c";
 
   @BeforeAll
   static void setUpBeforeClass() {
@@ -323,17 +325,17 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionArtifactIdDMN() {
-    String expectedVersion = "2.0.1";
-    Date expectedUpdated = parseDateTime("2020-11-18T17:00:00Z");
+    String expectedVersion = "2.1.0";
+    Date expectedUpdated = parseDateTime("2020-11-24T21:29:58Z");
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
-        + "123720a6-9758-45a3-8c5c-5fffab12c494/versions/"
+        + "5682fa26-b064-43c8-9475-1e4281e74068/versions/"
         + expectedVersion;
 
     ResourceIdentifier versionIdentifier =
         client.getLatestVersion(WEAVER_TEST_1_ID)
             .orElse(null);
     assertNotNull(versionIdentifier);
-    assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
+    assertEquals(WEAVER_TEST_1_ID_TAG, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
     assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
     assertTrue(isSameDay(expectedUpdated, versionIdentifier.getEstablishedOn()));
@@ -341,11 +343,11 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {
-    String expectedVersion = "2.0.1";
-    String updated = "2020-11-18";
+    String expectedVersion = "2.1.0";
+    String updated = "2020-11-24";
     Date expectedUpdated = parseDate(updated);
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
-        + "123720a6-9758-45a3-8c5c-5fffab12c494/versions/"
+        + "5682fa26-b064-43c8-9475-1e4281e74068/versions/"
         + expectedVersion;
 
     TrisotechFileInfo trisotechFileInfo = client.getFileInfo(WEAVER_TEST_1_ID)
@@ -354,7 +356,7 @@ class TrisotechWrapperIntTest {
     ResourceIdentifier versionIdentifier = client.getLatestVersion(trisotechFileInfo)
         .orElse(null);
     assertNotNull(versionIdentifier);
-    assertEquals(WEAVER_TEST_1_ID, versionIdentifier.getTag());
+    assertEquals(WEAVER_TEST_1_ID_TAG, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
     assertTrue(isSameDay(expectedUpdated, versionIdentifier.getEstablishedOn()));
     assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
@@ -362,21 +364,21 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionArtifactIdCMMN() {
-    String expectedVersion = "3.0.1";
+    String expectedVersion = "3.0.2";
     ResourceIdentifier versionIdentifier = client.getLatestVersion(WEAVE_TEST_1_ID)
         .orElse(null);
     assertNotNull(versionIdentifier);
-    assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
+    assertEquals(WEAVE_TEST_1_ID_TAG, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
   }
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoCMMN() {
-    String expectedVersion = "3.0.1";
-    String updated = "2020-09-03T13:21:00Z";
+    String expectedVersion = "3.0.2";
+    String updated = "2020-11-13T19:50:18Z";
     Date expectedUpdated = parseDateTime(updated);
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
-        + "93e58aa9-c258-46fd-909d-1cb096e19e64/versions/"
+        + "f59708b6-96c0-4aa3-be4a-31e075d76ec9/versions/"
         + expectedVersion;
 
     TrisotechFileInfo trisotechFileInfo = client.getFileInfo(WEAVE_TEST_1_ID)
@@ -385,7 +387,7 @@ class TrisotechWrapperIntTest {
     ResourceIdentifier versionIdentifier = client.getLatestVersion(trisotechFileInfo)
         .orElse(null);
     assertNotNull(versionIdentifier);
-    assertEquals(WEAVE_TEST_1_ID, versionIdentifier.getTag());
+    assertEquals(WEAVE_TEST_1_ID_TAG, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
     assertTrue(DateTimeUtil.isSameDay(expectedUpdated,versionIdentifier.getEstablishedOn()));
     assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());

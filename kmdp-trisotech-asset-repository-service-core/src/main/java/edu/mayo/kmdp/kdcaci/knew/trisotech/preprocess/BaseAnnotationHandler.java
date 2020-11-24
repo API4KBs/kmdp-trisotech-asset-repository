@@ -39,8 +39,7 @@ public abstract class BaseAnnotationHandler {
         .collect(Collectors.toList());
   }
 
-  public List<Annotation> getAnnotation(String name,
-      SemanticAnnotationRelTypeSeries defaultRel,
+  public List<Annotation> getAnnotation(SemanticAnnotationRelTypeSeries defaultRel,
       List<ConceptIdentifier> rows) {
     ConceptIdentifier rel = null;
 
@@ -53,15 +52,6 @@ public abstract class BaseAnnotationHandler {
             newAnnotation(rel, /*rol,*/ rows));
   }
 
-  public List<Annotation> getDataAnnotation(
-      String modelId,
-      String elementId) {
-
-    return Collections.singletonList(new Annotation()
-        .withRel(Imports.asConceptIdentifier())
-        .withRef(Term.newTerm(MAYO_ARTIFACTS_BASE_URI_URI, modelId + "#" + elementId).asConceptIdentifier()));
-  }
-
   protected Annotation newAnnotation(List<ConceptIdentifier> rows) {
     Annotation anno;
     switch (rows.size()) {
@@ -71,7 +61,6 @@ public abstract class BaseAnnotationHandler {
       default:
         anno = new Annotation()
             .withRef(rows.get(0));
-//            .withExpr(rows);
     }
     return anno;
   }

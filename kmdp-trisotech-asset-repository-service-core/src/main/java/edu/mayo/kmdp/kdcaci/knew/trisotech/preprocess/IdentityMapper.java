@@ -78,11 +78,10 @@ public class IdentityMapper {
 
   // SPARQL Strings
   // SPARQL endpoint for repository
-  private static final String ENDPOINT = "https://mc.trisotech.com/ds/query";
+  private static final String ENDPOINT = "https://test-mc.trisotech.com/ds/query";
 
   private static final String TRISOTECH_GRAPH = "http://trisotech.com/graph/1.0/graph#";
   private static final String ASSET_ID = "?assetId";
-  private static final String FILE_ID = "?fileId";
   private static final String MODEL = "?model";
   private static final String STATE = "?state";
   private static final String MIME_TYPE = "?mimeType";
@@ -164,25 +163,11 @@ public class IdentityMapper {
       while (results.hasNext()) {
         QuerySolution soln = results.nextSolution();
         artifactToArtifactIDMap
-            .computeIfAbsent(soln.getResource(MODEL), s -> new HashSet<>())
-            .add(soln.getResource("?dModel"));
+            .computeIfAbsent(soln.getResource("?fromModel"), s -> new HashSet<>())
+            .add(soln.getResource("?toModel"));
       }
     }
     return artifactToArtifactIDMap;
-  }
-
-  /**
-   * return the list of models from the triples
-   *
-   * @param modelResults the resultSet from a SPARQL query
-   */
-  private List<Resource> getModelList(ResultSet modelResults) {
-    List<Resource> modelList = new ArrayList<>();
-    while (modelResults.hasNext()) {
-      QuerySolution soln = modelResults.nextSolution();
-      modelList.add(soln.getResource(MODEL));
-    }
-    return modelList;
   }
 
   /**
@@ -286,20 +271,20 @@ public class IdentityMapper {
   }
 
   /**
-   * Get the Asset that matches the model for the fileId provided. Will return the asset that maps
+   * Get the Asset that matches the model for the modelId provided. Will return the asset that maps
    * to the LATEST version of the model.
    *
-   * @param fileId the id for the file representing the model
+   * @param modelId the id for the model
    * @return ResourceIdentifier for assetId of model
    */
-  public Optional<ResourceIdentifier> getAssetId(String fileId) {
-    logger.debug("getAssetId for fileId: {}", fileId);
+  public Optional<ResourceIdentifier> getAssetId(String modelId) {
+    logger.debug("getAssetId for modelId: {}", modelId);
     ResultSetRewindable modelSet = getModelSet();
     try {
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
 
-        if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
+        if (soln.getResource(MODEL).getURI().equals(modelId)) {
           URI statedId = URI.create(soln.getLiteral(ASSET_ID).toString());
           if (statedId.getScheme() == null) {
             // need to investigate why 'tags' get detected as assetIds
@@ -471,46 +456,50 @@ public class IdentityMapper {
    * @param any     search any model? true, else search only published models
    * @return the fileId for the asset; the fileId can be used in the APIs
    */
-  public Optional<String> getFileId(UUID assetId, boolean any) {
-    return getFileIdFromModels(getModelSet(any), assetId);
+  public Optional<String> getModelId(UUID assetId, boolean any) {
+    return getModelIdFromModels(getModelSet(any), assetId);
   }
 
-  private Optional<String> getFileIdFromModels(ResultSetRewindable theModels, UUID assetId) {
-    List<String> fileIds = new ArrayList<>();
+  private Optional<String> getModelIdFromModels(ResultSetRewindable theModels, UUID assetId) {
+    List<String> modelIds = new ArrayList<>();
 
     try {
       while (theModels.hasNext()) {
         QuerySolution soln = theModels.nextSolution();
 
         if (soln.getLiteral(ASSET_ID).getString().contains(assetId.toString())) {
-          fileIds.add(soln.getLiteral(FILE_ID).getString());
+          modelIds.add(soln.getResource(MODEL).getURI());
         }
       }
     } finally {
       theModels.reset();
     }
-    if (fileIds.size() > 1) {
-      logger.warn("BUG : The same AssetID has been used across multiple models, "
-          + "which is admissible but not supported");
-      logger.warn("Asset ID {}, model IDs {}", assetId, Strings.join(fileIds, ','));
+    if (modelIds.size() > 1) {
+      if(logger.isWarnEnabled()) {
+        logger.warn("Asset ID {}, model IDs {}", assetId, Strings.join(modelIds, ','));
+        logger.warn("BUG : The same AssetID has been used across multiple models, "
+            + "which is admissible but not supported");
+      }
     }
-    return fileIds.stream().findAny();
+    return modelIds.stream().findAny();
   }
 
   /**
    * Get the fileId for use with the APIs from the internal model Id
    *
    * @param internalId the internal trisotech model ID
-   * @return the fileId that can be used with the APIs
+   * @return the id that can be used with the APIs
+   * These values are the same now, but sometimes only have the tag of the internalId, and need the
+   * full uri for the queries now.
    */
-  public Optional<String> getFileId(String internalId) {
+  public Optional<String> getModelId(String internalId) {
     ResultSetRewindable modelSet = getModelSet();
     try {
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
         // use contains as sometimes internalId is just the tag
         if (soln.getResource(MODEL).getURI().contains(internalId)) {
-          return Optional.ofNullable(soln.getLiteral(FILE_ID).getString());
+          return Optional.ofNullable(soln.getResource(MODEL).getURI());
         }
       }
     } finally {
@@ -586,16 +575,16 @@ public class IdentityMapper {
    * Get the mimetype using the model id All models have a mimetype. If performance becomes an
    * issue, might want to separate out searching in published models instead of all models.
    *
-   * @param internalId the internal id of the model
+   * @param modelId the id of the model
    * @return the mimetype as specified in the triples
    */
-  public Optional<String> getMimetype(String internalId) {
+  public Optional<String> getMimetype(String modelId) {
     ResultSetRewindable modelSet = getModelSet();
     try {
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
-        // use contains as sometimes internalId is just the tag
-        if (soln.getResource(MODEL).getURI().contains(internalId)) {
+        // use contains as sometimes modelId is just the tag
+        if (soln.getResource(MODEL).getURI().contains(modelId)) {
           return Optional.ofNullable(soln.getLiteral(MIME_TYPE).getString());
         }
       }
@@ -608,15 +597,15 @@ public class IdentityMapper {
   /**
    * Get the state using the model id State only exists on published models
    *
-   * @param fileId the file id of the model
+   * @param modelId the id of the model
    * @return the state as specified in the triples
    */
-  public Optional<String> getState(String fileId) {
+  public Optional<String> getState(String modelId) {
     ResultSetRewindable modelSet = getModelSet();
     try {
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
-        if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
+        if (soln.getResource(MODEL).getURI().equals(modelId)) {
           return Optional.ofNullable(soln.getLiteral(STATE).getString());
         }
       }
@@ -629,15 +618,15 @@ public class IdentityMapper {
   /**
    * Get the version using the model id State only exists on published models
    *
-   * @param fileId the file id of the model
+   * @param modelId the id of the model
    * @return the version as specified in the triples
    */
-  public Optional<String> getVersion(String fileId) {
+  public Optional<String> getVersion(String modelId) {
     ResultSetRewindable modelSet = getModelSet();
     try {
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
-        if (soln.getLiteral(FILE_ID).getString().equals(fileId)) {
+        if (soln.getResource(MODEL).getURI().equals(modelId)) {
           logger.debug("returning version of: {}", soln.getLiteral(VERSION));
           return Optional.ofNullable(soln.getLiteral(VERSION)).map(Literal::getString);
         }

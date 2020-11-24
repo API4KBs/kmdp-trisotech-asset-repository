@@ -13,42 +13,13 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
-import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
-import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_UPPER;
-import static java.nio.charset.Charset.defaultCharset;
-import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
-import static org.omg.spec.api4kp._20200801.Answer.unsupported;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.asEnum;
-import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax;
-import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
-
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTWConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.NotLatestVersionException;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import java.io.IOException;
-import java.net.URI;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.apache.http.HttpException;
 import org.apache.jena.shared.NotFoundException;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
@@ -71,6 +42,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.net.URI;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.*;
+import static java.nio.charset.Charset.defaultCharset;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.Answer.unsupported;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.*;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
 /**
  * A 'wrapper' class. This class implements the Knowledge Asset API and wraps that API around
@@ -121,13 +112,13 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   @Override
   public Answer<KnowledgeAsset> getKnowledgeAsset(UUID assetId, String s) {
     boolean publishedOnly = configuration.getTyped(TTWParams.PUBLISHED_ONLY);
-    // need the fileId of the model in order to query for modelInfo
-    Optional<String> internalFileId = extractor.getFileId(assetId, ! publishedOnly);
+    // need the modelId of the model in order to query for modelInfo
+    Optional<String> modelId = extractor.getModelId(assetId, ! publishedOnly);
     // need the mimetype to get the correct file format
     Optional<String> mimeType = extractor.getMimetype(assetId);
     // want the latest artifactVersion of the model
     Optional<String> artifactVersion = extractor.getArtifactVersion(assetId);
-    if (internalFileId.isEmpty()
+    if (modelId.isEmpty()
         || mimeType.isEmpty()
         || (publishedOnly && artifactVersion.isEmpty())) {
       return Answer.of(Optional.empty());
@@ -135,9 +126,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     // get the modelInfo for the latest artifactVersion
 
     return Answer.of(
-        client.getLatestModelFileInfo(internalFileId.get())
+        client.getLatestModelFileInfo(modelId.get())
             .flatMap(modelInfo ->
-                getKnowledgeAssetForModel(internalFileId.get(), modelInfo)));
+                getKnowledgeAssetForModel(modelId.get(), modelInfo)));
   }
 
   /**
@@ -161,18 +152,15 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   public Answer<KnowledgeAsset> getKnowledgeAssetVersion(UUID assetId,
       String versionTag, String xAccept) {
     String internalId;
-    Optional<String> fileId;
 
     // For assetId, find artifactId; For assetId/versionTag, is latest artifactId/version a match? if not, get versions of artifactId and weave each one to get assetId/version
     try {
       internalId = extractor.resolveInternalArtifactID(assetId, versionTag, false);
 
-      fileId = extractor.getFileId(internalId);
       // the url is available from the extractor, HOWEVER, it is not the correct form to retrieve
       // the file in the correct format (xml) so need to make a server call now to get the proper URL
       return Answer.of(
-          fileId
-              .flatMap(client::getLatestModelFileInfo)
+              client.getLatestModelFileInfo(internalId)
               .flatMap(tfi -> client.downloadXmlModel(tfi.getUrl())
                   .map(weaver::weave)
                   .map(dox -> extractor.extract(dox, tfi)))
@@ -325,7 +313,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .getEnterpriseAssetVersionIdForAsset(assetId, versionTag, ! publishedOnly);
       if (enterpriseVersionId.isPresent()) {
         // get the model file -- always do get Canonical
-        String internalFileId = extractor.getFileId(assetId, ! publishedOnly)
+        String internalFileId = extractor.getModelId(assetId, ! publishedOnly)
             .orElse("");
 
         Optional<Document> modelDox = resolveModel(internalFileId, null);
@@ -362,7 +350,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   private Answer<KnowledgeCarrier> tryAnotherVersion(
       String internalId, UUID assetId, String versionTag) {
-    KnowledgeCarrier carrier = null;
     List<TrisotechFileInfo> trisotechVersions = extractor.getTrisotechModelVersions(internalId);
     Collections.reverse(trisotechVersions);
     for (TrisotechFileInfo model : trisotechVersions) {
@@ -429,7 +416,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     KnowledgeCarrier carrier;
     String internalId;
 
-    Optional<String> fileId = extractor.getFileId(assetId, false);
+    Optional<String> fileId = extractor.getModelId(assetId, false);
     // fileId is not found in the extractor for the assetId provided; fail
     if (!fileId.isPresent()) {
       return Answer.of(Optional.empty());
@@ -465,7 +452,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           Optional<ResourceIdentifier> lav = client
               .getLatestVersion(fileId.get());
           if (lav.isPresent()) {
-//            VersionedIdentifier latestArtifactVersion = lav.get();
             logger.debug("latestArtifactVersion version {}", lav.get().getVersionTag());
             logger.debug("latestArtifactVersion Tag {}", lav.get().getTag());
 
@@ -622,14 +608,14 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   public Answer<Void> setKnowledgeAssetCarrierVersion(UUID assetId, String versionTag,
       UUID artifactId, String artifactVersionTag, byte[] exemplar) {
     String internalId;
-    Optional<String> fileId = extractor.getFileId(assetId, true);
+    Optional<String> fileId = extractor.getModelId(assetId, true);
     String mimeType = extractor.getMimetype(assetId)
         .orElse(MediaType.APPLICATION_XML.toString());
 
     // fileId is not found in the extractor for the assetId provided; fail
     // At this time, not allowing for create, so if no fileId, fail
     if (!fileId.isPresent()) {
-      return Answer.of(Optional.empty()); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return Answer.of(Optional.empty());
     }
 
     // 1. Check if assetId is latest (no server call needed)
@@ -720,33 +706,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   private boolean isDMNModel(TrisotechFileInfo fileInfo) {
     return fileInfo.getMimetype().contains(DMN_LOWER);
   }
-//
-//  @Override
-//  public Answer<List<KnowledgeCarrier>> getCompositeKnowledgeAsset(UUID uuid, String s,
-//      Boolean aBoolean, String s1) {
-//    return unsupported();
-//  }
-//
-//  @Override
-//  public Answer<KnowledgeCarrier> getCompositeKnowledgeAssetStructure(UUID uuid, String s) {
-//    return unsupported();
-//  }
-//
-//  @Override
-//  public Answer<List<KnowledgeCarrier>> getKnowledgeArtifactBundle(UUID uuid, String s,
-//      String s1, Integer integer, String s2) {
-//    return unsupported();
-//  }
-//
-//  @Override
-//  public Answer<List<KnowledgeAsset>> getKnowledgeAssetBundle(UUID uuid, String s,
-//      String s1, Integer integer) {
-//    return unsupported();
-//  }
-//
-//  @Override
-//  public Answer<List<Bindings>> queryKnowledgeAssets(KnowledgeCarrier knowledgeCarrier) {
-//    return unsupported();
-//  }
+
 
 }

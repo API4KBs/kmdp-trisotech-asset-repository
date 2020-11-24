@@ -1,3 +1,13 @@
+# 5.0.0 - 11/23/2020
+- Updated triso service impl to be 5.0.0-snapshot
+- Updated root pom to base 8.0.8-snapshot
+- Biggest update is to v10 of the Trisotech API.
+  - SPARQL queries changed. This was the biggest change in the code.
+  - fileId now == modelId and is a full URI for both
+    - previously fileId was an internal id that was specifice to Trisotech
+  - models for testing were updated to make use of new capabilities in Trisotech
+  - added reuse/copyOf support
+  
 # 2.0.0 - 8/11/2020
 - Updated triso service impl to be 2.0.0-snapshot
 - Updated root pom to base 7.0.1-snapshot

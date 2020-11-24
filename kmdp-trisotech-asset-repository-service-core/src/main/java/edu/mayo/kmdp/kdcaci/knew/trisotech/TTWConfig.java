@@ -4,8 +4,8 @@ import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.Opt;
 import edu.mayo.kmdp.Option;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTWConfig.TTWParams;
-import edu.mayo.kmdp.terms.skosifier.Modes;
 import edu.mayo.kmdp.util.PropertiesUtil;
+
 import java.util.Properties;
 
 public class TTWConfig extends

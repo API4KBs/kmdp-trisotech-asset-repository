@@ -231,7 +231,7 @@ class MetadataTest {
     Optional<String> artifactVersion = extractor
         .getArtifactVersion(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
     assertNotNull(artifactVersion);
-    assertEquals("1.8.1", artifactVersion.get());
+    assertEquals("1.8.3", artifactVersion.get());
   }
 
   @Test
@@ -243,6 +243,7 @@ class MetadataTest {
 
     mimetype = extractor.getMimetype(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
     assertNotNull(mimetype);
+    assertFalse(mimetype.isEmpty());
     assertEquals("application/vnd.triso-cmmn+json", mimetype.get());
   }
 
@@ -344,51 +345,52 @@ class MetadataTest {
   @Test
   void testResolveEnterpriseAssetID() {
     ResourceIdentifier assetID = extractor
-        .resolveEnterpriseAssetID("123720a6-9758-45a3-8c5c-5fffab12c494");
+        .resolveEnterpriseAssetID("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068");
     assertEquals(
         "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.1.1",
         assetID.getVersionId().toString());
   }
 
   @Test
-  void testGetFileId_AssetUUID() {
+  void testGetModelId_AssetUUID() {
+    Optional<String> modelId = extractor
+        .getModelId(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"), false);
+    assertNotNull(modelId);
+    assertTrue(modelId.isPresent());
+    assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068", modelId.get());
+  }
+
+
+  @Test
+  void testGetModelId_internalId() {
     Optional<String> fileid = extractor
-        .getFileId(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"), false);
+        .getModelId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068");
     assertNotNull(fileid);
     assertTrue(fileid.isPresent());
-    assertEquals("123720a6-9758-45a3-8c5c-5fffab12c494", fileid.get());
+    assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068", fileid.get());
   }
 
   @Test
-  void testGetFileId_AssetUUID_empty() {
+  void testGetModelId_internalId_tagOnly() {
     Optional<String> fileid = extractor
-        .getFileId(UUID.fromString("abcdef3a-93c4-4e09-b1aa-14088c76adee"), false);
+        .getModelId("5682fa26-b064-43c8-9475-1e4281e74068");
+    assertNotNull(fileid);
+    assertTrue(fileid.isPresent());
+    assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068", fileid.get());
+  }
+
+  @Test
+  void testGetModel_internalId_empty() {
+    Optional<String> fileid = extractor.getModelId("abcdef3a-93c4-4e09-b1aa-14088c76adee");
     assertNotNull(fileid);
     assertFalse(fileid.isPresent());
     assertEquals(Optional.empty(), fileid);
   }
 
   @Test
-  void testGetFileId_internalId() {
+  void testGetModelId_internalId_URIString_empty() {
     Optional<String> fileid = extractor
-        .getFileId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068");
-    assertNotNull(fileid);
-    assertTrue(fileid.isPresent());
-    assertEquals("123720a6-9758-45a3-8c5c-5fffab12c494", fileid.get());
-  }
-
-  @Test
-  void testGetFileId_internalId_empty() {
-    Optional<String> fileid = extractor.getFileId("abcdef3a-93c4-4e09-b1aa-14088c76adee");
-    assertNotNull(fileid);
-    assertFalse(fileid.isPresent());
-    assertEquals(Optional.empty(), fileid);
-  }
-
-  @Test
-  void testGetFileId_internalId_URIString_empty() {
-    Optional<String> fileid = extractor
-        .getFileId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e7abcd");
+        .getModelId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e7abcd");
     assertNotNull(fileid);
     assertFalse(fileid.isPresent());
     assertEquals(Optional.empty(), fileid);

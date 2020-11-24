@@ -236,9 +236,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     // Annotations
     addSemanticAnnotations(surr, annotations);
 
-    logger.debug(
-        "surrogate in JSON format: {} ", new String(JSonUtil.writeJson(surr).get().toByteArray()));
-
+    if(logger.isDebugEnabled()) {
+      logger.debug(
+          "surrogate in JSON format: {} ", new String(JSonUtil.writeJson(surr).get().toByteArray()));
+    }
     return surr;
   }
 
@@ -264,7 +265,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     // need to find the dependency artifact versions that map to this artifact version
     // using this algorithm:
     // map to the 'latest' version of the dependency that is not timestamped later then the next
-    // get versions of this artifact
+    // version of this artifact
     logger.debug(
         "current artifactVersion: {} {} {} ",
         model.getName(), model.getVersion(), model.getUpdated());
@@ -508,8 +509,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   }
 
   @Override
-  public Optional<ResourceIdentifier> getAssetID(String fileId) {
-    return mapper.getAssetId(fileId);
+  public Optional<ResourceIdentifier> getAssetID(String modelId) {
+    return mapper.getAssetId(modelId);
   }
 
   public Optional<URI> getEnterpriseAssetIdForAsset(UUID assetId) {
@@ -522,8 +523,8 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return mapper.getEnterpriseAssetVersionIdForAsset(assetId, versionTag, any);
   }
 
-  public Optional<String> getFileId(UUID assetId, boolean any) {
-    return mapper.getFileId(assetId, any);
+  public Optional<String> getModelId(UUID assetId, boolean any) {
+    return mapper.getModelId(assetId, any);
   }
 
   @Override
@@ -531,16 +532,16 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return mapper.getArtifactId(id, any);
   }
 
-  public Optional<String> getFileId(String internalId) {
-    return mapper.getFileId(internalId);
+  public Optional<String> getModelId(String internalId) {
+    return mapper.getModelId(internalId);
   }
 
   public Optional<String> getMimetype(UUID assetId) {
     return mapper.getMimetype(assetId);
   }
 
-  public Optional<String> getMimetype(String internalId) {
-    return mapper.getMimetype(internalId);
+  public Optional<String> getMimetype(String modelId) {
+    return mapper.getMimetype(modelId);
   }
 
 
@@ -595,19 +596,22 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
    * Trisotech model versions can be retrieved through a specific call. The versions will NOT
    * include the latest version of the model, but all other versions.
    *
-   * @param internalId the internalId is the id used by Trisotech internally to identify the model.
+   * @param modelId the modelId is the id used by Trisotech internally to identify the model.
    *                   The internal id is the URI. It is used to get the appropriate query parameter
    *                   values.
    * @return the TrisotechFileInfo list of all but the current version of the model requested
    */
-  public List<TrisotechFileInfo> getTrisotechModelVersions(String internalId) {
+  public List<TrisotechFileInfo> getTrisotechModelVersions(String modelId) {
     // need fileId as trisotech APIs work on fileId
-    Optional<String> fileId = getFileId(internalId);
+    // -- CAO -- 11/05/2020 -- APIs will now use modelId;
+    // 'fileId' field is same as modelId, but we may only have the tag
+    // and need the URI for the query
+    Optional<String> fileId = getModelId(modelId);
     // need mimetype to get the correct URL to download XML
-    Optional<String> mimeType = getMimetype(internalId);
-    if (fileId.isEmpty() || mimeType.isEmpty()) {
-      logger.warn("Error finding fileId or mimetype for internalid "
-          + internalId + " while trying to determine version information");
+    Optional<String> mimeType = getMimetype(modelId);
+    if (mimeType.isEmpty()) {
+      logger.warn("Error finding mimetype for modelId {} while trying to determine version information",
+          modelId);
       return Collections.emptyList();
     }
     // need to get all versions for the file

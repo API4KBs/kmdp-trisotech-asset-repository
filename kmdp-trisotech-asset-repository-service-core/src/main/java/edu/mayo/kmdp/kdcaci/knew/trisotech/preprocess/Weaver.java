@@ -67,7 +67,6 @@ public class Weaver {
   private static final Logger logger = LoggerFactory.getLogger(Weaver.class);
 
   private static final String WWW_W_3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
-  private static final String MODEL_URI = "modelURI";
   private static final String DMN = "DMN";
   private static final String CMMN = "CMMN";
 
@@ -83,6 +82,8 @@ public class Weaver {
   private String decisionEl;
   private String elExporter;
   private String elExporterVersion;
+  private String elReuseLink;
+  private String elCopyOfLink;
   private String metadataRS;
   private String metadataNS;
   private String metadataEl;
@@ -121,11 +122,15 @@ public class Weaver {
     elExporter = config.getTyped(ReaderOptions.P_EL_EXPORTER);
     elExporterVersion = config.getTyped(ReaderOptions.P_EL_EXPORTER_VERSION);
     decisionEl = config.getTyped(ReaderOptions.P_EL_DECISION);
+    elReuseLink = config.getTyped(ReaderOptions.P_EL_REUSELINK);
+    elCopyOfLink = config.getTyped(ReaderOptions.P_EL_COPYOFLINK);
     metadataItemDef = config.getTyped(ReaderOptions.P_METADATA_ITEM_DEFINITION);
     metadataAttachment = config.getTyped(ReaderOptions.P_METADATA_ATTACHMENT_ITEM);
 
     logger.debug("METADATA_EL: {}", metadataEl);
     handlers.put(metadataEl, new MetadataAnnotationHandler());
+    handlers.put(elReuseLink, new MetadataAnnotationHandler());
+    handlers.put(elCopyOfLink, new MetadataAnnotationHandler());
   }
 
   public String getMetadataNS() {
@@ -198,6 +203,12 @@ public class Weaver {
 
     // get metas
     NodeList metas = dox.getElementsByTagNameNS(metadataNS, metadataEl);
+    weaveMetadata(metas);
+    // copyLink
+    metas = dox.getElementsByTagNameNS(metadataNS, elCopyOfLink);
+    weaveMetadata(metas);
+    // reuseLink
+    metas = dox.getElementsByTagNameNS(metadataNS, elReuseLink);
     weaveMetadata(metas);
 
     /****** Remove traces of Trisotech  ******/
@@ -304,6 +315,10 @@ public class Weaver {
    * 'interrelationship' elements are not needed in the output as they deal with model->model
    * relationships and we can get that another way.
    *
+   * 'reuseLink' elements are not needed in the output
+   *
+   * 'copyOfLink' elements are not needed in the output
+   *
    * 'itemDefinitions' were an experiment. IGNORE if they are in the file, but provide a warning.
    */
   private void removeTrisoTagsNotRetaining(Document dox) {
@@ -315,6 +330,16 @@ public class Weaver {
     XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, metadataRS))
         .forEach(element ->
           element.getParentNode().removeChild(element)
+        );
+
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, elReuseLink))
+        .forEach(element ->
+            element.getParentNode().removeChild(element)
+        );
+
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, elCopyOfLink))
+        .forEach(element ->
+            element.getParentNode().removeChild(element)
         );
 
     XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, metadataId))
@@ -339,6 +364,13 @@ public class Weaver {
               element.getAttribute("uri")));
           element.getParentNode().removeChild(element);
         });
+
+    // cleanup some additional tags not used anywhere
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS(metadataNS, "tags"))
+        .forEach(element ->
+            element.getParentNode().removeChild(element)
+        );
+
   }
 
   /**
@@ -457,11 +489,7 @@ public class Weaver {
 
   private List<ConceptIdentifier> getConceptIdentifiers(Element el) {
     // need to verify any URI values are valid -- no trisotech
-    Attr modelUriAttr = el.getAttributeNode(MODEL_URI);
     Attr uriAttr = el.getAttributeNode("uri");
-    if (modelUriAttr.getValue().contains(TRISOTECH_COM)) {
-      rewriteValue(modelUriAttr);
-    }
     if (uriAttr.getValue().contains(TRISOTECH_COM)) {
       rewriteValue(uriAttr);
     }
@@ -478,7 +506,9 @@ public class Weaver {
         concept = term.get()
             .asConceptIdentifier();
       } else {
-        logger.warn("WARNING: resource ID {} failed in lookupTerm and will be removed from the file", resourceIdentifier.getUuid().toString());
+        if(logger.isWarnEnabled()) {
+          logger.warn("WARNING: resource ID {} failed in lookupTerm and will be removed from the file", resourceIdentifier.getUuid().toString());
+        }
         return conceptIdentifiers;
       }
     } catch (URISyntaxException | IllegalArgumentException e) {
@@ -508,7 +538,7 @@ public class Weaver {
     BaseAnnotationHandler handler = handler(el);
 
     if (!rows.isEmpty() && !rows.stream().noneMatch(Objects::nonNull)) {
-      List<Annotation> annos = handler.getAnnotation(el.getLocalName(), defaultRel, rows);
+      List<Annotation> annos = handler.getAnnotation(defaultRel, rows);
       handler.replaceProprietaryElement(el,
           handler.wrap(toChildElements(annos, el)));
     }

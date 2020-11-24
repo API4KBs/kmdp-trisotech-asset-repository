@@ -6,32 +6,30 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dmn: <http://www.trisotech.com/graph/1.0/decision/element#>
 
 # SPARQL queries only get the LATEST version information for all models
-SELECT ?model ?dModel
+SELECT ?fromModel ?fromMimetype ?toModel ?toMimetype
 FROM NAMED ?
 WHERE {
-GRAPH ? {
-  {
-        # gets the models that are of type DMNModel
-                            ?model a tt:DMNModel.
-        # gets the models that are of type DMNModel
-                            ?dModel a tt:DMNModel.
-        # gets elements that are childOf for the model; the '*' will get all 'childOf' matches
-                            ?cElement ttr:childOf* ?model.
-        # do the same thing here with the second set of DMNModels
-                            ?dElement ttr:childOf* ?dModel.
-        # Now match the elements on the 'semantic' -- this is the link between the models
-                            ?cElement ttr:semantic ?dElement.
-   }
-UNION  # now do the same for CMMN->DMN models
-   {
-        # gets the models that are of type CMMNModel
-                            ?model a tt:CMMNModel.
-                            ?dModel a tt:DMNModel.
-                            ?cElement ttr:childOf* ?model.
-                            ?dElement ttr:childOf* ?dModel.
-                            ?cElement ttr:semantic ?dElement.
-   }
- }
+    GRAPH ? {
+        {
+        # gets the CMMN -> DMN relations
+            ?fromElement (ttr:semantic|ttr:copyOf) ?toElement .
+            # filter out models that refer to themselves
+            FILTER (!EXISTS { ?toElement rdf:type tt:Ref . } ) .
+            ?fromElement ttr:owner ?fromModel .
+            ?toElement ttr:owner ?toModel .
+            ?fromModel ttr:mimeType ?fromMimetype .
+            ?toModel ttr:mimeType ?toMimetype .
+
+        } UNION
+        {
+        # gets the DMN -> DMN relations
+            ?fromModel dmn:include ?toModel .
+            ?fromModel ttr:mimeType ?fromMimetype .
+            ?toModel ttr:mimeType ?toMimetype .
+        }
+    }
 }
+GROUP BY ?fromModel ?fromMimetype ?toModel ?toMimetype

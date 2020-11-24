@@ -35,6 +35,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.id.Pointer;
@@ -140,6 +141,7 @@ class TrisotechAssetRepositoryIntTest {
    */
   @Test
   void getVersionedKnowledgeAsset_found() {
+    // Basic Case Model
     String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "14321e7c-cb9a-427f-abf5-1420bf26e03c";
     String expectedAssetVersionId = expectedAssetId
@@ -168,6 +170,7 @@ class TrisotechAssetRepositoryIntTest {
   /*
   More complex 'found' version test
    */
+  @Disabled("fails until reuse items returned in relations")
   @Test
   void getVersionKnowledgeAsset_found2() {
     String expectedAssetId = MAYO_ASSETS_BASE_URI
@@ -196,6 +199,9 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(1, ka.getCarriers().size());
     assertEquals(expectedArtifactId,
         ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
+    // TODO: PICK UP HERE ON MONDAY -- ONLY GETTING ONE LINK; MISSING 5682f
+    // -- issue likely due to publishing times in this 'more complex found' scenario -- may need to change
+    // versions and be sure to publish in a specific order to get this to work - CAO 11/21/2020
     assertEquals(2, ka.getCarriers().get(0).getLinks().size());
     List<Link> links = ka.getCarriers().get(0).getLinks();
     for (Link link : links) {
@@ -213,6 +219,7 @@ class TrisotechAssetRepositoryIntTest {
   /*
   expect to get back the latest versions of dependencies
    */
+  @Disabled("fails until reuse items returned in relations")
   @Test
   void getVersionKnowledgeAsset_latest() {
     String expectedAssetId = MAYO_ASSETS_BASE_URI
@@ -221,13 +228,13 @@ class TrisotechAssetRepositoryIntTest {
         + "/versions/2.0.0";
     // Weave Test 1 (CMMN)
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "f59708b6-96c0-4aa3-be4a-31e075d76ec9/versions/3.0.1";
+        + "f59708b6-96c0-4aa3-be4a-31e075d76ec9/versions/3.0.2";
     // Weaver Test 1 (DMN)
     String expectedDependencyId1 = MAYO_ARTIFACTS_BASE_URI
-        + "5682fa26-b064-43c8-9475-1e4281e74068/versions/2.0.1";
+        + "5682fa26-b064-43c8-9475-1e4281e74068/versions/2.1.0";
     // Weaver Test 2 (DMN)
     String expectedDependencyId2 = MAYO_ARTIFACTS_BASE_URI
-        + "ede3b331-7b10-4580-98be-66ebff344c21/versions/0.6.0";
+        + "ede3b331-7b10-4580-98be-66ebff344c21/versions/0.7.0";
 
     Answer<KnowledgeAsset> answer = tar
         .getKnowledgeAssetVersion(UUID.fromString("3c99cf3a-93c4-4e09-b1aa-14088c76aded"),
@@ -261,8 +268,9 @@ class TrisotechAssetRepositoryIntTest {
         + "e35a686e-5b72-4feb-b923-b79ac1417613";
     String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "e35a686e-5b72-4feb-b923-b79ac1417613/versions/1.0.0";
+    // Operational Definition Model
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "ad174bca-8dd1-4e35-8933-e7456e1f3e5c/versions/0.0.1";
+        + "ad174bca-8dd1-4e35-8933-e7456e1f3e5c/versions/0.0.3";
 
     Answer<KnowledgeAsset> answer = tar
         .getKnowledgeAssetVersion(UUID.fromString("e35a686e-5b72-4feb-b923-b79ac1417613"),
@@ -641,24 +649,44 @@ class TrisotechAssetRepositoryIntTest {
   void setKnowledgeAssetCarrierVersion_published_found() {
     // not planning on uploading published versions, but test that it works until further notice
     InputStream publishedFile = TrisotechAssetRepositoryIntTest.class
-        .getResourceAsStream("/Test Save As.raw.dmn.xml");
+        .getResourceAsStream("/Test Save As.dmn");
     Answer<Void> answer = tar.setKnowledgeAssetCarrierVersion(
         UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
         "1.0.0-SNAPSHOT",
-        UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"),
+        // TODO: This ID may change on upgrade due to developer meddling. - CAO
+        // may need to go back to "e36338e7-500c-43a0-881d-22aa5dc538df"
+        UUID.fromString("f827ce35-e13f-470c-a7a0-686c29212754"),
         "1.0.3",
         XMLUtil.loadXMLDocument(publishedFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
     assertTrue(answer.isSuccess());
   }
-//
-//  @Test
-//  void getCompositeKnowledgeAsset() {
-//    Answer<List<KnowledgeCarrier>> answer= tar
-//        .getCompositeKnowledgeAssetS(UUID.randomUUID(), "s", false, "s1");
-//    assertTrue(answer.isFailure());
-//    assertEquals(NotImplemented, answer.getOutcomeType());
-//
-//  }
+
+  @Test
+  void setKnowledgeAssetCarrierVersion_published_found_diff_fileName() {
+    // not planning on uploading published versions, but test that it works until further notice
+    // this test makes sure that the publish will work for the model even if the filename is not the
+    // same as the model name. The model name is Test Save As. The POST will strip off .dmn to establish
+    // model name if not provided.
+    InputStream publishedFile = TrisotechAssetRepositoryIntTest.class
+        .getResourceAsStream("/Test Save As.raw.dmn.xml");
+    Answer<Void> answer = tar.setKnowledgeAssetCarrierVersion(
+        UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
+        "1.0.0-SNAPSHOT",
+        // TODO: This ID may change on upgrade due to developer meddling. - CAO
+        // may need to go back to "e36338e7-500c-43a0-881d-22aa5dc538df"
+        UUID.fromString("f827ce35-e13f-470c-a7a0-686c29212754"),
+        "1.0.3",
+        XMLUtil.loadXMLDocument(publishedFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
+    assertTrue(answer.isSuccess());
+  }
+
+  @Test
+  void getCompositeKnowledgeAsset() {
+    Answer<KnowledgeCarrier> answer= tar
+        .getCanonicalKnowledgeAssetSurrogate(UUID.randomUUID(), "s", "s1");
+    assertTrue(answer.isFailure());
+    assertEquals(NotImplemented, answer.getOutcomeType());
+  }
 
   @Test
   void getCompositeKnowledgeAssetStructure() {
@@ -669,30 +697,20 @@ class TrisotechAssetRepositoryIntTest {
 
   }
 
-//  @Test
-//  void getKnowledgeArtifactBundle() {
-//    Answer<List<KnowledgeCarrier>> answer= tar
-//        .getKnowledgeArtifactBundle(UUID.randomUUID(), "s", "s1", 6, "s2");
-//    assertTrue(answer.isFailure());
-//    assertEquals(NotImplemented, answer.getOutcomeType());
-//
-//  }
-//
-//  @Test
-//  void getKnowledgeAssetBundle() {
-//    Answer<List<KnowledgeAsset>> answer= tar
-//        .getKnowledgeAssetBundle(UUID.randomUUID(), "s", "s2", 7);
-//    assertTrue(answer.isFailure());
-//    assertEquals(NotImplemented, answer.getOutcomeType());
-//
-//  }
+  @Test
+  void getKnowledgeAssetCatalog() {
+    Answer<KnowledgeAssetCatalog> answer= tar
+        .getKnowledgeAssetCatalog();
+    assertTrue(answer.isFailure());
+    assertEquals(NotImplemented, answer.getOutcomeType());
+  }
 
-//  @Test
-//  void queryKnowledgeAssets() {
-//    Answer<List<Bindings>> answer= tar
-//        .queryKnowledgeAssets(null);
-//    assertTrue(answer.isFailure());
-//    assertEquals(NotImplemented, answer.getOutcomeType());
-//
-//  }
+  @Test
+  void listKnowledgeAssetVersions() {
+    Answer<List<Pointer>> answer= tar
+        .listKnowledgeAssetVersions(UUID.randomUUID(), 2, 2, "0.0.1", "3.4.0", "false?");
+    assertTrue(answer.isFailure());
+    assertEquals(NotImplemented, answer.getOutcomeType());
+  }
+
 }

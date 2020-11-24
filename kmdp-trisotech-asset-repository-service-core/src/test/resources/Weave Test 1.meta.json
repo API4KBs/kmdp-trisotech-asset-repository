@@ -1,12 +1,12 @@
 {
-  "id": "93e58aa9-c258-46fd-909d-1cb096e19e64",
-  "sku": "93e58aa9-c258-46fd-909d-1cb096e19e64",
-  "name": "Weave Test 1",
-  "path": "/",
-  "mimetype": "application/cmmn-1-1+xml",
-  "updated": "2020-09-03T06:43:29Z",
-  "updater": "Sottara, Davide",
-  "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2F&sku=93e58aa9-c258-46fd-909d-1cb096e19e64&mimetype=application%2Fcmmn-1-1%2Bxml",
-  "version": "3.0.1",
-  "state": "Published"
+  "id" : "http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9",
+  "sku" : "http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9",
+  "name" : "Weave Test 1",
+  "path" : "/",
+  "mimetype" : "application/cmmn-1-1+xml",
+  "updated" : "2020-11-13T19:50:18Z",
+  "updater" : "Orcutt, Cheryl A.",
+  "url" : "https://test-mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2F&sku=http%3A%2F%2Fwww.trisotech.com%2Fdefinitions%2F_f59708b6-96c0-4aa3-be4a-31e075d76ec9&mimetype=application%2Fcmmn-1-1%2Bxml",
+  "version" : "3.0.2",
+  "state" : "Published"
 }

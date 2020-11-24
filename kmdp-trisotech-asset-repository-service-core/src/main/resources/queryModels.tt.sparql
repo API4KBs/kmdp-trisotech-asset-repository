@@ -13,51 +13,24 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 # ?assetId is the enterprise ID that is associated with this artifact through a customAttribute; can vary by version
 # ?mimeType helps with the ability to retrieve the correct filetype for the model
 # ?artifactName is the name of the model
-SELECT ?model ?fileId ?assetId ?mimeType ?artifactName
+# ?state is the state of the model and is optional so models without state will be included
+SELECT ?model ?fileId ?assetId ?mimeType ?artifactName ?state
 FROM NAMED ?
 WHERE {
 GRAPH ? {
 # Trisotech requires a NAMED GRAPH be used or will fail
-    {
-        # gets the models that are of type DMNModel
-       ?model a tt:DMNModel.
-        # gets the name for the model
-       ?model rdfs:label ?artifactName.
-        # gets the fileId
-       ?model ttr:fileId ?fileId.
-        # gets the mimeType
-       ?model ttr:mimeType ?mimeType.
-        # the following processing gets the assetId
-        # first get the children of the model
-       ?cElement (ttr:childOf)* ?model.
-        # only get children that are of type decision
-       ?cElement a tt:decision.
-        # then get the customAttribute of the children
-       ?cElement ttr:customAttribute ?caElement.
-        # TODO: do we need to confirm the customAttributeKey to verify it is what we expect? CAO
-        # then get the assetId from the customAttribute
-       ?caElement ttr:customAttributeValue ?assetId.
-    }
-        # AND also get the CMMNModel information
-  UNION  {
-        # gets the models that are of type CMMNModel
-       ?model a tt:CMMNModel.
-        # gets the name for the model
-       ?model rdfs:label ?artifactName.
-        # gets the fileId; fileId can be used for querying from the APIs
-       ?model ttr:fileId ?fileId.
-        # gets the mimeType; mimeType helps figure out what type of file so correct mimeType query can be used
-       ?model ttr:mimeType ?mimeType.
-        # the following processing gets the assetId
-        # first get the children of the model
-       ?cElement (ttr:childOf)* ?model.
-        # only get children that are of type activity
-       ?cElement a tt:activity.
-        # then get the customAttribute of the children
-       ?cElement ttr:customAttribute ?caElement.
-        # TODO: do we need to confirm the customAttributeKey to verify it is what we expect? CAO
-        # then get the assetId from the customAttribute
-       ?caElement ttr:customAttributeValue ?assetId.
-    }
-  }
+    ?customAttribute a tt:CustomAttribute .
+    ?customAttribute ttr:key ?key
+    # the 'i' makes the query case-insensitive
+    FILTER regex(?key, "knowledgeAssetId", "i") .
+    ?customAttribute ttr:value ?assetId .
+    ?node ttr:customAttribute ?customAttribute .
+    ?node rdfs:label ?label .
+    ?node ttr:owner ?model .
+    ?model rdfs:label ?modelLabel .
+    ?model rdfs:label ?artifactName.
+    ?model ttr:fileId ?fileId.
+    ?model ttr:mimeType ?mimeType.
+    OPTIONAL { ?model ttr:state ?state } .
+}
 }

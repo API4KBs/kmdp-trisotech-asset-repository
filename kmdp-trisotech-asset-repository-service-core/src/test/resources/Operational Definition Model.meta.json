@@ -1,12 +1,12 @@
 {
-  "id": "4785534d-e322-48fa-ab75-3d7c1510758b",
-  "sku": "4785534d-e322-48fa-ab75-3d7c1510758b",
-  "name": "Operational Definition Model",
-  "path": "/jls test models",
-  "mimetype": "application/dmn-1-2+xml",
-  "updated": "2020-10-12T21:56:37Z",
-  "updater": "Sottara, Davide",
-  "url": "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2Fjls%20test%20models&sku=4785534d-e322-48fa-ab75-3d7c1510758b&mimetype=application%2Fdmn-1-2%2Bxml",
-  "version": "0.0.1",
-  "state": "Pending Approval"
+  "id" : "http://www.trisotech.com/definitions/_ad174bca-8dd1-4e35-8933-e7456e1f3e5c",
+  "sku" : "http://www.trisotech.com/definitions/_ad174bca-8dd1-4e35-8933-e7456e1f3e5c",
+  "name" : "Operational Definition Model",
+  "path" : "/jls test models",
+  "mimetype" : "application/dmn-1-2+xml",
+  "updated" : "2020-11-23T18:32:01Z",
+  "updater" : "Orcutt, Cheryl A.",
+  "url" : "https://test-mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2Fjls+test+models&sku=http%3A%2F%2Fwww.trisotech.com%2Fdefinitions%2F_ad174bca-8dd1-4e35-8933-e7456e1f3e5c&mimetype=application%2Fdmn-1-2%2Bxml",
+  "version" : "0.0.3",
+  "state" : "Pending Approval"
 }

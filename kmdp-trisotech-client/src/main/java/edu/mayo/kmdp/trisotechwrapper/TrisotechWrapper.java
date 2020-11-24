@@ -13,23 +13,6 @@
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
-import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.BASE_URL;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_XML_MIMETYPE;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CONTENT_PATH;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CONTENT_PATH_POST;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.REPOSITORY_PATH;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.VERSIONS_PATH;
-import static org.omg.spec.api4kp._20200801.id.VersionIdentifier.toSemVer;
-import static org.springframework.http.HttpHeaders.ACCEPT;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileData;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
@@ -37,26 +20,11 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.http.HttpException;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.jena.ext.com.google.common.base.Strings;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
-import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +35,24 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.*;
+import static org.omg.spec.api4kp._20200801.id.VersionIdentifier.toSemVer;
+import static org.springframework.http.HttpHeaders.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * Class to wrap the calls to Trisotech in meaningful ways.
@@ -199,14 +185,14 @@ public class TrisotechWrapper {
    * data from the query of the repository IS the model info, HOWEVER, need to know the model TYPE
    * for the query to return the appropriate XML url in the FileInfo
    *
-   * @param fileID Trisotech fileID used to query the repository
+   * @param modelID Trisotech modelID used to query the repository
    * @return Trisotech FileInfo
    */
-  public Optional<TrisotechFileInfo> getFileInfo(String fileID) {
+  public Optional<TrisotechFileInfo> getFileInfo(String modelID) {
     // get the mimeType first
-    Optional<String> mimeType = getFileInfoMimeType(fileID);
+    Optional<String> mimeType = getFileInfoMimeType(modelID);
     // now the modelInfo will return with a URL that can be used to download XML file
-    return mimeType.flatMap(mime -> getFileInfo(fileID, mime));
+    return mimeType.flatMap(mime -> getFileInfo(modelID, mime));
   }
 
   /**
@@ -258,23 +244,21 @@ public class TrisotechWrapper {
    * This method will be used when the mimeType is not provided initially. It will first query all
    * the models, then find the model to be queried and return the appropriate mimetype for that file.
    *
-   * @param fileId the ID in Trisotech for the file to be queried
+   * @param modelId the ID of the model in Trisotech
    * @return the mimetype for the file to be used to query needed information for download
    */
-  private Optional<String> getFileInfoMimeType(String fileId) {
+  private Optional<String> getFileInfoMimeType(String modelId) {
     List<TrisotechFileInfo> fileInfos = getModels(null);
     Optional<TrisotechFileInfo> fileInfo = fileInfos.stream()
-        .filter(f -> f.getId().equals(fileId))
+        .filter(f -> f.getId().equals(modelId))
         .findAny();
     if (fileInfo.isEmpty()) {
-      logger.error("Unable to get FileInfo for {}", fileId);
+      logger.error("Unable to get FileInfo for {}", modelId);
     }
 
       // want to return the XML version of the file, so need the fileInfo based on mimetype
       // this has to do with how Trisotech returns the data
       // we don't get the XML path unless we provide the correct mimetype in the query.
-      // contains() is used as a test as the mimetype returned is not exactly what we need, but
-      // can be used to determine which one to use
     return fileInfo.map(info -> getXmlMimeType(info.getMimetype()));
   }
 
@@ -328,11 +312,11 @@ public class TrisotechWrapper {
   /**
    * Get the Trisotech file info for the latest version of a model.
    *
-   * @param fileId id of the file for the model interested in
+   * @param modelId id of the model interested in
    * @return TrisotechFileInfo for the model
    */
-  public Optional<TrisotechFileInfo> getLatestModelFileInfo(String fileId) {
-    return getFileInfo(fileId);
+  public Optional<TrisotechFileInfo> getLatestModelFileInfo(String modelId) {
+    return getFileInfo(modelId);
   }
 
   /**
@@ -392,7 +376,7 @@ public class TrisotechWrapper {
     String optRepositoryId = cfg.getRepositoryId();
 
       URI uri;
-      uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
+      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getBaseURL()
           + VERSIONS_PATH)
           .build(optRepositoryId, fileId, resolvedMimetype);
 
@@ -426,7 +410,9 @@ public class TrisotechWrapper {
       logger.debug("tfiUpdated: {}", tfi.getUpdated());
       logger.debug("Date from tfiUpdated: {}", DateTimeUtil.parseDateTime(tfi.getUpdated()));
 
-      return Optional.of(SemanticIdentifier.newId(MAYO_ARTIFACTS_BASE_URI_URI, tfi.getId(), tfi.getVersion())
+      // id is now the full path, only want the tag, minus the underscore
+      String id = tfi.getId().substring(tfi.getId().lastIndexOf('/') + 1).replace("_", "");
+      return Optional.of(SemanticIdentifier.newId(MAYO_ARTIFACTS_BASE_URI_URI, id, tfi.getVersion())
           .withEstablishedOn(DateTimeUtil.parseDateTime(tfi.getUpdated())));
     }
     logger.info("No published version for {}", tfi.getName() );
@@ -508,7 +494,7 @@ public class TrisotechWrapper {
    * @throws IOException if can't make the request
    */
   private TrisotechPlaceData getPlaces() throws IOException {
-    URL url = new URL(BASE_URL +
+    URL url = new URL(this.cfg.getBaseURL() +
         REPOSITORY_PATH);
 
     HttpEntity<?> requestEntity = getHttpEntity();
@@ -559,7 +545,7 @@ public class TrisotechWrapper {
       // NOTE: MUST Use UriComponentBuilder to handle '+' in the MimeType, otherwise it will be
       // double-encoded and request will fail to return all values expected
       // See: https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#web-uri-encoding for details
-      uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
+      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getBaseURL()
           + CONTENT_PATH)
           .build(directoryID, mimeType, path);
 
@@ -599,7 +585,7 @@ public class TrisotechWrapper {
     final HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.add(ACCEPT, APPLICATION_JSON_VALUE);
     requestHeaders.add(AUTHORIZATION, getBearerTokenHeader());
-    requestHeaders.setContentType(APPLICATION_JSON_UTF8);
+    requestHeaders.setContentType(APPLICATION_JSON);
     return requestHeaders;
   }
 
@@ -661,14 +647,14 @@ public class TrisotechWrapper {
   /**
    * Upload model file to Tristotech
    * @param path The path location for the file to be uploaded to
-   * @param filename The name of the file uploading
+   * @param name The name of the model uploading
    * @param version the version for the file (NOTE: only for published models)
    * @param state the state for the file (NOTE: only for published models)
    * @param fileContents the file contents
    * @throws IOException unable to load the source document
    * @throws HttpException if TT Digital Enterprise Server refuses the request
    */
-  public void uploadXmlModel(String path, String filename,
+  public void uploadXmlModel(String path, String name,
       String mimeType, String version, String state,
       byte[] fileContents)
       throws IOException, HttpException {
@@ -681,17 +667,21 @@ public class TrisotechWrapper {
     // double-encoded and request will fail to return all values expected
     // See: https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#web-uri-encoding for details
     if(null == version || null == state) {
-      uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
-          + CONTENT_PATH)
-          .build(
-              cfg.getRepositoryId(),
-              mimeType,
-              path);
-    } else {
-      uri = UriComponentsBuilder.fromHttpUrl(BASE_URL
+      // using name here allows for the name of the file to be different than the
+      // name of the model. Ex: model.raw.dmn.xml vs model.dmn
+      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getBaseURL()
           + CONTENT_PATH_POST)
           .build(
               cfg.getRepositoryId(),
+              name,
+              mimeType,
+              path);
+    } else {
+      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getBaseURL()
+          + CONTENT_PATH_POST_WITH_VERSION)
+          .build(
+              cfg.getRepositoryId(),
+              name,
               mimeType,
               path,
               version,
@@ -715,7 +705,7 @@ public class TrisotechWrapper {
     OutputStream fout = conn.getOutputStream();
     PrintWriter body = new PrintWriter(new OutputStreamWriter(fout), true);
     body.append(CRLF);
-    addFileData("file", filename, fileContents, body, fout, boundary);
+    addFileData("file", name, fileContents, body, fout, boundary);
     addCloseDelimiter(body, boundary);
 
     checkResponse(conn);

@@ -51,12 +51,10 @@ public interface ExtractionStrategy {
   Optional<SyntacticRepresentation> getRepLanguage( Document dox, boolean concrete );
 
   Optional<String> getMimetype(UUID assetId);
-	Optional<String> getMimetype(String internalId);
+	Optional<String> getMimetype(String modelId);
 
 	Optional<String> getArtifactVersion(UUID assetId);
 
-	Optional<String> getFileId(String internalId);
-
-	Optional<String> getFileId(UUID assetId, boolean any);
+	Optional<String> getModelId(UUID assetId, boolean any);
 
 }

@@ -181,35 +181,38 @@ public class MetadataExtractor {
    * @param any boolean to determine if any model is considered, false to consider only published
    * @return fileId
    */
-  public Optional<String> getFileId(UUID assetId, boolean any) {
-    return strategy.getFileId(assetId, any);
+  public Optional<String> getModelId(UUID assetId, boolean any) {
+    return strategy.getModelId(assetId, any);
   }
 
 
+//  APIs will now work with modelId; modelId and fileId are one and the same in SPARQL query now
+//  -- CAO 11/05/2020
   /**
    * The fileId is the id of the file for the artifact that can be used with the APIs.
    *
-   * @param internalId the internal identifier for teh artifact
+   * @param internalId the internal identifier for the artifact
    * @return fileId
-   */  public Optional<String> getFileId(String internalId) {
-    return strategy.getFileId(internalId);
+   */
+   public Optional<String> getModelId(String internalId) {
+    return strategy.getModelId(internalId);
   }
 
   /**
    * enterpriseAssetId is the assetId found in the Carrier/model/XML file from Trisotech
    *
-   * @param fileId the Trisotech file ID to resolve to an enterprise ID
+   * @param modelId the Trisotech model ID to resolve to an enterprise ID
    * @return the enterprise ID
    */
-  public ResourceIdentifier resolveEnterpriseAssetID(String fileId) {
-    return strategy.getAssetID(fileId)
+  public ResourceIdentifier resolveEnterpriseAssetID(String modelId) {
+    return strategy.getAssetID(modelId)
         // Defensive exception. Published models should have an assetId | CAO | DS
         .orElseThrow(() -> {
-          String modelName = client.getFileInfo(fileId)
+          String modelName = client.getFileInfo(modelId)
               .map(TrisotechFileInfo::getName)
               .orElse("(unknown)");
           return new IllegalStateException(
-              "Defensive: Unable to resolve internal ID " + fileId
+              "Defensive: Unable to resolve model ID " + modelId
                   + " for model " + modelName
                   + " to a known Enterprise ID");
         });

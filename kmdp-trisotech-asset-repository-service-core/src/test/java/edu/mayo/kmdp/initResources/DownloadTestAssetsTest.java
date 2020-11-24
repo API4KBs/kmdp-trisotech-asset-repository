@@ -28,7 +28,7 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
-public class DownloadTestAssetsTest extends AbstractAssetDownloader {
+class DownloadTestAssetsTest extends AbstractAssetDownloader {
 
   @Autowired
   TrisotechAssetRepository assetRepository;
@@ -37,7 +37,7 @@ public class DownloadTestAssetsTest extends AbstractAssetDownloader {
   TrisotechWrapper wrapper;
 
   @Test
-  @Disabled
+  @Disabled("for developer use only to refresh test models")
   void testInit() {
     assertNotNull(assetRepository);
 

@@ -101,11 +101,11 @@ class IdentityMapperIntTest {
   @Test
   void getArtifactId_nonPublishedModel_anyQuery() {
     // valid assetId; non-published model, only available if query any
-    String expectedArtifactId = "http://www.trisotech.com/definitions/_e36338e7-500c-43a0-881d-22aa5dc538df";
-    // Test Save As.dmn
+    String expectedArtifactId = "http://www.trisotech.com/definitions/_09874501-6066-4d3b-83ac-e2019fae9240";
+    // Weaver Test 1 Decision with reuse.dmn
     ResourceIdentifier assetId =
-        newId(MAYO_ASSETS_BASE_URI_URI, "3c66cf3a-93c4-4e09-b1aa-14088c76dead",
-            "1.0.0-SNAPSHOT");
+        newId(MAYO_ASSETS_BASE_URI_URI, "3b88cf3a-93c4-4e09-b1aa-14088c76aded",
+            "1.0.0");
     try {
       String artifactId = identityMapper.getArtifactId(assetId, true);
       assertNotNull(artifactId);
@@ -146,10 +146,10 @@ class IdentityMapperIntTest {
 
   @Test
   void getEnterpriseAssetVersionIdForAsset_any() {
-    UUID assetId = UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead");
-    String versionTag = "1.0.0-SNAPSHOT";
+    UUID assetId = UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded");
+    String versionTag = "1.1.1";
     String expectedEnterpriseVersionId =
-        Registry.MAYO_ASSETS_BASE_URI + "3c66cf3a-93c4-4e09-b1aa-14088c76dead/versions/"
+        Registry.MAYO_ASSETS_BASE_URI + "3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/"
             + versionTag;
 
     Optional<URI> enterpriseAssetVersionId = null;
@@ -164,12 +164,12 @@ class IdentityMapperIntTest {
   }
 
   @Test
-  void getAssetId_FileId() {
-    String fileId = "a0240977-f789-4922-90c8-e6468e59f5c2";
+  void getAssetId_ModelId() {
+    String modelId = "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
     String expectedAssetId =
         Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
 
-    Optional<ResourceIdentifier> assetId = identityMapper.getAssetId(fileId);
+    Optional<ResourceIdentifier> assetId = identityMapper.getAssetId(modelId);
     assertEquals(expectedAssetId, assetId.get().getVersionId().toString());
   }
 
@@ -177,7 +177,7 @@ class IdentityMapperIntTest {
   @Test
   void getArtifactIdVersion() {
     UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
-    String expectedArtifactVersion = "1.8.1";
+    String expectedArtifactVersion = "1.8.3";
 
     Optional<String> artifactVersion = identityMapper.getArtifactIdVersion(assetId);
     assertEquals(expectedArtifactVersion, artifactVersion.get());
@@ -187,7 +187,7 @@ class IdentityMapperIntTest {
   void getAssetId_ArtifactIdVersion_Latest() {
     ResourceIdentifier artifactId = newId(URI.create(
             "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"));
-    String versionTag = "1.8.1";
+    String versionTag = "1.8.3";
     String expectedAssetId =
         Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1";
 
@@ -242,21 +242,21 @@ class IdentityMapperIntTest {
   }
 
   @Test
-  void getFileId_AssetUUID_published() {
+  void getModelId_AssetUUID_published() {
     UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
-    String expectedFileId = "a0240977-f789-4922-90c8-e6468e59f5c2";
-    Optional<String> fileId = identityMapper.getFileId(assetId, false);
-    assertNotNull(fileId);
-    assertEquals(expectedFileId, fileId.get());
+    String expectedModelId = "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
+    Optional<String> modelId = identityMapper.getModelId(assetId, false);
+    assertNotNull(modelId);
+    assertEquals(expectedModelId, modelId.get());
   }
 
   @Test
   void getFileId_AssetUUID_Any() {
-    UUID assetId = UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead");
-    String expectedFileId = "fe2e7db2-0642-4d37-b406-d0641e986dcf";
-    Optional<String> fileId = identityMapper.getFileId(assetId, true);
-    assertNotNull(fileId);
-    assertEquals(expectedFileId, fileId.get());
+    UUID assetId = UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded");
+    String expectedModelId = "http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068";
+    Optional<String> modelId = identityMapper.getModelId(assetId, true);
+    assertNotNull(modelId);
+    assertEquals(expectedModelId, modelId.get());
   }
 
   @Test
@@ -333,16 +333,16 @@ class IdentityMapperIntTest {
   @Test
   void getState() {
     // valid
-    String fileId = "123720a6-9758-45a3-8c5c-5fffab12c494";
-    String expectedState = "Draft";
-    Optional<String> state = identityMapper.getState(fileId);
+    String modelId = "http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068";
+    String expectedState = "Published";
+    Optional<String> state = identityMapper.getState(modelId);
     assertNotNull(state);
     assertTrue(state.isPresent());
     assertEquals(expectedState, state.get());
 
     // not published
-    fileId = "9cc13e06-cab4-449c-becf-584859e9e017";
-    state = identityMapper.getState(fileId);
+    modelId = "http://www.trisotech.com/definitions/_ec53ebfe-6a50-4a70-a386-e52f802b8b5c";
+    state = identityMapper.getState(modelId);
     assertNotNull(state);
     assertFalse(state.isPresent());
   }

@@ -74,7 +74,7 @@ class WeaverTest {
   @Test
   void testWeave() {
 
-    String path = "/Weaver Test 1.dmn.xml";
+    String path = "/Weaver Test 1.raw.dmn.xml";
 
     // using XMLUtil loadXMLDocument to load the XML Document properly
     // sets up the document for conversion by setting namespaceaware

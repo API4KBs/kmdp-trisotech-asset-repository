@@ -14,7 +14,7 @@
                       xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.1.7"
+                      exporterVersion="7.2.3"
                       id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
                       name="Basic Decision Model"
                       namespace="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
@@ -153,12 +153,13 @@
    <semantic:inputData id="_c8828c20-d075-42bf-bc5e-ad5b4e52ef1d"
                        name="Test History of Medication Therapy">
       <semantic:extensionElements>
-         <triso:copyOfLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                           id="_f740a9ac-4427-4c47-986f-539394b32ea5"
-                           itemName="20201015 - Test History of Medication Therapy"
-                           modelName="testClinicalSituations"
-                           modelType="http://www.trisotech.com/graph/1.0/element#Framework"
-                           uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#34502d34-f583-3a0f-979c-598680c2bacc"/>
+         <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                             id="_871528b5-012c-42e4-8371-8d62d405c4c6"
+                             itemName="20201015 - Test History of Medication Therapy"
+                             modelName="testClinicalSituations"
+                             modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                             type="graph"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#34502d34-f583-3a0f-979c-598680c2bacc"/>
       </semantic:extensionElements>
       <semantic:variable id="_c52decf4-65c7-49d3-8cc8-8dda5a2580ce"
                          name="Test History of Medication Therapy"
@@ -167,12 +168,13 @@
    <semantic:inputData id="_ffc7572a-2d99-4721-8cf0-a0f2f0aa5f13"
                        name="Test History of Condition">
       <semantic:extensionElements>
-         <triso:copyOfLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                           id="_90805f96-ca16-4400-a677-ac596ec37e00"
-                           itemName="20201015 - Test History of Condition"
-                           modelName="testClinicalSituations"
-                           modelType="http://www.trisotech.com/graph/1.0/element#Framework"
-                           uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#7a613331-ebcf-3b29-b920-fc52284ae909"/>
+         <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                             id="_8bcf8dca-728c-4a17-83db-3017f1db5e45"
+                             itemName="20201015 - Test History of Condition"
+                             modelName="testClinicalSituations"
+                             modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                             type="graph"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#7a613331-ebcf-3b29-b920-fc52284ae909"/>
       </semantic:extensionElements>
       <semantic:variable id="_5445c35a-23e6-4791-ada7-58ea4311b339"
                          name="Test History of Condition"

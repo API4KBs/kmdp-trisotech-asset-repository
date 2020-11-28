@@ -14,7 +14,7 @@
                       xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.1.7"
+                      exporterVersion="7.2.3"
                       id="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
                       name="Decision Subdecision"
                       namespace="http://www.trisotech.com/definitions/_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"
@@ -136,12 +136,13 @@
    <semantic:inputData id="_458c2a89-3a6c-41b6-a599-136726cb5935"
                        name="Test Most Recent Observation">
       <semantic:extensionElements>
-         <triso:copyOfLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                           id="_6a967874-fca4-418d-bf16-549cfe39672a"
-                           itemName="20201015 - Test Most Recent Observation"
-                           modelName="testClinicalSituations"
-                           modelType="http://www.trisotech.com/graph/1.0/element#Framework"
-                           uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#102f5949-fa9b-3531-85ba-28fafde21c2d"/>
+         <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                             id="_2323b26f-e825-4a95-b700-24dfbc8e6185"
+                             itemName="20201015 - Test Most Recent Observation"
+                             modelName="testClinicalSituations"
+                             modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                             type="graph"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#102f5949-fa9b-3531-85ba-28fafde21c2d"/>
       </semantic:extensionElements>
       <semantic:variable id="_04e814c8-ece5-4142-81ea-a5ea2fa28ea1"
                          name="Test Most Recent Observation"
@@ -159,12 +160,13 @@
    </semantic:decisionService>
    <semantic:inputData id="_03a9e028-8cb8-4b0c-aac9-c36e6d22bf82" name="Test On Medication">
       <semantic:extensionElements>
-         <triso:copyOfLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                           id="_db613f16-5f10-46cc-8fba-96b92c9a30d8"
-                           itemName="20201015 - Test On Medication"
-                           modelName="testClinicalSituations"
-                           modelType="http://www.trisotech.com/graph/1.0/element#Framework"
-                           uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#13a3e25c-6848-373e-9676-8ecb62ab3e6a"/>
+         <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                             id="_a7f36632-841f-4c8d-8f68-ffcf7ade6666"
+                             itemName="20201015 - Test On Medication"
+                             modelName="testClinicalSituations"
+                             modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                             type="graph"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#13a3e25c-6848-373e-9676-8ecb62ab3e6a"/>
       </semantic:extensionElements>
       <semantic:variable id="_7fc5973b-ae88-426a-bf27-28b5081d253f"
                          name="Test On Medication"
@@ -172,12 +174,13 @@
    </semantic:inputData>
    <semantic:inputData id="_d93219a2-8ffc-40c0-81a9-968cfff6396d" name="Test Has Condition">
       <semantic:extensionElements>
-         <triso:copyOfLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                           id="_167c3d13-ac71-4b64-8329-2c1eeb656aa3"
-                           itemName="20201015 - Test Has Condition"
-                           modelName="testClinicalSituations"
-                           modelType="http://www.trisotech.com/graph/1.0/element#Framework"
-                           uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#24a056c5-7ee8-343d-869d-0e05de819c41"/>
+         <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                             id="_b4548fa4-39ff-431c-8115-8a4e430bdcd6"
+                             itemName="20201015 - Test Has Condition"
+                             modelName="testClinicalSituations"
+                             modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                             type="graph"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#24a056c5-7ee8-343d-869d-0e05de819c41"/>
       </semantic:extensionElements>
       <semantic:variable id="_06f4cfc4-9350-4acf-b239-285f75de8a90"
                          name="Test Has Condition"

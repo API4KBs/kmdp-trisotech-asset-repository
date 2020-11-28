@@ -32,10 +32,10 @@ import org.springframework.stereotype.Component;
 public class StaticContextInitializer {
   private static final Logger logger = LoggerFactory.getLogger(StaticContextInitializer.class);
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.baseUrl:https://test-mc.trisotech.com/publicapi/}")
+  @Value("${edu.mayo.kmdp.trisotechwrapper.baseUrl:https://mc.trisotech.com/}")
   private String baseURL;
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.test.trisotechToken}")
+  @Value("${edu.mayo.kmdp.trisotechwrapper.trisotechToken}")
   private String token;
 
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName:}")
@@ -47,14 +47,18 @@ public class StaticContextInitializer {
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId:}")
   private String repositoryId;
 
+  private String apiEndpoint;
+
   @PostConstruct
   public void init() {
+    apiEndpoint = baseURL + "/publicapi/";
+
     if(logger.isDebugEnabled()) {
       logger.debug("\n\n****token in PostConstruct is {} ", token);
       logger.debug("repositoryName in PostConstruct is: {}", repositoryName);
-      logger.debug("baseUrl in PostConstruct is: {}", baseURL + "*****\n\n");
+      logger.debug("baseUrl in PostConstruct is: {}", baseURL);
+      logger.debug("apiEndpoint in PostConstruct is {}", apiEndpoint + "*****\n\n");
     }
-
     if (Util.isEmpty(token)) {
       throw new IllegalStateException("No bearer token detected - Unable to connect to the TT DES");
     }
@@ -70,6 +74,10 @@ public class StaticContextInitializer {
 
   public String getBaseURL() {
     return baseURL;
+  }
+
+  public String getApiEndpoint() {
+    return apiEndpoint;
   }
 
   public String getToken() {

@@ -11,7 +11,7 @@
                       xmlns:rss="http://purl.org/rss/2.0/"
                       xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.1.7"
+                      exporterVersion="7.2.3"
                       expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
                       id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9"
                       name="Weave Test 1"
@@ -120,13 +120,13 @@
                                    type="graph"
                                    uri="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
                <triso:reuseLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision"
-                                id="_d767d1d6-e2c9-4a2c-ac6c-47cbe735e8fa"
+                                id="_9a0cd5b4-691d-4967-b45b-d970b5884e0f"
                                 itemName="Weaver Test 1 Decision"
                                 mimeType="application/vnd.triso-dmn+json"
                                 modelName="Weaver Test 1"
                                 modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
                                 uri="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-               <triso:customAttribute id="_b5781f1f-3e43-4b74-adfe-fc84880c88aa"
+               <triso:customAttribute id="_1414fd63-62e0-4653-9db0-3401f79e1a83"
                                       key="knowledgeAssetId"
                                       type="string"
                                       value="https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.1.1"/>
@@ -148,7 +148,7 @@
                                    type="graph"
                                    uri="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
                <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision"
-                                 id="_cd3cde69-02e7-43fc-ae5a-97589883cec9"
+                                 id="_ae4197c5-a252-40ab-8da3-2bca8afef47f"
                                  itemName="Test Decision 2"
                                  mimeType="application/vnd.triso-dmn+json"
                                  modelName="Weaver Test 2"

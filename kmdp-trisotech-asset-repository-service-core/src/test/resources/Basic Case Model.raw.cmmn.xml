@@ -10,7 +10,7 @@
                       xmlns:rss="http://purl.org/rss/2.0/"
                       xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.1.7"
+                      exporterVersion="7.2.3"
                       expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
                       id="_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"
                       name="Basic Case Model"
@@ -26,9 +26,22 @@
                                     name="Knowledge - ICD Indications in HCM"/>
    <semantic:caseFileItemDefinition id="_f6e3c065-be28-4e35-ac1f-b5fae6a2ddb5"
                                     name="Case File Item Decision"/>
-   <semantic:caseFileItemDefinition id="_dd361f33-693e-4bdd-9093-8f84d9ca9a04" name="Case File "/>
-   <semantic:case id="Case_c5b0fddc-013d-4dfb-be05-1f83f22767c1" name="Basic Case Model">
+   <semantic:case id="Case_c5b0fddc-013d-4dfb-be05-1f83f22767c1">
       <semantic:caseFileModel>
+         <semantic:caseFileItem definitionRef="_f6e3c065-be28-4e35-ac1f-b5fae6a2ddb5"
+                                id="_51629986-fc6c-4759-9dd1-46eb369d3612"
+                                name="Case File Item Decision">
+            <semantic:extensionElements>
+               <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
+                                   graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                                   id="_c3f86180-ee52-4891-b778-5397c8bd8800"
+                                   itemName="Prior Management of Heart Failure with Reduced Ejection Fraction"
+                                   modelName="Clinical Situations - clinicalsituations"
+                                   modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                                   type="graph"
+                                   uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#2411bf41-d36c-3d38-b1dc-4c5e0ba650b2"/>
+            </semantic:extensionElements>
+         </semantic:caseFileItem>
          <semantic:caseFileItem definitionRef="_6894ff5f-130a-46a1-bcc4-5e915acd7c9b"
                                 id="_732407a2-b292-4b8a-bd44-1d04f6ba8e7f"
                                 name="Case File Item Data">
@@ -52,21 +65,8 @@
                                  url="http://kcms.mayo.edu/api/V1/Provider/Section/ByPocId?pocId=SEC-20145805"/>
             </semantic:extensionElements>
          </semantic:caseFileItem>
-         <semantic:caseFileItem definitionRef="_f6e3c065-be28-4e35-ac1f-b5fae6a2ddb5"
-                                id="_585e2cba-0025-4dc7-9808-0c641e7bbd2c"
-                                name="Case File Item Decision">
-            <semantic:extensionElements>
-               <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                                 graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                                 id="_21060590-1310-43cf-9cec-29426f6ae725"
-                                 itemName="Prior Management of Heart Failure with Reduced Ejection Fraction"
-                                 modelName="Clinical Situations - 20201101"
-                                 modelType="http://www.trisotech.com/graph/1.0/element#Framework"
-                                 uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#2411bf41-d36c-3d38-b1dc-4c5e0ba650b2"/>
-            </semantic:extensionElements>
-         </semantic:caseFileItem>
       </semantic:caseFileModel>
-      <semantic:casePlanModel id="_c5b0fddc-013d-4dfb-be05-1f83f22767c1" name="Basic Case Model">
+      <semantic:casePlanModel id="_c5b0fddc-013d-4dfb-be05-1f83f22767c1">
          <semantic:extensionElements>
             <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
                                 graphURI="http://trisotech.com/graph/1.0/graph#framework"
@@ -98,7 +98,7 @@
                                 name="Choose Management of Condition">
             <semantic:extensionElements>
                <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision"
-                                 id="_99e558b6-148e-4686-ae42-fbcc18ba49ee"
+                                 id="_28f5de74-17d6-48bd-8eb6-320f9368843b"
                                  itemName="Basic Decision - History Pertinent to Condition"
                                  mimeType="application/vnd.triso-dmn+json"
                                  modelName="Basic Decision Model"
@@ -198,12 +198,12 @@
    </semantic:textAnnotation>
    <semantic:association id="_122f94c2-88dd-454c-a5ea-db0b73ef832f"
                          sourceRef="_10eb8352-ab24-4d4c-abd8-a33ab5e1d00d"
-                         targetRef="_585e2cba-0025-4dc7-9808-0c641e7bbd2c"/>
+                         targetRef="_51629986-fc6c-4759-9dd1-46eb369d3612"/>
    <semantic:association id="_f4631bb4-f28f-4164-a635-4c28da04fa88"
                          sourceRef="_72232623-faf7-4f46-97ab-1211522fce68"
                          targetRef="_e3b0b96f-741f-4852-98a9-b332c24e4f18"/>
    <semantic:association id="_cf1c8685-039b-41e7-ac69-b91551bd8322"
-                         sourceRef="_585e2cba-0025-4dc7-9808-0c641e7bbd2c"
+                         sourceRef="_51629986-fc6c-4759-9dd1-46eb369d3612"
                          targetRef="_0b13f9ff-726e-4a7e-b42f-f2497ca47c39"/>
    <semantic:association id="_77e63d1a-b036-4793-ba44-976e98d4f1a2"
                          sourceRef="_732407a2-b292-4b8a-bd44-1d04f6ba8e7f"
@@ -215,7 +215,7 @@
       <cmmndi:CMMNDiagram cmmnElementRef="_f2bbf1dd-6ef6-47e2-ba8f-359b519d228b"
                           id="_bfeba959-dfeb-4edb-a8db-9dd2b50e5703"
                           name="Page 1">
-         <cmmndi:Size height="1063.5" width="1964.5624930212896"/>
+         <cmmndi:Size height="1063.5" width="1880.5624930212896"/>
          <cmmndi:CMMNShape cmmnElementRef="_c5b0fddc-013d-4dfb-be05-1f83f22767c1"
                            id="_f2bbf1dd-6ef6-47e2-ba8f-359b519d228b">
             <cmmndi:CMMNStyle>
@@ -224,15 +224,10 @@
                <cmmndi:FontColor blue="0" green="0" red="0"/>
             </cmmndi:CMMNStyle>
             <dc:Bounds height="613.5"
-                       width="1136.3669901918022"
+                       width="1052.3669901918022"
                        x="435.19550282948745"
                        y="130"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="12.015625"
-                          width="201"
-                          x="343.21825525592595"
-                          y="126.03718749999999"/>
-            </cmmndi:CMMNLabel>
+            <cmmndi:CMMNLabel/>
          </cmmndi:CMMNShape>
          <cmmndi:CMMNShape cmmnElementRef="_0b13f9ff-726e-4a7e-b42f-f2497ca47c39"
                            id="_bcf6fd98-38aa-4b47-a404-95d0a412f668">
@@ -241,11 +236,11 @@
                <cmmndi:StrokeColor blue="0" green="0" red="0"/>
                <cmmndi:FontColor blue="0" green="0" red="0"/>
             </cmmndi:CMMNStyle>
-            <dc:Bounds height="76" width="96" x="975.1955028294874" y="292"/>
+            <dc:Bounds height="76" width="96" x="891.1955028294874" y="292"/>
             <cmmndi:CMMNLabel triso:defaultBounds="true">
                <dc:Bounds height="40.671875"
                           width="68"
-                          x="989.1955028294874"
+                          x="905.1955028294874"
                           y="309.6640625"/>
             </cmmndi:CMMNLabel>
          </cmmndi:CMMNShape>
@@ -258,13 +253,28 @@
             </cmmndi:CMMNStyle>
             <dc:Bounds height="76.00000000000006"
                        width="96"
-                       x="975.1955028294874"
+                       x="891.1955028294874"
                        y="437.4235215889186"/>
             <cmmndi:CMMNLabel triso:defaultBounds="true">
                <dc:Bounds height="40.671875"
                           width="68"
-                          x="989.1955028294874"
+                          x="905.1955028294874"
                           y="455.0875840889186"/>
+            </cmmndi:CMMNLabel>
+         </cmmndi:CMMNShape>
+         <cmmndi:CMMNShape cmmnElementRef="_51629986-fc6c-4759-9dd1-46eb369d3612"
+                           id="_7059079c-da62-4285-9eba-5d9f46420261">
+            <cmmndi:CMMNStyle>
+               <cmmndi:FillColor blue="255" green="255" red="255"/>
+               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+               <cmmndi:FontColor blue="0" green="0" red="0"/>
+            </cmmndi:CMMNStyle>
+            <dc:Bounds height="40" width="34" x="729.6041666666667" y="212"/>
+            <cmmndi:CMMNLabel triso:defaultBounds="true">
+               <dc:Bounds height="26.015625"
+                          width="71.09375"
+                          x="711.0572916666667"
+                          y="256"/>
             </cmmndi:CMMNLabel>
          </cmmndi:CMMNShape>
          <cmmndi:CMMNShape cmmnElementRef="_732407a2-b292-4b8a-bd44-1d04f6ba8e7f"
@@ -274,11 +284,11 @@
                <cmmndi:StrokeColor blue="0" green="0" red="0"/>
                <cmmndi:FontColor blue="0" green="0" red="0"/>
             </cmmndi:CMMNStyle>
-            <dc:Bounds height="40" width="34" x="813.6041666666667" y="355"/>
+            <dc:Bounds height="40" width="34" x="729.6041666666667" y="355"/>
             <cmmndi:CMMNLabel triso:defaultBounds="true">
                <dc:Bounds height="12.015625"
                           width="97.765625"
-                          x="781.7213541666667"
+                          x="697.7213541666667"
                           y="399"/>
             </cmmndi:CMMNLabel>
          </cmmndi:CMMNShape>
@@ -291,12 +301,12 @@
             </cmmndi:CMMNStyle>
             <dc:Bounds height="40"
                        width="34"
-                       x="813.6041666666667"
+                       x="729.6041666666667"
                        y="455.42352158891856"/>
             <cmmndi:CMMNLabel triso:defaultBounds="true">
                <dc:Bounds height="26.015625"
                           width="92.5"
-                          x="784.3541666666667"
+                          x="700.3541666666667"
                           y="499.42352158891856"/>
             </cmmndi:CMMNLabel>
          </cmmndi:CMMNShape>
@@ -339,12 +349,12 @@
             </cmmndi:CMMNStyle>
             <dc:Bounds height="75.99999999999997"
                        width="96"
-                       x="1273.0624908357859"
+                       x="1189.0624908357859"
                        y="181.44791408241898"/>
             <cmmndi:CMMNLabel triso:defaultBounds="true">
                <dc:Bounds height="40.671875"
                           width="89"
-                          x="1277.5624908357859"
+                          x="1193.5624908357859"
                           y="199.11197658241898"/>
             </cmmndi:CMMNLabel>
          </cmmndi:CMMNShape>
@@ -355,11 +365,11 @@
                <cmmndi:StrokeColor blue="0" green="0" red="0"/>
                <cmmndi:FontColor blue="0" green="0" red="0"/>
             </cmmndi:CMMNStyle>
-            <dc:Bounds height="76" width="96" x="1273.0624908357859" y="292"/>
+            <dc:Bounds height="76" width="96" x="1189.0624908357859" y="292"/>
             <cmmndi:CMMNLabel triso:defaultBounds="true">
                <dc:Bounds height="40.671875"
                           width="89"
-                          x="1277.5624908357859"
+                          x="1193.5624908357859"
                           y="309.6640625"/>
             </cmmndi:CMMNLabel>
          </cmmndi:CMMNShape>
@@ -372,12 +382,12 @@
             </cmmndi:CMMNStyle>
             <dc:Bounds height="76"
                        width="96"
-                       x="1273.0624908357859"
+                       x="1189.0624908357859"
                        y="437.42352158891856"/>
             <cmmndi:CMMNLabel triso:defaultBounds="true">
                <dc:Bounds height="40.671875"
                           width="89"
-                          x="1277.5624908357859"
+                          x="1193.5624908357859"
                           y="455.08758408891856"/>
             </cmmndi:CMMNLabel>
          </cmmndi:CMMNShape>
@@ -390,27 +400,9 @@
             </cmmndi:CMMNStyle>
             <dc:Bounds height="450"
                        width="210"
-                       x="1216.062490835786"
+                       x="1132.062490835786"
                        y="163.49999999999991"/>
             <cmmndi:CMMNLabel/>
-         </cmmndi:CMMNShape>
-         <cmmndi:CMMNShape cmmnElementRef="_585e2cba-0025-4dc7-9808-0c641e7bbd2c"
-                           id="_14a06896-48ef-44a2-8bce-3fb2f1f14df6">
-            <cmmndi:CMMNStyle>
-               <cmmndi:FillColor blue="255" green="255" red="255"/>
-               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
-               <cmmndi:FontColor blue="0" green="0" red="0"/>
-            </cmmndi:CMMNStyle>
-            <dc:Bounds height="40"
-                       width="34"
-                       x="743.1955028294874"
-                       y="199.44791408241898"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="26.015625"
-                          width="70.9375"
-                          x="724.7267528294874"
-                          y="243.44791408241898"/>
-            </cmmndi:CMMNLabel>
          </cmmndi:CMMNShape>
          <cmmndi:CMMNEdge cmmnElementRef="_122f94c2-88dd-454c-a5ea-db0b73ef832f"
                           id="_9559d2f8-32d1-4697-947b-79bec8dc4a32">
@@ -419,8 +411,8 @@
                <cmmndi:FontColor blue="0" green="0" red="0"/>
             </cmmndi:CMMNStyle>
             <di:waypoint x="554.6041666666667" y="249"/>
-            <di:waypoint x="554.6041666666667" y="219.44791408241898"/>
-            <di:waypoint x="743.1955028294874" y="219.44791408241898"/>
+            <di:waypoint x="554.6041666666667" y="231.98112783208728"/>
+            <di:waypoint x="729.6041666666667" y="231.98112783208728"/>
             <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
          </cmmndi:CMMNEdge>
          <cmmndi:CMMNEdge cmmnElementRef="_f4631bb4-f28f-4164-a635-4c28da04fa88"
@@ -432,7 +424,7 @@
             <di:waypoint x="677.1955028294874" y="626.7800000000001"/>
             <di:waypoint x="657.1955028294874" y="626.7800000000001"/>
             <di:waypoint x="657.1955028294874" y="475.42352158891856"/>
-            <di:waypoint x="813.6041666666667" y="475.42352158891856"/>
+            <di:waypoint x="729.6041666666667" y="475.42352158891856"/>
             <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
          </cmmndi:CMMNEdge>
          <cmmndi:CMMNEdge cmmnElementRef="_cf1c8685-039b-41e7-ac69-b91551bd8322"
@@ -441,10 +433,10 @@
                <cmmndi:StrokeColor blue="0" green="0" red="0"/>
                <cmmndi:FontColor blue="0" green="0" red="0"/>
             </cmmndi:CMMNStyle>
-            <di:waypoint x="777.1955028294874" y="219.44791408241898"/>
-            <di:waypoint x="875.6955028294874" y="219.44791408241898"/>
-            <di:waypoint x="875.6955028294874" y="317.33"/>
-            <di:waypoint x="975.1955028294874" y="317.33"/>
+            <di:waypoint x="763.6041666666667" y="232"/>
+            <di:waypoint x="838.8998347480771" y="232"/>
+            <di:waypoint x="838.8998347480771" y="317.33"/>
+            <di:waypoint x="891.1955028294874" y="317.33"/>
             <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
          </cmmndi:CMMNEdge>
          <cmmndi:CMMNEdge cmmnElementRef="_77e63d1a-b036-4793-ba44-976e98d4f1a2"
@@ -453,10 +445,10 @@
                <cmmndi:StrokeColor blue="0" green="0" red="0"/>
                <cmmndi:FontColor blue="0" green="0" red="0"/>
             </cmmndi:CMMNStyle>
-            <di:waypoint x="847.6041666666667" y="375"/>
-            <di:waypoint x="924.3998347480771" y="375"/>
-            <di:waypoint x="924.3998347480771" y="342.65999999999997"/>
-            <di:waypoint x="975.1955028294874" y="342.65999999999997"/>
+            <di:waypoint x="763.6041666666667" y="375"/>
+            <di:waypoint x="840.3998347480771" y="375"/>
+            <di:waypoint x="840.3998347480771" y="342.65999999999997"/>
+            <di:waypoint x="891.1955028294874" y="342.65999999999997"/>
             <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
          </cmmndi:CMMNEdge>
          <cmmndi:CMMNEdge cmmnElementRef="_aac02834-1fce-42da-8264-b5b1b69f8e0d"
@@ -465,8 +457,8 @@
                <cmmndi:StrokeColor blue="0" green="0" red="0"/>
                <cmmndi:FontColor blue="0" green="0" red="0"/>
             </cmmndi:CMMNStyle>
-            <di:waypoint x="847.6041666666667" y="475.42352158891856"/>
-            <di:waypoint x="975.1955028294874" y="475.4235215889186"/>
+            <di:waypoint x="763.6041666666667" y="475.42352158891856"/>
+            <di:waypoint x="891.1955028294874" y="475.4235215889186"/>
             <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
          </cmmndi:CMMNEdge>
       </cmmndi:CMMNDiagram>

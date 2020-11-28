@@ -376,7 +376,7 @@ public class TrisotechWrapper {
     String optRepositoryId = cfg.getRepositoryId();
 
       URI uri;
-      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getBaseURL()
+      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getApiEndpoint()
           + VERSIONS_PATH)
           .build(optRepositoryId, fileId, resolvedMimetype);
 
@@ -494,7 +494,7 @@ public class TrisotechWrapper {
    * @throws IOException if can't make the request
    */
   private TrisotechPlaceData getPlaces() throws IOException {
-    URL url = new URL(this.cfg.getBaseURL() +
+    URL url = new URL(this.cfg.getApiEndpoint() +
         REPOSITORY_PATH);
 
     HttpEntity<?> requestEntity = getHttpEntity();
@@ -545,7 +545,7 @@ public class TrisotechWrapper {
       // NOTE: MUST Use UriComponentBuilder to handle '+' in the MimeType, otherwise it will be
       // double-encoded and request will fail to return all values expected
       // See: https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#web-uri-encoding for details
-      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getBaseURL()
+      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getApiEndpoint()
           + CONTENT_PATH)
           .build(directoryID, mimeType, path);
 
@@ -669,7 +669,7 @@ public class TrisotechWrapper {
     if(null == version || null == state) {
       // using name here allows for the name of the file to be different than the
       // name of the model. Ex: model.raw.dmn.xml vs model.dmn
-      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getBaseURL()
+      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getApiEndpoint()
           + CONTENT_PATH_POST)
           .build(
               cfg.getRepositoryId(),
@@ -677,7 +677,7 @@ public class TrisotechWrapper {
               mimeType,
               path);
     } else {
-      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getBaseURL()
+      uri = UriComponentsBuilder.fromHttpUrl(this.cfg.getApiEndpoint()
           + CONTENT_PATH_POST_WITH_VERSION)
           .build(
               cfg.getRepositoryId(),

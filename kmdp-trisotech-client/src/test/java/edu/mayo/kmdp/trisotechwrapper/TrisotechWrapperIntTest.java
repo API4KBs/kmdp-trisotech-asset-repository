@@ -63,13 +63,14 @@ import org.w3c.dom.Document;
 @ContextConfiguration(classes = {TrisotechWrapperConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
-    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
+    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",
+    "edu.mayo.kmdp.trisotechwrapper.baseUrl=https://mc.trisotech.com/"})
 class TrisotechWrapperIntTest {
 
   @Autowired
   TrisotechWrapper client;
 
-  private String repositoryBaseUrl;
+  private String repositoryApiEndpoint;
 
   // id to MEA-Test repository
   private String testRepoName;
@@ -100,7 +101,7 @@ class TrisotechWrapperIntTest {
 
   @BeforeEach
   void setUp() {
-    repositoryBaseUrl = client.getConfig().getBaseURL() +  "/repositoryfilecontent?repository=";
+    repositoryApiEndpoint = client.getConfig().getApiEndpoint() +  "/repositoryfilecontent?repository=";
     testRepoName = client.getConfig().getRepositoryName();
     testRepoId = client.getConfig().getRepositoryId();
   }
@@ -246,11 +247,14 @@ class TrisotechWrapperIntTest {
     List<TrisotechFileInfo> versionHistoryInfos = historyInfos.stream()
         .filter(hx -> version.equals(hx.getVersion()))
         .collect(Collectors.toList());
-    assertFalse(versionHistoryInfos.isEmpty());
+    // latest version is not returned in the history, so should not find
+    // the only way this would not be empty would be if the model was published with the same
+    // version more than once
+    assertTrue(versionHistoryInfos.isEmpty());
 
-    versionHistoryInfos.sort(Comparator.comparing(i -> parseDateTime(i.getUpdated())));
-    Collections.reverse(versionHistoryInfos);
-    TrisotechFileInfo latestInHistory = versionHistoryInfos.get(0);
+    historyInfos.sort(Comparator.comparing(i -> parseDateTime(i.getUpdated())));
+    Collections.reverse(historyInfos);
+    TrisotechFileInfo latestInHistory = historyInfos.get(0);
 
     assertTrue(updateDate.after(parseDateTime(latestInHistory.getUpdated())));
   }
@@ -325,8 +329,9 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionArtifactIdDMN() {
-    String expectedVersion = "2.1.0";
-    Date expectedUpdated = parseDateTime("2020-11-24T21:29:58Z");
+    // Weaver Test 1
+    String expectedVersion = "2.1.1";
+    Date expectedUpdated = parseDateTime("2020-12-09T06:13:58Z");
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "5682fa26-b064-43c8-9475-1e4281e74068/versions/"
         + expectedVersion;
@@ -343,8 +348,9 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoDMN() {
-    String expectedVersion = "2.1.0";
-    String updated = "2020-11-24";
+    // Weaver Test 1
+    String expectedVersion = "2.1.1";
+    String updated = "2020-12-09";
     Date expectedUpdated = parseDate(updated);
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "5682fa26-b064-43c8-9475-1e4281e74068/versions/"
@@ -374,8 +380,9 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoCMMN() {
+    // Weave Test 1
     String expectedVersion = "3.0.2";
-    String updated = "2020-11-13T19:50:18Z";
+    String updated = "2020-12-09T03:13:01Z";
     Date expectedUpdated = parseDateTime(updated);
     String expectedVersionId = MAYO_ARTIFACTS_BASE_URI
         + "f59708b6-96c0-4aa3-be4a-31e075d76ec9/versions/"
@@ -530,7 +537,7 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testDownloadXmlModelDMN() {
-    String repositoryFileUrl = repositoryBaseUrl + testRepoId
+    String repositoryFileUrl = repositoryApiEndpoint + testRepoId
         + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVER_TEST_1_ID;
     Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
     assertTrue(dox.isPresent());
@@ -539,7 +546,7 @@ class TrisotechWrapperIntTest {
   @Test
   final void testDownloadXmlModelCMMN() {
 
-    String repositoryFileUrl = repositoryBaseUrl + testRepoId
+    String repositoryFileUrl = repositoryApiEndpoint + testRepoId
         + "&mimetype=application%2Fcmmn-1-1%2Bxml&path=/&sku=" + WEAVE_TEST_1_ID;
     Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
     assertTrue(dox.isPresent());
@@ -549,14 +556,14 @@ class TrisotechWrapperIntTest {
   final void testDownloadXmlModelErrors() {
     // Any other exceptions to confirm?
     final String repositoryFileUrl =
-        repositoryBaseUrl + testRepoId
+        repositoryApiEndpoint + testRepoId
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVE_TEST_1_ID;
 
     Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
     assertFalse(dox.isPresent());
 
     final String repositoryFileUrl2 =
-        repositoryBaseUrl + testRepoName
+        repositoryApiEndpoint + testRepoName
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVER_TEST_1_ID;
 
     dox = client.downloadXmlModel(repositoryFileUrl2);

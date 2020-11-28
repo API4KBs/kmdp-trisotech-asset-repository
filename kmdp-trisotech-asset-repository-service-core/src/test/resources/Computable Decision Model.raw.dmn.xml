@@ -14,7 +14,7 @@
                       xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.1.7"
+                      exporterVersion="7.2.3"
                       id="_cdda3e01-7152-4888-a984-d938a7cecf6b"
                       name="Computable Decision Model"
                       namespace="http://www.trisotech.com/definitions/_cdda3e01-7152-4888-a984-d938a7cecf6b"
@@ -30,8 +30,8 @@
                          name="Whole Model Decision Service"
                          typeRef="Any"/>
       <semantic:outputDecision href="#_09bd2c7b-fefb-48a6-abad-b6888cc085da"/>
-      <semantic:inputData href="#_ec6ef2f2-35c8-4e0b-b138-69d935b59c2a"/>
-      <semantic:inputData href="#_f8bbc771-cff6-49bf-82f5-a641b1d87e70"/>
+      <semantic:inputData href="#_a7c2fa04-29e6-4d8a-bae3-fd9ec2e509f0"/>
+      <semantic:inputData href="#_c69760ee-988d-437a-94a8-c88117df75d3"/>
    </semantic:decisionService>
    <semantic:decisionService id="_70477b5f-146f-42e5-abfe-994c8c710289_DS"
                              name="Diagram Page 1"
@@ -40,8 +40,8 @@
                          name="Diagram Page 1"
                          typeRef="Any"/>
       <semantic:outputDecision href="#_09bd2c7b-fefb-48a6-abad-b6888cc085da"/>
-      <semantic:inputData href="#_ec6ef2f2-35c8-4e0b-b138-69d935b59c2a"/>
-      <semantic:inputData href="#_f8bbc771-cff6-49bf-82f5-a641b1d87e70"/>
+      <semantic:inputData href="#_a7c2fa04-29e6-4d8a-bae3-fd9ec2e509f0"/>
+      <semantic:inputData href="#_c69760ee-988d-437a-94a8-c88117df75d3"/>
    </semantic:decisionService>
    <semantic:decision id="_09bd2c7b-fefb-48a6-abad-b6888cc085da" name="Computable Decision">
       <semantic:extensionElements>
@@ -69,11 +69,11 @@
       <semantic:variable id="_8b194b31-e23f-4325-a931-fe547f586a00"
                          name="Computable Decision"
                          typeRef="boolean"/>
-      <semantic:informationRequirement id="_722b3e4d-80a4-40ea-acfe-8d90439c6e63">
-         <semantic:requiredInput href="#_ec6ef2f2-35c8-4e0b-b138-69d935b59c2a"/>
+      <semantic:informationRequirement id="_dc40feeb-1f98-4080-b14c-1afb74bbaf95">
+         <semantic:requiredInput href="#_c69760ee-988d-437a-94a8-c88117df75d3"/>
       </semantic:informationRequirement>
-      <semantic:informationRequirement id="_ea7b1bed-a5bf-4af1-98d4-2b048524a315">
-         <semantic:requiredInput href="#_f8bbc771-cff6-49bf-82f5-a641b1d87e70"/>
+      <semantic:informationRequirement id="_6fffa294-c5b9-4d86-a886-104b0fa16a27">
+         <semantic:requiredInput href="#_a7c2fa04-29e6-4d8a-bae3-fd9ec2e509f0"/>
       </semantic:informationRequirement>
       <semantic:decisionTable hitPolicy="UNIQUE"
                               id="_71786e07-58be-4d5a-b965-c9abc6fcf739"
@@ -137,31 +137,33 @@
          </semantic:rule>
       </semantic:decisionTable>
    </semantic:decision>
-   <semantic:inputData id="_ec6ef2f2-35c8-4e0b-b138-69d935b59c2a" name="Input 1">
+   <semantic:inputData id="_a7c2fa04-29e6-4d8a-bae3-fd9ec2e509f0" name="Input 1">
       <semantic:extensionElements>
-         <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                           graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                           id="_facb8b71-b4da-4ab8-978f-e5a962b4264d"
-                           itemName="Most Recent Bilirubin"
-                           modelName="Clinical Situations - 20201101"
-                           modelType="http://www.trisotech.com/graph/1.0/element#Framework"
-                           uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#6c14a53a-7ce2-34aa-9cf1-a800317bebef"/>
+         <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
+                             graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                             id="_8eab2fe7-22f6-49e7-a1fa-e3c7936060e5"
+                             itemName="Most Recent Bilirubin"
+                             modelName="Clinical Situations - clinicalsituations"
+                             modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                             type="graph"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#6c14a53a-7ce2-34aa-9cf1-a800317bebef"/>
       </semantic:extensionElements>
-      <semantic:variable id="_89ee8080-d233-4d0e-ad1b-e848b7d9307e"
+      <semantic:variable id="_f96db32d-1c89-4e7f-8839-42890883a9b2"
                          name="Input 1"
                          typeRef="boolean"/>
    </semantic:inputData>
-   <semantic:inputData id="_f8bbc771-cff6-49bf-82f5-a641b1d87e70" name="Input 2">
+   <semantic:inputData id="_c69760ee-988d-437a-94a8-c88117df75d3" name="Input 2">
       <semantic:extensionElements>
-         <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                           graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                           id="_e42c500b-1e82-49dc-9cf3-f52d00da6c39"
-                           itemName="Age"
-                           modelName="Clinical Situations - 20201101"
-                           modelType="http://www.trisotech.com/graph/1.0/element#Framework"
-                           uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#9296f375-a7ed-3c59-a972-4a7eb40c8820"/>
+         <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
+                             graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                             id="_5ec780f6-1c3e-4f7b-98b1-c6360ad1c885"
+                             itemName="Situation with Known Patient Age"
+                             modelName="Clinical Situations - clinicalsituations"
+                             modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                             type="graph"
+                             uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#9296f375-a7ed-3c59-a972-4a7eb40c8820"/>
       </semantic:extensionElements>
-      <semantic:variable id="_77bcc0b9-73c1-4eee-9f2d-5068aeb55761"
+      <semantic:variable id="_9517bfc9-eeb6-4ae4-8430-8e1eed1826e2"
                          name="Input 2"
                          typeRef="boolean"/>
    </semantic:inputData>
@@ -177,33 +179,33 @@
             <dmndi:DMNLabel sharedStyle="LS_cdda3e01-7152-4888-a984-d938a7cecf6b_0"
                             trisodmn:defaultBounds="true"/>
          </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_ec6ef2f2-35c8-4e0b-b138-69d935b59c2a"
-                         id="_ea8d2b51-e987-4ec6-b098-aff3ff2c125d">
+         <dmndi:DMNShape dmnElementRef="_a7c2fa04-29e6-4d8a-bae3-fd9ec2e509f0"
+                         id="_605f2797-09a0-4c4f-ad07-7d5f5a7350d4">
             <dc:Bounds height="60.00000762939453"
                        width="135.48234176635742"
-                       x="540.2588291168213"
+                       x="576.2588291168213"
                        y="330.99999618530273"/>
             <dmndi:DMNLabel sharedStyle="LS_cdda3e01-7152-4888-a984-d938a7cecf6b_0"
                             trisodmn:defaultBounds="true"/>
          </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_f8bbc771-cff6-49bf-82f5-a641b1d87e70"
-                         id="_032bf59d-b785-4dc4-a42a-064928a9dd90">
+         <dmndi:DMNShape dmnElementRef="_c69760ee-988d-437a-94a8-c88117df75d3"
+                         id="_0f6506f9-f1e1-46dc-a59f-9f602e7d1bee">
             <dc:Bounds height="60.00000762939453"
                        width="135.48234176635742"
-                       x="779.2588291168213"
+                       x="744.2588291168213"
                        y="330.99999618530273"/>
             <dmndi:DMNLabel sharedStyle="LS_cdda3e01-7152-4888-a984-d938a7cecf6b_0"
                             trisodmn:defaultBounds="true"/>
          </dmndi:DMNShape>
-         <dmndi:DMNEdge dmnElementRef="_722b3e4d-80a4-40ea-acfe-8d90439c6e63"
-                        id="_0e5f4240-273c-4ace-b830-208fe2c6275d">
-            <di:waypoint x="607.9968013763428" y="330.99999618530273"/>
+         <dmndi:DMNEdge dmnElementRef="_dc40feeb-1f98-4080-b14c-1afb74bbaf95"
+                        id="_ed21e623-a52d-4792-b120-6dbda9868149">
+            <di:waypoint x="811.9968013763428" y="330.99999618530273"/>
             <di:waypoint x="740" y="273"/>
             <dmndi:DMNLabel sharedStyle="LS_cdda3e01-7152-4888-a984-d938a7cecf6b_0"/>
          </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_ea7b1bed-a5bf-4af1-98d4-2b048524a315"
-                        id="_5fd12b68-5cfa-432d-8bed-69f299a6fec0">
-            <di:waypoint x="846.9968013763428" y="330.99999618530273"/>
+         <dmndi:DMNEdge dmnElementRef="_6fffa294-c5b9-4d86-a886-104b0fa16a27"
+                        id="_0adf9378-f2e9-4487-b2e9-973d4a18d315">
+            <di:waypoint x="643.9968013763428" y="330.99999618530273"/>
             <di:waypoint x="740" y="273"/>
             <dmndi:DMNLabel sharedStyle="LS_cdda3e01-7152-4888-a984-d938a7cecf6b_0"/>
          </dmndi:DMNEdge>

@@ -77,9 +77,6 @@ public class IdentityMapper {
   private static final Logger logger = LoggerFactory.getLogger(IdentityMapper.class);
 
   // SPARQL Strings
-  // SPARQL endpoint for repository
-  private static final String ENDPOINT = "https://test-mc.trisotech.com/ds/query";
-
   private static final String TRISOTECH_GRAPH = "http://trisotech.com/graph/1.0/graph#";
   private static final String ASSET_ID = "?assetId";
   private static final String MODEL = "?model";
@@ -90,6 +87,9 @@ public class IdentityMapper {
   private static final String ARTIFACT_NAME = "?artifactName";
 
   private static final String VERSIONS = "/versions";
+
+  // SPARQL endpoint for repository
+  private String sparqlEndpoint;
 
   // HierarchySorter will sort in reverse order of use, so an artifact imported by another will be at the top of the tree after the sort
   private HierarchySorter<Resource> hierarchySorter = new HierarchySorter<>();
@@ -118,6 +118,8 @@ public class IdentityMapper {
   void init() {
     String place = getFocusPlace();
     logger.debug("place in init {}", place);
+    sparqlEndpoint = client.getConfig().getBaseURL() + "/ds/query";
+    logger.debug("endpoint in init: {}", sparqlEndpoint);
     if (config == null) {
       config = new TTWConfig();
     }
@@ -192,7 +194,7 @@ public class IdentityMapper {
         .setDefaultHeaders(Collections.singleton(header))
         .build();
     QueryExecution qexec = QueryExecutionFactory
-        .sparqlService(ENDPOINT, query, httpClient);
+        .sparqlService(sparqlEndpoint, query, httpClient);
     return qexec.execSelect();
   }
 
@@ -474,8 +476,8 @@ public class IdentityMapper {
     } finally {
       theModels.reset();
     }
-    if (modelIds.size() > 1) {
-      if(logger.isWarnEnabled()) {
+    if(logger.isWarnEnabled()) {
+      if (modelIds.size() > 1) {
         logger.warn("Asset ID {}, model IDs {}", assetId, Strings.join(modelIds, ','));
         logger.warn("BUG : The same AssetID has been used across multiple models, "
             + "which is admissible but not supported");

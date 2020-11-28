@@ -50,7 +50,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @ContextConfiguration(classes = {TrisotechAssetRepositoryConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
-    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
+    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",
+    "edu.mayo.kmdp.trisotechwrapper.baseUrl=https://mc.trisotech.com/"})
 class IdentityMapperIntTest {
 
   public static final String DMN_MIMETYPE = "application/vnd.triso-dmn+json";
@@ -101,11 +102,12 @@ class IdentityMapperIntTest {
   @Test
   void getArtifactId_nonPublishedModel_anyQuery() {
     // valid assetId; non-published model, only available if query any
-    String expectedArtifactId = "http://www.trisotech.com/definitions/_09874501-6066-4d3b-83ac-e2019fae9240";
-    // Weaver Test 1 Decision with reuse.dmn
+    String expectedArtifactId = "http://www.trisotech.com/definitions/_22419c97-fb08-4b6d-8a68-87b101a6e716";
+    // Management of Cholesterol
     ResourceIdentifier assetId =
-        newId(MAYO_ASSETS_BASE_URI_URI, "3b88cf3a-93c4-4e09-b1aa-14088c76aded",
+        newId(MAYO_ASSETS_BASE_URI_URI, "3a78cf3a-93c4-4e08-b1ab-14088c76adad",
             "1.0.0");
+
     try {
       String artifactId = identityMapper.getArtifactId(assetId, true);
       assertNotNull(artifactId);
@@ -242,9 +244,13 @@ class IdentityMapperIntTest {
   }
 
   @Test
-  void getModelId_AssetUUID_published() {
-    UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
-    String expectedModelId = "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
+  void getModelId_MultipleAssetUUID(){
+    // this test is to test a model that will have a exported file that contains
+    // multiple customAttribute entries due to reuse of another model
+    // should still find the correct model based on the assetId
+    // should only be one model that matches the assetId
+    UUID assetId = UUID.fromString("3c99cf3a-93c4-4e09-b1aa-14088c76aded");
+    String expectedModelId = "http://www.trisotech.com/definitions/_f59708b6-96c0-4aa3-be4a-31e075d76ec9";
     Optional<String> modelId = identityMapper.getModelId(assetId, false);
     assertNotNull(modelId);
     assertEquals(expectedModelId, modelId.get());
@@ -252,9 +258,19 @@ class IdentityMapperIntTest {
 
   @Test
   void getFileId_AssetUUID_Any() {
+    // this model is the one reused in the test above
     UUID assetId = UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded");
     String expectedModelId = "http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068";
     Optional<String> modelId = identityMapper.getModelId(assetId, true);
+    assertNotNull(modelId);
+    assertEquals(expectedModelId, modelId.get());
+  }
+
+  @Test
+  void getModelId_AssetUUID_published() {
+    UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
+    String expectedModelId = "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5";
+    Optional<String> modelId = identityMapper.getModelId(assetId, false);
     assertNotNull(modelId);
     assertEquals(expectedModelId, modelId.get());
   }
@@ -334,7 +350,7 @@ class IdentityMapperIntTest {
   void getState() {
     // valid
     String modelId = "http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068";
-    String expectedState = "Published";
+    String expectedState = "Draft";
     Optional<String> state = identityMapper.getState(modelId);
     assertNotNull(state);
     assertTrue(state.isPresent());

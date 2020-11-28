@@ -17,17 +17,15 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?model ?fileId ?assetId ?mimeType ?artifactName ?state
 FROM NAMED ?
 WHERE {
-GRAPH ? {
 # Trisotech requires a NAMED GRAPH be used or will fail
+GRAPH ? {
     ?customAttribute a tt:CustomAttribute .
     ?customAttribute ttr:key ?key
     # the 'i' makes the query case-insensitive
     FILTER regex(?key, "knowledgeAssetId", "i") .
     ?customAttribute ttr:value ?assetId .
     ?node ttr:customAttribute ?customAttribute .
-    ?node rdfs:label ?label .
     ?node ttr:owner ?model .
-    ?model rdfs:label ?modelLabel .
     ?model rdfs:label ?artifactName.
     ?model ttr:fileId ?fileId.
     ?model ttr:mimeType ?mimeType.

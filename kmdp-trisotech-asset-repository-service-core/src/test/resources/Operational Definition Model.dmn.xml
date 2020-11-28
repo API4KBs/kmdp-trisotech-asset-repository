@@ -17,25 +17,6 @@
                       namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/ad174bca-8dd1-4e35-8933-e7456e1f3e5c"
                       xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
    <semantic:extensionElements/>
-   <semantic:decisionService id="_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_DS"
-                             name="Whole Model Decision Service">
-      <semantic:variable id="_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_DS_VAR"
-                         name="Whole Model Decision Service"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_1f273cd9-f663-430c-b5f7-22c51a924735"/>
-      <semantic:inputData href="#_6dcf0a5a-ffb0-4124-b13a-e6910b6f6ba7"/>
-      <semantic:inputData href="#_d61012d4-5075-44ab-a7ae-9a6d4906b6c3"/>
-      <semantic:inputData href="#_63bdf521-7818-45dd-8820-8bbee9baafb1"/>
-   </semantic:decisionService>
-   <semantic:decisionService id="_7d1fd159-f79a-4c8b-a0cd-5db2e284060c_DS" name="Diagram Page 1">
-      <semantic:variable id="_7d1fd159-f79a-4c8b-a0cd-5db2e284060c_DS_VAR"
-                         name="Diagram Page 1"
-                         typeRef="Any"/>
-      <semantic:outputDecision href="#_1f273cd9-f663-430c-b5f7-22c51a924735"/>
-      <semantic:inputData href="#_6dcf0a5a-ffb0-4124-b13a-e6910b6f6ba7"/>
-      <semantic:inputData href="#_d61012d4-5075-44ab-a7ae-9a6d4906b6c3"/>
-      <semantic:inputData href="#_63bdf521-7818-45dd-8820-8bbee9baafb1"/>
-   </semantic:decisionService>
    <semantic:decision id="_1f273cd9-f663-430c-b5f7-22c51a924735"
                       name="Aggregating Decision as Operational Definition">
       <semantic:extensionElements>
@@ -43,24 +24,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-11-20T00:00:00"
+            <surr:rel establishedOn="2020-12-06T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201120-165803#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201120-165803">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201206-144038">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-11-20T00:00:00"
+            <surr:ref establishedOn="2020-12-06T00:00:00"
                       name="Aggregation Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AggregationDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"
                       tag="AggregationDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201120-165890#7a42c227-08ed-36af-a332-b6f04cc457b3"
-                      versionTag="20201120-165890">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201206-144010#7a42c227-08ed-36af-a332-b6f04cc457b3"
+                      versionTag="20201206-144010">
                <id:uuid>7a42c227-08ed-36af-a332-b6f04cc457b3</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -98,30 +79,30 @@
       <semantic:variable id="_ebee8817-6b1c-4649-a320-b015ef3d7335"
                          name="Aggregating Decision as Operational Definition"
                          typeRef="Any"/>
-      <semantic:informationRequirement id="_66f18ca6-291a-4b6b-a678-2eb267b1c625">
-         <semantic:requiredInput href="#_6dcf0a5a-ffb0-4124-b13a-e6910b6f6ba7"/>
+      <semantic:informationRequirement id="_99ae94d3-99bc-4504-ac54-0fe355bfd49e">
+         <semantic:requiredInput href="#_9d88c493-1c6f-4030-8b65-bfaa0c96b9dc"/>
       </semantic:informationRequirement>
-      <semantic:informationRequirement id="_595be135-54cf-4435-a50e-216fc22efc3b">
-         <semantic:requiredInput href="#_d61012d4-5075-44ab-a7ae-9a6d4906b6c3"/>
+      <semantic:informationRequirement id="_30e80dab-2c76-4c8b-bf3e-604e644d850e">
+         <semantic:requiredInput href="#_bed1e88b-906a-4010-86f9-261ea7a3d5b8"/>
       </semantic:informationRequirement>
-      <semantic:informationRequirement id="_58bc47bf-88ab-431e-88fc-54f7a00f8e0f">
-         <semantic:requiredInput href="#_63bdf521-7818-45dd-8820-8bbee9baafb1"/>
+      <semantic:informationRequirement id="_a085e7af-0170-4278-a939-67f8074ad673">
+         <semantic:requiredInput href="#_9a0b72b7-4ce4-4681-99b8-c370ba14a4f9"/>
       </semantic:informationRequirement>
    </semantic:decision>
-   <semantic:inputData id="_6dcf0a5a-ffb0-4124-b13a-e6910b6f6ba7" name="Input A">
+   <semantic:inputData id="_9d88c493-1c6f-4030-8b65-bfaa0c96b9dc" name="Input A">
       <semantic:extensionElements>
          <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-11-20T00:00:00"
+            <surr:rel establishedOn="2020-12-06T00:00:00"
                       name="in terms of"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
                       tag="defined-in-terms-of"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201120-165803#6e1048ea-46da-39b1-b650-445f31a17fc1"
-                      versionTag="20201120-165803">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#6e1048ea-46da-39b1-b650-445f31a17fc1"
+                      versionTag="20201206-144038">
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-10-15T00:00:00"
@@ -130,30 +111,30 @@
                       referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/7a613331-ebcf-3b29-b920-fc52284ae909"
                       resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#7a613331-ebcf-3b29-b920-fc52284ae909"
                       tag="7a613331-ebcf-3b29-b920-fc52284ae909"
-                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201120-233622#7a613331-ebcf-3b29-b920-fc52284ae909"
-                      versionTag="20201120-233622">
+                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201101#7a613331-ebcf-3b29-b920-fc52284ae909"
+                      versionTag="20201101">
                <id:uuid>7a613331-ebcf-3b29-b920-fc52284ae909</id:uuid>
             </surr:ref>
          </surr:annotation>
       </semantic:extensionElements>
-      <semantic:variable id="_d2c5c244-ef5d-4efc-9573-23309f84f29d"
+      <semantic:variable id="_3ab3c77b-2f61-4053-8f42-7517f9923580"
                          name="Input A"
                          typeRef="string"/>
    </semantic:inputData>
-   <semantic:inputData id="_d61012d4-5075-44ab-a7ae-9a6d4906b6c3" name="Input B">
+   <semantic:inputData id="_bed1e88b-906a-4010-86f9-261ea7a3d5b8" name="Input B">
       <semantic:extensionElements>
          <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-11-20T00:00:00"
+            <surr:rel establishedOn="2020-12-06T00:00:00"
                       name="in terms of"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
                       tag="defined-in-terms-of"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201120-165803#6e1048ea-46da-39b1-b650-445f31a17fc1"
-                      versionTag="20201120-165803">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#6e1048ea-46da-39b1-b650-445f31a17fc1"
+                      versionTag="20201206-144038">
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-10-15T00:00:00"
@@ -162,30 +143,30 @@
                       referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/7a613331-ebcf-3b29-b920-fc52284ae909"
                       resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#7a613331-ebcf-3b29-b920-fc52284ae909"
                       tag="7a613331-ebcf-3b29-b920-fc52284ae909"
-                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201120-233622#7a613331-ebcf-3b29-b920-fc52284ae909"
-                      versionTag="20201120-233622">
+                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201101#7a613331-ebcf-3b29-b920-fc52284ae909"
+                      versionTag="20201101">
                <id:uuid>7a613331-ebcf-3b29-b920-fc52284ae909</id:uuid>
             </surr:ref>
          </surr:annotation>
       </semantic:extensionElements>
-      <semantic:variable id="_a1e8538a-9277-402e-97a9-9d26e2b0c14e"
+      <semantic:variable id="_9f5a0663-155a-47ce-a31e-d64d4943ca58"
                          name="Input B"
                          typeRef="string"/>
    </semantic:inputData>
-   <semantic:inputData id="_63bdf521-7818-45dd-8820-8bbee9baafb1" name="Test Prior Encounter">
+   <semantic:inputData id="_9a0b72b7-4ce4-4681-99b8-c370ba14a4f9" name="Input C">
       <semantic:extensionElements>
          <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-11-20T00:00:00"
+            <surr:rel establishedOn="2020-12-06T00:00:00"
                       name="in terms of"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
                       tag="defined-in-terms-of"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201120-165803#6e1048ea-46da-39b1-b650-445f31a17fc1"
-                      versionTag="20201120-165803">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#6e1048ea-46da-39b1-b650-445f31a17fc1"
+                      versionTag="20201206-144038">
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-10-15T00:00:00"
@@ -194,15 +175,15 @@
                       referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/1fcec7f2-70b3-3dab-a0d7-1edee27f1e2d"
                       resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#1fcec7f2-70b3-3dab-a0d7-1edee27f1e2d"
                       tag="1fcec7f2-70b3-3dab-a0d7-1edee27f1e2d"
-                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201120-233622#1fcec7f2-70b3-3dab-a0d7-1edee27f1e2d"
-                      versionTag="20201120-233622">
+                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201101#1fcec7f2-70b3-3dab-a0d7-1edee27f1e2d"
+                      versionTag="20201101">
                <id:uuid>1fcec7f2-70b3-3dab-a0d7-1edee27f1e2d</id:uuid>
             </surr:ref>
          </surr:annotation>
       </semantic:extensionElements>
-      <semantic:variable id="_ff0f69ad-61bb-453f-84b6-e5665851618b"
-                         name="Test Prior Encounter"
-                         typeRef="Any"/>
+      <semantic:variable id="_1f60ca42-2f71-4c9a-a8d0-13e23580faf3"
+                         name="Input C"
+                         typeRef="string"/>
    </semantic:inputData>
    <semantic:textAnnotation id="_d0f28fd1-3eb7-4264-abba-b6777638f436">
       <semantic:text>Top level decision annotated with aggregating, semantic decision model, operational definition, and prior management of HFrEF. Has a decision service and a knowledge asset ID</semantic:text>
@@ -216,51 +197,51 @@
             <dc:Bounds height="60" width="153" x="637.5" y="158"/>
             <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
          </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_d0f28fd1-3eb7-4264-abba-b6777638f436"
-                         id="_90197be4-ee08-4bd2-a2ad-f9fecb1ec18a">
-            <dc:Bounds height="163" width="100" x="1145" y="134"/>
-            <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
-         </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_6dcf0a5a-ffb0-4124-b13a-e6910b6f6ba7"
-                         id="_ae5ac497-1ae2-49a4-b2eb-b2ee27264e84">
+         <dmndi:DMNShape dmnElementRef="_9d88c493-1c6f-4030-8b65-bfaa0c96b9dc"
+                         id="_56ddb080-fc42-4827-861c-9b5b8cc35b6c">
             <dc:Bounds height="60.00000762939453"
                        width="135.48234176635742"
-                       x="469.2588291168213"
+                       x="480.2588291168213"
                        y="312.99999618530273"/>
             <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
          </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_d61012d4-5075-44ab-a7ae-9a6d4906b6c3"
-                         id="_8b0e4d2d-557e-46c5-8de4-637e2ab0fc4d">
+         <dmndi:DMNShape dmnElementRef="_bed1e88b-906a-4010-86f9-261ea7a3d5b8"
+                         id="_1c2f1ceb-31b2-426e-ae2f-716d0deb1f4c">
             <dc:Bounds height="60.00000762939453"
                        width="135.48234176635742"
                        x="646.2588291168213"
                        y="312.99999618530273"/>
             <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
          </dmndi:DMNShape>
-         <dmndi:DMNShape dmnElementRef="_63bdf521-7818-45dd-8820-8bbee9baafb1"
-                         id="_10b87ceb-c960-4fa2-bfb7-056e9e025a9e">
+         <dmndi:DMNShape dmnElementRef="_9a0b72b7-4ce4-4681-99b8-c370ba14a4f9"
+                         id="_e6c23071-76c8-491e-adab-1da036f454e6">
             <dc:Bounds height="60.00000762939453"
                        width="135.48234176635742"
-                       x="856.2588291168213"
+                       x="808.2588291168213"
                        y="312.99999618530273"/>
             <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
          </dmndi:DMNShape>
-         <dmndi:DMNEdge dmnElementRef="_66f18ca6-291a-4b6b-a678-2eb267b1c625"
-                        id="_3606e75f-0ae3-47dc-b548-7027a9390995">
-            <di:waypoint x="526.9968013763428" y="312.99999618530273"/>
-            <di:waypoint x="637.5" y="198"/>
+         <dmndi:DMNShape dmnElementRef="_d0f28fd1-3eb7-4264-abba-b6777638f436"
+                         id="_90197be4-ee08-4bd2-a2ad-f9fecb1ec18a">
+            <dc:Bounds height="163" width="100" x="1145" y="134"/>
+            <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNEdge dmnElementRef="_99ae94d3-99bc-4504-ac54-0fe355bfd49e"
+                        id="_6ba44122-1920-4a39-8833-f9e623b7f353">
+            <di:waypoint x="547.9968013763428" y="312.99999618530273"/>
+            <di:waypoint x="694" y="218"/>
             <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
          </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_595be135-54cf-4435-a50e-216fc22efc3b"
-                        id="_9cc8de7a-be21-428d-85e9-8c8408939ca2">
-            <di:waypoint x="713.9968013763428" y="312.99999618530273"/>
-            <di:waypoint x="714" y="218"/>
+         <dmndi:DMNEdge dmnElementRef="_30e80dab-2c76-4c8b-bf3e-604e644d850e"
+                        id="_c92d1f07-78f4-49e6-aceb-c6a3f7146adc">
+            <di:waypoint x="723.9968013763428" y="312.99999618530273"/>
+            <di:waypoint x="724" y="218"/>
             <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
          </dmndi:DMNEdge>
-         <dmndi:DMNEdge dmnElementRef="_58bc47bf-88ab-431e-88fc-54f7a00f8e0f"
-                        id="_1bf97061-b612-4949-b2f4-84b78e13de89">
-            <di:waypoint x="903.9968013763428" y="312.99999618530273"/>
-            <di:waypoint x="790.5" y="208"/>
+         <dmndi:DMNEdge dmnElementRef="_a085e7af-0170-4278-a939-67f8074ad673"
+                        id="_73f74f32-3151-4283-a0d2-28d9996cfe48">
+            <di:waypoint x="875.9968013763428" y="312.99999618530273"/>
+            <di:waypoint x="754" y="218"/>
             <dmndi:DMNLabel sharedStyle="LS_ad174bca-8dd1-4e35-8933-e7456e1f3e5c_0"/>
          </dmndi:DMNEdge>
       </dmndi:DMNDiagram>

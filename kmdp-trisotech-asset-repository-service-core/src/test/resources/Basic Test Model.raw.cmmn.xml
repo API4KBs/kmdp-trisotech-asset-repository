@@ -13,7 +13,7 @@
                       xmlns:rss="http://purl.org/rss/2.0/"
                       xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.1.7"
+                      exporterVersion="7.2.3"
                       expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
                       id="_81303f27-68f0-46ca-94ee-3be1f3605d77"
                       name="Basic Test Model"
@@ -24,7 +24,7 @@
    <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument"
                                     id="_cc8f8a61-5f42-4747-86e4-a2db92a8a79a"
                                     name="Knowledge - ICD Indications in HCM"/>
-   <semantic:case id="Case_3fd13f37-b0e4-46dc-bc43-027ce1a9ece8" name="Basic Test Model">
+   <semantic:case id="Case_3fd13f37-b0e4-46dc-bc43-027ce1a9ece8">
       <semantic:caseFileModel>
          <semantic:caseFileItem definitionRef="_cc8f8a61-5f42-4747-86e4-a2db92a8a79a"
                                 id="_e49b249f-f3a3-4399-bab4-56f9dca301f8"
@@ -38,17 +38,16 @@
             </semantic:extensionElements>
          </semantic:caseFileItem>
       </semantic:caseFileModel>
-      <semantic:casePlanModel id="_3fd13f37-b0e4-46dc-bc43-027ce1a9ece8" name="Basic Test Model">
+      <semantic:casePlanModel id="_3fd13f37-b0e4-46dc-bc43-027ce1a9ece8">
          <semantic:extensionElements>
             <triso:customAttribute id="_2ca5f1a9-553e-4319-aad2-8fbcf5342c0c"
                                    key="knowledgeAssetId"
                                    type="string"
                                    value="https://clinicalknowledgemanagement.mayo.edu/assets/34b7ae5e-0fb4-4be3-9a5c-5fa7f1b16c44/versions/1.0.0"/>
-            <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                                graphURI="http://trisotech.com/graph/1.0/graph#framework"
+            <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
                                 id="_45e96bf9-c27b-404d-9651-c8c508eaa579"
-                                itemName="Cognitive Process Model"
-                                modelName="KnowledgeAssetTypes - 20190801"
+                                itemName="20190801 - Cognitive Process Model"
+                                modelName="KnowledgeAssetTypes"
                                 modelType="http://www.trisotech.com/graph/1.0/element#Framework"
                                 type="graph"
                                 uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#e12dcd92-f8de-3115-b8ca-4480cfc44d77"/>
@@ -70,18 +69,15 @@
                                    id="PID__fb349180-8908-46f6-ac95-7a9a88731fe9"
                                    name="Review Current Status of Condition">
                <semantic:extensionElements>
-                  <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision"
-                                    id="_5d8c6140-a98e-498a-9a1b-dc91da3f59a2"
+                  <triso:copyOfLink id="_c631ad79-ef91-4bd9-8d74-acc63eda752a"
                                     itemName="Aggregating Naturalistic Assessment Decision A"
                                     mimeType="application/vnd.triso-dmn+json"
-                                    modelName="Aggregating Decision A"
                                     modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
                                     uri="http://www.trisotech.com/definitions/_fbf2ed55-80ac-4fea-8929-51b19d396728#_d73a2ccc-8c66-4cc8-a518-e734d5e23f56"/>
-                  <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                                      graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                  <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
                                       id="_2a39e1a4-bbc5-4964-8999-acc5ef2cb9f4"
-                                      itemName="Assess"
-                                      modelName="ClinicalTasks - ClinicalTasks"
+                                      itemName="ClinicalTasks - Assess"
+                                      modelName="ClinicalTasks"
                                       modelType="http://www.trisotech.com/graph/1.0/element#Framework"
                                       type="graph"
                                       uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
@@ -94,18 +90,15 @@
                                    id="PID__7eeaa027-8608-426e-bcae-54f8cfae2993"
                                    name="Review Prior Management of Condition">
                <semantic:extensionElements>
-                  <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision"
-                                    id="_cc7da6d6-23ef-4eed-84ba-5e6b3a7a3c77"
+                  <triso:copyOfLink id="_407d883e-4656-4b5b-a31d-f41bd37aeed4"
                                     itemName="Temporal Correlating Decision"
                                     mimeType="application/vnd.triso-dmn+json"
-                                    modelName="Temporal Correlating Decision"
                                     modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
                                     uri="http://www.trisotech.com/definitions/_c5da16dc-c17e-4e43-81b7-4bd73749d9fe#_3d782d62-e3cd-4e57-9157-fcb7c633c02a"/>
-                  <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                                      graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                  <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
                                       id="_dd821e90-44c1-45ef-9032-fcf5889600ff"
-                                      itemName="Assess"
-                                      modelName="ClinicalTasks - ClinicalTasks"
+                                      itemName="ClinicalTasks - Assess"
+                                      modelName="ClinicalTasks"
                                       modelType="http://www.trisotech.com/graph/1.0/element#Framework"
                                       type="graph"
                                       uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
@@ -118,18 +111,15 @@
                                    id="PID__306a1689-5d73-4984-b142-54a3b0f5858e"
                                    name="Review History Pertinent to Condition">
                <semantic:extensionElements>
-                  <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision"
-                                    id="_1faad0e9-3142-4851-bf8d-dc4758a1839d"
+                  <triso:copyOfLink id="_3b27ae1d-9779-4ab1-9d9b-dc4e02787fd6"
                                     itemName="Basic Decision - History Pertinent to Condition"
                                     mimeType="application/vnd.triso-dmn+json"
-                                    modelName="Basic Decision Model"
                                     modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
                                     uri="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356#_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"/>
-                  <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                                      graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                  <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
                                       id="_94ae39c0-e7b3-4f9f-85c0-7396a87c878a"
-                                      itemName="Assess"
-                                      modelName="ClinicalTasks - ClinicalTasks"
+                                      itemName="ClinicalTasks - Assess"
+                                      modelName="ClinicalTasks"
                                       modelType="http://www.trisotech.com/graph/1.0/element#Framework"
                                       type="graph"
                                       uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"/>
@@ -143,18 +133,15 @@
                                 id="PID__585e9112-8512-4304-996e-b125a2a6c96f"
                                 name="Choose Management of Condition">
             <semantic:extensionElements>
-               <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision"
-                                 id="_ecb45882-588e-454b-b00a-b12c950e76d9"
+               <triso:copyOfLink id="_a0f96e3e-ff14-429b-a662-dbf61aa5136b"
                                  itemName="Choice of Management of Condition"
                                  mimeType="application/vnd.triso-dmn+json"
-                                 modelName="Decision Subdecision"
                                  modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
                                  uri="http://www.trisotech.com/definitions/_5d4a2642-c38a-47bb-aac5-79c9c567ecd4#_721c22c3-3e27-4065-8f84-9b9ab524fb58"/>
-               <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                                   graphURI="http://trisotech.com/graph/1.0/graph#framework"
+               <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
                                    id="_b5faee48-61df-4c69-b93b-552a04465467"
-                                   itemName="Plan"
-                                   modelName="ClinicalTasks - ClinicalTasks"
+                                   itemName="ClinicalTasks - Plan"
+                                   modelName="ClinicalTasks"
                                    modelType="http://www.trisotech.com/graph/1.0/element#Framework"
                                    type="graph"
                                    uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#408de062-c8b1-3c65-9877-21ddead19bbf"/>
@@ -167,11 +154,10 @@
                              isBlocking="false"
                              name="Educate Patient on Condition">
             <semantic:extensionElements>
-               <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                                   graphURI="http://trisotech.com/graph/1.0/graph#framework"
+               <triso:semanticLink graphURI="http://trisotech.com/graph/1.0/graph#framework"
                                    id="_53e64c13-aa6c-44f8-9c57-bcf63590f087"
-                                   itemName="Educate"
-                                   modelName="ClinicalTasks - ClinicalTasks"
+                                   itemName="ClinicalTasks - Educate"
+                                   modelName="ClinicalTasks"
                                    modelType="http://www.trisotech.com/graph/1.0/element#Framework"
                                    type="graph"
                                    uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#14e929a2-a22a-3107-8a38-692107b0f7c5"/>
@@ -218,12 +204,7 @@
                        width="926.0000000000001"
                        x="150.95485345402983"
                        y="135.00346793077972"/>
-            <cmmndi:CMMNLabel triso:defaultBounds="true">
-               <dc:Bounds height="12.015625"
-                          width="201"
-                          x="57.399853454029824"
-                          y="131.07565543077973"/>
-            </cmmndi:CMMNLabel>
+            <cmmndi:CMMNLabel/>
          </cmmndi:CMMNShape>
          <cmmndi:CMMNShape cmmnElementRef="_e90b4aa8-1ce2-4781-90a2-bba2a4b6d85d"
                            id="_dffc79aa-91db-4ab1-bb83-981f529c7894">

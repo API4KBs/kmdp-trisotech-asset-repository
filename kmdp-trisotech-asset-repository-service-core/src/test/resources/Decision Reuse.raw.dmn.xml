@@ -15,7 +15,7 @@
                       xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.1.7"
+                      exporterVersion="7.2.3"
                       id="_c2e182f5-96a2-4ced-958a-8c43b7469b26"
                       name="Decision Reuse"
                       namespace="http://www.trisotech.com/definitions/_c2e182f5-96a2-4ced-958a-8c43b7469b26"
@@ -47,9 +47,21 @@
    </semantic:decisionService>
    <semantic:decision id="_fe5cc942-4756-4ae8-874a-c9f9e7a1f313" name="Decision Re-use">
       <semantic:extensionElements>
+         <triso:customAttribute id="_3120825e-6a18-4d90-8bc3-bf8be5701ed7"
+                                key="knowledgeAssetId"
+                                type="string"
+                                value="https://clinicalknowledgemanagement.mayo.edu/assets/bd0014e6-afbe-4006-b182-baa973f2929a/versions/1.0.0"/>
          <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
                              graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                             id="_2098f6cc-ca6c-4d49-8372-fa8e75b0fce4"
+                             id="_a060beb2-6fa4-4936-aa11-b3c480f1fc80"
+                             itemName="Semantic Decision Model"
+                             modelName="KnowledgeAssetTypes - 20190801"
+                             modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                             type="graph"
+                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
+         <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
+                             graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                             id="_6b023845-2491-4a71-a2aa-7ed8e8a6c4c8"
                              itemName="Choice Decision"
                              modelName="DecisionTypes - 20190801"
                              modelType="http://www.trisotech.com/graph/1.0/element#Framework"
@@ -57,21 +69,9 @@
                              uri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"/>
          <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
                              graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                             id="_0d412f45-0bff-4123-85a0-1747b09dac21"
-                             itemName="Semantic Decision Model"
-                             modelName="KnowledgeAssetTypes - 20190801"
-                             modelType="http://www.trisotech.com/graph/1.0/element#Framework"
-                             type="graph"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
-         <triso:customAttribute id="_3120825e-6a18-4d90-8bc3-bf8be5701ed7"
-                                key="knowledgeAssetId"
-                                type="string"
-                                value="https://clinicalknowledgemanagement.mayo.edu/assets/bd0014e6-afbe-4006-b182-baa973f2929a/versions/1.0.0"/>
-         <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                             graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                             id="_1dba056c-6f38-42fa-ab92-d1bd9e65a38d"
+                             id="_39fa08b1-025e-4c5b-bae9-04cc52abe704"
                              itemName="Prior Management of Atrial Fibrillation"
-                             modelName="Clinical Situations - 20201101"
+                             modelName="Clinical Situations - clinicalsituations"
                              modelType="http://www.trisotech.com/graph/1.0/element#Framework"
                              type="graph"
                              uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#9d5334cf-fd7b-3112-bf19-a08629ebab93"/>

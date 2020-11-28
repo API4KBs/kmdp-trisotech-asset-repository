@@ -28,9 +28,6 @@ GRAPH ? {
     # gets the assetId
     ?customAttribute ttr:value ?assetId .
     ?node ttr:customAttribute ?customAttribute .
-    # label is not being used right now - is the label 'name' on the model
-    # this is on the 'folder tab' of CMMN and on the decision for DMN
-    ?node rdfs:label ?label .
     # the model identifier
     ?node ttr:owner ?model .
     # the model file name

@@ -16,6 +16,7 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTWConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.NotLatestVersionException;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.DateTimeUtil;
@@ -383,12 +384,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     throw new NotFoundException("No artifact for asset " + assetId + " version: " + versionTag);
   }
 
-  private Optional<Document> findArtifactVersionDocumentForAsset(String internalId, UUID assetId,
-      String versionTag) {
-
-    return Optional.empty();
-  }
-
   private ResourceIdentifier getInternalIdAndVersion(UUID assetId, String versionTag)
       throws NotLatestVersionException {
     boolean publishedOnly = configuration.getTyped(TTWParams.PUBLISHED_ONLY);
@@ -594,8 +589,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   /**
    * Support for updating a model 'in place' The assetId, versionTag, artifactId and
-   * artifactVersionTag should match the current model, any mismatch will fail as NOT_FOUND. TODO:
-   * Confirm w/Davide which cases should fail and why
+   * artifactVersionTag should match the current model, any mismatch will fail as NOT_FOUND.
+   * TODO: Confirm w/Davide which cases should fail and why
    *
    * @param assetId enterprise asset ID
    * @param versionTag version for the asset

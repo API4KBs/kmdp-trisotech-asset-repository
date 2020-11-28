@@ -103,11 +103,11 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      mvn clean package "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.test.trisotechToken=$env:TRISO_DEV_TOKEN"
+      mvn clean package "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN"
   env:
     TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
     TRISO_REPO_DEV_ID: $(trisoRepoDevId)
-    TRISO_DEV_TOKEN: $(trisoDevTestToken)
+    TRISO_DEV_TOKEN: $(trisoTestToken)
 
 # ------------------ END PIPELINE  ------------------
 - script: |

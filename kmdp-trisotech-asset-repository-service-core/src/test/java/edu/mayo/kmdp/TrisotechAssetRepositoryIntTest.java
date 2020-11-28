@@ -13,29 +13,10 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
-import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
-import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.NotImplemented;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Final_Draft;
-
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
 import edu.mayo.kmdp.util.XMLUtil;
-import java.io.InputStream;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.id.Pointer;
@@ -49,6 +30,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+import java.io.InputStream;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
+import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.NotImplemented;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Final_Draft;
+
 /**
  * Integration test for TrisotechAssetRepository, using data from test repository.
  */
@@ -56,7 +52,8 @@ import org.springframework.test.context.TestPropertySource;
 @ContextConfiguration(classes = {TrisotechAssetRepositoryConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
-    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
+    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",
+    "edu.mayo.kmdp.trisotechwrapper.baseUrl=https://mc.trisotech.com/"})
 class TrisotechAssetRepositoryIntTest {
 
   @Autowired
@@ -170,7 +167,6 @@ class TrisotechAssetRepositoryIntTest {
   /*
   More complex 'found' version test
    */
-  @Disabled("fails until reuse items returned in relations")
   @Test
   void getVersionKnowledgeAsset_found2() {
     String expectedAssetId = MAYO_ASSETS_BASE_URI
@@ -199,9 +195,6 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(1, ka.getCarriers().size());
     assertEquals(expectedArtifactId,
         ka.getCarriers().get(0).getArtifactId().getVersionId().toString());
-    // TODO: PICK UP HERE ON MONDAY -- ONLY GETTING ONE LINK; MISSING 5682f
-    // -- issue likely due to publishing times in this 'more complex found' scenario -- may need to change
-    // versions and be sure to publish in a specific order to get this to work - CAO 11/21/2020
     assertEquals(2, ka.getCarriers().get(0).getLinks().size());
     List<Link> links = ka.getCarriers().get(0).getLinks();
     for (Link link : links) {
@@ -219,7 +212,6 @@ class TrisotechAssetRepositoryIntTest {
   /*
   expect to get back the latest versions of dependencies
    */
-  @Disabled("fails until reuse items returned in relations")
   @Test
   void getVersionKnowledgeAsset_latest() {
     String expectedAssetId = MAYO_ASSETS_BASE_URI
@@ -231,7 +223,7 @@ class TrisotechAssetRepositoryIntTest {
         + "f59708b6-96c0-4aa3-be4a-31e075d76ec9/versions/3.0.2";
     // Weaver Test 1 (DMN)
     String expectedDependencyId1 = MAYO_ARTIFACTS_BASE_URI
-        + "5682fa26-b064-43c8-9475-1e4281e74068/versions/2.1.0";
+        + "5682fa26-b064-43c8-9475-1e4281e74068/versions/2.1.1";
     // Weaver Test 2 (DMN)
     String expectedDependencyId2 = MAYO_ARTIFACTS_BASE_URI
         + "ede3b331-7b10-4580-98be-66ebff344c21/versions/0.7.0";
@@ -653,9 +645,7 @@ class TrisotechAssetRepositoryIntTest {
     Answer<Void> answer = tar.setKnowledgeAssetCarrierVersion(
         UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
         "1.0.0-SNAPSHOT",
-        // TODO: This ID may change on upgrade due to developer meddling. - CAO
-        // may need to go back to "e36338e7-500c-43a0-881d-22aa5dc538df"
-        UUID.fromString("f827ce35-e13f-470c-a7a0-686c29212754"),
+        UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"),
         "1.0.3",
         XMLUtil.loadXMLDocument(publishedFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
     assertTrue(answer.isSuccess());
@@ -664,7 +654,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void setKnowledgeAssetCarrierVersion_published_found_diff_fileName() {
     // not planning on uploading published versions, but test that it works until further notice
-    // this test makes sure that the publish will work for the model even if the filename is not the
+    // This test makes sure that the publish will work for the model even if the filename is not the
     // same as the model name. The model name is Test Save As. The POST will strip off .dmn to establish
     // model name if not provided.
     InputStream publishedFile = TrisotechAssetRepositoryIntTest.class
@@ -672,9 +662,7 @@ class TrisotechAssetRepositoryIntTest {
     Answer<Void> answer = tar.setKnowledgeAssetCarrierVersion(
         UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
         "1.0.0-SNAPSHOT",
-        // TODO: This ID may change on upgrade due to developer meddling. - CAO
-        // may need to go back to "e36338e7-500c-43a0-881d-22aa5dc538df"
-        UUID.fromString("f827ce35-e13f-470c-a7a0-686c29212754"),
+        UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"),
         "1.0.3",
         XMLUtil.loadXMLDocument(publishedFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
     assertTrue(answer.isSuccess());

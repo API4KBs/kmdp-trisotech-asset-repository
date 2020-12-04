@@ -201,6 +201,9 @@ public class Weaver {
     weaveMetadata(metas);
 
     /****** Remove traces of Trisotech  ******/
+    // remove spurious model elements
+    removeTrisoElementsNotRetaining(dox);
+
     // remove the namespace attributes
     removeProprietaryAttributesAndNS(dox);
 
@@ -220,6 +223,14 @@ public class Weaver {
     verifyAndRemoveInvalidCaseFileItemDefinition(dox);
 
     return dox;
+  }
+
+  private void removeTrisoElementsNotRetaining(Document dox) {
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS("*", "decisionService"))
+        .filter(el -> el.hasAttributeNS(metadataNS, "dynamicDecisionService"))
+        .forEach(element ->
+            element.getParentNode().removeChild(element)
+        );
   }
 
   /**
@@ -341,6 +352,7 @@ public class Weaver {
         // TODO: code review -- need to know which tags, or just check all hrefs? CAO
         .filter(el -> (el.getLocalName().equals("inputData")
             || el.getLocalName().equals("requiredInput")
+            || el.getLocalName().equals("requiredKnowledge")
             || el.getLocalName().equals("encapsulatedDecision")
             || el.getLocalName().equals("inputDecision")
             || el.getLocalName().equals("requiredDecision"))

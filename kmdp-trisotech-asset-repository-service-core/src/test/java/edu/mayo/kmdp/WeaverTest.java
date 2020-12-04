@@ -18,7 +18,8 @@ import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.validate;
-import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.*;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,14 +31,12 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
-import org.junit.jupiter.api.Disabled;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
@@ -102,6 +101,30 @@ class WeaverTest {
       weaver.weave(dox);
       assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
+      streamXMLDocument(dox, System.out);
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(),ie);
+      fail(ie.getMessage());
+    }
+  }
+
+  @Test
+  void testWeaveRemoveDecisionServices() {
+    String path = "/Basic Decision Model.raw.dmn.xml";
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+
+    try {
+      weaver.weave(dox);
+      assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
+
+      assertEquals(0,
+          XMLUtil.asElementStream(dox.getElementsByTagNameNS("*", "decisionService"))
+              .count());
+
+      assertEquals(1,
+          XMLUtil.asElementStream(dox.getElementsByTagNameNS("*", "decision"))
+              .count());
       streamXMLDocument(dox, System.out);
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(),ie);

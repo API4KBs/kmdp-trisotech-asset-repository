@@ -94,6 +94,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
   public static final String CMMN_DEFINITIONS = "//cmmn:definitions";
   public static final String DMN_DEFINITIONS = "//dmn:definitions";
   private static final String SEMANTIC_EXTENSION_ELEMENTS = "semantic:extensionElements";
+  private static final String EXTENSION_ELEMENTS = "extensionElements";
   private IdentityMapper mapper;
   private XPathUtil xPathUtil;
   private static final Logger logger = LoggerFactory.getLogger(TrisotechExtractionStrategy.class);
@@ -468,7 +469,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
       List<Node> itemDefs = null;
       if(null != list) {
         itemDefs = asAttributeStream(list)
-//					.map( in -> xNode( dox, "//dmn:itemDefinition[@name='"+ in.getValue()+"']" ) ) CAO
+					.map( in -> xPathUtil.xNode(dox, "//dmn:inputData[@name='" + in.getValue() + "']") )
           .collect(toList());
       }
 
@@ -476,7 +477,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
         for (Node itemDef : itemDefs) {
           List<Annotation> inputAnnos = XMLUtil.asElementStream(itemDef.getChildNodes())
               .filter(Objects::nonNull)
-              .filter(el -> el.getLocalName().equals(SEMANTIC_EXTENSION_ELEMENTS))
+              .filter(el -> el.getLocalName().equals(EXTENSION_ELEMENTS))
               .flatMap(el -> XMLUtil.asElementStream(el.getChildNodes()))
               .map(child -> JaxbUtil.unmarshall(Annotation.class, Annotation.class, child))
               .filter(Optional::isPresent)

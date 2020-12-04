@@ -7,11 +7,11 @@
   <parent>
     <groupId>edu.mayo.kmdp</groupId>
     <artifactId>kmdp-asset-repository-service-base</artifactId>
-    <version>8.0.8-SNAPSHOT</version>
+    <version>9.0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>kmdp-trisotech-asset-repository-service</artifactId>
-  <version>4.8.8-SNAPSHOT</version>
+  <version>4.9.1-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -30,9 +30,8 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
-    <kmdp.servers.version>4.8.8-SNAPSHOT</kmdp.servers.version>
-    <clinical.terms.version>7.0.0-SNAPSHOT</clinical.terms.version>
-
+    <kmdp.servers.version>4.9.1-SNAPSHOT</kmdp.servers.version>
+    <clinical.terms.version>7.0.2-SNAPSHOT</clinical.terms.version>
   </properties>
 
   <dependencies>

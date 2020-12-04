@@ -1,9 +1,9 @@
-## KMDP Master Pipeline
+## KMDP Main Pipeline
 ## KMDP Trisotech Asset Repo Service
 
 resources:
   pipelines:
-  - pipeline: kmdpTrisotechAssetRepositoryServiceMaster
+  - pipeline: kmdpTrisotechAssetRepositoryServiceMain
     source: kmdpTrisotechAssetRepositoryServiceReleaseCandidate
     trigger: 
       branches:
@@ -76,16 +76,16 @@ steps:
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.11'
     
-# Rebase to master and deploy
+# Rebase to Main and deploy
 - task: PowerShell@2
   displayName: 'Triso Asset Repo checkout Release Candidate'
   inputs:
     targetType: 'inline'
     script: |
       Write-Host ------ Starting Checkout ------
-      # Checkout master branch to create release candidate from
+      # Checkout Main branch to create release candidate from
       git checkout "release-$env:TRISO_RELEASE_VERSION"
-      git checkout master
+      git checkout main
       # rebase the release version
       git rebase "release-$env:TRISO_RELEASE_VERSION" 
       type pom.xml

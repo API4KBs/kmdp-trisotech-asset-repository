@@ -69,7 +69,7 @@ public abstract class AbstractAssetDownloader {
         .orElseGet(Assertions::fail);
     KnowledgeCarrier wovenModel
         = assetRepository
-        .getCanonicalKnowledgeAssetCarrier(assetPtr.getUuid(), assetPtr.getVersionTag())
+        .getKnowledgeAssetVersionCanonicalCarrier(assetPtr.getUuid(), assetPtr.getVersionTag())
         .orElseGet(Assertions::fail);
 
     assertFalse(surrogate.getSurrogate().isEmpty());

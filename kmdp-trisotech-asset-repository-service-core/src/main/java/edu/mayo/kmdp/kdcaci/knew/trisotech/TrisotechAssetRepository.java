@@ -301,7 +301,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    * @param extAccept 'accept' MIME type
    */
   @Override
-  public Answer<KnowledgeCarrier> getCanonicalKnowledgeAssetCarrier(UUID assetId,
+  public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalCarrier(UUID assetId,
       String versionTag, String extAccept) {
     Optional<URI> enterpriseVersionId;
     KnowledgeCarrier carrier;

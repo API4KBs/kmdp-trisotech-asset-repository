@@ -439,7 +439,7 @@ class TrisotechAssetRepositoryIntTest {
   }
 
   @Test
-  void getCanonicalKnowledgeAssetCarrier() {
+  void getKnowledgeAssetVersionCanonicalCarrier() {
     // Basic Decision Model.dmn
     String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "261543d9-90b6-4fe0-a26d-f329111d77ca";
@@ -449,7 +449,7 @@ class TrisotechAssetRepositoryIntTest {
         + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.4.0";
 
     Answer<KnowledgeCarrier> answer = tar
-        .getCanonicalKnowledgeAssetCarrier(UUID.fromString("261543d9-90b6-4fe0-a26d-f329111d77ca"),
+        .getKnowledgeAssetVersionCanonicalCarrier(UUID.fromString("261543d9-90b6-4fe0-a26d-f329111d77ca"),
             "1.0.0",
             null);
     assertTrue(answer.isSuccess());
@@ -462,7 +462,7 @@ class TrisotechAssetRepositoryIntTest {
   }
 
   @Test
-  void getCanonicalKnowledgeAssetCarrier_found() {
+  void getKnowledgeAssetVersionCanonicalCarrier_found() {
     String expectedAssetId = MAYO_ASSETS_BASE_URI
         + "14321e7c-cb9a-427f-abf5-1420bf26e03c";
     String expectedAssetVersionId = expectedAssetId
@@ -471,7 +471,7 @@ class TrisotechAssetRepositoryIntTest {
         + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0+1565742456000";
 
     Answer<KnowledgeCarrier> answer = tar
-        .getCanonicalKnowledgeAssetCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
+        .getKnowledgeAssetVersionCanonicalCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.0.0", null);
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
@@ -485,17 +485,17 @@ class TrisotechAssetRepositoryIntTest {
   }
 
   @Test
-  void getCanonicalKnowledgeAssetCarrier_notFound_badVersion() {
+  void getKnowledgeAssetVersionCanonicalCarrier_notFound_badVersion() {
     Answer<KnowledgeCarrier> answer = tar
-        .getCanonicalKnowledgeAssetCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
+        .getKnowledgeAssetVersionCanonicalCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.2.0", null);
     assertTrue(answer.isClientFailure());
   }
 
   @Test
-  void getCanonicalKnowledgeAssetCarrier_notFound_badId() {
+  void getKnowledgeAssetVersionCanonicalCarrier_notFound_badId() {
     Answer<KnowledgeCarrier> answer = tar
-        .getCanonicalKnowledgeAssetCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03d"),
+        .getKnowledgeAssetVersionCanonicalCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03d"),
             "1.0.0", null);
     assertTrue(answer.isClientFailure());
   }

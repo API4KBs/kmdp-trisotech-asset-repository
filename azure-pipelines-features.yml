@@ -107,7 +107,7 @@ steps:
   env:
     TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
     TRISO_REPO_DEV_ID: $(trisoRepoDevId)
-    TRISO_DEV_TOKEN: $(trisoTestToken)
+    TRISO_DEV_TOKEN: $(trisoDevToken)
 
 # ------------------ END PIPELINE  ------------------
 - script: |

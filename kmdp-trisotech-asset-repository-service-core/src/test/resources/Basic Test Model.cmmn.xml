@@ -68,24 +68,24 @@
                                    xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                                    xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                                    xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-                     <surr:rel establishedOn="2020-12-06T00:00:00"
+                     <surr:rel establishedOn="2020-12-15T00:00:00"
                                name="captures"
                                namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                                referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                                resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                                tag="captures"
-                               versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                               versionTag="20201206-144038">
+                               versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                               versionTag="20201215-130381">
                         <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
                      </surr:rel>
-                     <surr:ref establishedOn="2020-12-06T00:00:00"
+                     <surr:ref establishedOn="2020-12-01T00:00:00"
                                name="Assess"
                                namespaceUri="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
                                referentId="http://ontology.mayo.edu/ontologies/clinicaltaskontology/624ac551-2f99-3ccd-81af-609ca02a878e"
                                resourceId="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"
                                tag="624ac551-2f99-3ccd-81af-609ca02a878e"
-                               versionId="https://ontology.mayo.edu/taxonomies/ClinicalTasks/versions/20201206#624ac551-2f99-3ccd-81af-609ca02a878e"
-                               versionTag="20201206">
+                               versionId="https://ontology.mayo.edu/taxonomies/ClinicalTasks/versions/20201201#624ac551-2f99-3ccd-81af-609ca02a878e"
+                               versionTag="20201201">
                         <id:uuid>624ac551-2f99-3ccd-81af-609ca02a878e</id:uuid>
                      </surr:ref>
                   </surr:annotation>
@@ -102,24 +102,24 @@
                                    xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                                    xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                                    xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-                     <surr:rel establishedOn="2020-12-06T00:00:00"
+                     <surr:rel establishedOn="2020-12-15T00:00:00"
                                name="captures"
                                namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                                referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                                resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                                tag="captures"
-                               versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                               versionTag="20201206-144038">
+                               versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                               versionTag="20201215-130381">
                         <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
                      </surr:rel>
-                     <surr:ref establishedOn="2020-12-06T00:00:00"
+                     <surr:ref establishedOn="2020-12-01T00:00:00"
                                name="Assess"
                                namespaceUri="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
                                referentId="http://ontology.mayo.edu/ontologies/clinicaltaskontology/624ac551-2f99-3ccd-81af-609ca02a878e"
                                resourceId="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"
                                tag="624ac551-2f99-3ccd-81af-609ca02a878e"
-                               versionId="https://ontology.mayo.edu/taxonomies/ClinicalTasks/versions/20201206#624ac551-2f99-3ccd-81af-609ca02a878e"
-                               versionTag="20201206">
+                               versionId="https://ontology.mayo.edu/taxonomies/ClinicalTasks/versions/20201201#624ac551-2f99-3ccd-81af-609ca02a878e"
+                               versionTag="20201201">
                         <id:uuid>624ac551-2f99-3ccd-81af-609ca02a878e</id:uuid>
                      </surr:ref>
                   </surr:annotation>
@@ -136,24 +136,24 @@
                                    xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                                    xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                                    xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-                     <surr:rel establishedOn="2020-12-06T00:00:00"
+                     <surr:rel establishedOn="2020-12-15T00:00:00"
                                name="captures"
                                namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                                referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                                resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                                tag="captures"
-                               versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                               versionTag="20201206-144038">
+                               versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                               versionTag="20201215-130381">
                         <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
                      </surr:rel>
-                     <surr:ref establishedOn="2020-12-06T00:00:00"
+                     <surr:ref establishedOn="2020-12-01T00:00:00"
                                name="Assess"
                                namespaceUri="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
                                referentId="http://ontology.mayo.edu/ontologies/clinicaltaskontology/624ac551-2f99-3ccd-81af-609ca02a878e"
                                resourceId="https://ontology.mayo.edu/taxonomies/ClinicalTasks#624ac551-2f99-3ccd-81af-609ca02a878e"
                                tag="624ac551-2f99-3ccd-81af-609ca02a878e"
-                               versionId="https://ontology.mayo.edu/taxonomies/ClinicalTasks/versions/20201206#624ac551-2f99-3ccd-81af-609ca02a878e"
-                               versionTag="20201206">
+                               versionId="https://ontology.mayo.edu/taxonomies/ClinicalTasks/versions/20201201#624ac551-2f99-3ccd-81af-609ca02a878e"
+                               versionTag="20201201">
                         <id:uuid>624ac551-2f99-3ccd-81af-609ca02a878e</id:uuid>
                      </surr:ref>
                   </surr:annotation>
@@ -171,24 +171,24 @@
                                 xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                                 xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                                 xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-                  <surr:rel establishedOn="2020-12-06T00:00:00"
+                  <surr:rel establishedOn="2020-12-15T00:00:00"
                             name="captures"
                             namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                             referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                             resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                             tag="captures"
-                            versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                            versionTag="20201206-144038">
+                            versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                            versionTag="20201215-130381">
                      <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
                   </surr:rel>
-                  <surr:ref establishedOn="2020-12-06T00:00:00"
+                  <surr:ref establishedOn="2020-12-01T00:00:00"
                             name="Plan"
                             namespaceUri="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
                             referentId="http://ontology.mayo.edu/ontologies/clinicaltaskontology/408de062-c8b1-3c65-9877-21ddead19bbf"
                             resourceId="https://ontology.mayo.edu/taxonomies/ClinicalTasks#408de062-c8b1-3c65-9877-21ddead19bbf"
                             tag="408de062-c8b1-3c65-9877-21ddead19bbf"
-                            versionId="https://ontology.mayo.edu/taxonomies/ClinicalTasks/versions/20201206#408de062-c8b1-3c65-9877-21ddead19bbf"
-                            versionTag="20201206">
+                            versionId="https://ontology.mayo.edu/taxonomies/ClinicalTasks/versions/20201201#408de062-c8b1-3c65-9877-21ddead19bbf"
+                            versionTag="20201201">
                      <id:uuid>408de062-c8b1-3c65-9877-21ddead19bbf</id:uuid>
                   </surr:ref>
                </surr:annotation>
@@ -205,24 +205,24 @@
                                 xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                                 xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                                 xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-                  <surr:rel establishedOn="2020-12-06T00:00:00"
+                  <surr:rel establishedOn="2020-12-15T00:00:00"
                             name="captures"
                             namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                             referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                             resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                             tag="captures"
-                            versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                            versionTag="20201206-144038">
+                            versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                            versionTag="20201215-130381">
                      <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
                   </surr:rel>
-                  <surr:ref establishedOn="2020-12-06T00:00:00"
+                  <surr:ref establishedOn="2020-12-01T00:00:00"
                             name="Educate"
                             namespaceUri="https://ontology.mayo.edu/taxonomies/ClinicalTasks"
                             referentId="http://ontology.mayo.edu/ontologies/clinicaltaskontology/14e929a2-a22a-3107-8a38-692107b0f7c5"
                             resourceId="https://ontology.mayo.edu/taxonomies/ClinicalTasks#14e929a2-a22a-3107-8a38-692107b0f7c5"
                             tag="14e929a2-a22a-3107-8a38-692107b0f7c5"
-                            versionId="https://ontology.mayo.edu/taxonomies/ClinicalTasks/versions/20201206#14e929a2-a22a-3107-8a38-692107b0f7c5"
-                            versionTag="20201206">
+                            versionId="https://ontology.mayo.edu/taxonomies/ClinicalTasks/versions/20201201#14e929a2-a22a-3107-8a38-692107b0f7c5"
+                            versionTag="20201201">
                      <id:uuid>14e929a2-a22a-3107-8a38-692107b0f7c5</id:uuid>
                   </surr:ref>
                </surr:annotation>

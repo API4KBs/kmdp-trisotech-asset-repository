@@ -1,8 +1,11 @@
 package edu.mayo.kmdp.initResources;
 
 
+import static edu.mayo.kmdp.util.PropertiesUtil.serializeProps;
 import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.ofAst;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.snapshot.SerializationFormat.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.asEnum;
@@ -20,6 +23,8 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig;
+import edu.mayo.kmdp.util.properties.jaxb.JaxbConfig.JaxbOptions;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,9 +78,9 @@ public abstract class AbstractAssetDownloader {
         .orElseGet(Assertions::fail);
 
     assertFalse(surrogate.getSurrogate().isEmpty());
-    ResourceIdentifier nativeId = surrogate.getSurrogate().get(0).getArtifactId();
+    ResourceIdentifier nativeId = surrogate.getCarriers().get(0).getArtifactId();
     TrisotechFileInfo nativeSurrogate =
-        wrapper.getFileInfoByIdAndVersion(nativeId.getTag(), nativeId.getVersionTag())
+        wrapper.getFileInfoByIdAndVersion(nativeId.getUuid(), nativeId.getVersionTag())
             .orElseGet(Assertions::fail);
     Document nativeArtifact = wrapper.getPublishedModel(nativeSurrogate)
         .orElseGet(Assertions::fail);
@@ -133,11 +138,10 @@ public abstract class AbstractAssetDownloader {
 
   private void saveSurrogate(KnowledgeAsset surrogate, File surrFile) {
     new Surrogate2Parser().applyLower(
-        AbstractCarrier.ofAst(surrogate, rep(Knowledge_Asset_Surrogate_2_0)),
+        ofAst(surrogate, rep(Knowledge_Asset_Surrogate_2_0)),
         Serialized_Knowledge_Expression,
-        ModelMIMECoder
-            .encode(rep(Knowledge_Asset_Surrogate_2_0, XML_1_1, defaultCharset())),
-        null)
+        codedRep(Knowledge_Asset_Surrogate_2_0, XML_1_1, defaultCharset()),
+        serializeProps(new JaxbConfig().with(JaxbOptions.FORMATTED_OUTPUT,true)))
         .flatOpt(AbstractCarrier::asString)
         .ifPresent(
             str -> FileUtil.write(str, surrFile));

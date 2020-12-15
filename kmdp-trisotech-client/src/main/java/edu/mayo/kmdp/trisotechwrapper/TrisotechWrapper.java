@@ -60,6 +60,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Component
 public class TrisotechWrapper {
 
+  public static final String BASE_NAMESPACE = "http://www.trisotech.com/definitions/_";
+
   private final Logger logger = LoggerFactory.getLogger(TrisotechWrapper.class);
   private final String CRLF = "\r\n";
 
@@ -216,12 +218,13 @@ public class TrisotechWrapper {
   /**
    * Gets the modelInfo for the version requested.
    *
-   * @param fileId The ID for the file to be queried from Trisotech.
+   * @param fileUUID The ID for the file to be queried from Trisotech.
    * @param version the version of the file in Trisotech.
    * @return TrisotechFileInfo
    */
   public Optional<TrisotechFileInfo> getFileInfoByIdAndVersion(
-      String fileId, String version) {
+      UUID fileUUID, String version) {
+    String fileId = BASE_NAMESPACE + fileUUID;
     // first get the mimetype to provide the correct XML-ready URL in the TrisotechFileInfo
     Optional<String> mimeType = getFileInfoMimeType(fileId);
     return mimeType

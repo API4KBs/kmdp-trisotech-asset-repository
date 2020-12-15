@@ -23,11 +23,11 @@ import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.util.DateTimeUtil.isSameDay;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDate;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
+import static java.util.UUID.fromString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
@@ -83,6 +83,7 @@ class TrisotechWrapperIntTest {
   private static final String WEAVER_TEST_1_ID_TAG = "5682fa26-b064-43c8-9475-1e4281e74068" ;
   // DMN published 'Draft'
   private static final String WEAVER_TEST_2_ID = "http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21";
+  private static final String WEAVER_TEST_2_ID_TAG = "ede3b331-7b10-4580-98be-66ebff344c21";
   // DMN unpublished (Hyperlipidemia - ASCVD High Risk)
   private static final String DMN_UNPUBLISHED = "http://www.trisotech.com/definitions/_f32241b0-1a07-4c65-913b-46f8f4989f89";
   // CMMN Published
@@ -90,6 +91,7 @@ class TrisotechWrapperIntTest {
   private static final String WEAVE_TEST_1_ID_TAG = "f59708b6-96c0-4aa3-be4a-31e075d76ec9";
   // CMMN unpublished
   private static final String WEAVE_TEST_2_ID = "http://www.trisotech.com/definitions/_a4172970-dc92-415e-9921-5e0c78af501c";
+  private static final String WEAVE_TEST_2_ID_TAG = "a4172970-dc92-415e-9921-5e0c78af501c";
 
   @BeforeAll
   static void setUpBeforeClass() {
@@ -136,7 +138,6 @@ class TrisotechWrapperIntTest {
 
     dox = client.getModelByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2);
     assertEquals(Optional.empty(), dox);
-
   }
 
   @Test
@@ -169,13 +170,13 @@ class TrisotechWrapperIntTest {
     String expectedVersion = "1.2";
     String expectedVersion_2 = "0.1";
     TrisotechFileInfo fileInfo = client
-        .getFileInfoByIdAndVersion(WEAVER_TEST_1_ID, expectedVersion)
+        .getFileInfoByIdAndVersion(fromString(WEAVER_TEST_1_ID_TAG), expectedVersion)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals(expectedVersion, fileInfo.getVersion());
     assertEquals(WEAVER_TEST_1_ID, fileInfo.getId());
 
-    fileInfo = client.getFileInfoByIdAndVersion(WEAVER_TEST_2_ID, expectedVersion_2)
+    fileInfo = client.getFileInfoByIdAndVersion(fromString(WEAVER_TEST_2_ID_TAG), expectedVersion_2)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals(expectedVersion_2, fileInfo.getVersion());
@@ -186,14 +187,14 @@ class TrisotechWrapperIntTest {
   final void testGetModelInfoByIdAndVersionCMMN() {
     String expectedVersion = "2.0";
     TrisotechFileInfo fileInfo = client
-        .getFileInfoByIdAndVersion(WEAVE_TEST_1_ID, expectedVersion)
+        .getFileInfoByIdAndVersion(fromString(WEAVE_TEST_1_ID_TAG), expectedVersion)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals(expectedVersion, fileInfo.getVersion());
     assertEquals(WEAVE_TEST_1_ID, fileInfo.getId());
 
     String expectedVersion_2 = "1.0";
-    fileInfo = client.getFileInfoByIdAndVersion(WEAVE_TEST_2_ID, expectedVersion_2)
+    fileInfo = client.getFileInfoByIdAndVersion(fromString(WEAVE_TEST_2_ID_TAG), expectedVersion_2)
         .orElse(null);
     assertNotNull(fileInfo);
   }

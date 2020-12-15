@@ -13,14 +13,19 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess;
 
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
+import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static java.util.stream.Collectors.toList;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
-import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.artifactId;
+import static org.omg.spec.api4kp._20200801.id.VersionIdentifier.toSemVer;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultSurrogateUUID;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype._20200801.DependencyType.Depends_On;
 import static org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode._20190201.Language.English;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory._2020_01_20.KnowledgeArtifactCategory.Software;
@@ -59,7 +64,6 @@ import java.util.Optional;
 import java.util.UUID;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
-import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.surrogate.Dependency;
@@ -159,7 +163,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     String artifactTag = docId.get();
     String artifactVersionTag = model.getVersion() == null
         ? IdentifierConstants.VERSION_LATEST + "+" + modelDate.getTime()
-        : VersionIdentifier.toSemVer(model.getVersion()) + "+" + modelDate.getTime();
+        : toSemVer(model.getVersion()) + "+" + modelDate.getTime();
 
     // for the surrogate, want the version of the artifact
     ResourceIdentifier artifactID =
@@ -168,39 +172,31 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
 
     // artifact<->artifact relation
     List<ResourceIdentifier> theTargetArtifactId = getArtifactImports(docId.get(), model);
-    if (null != theTargetArtifactId) {
       logger.debug("theTargetArtifactId: {}", theTargetArtifactId);
-    } else {
-      logger.debug("theTargetArtifactId is null");
-    }
 
     // asset<->asset relations
     // assets are derived from the artifact relations
     List<ResourceIdentifier> theTargetAssetId = mapper.getAssetRelations(docId.get());
 
     // get the language for the document to set the appropriate values
-    Optional<SyntacticRepresentation> synRep = getRepLanguage(woven, false);
-    if (synRep.isPresent()) {
-      switch (asEnum(synRep.get().getLanguage())) {
-        case DMN_1_2:
-          formalCategory = Assessment_Predictive_And_Inferential_Models;
-          // default value
-          formalType = Decision_Model;
-          syntax = DMN_1_2_XML_Syntax;
-          break;
-        case CMMN_1_1:
-          formalCategory = Plans_Processes_Pathways_And_Protocol_Definitions;
-          // default value, may be specified differently in the file
-          formalType = Care_Process_Model;
-          syntax = CMMN_1_1_XML_Syntax;
-          break;
-        default:
-          throw new IllegalStateException(
-              "Invalid Language detected." + synRep.get().getLanguage());
-      }
-    } else {
-      throw new IllegalStateException(
-          "Invalid Language detected." + synRep); // TODO: better error for here? CAO
+    SyntacticRepresentation synRep = getRepLanguage(woven, false)
+        .orElseThrow(() -> new IllegalStateException("Invalid language detected"));
+    switch (asEnum(synRep.getLanguage())) {
+      case DMN_1_2:
+        formalCategory = Assessment_Predictive_And_Inferential_Models;
+        // default value
+        formalType = Decision_Model;
+        syntax = DMN_1_2_XML_Syntax;
+        break;
+      case CMMN_1_1:
+        formalCategory = Plans_Processes_Pathways_And_Protocol_Definitions;
+        // default value, may be specified differently in the file
+        formalType = Care_Process_Model;
+        syntax = CMMN_1_1_XML_Syntax;
+        break;
+      default:
+        throw new IllegalStateException(
+            "Invalid Language detected." + synRep.getLanguage());
     }
 
     // towards the ideal
@@ -220,35 +216,40 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
             .withLifecycle(lifecycle)
             .withLocalization(English)
             .withExpressionCategory(Software)
-            .withRepresentation(rep(synRep.get().getLanguage(), syntax, XML_1_1))
+            .withRepresentation(synRep)
+            .withMimeType(codedRep(synRep))
             .withLinks( // artifact - artifact relation/dependency
                 getRelatedArtifacts(theTargetArtifactId))
         )
         .withSurrogate(
             new KnowledgeArtifact()
-                // TODO this should be the model fileId...
-                .withArtifactId(artifactId(model.getId(), artifactVersionTag))
+                .withArtifactId(newId(
+                    MAYO_ARTIFACTS_BASE_URI_URI,
+                    defaultSurrogateUUID(assetID, Knowledge_Asset_Surrogate_2_0),
+                    toSemVer(artifactVersionTag)))
                 .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, JSON))
-                .withMimeType(model.getMimetype())
-        )
-        .withName(model.getName()); // TODO: might want '(DMN)' / '(CMMN)' here
+                .withMimeType(codedRep(Knowledge_Asset_Surrogate_2_0, JSON))
+        );
 
     // Annotations
     addSemanticAnnotations(surr, annotations);
 
-    if(logger.isDebugEnabled()) {
+    if (logger.isDebugEnabled()) {
       logger.debug(
-          "surrogate in JSON format: {} ", new String(JSonUtil.writeJson(surr).get().toByteArray()));
+          "surrogate in JSON format: {} ", writeJsonAsString(surr).orElse("n/a"));
     }
     return surr;
   }
 
   private List<ResourceIdentifier> getArtifactImports(String docId, TrisotechFileInfo model) {
     // if dealing with the latest of the model, return the latest of the imports
+    List<ResourceIdentifier> imports;
     if (mapper.isLatest(model.getId(), model.getVersion())) {
-      return mapper.getArtifactImports(docId);
+      imports = mapper.getArtifactImports(docId);
+    } else {
+      imports = getImportVersions(docId, model);
     }
-    return getImportVersions(docId, model);
+    return imports != null ? imports : Collections.emptyList();
   }
 
   /**
@@ -290,7 +291,9 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     // if next is null, it needs to be set to latest
     if (null == nextArtifactVersion) {
       nextArtifactVersion = client.getLatestModelFileInfo(model.getId()).orElse(null);
-      nextVersionDate = Date.from(Instant.parse(nextArtifactVersion.getUpdated()));
+      if (null != nextArtifactVersion) {
+        nextVersionDate = Date.from(Instant.parse(nextArtifactVersion.getUpdated()));
+      }
     }
 
     logger.debug("nextArtifactVersion: {} {} {} ", nextArtifactVersion.getName(),
@@ -454,7 +457,7 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     List<Annotation> annos = XMLUtil.asElementStream(
         dox.getDocumentElement().getElementsByTagName(SEMANTIC_EXTENSION_ELEMENTS))
         .filter(Objects::nonNull)
-        .filter(el -> el.getLocalName().equals("extensionElements"))
+        .filter(el -> el.getLocalName().equals(EXTENSION_ELEMENTS))
         .flatMap(el -> XMLUtil.asElementStream(el.getChildNodes()))
         .filter(child -> child.getLocalName().equals("annotation"))
         .map(child -> JaxbUtil.unmarshall(Annotation.class, Annotation.class, child))

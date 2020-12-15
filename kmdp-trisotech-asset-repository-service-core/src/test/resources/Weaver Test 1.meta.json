@@ -4,9 +4,9 @@
   "name" : "Weaver Test 1",
   "path" : "/",
   "mimetype" : "application/dmn-1-2+xml",
-  "updated" : "2020-12-09T02:54:00Z",
+  "updated" : "2020-12-09T06:13:58Z",
   "updater" : "Orcutt, Cheryl A.",
   "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2F&sku=http%3A%2F%2Fwww.trisotech.com%2Fdefinitions%2F_5682fa26-b064-43c8-9475-1e4281e74068&mimetype=application%2Fdmn-1-2%2Bxml",
-  "version" : "2.1.0",
+  "version" : "2.1.1",
   "state" : "Draft"
 }

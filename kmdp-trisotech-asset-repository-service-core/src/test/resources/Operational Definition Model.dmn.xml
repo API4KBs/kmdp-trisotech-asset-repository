@@ -24,24 +24,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-06T00:00:00"
+            <surr:rel establishedOn="2020-12-15T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201206-144038">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201215-130381">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-12-06T00:00:00"
+            <surr:ref establishedOn="2020-12-15T00:00:00"
                       name="Aggregation Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/AggregationDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#7a42c227-08ed-36af-a332-b6f04cc457b3"
                       tag="AggregationDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201206-144010#7a42c227-08ed-36af-a332-b6f04cc457b3"
-                      versionTag="20201206-144010">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201215-130346#7a42c227-08ed-36af-a332-b6f04cc457b3"
+                      versionTag="20201215-130346">
                <id:uuid>7a42c227-08ed-36af-a332-b6f04cc457b3</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -95,14 +95,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-06T00:00:00"
+            <surr:rel establishedOn="2020-12-15T00:00:00"
                       name="in terms of"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
                       tag="defined-in-terms-of"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#6e1048ea-46da-39b1-b650-445f31a17fc1"
-                      versionTag="20201206-144038">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#6e1048ea-46da-39b1-b650-445f31a17fc1"
+                      versionTag="20201215-130381">
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-10-15T00:00:00"
@@ -127,14 +127,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-06T00:00:00"
+            <surr:rel establishedOn="2020-12-15T00:00:00"
                       name="in terms of"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
                       tag="defined-in-terms-of"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#6e1048ea-46da-39b1-b650-445f31a17fc1"
-                      versionTag="20201206-144038">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#6e1048ea-46da-39b1-b650-445f31a17fc1"
+                      versionTag="20201215-130381">
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-10-15T00:00:00"
@@ -159,14 +159,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-06T00:00:00"
+            <surr:rel establishedOn="2020-12-15T00:00:00"
                       name="in terms of"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
                       tag="defined-in-terms-of"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#6e1048ea-46da-39b1-b650-445f31a17fc1"
-                      versionTag="20201206-144038">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#6e1048ea-46da-39b1-b650-445f31a17fc1"
+                      versionTag="20201215-130381">
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-10-15T00:00:00"

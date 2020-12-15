@@ -10,7 +10,7 @@
                       xmlns:rss="http://purl.org/rss/2.0/"
                       xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.2.3"
+                      exporterVersion="7.2.4"
                       expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
                       id="_a4172970-dc92-415e-9921-5e0c78af501c"
                       name="Weave Test 2"
@@ -89,7 +89,7 @@
                                    modelName="Weaver Test 2"
                                    type="graph"
                                    uri="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-               <triso:copyOfLink id="_e0bc3940-4d69-449f-b780-b52310c57c2b"
+               <triso:copyOfLink id="_eb70f4f9-33fd-4f5c-a5ab-d083eb772df5"
                                  itemName="Test Decision 2"
                                  mimeType="application/vnd.triso-dmn+json"
                                  modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"

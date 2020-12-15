@@ -49,14 +49,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-06T00:00:00"
+            <surr:rel establishedOn="2020-12-15T00:00:00"
                       name="in terms of"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
                       tag="defined-in-terms-of"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#6e1048ea-46da-39b1-b650-445f31a17fc1"
-                      versionTag="20201206-144038">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#6e1048ea-46da-39b1-b650-445f31a17fc1"
+                      versionTag="20201215-130381">
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-11-01T00:00:00"
@@ -82,22 +82,22 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-06T00:00:00"
+            <surr:rel establishedOn="2020-12-15T00:00:00"
                       name="in terms of"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
                       tag="defined-in-terms-of"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#6e1048ea-46da-39b1-b650-445f31a17fc1"
-                      versionTag="20201206-144038">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#6e1048ea-46da-39b1-b650-445f31a17fc1"
+                      versionTag="20201215-130381">
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-11-01T00:00:00"
                       name="Most Recent Blood Pressure"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
-                      referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/ffed935c-4a64-3666-880a-aa0d4a2ca507"
+                      referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/a57f482e-47d4-4369-b087-debfc97c7e40"
                       resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#ffed935c-4a64-3666-880a-aa0d4a2ca507"
-                      tag="ffed935c-4a64-3666-880a-aa0d4a2ca507"
+                      tag="a57f482e-47d4-4369-b087-debfc97c7e40"
                       versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201101#ffed935c-4a64-3666-880a-aa0d4a2ca507"
                       versionTag="20201101">
                <id:uuid>ffed935c-4a64-3666-880a-aa0d4a2ca507</id:uuid>

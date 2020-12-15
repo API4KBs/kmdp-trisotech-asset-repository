@@ -15,13 +15,13 @@
                       xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.2.3"
+                      exporterVersion="7.2.4"
                       id="_5682fa26-b064-43c8-9475-1e4281e74068"
                       name="Weaver Test 1"
                       namespace="http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068"
                       triso:logoChoice="Default"
                       triso:state="Draft"
-                      triso:version="2.1.0">
+                      triso:version="2.1.1">
    <semantic:extensionElements/>
    <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
                     name="Test Dictionary"

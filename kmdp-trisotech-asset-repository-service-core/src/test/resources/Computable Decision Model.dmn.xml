@@ -23,24 +23,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-06T00:00:00"
+            <surr:rel establishedOn="2020-12-15T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201206-144038">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201215-130381">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-12-06T00:00:00"
+            <surr:ref establishedOn="2020-12-15T00:00:00"
                       name="Computable Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ComputableDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a"
                       tag="ComputableDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201206-144010#8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a"
-                      versionTag="20201206-144010">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201215-130346#8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a"
+                      versionTag="20201215-130346">
                <id:uuid>8c1bd5ba-c9aa-3d6f-8a5c-40cbb9bbd31a</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -135,22 +135,22 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-06T00:00:00"
+            <surr:rel establishedOn="2020-12-15T00:00:00"
                       name="in terms of"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
                       tag="defined-in-terms-of"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#6e1048ea-46da-39b1-b650-445f31a17fc1"
-                      versionTag="20201206-144038">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#6e1048ea-46da-39b1-b650-445f31a17fc1"
+                      versionTag="20201215-130381">
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-11-01T00:00:00"
                       name="Most Recent Bilirubin"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
-                      referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/6c14a53a-7ce2-34aa-9cf1-a800317bebef"
+                      referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/0a094f18-4a93-43b4-af45-5a74f71ed3e2"
                       resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#6c14a53a-7ce2-34aa-9cf1-a800317bebef"
-                      tag="6c14a53a-7ce2-34aa-9cf1-a800317bebef"
+                      tag="0a094f18-4a93-43b4-af45-5a74f71ed3e2"
                       versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201101#6c14a53a-7ce2-34aa-9cf1-a800317bebef"
                       versionTag="20201101">
                <id:uuid>6c14a53a-7ce2-34aa-9cf1-a800317bebef</id:uuid>
@@ -167,14 +167,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-06T00:00:00"
+            <surr:rel establishedOn="2020-12-15T00:00:00"
                       name="in terms of"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defined-in-terms-of"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#6e1048ea-46da-39b1-b650-445f31a17fc1"
                       tag="defined-in-terms-of"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201206-144038#6e1048ea-46da-39b1-b650-445f31a17fc1"
-                      versionTag="20201206-144038">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#6e1048ea-46da-39b1-b650-445f31a17fc1"
+                      versionTag="20201215-130381">
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2020-11-01T00:00:00"

@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "item": {
+      "additionalProperties": false,
+      "dependencies": {
+        "drag": [
+          "type"
+        ]
+      },
+      "properties": {
+        "children": {
+          "items": {
+            "$ref": "#/definitions/item"
+          },
+          "type": "array"
+        },
+        "description": {
+          "type": "string"
+        },
+        "drag": {
+          "enum": [
+            "collection-group",
+            "collection",
+            "item",
+            "hidden"
+          ],
+          "type": "string"
+        },
+        "id": {
+          "format": "uri",
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "ref": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "format": "uri",
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              },
+              "type": {
+                "enum": [
+                  "activity",
+                  "actor",
+                  "entity",
+                  "event",
+                  "system",
+                  "goal",
+                  "capability"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "suffix": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "activity",
+            "actor",
+            "entity",
+            "event",
+            "system",
+            "goal",
+            "capability"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "type": "object"
+    }
+  },
+  "properties": {
+    "children": {
+      "items": {
+        "$ref": "#/definitions/item"
+      },
+      "type": "array"
+    },
+    "description": {
+      "type": "string"
+    },
+    "id": {
+      "format": "uri",
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "images": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "title": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "children"
+  ],
+  "type": "object"
+}

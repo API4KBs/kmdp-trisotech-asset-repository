@@ -16,11 +16,20 @@
 
   <name>Trisotech :: Native API Client</name>
 
+  <properties>
+    <staging-dir>${project.build.directory}/tt-stage</staging-dir>
+  </properties>
+
 
   <dependencies>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-utils</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.mayo.kmdp.kdcaci.knew</groupId>
+      <artifactId>knew-terminology-content</artifactId>
     </dependency>
 
     <dependency>
@@ -65,5 +74,39 @@
     </dependency>
 
   </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>${staging-dir}</directory>
+      </resource>
+      <resource>
+        <directory>${project.basedir}/src/main/resources</directory>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>gen-tt</id>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <mainClass>edu.mayo.kmdp.trisotech.accel.TrisotechAcceleratorGenerator</mainClass>
+              <arguments>
+                <argument>${staging-dir}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
 
 </project>

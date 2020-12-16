@@ -31,7 +31,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
     <kmdp.servers.version>4.9.1-SNAPSHOT</kmdp.servers.version>
-    <clinical.terms.version>7.0.2-SNAPSHOT</clinical.terms.version>
+    <clinical.terms.version>7.1.0-SNAPSHOT</clinical.terms.version>
   </properties>
 
   <dependencies>

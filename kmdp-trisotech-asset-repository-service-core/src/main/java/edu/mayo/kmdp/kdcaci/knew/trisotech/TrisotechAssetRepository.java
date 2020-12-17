@@ -293,7 +293,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
   /**
-   * corresponds to this uri:  /cat/assets/{assetId}/versions/{versionTag}/
+   * corresponds to this uri:  /cat/assets/{assetId}/versions/{versionTag}/carrier
    * KnowledgeCarrier: A Resource that wraps a Serialized, Encoded Knowledge Artifact
    *
    * @param assetId assetId of the asset
@@ -407,7 +407,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    */
   @Override
   public Answer<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(UUID assetId,
-      String versionTag, UUID artifactId, String artifactVersionTag) {
+      String versionTag, UUID artifactId, String artifactVersionTag, String xAccept) {
     KnowledgeCarrier carrier;
     String internalId;
 
@@ -440,8 +440,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       if (internalId.contains(artifactId.toString())) {
         // confirm version too
         Optional<String> artifactVersion = extractor.getArtifactVersion(assetId);
+        Optional<String> artifactVersionTimestamp = extractor.getArtifactIdVersionWithTimestamp(assetId);
         if (artifactVersion.isPresent()
-            && artifactVersion.get().equals(artifactVersionTag)) {
+            && (artifactVersion.get().equals(artifactVersionTag)
+        || artifactVersionTimestamp.get().equals(artifactVersionTag))) {
           // artifact matches, get the file and process
           // a specific version of knowledge asset carrier (fileId)
           Optional<ResourceIdentifier> lav = client
@@ -580,7 +582,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   @Override
   public Answer<KnowledgeCarrier> getKnowledgeAssetSurrogateVersion(UUID uuid, String s, UUID uuid1,
-      String s1) {
+      String s1, String xAccept) {
     return unsupported();
   }
 

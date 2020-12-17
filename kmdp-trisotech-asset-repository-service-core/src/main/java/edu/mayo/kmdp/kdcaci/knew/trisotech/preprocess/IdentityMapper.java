@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess;
 
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
+import static edu.mayo.kmdp.registry.Registry.ONTOLOGY_VER;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
@@ -521,13 +522,10 @@ public class IdentityMapper {
   public Optional<String> getMimetype(UUID assetId) {
     ResultSetRewindable modelSet = getModelSet();
     try {
-      while (modelSet.hasNext()) {
-        QuerySolution soln = modelSet.nextSolution();
-
-        if (soln.getLiteral(ASSET_ID).getString().contains(assetId.toString())) {
+        QuerySolution soln = findSolution(assetId, modelSet);
+        if(null != soln) {
           return Optional.ofNullable(soln.getLiteral(MIME_TYPE).getString());
         }
-      }
     } finally {
       modelSet.reset();
     }
@@ -651,18 +649,39 @@ public class IdentityMapper {
     // only publishedModels have a version
     ResultSetRewindable modelSet = getModelSet(false);
     try {
-      while (modelSet.hasNext()) {
-        QuerySolution soln = modelSet.nextSolution();
-        if (soln.getLiteral(ASSET_ID).getString().contains(assetId.toString())) {
+        QuerySolution soln = findSolution(assetId, modelSet);
+        if(null != soln) {
           return Optional.ofNullable(soln.getLiteral(VERSION)).map(Literal::getString);
         }
-      }
     } finally {
       modelSet.reset();
     }
     return Optional.empty();
   }
 
+
+  /**
+   * Get the version of the artifact for the asset provided Versions only exist on published
+   * models.
+   *
+   * @param assetId The enterprise asset Id
+   * @return the version of the artifact
+   */
+  public Optional<String> getArtifactIdVersionWithTimestamp(UUID assetId) {
+    // only publishedModels have a version
+    ResultSetRewindable modelSet = getModelSet(false);
+    try {
+        QuerySolution soln = findSolution(assetId, modelSet);
+        if(null != soln) {
+          String versionTag = soln.getLiteral(VERSION).getString();
+          String timestamp = DateTimeUtil.dateTimeStrToMillis(soln.getLiteral(UPDATED).getString());
+          return Optional.ofNullable(versionTag + "+" + timestamp);
+        }
+    } finally {
+      modelSet.reset();
+    }
+    return Optional.empty();
+  }
 
   /**
    * Get the updated dateTime of the artifact for the asset provided
@@ -674,12 +693,10 @@ public class IdentityMapper {
     // only publishedModels have a version
     ResultSetRewindable modelSet = getModelSet();
     try {
-      while (modelSet.hasNext()) {
-        QuerySolution soln = modelSet.nextSolution();
-        if (soln.getLiteral(ASSET_ID).getString().contains(assetId.toString())) {
+        QuerySolution soln = findSolution(assetId, modelSet);
+        if(null != soln) {
           return Optional.ofNullable(soln.getLiteral(UPDATED)).map(Literal::getString);
         }
-      }
     } finally {
       modelSet.reset();
     }
@@ -836,5 +853,19 @@ public class IdentityMapper {
     } else {
       return SemanticIdentifier.newId(MAYO_ARTIFACTS_BASE_URI_URI, id, versionTag);
     }
+  }
+
+  private QuerySolution findSolution(UUID assetId, ResultSetRewindable modelSet) {
+    try {
+      while (modelSet.hasNext()) {
+        QuerySolution soln = modelSet.nextSolution();
+        if (soln.getLiteral(ASSET_ID).getString().contains(assetId.toString())) {
+          return soln;
+        }
+      }
+    } finally {
+      modelSet.reset();
+    }
+    return null;
   }
 }

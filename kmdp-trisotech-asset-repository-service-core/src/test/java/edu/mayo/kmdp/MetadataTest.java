@@ -235,6 +235,15 @@ class MetadataTest {
     assertEquals("1.8.3", artifactVersion.get());
   }
 
+
+  @Test
+  void testGetArtifactVersionWithTimestamp() {
+    Optional<String> artifactVersion = extractor
+        .getArtifactIdVersionWithTimestamp(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
+    assertNotNull(artifactVersion);
+    assertEquals("1.8.3+1607481864000", artifactVersion.get());
+  }
+
   @Test
   void testGetMimeType() {
     Optional<String> mimetype = extractor

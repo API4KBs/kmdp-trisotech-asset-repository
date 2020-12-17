@@ -37,21 +37,22 @@ There are multiple pieces to the extractor:
 
 ### Compiling
 
-To compile locally requires using the token. From the commandline, this is easiest to do with a local properties file that just includes the token:
-
-`mvn -U clean install -Dmaven.javadoc.skip=true -Dspring.profiles.active=dev -Dspring.config.additional-location="file:<localpath>\tt.properties"`
-
-The file can be named anything as long as it ends in .properties.
-
-The above may not work in all cases. With some changes made, the code will work with a environment variable for the token.
+To compile locally requires using the token. 
 
 Create a user environment variable with the name:
 `edu.mayo.kmdp.trisotechwrapper.trisotechToken`
 
 Give it the token value for its value.
+Then use the following to compile on the command line:
+`mvn clean install`
 
-From within IntelliJ, the appropriate properties files need to be modified to include the token.
-This is needed to be able to debug within IntelliJ.
- 
+ALTERNATIVELY: From the commandline, this can be done with a local properties file that just includes the token:
+`mvn -U clean install -Dmaven.javadoc.skip=true -Dspring.profiles.active=dev -Dspring.config.additional-location="file:<localpath>\tt.properties"`
+
+The file can be named anything as long as it ends in .properties.
+
+There is no longer a need to modify the project properties files. Instead use the environment variable or a .spring-tools.devtools.properties file.
+IF one of the properties file is modified to include the token, heed the warning:
+
 ** WARNING **
 DO NOT CHECK-IN THESE FILES WITH THE TOKEN!!!!

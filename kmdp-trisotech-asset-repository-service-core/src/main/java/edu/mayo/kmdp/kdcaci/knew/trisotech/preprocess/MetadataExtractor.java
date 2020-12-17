@@ -165,6 +165,10 @@ public class MetadataExtractor {
     return strategy.getArtifactVersion(assetId);
   }
 
+  public Optional<String> getArtifactIdVersionWithTimestamp(UUID assetId) {
+    return strategy.getArtifactIdVersionWithTimestamp(assetId);
+  }
+
   public Optional<String> getArtifactIdUpdateTime(UUID assetId) {
     return strategy.getArtifactIdUpdateTime(assetId);
   }

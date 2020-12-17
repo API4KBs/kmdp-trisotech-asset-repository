@@ -15,13 +15,15 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 # ?updated is the date this version was last updated
 # ?mimeType helps with the ability to retrieve the correct filetype for the model
 # ?artifactName is the name of the model
+# because version is only on published models, not all models will be returned with this SELECT; can make version OPTIONAL
+# NOTE: just because a model is published, does NOT mean it is 'Published'
 SELECT ?model ?fileId ?assetId ?version ?state ?updated ?mimeType ?artifactName
 FROM NAMED ?
 WHERE {
 GRAPH ? {
     # gets the customAttribute. This is where the knowledgeAsset is stored
     ?customAttribute a tt:CustomAttribute .
-    # gets the key value and only key values that are knowledgeAssetId (case-insensitive)
+    # gets the customAttribute key value and only key values that are 'knowledgeAssetId' (case-insensitive)
     ?customAttribute ttr:key ?key
     # the 'i' makes the query case-insensitive
     FILTER regex(?key, "knowledgeAssetId", "i") .

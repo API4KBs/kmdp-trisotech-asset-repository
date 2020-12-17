@@ -552,6 +552,10 @@ public class TrisotechExtractionStrategy implements ExtractionStrategy {
     return mapper.getArtifactIdVersion(assetId);
   }
 
+  public Optional<String> getArtifactIdVersionWithTimestamp(UUID assetId) {
+    return mapper.getArtifactIdVersionWithTimestamp(assetId);
+  }
+
   public Optional<String> getArtifactIdUpdateTime(UUID assetId) {
     return mapper.getArtifactIdUpdateTime(assetId);
   }

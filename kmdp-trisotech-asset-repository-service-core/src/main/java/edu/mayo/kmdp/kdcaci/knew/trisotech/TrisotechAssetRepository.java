@@ -13,6 +13,25 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
+import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_UPPER;
+import static java.nio.charset.Charset.defaultCharset;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.asEnum;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
+
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTWConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.NotLatestVersionException;
@@ -21,6 +40,16 @@ import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import java.io.IOException;
+import java.net.URI;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import org.apache.http.HttpException;
 import org.apache.jena.shared.NotFoundException;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
@@ -43,26 +72,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.net.URI;
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
-import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI_URI;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.*;
-import static java.nio.charset.Charset.defaultCharset;
-import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
-import static org.omg.spec.api4kp._20200801.Answer.unsupported;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.*;
-import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.CMMN_1_1_XML_Syntax;
-import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.DMN_1_2_XML_Syntax;
 
 /**
  * A 'wrapper' class. This class implements the Knowledge Asset API and wraps that API around
@@ -99,7 +108,12 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   @Override
   public Answer<KnowledgeAssetCatalog> getKnowledgeAssetCatalog() {
-    return unsupported();
+    return Answer.of(new KnowledgeAssetCatalog()
+        .withName("KMDP Trisotech DES Wrapper")
+        .withId(newId(BASE_UUID_URN_URI,"TTW"))
+        .withOwner("KMDP / MEA")
+        .withSurrogateModels(rep(Knowledge_Asset_Surrogate_2_0,XML_1_1))
+        .withSupportedAssetTypes(Decision_Model,Care_Process_Model));
   }
 
 
@@ -130,17 +144,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         client.getLatestModelFileInfo(modelId.get())
             .flatMap(modelInfo ->
                 getKnowledgeAssetForModel(modelId.get(), modelInfo)));
-  }
-
-  /**
-   * @return Pointers to the versions of a given asset
-   */
-  @Override
-  public Answer<List<Pointer>> listKnowledgeAssetVersions(UUID assetId, Integer offset,
-      Integer limit, String beforeTag, String afterTag, String sort) {
-    // all versions of given knowledge asset. May make sense to implement
-    // may be empty if no versions have been established
-    return unsupported(); // for now
   }
 
 
@@ -219,11 +222,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     throw new NotFoundException("No artifact for asset " + assetId + " version: " + versionTag);
   }
 
-  @Override
-  public Answer<UUID> initKnowledgeAsset() {
-    return unsupported();
-  }
-
   /**
    * list of the all published assets. If assetTypeTag is available will return all published assets
    * of that type.
@@ -279,19 +277,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   }
 
-
-  @Override
-  public Answer<Void> setKnowledgeAssetVersion(UUID uuid, String s,
-      KnowledgeAsset knowledgeAsset) {
-    return unsupported();
-  }
-
-  @Override
-  public Answer<Void> addKnowledgeAssetCarrier(UUID assetId, String versionTag,
-      KnowledgeCarrier assetCarrier) {
-    return unsupported();
-  }
-
   /**
    * corresponds to this uri:  /cat/assets/{assetId}/versions/{versionTag}/carrier
    * KnowledgeCarrier: A Resource that wraps a Serialized, Encoded Knowledge Artifact
@@ -342,12 +327,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   }
 
-  @Override
-  public Answer<KnowledgeCarrier> getCanonicalKnowledgeAssetSurrogate(UUID assetId,
-      String versionTag,
-      String extAccept) {
-    return unsupported();
-  }
 
   private Answer<KnowledgeCarrier> tryAnotherVersion(
       String internalId, UUID assetId, String versionTag) {
@@ -376,7 +355,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
               .map(XMLUtil::toByteArray).orElse(new byte[0]))
               .withRepresentation(getLanguageRepresentationForModel(downloadXml))
               .withArtifactId(artifactId)
-              .withAssetId(SemanticIdentifier.newId(MAYO_ASSETS_BASE_URI_URI, assetId, versionTag))
+              .withAssetId(newId(MAYO_ASSETS_BASE_URI_URI, assetId, versionTag))
           );
         }
       }
@@ -458,10 +437,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
                 .map(weaver::weave)
                 .map(XMLUtil::toByteArray).orElse(new byte[0]))
                 .withAssetId(
-                    SemanticIdentifier
-                        .newId(MAYO_ASSETS_BASE_URI_URI, assetId.toString(), versionTag))
+                    newId(MAYO_ASSETS_BASE_URI_URI, assetId.toString(), versionTag))
                 .withArtifactId(
-                    SemanticIdentifier.newId(MAYO_ARTIFACTS_BASE_URI_URI, artifactId.toString(),
+                    newId(MAYO_ARTIFACTS_BASE_URI_URI, artifactId.toString(),
                         lav.get().getVersionTag()))
                 .withRepresentation(getLanguageRepresentationForModel(dox));
           } else {
@@ -573,19 +551,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     }
     return Answer.of(Optional.empty());
   }
-
-  @Override
-  public Answer<List<Pointer>> listKnowledgeAssetCarriers(UUID assetId, String versionTag) {
-    // Expect only one carrier ; Canonical will give XML
-    return unsupported();
-  }
-
-  @Override
-  public Answer<KnowledgeCarrier> getKnowledgeAssetSurrogateVersion(UUID uuid, String s, UUID uuid1,
-      String s1, String xAccept) {
-    return unsupported();
-  }
-
 
   // to upload the "dictionary" DMN model
 

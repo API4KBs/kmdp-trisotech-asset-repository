@@ -671,7 +671,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void getCompositeKnowledgeAsset() {
     Answer<KnowledgeCarrier> answer= tar
-        .getCanonicalKnowledgeAssetSurrogate(UUID.randomUUID(), "s", "s1");
+        .getKnowledgeAssetVersionCanonicalSurrogate(UUID.randomUUID(), "s", "s1");
     assertTrue(answer.isFailure());
     assertEquals(NotImplemented, answer.getOutcomeType());
   }

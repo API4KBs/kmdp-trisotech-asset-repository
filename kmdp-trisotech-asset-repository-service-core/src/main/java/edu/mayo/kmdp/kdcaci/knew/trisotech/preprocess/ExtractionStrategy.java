@@ -57,4 +57,5 @@ public interface ExtractionStrategy {
 
 	Optional<String> getModelId(UUID assetId, boolean any);
 
+  Optional<String> getArtifactIdUpdateTimeAsMS(UUID assetId);
 }

@@ -477,12 +477,10 @@ public class IdentityMapper {
     } finally {
       theModels.reset();
     }
-    if(logger.isWarnEnabled()) {
-      if (modelIds.size() > 1) {
-        logger.warn("Asset ID {}, model IDs {}", assetId, Strings.join(modelIds, ','));
-        logger.warn("BUG : The same AssetID has been used across multiple models, "
-            + "which is admissible but not supported");
-      }
+    if(logger.isWarnEnabled() && modelIds.size() > 1) {
+      logger.warn("Asset ID {}, model IDs {}", assetId, Strings.join(modelIds, ','));
+      logger.warn("BUG : The same AssetID has been used across multiple models, "
+          + "which is admissible but not supported");
     }
     return modelIds.stream().findAny();
   }
@@ -703,6 +701,26 @@ public class IdentityMapper {
     return Optional.empty();
   }
 
+  /**
+   * Get the updated dateTime of the artifact for the asset provided
+   *
+   * @param assetId The enterprise asset Id
+   * @return the updated field of the artifact in MS
+   */
+  public Optional<String> getArtifactIdUpdateTimeAsMS(UUID assetId) {
+    // only publishedModels have a version
+    ResultSetRewindable modelSet = getModelSet();
+    try {
+      QuerySolution soln = findSolution(assetId, modelSet);
+      if(null != soln) {
+        String timestamp = DateTimeUtil.dateTimeStrToMillis(soln.getLiteral(UPDATED).getString());
+        return Optional.ofNullable(timestamp);
+      }
+    } finally {
+      modelSet.reset();
+    }
+    return Optional.empty();
+  }
 
   /**
    * Given the internal id for the model, get the information about other models it imports. This is
@@ -761,8 +779,7 @@ public class IdentityMapper {
                 DateTimeUtil.dateTimeStrToMillis(soln.getLiteral(UPDATED).getString()));
             return Optional.ofNullable(rid);
           } else {
-            // TODO: Still use timestamp?
-            ResourceIdentifier rid =  convertInternalId(soln.getResource(MODEL).getURI(), VERSION_LATEST, "" + new Date().getTime());
+            ResourceIdentifier rid =  convertInternalId(soln.getResource(MODEL).getURI(), VERSION_LATEST, "+" + new Date().getTime());
             return Optional.ofNullable(rid);
           }
         }

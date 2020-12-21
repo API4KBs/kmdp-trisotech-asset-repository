@@ -169,6 +169,10 @@ public class MetadataExtractor {
     return strategy.getArtifactIdVersionWithTimestamp(assetId);
   }
 
+  public Optional<String> getArtifactIdUpdateTimeAsMS(UUID assetId) {
+    return strategy.getArtifactIdUpdateTimeAsMS(assetId);
+  }
+
   public Optional<String> getArtifactIdUpdateTime(UUID assetId) {
     return strategy.getArtifactIdUpdateTime(assetId);
   }
@@ -193,10 +197,10 @@ public class MetadataExtractor {
 //  APIs will now work with modelId; modelId and fileId are one and the same in SPARQL query now
 //  -- CAO 11/05/2020
   /**
-   * The fileId is the id of the file for the artifact that can be used with the APIs.
+   * The internalId is the id for the artifact that can be used with the APIs.
    *
    * @param internalId the internal identifier for the artifact
-   * @return fileId
+   * @return modelId
    */
    public Optional<String> getModelId(String internalId) {
     return strategy.getModelId(internalId);

@@ -389,9 +389,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     boolean publishedOnly = configuration.getTyped(TTWParams.PUBLISHED_ONLY);
     String internalId = extractor.resolveInternalArtifactID(assetId, versionTag, ! publishedOnly);
     Optional<String> version = extractor.getArtifactVersion(assetId);
-    Optional<String> updated = extractor.getArtifactIdUpdateTime(assetId);
+    Optional<String> updated = extractor.getArtifactIdUpdateTimeAsMS(assetId);
     return extractor.convertInternalId(internalId,
-        version.orElse(IdentifierConstants.VERSION_LATEST), updated.orElse("" + new Date().getTime())); // TODO: better alternative? error? CAO
+        version.orElse(IdentifierConstants.VERSION_LATEST), updated.orElse("+" + new Date().getTime())); // TODO: better alternative? error? CAO
   }
 
   /**
@@ -442,7 +442,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         Optional<String> artifactVersion = extractor.getArtifactVersion(assetId);
         Optional<String> artifactVersionTimestamp = extractor.getArtifactIdVersionWithTimestamp(assetId);
         if (artifactVersion.isPresent()
-            && (artifactVersion.get().equals(artifactVersionTag)
+            && (artifactVersion.get().equals(artifactVersionTag.strip())
         || artifactVersionTimestamp.get().equals(artifactVersionTag))) {
           // artifact matches, get the file and process
           // a specific version of knowledge asset carrier (fileId)

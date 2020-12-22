@@ -40,6 +40,7 @@ import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
 import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.NotImplemented;
+import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.OK;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
@@ -70,7 +71,7 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void getAssetCatalog() {
     Answer<KnowledgeAssetCatalog> answer = tar.getKnowledgeAssetCatalog();
-    assertEquals(NotImplemented, answer.getOutcomeType());
+    assertEquals(OK, answer.getOutcomeType());
   }
 
   @Test
@@ -683,14 +684,6 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(answer.isFailure());
     assertEquals(NotImplemented, answer.getOutcomeType());
 
-  }
-
-  @Test
-  void getKnowledgeAssetCatalog() {
-    Answer<KnowledgeAssetCatalog> answer= tar
-        .getKnowledgeAssetCatalog();
-    assertTrue(answer.isFailure());
-    assertEquals(NotImplemented, answer.getOutcomeType());
   }
 
   @Test

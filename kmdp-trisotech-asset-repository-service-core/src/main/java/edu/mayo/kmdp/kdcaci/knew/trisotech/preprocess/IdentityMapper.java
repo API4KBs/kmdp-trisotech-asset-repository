@@ -14,7 +14,6 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess;
 
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
-import static edu.mayo.kmdp.registry.Registry.ONTOLOGY_VER;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_LATEST;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
@@ -522,7 +521,7 @@ public class IdentityMapper {
     try {
         QuerySolution soln = findSolution(assetId, modelSet);
         if(null != soln) {
-          return Optional.ofNullable(soln.getLiteral(MIME_TYPE).getString());
+          return Optional.ofNullable(soln.getLiteral(MIME_TYPE)).map(Literal::getString);
         }
     } finally {
       modelSet.reset();
@@ -544,7 +543,7 @@ public class IdentityMapper {
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
         if (soln.getLiteral(ASSET_ID).getString().contains(assetId.getResourceId().toString())) {
-          return Optional.ofNullable(soln.getLiteral(ARTIFACT_NAME).getString());
+          return Optional.ofNullable(soln.getLiteral(ARTIFACT_NAME)).map(Literal::getString);
         }
       }
     } finally {
@@ -559,7 +558,7 @@ public class IdentityMapper {
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
         if (soln.getResource(MODEL).getURI().contains(artifactId.getTag())) {
-          return Optional.ofNullable(soln.getLiteral(ARTIFACT_NAME).getString());
+          return Optional.ofNullable(soln.getLiteral(ARTIFACT_NAME)).map(Literal::getString);
         }
       }
     } finally {
@@ -583,7 +582,7 @@ public class IdentityMapper {
         QuerySolution soln = modelSet.nextSolution();
         // use contains as sometimes modelId is just the tag
         if (soln.getResource(MODEL).getURI().contains(modelId)) {
-          return Optional.ofNullable(soln.getLiteral(MIME_TYPE).getString());
+          return Optional.ofNullable(soln.getLiteral(MIME_TYPE)).map(Literal::getString);
         }
       }
     } finally {
@@ -604,7 +603,7 @@ public class IdentityMapper {
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
         if (soln.getResource(MODEL).getURI().equals(modelId)) {
-          return Optional.ofNullable(soln.getLiteral(STATE).getString());
+          return Optional.ofNullable(soln.getLiteral(STATE)).map(Literal::getString);
         }
       }
     } finally {
@@ -672,8 +671,10 @@ public class IdentityMapper {
         QuerySolution soln = findSolution(assetId, modelSet);
         if(null != soln) {
           String versionTag = soln.getLiteral(VERSION).getString();
-          String timestamp = DateTimeUtil.dateTimeStrToMillis(soln.getLiteral(UPDATED).getString());
-          return Optional.ofNullable(versionTag + "+" + timestamp);
+          return Optional.ofNullable(soln.getLiteral(UPDATED))
+              .map(Literal::getString)
+              .map(DateTimeUtil::dateTimeStrToMillis)
+              .map(timestamp -> versionTag + "+" + timestamp);
         }
     } finally {
       modelSet.reset();
@@ -713,8 +714,9 @@ public class IdentityMapper {
     try {
       QuerySolution soln = findSolution(assetId, modelSet);
       if(null != soln) {
-        String timestamp = DateTimeUtil.dateTimeStrToMillis(soln.getLiteral(UPDATED).getString());
-        return Optional.ofNullable(timestamp);
+        return Optional.ofNullable(soln.getLiteral(UPDATED))
+            .map(Literal::getString)
+            .map(DateTimeUtil::dateTimeStrToMillis);
       }
     } finally {
       modelSet.reset();
@@ -774,12 +776,18 @@ public class IdentityMapper {
         QuerySolution soln = modelSet.nextSolution();
         if (soln.getResource(MODEL).equals(resource)) {
           if (soln.getLiteral(VERSION) != null) {
-            ResourceIdentifier rid = convertInternalId(soln.getResource(MODEL).getURI(),
+            ResourceIdentifier rid = convertInternalId(
+                soln.getResource(MODEL).getURI(),
                 soln.getLiteral(VERSION).getString(),
-                DateTimeUtil.dateTimeStrToMillis(soln.getLiteral(UPDATED).getString()));
+                Optional.ofNullable(soln.getLiteral(UPDATED))
+                    .map(Literal::toString)
+                    .map(DateTimeUtil::dateTimeStrToMillis)
+                    .orElse("" + new Date().getTime()));
             return Optional.ofNullable(rid);
           } else {
-            ResourceIdentifier rid =  convertInternalId(soln.getResource(MODEL).getURI(), VERSION_LATEST, "+" + new Date().getTime());
+            ResourceIdentifier rid = convertInternalId(
+                soln.getResource(MODEL).getURI(),
+                VERSION_LATEST, "" + new Date().getTime());
             return Optional.ofNullable(rid);
           }
         }
@@ -792,7 +800,10 @@ public class IdentityMapper {
     if (config.getTyped(TTWParams.PUBLISHED_ONLY)) {
       return Optional.empty();
     } else {
-      ResourceIdentifier rid =  convertInternalId(resource.getURI(), VERSION_LATEST, "" + new Date().getTime());
+      ResourceIdentifier rid =  convertInternalId(
+          resource.getURI(),
+          VERSION_LATEST,
+          "" + new Date().getTime());
       return Optional.ofNullable(rid);
     }
   }

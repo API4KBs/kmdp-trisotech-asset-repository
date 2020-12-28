@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess;
+package edu.mayo.kmdp.kdcaci.knew.trisotech.exception;
 
-import edu.mayo.kmdp.ConfigProperties;
-import java.util.Properties;
-import org.springframework.stereotype.Component;
+/**
+ * Exception to handle when the asset version we're looking for doesn't
+ * exist for the latest version of the artifact.
+ * Provide the model URI for the artifact as the errorMessage.
+ */
+public class NotLatestVersionException extends Exception {
 
-@Component
-public class ReaderConfig extends ConfigProperties<ReaderConfig, ReaderOptions>  {
+  private String modelUri;
 
-	private static final Properties defaultedProperties = defaulted( ReaderOptions.class );
+  public NotLatestVersionException(String modelUri) {
+    super(
+        "Model " + modelUri + " was resolved using a non-current Asset version");
+    this.modelUri = modelUri;
+  }
 
-	public ReaderConfig() {
-		super(defaultedProperties);
-	}
-
-	@Override
-	public ReaderOptions[] properties() {
-		return ReaderOptions.values();
-	}
-
-
+  public String getModelUri() {
+    return modelUri;
+  }
 }

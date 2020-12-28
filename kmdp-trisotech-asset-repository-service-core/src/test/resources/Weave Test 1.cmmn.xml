@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"
                       xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9"
-                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
+                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets/"
                       xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
                       xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"
                       xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
                       xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:i18n="http://www.omg.org/spec/BPMN/non-normative/extensions/i18n/1.0"
                       xmlns:ns1="https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068"
                       xmlns:ns2="https://clinicalknowledgemanagement.mayo.edu/artifacts/ede3b331-7b10-4580-98be-66ebff344c21"
                       xmlns:rss="http://purl.org/rss/2.0/"

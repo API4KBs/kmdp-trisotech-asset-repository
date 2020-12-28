@@ -1,11 +1,11 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -13,8 +13,6 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor.Format.JSON;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor.Format.XML;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -23,26 +21,32 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.NotLatestVersionException;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.IdentityMapper;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestVersionException;
 import edu.mayo.kmdp.util.DateTimeUtil;
-import edu.mayo.kmdp.util.JaxbUtil;
-import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.xml.transform.stream.StreamSource;
-import org.apache.jena.shared.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
@@ -50,7 +54,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringBootTest
 @ContextConfiguration(classes = {TrisotechAssetRepositoryConfig.class})
@@ -63,19 +66,30 @@ class MetadataTest {
   // FYI: IDE may complain about
   // the following two not being able to be autowired, but the code works.
   @Autowired
-  private MetadataExtractor extractor;
+  private MetadataIntrospector extractor;
+
+  @Autowired
+  private IdentityMapper mapper;
 
   @Autowired
   private Weaver weaver;
 
-  private static String dmnPath = "/Weaver Test 1.dmn.xml";
-  private static String metaPath = "/Weaver Test 1.meta.json";
-  private static String cmmnPath = "/Weave Test 1.cmmn.xml";
-  private static String cmmnMetaPath = "/Weave Test 1.meta.json";
+  @Autowired
+  private Redactor redactor;
+
+  private static final String dmnPath = "/Weaver Test 1.dmn.xml";
+  private static final String metaPath = "/Weaver Test 1.meta.json";
+  private static final String cmmnPath = "/Weave Test 1.cmmn.xml";
+  private static final String cmmnMetaPath = "/Weave Test 1.meta.json";
   private static boolean constructed = false;
 
   private static byte[] annotatedDMN;
   private static byte[] annotatedCMMN;
+
+  private final String xmlCodedRep = codedRep(
+      Knowledge_Asset_Surrogate_2_0, XML_1_1, Charset.defaultCharset(), Encodings.DEFAULT);
+  private final String jsonCodedRep = codedRep(
+      Knowledge_Asset_Surrogate_2_0, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
 
 
   /**
@@ -92,6 +106,7 @@ class MetadataTest {
       Optional<byte[]> dmn = XMLUtil
           .loadXMLDocument(MetadataTest.class.getResourceAsStream(dmnPath))
           .map(weaver::weave)
+          .map(redactor::redact)
           .map(XMLUtil::toByteArray);
       assertTrue(dmn.isPresent());
       annotatedDMN = dmn.get();
@@ -99,6 +114,7 @@ class MetadataTest {
       Optional<byte[]> cmmn = XMLUtil
           .loadXMLDocument(MetadataTest.class.getResourceAsStream(cmmnPath))
           .map(weaver::weave)
+          .map(redactor::redact)
           .map(XMLUtil::toByteArray);
       assertTrue(cmmn.isPresent());
       annotatedCMMN = cmmn.get();
@@ -133,16 +149,15 @@ class MetadataTest {
 
   @Test
   void testXMLValidate() {
-    Optional<ByteArrayOutputStream> baos = extractor
-        .doExtract(new ByteArrayInputStream(annotatedDMN),
+    Optional<byte[]> baos = extractor
+        .extractBinary(new ByteArrayInputStream(annotatedDMN),
             MetadataTest.class.getResourceAsStream(metaPath),
-            XML,
-            JaxbUtil.defaultProperties());
+            xmlCodedRep);
 
     if (baos.isEmpty()) {
       fail("Unable to create metadata");
     } else {
-      boolean ans = baos.map(ByteArrayOutputStream::toByteArray)
+      boolean ans = baos
           .map(ByteArrayInputStream::new)
           .map(StreamSource::new)
           .map((dox) -> XMLUtil
@@ -154,47 +169,46 @@ class MetadataTest {
 
   @Test
   void testToXML() {
-    assertTrue(extractor.doExtract(new ByteArrayInputStream(annotatedDMN),
+    assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedDMN),
         MetadataTest.class.getResourceAsStream(metaPath),
-        XML,
-        JaxbUtil.defaultProperties())
-        .map(Util::printOut).isPresent());
-    assertTrue(extractor.doExtract(new ByteArrayInputStream(annotatedCMMN),
+        xmlCodedRep)
+//        .map(String::new).map(Util::printOut)
+        .isPresent());
+    assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedCMMN),
         MetadataTest.class.getResourceAsStream(cmmnMetaPath),
-        XML,
-        JaxbUtil.defaultProperties())
-        .map(Util::printOut).isPresent());
-
+        xmlCodedRep)
+//        .map(String::new).map(Util::printOut)
+        .isPresent());
   }
 
   @Test
   void testToJson() {
-    assertTrue(extractor.doExtract(new ByteArrayInputStream(annotatedDMN),
+    assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedDMN),
         MetadataTest.class.getResourceAsStream(metaPath),
-        JSON,
-        JaxbUtil.defaultProperties())
-        .map(Util::printOut).isPresent());
-    assertTrue(extractor.doExtract(new ByteArrayInputStream(annotatedCMMN),
+        jsonCodedRep)
+//        .map(String::new).map(Util::printOut)
+        .isPresent());
+    assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedCMMN),
         MetadataTest.class.getResourceAsStream(cmmnMetaPath),
-        JSON,
-        JaxbUtil.defaultProperties())
-        .map(Util::printOut).isPresent());
+        jsonCodedRep)
+//        .map(String::new).map(Util::printOut)
+        .isPresent());
   }
 
   @Test
   void testGetEnterpriseAssetIdForAsset() {
-    Optional<URI> enterpriseAsset = extractor
-        .getEnterpriseAssetIdForAsset(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
+    Optional<URI> enterpriseAsset = mapper
+        .getCurrentAssetSeriesUri(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
     assertNotNull(enterpriseAsset);
     assertEquals(
         "https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c",
-        enterpriseAsset.get().toString());
+        enterpriseAsset.map(Objects::toString).orElse(""));
   }
 
   @Test
   void testGetEnterpriseAssetIdForAsset_empty() {
-    Optional<URI> enterpriseAsset = extractor
-        .getEnterpriseAssetIdForAsset(UUID.fromString("14421eac-cb9a-427f-abf5-1420bf26e03c"));
+    Optional<URI> enterpriseAsset = mapper
+        .getCurrentAssetSeriesUri(UUID.fromString("14421eac-cb9a-427f-abf5-1420bf26e03c"));
     assertNotNull(enterpriseAsset);
     assertFalse(enterpriseAsset.isPresent());
     assertEquals(Optional.empty(), enterpriseAsset);
@@ -202,83 +216,83 @@ class MetadataTest {
 
   @Test
   void testGetEnterpriseAssetVersionIdForAsset() {
-    Optional<URI> enterpriseAssetVersion = null;
+    Optional<ResourceIdentifier> enterpriseAssetVersion = Optional.empty();
     try {
-      enterpriseAssetVersion = extractor.getEnterpriseAssetVersionIdForAsset(
+      enterpriseAssetVersion = mapper.resolveAssetToCurrentAssetId(
           UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
           "1.0.1", false);
     } catch (NotLatestVersionException e) {
       fail();
     }
-    assertNotNull(enterpriseAssetVersion);
     assertEquals(
         "https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c/versions/1.0.1",
-        enterpriseAssetVersion.get().toString());
+        enterpriseAssetVersion.map(ResourceIdentifier::getVersionId).map(Objects::toString).orElse(""));
   }
 
   @Test
   void testGetEnterpriseAssetVersionIdForAsset_badId() {
-    Optional<URI> enterpriseAssetVersion = null;
-    NotFoundException nfe = assertThrows(
-        NotFoundException.class,
-        () -> extractor.getEnterpriseAssetVersionIdForAsset(
-            UUID.fromString("14ba1e7c-cb9a-427f-abf5-1420bf26e03c"),
-            "1.0.1", false));
-
+    try {
+      Optional<ResourceIdentifier> uri = mapper.resolveAssetToCurrentAssetId(
+              UUID.fromString("14ba1e7c-cb9a-427f-abf5-1420bf26e03c"),
+              "1.0.1", false);
+      assertTrue(uri.isEmpty());
+    } catch (NotLatestVersionException e) {
+      fail(e.getMessage());
+    }
   }
 
   @Test
   void testGetArtifactVersion() {
-    Optional<String> artifactVersion = extractor
-        .getArtifactVersion(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
+    Optional<String> artifactVersion = mapper
+        .getLatestCarrierVersionTag(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
     assertNotNull(artifactVersion);
-    assertEquals("1.8.3", artifactVersion.get());
+    assertEquals("1.8.5", artifactVersion.orElse(""));
   }
 
 
   @Test
   void testGetArtifactVersionWithTimestamp() {
-    Optional<String> artifactVersion = extractor
-        .getArtifactIdVersionWithTimestamp(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
+    Optional<String> artifactVersion = mapper
+        .getLatestCarrierTimestampedVersionTag(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
     assertNotNull(artifactVersion);
-    assertEquals("1.8.3+1607481864000", artifactVersion.get());
+    assertEquals("1.8.5+1609367257000", artifactVersion.orElse(""));
   }
 
   @Test
   void testGetMimeType() {
-    Optional<String> mimetype = extractor
+    String mimetype = mapper
         .getMimetype(UUID.fromString("bd0014e6-afbe-4006-b182-baa973f2929a"));
     assertNotNull(mimetype);
-    assertEquals("application/vnd.triso-dmn+json", mimetype.get());
+    assertEquals("application/vnd.triso-dmn+json", mimetype);
 
-    mimetype = extractor.getMimetype(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
+    mimetype = mapper.getMimetype(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
     assertNotNull(mimetype);
     assertFalse(mimetype.isEmpty());
-    assertEquals("application/vnd.triso-cmmn+json", mimetype.get());
+    assertEquals("application/vnd.triso-cmmn+json", mimetype);
   }
 
   @Test
   void testGetEnterpriseAssetVersionIdForAsset_badVersion() {
     NotLatestVersionException nlve = assertThrows(
         NotLatestVersionException.class,
-        () -> extractor.getEnterpriseAssetVersionIdForAsset(
+        () -> mapper.resolveAssetToCurrentAssetId(
             UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.1.0", false));
     // internalId provided with exception
     assertEquals(
         "http://www.trisotech.com/definitions/_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"
-        , nlve.getMessage());
+        , nlve.getModelUri());
   }
 
   @Test
   void testResolveInternalArtifactID() {
     try {
-      String artifactId = extractor
+      String artifactId = mapper
           .resolveInternalArtifactID(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"),
               "1.1.1", false);
       assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
           artifactId);
-    } catch (NotLatestVersionException e) {
+    } catch (NotLatestVersionException | edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException e) {
       fail(
           "Should have artifact for specified asset: 3c66cf3a-93c4-4e09-b1aa-14088c76aded with version 1.1.1");
       e.printStackTrace();
@@ -289,19 +303,19 @@ class MetadataTest {
   void testResolveInternalArtifactID_Published_NotLatestVersionException() {
     NotLatestVersionException ave = assertThrows(
         NotLatestVersionException.class,
-        () -> extractor
+        () -> mapper
             .resolveInternalArtifactID(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"),
                 "2.0.0",
                 false));
     assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
-        ave.getMessage());
+        ave.getModelUri());
   }
 
   @Test
   void testResolveInternalArtifactID_Published_NotFound() {
     UUID assetId = UUID.fromString("abcdef3a-93c4-4e09-b1aa-14088c76adee");
     NotFoundException nfe = assertThrows(NotFoundException.class,
-        () -> extractor
+        () -> mapper
             .resolveInternalArtifactID(assetId, "1.0.0-SNAPSHOT", false));
     assertEquals(assetId.toString(), nfe.getMessage());
   }
@@ -309,12 +323,12 @@ class MetadataTest {
   @Test
   void testResolveInternalArtifactID_Any() {
     try {
-      String artifactId = extractor
+      String artifactId = mapper
           .resolveInternalArtifactID(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"),
               "1.1.1", true);
       assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
           artifactId);
-    } catch (NotLatestVersionException e) {
+    } catch (NotLatestVersionException | NotFoundException e) {
       fail(
           "Should have artifact for specified asset: 3c66cf3a-93c4-4e09-b1aa-14088c76aded and version 1.1.1");
       e.printStackTrace();
@@ -325,19 +339,19 @@ class MetadataTest {
   void testResolveInternalArtifactID_Any_NotLatestVersionException() {
     NotLatestVersionException ave = assertThrows(
         NotLatestVersionException.class,
-        () -> extractor
+        () -> mapper
             .resolveInternalArtifactID(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"),
                 "2.0.0",
                 true));
     assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
-        ave.getMessage());
+        ave.getModelUri());
   }
 
   @Test
   void testResolveInternalArtifactID_Any_NotFound() {
     UUID assetId = UUID.fromString("abcdef3a-93c4-4e09-b1aa-14088c76adee");
     NotFoundException nfe = assertThrows(NotFoundException.class,
-        () -> extractor
+        () -> mapper
             .resolveInternalArtifactID(assetId, "1.0.0-SNAPSHOT",
                 true));
     assertEquals(assetId.toString(), nfe.getMessage());
@@ -348,14 +362,15 @@ class MetadataTest {
   void testResolveEnterpriseAssetID_IllegalStateException() {
     IllegalStateException ave = assertThrows(
         IllegalStateException.class,
-        () -> extractor.resolveEnterpriseAssetID("3c66cf3a-93c4-4e09-b1aa-14088c76aded"));
+        () -> mapper.resolveEnterpriseAssetID("3c66cf3a-93c4-4e09-b1aa-14088c76aded"));
     assertTrue(ave.getMessage().contains("3c66cf3a-93c4-4e09-b1aa-14088c76aded"));
   }
 
   @Test
   void testResolveEnterpriseAssetID() {
-    ResourceIdentifier assetID = extractor
-        .resolveEnterpriseAssetID("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068");
+    ResourceIdentifier assetID = mapper
+        .resolveEnterpriseAssetID(
+            "http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068");
     assertEquals(
         "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.1.1",
         assetID.getVersionId().toString());
@@ -363,35 +378,38 @@ class MetadataTest {
 
   @Test
   void testGetModelId_AssetUUID() {
-    Optional<String> modelId = extractor
-        .getModelId(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"), false);
+    Optional<String> modelId = mapper
+        .getCurrentModelId(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"), false);
     assertNotNull(modelId);
     assertTrue(modelId.isPresent());
-    assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068", modelId.get());
+    assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
+        modelId.get());
   }
 
 
   @Test
   void testGetModelId_internalId() {
-    Optional<String> fileid = extractor
-        .getModelId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068");
+    Optional<String> fileid = mapper
+        .resolveModelId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068");
     assertNotNull(fileid);
     assertTrue(fileid.isPresent());
-    assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068", fileid.get());
+    assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
+        fileid.get());
   }
 
   @Test
   void testGetModelId_internalId_tagOnly() {
-    Optional<String> fileid = extractor
-        .getModelId("5682fa26-b064-43c8-9475-1e4281e74068");
+    Optional<String> fileid = mapper
+        .resolveModelId("5682fa26-b064-43c8-9475-1e4281e74068");
     assertNotNull(fileid);
     assertTrue(fileid.isPresent());
-    assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068", fileid.get());
+    assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
+        fileid.get());
   }
 
   @Test
   void testGetModel_internalId_empty() {
-    Optional<String> fileid = extractor.getModelId("abcdef3a-93c4-4e09-b1aa-14088c76adee");
+    Optional<String> fileid = mapper.resolveModelId("abcdef3a-93c4-4e09-b1aa-14088c76adee");
     assertNotNull(fileid);
     assertFalse(fileid.isPresent());
     assertEquals(Optional.empty(), fileid);
@@ -399,8 +417,8 @@ class MetadataTest {
 
   @Test
   void testGetModelId_internalId_URIString_empty() {
-    Optional<String> fileid = extractor
-        .getModelId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e7abcd");
+    Optional<String> fileid = mapper
+        .resolveModelId("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e7abcd");
     assertNotNull(fileid);
     assertFalse(fileid.isPresent());
     assertEquals(Optional.empty(), fileid);
@@ -419,14 +437,15 @@ class MetadataTest {
     String expectedVersionTag = versionTag + "+" + modelDate.getTime();
 
     // test w/o a version
-    ResourceIdentifier fileId = extractor.convertInternalId(internalId, null, null);
+    ResourceIdentifier fileId = mapper.internalToEnterpriseArtifactId(internalId, null, null);
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
     assertNull(fileId.getVersionTag());
     assertEquals(expectedFileId, fileId.getResourceId().toString());
 
     // test w/version
-    fileId = extractor.convertInternalId(internalId, versionTag, DateTimeUtil.dateTimeStrToMillis(updated));
+    fileId = mapper
+        .internalToEnterpriseArtifactId(internalId, versionTag, DateTimeUtil.dateTimeStrToMillis(updated));
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
     assertEquals(expectedVersionTag, fileId.getVersionTag());

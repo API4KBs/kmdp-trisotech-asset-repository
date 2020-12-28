@@ -17,7 +17,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 # ?artifactName is the name of the model
 # because version is only on published models, not all models will be returned with this SELECT; can make version OPTIONAL
 # NOTE: just because a model is published, does NOT mean it is 'Published'
-SELECT ?model ?fileId ?assetId ?version ?state ?updated ?mimeType ?artifactName
+SELECT ?model ?assetId ?version ?state ?updated ?mimeType ?artifactName
 FROM NAMED ?
 WHERE {
 GRAPH ? {
@@ -33,14 +33,14 @@ GRAPH ? {
     # the model identifier
     ?node ttr:owner ?model .
     # the model file name
-    ?model rdfs:label ?artifactName.
+    ?model rdfs:label ?artifactName .
     # gets the mimeType
-    ?model ttr:mimeType ?mimeType.
+    ?model ttr:mimeType ?mimeType .
     # gets the state - only latest state is returned; there will only be a state if the model is published
-    ?model ttr:state ?state  .
+    OPTIONAL { ?model ttr:state ?state } .
     # gets the timestamp of last update
-    ?model ttr:updated ?updated .
+    OPTIONAL { ?model ttr:updated ?updated } .
     # gets the version - only latest version is returned; there will only be a version if the model is published
-    ?model ttr:version ?version .
+    OPTIONAL { ?model ttr:version ?version } .
   }
 }

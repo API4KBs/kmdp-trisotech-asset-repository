@@ -37,7 +37,6 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.omg.spec.api4kp._20200801.id.Term;
-// FIXME Use a stable release of ClinicalKnowledgeAssetType once reconciled with KnowledgeAssetType
 import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.snapshot.ClinicalKnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetrole._20190801.KnowledgeAssetRole;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype._20190801.KnowledgeAssetType;

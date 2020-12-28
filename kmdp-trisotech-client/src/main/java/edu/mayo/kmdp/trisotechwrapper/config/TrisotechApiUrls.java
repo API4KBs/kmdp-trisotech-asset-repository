@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.trisotechwrapper;
+package edu.mayo.kmdp.trisotechwrapper.config;
+
+import static edu.mayo.kmdp.util.Util.isEmpty;
 
 public class TrisotechApiUrls {
 
@@ -34,10 +36,32 @@ public class TrisotechApiUrls {
   // versions of specific file within specified repository
   public static final String VERSIONS_PATH = "repositoryfileversion?repository={repo}&id={fileId}&mimetype={mime}";
 
+  public static final String SPARQL_PATH = "/ds/query";
 
   // return DMN files in XML format
   public static final String DMN_XML_MIMETYPE = "application/dmn-1-2+xml";
   // return CMMN files in XML format
   public static final String CMMN_XML_MIMETYPE = "application/cmmn-1-1+xml";
 
+
+  /**
+   * get the XML-specified mimeType for transferring XML files with Trisotech
+   *
+   * @param mimetype the mimetype specified through file information
+   * @return the XML mimetype specfication to be used in API calls
+   * @throws IllegalArgumentException if a type other than "dmn" and "cmmn" is requested
+   */
+  public static String getXmlMimeType(String mimetype) {
+    if (isEmpty(mimetype)) {
+      return null;
+    }
+    String mime = mimetype.toLowerCase();
+    if (mime.contains(DMN_LOWER)) {
+      return DMN_XML_MIMETYPE;
+    } else if (mime.contains(CMMN_LOWER)) {
+      return CMMN_XML_MIMETYPE;
+    } else {
+      throw new IllegalArgumentException("Unexpected MIME type " + mimetype);
+    }
+  }
 }

@@ -16,18 +16,20 @@
 package edu.mayo.kmdp.trisotechwrapper;
 
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_XML_MIMETYPE;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_LOWER;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.DMN_XML_MIMETYPE;
+import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CMMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CMMN_XML_MIMETYPE;
+import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.DMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.DMN_XML_MIMETYPE;
 import static edu.mayo.kmdp.util.DateTimeUtil.isSameDay;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDate;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static java.util.UUID.fromString;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
@@ -37,7 +39,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import org.apache.http.HttpException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -218,7 +222,7 @@ class TrisotechWrapperIntTest {
     assertEquals("1.6", file.getVersion());
 
     // expect same results with repository provided
-    fileVersions = client.getModelVersions(testRepoName, WEAVER_TEST_1_ID,
+    fileVersions = client.getModelVersions(testRepoId, WEAVER_TEST_1_ID,
         DMN_XML_MIMETYPE); // 7/9/2019 -- should be at least 15
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 10);
@@ -279,7 +283,7 @@ class TrisotechWrapperIntTest {
     assertEquals("1.6", file.getVersion());
 
     // expect same results with repository provided
-    fileVersions = client.getModelVersions(testRepoName, WEAVER_TEST_1_ID, DMN_XML_MIMETYPE);
+    fileVersions = client.getModelVersions(testRepoId, WEAVER_TEST_1_ID, DMN_XML_MIMETYPE);
     assertNotNull(fileVersions);
     assertTrue(fileVersions.size() > 10); // 7/9/2019 -- should be at least 15
 
@@ -441,7 +445,8 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetPublishedModelByIdWithFileInfoDMN() {
-    List<TrisotechFileInfo> trisotechFileInfos = client.getDMNModelsFileInfo();
+    List<TrisotechFileInfo> trisotechFileInfos
+        = client.getModelsFileInfo("dmn", false);
     TrisotechFileInfo trisotechFileInfo = trisotechFileInfos.stream()
         .filter((f) -> f.getId().equals(WEAVER_TEST_1_ID)).findAny()
         .orElse(null);
@@ -454,7 +459,8 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetDmnModels() {
-    List<TrisotechFileInfo> dmnModels = client.getDMNModelsFileInfo();
+    List<TrisotechFileInfo> dmnModels
+        = client.getModelsFileInfo("dmn", false);
     assertNotNull(dmnModels);
   }
 
@@ -481,7 +487,8 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetPublishedModelByIdWithFileInfoCMMN() {
-    List<TrisotechFileInfo> trisotechFileInfos = client.getCMMNModelsFileInfo();
+    List<TrisotechFileInfo> trisotechFileInfos =
+        client.getModelsFileInfo("cmmn", false);
     TrisotechFileInfo trisotechFileInfo = trisotechFileInfos.stream()
         .filter((f) -> f.getId().equals(WEAVE_TEST_1_ID))
         .findAny()
@@ -495,21 +502,24 @@ class TrisotechWrapperIntTest {
 
   @Test
   final void testGetCmmnModels() {
-    List<TrisotechFileInfo> cmmnModels = client.getCMMNModelsFileInfo();
+    List<TrisotechFileInfo> cmmnModels =
+        client.getModelsFileInfo("cmmn", false);
     assertNotNull(cmmnModels);
     assertTrue(cmmnModels.size() >= 3);
   }
 
   @Test
   final void testGetPublishedCmmnModels() {
-    List<TrisotechFileInfo> publishedModels = client.getPublishedCMMNModelsFileInfo();
+    List<TrisotechFileInfo> publishedModels =
+        client.getModelsFileInfo("cmmn", true);
     assertNotNull(publishedModels);
     assertEquals(4, publishedModels.size());
   }
 
   @Test
   final void testGetPublishedDmnModels() {
-    List<TrisotechFileInfo> publishedModels = client.getPublishedDMNModelsFileInfo();
+    List<TrisotechFileInfo> publishedModels =
+        client.getModelsFileInfo("dmn", false);
     assertNotNull(publishedModels);
     assertTrue(publishedModels.size() >= 4);
   }
@@ -540,8 +550,10 @@ class TrisotechWrapperIntTest {
   final void testDownloadXmlModelDMN() {
     String repositoryFileUrl = repositoryApiEndpoint + testRepoId
         + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVER_TEST_1_ID;
-    Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
-    assertTrue(dox.isPresent());
+    assertDoesNotThrow(() -> {
+      Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
+      assertTrue(dox.isPresent());
+    });
   }
 
   @Test
@@ -549,8 +561,10 @@ class TrisotechWrapperIntTest {
 
     String repositoryFileUrl = repositoryApiEndpoint + testRepoId
         + "&mimetype=application%2Fcmmn-1-1%2Bxml&path=/&sku=" + WEAVE_TEST_1_ID;
-    Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
-    assertTrue(dox.isPresent());
+    assertDoesNotThrow(() -> {
+      Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
+      assertTrue(dox.isPresent());
+    });
   }
 
   @Test
@@ -560,15 +574,15 @@ class TrisotechWrapperIntTest {
         repositoryApiEndpoint + testRepoId
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVE_TEST_1_ID;
 
-    Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
-    assertFalse(dox.isPresent());
+    assertThrows(HttpException.class, () ->
+        client.tryDownloadXmlModel(repositoryFileUrl));
 
     final String repositoryFileUrl2 =
-        repositoryApiEndpoint + testRepoName
+        repositoryApiEndpoint + UUID.randomUUID()
             + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + WEAVER_TEST_1_ID;
 
-    dox = client.downloadXmlModel(repositoryFileUrl2);
-    assertFalse(dox.isPresent());
+    assertThrows(HttpException.class, () ->
+        client.tryDownloadXmlModel(repositoryFileUrl2));
   }
 
 

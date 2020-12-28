@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ns1:definitions xmlns:ns1="http://www.omg.org/spec/DMN/20180521/MODEL/"
                  xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/e36338e7-500c-43a0-881d-22aa5dc538df"
-                 xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
+                 xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets/"
                  xmlns:boxedext="https://www.trisotech.com/spec/DMN/20191111/EXT/"
                  xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
                  xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
                  xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/"
                  xmlns:feel="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                 xmlns:i18n="http://www.omg.org/spec/BPMN/non-normative/extensions/i18n/1.0"
                  xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"
                  xmlns:ns2="https://clinicalknowledgemanagement.mayo.edu/artifacts/"
                  xmlns:ns3="https://clinicalknowledgemanagement.mayo.edu/artifacts/"
@@ -38,14 +39,14 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:ref establishedOn="2020-11-01T00:00:00"
+            <surr:ref establishedOn="2020-12-17T00:00:00"
                       name="Most Recent Weight"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
                       referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/2d0e15f2-7676-3288-bfd1-3465eb5efff9"
                       resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#2d0e15f2-7676-3288-bfd1-3465eb5efff9"
                       tag="2d0e15f2-7676-3288-bfd1-3465eb5efff9"
-                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201101#2d0e15f2-7676-3288-bfd1-3465eb5efff9"
-                      versionTag="20201101">
+                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201222-000423#2d0e15f2-7676-3288-bfd1-3465eb5efff9"
+                      versionTag="20201222-000423">
                <id:uuid>2d0e15f2-7676-3288-bfd1-3465eb5efff9</id:uuid>
             </surr:ref>
          </surr:annotation>

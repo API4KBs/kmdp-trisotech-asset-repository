@@ -13,10 +13,20 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN_EL_DECISION;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN_EL_EXTENSIONS;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DROOLS_NS;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_ATTACHMENT_ITEM;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CMMN_11_NS;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_DMN_12_NS;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_METADATA_NS;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_META_EXPORTER;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_META_EXPORTER_VERSION;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_RELATIONSHIP;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_SEMANTICLINK;
 import static edu.mayo.kmdp.util.Util.resolveResource;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
-import static edu.mayo.kmdp.util.XMLUtil.streamXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.validate;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
@@ -27,7 +37,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -66,6 +77,9 @@ class WeaverTest {
   @Autowired
   private Weaver weaver;
 
+  @Autowired
+  private Redactor redactor;
+
   @Test
   void testInit() {
     assertNotNull(weaver);
@@ -82,10 +96,10 @@ class WeaverTest {
     Document dox = loadXMLDocument(resolveResource(path))
         .orElseGet(() -> fail("Unable to load document " + path));
     try {
-      weaver.weave(dox);
-      streamXMLDocument(dox, System.out);
+      redactor.redact(weaver.weave(dox));
+      //streamXMLDocument(dox, System.out);
 
-			assertTrue( validate( dox, DMN_1_2.getReferentId()));
+			assertTrue(validate( dox, DMN_1_2.getReferentId()));
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
@@ -99,10 +113,10 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     try {
-      weaver.weave(dox);
+      redactor.redact(weaver.weave(dox));
       assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
-      streamXMLDocument(dox, System.out);
+      //streamXMLDocument(dox, System.out);
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
@@ -116,7 +130,7 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     try {
-      weaver.weave(dox);
+      redactor.redact(weaver.weave(dox));
       assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
       assertEquals(0,
@@ -126,7 +140,7 @@ class WeaverTest {
       assertEquals(1,
           XMLUtil.asElementStream(dox.getElementsByTagNameNS("*", "decision"))
               .count());
-      streamXMLDocument(dox, System.out);
+      //streamXMLDocument(dox, System.out);
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(),ie);
       fail(ie.getMessage());
@@ -144,8 +158,8 @@ class WeaverTest {
 		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
     try {
-      weaver.weave(dox);
-      streamXMLDocument(dox, System.out);
+      redactor.redact(weaver.weave(dox));
+      //streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
 
@@ -190,8 +204,8 @@ class WeaverTest {
 		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
     try {
-      weaver.weave(dox);
-      streamXMLDocument(dox, System.out);
+      redactor.redact(weaver.weave(dox));
+      //streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
 
@@ -221,8 +235,8 @@ class WeaverTest {
 		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
     try {
-      weaver.weave(dox);
-      streamXMLDocument(dox, System.out);
+      redactor.redact(weaver.weave(dox));
+      //streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
 
@@ -280,8 +294,8 @@ class WeaverTest {
  		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
     try {
-      weaver.weave(dox);
-      streamXMLDocument(dox, System.out);
+      redactor.redact(weaver.weave(dox));
+      //streamXMLDocument(dox, System.out);
 
       assertNotNull(dox);
 
@@ -325,10 +339,8 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     try {
-
-      weaver.weave(dox);
-
-      streamXMLDocument(dox, System.out);
+      redactor.redact(weaver.weave(dox));
+      //streamXMLDocument(dox, System.out);
 
       assertTrue(validate(dox, CMMN_1_1.getReferentId()));
 
@@ -341,10 +353,10 @@ class WeaverTest {
       assertTrue(verifyRootNamespaces(dox));
       assertTrue(verifyCaseFileItemDefinition(dox));
 
-      NodeList metas = dox.getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataEl());
+      NodeList metas = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_SEMANTICLINK);
       assertEquals(0, metas.getLength());
       NodeList relations = dox
-          .getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataRS());
+          .getElementsByTagNameNS(TT_METADATA_NS, TT_RELATIONSHIP);
 
       assertEquals(0, relations.getLength());
 
@@ -362,9 +374,8 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     try {
-
-      weaver.weave(dox);
-      streamXMLDocument(dox, System.out);
+      redactor.redact(weaver.weave(dox));
+      //streamXMLDocument(dox, System.out);
 
       assertTrue(validate(dox, CMMN_1_1.getReferentId()));
 
@@ -377,10 +388,10 @@ class WeaverTest {
       assertTrue(verifyRootNamespaces(dox));
       assertTrue(verifyCaseFileItemDefinition(dox));
 
-      NodeList metas = dox.getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataEl());
+      NodeList metas = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_SEMANTICLINK);
       assertEquals(0, metas.getLength());
       NodeList relations = dox
-          .getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataRS());
+          .getElementsByTagNameNS(TT_METADATA_NS, TT_RELATIONSHIP);
 
       assertEquals(0, relations.getLength());
 
@@ -399,9 +410,8 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     try {
-
-      weaver.weave(dox);
-      streamXMLDocument(dox, System.out);
+      redactor.redact(weaver.weave(dox));
+      //streamXMLDocument(dox, System.out);
 
       assertTrue(validate(dox, CMMN_1_1.getReferentId()));
 
@@ -414,10 +424,10 @@ class WeaverTest {
       assertTrue(verifyRootNamespaces(dox));
       assertTrue(verifyCaseFileItemDefinition(dox));
 
-      NodeList metas = dox.getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataEl());
+      NodeList metas = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_SEMANTICLINK);
       assertEquals(0, metas.getLength());
       NodeList relations = dox
-          .getElementsByTagNameNS(weaver.getMetadataNS(), weaver.getMetadataRS());
+          .getElementsByTagNameNS(TT_METADATA_NS, TT_RELATIONSHIP);
 
       assertEquals(0, relations.getLength());
 
@@ -429,7 +439,7 @@ class WeaverTest {
 
   private boolean confirmDecisionURI(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
-        .filter(el -> el.getLocalName().equals(weaver.getDecisionEl()))
+        .filter(el -> el.getLocalName().equals(DMN_EL_DECISION))
         .forEach(element -> {
           Attr attr = element.getAttributeNode("externalRef");
           if (!attr.getValue().contains("ns") || !attr.getValue().contains("_")) {
@@ -574,16 +584,16 @@ class WeaverTest {
           int attrSize = attributes.getLength();
           for (int i = 0; i < attrSize; i++) {
             Attr attr = (Attr) attributes.item(i);
-            if ((weaver.getMetadataNS().equals(attr.getNamespaceURI()))
-                || (weaver.getMetadataNS().equals(attr.getValue()))
-                || (weaver.getMetadataDiagramDmnNS().equals(attr.getNamespaceURI()))
-                || (weaver.getMetadataDiagramDmnNS().equals(attr.getValue()))
-                || (weaver.getMetadataDiagramCmmnNS().equals(attr.getNamespaceURI()))
-                || (weaver.getMetadataDiagramCmmnNS().equals(attr.getValue()))
-                || (weaver.getDroolsNS().equals(attr.getNamespaceURI()))
-                || (weaver.getDroolsNS().equals(attr.getValue()))
-                || (weaver.getElExporter().equals(attr.getLocalName()))
-                || (weaver.getElExporterVersion().equals(attr.getLocalName()))
+            if ((TT_METADATA_NS.equals(attr.getNamespaceURI()))
+                || (TT_METADATA_NS.equals(attr.getValue()))
+                || (TT_DMN_12_NS.equals(attr.getNamespaceURI()))
+                || (TT_DMN_12_NS.equals(attr.getValue()))
+                || (TT_CMMN_11_NS.equals(attr.getNamespaceURI()))
+                || (TT_CMMN_11_NS.equals(attr.getValue()))
+                || (DROOLS_NS.equals(attr.getNamespaceURI()))
+                || (DROOLS_NS.equals(attr.getValue()))
+                || (TT_META_EXPORTER.equals(attr.getLocalName()))
+                || (TT_META_EXPORTER_VERSION.equals(attr.getLocalName()))
             ) {
               fail("Should not have '" + attr.getPrefix() + "' attributes anymore. Have: " +
                   attr.getLocalName() + " on parent: " + el.getNodeName());
@@ -599,11 +609,10 @@ class WeaverTest {
    */
   private boolean confirmNoTrisotechTags(Document dox) {
     // Confirm no trisotech tags remain:
-    NodeList elements = dox.getElementsByTagNameNS(weaver.getMetadataNS(), "*");
+    NodeList elements = dox.getElementsByTagNameNS(TT_METADATA_NS, "*");
     asElementStream(elements).forEach(
         el -> {
-          if((weaver.getMetadataItemDef().equals(el.getLocalName()))
-          || (weaver.getMetadataAttachment().equals(el.getLocalName()))) {
+          if((TT_ATTACHMENT_ITEM.equals(el.getLocalName()))) {
             fail("should not have " + el.getNodeName() + " elements anymore.");
           }
         }
@@ -616,7 +625,7 @@ class WeaverTest {
                                                          Class<T> type) {
 
     return XMLUtil.asElementStream(dox.getElementsByTagName("*"))
-        .filter(el -> el.getLocalName().equals("extensionElements"))
+        .filter(el -> el.getLocalName().equals(DMN_EL_EXTENSIONS))
         .map(Element::getChildNodes)
         .flatMap(XMLUtil::asElementStream)
         .map(el -> JaxbUtil.unmarshall(Annotation.class,el))

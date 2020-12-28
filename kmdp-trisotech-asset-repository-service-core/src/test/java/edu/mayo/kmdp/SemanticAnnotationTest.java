@@ -21,8 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.Weaver;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
@@ -48,10 +49,13 @@ import org.w3c.dom.Document;
 class SemanticAnnotationTest {
 
 	@Autowired
-	MetadataExtractor extractor;
+	MetadataIntrospector extractor;
 
 	@Autowired
 	Weaver dmnWeaver;
+
+	@Autowired
+	Redactor redactor;
 
 	@Autowired
 	TermsApiInternal terms;
@@ -62,10 +66,12 @@ class SemanticAnnotationTest {
 		String dmnPath = "/Computable Decision Model.raw.dmn.xml";
 		String metaPath = "/Computable Decision Model.meta.json";
 
-		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
-		                              .map( dmnWeaver::weave )
-		                              .map( XMLUtil::toByteArray );
-		assertTrue( dmn.isPresent() );
+		Optional<byte[]> dmn = XMLUtil
+				.loadXMLDocument(SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
+				.map(dmnWeaver::weave)
+				.map(redactor::redact)
+				.map(XMLUtil::toByteArray);
+		assertTrue(dmn.isPresent());
 
 
 		try {
@@ -113,11 +119,12 @@ class SemanticAnnotationTest {
 
 		Optional<byte[]> dmn = XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath))
 				.map( dmnWeaver::weave )
+				.map(redactor::redact)
 				.map( XMLUtil::toByteArray );
 		assertTrue( dmn.isPresent() );
 		Optional<Document> dox = (XMLUtil.loadXMLDocument( SemanticAnnotationTest.class.getResourceAsStream(dmnPath)));
-		dmnWeaver.weave(dox.get());
-		XMLUtil.streamXMLDocument(dox.get(), System.out);
+		redactor.redact(dmnWeaver.weave(dox.get()));
+		//XMLUtil.streamXMLDocument(dox.get(), System.out);
 
 		try {
 			Optional<KnowledgeAsset> res = extractor.extract(new ByteArrayInputStream(dmn.get()),

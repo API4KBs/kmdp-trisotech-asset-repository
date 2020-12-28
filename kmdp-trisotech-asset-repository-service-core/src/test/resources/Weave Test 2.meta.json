@@ -3,10 +3,10 @@
   "sku" : "http://www.trisotech.com/definitions/_a4172970-dc92-415e-9921-5e0c78af501c",
   "name" : "Weave Test 2",
   "path" : "/",
-  "mimetype" : "application/cmmn-1-1+xml",
+  "mimetype" : "application/vnd.triso-cmmn+json",
   "updated" : "2020-09-03T07:10:34Z",
   "updater" : "Sottara, Davide",
-  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2F&sku=http%3A%2F%2Fwww.trisotech.com%2Fdefinitions%2F_a4172970-dc92-415e-9921-5e0c78af501c&mimetype=application%2Fcmmn-1-1%2Bxml",
+  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2F&sku=http%3A%2F%2Fwww.trisotech.com%2Fdefinitions%2F_a4172970-dc92-415e-9921-5e0c78af501c&mimetype=application%2Fvnd.triso-cmmn%2Bjson",
   "version" : "1.0.0",
   "state" : "Published"
 }

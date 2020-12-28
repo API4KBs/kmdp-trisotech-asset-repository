@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
                       xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/c2e182f5-96a2-4ced-958a-8c43b7469b26"
-                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets"
+                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets/"
                       xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
                       xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
                       xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
                       xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:i18n="http://www.omg.org/spec/BPMN/non-normative/extensions/i18n/1.0"
                       xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
                       xmlns:openapi="https://openapis.org/omg/extension/1.0"
                       xmlns:rss="http://purl.org/rss/2.0/"
@@ -42,24 +43,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-15T00:00:00"
+            <surr:rel establishedOn="2020-12-24T00:00:00"
                       name="captures"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/captures"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#8856ffdd-044d-37cd-8124-a6be5dcea329"
                       tag="captures"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#8856ffdd-044d-37cd-8124-a6be5dcea329"
-                      versionTag="20201215-130381">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201224-112536#8856ffdd-044d-37cd-8124-a6be5dcea329"
+                      versionTag="20201224-112536">
                <id:uuid>8856ffdd-044d-37cd-8124-a6be5dcea329</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-12-15T00:00:00"
+            <surr:ref establishedOn="2020-12-24T00:00:00"
                       name="Choice Decision"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KAO/DecisionType"
                       referentId="http://ontology.mayo.edu/ontologies/decisionmodels/ChoiceDecision"
                       resourceId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType#21d77342-d120-324b-9ac6-11562e52c4cd"
                       tag="ChoiceDecision"
-                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201215-130346#21d77342-d120-324b-9ac6-11562e52c4cd"
-                      versionTag="20201215-130346">
+                      versionId="https://ontology.mayo.edu/taxonomies/KAO/DecisionType/versions/20201224-112502#21d77342-d120-324b-9ac6-11562e52c4cd"
+                      versionTag="20201224-112502">
                <id:uuid>21d77342-d120-324b-9ac6-11562e52c4cd</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -67,24 +68,24 @@
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                           xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
                           xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
-            <surr:rel establishedOn="2020-12-15T00:00:00"
+            <surr:rel establishedOn="2020-12-24T00:00:00"
                       name="defines"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType"
                       referentId="https://www.omg.org/spec/API4KP/api4kp/defines"
                       resourceId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
                       tag="defines"
-                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201215-130381#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
-                      versionTag="20201215-130381">
+                      versionId="https://ontology.mayo.edu/taxonomies/KMDO/SemanticAnnotationRelType/versions/20201224-112536#e5ce0278-0309-3c37-ae63-626f7fc5c76b"
+                      versionTag="20201224-112536">
                <id:uuid>e5ce0278-0309-3c37-ae63-626f7fc5c76b</id:uuid>
             </surr:rel>
-            <surr:ref establishedOn="2020-11-01T00:00:00"
+            <surr:ref establishedOn="2020-12-17T00:00:00"
                       name="Prior Management of Atrial Fibrillation"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
                       referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/9d5334cf-fd7b-3112-bf19-a08629ebab93"
                       resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#9d5334cf-fd7b-3112-bf19-a08629ebab93"
                       tag="9d5334cf-fd7b-3112-bf19-a08629ebab93"
-                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201101#9d5334cf-fd7b-3112-bf19-a08629ebab93"
-                      versionTag="20201101">
+                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201222-000478#9d5334cf-fd7b-3112-bf19-a08629ebab93"
+                      versionTag="20201222-000478">
                <id:uuid>9d5334cf-fd7b-3112-bf19-a08629ebab93</id:uuid>
             </surr:ref>
          </surr:annotation>

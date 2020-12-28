@@ -13,8 +13,27 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
+import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
+import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CMMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CMMN_UPPER;
+import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.NotImplemented;
+import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.OK;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Final_Draft;
+
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
 import edu.mayo.kmdp.util.XMLUtil;
+import java.io.InputStream;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,22 +48,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-
-import java.io.InputStream;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
-import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_LOWER;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechApiUrls.CMMN_UPPER;
-import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.NotImplemented;
-import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.OK;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Final_Draft;
 
 /**
  * Integration test for TrisotechAssetRepository, using data from test repository.
@@ -82,7 +85,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "261543d9-90b6-4fe0-a26d-f329111d77ca/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.4.0";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.5.0";
     Answer<KnowledgeAsset> answer = tar
         .getKnowledgeAsset(UUID.fromString("261543d9-90b6-4fe0-a26d-f329111d77ca"), null);
     assertTrue(answer.isSuccess());
@@ -117,7 +120,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "261543d9-90b6-4fe0-a26d-f329111d77ca/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.4.0";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.5.0";
 
     Answer<KnowledgeAsset> answer = tar
         .getKnowledgeAssetVersion(UUID.fromString("261543d9-90b6-4fe0-a26d-f329111d77ca"),
@@ -447,7 +450,7 @@ class TrisotechAssetRepositoryIntTest {
     String expectedAssetVersionId = MAYO_ASSETS_BASE_URI
         + "261543d9-90b6-4fe0-a26d-f329111d77ca/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
-        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.4.0";
+        + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.5.0";
 
     Answer<KnowledgeCarrier> answer = tar
         .getKnowledgeAssetVersionCanonicalCarrier(UUID.fromString("261543d9-90b6-4fe0-a26d-f329111d77ca"),
@@ -510,12 +513,12 @@ class TrisotechAssetRepositoryIntTest {
         + "/versions/1.0.0";
     String expectedArtifactId = MAYO_ARTIFACTS_BASE_URI
         + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356";
-    String expectedArtifactVersionId = expectedArtifactId + "/versions/1.4.0";
+    String expectedArtifactVersionId = expectedArtifactId + "/versions/1.5.0+1609367101000";
 
     Answer<KnowledgeCarrier> answer = tar
         .getKnowledgeAssetCarrierVersion(UUID.fromString("261543d9-90b6-4fe0-a26d-f329111d77ca"),
             "1.0.0",
-            UUID.fromString("ee0c768a-a0d4-4052-a6ea-fc0a3889b356"), "1.4.0");
+            UUID.fromString("ee0c768a-a0d4-4052-a6ea-fc0a3889b356"), "1.5.0");
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
     KnowledgeCarrier kc = answer.get();
@@ -609,7 +612,7 @@ class TrisotechAssetRepositoryIntTest {
             "1.0.0",
             UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"), "",
             XMLUtil.loadXMLDocument(testFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
-    assertTrue(answer.isClientFailure());
+    assertFalse(answer.isSuccess());
   }
 
   @Test
@@ -623,20 +626,6 @@ class TrisotechAssetRepositoryIntTest {
     assertTrue(answer.isClientFailure());
   }
 
-  @Test
-  void setKnowledgeAssetCarrierVersion_not_found() {
-    InputStream testFile = TrisotechAssetRepositoryIntTest.class
-        .getResourceAsStream("/Test Save As.raw.dmn.xml");
-    Answer<Void> answer = tar
-        .setKnowledgeAssetCarrierVersion(
-            UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76dead"),
-            "1.0.0-SNAPSHOT",
-            UUID.fromString("e36338e7-500c-43a0-881d-22aa5dc538df"),
-            // no version specified -> not found
-            "",
-            XMLUtil.loadXMLDocument(testFile).map(XMLUtil::toByteArray).orElse(new byte[0]));
-    assertFalse(answer.isSuccess());
-  }
 
   @Test
   void setKnowledgeAssetCarrierVersion_published_found() {

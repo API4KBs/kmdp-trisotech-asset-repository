@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.kmdp.trisotechwrapper;
+package edu.mayo.kmdp.trisotechwrapper.config;
 
 import edu.mayo.kmdp.util.Util;
 import javax.annotation.PostConstruct;
@@ -29,8 +29,8 @@ import org.springframework.stereotype.Component;
  * (especially the token) are NOT in the codebase.
  */
 @Component
-public class StaticContextInitializer {
-  private static final Logger logger = LoggerFactory.getLogger(StaticContextInitializer.class);
+public class TTWEnvironmentConfiguration {
+  private static final Logger logger = LoggerFactory.getLogger(TTWEnvironmentConfiguration.class);
 
   @Value("${edu.mayo.kmdp.trisotechwrapper.baseUrl:https://mc.trisotech.com/}")
   private String baseURL;
@@ -46,6 +46,9 @@ public class StaticContextInitializer {
 
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId:}")
   private String repositoryId;
+
+  @Value("${edu.mayo.kmdp.trisotechwrapper.expiration:1440}")
+  private String cacheExpiration;
 
   private String apiEndpoint;
 
@@ -86,6 +89,10 @@ public class StaticContextInitializer {
 
   public String getRepositoryName() {
     return repositoryName;
+  }
+
+  public String getCacheExpiration() {
+    return cacheExpiration;
   }
 
   public String getRepositoryId() {

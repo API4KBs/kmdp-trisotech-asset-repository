@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.MetadataExtractor;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.preprocess.TrisotechExtractionStrategy;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechIntrospectionStrategy;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ import org.w3c.dom.Document;
 
 class TrisotechExtractionStrategyTest {
 
-  TrisotechExtractionStrategy tes;
+  TrisotechIntrospectionStrategy tes;
   String dmnPath = "/Weaver Test 1.dmn.xml";
   String dmnMeta = "/Weaver Test 1.meta.json";
   String cmmnPath = "/Weave Test 1.cmmn.xml";
@@ -62,11 +62,11 @@ class TrisotechExtractionStrategyTest {
 
   @BeforeEach
   void setUp() {
-    this.tes = new TrisotechExtractionStrategy();
-    InputStream dmnStream = MetadataExtractor.class.getResourceAsStream(dmnMeta);
-    InputStream cmmnStream = MetadataExtractor.class.getResourceAsStream(cmmnMeta);
-    InputStream baseCaseStream = MetadataExtractor.class.getResourceAsStream(basicCaseMeta);
-    InputStream basicDecisionStream = MetadataExtractor.class
+    this.tes = new TrisotechIntrospectionStrategy();
+    InputStream dmnStream = MetadataIntrospector.class.getResourceAsStream(dmnMeta);
+    InputStream cmmnStream = MetadataIntrospector.class.getResourceAsStream(cmmnMeta);
+    InputStream baseCaseStream = MetadataIntrospector.class.getResourceAsStream(basicCaseMeta);
+    InputStream basicDecisionStream = MetadataIntrospector.class
         .getResourceAsStream(basicDecisionMeta);
 
     dmnDox = loadXMLDocument(resolveResource(dmnPath))
@@ -103,16 +103,16 @@ class TrisotechExtractionStrategyTest {
   void getArtifactID() {
 
     String expectedDMNId = "https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068";
-    Optional<String> value = this.tes.getArtifactID(dmnDox, dmnFile);
+    Optional<String> value = this.tes.getArtifactID(dmnDox);
     assertNotNull(value.orElseGet(Assertions::fail));
     assertEquals(expectedDMNId, value.orElseGet(Assertions::fail));
 
     String expectedCMMNId = "https://clinicalknowledgemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9";
-    value = this.tes.getArtifactID(cmmnDox, cmmnFile);
+    value = this.tes.getArtifactID(cmmnDox);
     assertNotNull(value.orElseGet(Assertions::fail));
     assertEquals(expectedCMMNId, value.orElseGet(Assertions::fail));
 
-    value = this.tes.getArtifactID(badDox, badFile);
+    value = this.tes.getArtifactID(badDox);
     assertFalse(value.isPresent());
 
   }

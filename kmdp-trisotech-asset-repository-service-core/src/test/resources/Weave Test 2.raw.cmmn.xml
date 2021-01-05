@@ -90,7 +90,7 @@
                                    modelName="Weaver Test 2"
                                    type="graph"
                                    uri="http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
-               <triso:copyOfLink id="_8c76389b-0683-41cc-b709-82d1fb740d5d"
+               <triso:copyOfLink id="_61cac41b-1c6c-4ac2-8c93-098791dbc43f"
                                  itemName="Test Decision 2"
                                  mimeType="application/vnd.triso-dmn+json"
                                  modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"

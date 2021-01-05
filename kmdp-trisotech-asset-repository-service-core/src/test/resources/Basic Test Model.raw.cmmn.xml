@@ -70,7 +70,7 @@
                                    id="PID__fb349180-8908-46f6-ac95-7a9a88731fe9"
                                    name="Review Current Status of Condition">
                <semantic:extensionElements>
-                  <triso:copyOfLink id="_e2411f08-6f5b-41a0-9e73-d366e3023258"
+                  <triso:copyOfLink id="_fde6d3d6-7e09-4035-9a1b-c2e5c2f5fd75"
                                     itemName="Aggregating Naturalistic Assessment Decision A"
                                     mimeType="application/vnd.triso-dmn+json"
                                     modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
@@ -91,7 +91,7 @@
                                    id="PID__7eeaa027-8608-426e-bcae-54f8cfae2993"
                                    name="Review Prior Management of Condition">
                <semantic:extensionElements>
-                  <triso:copyOfLink id="_01fa9af4-660a-495f-b992-272cd4a31107"
+                  <triso:copyOfLink id="_ce9abd8c-2095-4074-aa86-e0d87e742a48"
                                     itemName="Temporal Correlating Decision"
                                     mimeType="application/vnd.triso-dmn+json"
                                     modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
@@ -112,7 +112,7 @@
                                    id="PID__306a1689-5d73-4984-b142-54a3b0f5858e"
                                    name="Review History Pertinent to Condition">
                <semantic:extensionElements>
-                  <triso:copyOfLink id="_917f42c4-c652-4eeb-9f48-6478b45ba727"
+                  <triso:copyOfLink id="_59e6ad55-3e8d-4de1-a5b9-2fb2bbbcd89f"
                                     itemName="Basic Decision - History Pertinent to Condition"
                                     mimeType="application/vnd.triso-dmn+json"
                                     modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
@@ -134,7 +134,7 @@
                                 id="PID__585e9112-8512-4304-996e-b125a2a6c96f"
                                 name="Choose Management of Condition">
             <semantic:extensionElements>
-               <triso:copyOfLink id="_edfd80a4-5a0b-4db6-a70e-2e489b47007f"
+               <triso:copyOfLink id="_6abc6055-252f-4a6a-baf2-e6225893545d"
                                  itemName="Choice of Management of Condition"
                                  mimeType="application/vnd.triso-dmn+json"
                                  modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"

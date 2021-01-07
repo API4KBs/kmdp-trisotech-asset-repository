@@ -57,7 +57,6 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
-import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
@@ -344,10 +343,9 @@ public class TrisotechIntrospectionStrategy {
       TrisotechFileInfo matchVersion = findVersionMatch(importVersions, artifactDate,
           nextVersionDate);
       if (null != matchVersion) { // shouldn't happen
-        String versionTs = DateTimeUtil.dateTimeStrToMillis(matchVersion.getUpdated());
-        dependencies.add(mapper.internalToEnterpriseArtifactId(ri.getTag(),
+        dependencies.add(names.rewriteInternalId(ri.getTag(),
             matchVersion.getVersion(),
-            versionTs));
+            matchVersion.getUpdated()));
       }
     }
     return dependencies;

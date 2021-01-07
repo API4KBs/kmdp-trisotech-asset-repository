@@ -27,12 +27,12 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.IdentityMapper;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestVersionException;
-import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
@@ -67,6 +67,9 @@ class MetadataTest {
   // the following two not being able to be autowired, but the code works.
   @Autowired
   private MetadataIntrospector extractor;
+
+  @Autowired
+  NamespaceManager names;
 
   @Autowired
   private IdentityMapper mapper;
@@ -437,15 +440,13 @@ class MetadataTest {
     String expectedVersionTag = versionTag + "+" + modelDate.getTime();
 
     // test w/o a version
-    ResourceIdentifier fileId = mapper.internalToEnterpriseArtifactId(internalId, null, null);
+    ResourceIdentifier fileId = names.rewriteInternalId(internalId, null);
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
-    assertNull(fileId.getVersionTag());
     assertEquals(expectedFileId, fileId.getResourceId().toString());
 
     // test w/version
-    fileId = mapper
-        .internalToEnterpriseArtifactId(internalId, versionTag, DateTimeUtil.dateTimeStrToMillis(updated));
+    fileId = names.rewriteInternalId(internalId, versionTag, updated);
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
     assertEquals(expectedVersionTag, fileId.getVersionTag());

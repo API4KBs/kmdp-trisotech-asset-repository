@@ -13,7 +13,6 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams.DEFAULT_VERSION_TAG;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.DMN_LOWER;
@@ -38,7 +37,6 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -278,17 +276,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
 
-  private ResourceIdentifier getInternalIdAndVersion(UUID assetId, String versionTag)
-      throws NotLatestVersionException, NotFoundException {
-    String internalId = mapper.resolveInternalArtifactID(assetId, versionTag, publishedOnly);
-    Optional<String> version = mapper.getLatestCarrierVersionTag(assetId);
-    Optional<String> updated = mapper.getLatestCarrierMostRecentUpdateTimestamp(assetId);
-    return mapper.internalToEnterpriseArtifactId(
-        internalId,
-        version.orElse(configuration.getTyped(DEFAULT_VERSION_TAG, String.class)),
-        updated.orElse(Long.toString(new Date().getTime())));
-  }
-
   /**
    * Retrieves (a copy of) a specific version of an Artifact. That Artifact must be known to the
    * client to carry at least one expression, in some language, of the given Knowledge Asset.
@@ -424,7 +411,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             getCarrier(
                 assetId,
                 assetVersionTag,
-                mapper.internalToEnterpriseArtifactId(model),
+                names.rewriteInternalId(model),
                 dox));
       }
     }
@@ -523,7 +510,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .getCurrentModelId(assetId, publishedOnly)
           .flatMap(this::dowloadLatestModelVersion);
 
-      ResourceIdentifier artifactId = getInternalIdAndVersion(assetId, versionTag);
+      ResourceIdentifier artifactId = mapper.getCarrierArtifactId(assetId, versionTag);
       return modelDox.flatMap(xml -> getCarrier(assetId, versionTag, artifactId, xml));
     } catch (NotLatestVersionException | NotFoundException e) {
       e.printStackTrace();

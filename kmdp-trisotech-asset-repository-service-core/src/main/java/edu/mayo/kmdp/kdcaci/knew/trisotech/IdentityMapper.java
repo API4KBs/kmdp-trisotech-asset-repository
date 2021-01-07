@@ -14,7 +14,6 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams.ARTIFACT_NAMESPACE;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams.DEFAULT_VERSION_TAG;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.KEY;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_BASE_MODEL_URI;
@@ -27,7 +26,6 @@ import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MODEL;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.STATE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.UPDATED;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.VERSION;
-import static edu.mayo.kmdp.util.DateTimeUtil.dateTimeStrToMillis;
 import static edu.mayo.kmdp.util.NameUtils.getTrailingPart;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
@@ -37,14 +35,13 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.tryNewVersionI
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestVersionException;
-import edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -87,6 +84,8 @@ public class IdentityMapper {
 
   private boolean publishedOnly;
 
+  private String defaultVersion;
+
   /**
    * init is needed w/@PostConstruct because @Value values will not be set until after
    * construction.
@@ -99,6 +98,7 @@ public class IdentityMapper {
       config = new TTAssetRepositoryConfig();
     }
     publishedOnly = config.getTyped(TTWParams.PUBLISHED_ONLY);
+    defaultVersion = config.getTyped(DEFAULT_VERSION_TAG);
   }
 
 
@@ -106,7 +106,7 @@ public class IdentityMapper {
     return client.getDependencyMap();
   }
 
-  private Optional<Map<TTGraphTerms,String>> findSolutionByModelId(String modelUri, boolean pub) {
+  private Optional<Map<TTGraphTerms,String>> getStatementsByModel(String modelUri, boolean pub) {
     if (pub) {
       return Optional.ofNullable(client.getMetadataByModel(modelUri))
           .filter(soln -> soln.containsKey(STATE));
@@ -116,7 +116,7 @@ public class IdentityMapper {
   }
 
 
-  private Optional<Map<TTGraphTerms,String>> findSolutionByAssetId(UUID assetId, boolean pub) {
+  private Optional<Map<TTGraphTerms,String>> getStatementsByAsset(UUID assetId, boolean pub) {
     if (pub) {
       return Optional.ofNullable(client.getMetadataByAsset(assetId))
           .filter(soln -> soln.containsKey(STATE));
@@ -135,15 +135,14 @@ public class IdentityMapper {
    */
   public Optional<ResourceIdentifier> resolveModelToCurrentAssetId(String modelUri) {
     logger.debug("getAssetId for modelUri: {}", modelUri);
-    return findSolutionByModelId(modelUri, publishedOnly)
+    return getStatementsByModel(modelUri, publishedOnly)
         .map(soln -> {
           String statedIdStr = soln.get(ASSET_ID);
           URI statedId = URI.create(statedIdStr);
           if (statedId.getScheme() == null) {
             // need to investigate why 'tags' get detected as assetIds
             if (Util.isUUID(statedIdStr)) {
-              return newId(statedId.toString(),
-                      config.getTyped(DEFAULT_VERSION_TAG, String.class));
+              return newId(statedId.toString(), defaultVersion);
             } else {
               throw new IllegalStateException(
                   "Invalid AssetID " + statedIdStr + " found on model " + modelUri);
@@ -172,7 +171,7 @@ public class IdentityMapper {
    */
   public Optional<ResourceIdentifier> resolveAssetToCurrentAssetId(UUID assetId, String versionTag, boolean pub)
       throws NotLatestVersionException {
-    Optional<Map<TTGraphTerms,String>> soln = findSolutionByAssetId(assetId, pub);
+    Optional<Map<TTGraphTerms,String>> soln = getStatementsByAsset(assetId, pub);
     if (soln.isPresent()) {
       String enterpriseAssetVersionId = soln.get().get(ASSET_ID);
       ResourceIdentifier versionId = newVersionId(URI.create(enterpriseAssetVersionId));
@@ -196,7 +195,7 @@ public class IdentityMapper {
    * @return ResourceIdentifier for the assetId or Empty
    */
   public Optional<URI> getCurrentAssetSeriesUri(UUID assetUUID) {
-    return findSolutionByAssetId(assetUUID, publishedOnly)
+    return getStatementsByAsset(assetUUID, publishedOnly)
         .map(soln -> asSeriesURI(
             URI.create(soln.get(ASSET_ID))));
   }
@@ -218,7 +217,7 @@ public class IdentityMapper {
   public String getCurrentModelId(ResourceIdentifier assetId, boolean pub)
       throws NotLatestVersionException, NotFoundException {
 
-    Optional<Map<TTGraphTerms,String>> solnOpt = findSolutionByAssetId(assetId.getUuid(), pub);
+    Optional<Map<TTGraphTerms,String>> solnOpt = getStatementsByAsset(assetId.getUuid(), pub);
     if (solnOpt.isPresent()) {
       Map<TTGraphTerms,String> soln = solnOpt.get();
       Optional<ResourceIdentifier> rid
@@ -255,8 +254,34 @@ public class IdentityMapper {
    * @return the fileId for the asset; the fileId can be used in the APIs
    */
   public Optional<String> getCurrentModelId(UUID assetId, boolean pub) {
-    return findSolutionByAssetId(assetId, pub)
+    return getStatementsByAsset(assetId, pub)
         .map(soln -> soln.get(MODEL));
+  }
+
+
+  /**
+   * Resolves an id+version to a knowledge asset for which there exist (at least) one carrier model.
+   * (Note: a model should not implement more than one knowledge asset through its series)
+   * Finds the (one) model annotated with that asset id, starting with the most recent version
+   * of the model, and backtracking in history if necessary.
+   *
+   * @param assetId The UUID of the asset (series)
+   * @param assetVersionTag the version of the asset
+   * @return A ResourceIdentifier for the
+   *
+   * @throws NotLatestVersionException The requested assetId is associated with a version of a model
+   * that is not the latest version of that model
+   * @throws NotFoundException no model for the given asset version
+   */
+  public ResourceIdentifier getCarrierArtifactId(UUID assetId, String assetVersionTag)
+      throws NotLatestVersionException, NotFoundException {
+    String modelUri = resolveInternalArtifactID(assetId, assetVersionTag, publishedOnly);
+    String modelVersion = getLatestCarrierVersionTag(assetId)
+        .orElse(defaultVersion);
+    Optional<String> modelUpdated = getLatestCarrierMostRecentUpdateDateTime(assetId);
+    return modelUpdated.isPresent()
+      ? names.rewriteInternalId(modelUri,modelVersion,modelUpdated.get())
+      : names.rewriteInternalId(modelUri,modelVersion);
   }
 
   /**
@@ -276,7 +301,7 @@ public class IdentityMapper {
     } else {
       modelURI = (TT_BASE_MODEL_URI + getTrailingPart(internalId));
     }
-    return findSolutionByModelId(modelURI, publishedOnly).isPresent()
+    return getStatementsByModel(modelURI, publishedOnly).isPresent()
         ? Optional.of(modelURI)
         : Optional.empty();
   }
@@ -290,7 +315,7 @@ public class IdentityMapper {
    * @return the mimetype as specified in the triples
    */
   public String getMimetype(UUID assetId) {
-    return findSolutionByAssetId(assetId, false)
+    return getStatementsByAsset(assetId, false)
         .map(soln -> soln.get(MIME_TYPE))
         .orElseThrow(() ->
             new IllegalStateException("Asset " + assetId + "does not have a MIME type"));
@@ -304,7 +329,7 @@ public class IdentityMapper {
    * @return the mimetype as specified in the triples
    */
   public String getMimetype(String modelUri) {
-    return findSolutionByModelId(modelUri, publishedOnly)
+    return getStatementsByModel(modelUri, publishedOnly)
         .map(soln -> soln.get(MIME_TYPE))
         .orElseThrow(() ->
             new IllegalStateException("Model " + modelUri + "does not have a MIME type"));
@@ -318,7 +343,7 @@ public class IdentityMapper {
    * @return the state as specified in the triples
    */
   public Optional<String> getPublicationState(String modelUri) {
-    return findSolutionByModelId(modelUri, publishedOnly)
+    return getStatementsByModel(modelUri, publishedOnly)
         .map(soln -> soln.get(STATE));
   }
 
@@ -329,7 +354,7 @@ public class IdentityMapper {
    * @return the version as specified in the triples
    */
   public Optional<String> getLatestVersionTag(String modelId) {
-    return findSolutionByModelId(modelId, true)
+    return getStatementsByModel(modelId, true)
         .map(soln -> soln.get(VERSION));
   }
 
@@ -343,31 +368,26 @@ public class IdentityMapper {
    */
   private Optional<ResourceIdentifier> getLatestVersionArtifactId(String modelUri) {
     Optional<Map<TTGraphTerms,String>> qsOpt =
-        findSolutionByModelId(modelUri, publishedOnly);
+        getStatementsByModel(modelUri, publishedOnly);
 
-    Optional<ResourceIdentifier> ridOpt = qsOpt.map(soln -> {
-          if (soln.get(VERSION) != null) {
-            return internalToEnterpriseArtifactId(
-                soln.get(MODEL),
-                soln.get(VERSION),
-                Optional.ofNullable(soln.get(UPDATED))
-                    .map(DateTimeUtil::dateTimeStrToMillis)
-                    .orElse("" + new Date().getTime()));
-          } else {
-            return internalToEnterpriseArtifactId(
-                soln.get(MODEL),
-                config.getTyped(DEFAULT_VERSION_TAG, String.class), "" + new Date().getTime());
-          }
-        });
+    Optional<ResourceIdentifier> ridOpt = qsOpt.map(qs -> {
+      if (qs.get(VERSION) != null) {
+        return qs.containsKey(UPDATED)
+            ? names.rewriteInternalId(qs.get(MODEL), qs.get(VERSION), qs.get(UPDATED))
+            : names.rewriteInternalId(qs.get(MODEL), qs.get(VERSION));
+      } else {
+        return names.rewriteInternalId(
+            qs.get(MODEL),
+            defaultVersion);
+      }
+    });
 
     if (ridOpt.isEmpty()) {
       // TODO: return something different? Error? CAO
       logger.warn("Artifact {} is not a published model.", modelUri);
       if (!publishedOnly) {
-        ridOpt = Optional.ofNullable(internalToEnterpriseArtifactId(
-            modelUri.toString(),
-            config.getTyped(DEFAULT_VERSION_TAG, String.class),
-            "" + new Date().getTime()));
+        ridOpt = Optional.ofNullable(
+            names.rewriteInternalId(modelUri, defaultVersion));
       }
     }
     return ridOpt;
@@ -385,7 +405,7 @@ public class IdentityMapper {
    */
   public Optional<String> getLatestCarrierVersionTag(UUID assetId) {
     // only publishedModels have a version
-    return findSolutionByAssetId(assetId, true)
+    return getStatementsByAsset(assetId, true)
         .map(soln -> soln.get(VERSION));
   }
 
@@ -398,7 +418,7 @@ public class IdentityMapper {
    */
   public Optional<String> getLatestCarrierTimestampedVersionTag(UUID assetId) {
     // only publishedModels have a versionre
-    return findSolutionByAssetId(assetId, true)
+    return getStatementsByAsset(assetId, true)
         .flatMap(soln -> {
           String versionTag = soln.get(VERSION);
           return Optional.ofNullable(soln.get(UPDATED))
@@ -414,7 +434,7 @@ public class IdentityMapper {
    * @return the updated value of the artifact
    */
   public Optional<String> getLatestCarrierMostRecentUpdateDateTime(UUID assetId) {
-    return findSolutionByAssetId(assetId, publishedOnly)
+    return getStatementsByAsset(assetId, publishedOnly)
         .map(soln -> soln.get(UPDATED));
   }
 
@@ -426,7 +446,7 @@ public class IdentityMapper {
    */
   public Optional<String> getLatestCarrierMostRecentUpdateTimestamp(UUID assetId) {
     // only publishedModels have a version
-    return findSolutionByAssetId(assetId, publishedOnly)
+    return getStatementsByAsset(assetId, publishedOnly)
         .map(soln -> soln.get(UPDATED))
         .map(DateTimeUtil::dateTimeStrToMillis);
   }
@@ -561,40 +581,6 @@ public class IdentityMapper {
   }
 
 
-  /**
-   * @param info Internal metadata
-   * @return ResourceIdentifier with the KMDP-ified internal id
-   */
-  public ResourceIdentifier internalToEnterpriseArtifactId(TrisotechFileInfo info) {
-    return internalToEnterpriseArtifactId(
-        info.getId(),
-        info.getVersion(),
-        dateTimeStrToMillis(info.getUpdated())
-    );
-  }
-
-  /**
-   * Need the Trisotech path converted to KMDP path and underscores removed
-   *
-   * @param internalId the Trisotech internal id for the model
-   * @param timestamp  the timestamp/updated time for this version of the model, in millis from epoch
-   * @return ResourceIdentifier with the KMDP-ified internal id
-   */
-  public ResourceIdentifier internalToEnterpriseArtifactId(
-      String internalId,
-      String versionTag,
-      String timestamp) {
-    String artifactUUID =
-        internalId.substring(internalId.lastIndexOf('/') + 1).replace("_", "");
-    if (null != timestamp) {
-      String timestampVersion = versionTag + "+" + timestamp;
-      return newId(names.getArtifactNamespace(), artifactUUID, timestampVersion);
-    } else {
-      return newId(names.getArtifactNamespace(), artifactUUID, versionTag);
-    }
-  }
-
-
   private boolean isIdentifier(Element el) {
     return config.getTyped(TTWParams.ASSET_ID_ATTRIBUTE)
         .equals(el.getAttribute(KEY));
@@ -630,7 +616,7 @@ public class IdentityMapper {
   private boolean matches(String modelId, String artifactId) {
     int j = TT_BASE_MODEL_URI.length();
     String key1 = modelId.substring(j);
-    int k = config.getTyped(ARTIFACT_NAMESPACE,String.class).length();
+    int k = names.getArtifactNamespace().toString().length();
     String key2 = artifactId.substring(k);
     return key1.equals(key2);
   }

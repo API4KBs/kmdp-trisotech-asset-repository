@@ -124,6 +124,10 @@
                 <argument>
                   ${project.build.outputDirectory}${file.separator}terminologies.json
                 </argument>
+                <!-- Exclude 'SNAPSHOT' ontologies, whose version follows the pattern versions/yyyyMMdd-* -->
+<!--                <argument>-->
+<!--                  ^((?!versions\/\d{8}-).)*$-->
+<!--                </argument>-->
               </arguments>
             </configuration>
           </execution>

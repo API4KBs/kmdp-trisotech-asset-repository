@@ -549,7 +549,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
     // weave in KMD information
     Optional<Document> wovenDocument = modelDocument
-        .map(weaver::weave);
+        .map(weaver::weave)
+        .map(redactor::redact);
 
     // extract data from Trisotech format to OMG format
     return wovenDocument

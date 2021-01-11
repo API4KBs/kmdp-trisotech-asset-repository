@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/250866fc-5073-42ee-9907-708ee148193d"
+                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets/"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:i18n="http://www.omg.org/spec/BPMN/non-normative/extensions/i18n/1.0"
+                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
+                      xmlns:rss="http://purl.org/rss/2.0/"
+                      xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      id="_250866fc-5073-42ee-9907-708ee148193d"
+                      name="Decision with Reuse"
+                      namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/250866fc-5073-42ee-9907-708ee148193d"
+                      xml:lang="en"
+                      xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+   <semantic:extensionElements/>
+   <semantic:decision id="_586872e8-9b9f-4c25-9c3f-7e6e076a5551" name="Reusing Decision">
+      <semantic:extensionElements/>
+      <semantic:variable id="_7affb2ce-bed9-4658-b856-11454f19034d"
+                         name="Reusing Decision"
+                         typeRef="Any"/>
+      <semantic:informationRequirement id="_bb823107-6827-49cf-bfdf-4fd33b8fe5b3">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/c0ae5c78-c1d6-48ad-bcfb-47bde312b963#422cbe5b-acb7-418a-9637-50e35196f909"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_736705c6-8626-427a-88b5-de055bd48a85">
+         <semantic:requiredDecision href="https://clinicalknowledgemanagement.mayo.edu/artifacts/c0ae5c78-c1d6-48ad-bcfb-47bde312b963#e3f80208-dc6f-48ca-b47c-f40cdcbf8981"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_c4f62e7d-1a5d-41ba-bfbc-816fbbf9d974">
+         <semantic:requiredDecision href="#_f3da83df-b1bc-4ab8-b2be-ddc4937e3142"/>
+      </semantic:informationRequirement>
+      <semantic:informationRequirement id="_a4ba8c43-76e7-43a6-ab39-73ab3cd23362">
+         <semantic:requiredInput href="https://clinicalknowledgemanagement.mayo.edu/artifacts/clinicalsituations#13a3e25c-6848-373e-9676-8ecb62ab3e6a"/>
+      </semantic:informationRequirement>
+   </semantic:decision>
+   <semantic:decision id="_f3da83df-b1bc-4ab8-b2be-ddc4937e3142" name="Decision C">
+      <semantic:extensionElements/>
+      <semantic:variable id="_a66fdcf0-54a4-4825-8607-c9a836a8085b"
+                         name="Decision C"
+                         typeRef="Any"/>
+   </semantic:decision>
+   <dmndi:DMNDI>
+      <dmndi:DMNDiagram id="_39322235-9598-4529-aacd-7a021ebb8ff2" name="Page 1">
+         <di:extension/>
+         <dmndi:Size height="1050" width="1485"/>
+         <dmndi:DMNShape dmnElementRef="_586872e8-9b9f-4c25-9c3f-7e6e076a5551"
+                         id="_bd0ac8a3-4984-4c8c-822e-b3a097d20a13">
+            <dc:Bounds height="60" width="153" x="558" y="99"/>
+            <dmndi:DMNLabel sharedStyle="LS_250866fc-5073-42ee-9907-708ee148193d_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_a3551fb5-ba9c-40cf-9c4b-5116495158e9"
+                         id="_affa9293-385d-4101-9b7c-36f538549a82">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="458.2588291168213"
+                       y="261.99999618530273"/>
+            <dmndi:DMNLabel sharedStyle="LS_250866fc-5073-42ee-9907-708ee148193d_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_9b005058-b05d-4608-97c5-d1e9e4028ffc"
+                         id="_140ab188-eb81-4c72-9355-464abe84b53a">
+            <dc:Bounds height="60" width="153" x="697.5" y="228"/>
+            <dmndi:DMNLabel sharedStyle="LS_250866fc-5073-42ee-9907-708ee148193d_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_f3da83df-b1bc-4ab8-b2be-ddc4937e3142"
+                         id="_6ec13f03-6033-4385-b288-feafd676b1b0">
+            <dc:Bounds height="60" width="153" x="259.5" y="192"/>
+            <dmndi:DMNLabel sharedStyle="LS_250866fc-5073-42ee-9907-708ee148193d_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_be6be145-e914-4163-9875-4849e7f098f6"
+                         id="_7c98e619-e860-4722-98e9-edf209dfc8ef">
+            <dc:Bounds height="60.00000762939453"
+                       width="135.48234176635742"
+                       x="599.2588291168213"
+                       y="337.99999618530273"/>
+            <dmndi:DMNLabel sharedStyle="LS_250866fc-5073-42ee-9907-708ee148193d_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNEdge dmnElementRef="_bb823107-6827-49cf-bfdf-4fd33b8fe5b3"
+                        id="_731f2665-085d-4c32-9487-e1352b6d2606">
+            <di:waypoint x="535.9968013763428" y="261.99999618530273"/>
+            <di:waypoint x="604.5" y="159"/>
+            <dmndi:DMNLabel sharedStyle="LS_250866fc-5073-42ee-9907-708ee148193d_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_736705c6-8626-427a-88b5-de055bd48a85"
+                        id="_051e2fb9-4afd-41d9-9e45-653b6978e703">
+            <di:waypoint x="764" y="228"/>
+            <di:waypoint x="644.5" y="159"/>
+            <dmndi:DMNLabel sharedStyle="LS_250866fc-5073-42ee-9907-708ee148193d_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_c4f62e7d-1a5d-41ba-bfbc-816fbbf9d974"
+                        id="_4a398cee-3550-41a9-8f64-ea2985b59651">
+            <di:waypoint x="412.5" y="212"/>
+            <di:waypoint x="558" y="139"/>
+            <dmndi:DMNLabel sharedStyle="LS_250866fc-5073-42ee-9907-708ee148193d_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_a4ba8c43-76e7-43a6-ab39-73ab3cd23362"
+                        id="_c620e472-d7a5-4ab8-9b31-a8e62e2b9ead">
+            <di:waypoint x="656.9968013763428" y="337.99999618530273"/>
+            <di:waypoint x="634.5" y="159"/>
+            <dmndi:DMNLabel sharedStyle="LS_250866fc-5073-42ee-9907-708ee148193d_0"/>
+         </dmndi:DMNEdge>
+      </dmndi:DMNDiagram>
+      <dmndi:DMNStyle fontBold="false"
+                      fontFamily="arial,helvetica,sans-serif"
+                      fontItalic="false"
+                      fontSize="11"
+                      fontStrikeThrough="false"
+                      fontUnderline="false"
+                      id="LS_250866fc-5073-42ee-9907-708ee148193d_0"/>
+   </dmndi:DMNDI>
+</semantic:definitions>

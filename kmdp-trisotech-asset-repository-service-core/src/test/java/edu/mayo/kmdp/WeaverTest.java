@@ -28,6 +28,11 @@ import static edu.mayo.kmdp.util.Util.resolveResource;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 import static edu.mayo.kmdp.util.XMLUtil.validate;
+import static edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries.Actionable_Decision;
+import static edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries.Aggregation_Decision;
+import static edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries.Assessment_Decision;
+import static edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries.Choice_Decision;
+import static edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries.Naturalistic_Decision;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,6 +53,7 @@ import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnot
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
@@ -183,9 +189,9 @@ class WeaverTest {
             .flatMap(StreamUtil::trimStream)
             .collect(Collectors.toSet());
 			assertEquals(3, decisions.size());
-			assertTrue(decisions.contains(DecisionTypeSeries.Aggregation_Decision));
-      assertTrue(decisions.contains(DecisionTypeSeries.Assessment_Decision));
-      assertTrue(decisions.contains(DecisionTypeSeries.Naturalistic_Decision));
+			assertTrue(decisions.contains(Aggregation_Decision));
+      assertTrue(decisions.contains(Assessment_Decision));
+      assertTrue(decisions.contains(Naturalistic_Decision));
 
 
     } catch (IllegalStateException ie) {
@@ -260,11 +266,11 @@ class WeaverTest {
           .collect(Collectors.toSet());
       assertEquals(5, decisions.size());
       // there are 2 Naturalistic_Decision, that's why only 5 are asserted here
-      assertTrue(decisions.contains(DecisionTypeSeries.Aggregation_Decision));
-      assertTrue(decisions.contains(DecisionTypeSeries.Assessment_Decision));
-      assertTrue(decisions.contains(DecisionTypeSeries.Naturalistic_Decision));
-      assertTrue(decisions.contains(DecisionTypeSeries.Choice_Decision));
-      assertTrue(decisions.contains(DecisionTypeSeries.Actionable_Decision));
+      assertTrue(decisions.contains(Aggregation_Decision));
+      assertTrue(decisions.contains(Assessment_Decision));
+      assertTrue(decisions.contains(Naturalistic_Decision));
+      assertTrue(decisions.contains(Choice_Decision));
+      assertTrue(decisions.contains(Actionable_Decision));
 
       props = loadAnnotations(dox, In_Terms_Of, Annotation.class);
       assertTrue(props.stream()
@@ -436,6 +442,62 @@ class WeaverTest {
       fail(ie.getMessage());
     }
   }
+
+
+  @Test
+  void testRewriteReuseLinks() {
+    // Rewrite the 'reuse' links, preserve the 'copy of'
+    String path = "/Decision with Reuse.raw.dmn.xml";
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+
+    try {
+      redactor.redact(weaver.weave(dox));
+      assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
+
+      NodeList decisions = dox.getElementsByTagName("semantic:decision");
+      assertEquals(2, decisions.getLength());
+
+      NodeList inputs = dox.getElementsByTagName("semantic:inputData");
+      assertEquals(1, inputs.getLength());
+
+      Element rootDecision = asElementStream(decisions)
+          .filter(el -> el.getAttribute("name").equals("Reusing Decision"))
+          .findAny()
+          .orElseGet(Assertions::fail);
+      NodeList deps = rootDecision.getElementsByTagName("semantic:informationRequirement");
+      assertEquals(4, deps.getLength());
+
+      asElementStream(deps).forEach(
+          dep -> {
+            NodeList reqDec = dep.getElementsByTagName("semantic:requiredDecision");
+            NodeList reqInp = dep.getElementsByTagName("semantic:requiredInput");
+
+            if (reqDec.getLength() > 0) {
+              String href = ((Element) reqDec.item(0)).getAttribute("href");
+              boolean isExternalRefReuse = href.contains("c0ae5c78-c1d6-48ad-bcfb-47bde312b963");
+              boolean isInternalRefCopy = href.equals("#_f3da83df-b1bc-4ab8-b2be-ddc4937e3142");
+              assertTrue(isExternalRefReuse || isInternalRefCopy);
+            }
+            if (reqInp.getLength() > 0) {
+              String href = ((Element) reqInp.item(0)).getAttribute("href");
+              boolean isExternalRefReuse = href.contains("c0ae5c78-c1d6-48ad-bcfb-47bde312b963");
+              boolean isInternalRefCopy = href.equals("#_be6be145-e914-4163-9875-4849e7f098f6");
+              assertTrue(isExternalRefReuse || isInternalRefCopy);
+            }
+          }
+      );
+
+      NodeList annos = dox.getElementsByTagName("surr:annotation");
+      assertEquals(1, annos.getLength());
+
+      //streamXMLDocument(dox, System.out);
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(),ie);
+      fail(ie.getMessage());
+    }
+  }
+
 
   private boolean confirmDecisionURI(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))

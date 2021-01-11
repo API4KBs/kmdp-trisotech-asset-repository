@@ -18,6 +18,7 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DROOLS_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TRISOTECH_COM;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_ATTACHMENT_ITEM;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CMMN_11_NS;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_COMMENTS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_COPYOFLINK;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CUSTOM_ATTRIBUTE_ATTR;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_DMN_12_NS;
@@ -137,6 +138,10 @@ public class Redactor {
           element.getParentNode().removeChild(element)
         );
 
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS(TT_METADATA_NS, TT_COMMENTS))
+        .forEach(element ->
+          element.getParentNode().removeChild(element)
+        );
 
 
     // if any meta items were invalid, want to strip them from the file

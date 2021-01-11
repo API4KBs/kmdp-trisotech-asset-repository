@@ -40,6 +40,7 @@ import edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.Util;
+import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -569,6 +570,11 @@ public class IdentityMapper {
    * @return ResourceIdenifier of the assetID
    */
   public Optional<ResourceIdentifier> extractAssetIdFromDocument(Document dox) {
+    return extractAssetIdFromRawDocument(dox)
+        .or(() -> extractAssetIdFromWovenDocument(dox));
+  }
+
+  private Optional<ResourceIdentifier> extractAssetIdFromRawDocument(Document dox) {
     NodeList metas = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_CUSTOM_ATTRIBUTE_ATTR);
 
     List<ResourceIdentifier> ids = asElementStream(metas)
@@ -580,6 +586,13 @@ public class IdentityMapper {
     return ids.isEmpty() ? Optional.empty() : Optional.ofNullable(ids.get(0));
   }
 
+  private Optional<ResourceIdentifier> extractAssetIdFromWovenDocument(Document dox) {
+    XPathUtil xPath = new XPathUtil();
+    String idNode = xPath.xString(dox, "//*[local-name()='resourceIdentifier']/@versionId");
+    return Optional.ofNullable(idNode)
+        .map(URI::create)
+        .map(SemanticIdentifier::newVersionId);
+  }
 
   private boolean isIdentifier(Element el) {
     return config.getTyped(TTWParams.ASSET_ID_ATTRIBUTE)

@@ -220,7 +220,7 @@ public class TTCacheManager {
 
         if (modelsSolutionsByModelID.containsKey(modelId)) {
           logger.error("model ID {} has multiple asset IDs {} and {}",
-              modelId,
+              modelsSolutionsByModelID.get(modelId).get(ARTIFACT_NAME),
               modelsSolutionsByModelID.get(modelId).get(ASSET_ID),
               soln.get(ASSET_ID.key));
         }

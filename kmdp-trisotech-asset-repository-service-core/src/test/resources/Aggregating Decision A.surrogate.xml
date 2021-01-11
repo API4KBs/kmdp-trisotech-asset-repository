@@ -6,7 +6,7 @@
     <surr:formalCategory referentId="https://www.omg.org/spec/API4KP/api4kp-kao/InferentialAsset" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory#d4b0e868-60c8-387d-a139-e3c35427bfb6" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory/versions/20190801#d4b0e868-60c8-387d-a139-e3c35427bfb6" tag="InferentialAsset" versionTag="20190801" name="Assessment, Predictive and Inferential Models" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory" establishedOn="2019-08-01T00:00:00">
         <id:uuid>d4b0e868-60c8-387d-a139-e3c35427bfb6</id:uuid>
     </surr:formalCategory>
-    <surr:assetId resourceId="https://clinicalknowledgemanagement.mayo.edu/assets/b0764bf2-4529-4869-9ddc-92dc22d521de" versionId="https://clinicalknowledgemanagement.mayo.edu/assets/b0764bf2-4529-4869-9ddc-92dc22d521de/versions/1.0.0" tag="b0764bf2-4529-4869-9ddc-92dc22d521de" versionTag="1.0.0" namespaceUri="https://clinicalknowledgemanagement.mayo.edu/assets/" establishedOn="2021-01-05T00:00:00">
+    <surr:assetId resourceId="https://clinicalknowledgemanagement.mayo.edu/assets/b0764bf2-4529-4869-9ddc-92dc22d521de" versionId="https://clinicalknowledgemanagement.mayo.edu/assets/b0764bf2-4529-4869-9ddc-92dc22d521de/versions/1.0.0" tag="b0764bf2-4529-4869-9ddc-92dc22d521de" versionTag="1.0.0" namespaceUri="https://clinicalknowledgemanagement.mayo.edu/assets/" establishedOn="2021-01-08T00:00:00">
         <id:uuid>b0764bf2-4529-4869-9ddc-92dc22d521de</id:uuid>
     </surr:assetId>
     <surr:annotation>
@@ -103,7 +103,7 @@
         </surr:lifecycle>
     </surr:carriers>
     <surr:surrogate mimeType="model/surr-v2+json">
-        <surr:artifactId resourceId="https://clinicalknowledgemanagement.mayo.edu/artifacts/7fbba270-9534-3d7f-b69b-c339ab98a998" versionId="https://clinicalknowledgemanagement.mayo.edu/artifacts/7fbba270-9534-3d7f-b69b-c339ab98a998/versions/1.0.0+1602260445000" tag="7fbba270-9534-3d7f-b69b-c339ab98a998" versionTag="1.0.0+1602260445000" namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/" establishedOn="2021-01-05T00:00:00">
+        <surr:artifactId resourceId="https://clinicalknowledgemanagement.mayo.edu/artifacts/7fbba270-9534-3d7f-b69b-c339ab98a998" versionId="https://clinicalknowledgemanagement.mayo.edu/artifacts/7fbba270-9534-3d7f-b69b-c339ab98a998/versions/1.0.0+1602260445000" tag="7fbba270-9534-3d7f-b69b-c339ab98a998" versionTag="1.0.0+1602260445000" namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/" establishedOn="2021-01-08T00:00:00">
             <id:uuid>7fbba270-9534-3d7f-b69b-c339ab98a998</id:uuid>
         </surr:artifactId>
         <surr:representation>

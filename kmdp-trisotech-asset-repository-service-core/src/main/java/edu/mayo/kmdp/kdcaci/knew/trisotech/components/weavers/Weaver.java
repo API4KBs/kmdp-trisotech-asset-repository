@@ -15,11 +15,16 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.CMMN;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.KEY;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TRISOTECH_COM;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_ACCELERATOR_ENTTIY;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_ACCELERATOR_MODEL;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_COPYOFLINK;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CUSTOM_ATTRIBUTE_ATTR;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_METADATA_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_REUSELINK;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_SEMANTICLINK;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.VALUE;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.W3C_XMLNS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.W3C_XSI;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
@@ -33,35 +38,26 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRe
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.clinicaltasks.ClinicalTaskSeries;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
-import javax.xml.bind.JAXBElement;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
-import org.omg.spec.api4kp._20200801.surrogate.ObjectFactory;
 import org.omg.spec.api4kp._20200801.terms.model.ConceptDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,16 +84,12 @@ public class Weaver {
   @Autowired
   private NamespaceManager names;
 
-  private final ObjectFactory of = new ObjectFactory();
-  private final Map<String, MetadataAnnotationHandler> handlers = new HashMap<>();
+  private final MetadataAnnotationHandler metaHandler = new MetadataAnnotationHandler();
+  private final AssetIDAnnotationHandler assetIdHandler = new AssetIDAnnotationHandler();
 
   @PostConstruct
   public void init() {
     logger.debug("Weaver ctor");
-
-    handlers.put(TT_SEMANTICLINK, new MetadataAnnotationHandler());
-    handlers.put(TT_REUSELINK, new MetadataAnnotationHandler());
-    handlers.put(TT_COPYOFLINK, new MetadataAnnotationHandler());
   }
 
 
@@ -126,13 +118,23 @@ public class Weaver {
 
     // get metas
     NodeList metas = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_SEMANTICLINK);
-    weaveMetadata(metas);
+    weaveMetadata(asElementStream(metas));
+
     // copyLink
-    metas = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_COPYOFLINK);
-    weaveMetadata(metas);
+    NodeList copies = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_COPYOFLINK);
+    weaveMetadata(asElementStream(copies));
+
     // reuseLink
-    metas = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_REUSELINK);
-    weaveMetadata(metas);
+    NodeList reuses = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_REUSELINK);
+    weaveMetadata(asElementStream(reuses)
+        .filter(this::isAcceleratorReuse));
+    asElementStream(reuses)
+        .filter(reuse -> ! this.isAcceleratorReuse(reuse))
+        .forEach(reuse -> rewriteReuseLinks(reuse, dox));
+
+    // rewrite custom attribute 'asset ID'
+    // necessary in case the asset ID has to be extracted from the file
+    weaveAssetId(dox);
 
     // rewrite namespaces
     weaveNamespaces(dox);
@@ -141,9 +143,72 @@ public class Weaver {
     weaveImport(dox);
 
     // rewrite href for 'inputData' and 'requiredInput' tags
-    weaveInputs(dox);
+    weaveExternalReferences(dox);
 
     return dox;
+  }
+
+  private void weaveAssetId(Document dox) {
+    // looks for an Asset ID, and rewrites it as an annotation
+    // note: avoid 'spurious' asset IDs derived from reuse elements
+    asElementStream(dox.getElementsByTagNameNS(TT_METADATA_NS, TT_CUSTOM_ATTRIBUTE_ATTR))
+        .filter(el -> names.getAssetIDKey().equals(el.getAttribute(KEY)))
+        .filter(el -> asElementStream(el.getParentNode().getChildNodes())
+            .noneMatch(sibling -> sibling.getLocalName().equals(TT_REUSELINK)))
+        .forEach(this::rewriteAssetId);
+  }
+
+  private void rewriteAssetId(Element el) {
+    String assetId = el.getAttribute(VALUE);
+    ResourceIdentifier rid = assetIdHandler.getIdentifier(assetId);
+    assetIdHandler.replaceProprietaryElement(el, rid);
+  }
+
+
+  private boolean isAcceleratorReuse(Element element) {
+    return TT_ACCELERATOR_MODEL.equals(element.getAttribute("modelType"))
+        && TT_ACCELERATOR_ENTTIY.equals(element.getAttribute("graphType"));
+  }
+
+  /**
+   * DMN:
+   * m1:A hasRequirement m1:B* (reuse of m2:B)
+   * should be rewritten as
+   * m1:A hasRequirement m2:B
+   *
+   * CMMN:
+   * Nothing to do - the XML also includes a proper external reference
+   *
+   * @param reuseLink
+   * @param dox
+   */
+  private void rewriteReuseLinks(Element reuseLink, Document dox) {
+    if (isCMMN(reuseLink.getOwnerDocument())) {
+      // the reuseElement will be removed later.
+      // Everything else has to stay
+      return;
+    }
+
+    String targetUri = reuseLink.getAttribute("uri");
+    // reuseLink -> extensionElement -> reusing modelElement
+    Element reusingElement = ((Element) reuseLink.getParentNode().getParentNode());
+    String parentId = reusingElement.getAttribute("id");
+
+    XMLUtil.asElementStream(dox.getElementsByTagName("*"))
+        .filter(el -> (el.getLocalName().equals("inputData")
+            || el.getLocalName().equals("requiredInput")
+            || el.getLocalName().equals("requiredKnowledge")
+            || el.getLocalName().equals("encapsulatedDecision")
+            || el.getLocalName().equals("outputDecision")
+            || el.getLocalName().equals("inputDecision")
+            || el.getLocalName().equals("requiredDecision"))
+            && el.getAttribute("href").equals("#" + parentId))
+        .forEach(element -> {
+          Attr attr = element.getAttributeNode("href");
+          attr.setValue(targetUri);
+        });
+
+   reusingElement.getParentNode().removeChild(reusingElement);
   }
 
   /**
@@ -193,17 +258,19 @@ public class Weaver {
 
 
   /**
-   * weaveInputs will rewrite the href attribute of the tags given to be KMDP hrefs instead of
+   * weaveInputs will rewrite the href attribute
+   * of the tags given to be KMDP hrefs instead of
    * Trisotech
    *
    * @param dox the XML document being rewritten
    */
-  private void weaveInputs(Document dox) {
+  private void weaveExternalReferences(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         // TODO: code review -- need to know which tags, or just check all hrefs? CAO
         .filter(el -> (el.getLocalName().equals("inputData")
             || el.getLocalName().equals("requiredInput")
             || el.getLocalName().equals("requiredKnowledge")
+            || el.getLocalName().equals("outputDecision")
             || el.getLocalName().equals("encapsulatedDecision")
             || el.getLocalName().equals("inputDecision")
             || el.getLocalName().equals("requiredDecision"))
@@ -266,13 +333,12 @@ public class Weaver {
     }
   }
 
-  private void weaveMetadata(NodeList metas) {
-    asElementStream(metas)
-        .forEach(
-            el -> doInjectTerm(el,
-                getSemanticAnnotation(el),
-                getConceptIdentifiers(el))
-        );
+  private void weaveMetadata(Stream<Element> metas) {
+    metas.forEach(
+        el -> doInjectTerm(el,
+            getSemanticAnnotation(el),
+            getConceptIdentifiers(el))
+    );
   }
 
   private List<ConceptIdentifier> getConceptIdentifiers(Element el) {
@@ -282,7 +348,6 @@ public class Weaver {
       rewriteValue(uriAttr);
     }
 
-    // TODO: would there ever be more than one? CAO maybe
     List<ConceptIdentifier> conceptIdentifiers = new ArrayList<>();
     ConceptIdentifier concept = null;
     try {
@@ -295,7 +360,8 @@ public class Weaver {
             .asConceptIdentifier();
       } else {
         if(logger.isWarnEnabled()) {
-          logger.warn("WARNING: resource ID {} failed in lookupTerm and will be removed from the file", resourceIdentifier.getUuid().toString());
+          logger.warn("WARNING: resource ID {} failed in lookupTerm "
+              + "and will be removed from the file", resourceIdentifier.getUuid());
         }
         return conceptIdentifiers;
       }
@@ -308,67 +374,13 @@ public class Weaver {
   }
 
 
-  private MetadataAnnotationHandler handler(Element el) {
-    if (logger.isDebugEnabled()) {
-      logger.debug("el localname:  {}", el.getLocalName());
-    }
-    if (!handlers.containsKey(el.getLocalName())) {
-      throw new UnsupportedOperationException(
-          "Unable to find handler for annotation " + el.getLocalName());
-    }
-    return handlers.get(el.getLocalName());
-  }
-
-
   private void doInjectTerm(Element el,
       SemanticAnnotationRelTypeSeries defaultRel,
       List<ConceptIdentifier> rows) {
-    MetadataAnnotationHandler handler = handler(el);
-
     if (!rows.isEmpty() && rows.stream().anyMatch(Objects::nonNull)) {
-      List<Annotation> annos = handler.getAnnotation(defaultRel, rows);
-      handler.replaceProprietaryElement(el,
-          handler.wrap(toChildElements(annos, el)));
+      List<Annotation> annos = metaHandler.getAnnotation(defaultRel, rows);
+      metaHandler.replaceProprietaryElement(el, annos);
     }
-  }
-
-  private List<Element> toChildElements(List<Annotation> annos, Element parent) {
-    return annos.stream()
-        .map(ann -> toChildElement(ann, parent))
-        .collect(Collectors.toList());
-  }
-
-  private Element toChildElement(Annotation ann, Element parent) {
-    Element el;
-    if (ann != null) {
-      el = toElement(of,
-          ann,
-          of::createAnnotation
-      );
-    } else {
-      throw new IllegalStateException("Unmanaged annotation type" + ann.getClass().getName());
-    }
-    parent.getOwnerDocument().adoptNode(el);
-    parent.appendChild(el);
-    return el;
-  }
-
-
-  public static <T> Element toElement(Object ctx,
-      T root,
-      final Function<T, JAXBElement<? super T>> mapper) {
-
-    Optional<Document> dox = JaxbUtil.marshall(Collections.singleton(ctx.getClass()),
-        root,
-        mapper,
-        JaxbUtil.defaultProperties())
-        .map(ByteArrayOutputStream::toByteArray)
-        .map(ByteArrayInputStream::new)
-        .flatMap(XMLUtil::loadXMLDocument);
-
-    return dox
-        .map(Document::getDocumentElement)
-        .orElseThrow(IllegalStateException::new);
   }
 
 
@@ -379,13 +391,13 @@ public class Weaver {
         .append(" ")
         .append("xsd/API4KP/surrogate/surrogate.xsd");
 
-    String baseNS = dox.getDocumentElement().getNamespaceURI();
-    if (baseNS.contains(DMN)) {
+
+    if (isDMN(dox)) {
       sb.append(" ")
           .append(DMN_1_2.getReferentId())
           .append(" ").append(Registry.getValidationSchema(DMN_1_2.getReferentId())
           .orElseThrow(IllegalStateException::new));
-    } else if (baseNS.contains(CMMN)) {
+    } else if (isCMMN(dox)) {
       sb.append(" ").append(CMMN_1_1)
           .append(" ").append(Registry.getValidationSchema(CMMN_1_1.getReferentId())
           .orElseThrow(IllegalStateException::new));
@@ -394,5 +406,14 @@ public class Weaver {
     return sb.toString();
   }
 
+  private boolean isCMMN(Document dox) {
+    String baseNS = dox.getDocumentElement().getNamespaceURI();
+    return baseNS.contains(CMMN);
+  }
+
+  private boolean isDMN(Document dox) {
+    String baseNS = dox.getDocumentElement().getNamespaceURI();
+    return baseNS.contains(DMN);
+  }
 
 }

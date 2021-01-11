@@ -15,7 +15,7 @@
                       xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.3.1"
+                      exporterVersion="7.3.2"
                       id="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
                       name="Basic Decision Model"
                       namespace="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"

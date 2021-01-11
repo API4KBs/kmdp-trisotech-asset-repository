@@ -5,6 +5,9 @@ public class TTConstants {
   public static final String TRISOTECH_COM = "trisotech.com";
   public static final String TT_BASE_MODEL_URI = "http://www.trisotech.com/definitions/_";
 
+  public static final String TT_ACCELERATOR_MODEL = "http://www.trisotech.com/graph/1.0/element#Framework";
+  public static final String TT_ACCELERATOR_ENTTIY = "http://www.trisotech.com/graph/1.0/element#Entity";
+
   public static final String W3C_XMLNS = "http://www.w3.org/2000/xmlns/";
   public static final String W3C_XSI = "http://www.w3.org/2001/XMLSchema-instance";
   public static final String DMN = "DMN";
@@ -22,6 +25,7 @@ public class TTConstants {
   public static final String TT_CUSTOM_ATTRIBUTE_ATTR = "customAttribute";
   public static final String TT_REUSELINK = "reuseLink";
   public static final String TT_COPYOFLINK = "copyOfLink";
+  public static final String TT_COMMENTS = "comments";
 
   public static final String TT_DYNAMIC_DECISION_SERVICE = "dynamicDecisionService";
   public static final String TT_WHOLE_DECISION_SERVICE = "wholeModelDecisionService";

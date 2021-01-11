@@ -25,6 +25,8 @@ public class NamespaceManager {
   private URI artifactNamespace;
   private URI assetNamespace;
 
+  private String assetIDKey;
+
   private String defaultVersion;
 
   @PostConstruct
@@ -37,6 +39,7 @@ public class NamespaceManager {
         Pattern.compile(config.getTyped(TTWParams.DOMAIN_TERMS_NAMESPACE_PATTERN));
     artifactNamespace = URI.create(config.getTyped(TTWParams.ARTIFACT_NAMESPACE));
     assetNamespace = URI.create(config.getTyped(TTWParams.ASSET_NAMESPACE));
+    assetIDKey = config.getTyped(TTWParams.ASSET_ID_ATTRIBUTE);
   }
 
 
@@ -117,4 +120,9 @@ public class NamespaceManager {
     }
     return isDomainConcept(baseURI.toString());
   }
+
+  public String getAssetIDKey() {
+    return assetIDKey;
+  }
+
 }

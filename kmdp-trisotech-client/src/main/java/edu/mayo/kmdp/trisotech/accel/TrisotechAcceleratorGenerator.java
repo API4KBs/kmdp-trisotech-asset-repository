@@ -18,7 +18,7 @@ import edu.mayo.kmdp.trisotech.accel.beans.TrisotechAccelerator.TrisotechAcceler
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.URIUtil;
-import edu.mayo.ontology.taxonomies.clinicalinterrogatives._20201101.ClinicalInterrogative;
+import edu.mayo.ontology.taxonomies.clinicalinterrogatives.snapshot.ClinicalInterrogative;
 import edu.mayo.ontology.taxonomies.clinicalsituations._20201217.AnticoagulationClinicalSituation;
 import edu.mayo.ontology.taxonomies.clinicalsituations._20201217.CardiologyClinicalSituation;
 import edu.mayo.ontology.taxonomies.clinicalsituations._20201217.HeartfailureClinicalSituation;

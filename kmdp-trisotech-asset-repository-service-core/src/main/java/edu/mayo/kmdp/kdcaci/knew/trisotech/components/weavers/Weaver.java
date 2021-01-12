@@ -38,6 +38,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRe
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
 import edu.mayo.kmdp.registry.Registry;
+import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.clinicaltasks.ClinicalTaskSeries;
@@ -242,7 +243,7 @@ public class Weaver {
     // the Terms service needs a UUID...
     URI uri = URI.create(uriStr);
     Answer<ConceptDescriptor> cdAns
-        = Answer.of(Optional.ofNullable(uri.getFragment()))
+        = Answer.of(Optional.ofNullable(NameUtils.getTrailingPart(uri.toString())))
         .flatOpt(Util::ensureUUID)
         .flatMap(id -> terms.lookupTerm(id.toString())) ;
     if (!cdAns.isSuccess()) {

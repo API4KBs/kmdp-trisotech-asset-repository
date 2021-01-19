@@ -119,12 +119,6 @@ public abstract class AbstractAssetDownloader {
           .ifPresent(str -> FileUtil
               .write(str, modelFile));
     } else if (modelFile.getName().endsWith("dmn.xml")) {
-      KnowledgeCarrier lifted = new DMN12Parser().applyLift(wovenModel,
-          Serialized_Knowledge_Expression,
-          ModelMIMECoder
-              .encode(rep(DMN_1_2, XML_1_1, defaultCharset())),
-          null).get();
-
       new DMN12Parser().applyLift(wovenModel,
           Serialized_Knowledge_Expression,
           ModelMIMECoder

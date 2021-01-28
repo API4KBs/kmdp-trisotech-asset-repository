@@ -31,7 +31,7 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import static org.omg.spec.api4kp._20200801.id.VersionIdentifier.toSemVer;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultSurrogateUUID;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
-import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype._20200801.DependencyType.Depends_On;
+import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype._20200801.DependencyType.Imports;
 import static org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode._20190201.Language.English;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory._2020_01_20.KnowledgeArtifactCategory.Software;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models;
@@ -441,7 +441,7 @@ public class TrisotechIntrospectionStrategy {
         // TODO: Do something different for null id? means related artifact was not published
         //  log warning was already noted in gathering of related artifacts CAO
         .filter(Objects::nonNull)
-        .map(resourceIdentifier -> new Dependency().withRel(DependencyTypeSeries.Imports)
+        .map(resourceIdentifier -> new Dependency().withRel(Imports)
             .withHref(resourceIdentifier))
         .collect(toList());
 
@@ -459,7 +459,7 @@ public class TrisotechIntrospectionStrategy {
     return theTargetAssetId.stream()
         .map(resourceIdentifier ->
             new Dependency()
-                .withRel(Depends_On)
+                .withRel(Imports)
                 .withHref(resourceIdentifier))
         .collect(toList());
   }

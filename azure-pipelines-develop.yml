@@ -141,25 +141,6 @@ steps:
   env:
     ALM_VERSION: $(AlmVersioning.Project.Version)
 
-# Write SLM version to variable group for trisotech war
-- task: PowerShell@2
-  displayName: 'Update Variable Group by Id'
-  inputs:
-    targetType: 'inline'
-    script: |
-      # Write your PowerShell commands here.
-      
-      # Base64-encodes the Personal Access Token (PAT) appropriately
-      $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$env:SYSTEM_ACCESSTOKEN)))
-      $url = "https://dev.azure.com/mclm/KMD/_apis/distributedtask/variablegroups/19?api-version=6.1-preview.1"
-
-      $json = '{"id":19,"type":"Vsts","name":"kmdp-platform-dev-variables","variables":{"trisoRepoWarVersion":{"isSecret":false,"value":$env:PROJECT_SLM_VERSION}}}'
-      $pipeline = Invoke-RestMethod -Uri $url -Method Put -Body $json -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
-      Write-Host "New Variable Value:" $pipeline.variables.trisoRepoWarVersion.value
-  env:
-    SYSTEM_ACCESSTOKEN: $(system.accesstoken)
-    PROJECT_SLM_VERSION: $(projectSlmVersionFinal)
-
 # Set Version of Deployable War
 - task: PowerShell@2
   displayName: 'Maven Set Version Deployable War'
@@ -211,6 +192,24 @@ steps:
     TRISO_DEV_TOKEN: $(trisoDevToken)
     DEPLOY_REPO: $(deploymentRepo)
     DEPLOY_REPO_PATH: $(deploymentRepoPath)
+
+# Write SLM version to variable group for trisotech war
+- task: PowerShell@2
+  displayName: 'Update Variable Group by Id'
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$env:SYSTEM_ACCESSTOKEN)))
+      $url = "https://dev.azure.com/mclm/KMD/_apis/distributedtask/variablegroups/19?api-version=6.1-preview.1"
+      $variables = Invoke-RestMethod -Uri $url -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+      $variables.variables.trisoRepoWarVersion.value = $env:PROJECT_SLM_VERSION
+      $jsonFile = @($variables) | ConvertTo-Json -Depth 99
+      $pipeline = Invoke-RestMethod -Uri $url -Method Put -Body $jsonFile -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+      Write-Host "New Variable Value:" $pipeline.variables.trisoRepoWarVersion.value
+  env:
+    SYSTEM_ACCESSTOKEN: $(system.accesstoken)
+    PROJECT_SLM_VERSION: $(projectSlmVersionFinal)
 
 # Copy War File to build
 - task: CopyFiles@2

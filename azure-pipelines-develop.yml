@@ -141,6 +141,25 @@ steps:
   env:
     ALM_VERSION: $(AlmVersioning.Project.Version)
 
+# Write SLM version to variable group for trisotech war
+- task: PowerShell@2
+  displayName: 'Update Variable Group by Id'
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      # Base64-encodes the Personal Access Token (PAT) appropriately
+      $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$env:SYSTEM_ACCESSTOKEN)))
+      $url = "https://dev.azure.com/mclm/KMD/_apis/distributedtask/variablegroups/19?api-version=6.1-preview.1"
+
+      $json = '{"id":19,"type":"Vsts","name":"kmdp-platform-dev-variables","variables":{"trisoRepoWarVersion":{"isSecret":false,"value":$env:PROJECT_SLM_VERSION}}}'
+      $pipeline = Invoke-RestMethod -Uri $url -Method Put -Body $json -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+      Write-Host "New Variable Value:" $pipeline.variables.trisoRepoWarVersion.value
+  env:
+    SYSTEM_ACCESSTOKEN: $(system.accesstoken)
+    PROJECT_SLM_VERSION: $(projectSlmVersionFinal)
+
 # Set Version of Deployable War
 - task: PowerShell@2
   displayName: 'Maven Set Version Deployable War'

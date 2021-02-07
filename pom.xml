@@ -7,7 +7,7 @@
   <parent>
     <groupId>edu.mayo.kmdp</groupId>
     <artifactId>kmdp-asset-repository-service-base</artifactId>
-    <version>9.0.5-SNAPSHOT</version>
+    <version>9.0.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>kmdp-trisotech-asset-repository-service</artifactId>
@@ -15,7 +15,9 @@
 
   <packaging>pom</packaging>
 
+  <!-- Project Information -->
   <name>Trisotech :: Knowledge Asset Repository</name>
+  <description>Trisotech asset repository service implementation</description>
 
   <modules>
     <module>kmdp-trisotech-asset-repository-service-core</module>
@@ -26,12 +28,10 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-
-    <kmdp.servers.version>4.9.5-SNAPSHOT</kmdp.servers.version>
-    <clinical.terms.version>7.1.3-SNAPSHOT</clinical.terms.version>
+    <kmdp.servers.version>4.9.6-SNAPSHOT</kmdp.servers.version>
+    <clinical.terms.version>7.1.5-SNAPSHOT</clinical.terms.version>
   </properties>
 
   <dependencies>

@@ -10,6 +10,8 @@ public class TTConstants {
 
   public static final String W3C_XMLNS = "http://www.w3.org/2000/xmlns/";
   public static final String W3C_XSI = "http://www.w3.org/2001/XMLSchema-instance";
+  public static final String CMMN_11_XMLNS = "http://www.omg.org/spec/CMMN/20151109/MODEL";
+  public static final String DMN_12_XMLNS = "http://www.omg.org/spec/DMN/20180521/MODEL";
   public static final String DMN = "DMN";
   public static final String CMMN = "CMMN";
 

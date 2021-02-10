@@ -30,7 +30,7 @@ public class NamespaceManager {
   private String defaultVersion;
 
   @PostConstruct
-  void init() {
+  public void init() {
     if (config == null) {
       config = new TTAssetRepositoryConfig();
     }

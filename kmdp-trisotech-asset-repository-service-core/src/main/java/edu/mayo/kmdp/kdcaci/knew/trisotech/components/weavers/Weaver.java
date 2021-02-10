@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.CMMN;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.CMMN_11_XMLNS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.KEY;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TRISOTECH_COM;
@@ -39,8 +40,10 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRe
 import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.kmdp.util.XPathUtil;
 import edu.mayo.ontology.taxonomies.clinicaltasks.ClinicalTaskSeries;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
@@ -68,6 +71,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -93,6 +97,14 @@ public class Weaver {
     logger.debug("Weaver ctor");
   }
 
+  public Weaver() {
+    //
+  }
+
+  public Weaver(NamespaceManager names) {
+    this.names = names;
+    names.init();
+  }
 
   /**
    * Weave out Trisotech-specific elements and where necessary, replace with KMDP-specific.
@@ -145,6 +157,12 @@ public class Weaver {
 
     // rewrite href for 'inputData' and 'requiredInput' tags
     weaveExternalReferences(dox);
+
+    // BUG ### CMMN Decision task with copy/reuse links do not have
+    // a corresponding decisionRef -> decision
+    if (isCMMN(dox)) {
+      ensureCMMNDecisionTaskIntegrity(dox);
+    }
 
     return dox;
   }
@@ -256,6 +274,43 @@ public class Weaver {
     return names.isDomainConcept(ns);
   }
 
+
+  private void ensureCMMNDecisionTaskIntegrity(Document dox) {
+    XPathUtil x = new XPathUtil();
+    asElementStream(x.xList(dox,"//cmmn:decisionTask[not(@decisionRef)]"))
+        .forEach(decisionTask -> {
+          Optional<Element> reuseNode = getReuseNode(x, decisionTask, TT_COPYOFLINK)
+              .or(() -> getReuseNode(x, decisionTask, TT_REUSELINK));
+          if (reuseNode.isEmpty()) {
+            logger.warn("Found decision Task with neither external nor internal reference");
+            return;
+          }
+          URI ref = URI.create(reuseNode.get().getAttribute("uri"));
+          String decisionTaskName = reuseNode.get().getAttribute("itemName");
+          String id = "_" + Util.uuid(ref.toString()).toString().replace("-","");
+
+          int numNamespaces = x.xList(dox,"//namespace::*").getLength();
+          String prefix = "ns" + (1000 + numNamespaces + 1 );
+
+          dox.getDocumentElement().setAttribute("xmlns:" + prefix, URIUtil.normalizeURIString(ref));
+
+          decisionTask.setAttribute("decisionRef", id);
+
+          Element el = dox.createElementNS(CMMN_11_XMLNS,"decision");
+          el.setAttribute("implementationType", "http://www.omg.org/spec/CMMN/DecisionType/DMN1");
+          el.setAttribute("name", decisionTaskName);
+          el.setAttribute("id", id);
+          el.setAttribute("externalRef", prefix + ":" + ref.getFragment());
+
+          dox.getDocumentElement().appendChild(el);
+        });
+
+  }
+
+  private Optional<Element> getReuseNode(XPathUtil x, Node local, String linkType) {
+    return Optional.ofNullable(x.xNode(local, ".//*[local-name()='" + linkType + "']"))
+        .flatMap(n -> Util.as(n, Element.class));
+  }
 
 
   /**

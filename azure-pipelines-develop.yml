@@ -30,6 +30,7 @@ resources:
     trigger: 
       branches:
       - develop
+      - main
    
 # Sets Virtual Machine to Run Pipeline on
 pool:

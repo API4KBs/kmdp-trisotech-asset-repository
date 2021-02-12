@@ -388,11 +388,6 @@ public class TTWebClient {
     QueryExecution qexec = QueryExecutionFactory
         .sparqlService(sparqlEndpoint, query, httpClient);
 
-    logger.debug("Preparing SPARQL Query");
-    logger.debug("  AUTH HEADER " + getBearerTokenHeader());
-    logger.debug("  SPARQL Endpooint " + sparqlEndpoint);
-    logger.debug("  QUERY " + query.toString());    
-    
     return qexec.execSelect();
   }
 

@@ -20,12 +20,14 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_BASE_MODEL_URI;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CUSTOM_ATTRIBUTE_ATTR;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_METADATA_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.VALUE;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper.applyTimestampToVersion;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_ID;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MIME_TYPE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MODEL;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.STATE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.UPDATED;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.VERSION;
+import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.NameUtils.getTrailingPart;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
@@ -423,8 +425,8 @@ public class IdentityMapper {
         .flatMap(soln -> {
           String versionTag = soln.get(VERSION);
           return Optional.ofNullable(soln.get(UPDATED))
-              .map(DateTimeUtil::dateTimeStrToMillis)
-              .map(timestamp -> versionTag + "+" + timestamp);
+              .map(timestamp ->
+                  applyTimestampToVersion(versionTag, parseDateTime(timestamp).getTime()));
         });
   }
 

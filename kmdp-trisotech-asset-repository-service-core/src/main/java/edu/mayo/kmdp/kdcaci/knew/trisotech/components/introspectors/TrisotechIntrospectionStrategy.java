@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams.DEFAULT_VERSION_TAG;
+import static edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper.applyTimestampToVersion;
 import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
 import static edu.mayo.kmdp.util.JaxbUtil.unmarshall;
 import static edu.mayo.kmdp.util.Util.isNotEmpty;
@@ -80,7 +81,6 @@ import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.Link;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
-import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
@@ -180,8 +180,8 @@ public class TrisotechIntrospectionStrategy {
     Date modelDate = Date.from(Instant.parse(model.getUpdated()));
     String artifactTag = docId.get();
     String artifactVersionTag = model.getVersion() == null
-        ? config.getTyped(DEFAULT_VERSION_TAG, String.class) + "+" + modelDate.getTime()
-        : toSemVer(model.getVersion()) + "+" + modelDate.getTime();
+        ? applyTimestampToVersion(config.getTyped(DEFAULT_VERSION_TAG, String.class), modelDate.getTime())
+        : applyTimestampToVersion(toSemVer(model.getVersion()), modelDate.getTime());
 
     // for the surrogate, want the version of the artifact
     ResourceIdentifier artifactID =

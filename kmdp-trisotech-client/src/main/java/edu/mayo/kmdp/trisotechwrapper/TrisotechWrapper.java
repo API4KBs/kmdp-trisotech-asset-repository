@@ -51,9 +51,9 @@ import org.w3c.dom.Document;
 
 /**
  * Class to wrap the calls to Trisotech in meaningful ways.
- *
- * The TTW points to a specific folder in a specific place, as dictated by configuration
- * This assumption could be generalized in the future
+ * <p>
+ * The TTW points to a specific folder in a specific place, as dictated by configuration This
+ * assumption could be generalized in the future
  */
 @Component
 public class TrisotechWrapper {
@@ -95,7 +95,20 @@ public class TrisotechWrapper {
 
   }
 
-
+  /**
+   * Combines a versionTag with a timestamp in a consistent way. TT allows to reuse version tags,
+   * effectively not making the assumption that versions should be immutable.
+   * <p>
+   * Timestamps are used to reconcile the approaches, and differentiate between distinct (immutable)
+   * "versions" of the same (mutable) "version",
+   *
+   * @param versionTag
+   * @param timestamp
+   * @return
+   */
+  public static String applyTimestampToVersion(String versionTag, long timestamp) {
+    return versionTag + "-" + timestamp;
+  }
 
   public TTWEnvironmentConfiguration getConfig() {
     return cfg;
@@ -260,7 +273,8 @@ public class TrisotechWrapper {
       return false;
     }
     Date artifactDate = Date.from(Instant.parse(fileInfo.getUpdated()));
-    String timeStampedVersion = toSemVer(fileInfo.getVersion()) + "+" + artifactDate.getTime();
+    String timeStampedVersion =
+        applyTimestampToVersion(toSemVer(fileInfo.getVersion()), artifactDate.getTime());
     return fileVersion.equals(timeStampedVersion);
   }
 
@@ -301,7 +315,7 @@ public class TrisotechWrapper {
    * returns all the file info for all the versions of the model for the default repository
    *
    * @param modelUri The modelUri for the model desired so that it includes the correct URl for
-   *               downloading the model version.
+   *                 downloading the model version.
    * @return The list of Trisotech FileInfo for all the versions for that model
    */
   public List<TrisotechFileInfo> getModelVersions(String modelUri) {
@@ -311,7 +325,7 @@ public class TrisotechWrapper {
   /**
    * returns all the file info for all the versions of the model for the default repository
    *
-   * @param modelUri   The modelUri for the model desired
+   * @param modelUri The modelUri for the model desired
    * @param mimeType The mimeType of the model requested; mimeType is needed to get back the
    *                 information so that it includes the correct URl for downloading the model
    *                 version.
@@ -324,7 +338,7 @@ public class TrisotechWrapper {
   /**
    * returns all the file info for all the versions of the model for the default repository
    *
-   * @param modelUri   The fileId for the model desired
+   * @param modelUri The fileId for the model desired
    * @param mimeType The mimeType of the model requested; mimeType is needed to get back the
    *                 information so that it includes the correct URl for downloading the model
    *                 version.
@@ -409,7 +423,8 @@ public class TrisotechWrapper {
   public void uploadXmlModel(String path, String name, String mimeType, String artifactVersionTag,
       String state, byte[] exemplar)
       throws IOException, HttpException {
-    webClient.uploadXmlModel(focusPlaceId, path, name, mimeType, artifactVersionTag, state, exemplar);
+    webClient
+        .uploadXmlModel(focusPlaceId, path, name, mimeType, artifactVersionTag, state, exemplar);
   }
 
   /**

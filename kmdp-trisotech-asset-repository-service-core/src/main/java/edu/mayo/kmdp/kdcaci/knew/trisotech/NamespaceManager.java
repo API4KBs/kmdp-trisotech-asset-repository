@@ -100,7 +100,7 @@ public class NamespaceManager {
     String vTag = versionTag != null ? versionTag : defaultVersion;
     Date timestamp = establishedOn != null ? establishedOn : new Date();
 
-    String stampedVersionTag = vTag + "+" + timestamp.getTime();
+    String stampedVersionTag = vTag + "-" + timestamp.getTime();
     return newId(getArtifactNamespace(), artifactUUID, stampedVersionTag)
         .withEstablishedOn(timestamp);
   }

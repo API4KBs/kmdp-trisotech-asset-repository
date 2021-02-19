@@ -61,11 +61,13 @@ import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.services.KPComponent;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.terms.model.ConceptDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -84,6 +86,7 @@ public class Weaver {
   public static final Logger logger = LoggerFactory.getLogger(Weaver.class);
 
   @Autowired
+  @KPComponent(implementation = "broker")
   private TermsApiInternal terms;
 
   @Autowired

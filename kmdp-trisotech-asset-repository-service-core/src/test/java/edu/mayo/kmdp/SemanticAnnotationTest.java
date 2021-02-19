@@ -32,6 +32,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
+import org.omg.spec.api4kp._20200801.services.KPComponent;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.terms.model.ConceptDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,7 @@ class SemanticAnnotationTest {
 	Redactor redactor;
 
 	@Autowired
+	@KPComponent(implementation = "broker")
 	TermsApiInternal terms;
 
 	@Test

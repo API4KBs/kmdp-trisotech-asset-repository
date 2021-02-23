@@ -6,11 +6,11 @@
   <parent>
     <artifactId>kmdp-trisotech-asset-repository-service</artifactId>
     <groupId>edu.mayo.kmdp</groupId>
-    <version>5.1.7</version>
+    <version>5.1.8-SNAPSHOT</version>
   </parent>
 
   <artifactId>kmdp-knowledge-asset-repository-trisotech-core</artifactId>
-  <version>5.1.7</version>
+  <version>5.1.8-SNAPSHOT</version>
 
   <name>Trisotech :: Knowledge Asset Repository :: Core</name>
 

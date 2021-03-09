@@ -30,7 +30,6 @@
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-asset-repository-service-client</artifactId>
       <version>${kmdp.impl.version}</version>
-      <scope>test</scope>
     </dependency>
 
     <dependency>

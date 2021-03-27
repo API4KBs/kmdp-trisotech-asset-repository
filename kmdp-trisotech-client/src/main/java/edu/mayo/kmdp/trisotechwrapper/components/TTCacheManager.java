@@ -57,6 +57,10 @@ public class TTCacheManager {
     this.pathIndexes = initCache(Long.parseLong(cfg.getCacheExpiration()));
   }
 
+  public boolean clearCache() {
+    pathIndexes.invalidateAll();
+    return true;
+  }
 
   private LoadingCache<String, PlacePathIndex> initCache(final long expirationMinutes) {
     CacheLoader<String, PlacePathIndex> loader = new CacheLoader<>() {

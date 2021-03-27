@@ -18,6 +18,7 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.DMN_LOWER;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.Answer.conflict;
+import static org.omg.spec.api4kp._20200801.Answer.failed;
 import static org.omg.spec.api4kp._20200801.Answer.notFound;
 import static org.omg.spec.api4kp._20200801.Answer.succeed;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
@@ -34,6 +35,7 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestVersionException;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
 import java.util.Collections;
@@ -240,16 +242,31 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .limit((null == limit) ? Integer.MAX_VALUE : limit)
         .map(trisotechFileInfo -> {
           // getId from fileInfo is the fileID
-          ResourceIdentifier assetId = mapper
-              .resolveEnterpriseAssetID(trisotechFileInfo.getId());
-          return assetId.toPointer()
-              .withType(isDMNModel(trisotechFileInfo)
-                  ? Decision_Model.getReferentId()
-                  : Care_Process_Model.getReferentId())
-              .withName(trisotechFileInfo.getName());
-        }).collect(Collectors.toList());
+          Pointer ptr = null;
+          try {
+            ResourceIdentifier assetId = mapper
+                .resolveEnterpriseAssetID(trisotechFileInfo.getId());
+            ptr = assetId.toPointer()
+                .withType(isDMNModel(trisotechFileInfo)
+                    ? Decision_Model.getReferentId()
+                    : Care_Process_Model.getReferentId())
+                .withName(trisotechFileInfo.getName());
+          } catch (IllegalStateException ise) {
+            logger.error(ise.getMessage(), ise);
+          }
+          return Optional.ofNullable(ptr);
+        })
+        .flatMap(StreamUtil::trimStream)
+        .collect(Collectors.toList());
 
     return Answer.of(assetList);
+  }
+
+  @Override
+  public Answer<Void> clearKnowledgeAssetCatalog() {
+    return client.clearCache()
+        ? succeed()
+        : failed();
   }
 
   /**

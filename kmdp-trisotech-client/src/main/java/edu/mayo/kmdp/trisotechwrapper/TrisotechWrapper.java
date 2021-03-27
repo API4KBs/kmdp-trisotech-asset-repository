@@ -128,6 +128,14 @@ public class TrisotechWrapper {
 
 
   /**
+   * Resets the internal cache, forcing a reload
+   */
+  public boolean clearCache() {
+    return cacheManager.clearCache();
+  }
+
+
+  /**
    * Retrieves the LATEST version of the model for the fileId provided.
    *
    * @param fileId The file ID to identify the model to retrieve

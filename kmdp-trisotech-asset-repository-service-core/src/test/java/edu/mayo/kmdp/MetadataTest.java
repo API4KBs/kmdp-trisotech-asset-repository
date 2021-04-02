@@ -260,7 +260,7 @@ class MetadataTest {
         .getLatestCarrierTimestampedVersionTag(
             UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
     assertNotNull(artifactVersion);
-    assertEquals("1.8.5-1609367257000", artifactVersion.orElse(""));
+    assertTrue(artifactVersion.orElse("").matches("\\d+\\.\\d+\\.\\d-\\d+"));
   }
 
   @Test

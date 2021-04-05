@@ -146,22 +146,6 @@ steps:
   env:
     PROJECT_SLM_VERSION: $(projectSlmVersionFinal)
 
-# GitHub Super-Linter
-- script: |
-    mkdir super-linter.report
-    docker pull github/super-linter:latest
-    docker run -e RUN_LOCAL=true -e DISABLE_ERRORS=true -e OUTPUT_DETAILS=detailed -e OUTPUT_FORMAT=tap -v $(System.DefaultWorkingDirectory):/tmp/lint/ --name my-vol github/super-linter
-    docker cp my-vol:/tmp/lint/super-linter.report $(build.artifactstagingdirectory)
-  displayName: 'Code Scan using GitHub Super-Linter'
-
-# Publish GitHub Results to Azure Pipelines
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: deploy'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
-    ArtifactName: githublinter
-  condition: succeededOrFailed()
-
 # Maven project clean package using refresh profile
 - task: PowerShell@2
   displayName: 'Maven Clean Package'

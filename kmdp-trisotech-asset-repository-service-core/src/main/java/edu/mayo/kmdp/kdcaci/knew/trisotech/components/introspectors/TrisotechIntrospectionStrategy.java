@@ -24,6 +24,7 @@ import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.Semant
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static java.nio.charset.Charset.defaultCharset;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
@@ -32,12 +33,15 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import static org.omg.spec.api4kp._20200801.id.VersionIdentifier.toSemVer;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultSurrogateUUID;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
-import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype._20200801.DependencyType.Imports;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Imports;
 import static org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode._20190201.Language.English;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory._2020_01_20.KnowledgeArtifactCategory.Software;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Computable_Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
@@ -81,8 +85,9 @@ import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.Link;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
+import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
-import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import org.slf4j.Logger;
@@ -163,7 +168,7 @@ public class TrisotechIntrospectionStrategy {
     List<Annotation> annotations = extractAnnotations(woven);
     KnowledgeAssetCategorySeries formalCategory;
 
-    KnowledgeAssetTypeSeries formalType;
+    List<KnowledgeAssetType> formalType;
     KnowledgeAsset surr;
 
     KnowledgeRepresentationLanguageSerializationSeries syntax;
@@ -212,13 +217,13 @@ public class TrisotechIntrospectionStrategy {
       case DMN_1_2:
         formalCategory = Assessment_Predictive_And_Inferential_Models;
         // default value
-        formalType = Decision_Model;
+        formalType = asList(Decision_Model, Clinical_Decision_Model);
         syntax = DMN_1_2_XML_Syntax;
         break;
       case CMMN_1_1:
         formalCategory = Plans_Processes_Pathways_And_Protocol_Definitions;
         // default value, may be specified differently in the file
-        formalType = Care_Process_Model;
+        formalType = asList(Case_Management_Model, Clinical_Case_Management_Model);
         syntax = CMMN_1_1_XML_Syntax;
         break;
       default:
@@ -234,8 +239,6 @@ public class TrisotechIntrospectionStrategy {
         .withFormalType(formalType)
         // only restrict to published assets
         .withLifecycle(lifecycle)
-//         TODO: Follow-up w/Davide on this CAO
-        // Some work needed to infer the dependencies
         .withLinks(getRelatedAssets(theTargetAssetId)) // asset - asset relation/dependency
         .withCarriers(new KnowledgeArtifact()
             .withArtifactId(artifactID)

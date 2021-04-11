@@ -43,7 +43,18 @@
          </semantic:caseFileItem>
       </semantic:caseFileModel>
       <semantic:casePlanModel id="_40e952e9-9c4c-4f19-bb14-a8a9681d782d" name="Test">
-         <semantic:extensionElements/>
+         <semantic:extensionElements>
+            <id:resourceIdentifier xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                                   xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                                   establishedOn="2021-04-11T00:00:00"
+                                   namespaceUri="https://clinicalknowledgemanagement.mayo.edu/assets/"
+                                   resourceId="https://clinicalknowledgemanagement.mayo.edu/assets/042aa156-de7d-4bb2-a51c-1d0f273a6ce1"
+                                   tag="042aa156-de7d-4bb2-a51c-1d0f273a6ce1"
+                                   versionId="https://clinicalknowledgemanagement.mayo.edu/assets/042aa156-de7d-4bb2-a51c-1d0f273a6ce1/versions/1.0.0"
+                                   versionTag="1.0.0">
+               <id:uuid>042aa156-de7d-4bb2-a51c-1d0f273a6ce1</id:uuid>
+            </id:resourceIdentifier>
+         </semantic:extensionElements>
          <semantic:planItem definitionRef="PID__6088d90d-bc64-40e0-93ca-950552bd4f98"
                             id="_6088d90d-bc64-40e0-93ca-950552bd4f98">
             <semantic:entryCriterion id="_5a6f277d-bf57-4826-8e0b-4c867a44f5f0"
@@ -74,7 +85,7 @@
                       implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
                       name="Test Decision 2"/>
    <cmmndi:CMMNDI>
-      <cmmndi:CMMNDiagram cmmnElementRef="_fe3937b5-4ddf-4b72-9e2a-81a8f5400ae7"
+      <cmmndi:CMMNDiagram cmmnElementRef="_a4172970-dc92-415e-9921-5e0c78af501c"
                           id="_58464e33-4c5a-4c60-b0c3-3433c94d8f08"
                           name="Page 1">
          <cmmndi:Size height="1050" width="1485"/>

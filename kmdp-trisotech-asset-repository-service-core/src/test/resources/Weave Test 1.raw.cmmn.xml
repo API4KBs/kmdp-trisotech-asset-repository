@@ -12,7 +12,7 @@
                       xmlns:rss="http://purl.org/rss/2.0/"
                       xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.3.2"
+                      exporterVersion="7.6.1"
                       expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
                       id="_f59708b6-96c0-4aa3-be4a-31e075d76ec9"
                       name="Weave Test 1"
@@ -175,7 +175,7 @@
                       name="Test Decision 2"
                       triso:modelId="_ede3b331-7b10-4580-98be-66ebff344c21"/>
    <cmmndi:CMMNDI>
-      <cmmndi:CMMNDiagram cmmnElementRef="_fe3937b5-4ddf-4b72-9e2a-81a8f5400ae7"
+      <cmmndi:CMMNDiagram cmmnElementRef="_f59708b6-96c0-4aa3-be4a-31e075d76ec9"
                           id="_58464e33-4c5a-4c60-b0c3-3433c94d8f08"
                           name="Page 1">
          <cmmndi:Size height="1050" width="1571.481679030827"/>

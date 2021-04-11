@@ -11,7 +11,7 @@
                       xmlns:rss="http://purl.org/rss/2.0/"
                       xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.3.2"
+                      exporterVersion="7.6.1"
                       expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
                       id="_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"
                       name="Basic Case Model"
@@ -20,13 +20,14 @@
                       triso:state="Draft"
                       triso:version="1.8.5"
                       xml:lang="en">
-   <semantic:caseFileItemDefinition definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+   <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/XSDElement"
                                     id="_6894ff5f-130a-46a1-bcc4-5e915acd7c9b"
                                     name="Case File Item Data"/>
    <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument"
                                     id="_00f6dab7-b939-4816-868e-0a64d6ee4994"
                                     name="Knowledge - ICD Indications in HCM"/>
-   <semantic:caseFileItemDefinition id="_f6e3c065-be28-4e35-ac1f-b5fae6a2ddb5"
+   <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument"
+                                    id="_f6e3c065-be28-4e35-ac1f-b5fae6a2ddb5"
                                     name="Case File Item Decision"/>
    <semantic:case id="Case_c5b0fddc-013d-4dfb-be05-1f83f22767c1">
       <semantic:caseFileModel>
@@ -48,12 +49,14 @@
                                 id="_732407a2-b292-4b8a-bd44-1d04f6ba8e7f"
                                 name="Case File Item Data">
             <semantic:extensionElements>
-               <triso:semanticLink id="fe283334-808e-4e4e-b1e9-1a9a939a943d"
-                                   invalid="true"
-                                   itemName="Cardioversion Indicated - Most Recent Creatinine Clearance"
-                                   modelName="Atrial Fibrillation"
+               <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
+                                   graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                                   id="_ae04efd8-ca3d-48f7-bab0-15f032921a1f"
+                                   itemName="Statin Therapy Contraindicated"
+                                   modelName="Clinical Situations"
+                                   modelType="http://www.trisotech.com/graph/1.0/element#Framework"
                                    type="graph"
-                                   uri="http://www.trisotech.com/definitions/_527bed4a-a36f-4424-a752-7a9675fc976c#_268b2d96-dc31-4ad5-84a2-f272f5b70f58"/>
+                                   uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#19c0186d-def6-4370-8424-3e53e79f7ebc"/>
             </semantic:extensionElements>
          </semantic:caseFileItem>
          <semantic:caseFileItem definitionRef="_00f6dab7-b939-4816-868e-0a64d6ee4994"
@@ -94,20 +97,12 @@
                                 name="Basic Decision - History Pertinent to Condition"
                                 triso:linkedTermsId="">
             <semantic:extensionElements>
-               <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
-                                   graphURI="http://trisotech.com/graph/1.0/graph#framework"
-                                   id="_1fee6102-ba00-4f14-b07f-0878735c2c3f"
-                                   itemName="Plan"
-                                   modelName="ClinicalTasks - ClinicalTasks"
-                                   modelType="http://www.trisotech.com/graph/1.0/element#Framework"
-                                   type="graph"
-                                   uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#408de062-c8b1-3c65-9877-21ddead19bbf"/>
                <triso:customAttribute id="_0b08c21d-72b5-4e33-9222-acacb7ebe58c"
                                       key="knowledgeAssetId"
                                       type="string"
                                       value="https://clinicalknowledgemanagement.mayo.edu/assets/261543d9-90b6-4fe0-a26d-f329111d77ca/versions/1.0.0"/>
                <triso:reuseLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision"
-                                id="_ebdbded2-1baf-4121-aed7-6447a585e83e"
+                                id="_57bb12a2-d56b-4bb0-8b91-70b1341639d8"
                                 itemName="Basic Decision - History Pertinent to Condition"
                                 mimeType="application/vnd.triso-dmn+json"
                                 modelName="Basic Decision Model"
@@ -196,7 +191,7 @@
    <semantic:decision externalRef="ns1:_4a4a026a-5de7-4b57-aad9-e0ce1f8a9719"
                       id="_7dfe244c35cffbd4efa07be80b4df2be"
                       implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
-                      name="Basic Decision"
+                      name="Basic Decision - History Pertinent to Condition"
                       triso:modelId="_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"/>
    <semantic:textAnnotation id="_72232623-faf7-4f46-97ab-1211522fce68">
       <semantic:text>Asset ID in both case file item definition and in the identifier field, URL of the KCMS content under attachments</semantic:text>
@@ -220,7 +215,7 @@
                          sourceRef="_e3b0b96f-741f-4852-98a9-b332c24e4f18"
                          targetRef="_4ad6c909-d593-4616-9bf6-af18752fbbfc"/>
    <cmmndi:CMMNDI>
-      <cmmndi:CMMNDiagram cmmnElementRef="_f2bbf1dd-6ef6-47e2-ba8f-359b519d228b"
+      <cmmndi:CMMNDiagram cmmnElementRef="_16086bb8-c1fc-49b0-800b-c9b995dc5ed5"
                           id="_bfeba959-dfeb-4edb-a8db-9dd2b50e5703"
                           name="Page 1">
          <cmmndi:Size height="1063.5" width="1880.5624930212896"/>

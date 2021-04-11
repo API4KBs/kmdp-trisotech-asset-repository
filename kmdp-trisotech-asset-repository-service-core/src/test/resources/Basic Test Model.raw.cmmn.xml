@@ -14,7 +14,7 @@
                       xmlns:rss="http://purl.org/rss/2.0/"
                       xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
                       exporter="Trisotech DES API Repository Conversion"
-                      exporterVersion="7.3.2"
+                      exporterVersion="7.6.1"
                       expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
                       id="_81303f27-68f0-46ca-94ee-3be1f3605d77"
                       name="Basic Test Model"
@@ -70,7 +70,7 @@
                                    id="PID__fb349180-8908-46f6-ac95-7a9a88731fe9"
                                    name="Review Current Status of Condition">
                <semantic:extensionElements>
-                  <triso:copyOfLink id="_0ffb879d-7251-4c32-9ed2-746a795e02d5"
+                  <triso:copyOfLink id="_9bbd5fd3-c74a-4d70-bb56-4f893829257f"
                                     itemName="Aggregating Naturalistic Assessment Decision A"
                                     mimeType="application/vnd.triso-dmn+json"
                                     modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
@@ -91,7 +91,7 @@
                                    id="PID__7eeaa027-8608-426e-bcae-54f8cfae2993"
                                    name="Review Prior Management of Condition">
                <semantic:extensionElements>
-                  <triso:copyOfLink id="_c6e83910-a483-4db8-845d-db748433ba4e"
+                  <triso:copyOfLink id="_3fc34035-9449-42ba-be15-cf44f863bf86"
                                     itemName="Temporal Correlating Decision"
                                     mimeType="application/vnd.triso-dmn+json"
                                     modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
@@ -112,7 +112,7 @@
                                    id="PID__306a1689-5d73-4984-b142-54a3b0f5858e"
                                    name="Review History Pertinent to Condition">
                <semantic:extensionElements>
-                  <triso:copyOfLink id="_a242654e-df50-4be8-8ccd-893ade6d00d7"
+                  <triso:copyOfLink id="_dff05631-dc1e-4c3b-8be9-04f7ebd5cc0f"
                                     itemName="Basic Decision - History Pertinent to Condition"
                                     mimeType="application/vnd.triso-dmn+json"
                                     modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
@@ -134,7 +134,7 @@
                                 id="PID__585e9112-8512-4304-996e-b125a2a6c96f"
                                 name="Choose Management of Condition">
             <semantic:extensionElements>
-               <triso:copyOfLink id="_5234c857-1016-4372-89a8-1ac6cdd12fb1"
+               <triso:copyOfLink id="_f0618d3b-1ccd-489b-ab55-3439f5139227"
                                  itemName="Choice of Management of Condition"
                                  mimeType="application/vnd.triso-dmn+json"
                                  modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
@@ -190,7 +190,7 @@
                       name="Choice of Management of Condition"
                       triso:modelId="_5d4a2642-c38a-47bb-aac5-79c9c567ecd4"/>
    <cmmndi:CMMNDI>
-      <cmmndi:CMMNDiagram cmmnElementRef="_996646f5-de5e-4563-ad19-bfa1ddd6cc98"
+      <cmmndi:CMMNDiagram cmmnElementRef="_81303f27-68f0-46ca-94ee-3be1f3605d77"
                           id="_c4d3340b-ef34-42d5-8ad5-b2e573f62225"
                           name="Page 1">
          <cmmndi:Size height="1074" width="1611"/>

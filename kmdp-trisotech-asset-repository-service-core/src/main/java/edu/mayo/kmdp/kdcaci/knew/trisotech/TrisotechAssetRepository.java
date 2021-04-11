@@ -22,7 +22,7 @@ import static org.omg.spec.api4kp._20200801.Answer.failed;
 import static org.omg.spec.api4kp._20200801.Answer.notFound;
 import static org.omg.spec.api4kp._20200801.Answer.succeed;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;

@@ -97,7 +97,7 @@ public class Weaver {
 
   @PostConstruct
   public void init() {
-    logger.debug("Weaver ctor");
+    logger.debug("Weaver Initialized");
   }
 
   public Weaver() {

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/fc391287-da81-4bd4-8770-4dfc8f768a3a"
+                      xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets/"
+                      xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                      xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                      xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:i18n="http://www.omg.org/spec/BPMN/non-normative/extensions/i18n/1.0"
+                      xmlns:openapi="https://openapis.org/omg/extension/1.0"
+                      xmlns:rss="http://purl.org/rss/2.0/"
+                      xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
+                      xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      id="_fc391287-da81-4bd4-8770-4dfc8f768a3a"
+                      name="Linked Service"
+                      namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/fc391287-da81-4bd4-8770-4dfc8f768a3a"
+                      xml:lang="en"
+                      xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+   <semantic:extensionElements/>
+   <semantic:decisionService id="_397c2512-42d0-4773-88d3-6c447f46f15b" name="Linked Service">
+      <semantic:variable id="_97ca95e0-1d5f-47dc-a87d-2a1407d1049b"
+                         name="Linked Service"
+                         typeRef="Any"/>
+      <semantic:outputDecision href="#_64c03d18-663b-411e-a469-4ff4e2b3722b"/>
+   </semantic:decisionService>
+   <semantic:decision id="_64c03d18-663b-411e-a469-4ff4e2b3722b" name="Service Output">
+      <semantic:extensionElements>
+         <id:resourceIdentifier xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                                xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                                establishedOn="2021-07-08T00:00:00"
+                                namespaceUri="urn:uuid:"
+                                resourceId="urn:uuid:d723015a-2a0e-4a5a-91b7-0c128160b62c"
+                                tag="d723015a-2a0e-4a5a-91b7-0c128160b62c"
+                                versionId="urn:uuid:d723015a-2a0e-4a5a-91b7-0c128160b62c:0.0.0"
+                                versionTag="0.0.0">
+            <id:uuid>d723015a-2a0e-4a5a-91b7-0c128160b62c</id:uuid>
+         </id:resourceIdentifier>
+      </semantic:extensionElements>
+      <semantic:variable id="_8575c4ed-7d5b-4f8f-b669-023b9f61083e"
+                         name="Service Output"
+                         typeRef="Any"/>
+      <semantic:authorityRequirement id="_01db987a-f64a-4132-8f00-44f521339fbc">
+         <semantic:requiredAuthority href="#_992bb461-d2a7-424b-92d3-c1a949205a67"/>
+      </semantic:authorityRequirement>
+   </semantic:decision>
+   <semantic:knowledgeSource id="_992bb461-d2a7-424b-92d3-c1a949205a67"
+                             locationURI="urn:uuid:15ec3f90-e43f-4491-b9fb-d6646237501c:0.0.0"
+                             name="Linked DEK">
+      <semantic:type>application/dita+xml</semantic:type>
+   </semantic:knowledgeSource>
+   <dmndi:DMNDI>
+      <dmndi:DMNDiagram id="_e896644a-bd92-41a3-9120-7b0833df5ed7" name="Page 1">
+         <di:extension/>
+         <dmndi:Size height="1050" width="1485"/>
+         <dmndi:DMNShape dmnElementRef="_397c2512-42d0-4773-88d3-6c447f46f15b"
+                         id="_0fd4b045-35b9-4fc8-b3dc-0fcbf40e711c"
+                         isCollapsed="false">
+            <dc:Bounds height="200" width="260" x="412.5" y="165"/>
+            <dmndi:DMNLabel sharedStyle="LS_fc391287-da81-4bd4-8770-4dfc8f768a3a_0"/>
+            <dmndi:DMNDecisionServiceDividerLine>
+               <di:waypoint x="412.5" y="265"/>
+               <di:waypoint x="672.5" y="265"/>
+            </dmndi:DMNDecisionServiceDividerLine>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_64c03d18-663b-411e-a469-4ff4e2b3722b"
+                         id="_ef8fc6e9-c191-4392-a1c9-9ab47adb07f6">
+            <dc:Bounds height="60" width="153" x="466" y="189"/>
+            <dmndi:DMNLabel sharedStyle="LS_fc391287-da81-4bd4-8770-4dfc8f768a3a_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_992bb461-d2a7-424b-92d3-c1a949205a67"
+                         id="_65d7d3a2-1e00-408b-bab8-0b780be179e8">
+            <dc:Bounds height="69.95735931396484"
+                       width="100"
+                       x="740.5"
+                       y="145.02132034301758"/>
+            <dmndi:DMNLabel sharedStyle="LS_fc391287-da81-4bd4-8770-4dfc8f768a3a_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNEdge dmnElementRef="_01db987a-f64a-4132-8f00-44f521339fbc"
+                        id="_786aa831-db56-44c6-aaae-4544eab13f2e">
+            <di:waypoint x="740.5" y="179.42132034301758"/>
+            <di:waypoint x="619" y="219"/>
+            <dmndi:DMNLabel sharedStyle="LS_fc391287-da81-4bd4-8770-4dfc8f768a3a_0"/>
+         </dmndi:DMNEdge>
+      </dmndi:DMNDiagram>
+      <dmndi:DMNStyle fontBold="false"
+                      fontFamily="arial,helvetica,sans-serif"
+                      fontItalic="false"
+                      fontSize="11"
+                      fontStrikeThrough="false"
+                      fontUnderline="false"
+                      id="LS_fc391287-da81-4bd4-8770-4dfc8f768a3a_0"/>
+   </dmndi:DMNDI>
+</semantic:definitions>

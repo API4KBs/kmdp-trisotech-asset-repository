@@ -513,7 +513,7 @@ class TrisotechWrapperIntTest {
     List<TrisotechFileInfo> publishedModels =
         client.getModelsFileInfo("cmmn", true);
     assertNotNull(publishedModels);
-    assertEquals(4, publishedModels.size());
+    assertEquals(5, publishedModels.size());
   }
 
   @Test

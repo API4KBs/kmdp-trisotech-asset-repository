@@ -67,7 +67,6 @@ import org.omg.spec.api4kp._20200801.terms.model.ConceptDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -250,7 +249,8 @@ public class Weaver {
       String grandparent = el.getParentNode().getParentNode().getNodeName();
       if (grandparent.equals("semantic:decision")) {
         return Defines;
-      } else if (grandparent.equals("semantic:inputData")) {
+      } else if (grandparent.equals("semantic:inputData")
+          || grandparent.equals("semantic:caseFileItem")) {
         return In_Terms_Of;
       } else {
         return null;

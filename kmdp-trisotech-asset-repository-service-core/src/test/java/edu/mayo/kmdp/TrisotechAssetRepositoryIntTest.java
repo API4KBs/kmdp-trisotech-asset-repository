@@ -402,7 +402,7 @@ class TrisotechAssetRepositoryIntTest {
 
     List<Pointer> pointers = listAnswer.get();
 
-    assertEquals(4, pointers.size());
+    assertEquals(5, pointers.size());
     pointers.forEach((ptr) -> {
       // Only Care Process Models should be returned
       assertEquals(Care_Process_Model.getReferentId(), ptr.getType());

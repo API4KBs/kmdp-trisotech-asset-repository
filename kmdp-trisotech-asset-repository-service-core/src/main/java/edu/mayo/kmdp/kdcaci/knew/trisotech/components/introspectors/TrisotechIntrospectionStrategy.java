@@ -25,17 +25,19 @@ import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.Semant
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.id.IdentifierConstants.VERSION_ZERO_SNAPSHOT;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import static org.omg.spec.api4kp._20200801.id.VersionIdentifier.toSemVer;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultSurrogateUUID;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
-import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Imports;
 import static org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode._20190201.Language.English;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory._2020_01_20.KnowledgeArtifactCategory.Software;
@@ -63,21 +65,25 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.StreamUtil;
+import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.surrogate.Dependency;
@@ -85,7 +91,6 @@ import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.Link;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
-import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
@@ -94,6 +99,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -105,7 +111,8 @@ import org.w3c.dom.NodeList;
 @Component
 public class TrisotechIntrospectionStrategy {
 
-  private static final Logger logger = LoggerFactory.getLogger(TrisotechIntrospectionStrategy.class);
+  private static final Logger logger = LoggerFactory
+      .getLogger(TrisotechIntrospectionStrategy.class);
 
   @Autowired
   TrisotechWrapper client;
@@ -144,7 +151,7 @@ public class TrisotechIntrospectionStrategy {
       // this only works when trying to process the LATEST version
       // since the Enteprise Graph does not contain historical information
       tryAssetID = mapper.resolveModelToCurrentAssetId(meta.getId())
-      .or(() -> mapper.extractAssetIdFromDocument(dox));
+          .or(() -> mapper.extractAssetIdFromDocument(dox));
     } else {
       tryAssetID = mapper.extractAssetIdFromDocument(dox);
     }
@@ -156,7 +163,7 @@ public class TrisotechIntrospectionStrategy {
         .orElse(randomAssetId(names.getAssetNamespace()));
 
     if (logger.isDebugEnabled()) {
-      logger.debug("assetID: {} : {}", assetID.getResourceId(), assetID.getVersionTag() );
+      logger.debug("assetID: {} : {}", assetID.getResourceId(), assetID.getVersionTag());
     }
 
     return extractXML(dox, meta, assetID);
@@ -185,25 +192,26 @@ public class TrisotechIntrospectionStrategy {
     Date modelDate = Date.from(Instant.parse(model.getUpdated()));
     String artifactTag = docId.get();
     String artifactVersionTag = model.getVersion() == null
-        ? applyTimestampToVersion(config.getTyped(DEFAULT_VERSION_TAG, String.class), modelDate.getTime())
+        ? applyTimestampToVersion(config.getTyped(DEFAULT_VERSION_TAG, String.class),
+        modelDate.getTime())
         : applyTimestampToVersion(toSemVer(model.getVersion()), modelDate.getTime());
 
     // for the surrogate, want the version of the artifact
     ResourceIdentifier artifactID =
-        newVersionId(URI.create(artifactTag),artifactVersionTag)
+        newVersionId(URI.create(artifactTag), artifactVersionTag)
             .withEstablishedOn(modelDate);
 
     // artifact<->artifact relation
-    List<ResourceIdentifier> theTargetArtifactId = getArtifactImports(docId.get(), model);
-      logger.debug("theTargetArtifactId: {}", theTargetArtifactId);
+    List<ResourceIdentifier> importedArtifactIds = getArtifactImports(docId.get(), model);
+    logger.debug("Imported Artifacts: {}", importedArtifactIds);
 
     // asset<->asset relations
     // assets are derived from the artifact relations
-    List<ResourceIdentifier> theTargetAssetId;
-    if (mapper.isLatest(model.getId(),model.getVersion())) {
-       theTargetAssetId = mapper.getLatestAssetDependencies(docId.get());
+    List<ResourceIdentifier> importedAssets;
+    if (mapper.isLatest(model.getId(), model.getVersion())) {
+      importedAssets = mapper.getLatestAssetDependencies(docId.get());
     } else {
-      theTargetAssetId = theTargetArtifactId
+      importedAssets = importedArtifactIds
           .stream()
           .map(aid -> mapper.getAssetIdForHistoricalArtifact(aid))
           .flatMap(StreamUtil::trimStream)
@@ -234,32 +242,36 @@ public class TrisotechIntrospectionStrategy {
     // towards the ideal
     surr = new org.omg.spec.api4kp._20200801.surrogate.resources.KnowledgeAsset()
         .withAssetId(assetID)
-        .withName(model.getName())
+        .withName(model.getName().trim())
         .withFormalCategory(formalCategory)
         .withFormalType(formalType)
         // only restrict to published assets
         .withLifecycle(lifecycle)
-        .withLinks(getRelatedAssets(theTargetAssetId)) // asset - asset relation/dependency
-        .withCarriers(new KnowledgeArtifact()
-            .withArtifactId(artifactID)
-            .withName(model.getName())
-            .withLifecycle(lifecycle)
-            .withLocalization(English)
-            .withExpressionCategory(Software)
-            .withRepresentation(synRep)
-            .withMimeType(codedRep(synRep))
-            .withLinks( // artifact - artifact relation/dependency
-                getRelatedArtifacts(theTargetArtifactId))
-        )
-        .withSurrogate(
-            new KnowledgeArtifact()
-                .withArtifactId(newId(
-                    names.getArtifactNamespace(),
-                    defaultSurrogateUUID(assetID, Knowledge_Asset_Surrogate_2_0),
-                    toSemVer(artifactVersionTag)))
-                .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, JSON))
-                .withMimeType(codedRep(Knowledge_Asset_Surrogate_2_0, JSON))
-        );
+        // asset - asset relation/dependency
+        .withLinks(mergeSorted(
+            getRelatedAssets(importedAssets),
+            getOtherDependencies(woven, synRep.getLanguage())))
+            // carriers
+            .withCarriers(new KnowledgeArtifact()
+                .withArtifactId(artifactID)
+                .withName(model.getName().trim())
+                .withLifecycle(lifecycle)
+                .withLocalization(English)
+                .withExpressionCategory(Software)
+                .withRepresentation(synRep)
+                .withMimeType(codedRep(synRep))
+                .withLinks( // artifact - artifact relation/dependency
+                    getRelatedArtifacts(importedArtifactIds))
+            )
+            .withSurrogate(
+                new KnowledgeArtifact()
+                    .withArtifactId(newId(
+                        names.getArtifactNamespace(),
+                        defaultSurrogateUUID(assetID, Knowledge_Asset_Surrogate_2_0),
+                        toSemVer(artifactVersionTag)))
+                    .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, JSON))
+                    .withMimeType(codedRep(Knowledge_Asset_Surrogate_2_0, JSON))
+            );
 
     // Annotations
     addSemanticAnnotations(surr, annotations);
@@ -269,6 +281,50 @@ public class TrisotechIntrospectionStrategy {
           "surrogate in JSON format: {} ", writeJsonAsString(surr).orElse("n/a"));
     }
     return surr;
+  }
+
+  private Collection<Link> mergeSorted(Collection<Link> link1, Collection<Link> link2) {
+    return Stream.concat(
+        link1.stream(),
+        link2.stream())
+        .sorted(comparing(l -> l.getHref().getTag()))
+        .collect(Collectors.toList());
+  }
+
+  private List<Link> getOtherDependencies(
+      Document woven,
+      KnowledgeRepresentationLanguage language) {
+    Stream<Attr> assetURIs;
+    switch (asEnum(language)) {
+      case DMN_1_2:
+        assetURIs = asAttributeStream(xPathUtil.xList(woven,
+            "//dmn:knowledgeSource[not(./dmn:type='*/*')]/@locationURI"));
+        break;
+      case CMMN_1_1:
+        assetURIs = asAttributeStream(xPathUtil.xList(woven,
+            "//cmmn:caseFileItemDefinition[@definitionType='http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument']/@structureRef"));
+        break;
+      default:
+        assetURIs = Stream.empty();
+    }
+
+    return assetURIs
+        .map(Attr::getValue)
+        .filter(Util::isNotEmpty)
+        // only supported URIs
+        .filter(str -> str.startsWith("urn") || str.startsWith("http") || str.startsWith("assets"))
+        .map(str -> str.replace("assets:", names.getAssetNamespace().toString()))
+        .map(URI::create)
+        .map(SemanticIdentifier::newVersionId)
+        .map(id -> {
+          if (id.getVersionId() == null) {
+            return newId(id.getNamespaceUri(), id.getTag(), VERSION_ZERO_SNAPSHOT);
+          } else {
+            return id;
+          }
+        })
+        .map(id -> new Dependency().withRel(Depends_On).withHref(id))
+        .collect(Collectors.toList());
   }
 
   private List<ResourceIdentifier> getArtifactImports(String docId, TrisotechFileInfo model) {
@@ -469,11 +525,26 @@ public class TrisotechIntrospectionStrategy {
 
 
   protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
-    annotations.stream()
+    List<Annotation> annos = annotations.stream()
         .filter(ann -> Captures.sameTermAs(ann.getRel())
             || Defines.sameTermAs(ann.getRel())
             || In_Terms_Of.sameTermAs(ann.getRel()))
         .map(ann -> (Annotation) ann.copyTo(new Annotation()))
+        .collect(Collectors.toList());
+
+    List<Annotation> uniqueAnnos = new LinkedList<>();
+    for (Annotation ann : annos) {
+      if (uniqueAnnos.stream()
+          .noneMatch(a ->
+              a.getRef().sameTermAs(ann.getRef())
+                  && a.getRel().sameTermAs(ann.getRel()))) {
+        uniqueAnnos.add(ann);
+      }
+    }
+    Comparator<Annotation> comp = comparing(annotation -> annotation.getRel().getTag());
+    comp = comp.thenComparing(ann -> ann.getRef().getTag());
+    uniqueAnnos.stream()
+        .sorted(comp)
         .forEach(surr::withAnnotation);
   }
 
@@ -498,13 +569,13 @@ public class TrisotechIntrospectionStrategy {
 
       NodeList list = xPathUtil.xList(dox, "//dmn:inputData/@name");
       List<Node> itemDefs = null;
-      if(null != list) {
+      if (null != list) {
         itemDefs = asAttributeStream(list)
-					.map( in -> xPathUtil.xNode(dox, "//dmn:inputData[@name='" + in.getValue() + "']") )
-          .collect(toList());
+            .map(in -> xPathUtil.xNode(dox, "//dmn:inputData[@name='" + in.getValue() + "']"))
+            .collect(toList());
       }
 
-      if(null != itemDefs) {
+      if (null != itemDefs) {
         for (Node itemDef : itemDefs) {
           List<Annotation> inputAnnos = asElementStream(itemDef.getChildNodes())
               .filter(Objects::nonNull)
@@ -564,7 +635,7 @@ public class TrisotechIntrospectionStrategy {
   }
 
   public Optional<KnowledgeRepresentationLanguage> detectRepLanguage(Document dox) {
-    return getRepLanguage(dox,false)
+    return getRepLanguage(dox, false)
         .map(SyntacticRepresentation::getLanguage);
   }
 

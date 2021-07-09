@@ -1,0 +1,12 @@
+{
+  "id" : "http://www.trisotech.com/definitions/_1d64d702-1f3f-42d9-8149-7e73c0231e84",
+  "sku" : "http://www.trisotech.com/definitions/_1d64d702-1f3f-42d9-8149-7e73c0231e84",
+  "name" : "Links Test",
+  "path" : "/",
+  "mimetype" : "application/vnd.triso-cmmn+json",
+  "updated" : "2021-07-09T01:17:39Z",
+  "updater" : "Sottara, Davide",
+  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2F&sku=http%3A%2F%2Fwww.trisotech.com%2Fdefinitions%2F_1d64d702-1f3f-42d9-8149-7e73c0231e84&mimetype=application%2Fvnd.triso-cmmn%2Bjson",
+  "version" : "1.0.0",
+  "state" : "Draft"
+}

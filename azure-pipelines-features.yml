@@ -11,10 +11,8 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-# Gets Variables from Azure DevOps Library
 variables: 
-  - group: kmdp-platform-variables
-  - group: kmdp-platform-dev-variables
+- group: kmdp-platform-dev-variables
 
 # ------------------ PIPELINE STEPS  ------------------
 steps:
@@ -105,7 +103,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      mvn clean package "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
+      mvn clean package "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_DEV_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_DEV_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN"
   env:
     TRISO_REPO_DEV_NAME: $(trisoRepoDevName)
     TRISO_REPO_DEV_ID: $(trisoRepoDevId)

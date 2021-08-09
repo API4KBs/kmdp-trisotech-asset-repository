@@ -3,151 +3,150 @@
 
 resources:
   pipelines:
-  - pipeline: kmdpTrisotechAssetRepositoryServiceMain
-    source: kmdpTrisotechAssetRepositoryServiceReleaseCandidate
-    trigger: 
-      branches:
-      - develop
+    - pipeline: kmdpTrisotechAssetRepositoryServiceMain
+      source: kmdpTrisotechAssetRepositoryServiceReleaseCandidate
+      trigger:
+        branches:
+          - develop
 
 # Sets Virtual Machine to Run Pipeline on
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 # Gets Variables from Azure DevOps Library
-variables: 
+variables:
   - group: kmdp-platform-variables
   - group: kmdp-platform-dev-variables
 
 steps:
-# ------------------ PIPELINE STEPS  ------------------
-# Outputs pipeline steps have started
-- script: |
-    echo Starting Develop Branch Build Pipeline!
-    echo Project :: KMDP Trisotech Asset Repo Service Pipeline
-  displayName: 'Starting Pipeline Steps'
+  # ------------------ PIPELINE STEPS  ------------------
+  # Outputs pipeline steps have started
+  - script: |
+      echo Starting Develop Branch Build Pipeline!
+      echo Project :: KMDP Trisotech Asset Repo Service Pipeline
+    displayName: "Starting Pipeline Steps"
 
-# Sets Git Credentials on the VM set from variable group
-# $env:GIT_REDIRECT_STDERR = '2>&1' prevents unwanted errors
-- task: PowerShell@2
-  displayName: 'Git Config User'
-  inputs:
-    targetType: 'inline'
-    script: |
-      $env:GIT_REDIRECT_STDERR = '2>&1'
-      git config --global user.email "$env:GIT_USER_EMAIL"
-      git config --global user.name "$env:GIT_USER_NAME"
-      Write-Host Email: "$env:GIT_USER_EMAIL"
-      Write-Host User Name: "$env:GIT_USER_NAME"
-  env:
-    GIT_USER_EMAIL: $(gitUserEmail)
-    GIT_USER_NAME: $(gitUserName)
+  # Sets Git Credentials on the VM set from variable group
+  # $env:GIT_REDIRECT_STDERR = '2>&1' prevents unwanted errors
+  - task: PowerShell@2
+    displayName: "Git Config User"
+    inputs:
+      targetType: "inline"
+      script: |
+        $env:GIT_REDIRECT_STDERR = '2>&1'
+        git config --global user.email "$env:GIT_USER_EMAIL"
+        git config --global user.name "$env:GIT_USER_NAME"
+        Write-Host Email: "$env:GIT_USER_EMAIL"
+        Write-Host User Name: "$env:GIT_USER_NAME"
+    env:
+      GIT_USER_EMAIL: $(gitUserEmail)
+      GIT_USER_NAME: $(gitUserName)
 
-# Gets .m2 Settings File from Azure DevOps Library
-# Downloads File for use in Pipeline
-- task: DownloadSecureFile@1
-  displayName: 'Downloads Secure .m2 Settings File'
-  name: settingsxml
-  inputs:
-    secureFile: settings-dev.xml
+  # Gets .m2 Settings File from Azure DevOps Library
+  # Downloads File for use in Pipeline
+  - task: DownloadSecureFile@1
+    displayName: "Downloads Secure .m2 Settings File"
+    name: settingsxml
+    inputs:
+      secureFile: settings-dev.xml
 
-# Write settings file to Build Server
-- task: PowerShell@2
-  displayName: 'Update m2 Settings File'
-  inputs:
-    targetType: 'inline'
-    script: |
-      New-Item -Type Directory -Force "${HOME}/.m2"
-      Copy-Item -Force "$(settingsxml.secureFilePath)" "${HOME}/.m2/settings.xml"
+  # Write settings file to Build Server
+  - task: PowerShell@2
+    displayName: "Update m2 Settings File"
+    inputs:
+      targetType: "inline"
+      script: |
+        New-Item -Type Directory -Force "${HOME}/.m2"
+        Copy-Item -Force "$(settingsxml.secureFilePath)" "${HOME}/.m2/settings.xml"
 
-# Authenticate to Maven Feed 
-- task: MavenAuthenticate@0
-  displayName: 'Maven Authenticate'
-  inputs:
-    artifactsFeeds: 'KMD'
+  # Authenticate to Maven Feed
+  - task: MavenAuthenticate@0
+    displayName: "Maven Authenticate"
+    inputs:
+      artifactsFeeds: "KMD"
 
-# Sets JDK 11 for Pipeline
-# Runs Maven Goal: validate
-- task: Maven@3
-  displayName: 'Sets Pipeline to JDK 11'
-  inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'validate'
-    options: '-ntp'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    
-# Rebase to Main and deploy
-- task: PowerShell@2
-  displayName: 'Triso Asset Repo checkout Release Candidate'
-  inputs:
-    targetType: 'inline'
-    script: |
-      Write-Host ------ Starting Checkout ------
-      # Checkout Main branch to create release candidate from
-      git checkout "release-$env:TRISO_RELEASE_VERSION"
-      git checkout main
-      # rebase the release version
-      git rebase "release-$env:TRISO_RELEASE_VERSION" 
-      type pom.xml
-  env:
-    TRISO_RELEASE_VERSION: $(trisoReleaseVersion)
-    SYSTEM_ACCESSTOKEN: $(system.accesstoken)
+  # Sets JDK 11 for Pipeline
+  # Runs Maven Goal: validate
+  - task: Maven@3
+    displayName: "Sets Pipeline to JDK 11"
+    inputs:
+      mavenPomFile: "pom.xml"
+      goals: "validate"
+      options: "-ntp"
+      javaHomeOption: "JDKVersion"
+      jdkVersionOption: "1.11"
 
-# Sets ALM/SLM Versioning Policy 
-# Sets Version Tranformation: none
-- task: AlmVersioning@4
-  displayName: 'SLM Update Version/Build #'
-  inputs:
-    projectType: java
-    versionFilePath: pom.xml
-    versionTransformation: none
+  # Rebase to Main and deploy
+  - task: PowerShell@2
+    displayName: "Triso Asset Repo checkout Release Candidate"
+    inputs:
+      targetType: "inline"
+      script: |
+        Write-Host ------ Starting Checkout ------
+        # Checkout Main branch to create release candidate from
+        git checkout "release-$env:TRISO_RELEASE_VERSION"
+        git checkout main
+        # rebase the release version
+        git rebase "release-$env:TRISO_RELEASE_VERSION" 
+        type pom.xml
+    env:
+      TRISO_RELEASE_VERSION: $(trisoReleaseVersion)
+      SYSTEM_ACCESSTOKEN: $(system.accesstoken)
 
-# Clean install and deploy
-- task: PowerShell@2
-  displayName: 'Triso Asset Repo Push'
-  inputs:
-    targetType: 'inline'
-    script: |
-      Write-Host ------ Starting Checkout ------
-      # maven clean install
-      mvn clean package "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_TEST_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_TEST_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
-      mvn clean install -Prelease "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_TEST_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_TEST_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
-      mvn deploy "-DaltDeploymentRepository=KMD::default::https://pkgs.dev.azure.com/mclm/_packaging/KMD/maven/v1" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryName=$env:TRISO_REPO_TEST_NAME" "-Dedu.mayo.kmdp.trisotechwrapper.repositoryId=$env:TRISO_REPO_TEST_ID" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
-      git push "https://kmd:$env:SYSTEM_ACCESSTOKEN@dev.azure.com/mclm/KMD/_git/kmdp-trisotech-asset-repository-service"
-      git push "https://kmd:$env:SYSTEM_ACCESSTOKEN@dev.azure.com/mclm/KMD/_git/kmdp-trisotech-asset-repository-service" -d "release-$env:TRISO_RELEASE_VERSION"
-      Write-Host ------ Ending Checkout ------
-  env:
-    TRISO_RELEASE_VERSION: $(trisoReleaseVersion)
-    TRISO_REPO_TEST_NAME: $(trisoRepoTestName)
-    TRISO_REPO_TEST_ID: $(trisoRepoTestId)
-    TRISO_DEV_TOKEN: $(trisoDevToken)
-    SYSTEM_ACCESSTOKEN: $(system.accesstoken)
+  # Sets ALM/SLM Versioning Policy
+  # Sets Version Tranformation: none
+  - task: AlmVersioning@4
+    displayName: "SLM Update Version/Build #"
+    inputs:
+      projectType: java
+      versionFilePath: pom.xml
+      versionTransformation: none
 
-# Copy War File to Build: Artifact Staging Directory
-- task: CopyFiles@2
-  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
-  inputs:
-      SourceFolder: '$(system.defaultworkingdirectory)'
+  # Clean install and deploy
+  - task: PowerShell@2
+    displayName: "Triso Asset Repo Push"
+    inputs:
+      targetType: "inline"
+      script: |
+        Write-Host ------ Starting Checkout ------
+        # maven clean install
+        mvn clean package "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
+        mvn clean install -Prelease "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
+        mvn deploy "-DaltDeploymentRepository=KMD::default::https://pkgs.dev.azure.com/mclm/_packaging/KMD/maven/v1" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
+        git push "https://kmd:$env:SYSTEM_ACCESSTOKEN@dev.azure.com/mclm/KMD/_git/kmdp-trisotech-asset-repository-service"
+        git push "https://kmd:$env:SYSTEM_ACCESSTOKEN@dev.azure.com/mclm/KMD/_git/kmdp-trisotech-asset-repository-service" -d "release-$env:TRISO_RELEASE_VERSION"
+        Write-Host ------ Ending Checkout ------
+    env:
+      TRISO_RELEASE_VERSION: $(trisoReleaseVersion)
+      TRISO_DEV_TOKEN: $(trisoDevToken)
+      TRISO_SPLUNK_TOKEN: $(splunkToken)
+      SYSTEM_ACCESSTOKEN: $(system.accesstoken)
+
+  # Copy War File to Build: Artifact Staging Directory
+  - task: CopyFiles@2
+    displayName: "Copy Files to: $(build.artifactstagingdirectory)"
+    inputs:
+      SourceFolder: "$(system.defaultworkingdirectory)"
       Contents: |
         **/*.war
-      TargetFolder: '$(build.artifactstagingdirectory)'
+      TargetFolder: "$(build.artifactstagingdirectory)"
 
-# Export Variables for Use in Release Pipelines
-- task: ImportExportVariables@1
-  displayName: 'Export Build Variables'
-  inputs:
-    action: 'Export'
+  # Export Variables for Use in Release Pipelines
+  - task: ImportExportVariables@1
+    displayName: "Export Build Variables"
+    inputs:
+      action: "Export"
 
-# Publish to Azure Pipelines: Artifact Staging Directory
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: deploy'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
-    ArtifactName: deploy
-  condition: succeededOrFailed()
+  # Publish to Azure Pipelines: Artifact Staging Directory
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: deploy"
+    inputs:
+      PathtoPublish: "$(build.artifactstagingdirectory)"
+      ArtifactName: deploy
+    condition: succeededOrFailed()
 
-# ------------------ END PIPELINE  ------------------
-# Outputs pipeline steps have ended
-- script: |
-    echo Ending Develop Branch Pipeline!
-  displayName: 'Ending Pipeline Steps' 
+  # ------------------ END PIPELINE  ------------------
+  # Outputs pipeline steps have ended
+  - script: |
+      echo Ending Develop Branch Pipeline!
+    displayName: "Ending Pipeline Steps"

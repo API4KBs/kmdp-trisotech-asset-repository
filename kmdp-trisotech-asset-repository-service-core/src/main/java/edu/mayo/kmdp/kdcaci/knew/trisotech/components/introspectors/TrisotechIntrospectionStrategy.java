@@ -83,6 +83,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
+import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
@@ -314,13 +315,14 @@ public class TrisotechIntrospectionStrategy {
         .filter(Util::isNotEmpty)
         // only supported URIs
         .filter(str -> str.startsWith("urn") || str.startsWith("http") || str.startsWith("assets"))
-        .map(str -> str.replace("assets:", names.getAssetNamespace().toString()))
+        .map(this::normalizeQualifiedName)
         .map(URI::create)
         .map(SemanticIdentifier::newVersionId)
         .map(id -> {
           if (id.getVersionId() == null) {
+            String separator = id.getResourceId().toString().startsWith("urn") ? ":" : "/";
             return newVersionId(
-                URI.create(id.getNamespaceUri().toString() + "/" + UUID.fromString(id.getTag())),
+                URI.create(id.getNamespaceUri().toString() + separator + UUID.fromString(id.getTag())),
                 VERSION_ZERO_SNAPSHOT);
           } else {
             return id;
@@ -328,6 +330,18 @@ public class TrisotechIntrospectionStrategy {
         })
         .map(id -> new Dependency().withRel(Depends_On).withHref(id))
         .collect(Collectors.toList());
+  }
+
+  private String normalizeQualifiedName(String id) {
+    if (id.startsWith("assets:")) {
+      String str = id.replace("assets:", names.getAssetNamespace().toString());
+      if (str.contains(":")) {
+        str = str.replace(":", IdentifierConstants.VERSIONS);
+      }
+      return str;
+    } else {
+      return id;
+    }
   }
 
   private List<ResourceIdentifier> getArtifactImports(String docId, TrisotechFileInfo model) {

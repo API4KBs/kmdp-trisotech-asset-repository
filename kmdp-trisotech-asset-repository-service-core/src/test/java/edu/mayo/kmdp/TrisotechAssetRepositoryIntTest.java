@@ -39,6 +39,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.id.Pointer;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.repository.KnowledgeAssetCatalog;
 import org.omg.spec.api4kp._20200801.surrogate.Dependency;
@@ -151,6 +152,8 @@ class TrisotechAssetRepositoryIntTest {
         + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0-1565742456000";
     String expectedDependencyId = MAYO_ARTIFACTS_BASE_URI
         + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.2-1565368008000";
+    String expectedDependencyAssetId = MAYO_ASSETS_BASE_URI +
+        "33730029-59f0-4604-8d56-f298e634dda3/versions/0.0.0-SNAPSHOT";
     Answer<KnowledgeAsset> answer = tar
         .getKnowledgeAssetVersion(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.0.0");
@@ -166,6 +169,8 @@ class TrisotechAssetRepositoryIntTest {
     Dependency dependency = (Dependency) ka.getCarriers().get(0).getLinks().get(0);
     assertEquals(expectedDependencyId, dependency.getHref().getVersionId().toString());
 
+    SemanticIdentifier assetDependency = ka.getLinks().get(0).getHref();
+    assertEquals(expectedDependencyAssetId, assetDependency.getVersionId().toString());
   }
 
   /*

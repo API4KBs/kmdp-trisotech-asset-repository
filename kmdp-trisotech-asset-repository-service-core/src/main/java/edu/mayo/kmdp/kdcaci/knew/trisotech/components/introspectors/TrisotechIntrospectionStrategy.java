@@ -78,6 +78,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -318,7 +319,9 @@ public class TrisotechIntrospectionStrategy {
         .map(SemanticIdentifier::newVersionId)
         .map(id -> {
           if (id.getVersionId() == null) {
-            return newId(id.getNamespaceUri(), id.getTag(), VERSION_ZERO_SNAPSHOT);
+            return newVersionId(
+                URI.create(id.getNamespaceUri().toString() + "/" + UUID.fromString(id.getTag())),
+                VERSION_ZERO_SNAPSHOT);
           } else {
             return id;
           }

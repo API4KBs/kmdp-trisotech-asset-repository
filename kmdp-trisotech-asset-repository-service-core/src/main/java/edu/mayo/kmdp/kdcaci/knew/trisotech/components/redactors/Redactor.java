@@ -1,11 +1,11 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -49,6 +49,11 @@ public class Redactor {
 
   public static final Logger logger = LoggerFactory.getLogger(Redactor.class);
 
+  static final String CMMN_DEFINITION_TYPE_UNSPECIFIED =
+      "http://www.omg.org/spec/CMMN/DefinitionType/Unspecified";
+  static final String CMMN_DEFINITION_TYPE_XSD =
+      "http://www.omg.org/spec/CMMN/DefinitionType/XSDElement";
+
   /**
    * Weave out Trisotech-specific elements and where necessary, replace with KMDP-specific.
    */
@@ -84,15 +89,23 @@ public class Redactor {
         .filter(el -> (el.getLocalName().equals("caseFileItemDefinition")))
         .forEach(element -> {
           Attr attr = element.getAttributeNode("definitionType");
-          // TODO: is it an error if there isn't a definitionType for caseFileItemDefinition? CAO
-          if ((null != attr) && (attr.getValue().contains(TRISOTECH_COM))) {
-            logger.warn(
-                String.format(
-                    "WARNING: Should not have %s in caseFileItemDefinition. Rewriting to default value of Unspecified. Found for %s",
-                    TRISOTECH_COM, element.getAttributeNode("name").getValue()));
-            // TODO: a way to do this using the XSD? CAO
-            attr.setValue("http://www.omg.org/spec/CMMN/DefinitionType/Unspecified");
-          }
+          if (attr == null) {
+            element.setAttribute("definitionType", CMMN_DEFINITION_TYPE_UNSPECIFIED);
+          } else if (attr.getValue() == null) {
+            attr.setValue(CMMN_DEFINITION_TYPE_UNSPECIFIED);
+          } else if (attr.getValue().contains(TRISOTECH_COM)) {
+            if (attr.getValue().contains("ItemDefinitionType")) {
+              logger.info(
+                  "Rewriting CMMN* CFI ItemDefinition as an XSD Element - waiting for (S)DMN/CMMN integration");
+              attr.setValue(CMMN_DEFINITION_TYPE_XSD);
+            } else {
+              logger.warn(
+                  String.format(
+                      "WARNING: Should not have %s in caseFileItemDefinition. Rewriting to default value of Unspecified. Found for %s",
+                      TRISOTECH_COM, element.getAttributeNode("name").getValue()));
+              attr.setValue(CMMN_DEFINITION_TYPE_UNSPECIFIED);
+            }
+          } // else leave as is - should be a valid CMMN definition type
         });
   }
 
@@ -115,12 +128,12 @@ public class Redactor {
   private void removeTrisoTagsNotRetaining(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagNameNS(TT_METADATA_NS, TT_ATTACHMENT_ITEM))
         .forEach(element ->
-          element.getParentNode().removeChild(element)
+            element.getParentNode().removeChild(element)
         );
 
     XMLUtil.asElementStream(dox.getElementsByTagNameNS(TT_METADATA_NS, TT_RELATIONSHIP))
         .forEach(element ->
-          element.getParentNode().removeChild(element)
+            element.getParentNode().removeChild(element)
         );
 
     XMLUtil.asElementStream(dox.getElementsByTagNameNS(TT_METADATA_NS, TT_REUSELINK))
@@ -135,14 +148,13 @@ public class Redactor {
 
     XMLUtil.asElementStream(dox.getElementsByTagNameNS(TT_METADATA_NS, TT_CUSTOM_ATTRIBUTE_ATTR))
         .forEach(element ->
-          element.getParentNode().removeChild(element)
+            element.getParentNode().removeChild(element)
         );
 
     XMLUtil.asElementStream(dox.getElementsByTagNameNS(TT_METADATA_NS, TT_COMMENTS))
         .forEach(element ->
-          element.getParentNode().removeChild(element)
+            element.getParentNode().removeChild(element)
         );
-
 
     // if any meta items were invalid, want to strip them from the file
     // all valid items should have been converted

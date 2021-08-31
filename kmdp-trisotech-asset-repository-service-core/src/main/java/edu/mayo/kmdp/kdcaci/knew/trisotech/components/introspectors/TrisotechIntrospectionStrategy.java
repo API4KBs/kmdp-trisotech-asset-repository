@@ -314,7 +314,9 @@ public class TrisotechIntrospectionStrategy {
         .map(Attr::getValue)
         .filter(Util::isNotEmpty)
         // only supported URIs
-        .filter(str -> str.startsWith("urn") || str.startsWith("http") || str.startsWith("assets"))
+        .filter(str -> str.startsWith("urn:")
+            || str.startsWith(names.getAssetNamespace().toString())
+            || str.startsWith("assets:"))
         .map(this::normalizeQualifiedName)
         .map(URI::create)
         .map(SemanticIdentifier::newVersionId)

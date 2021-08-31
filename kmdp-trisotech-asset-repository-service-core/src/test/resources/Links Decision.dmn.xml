@@ -27,7 +27,7 @@
       <semantic:extensionElements>
          <id:resourceIdentifier xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
                                 xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
-                                establishedOn="2021-07-08T00:00:00"
+                                establishedOn="2021-08-30T00:00:00"
                                 namespaceUri="urn:uuid:"
                                 resourceId="urn:uuid:3f8e1a38-651c-4dd0-8daa-37391df74ffd"
                                 tag="3f8e1a38-651c-4dd0-8daa-37391df74ffd"
@@ -51,8 +51,12 @@
       <semantic:authorityRequirement id="_a7678ad3-80fb-41ab-b151-ca1475d26050">
          <semantic:requiredAuthority href="#_bb3376ae-2f9c-45d7-b415-d1daf1fb0981"/>
       </semantic:authorityRequirement>
+      <semantic:authorityRequirement id="_7aa487b1-2341-41f1-b8e9-0b31a0be27b9">
+         <semantic:requiredAuthority href="#_e6d23ce1-35cb-4f3e-adae-7404af292f82"/>
+      </semantic:authorityRequirement>
    </semantic:decision>
-   <semantic:inputData id="_d8e5ac91-4634-4fa2-9ebb-07a458bae4b8" name="Test Has Condition">
+   <semantic:inputData id="_d8e5ac91-4634-4fa2-9ebb-07a458bae4b8"
+                       name="Test Patient Has Condition At Present">
       <semantic:extensionElements>
          <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
                           xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
@@ -69,19 +73,19 @@
                <id:uuid>6e1048ea-46da-39b1-b650-445f31a17fc1</id:uuid>
             </surr:rel>
             <surr:ref establishedOn="2021-04-01T00:00:00"
-                      name="Test Has Condition"
+                      name="Test Patient Has Condition At Present"
                       namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
                       referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/24a056c5-7ee8-343d-869d-0e05de819c41"
                       resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#24a056c5-7ee8-343d-869d-0e05de819c41"
                       tag="24a056c5-7ee8-343d-869d-0e05de819c41"
-                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20210401#24a056c5-7ee8-343d-869d-0e05de819c41"
-                      versionTag="20210401">
+                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20210830-171627#24a056c5-7ee8-343d-869d-0e05de819c41"
+                      versionTag="20210830-171627">
                <id:uuid>24a056c5-7ee8-343d-869d-0e05de819c41</id:uuid>
             </surr:ref>
          </surr:annotation>
       </semantic:extensionElements>
       <semantic:variable id="_83656db6-cdb0-4d64-9572-5aab16ec823d"
-                         name="Test Has Condition"
+                         name="Test Patient Has Condition At Present"
                          typeRef="Any"/>
    </semantic:inputData>
    <semantic:inputData id="_b9b08ec0-92c4-4c13-9ad4-ccb8c4c45717"
@@ -107,8 +111,8 @@
                       referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/99b70276-3bbd-3e93-8fcb-9d5ef7e8ee0f"
                       resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#99b70276-3bbd-3e93-8fcb-9d5ef7e8ee0f"
                       tag="99b70276-3bbd-3e93-8fcb-9d5ef7e8ee0f"
-                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20210401#99b70276-3bbd-3e93-8fcb-9d5ef7e8ee0f"
-                      versionTag="20210401">
+                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20210830-171627#99b70276-3bbd-3e93-8fcb-9d5ef7e8ee0f"
+                      versionTag="20210830-171627">
                <id:uuid>99b70276-3bbd-3e93-8fcb-9d5ef7e8ee0f</id:uuid>
             </surr:ref>
          </surr:annotation>
@@ -122,20 +126,25 @@
                              name="Linked Content Asset">
       <semantic:type>application/fhir+json</semantic:type>
    </semantic:knowledgeSource>
+   <semantic:knowledgeSource id="_e6d23ce1-35cb-4f3e-adae-7404af292f82"
+                             locationURI="https://www.mayoclinic.org/"
+                             name="External Resource">
+      <semantic:type>*/*</semantic:type>
+   </semantic:knowledgeSource>
    <dmndi:DMNDI>
       <dmndi:DMNDiagram id="_69dfc37c-6120-4479-98ab-2c74f67c085f" name="Page 1">
          <di:extension/>
-         <dmndi:Size height="1050" width="1679.2411708831787"/>
+         <dmndi:Size height="1050" width="1704.9823417663574"/>
          <dmndi:DMNShape dmnElementRef="_be8344df-e238-4315-bd62-93edd19fd690"
                          id="_69112ca5-d89b-44a6-b7f2-2069b7cfe715">
-            <dc:Bounds height="60" width="153" x="585" y="130"/>
+            <dc:Bounds height="60" width="153" x="610.7411708831787" y="130"/>
             <dmndi:DMNLabel sharedStyle="LS_d18e1734-6f1f-46e9-bc6d-54745307f493_0"/>
          </dmndi:DMNShape>
          <dmndi:DMNShape dmnElementRef="_d8e5ac91-4634-4fa2-9ebb-07a458bae4b8"
                          id="_2ea000f3-925c-4e11-90f8-0d14fb86a052">
             <dc:Bounds height="60.00000762939453"
                        width="135.48234176635742"
-                       x="502.2588291168213"
+                       x="528"
                        y="305.99999618530273"/>
             <dmndi:DMNLabel sharedStyle="LS_d18e1734-6f1f-46e9-bc6d-54745307f493_0"/>
          </dmndi:DMNShape>
@@ -143,7 +152,7 @@
                          id="_b18cee5b-a488-4e18-b021-2a8c97a4db38">
             <dc:Bounds height="60.00000762939453"
                        width="135.48234176635742"
-                       x="688.5"
+                       x="714.2411708831787"
                        y="294.99999618530273"/>
             <dmndi:DMNLabel sharedStyle="LS_d18e1734-6f1f-46e9-bc6d-54745307f493_0"/>
          </dmndi:DMNShape>
@@ -157,31 +166,45 @@
          </dmndi:DMNShape>
          <dmndi:DMNShape dmnElementRef="_27069a43-0770-44bf-a920-290b87387747"
                          id="_457b5972-96e9-4c07-b1e1-8d70b09c752f">
-            <dc:Bounds height="60" width="153" x="824.5" y="207"/>
+            <dc:Bounds height="60" width="153" x="850.2411708831787" y="207"/>
+            <dmndi:DMNLabel sharedStyle="LS_d18e1734-6f1f-46e9-bc6d-54745307f493_0"/>
+         </dmndi:DMNShape>
+         <dmndi:DMNShape dmnElementRef="_e6d23ce1-35cb-4f3e-adae-7404af292f82"
+                         id="_d8adb52d-c5fb-4e8d-bd6b-f020364a1962">
+            <dc:Bounds height="69.95735931396484"
+                       width="100"
+                       x="378"
+                       y="226.02132034301758"/>
             <dmndi:DMNLabel sharedStyle="LS_d18e1734-6f1f-46e9-bc6d-54745307f493_0"/>
          </dmndi:DMNShape>
          <dmndi:DMNEdge dmnElementRef="_f2ac0414-31e6-43bf-83e1-d4f6cc466378"
                         id="_6ce3a78c-181c-42a8-a82a-3dfccf1543d3">
-            <di:waypoint x="756.2379722595215" y="294.99999618530273"/>
-            <di:waypoint x="671.5" y="190"/>
+            <di:waypoint x="781.9791431427002" y="294.99999618530273"/>
+            <di:waypoint x="697.2411708831787" y="190"/>
             <dmndi:DMNLabel sharedStyle="LS_d18e1734-6f1f-46e9-bc6d-54745307f493_0"/>
          </dmndi:DMNEdge>
          <dmndi:DMNEdge dmnElementRef="_d4ab6c44-03c7-4ed8-a470-91c241751ccd"
                         id="_020a8ab6-730f-47ac-b0f1-3ff7c4b2259c">
-            <di:waypoint x="569.9968013763428" y="305.99999618530273"/>
-            <di:waypoint x="651.5" y="190"/>
+            <di:waypoint x="595.7379722595215" y="305.99999618530273"/>
+            <di:waypoint x="677.2411708831787" y="190"/>
             <dmndi:DMNLabel sharedStyle="LS_d18e1734-6f1f-46e9-bc6d-54745307f493_0"/>
          </dmndi:DMNEdge>
          <dmndi:DMNEdge dmnElementRef="_a7678ad3-80fb-41ab-b151-ca1475d26050"
                         id="_490bf493-e7b2-4658-8a02-3dbb3d3bf561">
             <di:waypoint x="478" y="120.52132034301758"/>
-            <di:waypoint x="585" y="160"/>
+            <di:waypoint x="610.7411708831787" y="160"/>
             <dmndi:DMNLabel sharedStyle="LS_d18e1734-6f1f-46e9-bc6d-54745307f493_0"/>
          </dmndi:DMNEdge>
          <dmndi:DMNEdge dmnElementRef="_177dae1b-d486-4936-83d6-52ddadfaedca"
                         id="_bcb69c18-b4a6-4a5b-b419-6b5d986313b8">
-            <di:waypoint x="891" y="207"/>
-            <di:waypoint x="738" y="160"/>
+            <di:waypoint x="916.7411708831787" y="207"/>
+            <di:waypoint x="763.7411708831787" y="160"/>
+            <dmndi:DMNLabel sharedStyle="LS_d18e1734-6f1f-46e9-bc6d-54745307f493_0"/>
+         </dmndi:DMNEdge>
+         <dmndi:DMNEdge dmnElementRef="_7aa487b1-2341-41f1-b8e9-0b31a0be27b9"
+                        id="_b99d348c-1e49-4bb6-951b-e98637a2e492">
+            <di:waypoint x="478" y="260.5213203430176"/>
+            <di:waypoint x="637.2411708831787" y="190"/>
             <dmndi:DMNLabel sharedStyle="LS_d18e1734-6f1f-46e9-bc6d-54745307f493_0"/>
          </dmndi:DMNEdge>
       </dmndi:DMNDiagram>

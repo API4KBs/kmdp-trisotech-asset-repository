@@ -64,9 +64,7 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
-import edu.mayo.kmdp.util.StreamUtil;
-import edu.mayo.kmdp.util.Util;
-import edu.mayo.kmdp.util.XPathUtil;
+import edu.mayo.kmdp.util.*;
 
 import java.net.URI;
 import java.time.Instant;
@@ -176,9 +174,11 @@ public class TrisotechIntrospectionStrategy {
     private KnowledgeAsset extractXML(Document woven, TrisotechFileInfo model,
                                       ResourceIdentifier assetID) {
 
+        Optional<String> modelToString = JSonUtil.printJson(model);
+        String wovenToString = XMLUtil.toString(woven);
         if (logger.isDebugEnabled()) {
-            logger.debug("Attempting to extract XML KnowledgeAsset with document: {}", woven);
-            logger.debug("Attempting to extract XML KnowledgeAsset with trisotechFileInfo: {}", model);
+            logger.debug("Attempting to extract XML KnowledgeAsset with document: {}", wovenToString);
+            logger.debug("Attempting to extract XML KnowledgeAsset with trisotechFileInfo: {}", modelToString);
             logger.debug("Attempting to extract XML KnowledgeAsset with ResourceIdentifier: {}", assetID);
 
         }

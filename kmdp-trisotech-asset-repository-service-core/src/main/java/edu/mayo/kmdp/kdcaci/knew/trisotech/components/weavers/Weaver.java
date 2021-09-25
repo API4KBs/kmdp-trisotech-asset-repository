@@ -83,6 +83,7 @@ import org.w3c.dom.NodeList;
 public class Weaver {
 
   public static final Logger logger = LoggerFactory.getLogger(Weaver.class);
+  public static final String xmlns = "xmlns:";
 
   @Autowired
   @KPComponent(implementation = "broker")
@@ -96,7 +97,9 @@ public class Weaver {
 
   @PostConstruct
   public void init() {
-    logger.debug("Weaver Initialized");
+    if (logger.isDebugEnabled()) {
+      logger.debug("The Trisotech Weaver class is initialized");
+    }
   }
 
   public Weaver() {
@@ -113,7 +116,7 @@ public class Weaver {
    */
   public Document weave(Document dox) {
     dox.getDocumentElement().setAttributeNS(W3C_XMLNS,
-        "xmlns:" + "xsi",
+        xmlns + "xsi",
         W3C_XSI);
 
     String surrPrefix = Registry
@@ -124,7 +127,7 @@ public class Weaver {
         .orElseThrow(IllegalStateException::new);
 
     dox.getDocumentElement().setAttributeNS(W3C_XMLNS,
-        "xmlns:" + surrPrefix,
+        xmlns + surrPrefix,
         surrNamespace);
 
     dox.getDocumentElement().setAttributeNS(W3C_XSI,
@@ -295,7 +298,7 @@ public class Weaver {
           int numNamespaces = x.xList(dox,"//namespace::*").getLength();
           String prefix = "ns" + (1000 + numNamespaces + 1 );
 
-          dox.getDocumentElement().setAttribute("xmlns:" + prefix, URIUtil.normalizeURIString(ref));
+          dox.getDocumentElement().setAttribute(xmlns + prefix, URIUtil.normalizeURIString(ref));
 
           decisionTask.setAttribute("decisionRef", id);
 

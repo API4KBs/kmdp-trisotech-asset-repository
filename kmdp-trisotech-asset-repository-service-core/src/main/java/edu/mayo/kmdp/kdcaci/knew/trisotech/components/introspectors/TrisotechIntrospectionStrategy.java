@@ -147,11 +147,17 @@ public class TrisotechIntrospectionStrategy {
     }
 
 
+    /**
+     *
+     * @param dox
+     * @param meta
+     * @return
+     */
     public KnowledgeAsset extractXML(Document dox, TrisotechFileInfo meta) {
         Optional<ResourceIdentifier> tryAssetID;
         if (mapper.isLatest(meta)) {
             // this only works when trying to process the LATEST version
-            // since the Enteprise Graph does not contain historical information
+            // since the Enterprise Graph does not contain historical information
             tryAssetID = mapper.resolveModelToCurrentAssetId(meta.getId())
                     .or(() -> mapper.extractAssetIdFromDocument(dox));
         } else {
@@ -164,9 +170,18 @@ public class TrisotechIntrospectionStrategy {
         ResourceIdentifier assetID = tryAssetID
                 .orElse(randomAssetId(names.getAssetNamespace()));
 
+        var id = dox.getDocumentElement().getAttribute("id");
+
         if (logger.isDebugEnabled()) {
             logger.debug("assetID: {} : {}", assetID.getResourceId(), assetID.getVersionTag());
+            logger.debug("the id found in woven document {}", id);
         }
+
+        if (id.isEmpty()) {
+            logger.error("No ID found in the woven document");
+            return new KnowledgeAsset();
+        }
+
 
         return extractXML(dox, meta, assetID);
     }
@@ -174,9 +189,9 @@ public class TrisotechIntrospectionStrategy {
     private KnowledgeAsset extractXML(Document woven, TrisotechFileInfo model,
                                       ResourceIdentifier assetID) {
 
-        Optional<String> modelToString = JSonUtil.printJson(model);
-        String wovenToString = XMLUtil.toString(woven);
         if (logger.isDebugEnabled()) {
+            Optional<String> modelToString = JSonUtil.printJson(model);
+            String wovenToString = XMLUtil.toString(woven);
             logger.debug("Attempting to extract XML KnowledgeAsset with document: {}", wovenToString);
             logger.debug("Attempting to extract XML KnowledgeAsset with trisotechFileInfo: {}", modelToString);
             logger.debug("Attempting to extract XML KnowledgeAsset with ResourceIdentifier: {}", assetID);

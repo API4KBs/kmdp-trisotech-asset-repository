@@ -31,6 +31,7 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.W3C_XSI;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Has_Primary_Subject;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
@@ -250,13 +251,16 @@ public class Weaver {
       return Captures;
     } else if (isDomainConcept(uri)) {
       String grandparent = el.getParentNode().getParentNode().getNodeName();
-      if (grandparent.equals("semantic:decision")) {
-        return Defines;
-      } else if (grandparent.equals("semantic:inputData")
-          || grandparent.equals("semantic:caseFileItem")) {
-        return In_Terms_Of;
-      } else {
-        return null;
+      switch (grandparent) {
+        case "semantic:decision":
+          return Defines;
+        case "semantic:inputData":
+        case "semantic:caseFileItem":
+          return In_Terms_Of;
+        case "semantic:casePlanModel":
+          return Has_Primary_Subject;
+        default:
+          return null;
       }
     }
 

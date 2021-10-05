@@ -19,6 +19,7 @@ import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -564,7 +565,7 @@ public class TrisotechWrapper {
    *                       ID </p>
    * @return Optional<String> the ID for the repository requested
    */
-  private Optional<String> getRepositoryId(String repositoryName) {
+  public Optional<String> getRepositoryId(String repositoryName) {
     try {
       return webClient.getPlaces()
           .map(TrisotechPlaceData::getData)
@@ -577,5 +578,24 @@ public class TrisotechWrapper {
       logger.error(e.getMessage(), e);
     }
     return Optional.empty();
+  }
+
+  /**
+   * Lists the Places available on the DES Server
+   * @return a Map of place id / place name
+   */
+  public Map<String,String> listPlaces() {
+    try {
+      return webClient.getPlaces()
+          .map(tpd -> tpd.getData().stream()
+              .collect(Collectors.toMap(
+                  TrisotechPlace::getId,
+                  TrisotechPlace::getName
+              )))
+          .orElse(Collections.emptyMap());
+    } catch (IOException e) {
+      logger.error(e.getMessage(), e);
+      return Collections.emptyMap();
+    }
   }
 }

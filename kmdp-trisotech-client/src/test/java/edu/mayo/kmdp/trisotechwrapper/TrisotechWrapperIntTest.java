@@ -1,17 +1,15 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.trisotechwrapper;
 
@@ -38,6 +36,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -84,7 +83,7 @@ class TrisotechWrapperIntTest {
   // Test files
   // DMN Published
   private static final String WEAVER_TEST_1_ID = "http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068";
-  private static final String WEAVER_TEST_1_ID_TAG = "5682fa26-b064-43c8-9475-1e4281e74068" ;
+  private static final String WEAVER_TEST_1_ID_TAG = "5682fa26-b064-43c8-9475-1e4281e74068";
   // DMN published 'Draft'
   private static final String WEAVER_TEST_2_ID = "http://www.trisotech.com/definitions/_ede3b331-7b10-4580-98be-66ebff344c21";
   private static final String WEAVER_TEST_2_ID_TAG = "ede3b331-7b10-4580-98be-66ebff344c21";
@@ -107,7 +106,8 @@ class TrisotechWrapperIntTest {
 
   @BeforeEach
   void setUp() {
-    repositoryApiEndpoint = client.getConfig().getApiEndpoint() +  "/repositoryfilecontent?repository=";
+    repositoryApiEndpoint =
+        client.getConfig().getApiEndpoint() + "/repositoryfilecontent?repository=";
     testRepoName = client.getConfig().getRepositoryName();
     testRepoId = client.getConfig().getRepositoryId();
   }
@@ -241,7 +241,8 @@ class TrisotechWrapperIntTest {
   final void testGetLatestVersionInfoDMN() {
     TrisotechFileInfo latestFileInfo = client.getLatestModelFileInfo(WEAVER_TEST_1_ID)
         .orElseGet(Assertions::fail);
-    List<TrisotechFileInfo> historyInfos = client.getModelVersions(WEAVER_TEST_1_ID,DMN_XML_MIMETYPE);
+    List<TrisotechFileInfo> historyInfos = client.getModelVersions(WEAVER_TEST_1_ID,
+        DMN_XML_MIMETYPE);
     assertFalse(historyInfos.isEmpty());
 
     String fileId = latestFileInfo.getId();
@@ -401,7 +402,7 @@ class TrisotechWrapperIntTest {
     assertNotNull(versionIdentifier);
     assertEquals(WEAVE_TEST_1_ID_TAG, versionIdentifier.getTag());
     assertEquals(expectedVersion, versionIdentifier.getVersionTag());
-    assertTrue(DateTimeUtil.isSameDay(expectedUpdated,versionIdentifier.getEstablishedOn()));
+    assertTrue(DateTimeUtil.isSameDay(expectedUpdated, versionIdentifier.getEstablishedOn()));
     assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
   }
 
@@ -583,6 +584,19 @@ class TrisotechWrapperIntTest {
 
     assertThrows(HttpException.class, () ->
         client.tryDownloadXmlModel(repositoryFileUrl2));
+  }
+
+  @Test
+  final void testGetPlaces() {
+    String key = "8773e388-75b7-4061-a489-b788222022d3";
+
+    Map<String, String> placeMap = client.listPlaces();
+    assertNotNull(placeMap);
+    assertFalse(placeMap.isEmpty());
+
+    System.out.println(placeMap);
+    assertTrue(placeMap.containsKey(key));
+    assertEquals("MEA", key);
   }
 
 

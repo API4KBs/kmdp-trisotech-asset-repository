@@ -16,6 +16,7 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CMMN_LOWER;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.DMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeTypeByAssetType;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.Answer.conflict;
 import static org.omg.spec.api4kp._20200801.Answer.failed;
@@ -235,7 +236,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   public Answer<List<Pointer>> listKnowledgeAssets(String assetTypeTag, String assetAnnotationTag,
       String assetAnnotationConcept, Integer offset, Integer limit) {
     List<TrisotechFileInfo> trisotechFileInfoList
-        = client.getModelsFileInfo(assetTypeTag, publishedOnly);
+        = client.getModelsFileInfo(getXmlMimeTypeByAssetType(assetTypeTag), publishedOnly);
 
     List<Pointer> assetList = trisotechFileInfoList.stream()
         .skip((null == offset) ? 0 : offset)

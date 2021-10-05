@@ -15,8 +15,6 @@ package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ASSETS_BASE_URI;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CMMN_LOWER;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CMMN_UPPER;
 import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.NotImplemented;
 import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Final_Draft;
 
@@ -349,7 +348,8 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_DMN() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets("dmn", null, null, null, null);
+    Answer<List<Pointer>> listAnswer =
+        tar.listKnowledgeAssets(Decision_Model.getTag(), null, null, null, null);
     assertTrue(listAnswer.isSuccess());
 
     assertFalse(listAnswer.get().isEmpty());
@@ -365,7 +365,8 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_DMN_limit() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets("dmn", null, null, null, 2);
+    Answer<List<Pointer>> listAnswer =
+        tar.listKnowledgeAssets(Decision_Model.getTag(), null, null, null, 2);
     assertTrue(listAnswer.isSuccess());
 
     assertFalse(listAnswer.get().isEmpty());
@@ -382,7 +383,8 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_DMN_offset() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets("dmn", null, null, 3, 2);
+    Answer<List<Pointer>> listAnswer =
+        tar.listKnowledgeAssets(Decision_Model.getTag(), null, null, 3, 2);
     assertTrue(listAnswer.isSuccess());
 
     assertFalse(listAnswer.get().isEmpty());
@@ -400,7 +402,8 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_CMMN() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets(CMMN_UPPER, null, null, null, null);
+    Answer<List<Pointer>> listAnswer =
+        tar.listKnowledgeAssets(Case_Management_Model.getTag(), null, null, null, null);
     assertTrue(listAnswer.isSuccess());
 
     assertFalse(listAnswer.get().isEmpty());
@@ -416,7 +419,8 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssets_CMMN_limit() {
-    Answer<List<Pointer>> listAnswer = tar.listKnowledgeAssets(CMMN_LOWER, null, null, null, 1);
+    Answer<List<Pointer>> listAnswer =
+        tar.listKnowledgeAssets(Case_Management_Model.getTag(), null, null, null, 1);
     assertTrue(listAnswer.isSuccess());
 
     assertFalse(listAnswer.get().isEmpty());

@@ -596,7 +596,7 @@ class TrisotechWrapperIntTest {
 
     System.out.println(placeMap);
     assertTrue(placeMap.containsKey(key));
-    assertEquals("MEA", key);
+    assertEquals("MEA", placeMap.get(key));
   }
 
 

@@ -22,6 +22,8 @@ import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Has_Focus;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Has_Primary_Subject;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
@@ -584,6 +586,8 @@ public class TrisotechIntrospectionStrategy {
         List<Annotation> annos = annotations.stream()
                 .filter(ann -> Captures.sameTermAs(ann.getRel())
                         || Defines.sameTermAs(ann.getRel())
+                        || Has_Primary_Subject.sameTermAs(ann.getRel())
+                        || Has_Focus.sameTermAs(ann.getRel())
                         || In_Terms_Of.sameTermAs(ann.getRel()))
                 .map(ann -> (Annotation) ann.copyTo(new Annotation()))
                 .collect(Collectors.toList());

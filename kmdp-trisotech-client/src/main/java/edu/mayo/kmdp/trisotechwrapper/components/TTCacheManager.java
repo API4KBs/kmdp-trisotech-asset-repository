@@ -2,6 +2,7 @@ package edu.mayo.kmdp.trisotechwrapper.components;
 
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ARTIFACT_NAME;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_ID;
+import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_TYPE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MIME_TYPE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MODEL;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.STATE;
@@ -262,6 +263,10 @@ public class TTCacheManager {
       Optional.ofNullable(soln.getLiteral(UPDATED.key))
           .map(Literal::getString)
           .ifPresent(u -> map.put(UPDATED, u));
+
+      Optional.ofNullable(soln.getResource(ASSET_TYPE.key))
+          .map(Resource::getURI)
+          .ifPresent(t -> map.put(ASSET_TYPE, t));
 
       return map;
     }

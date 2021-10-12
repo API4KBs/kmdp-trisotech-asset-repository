@@ -17,7 +17,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 # ?artifactName is the name of the model
 # because version is only on published models, not all models will be returned with this SELECT; can make version OPTIONAL
 # NOTE: just because a model is published, does NOT mean it is 'Published'
-SELECT ?model ?assetId ?version ?state ?updated ?mimeType ?artifactName
+SELECT ?model ?assetId ?assetType ?version ?state ?updated ?mimeType ?artifactName
 FROM NAMED ?
 WHERE {
 GRAPH ? {
@@ -42,5 +42,9 @@ GRAPH ? {
     OPTIONAL { ?model ttr:updated ?updated } .
     # gets the version - only latest version is returned; there will only be a version if the model is published
     OPTIONAL { ?model ttr:version ?version } .
+    # gets the asset type from an annotation on the same element that carries the assetId
+    OPTIONAL { ?node ttr:semantic ?ann.
+               ?ann ttr:ref ?assetType.
+               FILTER regex(str(?assetType), '^.+(Clinical)?KnowledgeAssetType#.+') } .
   }
 }

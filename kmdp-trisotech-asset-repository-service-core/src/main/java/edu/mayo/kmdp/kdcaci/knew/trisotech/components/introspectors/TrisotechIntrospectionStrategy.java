@@ -27,6 +27,7 @@ import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.Semant
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
@@ -38,7 +39,7 @@ import static org.omg.spec.api4kp._20200801.id.VersionIdentifier.toSemVer;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultSurrogateUUID;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAssetId;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Eligibility_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Imports;
 import static org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode._20190201.Language.English;
@@ -66,8 +67,11 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
-import edu.mayo.kmdp.util.*;
-
+import edu.mayo.kmdp.util.JSonUtil;
+import edu.mayo.kmdp.util.StreamUtil;
+import edu.mayo.kmdp.util.Util;
+import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -83,7 +87,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
-
 import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
@@ -98,7 +101,6 @@ import org.omg.spec.api4kp._20200801.surrogate.Publication;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
-import org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,10 +203,7 @@ public class TrisotechIntrospectionStrategy {
         }
 
         List<Annotation> annotations = extractAnnotations(woven);
-        KnowledgeAssetCategorySeries formalCategory;
-
-        List<KnowledgeAssetType> formalType;
-        KnowledgeAsset surr;
+         KnowledgeAsset surr;
 
         Publication lifecycle = getPublication(model);
         // Identifiers
@@ -251,28 +250,26 @@ public class TrisotechIntrospectionStrategy {
                     .collect(Collectors.toList());
         }
 
-        KnowledgeRepresentationLanguageSerializationSeries syntax;
-
         // get the language for the document to set the appropriate values
         SyntacticRepresentation synRep = getRepLanguage(woven, false)
                 .orElseThrow(() -> new IllegalStateException("Invalid language detected"));
         switch (asEnum(synRep.getLanguage())) {
             case DMN_1_2:
-                formalCategory = Assessment_Predictive_And_Inferential_Models;
-                // default value
-                formalType = asList(Decision_Model, Clinical_Decision_Model);
-                syntax = DMN_1_2_XML_Syntax;
+                synRep =
+                    rep(DMN_1_2, DMN_1_2_XML_Syntax, XML_1_1, defaultCharset(), Encodings.DEFAULT);
                 break;
             case CMMN_1_1:
-                formalCategory = Plans_Processes_Pathways_And_Protocol_Definitions;
-                // default value, may be specified differently in the file
-                formalType = asList(Case_Management_Model, Clinical_Case_Management_Model);
-                syntax = CMMN_1_1_XML_Syntax;
+                synRep =
+                    rep(CMMN_1_1, CMMN_1_1_XML_Syntax, XML_1_1, defaultCharset(), Encodings.DEFAULT);
                 break;
             default:
                 throw new IllegalStateException(
                         "Invalid Language detected." + synRep.getLanguage());
         }
+
+        List<KnowledgeAssetType> formalType = detectFormalTypes(model, synRep);
+
+        KnowledgeAssetCategorySeries formalCategory = inferFormalCategory(formalType);
 
         if (logger.isDebugEnabled()) {
             logger.debug("The syntactic representations found are: {}", synRep);
@@ -322,6 +319,34 @@ public class TrisotechIntrospectionStrategy {
                     "finished extracting XML for woven document");
         }
         return surr;
+    }
+
+    private KnowledgeAssetCategorySeries inferFormalCategory(List<KnowledgeAssetType> formalType) {
+        if (Clinical_Eligibility_Rule.isAnyOf(formalType)) {
+            return KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
+        } else if (Case_Management_Model.isAnyOf(formalType)
+            || Clinical_Case_Management_Model.isAnyOf(formalType)) {
+            return Plans_Processes_Pathways_And_Protocol_Definitions;
+        } else {
+            return Assessment_Predictive_And_Inferential_Models;
+        }
+    }
+
+    private List<KnowledgeAssetType> detectFormalTypes(
+        TrisotechFileInfo model,
+        SyntacticRepresentation synRep) {
+        return mapper.getDeclaredAssetType(model.getId())
+            .map(Collections::singletonList)
+            .orElseGet(() -> {
+                switch (asEnum(synRep.getLanguage())) {
+                    case DMN_1_2:
+                        return asList(Decision_Model);
+                    case CMMN_1_1:
+                        return asList(Case_Management_Model);
+                    default:
+                        return emptyList();
+                }
+            });
     }
 
     private Collection<Link> mergeSorted(Collection<Link> link1, Collection<Link> link2) {
@@ -393,7 +418,7 @@ public class TrisotechIntrospectionStrategy {
         } else {
             imports = getImportVersions(docId, model);
         }
-        return imports != null ? imports : Collections.emptyList();
+        return imports != null ? imports : emptyList();
     }
 
     /**

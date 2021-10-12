@@ -57,6 +57,10 @@ import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.services.repository.KnowledgeAssetCatalog;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -240,7 +244,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
     List<Pointer> assetList = trisotechFileInfoList.stream()
         .skip((null == offset) ? 0 : offset)
-        .limit((null == limit) ? Integer.MAX_VALUE : limit)
+        .limit((null == limit || limit < 0) ? Integer.MAX_VALUE : limit)
         .map(trisotechFileInfo -> {
           // getId from fileInfo is the fileID
           Pointer ptr = null;
@@ -248,9 +252,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             ResourceIdentifier assetId = mapper
                 .resolveEnterpriseAssetID(trisotechFileInfo.getId());
             ptr = assetId.toPointer()
-                .withType(isDMNModel(trisotechFileInfo)
-                    ? Decision_Model.getReferentId()
-                    : Care_Process_Model.getReferentId())
+                .withType(
+                    mapper.getDeclaredAssetTypeOrDefault(trisotechFileInfo.getId()).getReferentId())
                 .withName(trisotechFileInfo.getName());
           } catch (IllegalStateException ise) {
             logger.error(ise.getMessage(), ise);
@@ -260,6 +263,15 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .flatMap(StreamUtil::trimStream)
         .collect(Collectors.toList());
 
+    if (assetTypeTag != null) {
+      Optional<KnowledgeAssetType> type = KnowledgeAssetTypeSeries.resolveTag(assetTypeTag)
+          .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveTag(assetTypeTag));
+      return Answer.of(type.map(ConceptTerm::getReferentId)
+          .map(typeUri -> assetList.stream()
+              .filter(ptr -> ptr.getType().equals(typeUri))
+              .collect(Collectors.toList()))
+          .orElse(Collections.emptyList()));
+    }
     return Answer.of(assetList);
   }
 

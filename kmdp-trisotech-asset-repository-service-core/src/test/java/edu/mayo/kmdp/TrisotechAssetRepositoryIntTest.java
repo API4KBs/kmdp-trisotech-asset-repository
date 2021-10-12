@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Eligibility_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Final_Draft;
@@ -253,9 +253,11 @@ class TrisotechAssetRepositoryIntTest {
     for (Link link : links) {
       Dependency dependency = (Dependency) link;
       if (dependency.getHref().getTag().equals("5682fa26-b064-43c8-9475-1e4281e74068")) {
-        assertTrue(dependency.getHref().getVersionId().toString().startsWith(expectedDependencyId1));
+        assertTrue(
+            dependency.getHref().getVersionId().toString().startsWith(expectedDependencyId1));
       } else if (dependency.getHref().getTag().equals("ede3b331-7b10-4580-98be-66ebff344c21")) {
-        assertTrue(dependency.getHref().getVersionId().toString().startsWith(expectedDependencyId2));
+        assertTrue(
+            dependency.getHref().getVersionId().toString().startsWith(expectedDependencyId2));
       } else {
         fail("Unexpected dependency value: " + dependency.getHref().getVersionId().toString());
       }
@@ -338,7 +340,7 @@ class TrisotechAssetRepositoryIntTest {
       }
       if (expectedCaseId.equals(ptr.getVersionId().toString())) {
         assertEquals(expectedCaseName, ptr.getName());
-        assertEquals(Care_Process_Model.getReferentId(), ptr.getType());
+        assertEquals(Case_Management_Model.getReferentId(), ptr.getType());
         foundCase.set(true);
       }
     });
@@ -413,7 +415,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(5, pointers.size());
     pointers.forEach((ptr) -> {
       // Only Care Process Models should be returned
-      assertEquals(Care_Process_Model.getReferentId(), ptr.getType());
+      assertEquals(Case_Management_Model.getReferentId(), ptr.getType());
     });
   }
 
@@ -430,7 +432,7 @@ class TrisotechAssetRepositoryIntTest {
     assertEquals(1, pointers.size());
     pointers.forEach((ptr) -> {
       // Only Care Process Models should be returned
-      assertEquals(Care_Process_Model.getReferentId(), ptr.getType());
+      assertEquals(Case_Management_Model.getReferentId(), ptr.getType());
     });
   }
 
@@ -462,7 +464,8 @@ class TrisotechAssetRepositoryIntTest {
         + "ee0c768a-a0d4-4052-a6ea-fc0a3889b356/versions/1.5.0";
 
     Answer<KnowledgeCarrier> answer = tar
-        .getKnowledgeAssetVersionCanonicalCarrier(UUID.fromString("261543d9-90b6-4fe0-a26d-f329111d77ca"),
+        .getKnowledgeAssetVersionCanonicalCarrier(
+            UUID.fromString("261543d9-90b6-4fe0-a26d-f329111d77ca"),
             "1.0.0",
             null);
     assertTrue(answer.isSuccess());
@@ -484,7 +487,8 @@ class TrisotechAssetRepositoryIntTest {
         + "16086bb8-c1fc-49b0-800b-c9b995dc5ed5/versions/1.6.0-1565742456000";
 
     Answer<KnowledgeCarrier> answer = tar
-        .getKnowledgeAssetVersionCanonicalCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
+        .getKnowledgeAssetVersionCanonicalCarrier(
+            UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.0.0", null);
     assertTrue(answer.isSuccess());
     assertNotNull(answer.get());
@@ -500,7 +504,8 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void getKnowledgeAssetVersionCanonicalCarrier_notFound_badVersion() {
     Answer<KnowledgeCarrier> answer = tar
-        .getKnowledgeAssetVersionCanonicalCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
+        .getKnowledgeAssetVersionCanonicalCarrier(
+            UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.2.0", null);
     assertTrue(answer.isClientFailure());
   }
@@ -508,7 +513,8 @@ class TrisotechAssetRepositoryIntTest {
   @Test
   void getKnowledgeAssetVersionCanonicalCarrier_notFound_badId() {
     Answer<KnowledgeCarrier> answer = tar
-        .getKnowledgeAssetVersionCanonicalCarrier(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03d"),
+        .getKnowledgeAssetVersionCanonicalCarrier(
+            UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03d"),
             "1.0.0", null);
     assertTrue(answer.isClientFailure());
   }
@@ -669,7 +675,7 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void getCompositeKnowledgeAsset() {
-    Answer<KnowledgeCarrier> answer= tar
+    Answer<KnowledgeCarrier> answer = tar
         .getKnowledgeAssetVersionCanonicalSurrogate(UUID.randomUUID(), "s", "s1");
     assertTrue(answer.isFailure());
     assertEquals(NotImplemented, answer.getOutcomeType());
@@ -686,10 +692,18 @@ class TrisotechAssetRepositoryIntTest {
 
   @Test
   void listKnowledgeAssetVersions() {
-    Answer<List<Pointer>> answer= tar
+    Answer<List<Pointer>> answer = tar
         .listKnowledgeAssetVersions(UUID.randomUUID(), 2, 2, "0.0.1", "3.4.0", "false?");
     assertTrue(answer.isFailure());
     assertEquals(NotImplemented, answer.getOutcomeType());
+  }
+
+  @Test
+  void testEligibilityModel() {
+    Answer<List<Pointer>> answer = tar
+        .listKnowledgeAssets(Clinical_Eligibility_Rule.getTag(), null, null, 0, -1);
+    assertTrue(answer.isSuccess());
+    assertEquals(1, answer.get().size());
   }
 
 }

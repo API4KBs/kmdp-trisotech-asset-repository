@@ -17,6 +17,7 @@ import static edu.mayo.kmdp.util.Util.isEmpty;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Eligibility_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Cognitive_Process_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
@@ -84,9 +85,8 @@ public class TrisotechApiUrls {
   }
 
   /**
-   * Maps the assetTypeTag used in the KARS API to the mime type used by the TT API
-   * The mapping is based on the assumption that BPM+ languages are used consistently
-   * for specific asset types.
+   * Maps the assetTypeTag used in the KARS API to the mime type used by the TT API The mapping is
+   * based on the assumption that BPM+ languages are used consistently for specific asset types.
    *
    * @param assetTypeTag a formal asset type tag
    * @return the (TT) mime type implied by the asset type
@@ -104,7 +104,8 @@ public class TrisotechApiUrls {
     impliedTypes.add(resolvedType);
 
     if (Decision_Model.isAnyOf(impliedTypes)
-        || Clinical_Decision_Model.isAnyOf(impliedTypes)) {
+        || Clinical_Decision_Model.isAnyOf(impliedTypes)
+        || Clinical_Eligibility_Rule.isAnyOf(impliedTypes)) {
       return getXmlMimeType(DMN_LOWER);
     } else if (Case_Management_Model.isAnyOf(impliedTypes)
         || Clinical_Case_Management_Model.isAnyOf(impliedTypes)) {

@@ -22,6 +22,7 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_METADATA_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.VALUE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper.applyTimestampToVersion;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_ID;
+import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_TYPE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MIME_TYPE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MODEL;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.STATE;
@@ -56,6 +57,9 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -359,6 +363,42 @@ public class IdentityMapper {
   public Optional<String> getLatestVersionTag(String modelId) {
     return getStatementsByModel(modelId, true)
         .map(soln -> soln.get(VERSION));
+  }
+
+  /**
+   * Get the Asset Type declared on the model, if any
+   *
+   * @param modelId the id of the model
+   * @return an optional asset type declared in the model
+   */
+  public Optional<KnowledgeAssetType> getDeclaredAssetType(String modelId) {
+    return getStatementsByModel(modelId, true)
+        .map(soln -> soln.get(ASSET_TYPE))
+        .flatMap(type -> KnowledgeAssetTypeSeries.resolveId(type)
+            .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(type)));
+  }
+
+  /**
+   * Get the Asset Type declared on the model, or the default based on the modeling language
+   *
+   * @param modelId the id of the model
+   * @return the asset type declared on the model, or a default
+   */
+  public KnowledgeAssetType getDeclaredAssetTypeOrDefault(String modelId) {
+    return getStatementsByModel(modelId, true)
+        .map(soln -> soln.get(ASSET_TYPE))
+        .flatMap(type -> KnowledgeAssetTypeSeries.resolveId(type)
+            .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(type)))
+        .orElseGet(() -> {
+          String mime = getMimetype(modelId);
+          if (mime.contains("dmn")) {
+            return KnowledgeAssetTypeSeries.Decision_Model;
+          } else if (mime.contains("cmmn")) {
+            return KnowledgeAssetTypeSeries.Case_Management_Model;
+          } else {
+            throw new IllegalStateException("Unrecognized model type " + mime);
+          }
+        });
   }
 
 

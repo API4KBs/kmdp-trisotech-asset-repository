@@ -3,7 +3,7 @@ package edu.mayo.kmdp.initResources;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import edu.mayo.kmdp.TrisotechAssetRepositoryConfig;
+import edu.mayo.kmdp.TrisotechAssetRepositoryTestConfig;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import java.io.File;
@@ -24,7 +24,7 @@ import org.springframework.test.context.TestPropertySource;
  */
 
 @SpringBootTest
-@ContextConfiguration(classes = TrisotechAssetRepositoryConfig.class)
+@ContextConfiguration(classes = TrisotechAssetRepositoryTestConfig.class)
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",

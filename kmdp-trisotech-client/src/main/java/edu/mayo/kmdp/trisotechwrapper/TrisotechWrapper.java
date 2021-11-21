@@ -14,6 +14,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
 import edu.mayo.kmdp.util.DateTimeUtil;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
@@ -135,7 +136,7 @@ public class TrisotechWrapper {
    * methodName: getMetadataByAsset
    * <p>description: returns asset metadata from the cache</p>
    *
-   * @param assetId The Id of the asset
+   * @param assetId The id of the asset
    * @return Map<TTGraphTerms, String>
    */
   public Map<TTGraphTerms, String> getMetadataByAsset(UUID assetId) {
@@ -158,11 +159,12 @@ public class TrisotechWrapper {
    * methodName: getModelById
    * <p>description: Retrieves the LATEST version of the model for the fileId provided.</p>
    *
-   * @param fileId The file ID to identify the model to retrieve
+   * @param fileId        The file ID to identify the model to retrieve
+   * @param publishedOnly if true, only processes models with a publication status
    * @return XML Document for the model or Empty
    */
-  public Optional<Document> getModelById(String fileId) {
-    return getFileInfo(fileId)
+  public Optional<Document> getModelById(String fileId, boolean publishedOnly) {
+    return getLatestModelFileInfo(fileId, publishedOnly)
         .flatMap(this::getModel);
   }
 
@@ -176,7 +178,7 @@ public class TrisotechWrapper {
   public Optional<Document> getModel(
       TrisotechFileInfo trisotechFileInfo) {
     try {
-      Optional<Document> document = webClient.downloadXmlModel(trisotechFileInfo.getUrl());
+      Optional<Document> document = downloadXmlModel(trisotechFileInfo);
       if (logger.isDebugEnabled() && document.isPresent()) {
         String documentToString = XMLUtil.toString(document.get());
         logger
@@ -189,19 +191,6 @@ public class TrisotechWrapper {
     return Optional.empty();
   }
 
-  /**
-   * methodName: getPublishedModelById
-   * <p>description: Retrieve the PUBLISHED Model given the file ID Will only return if the model
-   * has been published, else empty.</p>
-   *
-   * @param fileId the fileId for the file to find the model information
-   * @return DMN XML Document or Optional.empty
-   */
-  public Optional<Document> getPublishedModelById(String fileId) {
-    return getFileInfo(fileId)
-        .flatMap(this::getPublishedModel);
-  }
-
 
   /**
    * methodName: getPublishedModel
@@ -212,21 +201,9 @@ public class TrisotechWrapper {
    */
   public Optional<Document> getPublishedModel(
       TrisotechFileInfo trisotechFileInfo) {
-    try {
-      if (publishedModel(trisotechFileInfo)) {
-        Optional<Document> document = webClient.downloadXmlModel(trisotechFileInfo.getUrl());
-        if (logger.isDebugEnabled() && document.isPresent()) {
-          String documentToString = XMLUtil.toString(document.get());
-          logger
-              .debug("The published document found from the Trisotech Rest Web Client is {}",
-                  documentToString);
-        }
-        return document;
-      }
-    } catch (Exception e) {
-      logger.error(String.format("%s %s", e.getMessage(), Arrays.toString(e.getStackTrace())), e);
-    }
-    return Optional.empty();
+    return Optional.of(trisotechFileInfo)
+        .filter(this::isPublished)
+        .flatMap(this::getModel);
   }
 
   /**
@@ -240,32 +217,18 @@ public class TrisotechWrapper {
    */
   public List<TrisotechFileInfo> getModelsFileInfo(String xmlMimeType, boolean publishedOnly) {
     return getModels(getXmlMimeType(xmlMimeType))
-        .filter(x -> !publishedOnly || publishedModel(x))
+        .map(x -> toLatestModelFileInfo(x, publishedOnly))
+        .flatMap(StreamUtil::trimStream)
         .collect(Collectors.toList());
   }
 
-  /**
-   * methodName: getFileInfo
-   * <p>description: get the ModelInfo for the fileID provided. mimeType is used to return the
-   * appropriate information in a format for download Acceptable values for mimeType are:
-   * DMN_XMl_MIMETYPE or CMMN_XML_MIMETYPE </p>
-   *
-   * @param modelId the fileID for the model used to query from Trisotech
-   * @return Optional<TrisotechFileInfo> the Trisotech FileInfo about the model
-   */
-  public Optional<TrisotechFileInfo> getFileInfo(String modelId) {
-    Optional<TrisotechFileInfo> trisotechFileInfo =
-        Optional.ofNullable(cacheManager.getModelInfo(focusPlaceId, targetPath, modelId));
-    if (trisotechFileInfo.isEmpty()) {
-      logger.error("Unable to get FileInfo for {}", modelId);
-    }
-    if (logger.isDebugEnabled()) {
-      logger
-          .debug("The trisotechFileInfo found from the cache manager is {}",
-              trisotechFileInfo);
-    }
-    return trisotechFileInfo;
+  private Optional<TrisotechFileInfo> toLatestModelFileInfo(
+      TrisotechFileInfo x, boolean publishedOnly) {
+    return isPublished(x)
+        ? Optional.of(x)
+        : getLatestModelFileInfo(x.getId(), publishedOnly);
   }
+
 
   /**
    * methodName: getFileInfoByIdAndVersion
@@ -282,26 +245,6 @@ public class TrisotechWrapper {
     return getFileInfoByIdAndVersion(fileId, version);
   }
 
-  /**
-   * methodName: getFileInfoMimeType
-   * <p>description: Trisotech by default returns JSON files. In order to get a XML-ready URL for
-   * downloading XML-compliant model information, a mimeType must be provided in the query. This
-   * method will be used when the mimeType is not provided initially. It will first query all the
-   * models, then find the model to be queried and return the appropriate mimetype for that
-   * file.</p>
-   *
-   * @param modelId the ID of the model in Trisotech
-   * @return Optional<String> the mimetype for the file to be used to query needed information for
-   * download
-   */
-  private Optional<String> getFileInfoMimeType(String modelId) {
-    // want to return the XML version of the file, so need the fileInfo based on mimetype
-    // this has to do with how Trisotech returns the data
-    // we don't get the XML path unless we provide the correct mimetype in the query.
-    return getFileInfo(modelId)
-        .map(info -> getXmlMimeType(info.getMimetype()));
-  }
-
 
   /**
    * methodName: getFileInfoByIdAndVersion
@@ -314,7 +257,7 @@ public class TrisotechWrapper {
    */
   public Optional<TrisotechFileInfo> getFileInfoByIdAndVersion(
       String fileId, String fileVersion) {
-    return getLatestModelFileInfo(fileId)
+    return getLatestModelFileInfo(fileId, true)
         .filter(trisotechFileInfo -> compareVersion(fileVersion, trisotechFileInfo))
         .or(() ->
             getModelVersions(fileId).stream()
@@ -350,8 +293,21 @@ public class TrisotechWrapper {
    * @param modelId id of the model interested in
    * @return Optional<TrisotechFileInfo> for the model
    */
-  public Optional<TrisotechFileInfo> getLatestModelFileInfo(String modelId) {
-    return getFileInfo(modelId);
+  public Optional<TrisotechFileInfo> getLatestModelFileInfo(String modelId, boolean publishedOnly) {
+    Optional<TrisotechFileInfo> trisotechFileInfo =
+        Optional.ofNullable(cacheManager.getModelInfo(focusPlaceId, targetPath, modelId))
+            .filter(x -> !publishedOnly || isPublished(x))
+            .or(() -> getModelVersions(modelId).stream()
+                .filter(x -> !publishedOnly || isPublished(x))
+                .reduce((f, s) -> s));
+
+    if (trisotechFileInfo.isEmpty()) {
+      logger.error("Unable to get FileInfo for {}", modelId);
+    }
+    if (logger.isDebugEnabled()) {
+      logger.debug("The trisotechFileInfo found from the cache manager is {}", trisotechFileInfo);
+    }
+    return trisotechFileInfo;
   }
 
   /**
@@ -363,16 +319,12 @@ public class TrisotechWrapper {
    * @return Optional<Document> the XML Document for the specified version of the model or Empty
    */
   public Optional<Document> getModelByIdAndVersion(String fileId, String version) {
-    Optional<String> mimeType = getFileInfoMimeType(fileId);
-    if (mimeType.isEmpty()) {
-      return Optional.empty();
-    }
-    List<TrisotechFileInfo> fileInfos = getModelVersions(fileId, mimeType.get());
+    List<TrisotechFileInfo> fileInfos = getModelVersions(fileId);
 
     // long form
     for (TrisotechFileInfo fileInfo : fileInfos) {
       if (version.equals(fileInfo.getVersion())) {
-        Optional<Document> document = webClient.downloadXmlModel(fileInfo.getUrl());
+        Optional<Document> document = downloadXmlModel(fileInfo);
         if (logger.isDebugEnabled() && document.isPresent()) {
           String documentToString = XMLUtil.toString(document.get());
           logger
@@ -396,22 +348,7 @@ public class TrisotechWrapper {
    * @return List<TrisotechFileInfo for all the versions for that model
    */
   public List<TrisotechFileInfo> getModelVersions(String modelUri) {
-    return getModelVersions(focusPlaceId, modelUri, getFileInfoMimeType(modelUri).orElseThrow());
-  }
-
-  /**
-   * methodName: getModelVersions
-   * <p>description: returns all the file info for all the versions of the model for the default
-   * repository</p>
-   *
-   * @param modelUri The modelUri for the model desired
-   * @param mimeType The mimeType of the model requested; mimeType is needed to get back the
-   *                 information so that it includes the correct URl for downloading the model
-   *                 version.
-   * @return List<TrisotechFileInfo> for all the versions for that model
-   */
-  public List<TrisotechFileInfo> getModelVersions(String modelUri, String mimeType) {
-    return getModelVersions(focusPlaceId, modelUri, mimeType);
+    return getModelVersions(focusPlaceId, modelUri);
   }
 
   /**
@@ -419,14 +356,10 @@ public class TrisotechWrapper {
    * <p>returns all the file info for all the versions of the model for the default repository</p>
    *
    * @param modelUri The fileId for the model desired
-   * @param mimeType The mimeType of the model requested; mimeType is needed to get back the
-   *                 information so that it includes the correct URl for downloading the model
-   *                 version.
    * @return List<TrisotechFileInfo> for all the versions for that model
    */
-  public List<TrisotechFileInfo> getModelVersions(String repositoryId, String modelUri,
-      String mimeType) {
-    return webClient.getModelVersions(repositoryId, modelUri, mimeType);
+  public List<TrisotechFileInfo> getModelVersions(String repositoryId, String modelUri) {
+    return webClient.getModelVersions(repositoryId, modelUri);
   }
 
   /**
@@ -437,9 +370,9 @@ public class TrisotechWrapper {
    * @param artifactId the id for the artifact requesting latest version of
    * @return Optional<ResourceIdentifier>
    */
-  public Optional<ResourceIdentifier> getLatestVersion(String artifactId) {
-    return getFileInfo(artifactId)
-        .flatMap(this::getLatestVersion);
+  public Optional<ResourceIdentifier> getLatestVersionId(String artifactId) {
+    return getLatestModelFileInfo(artifactId, true)
+        .flatMap(this::getLatestVersionId);
   }
 
   /**
@@ -451,7 +384,7 @@ public class TrisotechWrapper {
    * @return Optional<ResourceIdentifier>
    */
   //return ResourceIdentifier uid, versionTag (1.0.0) , create .withEstablishedOn for timestamp
-  public Optional<ResourceIdentifier> getLatestVersion(TrisotechFileInfo trisotechFileInfo) {
+  public Optional<ResourceIdentifier> getLatestVersionId(TrisotechFileInfo trisotechFileInfo) {
     // only return for published models
     if (null != trisotechFileInfo.getState()) {
       if (logger.isDebugEnabled()) {
@@ -488,7 +421,6 @@ public class TrisotechWrapper {
   }
 
   /**
-   * methodName: publishedModel
    * <p>description: is the model published? models can be published, but not be in the state of
    * 'Published'. All models, of any state, that are published will return true here.</p>
    *
@@ -496,12 +428,24 @@ public class TrisotechWrapper {
    *                          published
    * @return boolean
    */
-  private boolean publishedModel(TrisotechFileInfo trisotechFileInfo) {
+  private boolean isPublished(TrisotechFileInfo trisotechFileInfo) {
     // using the new POST capabilities, it is possible to get a state and version of ""
     // which can mess up the search for models as the SPARQL query will not return
     // those values
     return isNotEmpty(trisotechFileInfo.getState())
         && isNotEmpty(trisotechFileInfo.getVersion());
+  }
+
+  /**
+   * @param info metadata about the model to download
+   * @return Optional<Document>
+   */
+  public Optional<Document> downloadXmlModel(TrisotechFileInfo info) {
+    String url = info.getUrl();
+    if (!url.contains("mimetype=")) {
+      url = url + "&mimetype=" + info.getMimetype();
+    }
+    return downloadXmlModel(url);
   }
 
   /**
@@ -523,17 +467,6 @@ public class TrisotechWrapper {
     return document;
   }
 
-  /**
-   * methodName: tryDownloadXmlModel
-   * <p>description: From Trisotech rest client try to download XML Model</p>
-   *
-   * @param fromUrl URL where to request from the client
-   * @throws IOException   Input/Output exception
-   * @throws HttpException Web based exception
-   */
-  public void tryDownloadXmlModel(String fromUrl) throws IOException, HttpException {
-    webClient.tryDownloadXmlModel(fromUrl);
-  }
 
   /**
    * methodName: uploadXmlModel
@@ -582,9 +515,10 @@ public class TrisotechWrapper {
 
   /**
    * Lists the Places available on the DES Server
+   *
    * @return a Map of place id / place name
    */
-  public Map<String,String> listPlaces() {
+  public Map<String, String> listPlaces() {
     try {
       return webClient.getPlaces()
           .map(tpd -> tpd.getData().stream()

@@ -1,0 +1,16 @@
+# PREFIX sets up the namespaces to be used in the query
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX tt: <http://www.trisotech.com/graph/1.0/element#>
+PREFIX ttr: <http://www.trisotech.com/graph/1.0/elementRel#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?s ?p ?o
+FROM NAMED ?
+WHERE {
+GRAPH ? {
+    ?s ?p ?o.
+  }
+}

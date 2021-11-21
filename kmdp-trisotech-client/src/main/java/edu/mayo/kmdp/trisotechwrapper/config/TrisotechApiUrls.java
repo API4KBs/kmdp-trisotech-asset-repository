@@ -51,7 +51,7 @@ public class TrisotechApiUrls {
   public static final String CONTENT_PATH_POST = "repositorycontent?repository={repo}&name={name}&mimetype={mime}&path={path}";
   public static final String CONTENT_PATH_POST_WITH_VERSION = "repositorycontent?repository={repo}&name={name}&mimetype={mime}&path={path}&version={version}&state={state}";
   // versions of specific file within specified repository
-  public static final String VERSIONS_PATH = "repositoryfileversion?repository={repo}&id={fileId}&mimetype={mime}";
+  public static final String VERSIONS_PATH = "repositoryfileversion?repository={repo}&id={fileId}";
 
   public static final String SPARQL_PATH = "/ds/query";
 

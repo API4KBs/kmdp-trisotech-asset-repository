@@ -60,6 +60,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRe
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Final_Draft;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Unpublished;
 
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.IdentityMapper;
@@ -441,7 +442,7 @@ public class TrisotechIntrospectionStrategy {
                 model.getName(), model.getVersion(), model.getUpdated());
         // getTrisotechModelVersions returns all versions of the model EXCEPT the latest
         List<TrisotechFileInfo> artifactModelVersions
-                = client.getModelVersions(model.getId(), model.getMimetype());
+                = client.getModelVersions(model.getId());
         // get next version
         TrisotechFileInfo nextArtifactVersion = null;
         Date artifactDate = Date.from(Instant.parse(model.getUpdated()));
@@ -459,7 +460,7 @@ public class TrisotechIntrospectionStrategy {
         // the latest version is NOT included in the list of versions;
         // if next is null, it needs to be set to latest
         if (null == nextArtifactVersion) {
-            nextArtifactVersion = client.getLatestModelFileInfo(model.getId()).orElse(null);
+            nextArtifactVersion = client.getLatestModelFileInfo(model.getId(),false).orElse(null);
             if (null != nextArtifactVersion) {
                 nextVersionDate = Date.from(Instant.parse(nextArtifactVersion.getUpdated()));
             }
@@ -475,8 +476,7 @@ public class TrisotechIntrospectionStrategy {
                     .debug("have resourceIdentifier from artifactImports: {} ", ri.getVersionId());
             String importedModelID = mapper.resolveModelId(ri.getTag()).orElseThrow();
             List<TrisotechFileInfo> importVersions =
-                    client.getModelVersions(importedModelID,
-                            mapper.getMimetype(importedModelID));
+                    client.getModelVersions(importedModelID);
             // will need to use convertInternalId to get the KMDP resourceId to return
             // use the tag of the artifact with the version and timestamp found to match
             if (importVersions.isEmpty()) {
@@ -561,9 +561,7 @@ public class TrisotechIntrospectionStrategy {
                     throw new IllegalStateException("Unrecognized state " + meta.getState());
             }
         } else {
-            // NOTE: This should NOT happen in production, but can happen when we are testing models and downloading manually
-            // either way, don't want to leave lifecycle empty, so default to Draft (per e-mail w/Davide 1/24/2020)
-            lifecycle.withPublicationStatus(Draft);
+            lifecycle.withPublicationStatus(Unpublished);
         }
         logger.debug("lifecycle = {}", lifecycle.getPublicationStatus());
 

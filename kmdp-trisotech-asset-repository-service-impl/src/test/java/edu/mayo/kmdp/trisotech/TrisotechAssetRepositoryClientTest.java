@@ -18,6 +18,7 @@ package edu.mayo.kmdp.trisotech;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.kdcaci.knew.trisotech.ServerConfig;
 import edu.mayo.kmdp.util.ws.JsonRestWSUtils.WithFHIR;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest(
     webEnvironment = WebEnvironment.RANDOM_PORT,
     classes = Swagger2SpringBoot.class)
-@ContextConfiguration(classes = IntegrationTestConfig.class)
+@ContextConfiguration(classes = ServerConfig.class)
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
     "edu.mayo.kmdp.trisotechwrapper.repositoryPath=/",

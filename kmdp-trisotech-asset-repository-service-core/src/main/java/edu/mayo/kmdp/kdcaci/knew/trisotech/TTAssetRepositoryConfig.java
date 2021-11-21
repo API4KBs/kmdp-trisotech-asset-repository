@@ -14,10 +14,10 @@ public class TTAssetRepositoryConfig extends
 
   private static final String PARAM_NAMESPACE = "edu.mayo.kmdp.kdcaci.knew.trisotech.";
 
-  private static final Properties DEFAULTS = defaulted( TTWParams.class );
+  private static final Properties DEFAULTS = defaulted(TTWParams.class);
 
   public TTAssetRepositoryConfig() {
-    super( DEFAULTS );
+    super(DEFAULTS);
   }
 
   public TTAssetRepositoryConfig(Properties defaults) {
@@ -37,52 +37,59 @@ public class TTAssetRepositoryConfig extends
   public enum TTWParams implements
       Option<TTWParams> {
 
-    PUBLISHED_ONLY( Opt.of(
+    PUBLISHED_ONLY(Opt.of(
         PARAM_NAMESPACE + "publishedModelsOnly",
         Boolean.TRUE.toString(),
-        "If true, will not expose models unless they are published",
+        "If true, will not expose model (versions) unless they have a publication status",
         Boolean.class,
-        true) ),
+        true)),
+    ASSETS_ONLY(Opt.of(
+        PARAM_NAMESPACE + "assetsOnly",
+        Boolean.TRUE.toString(),
+        "If true, will not expose models unless their latest version is the carrier of a"
+            + " named enterprise Knowledge Asset",
+        Boolean.class,
+        true)),
 
-    ASSET_ID_ATTRIBUTE( Opt.of(
+    ASSET_ID_ATTRIBUTE(Opt.of(
         PARAM_NAMESPACE + "assetIdAttributeName",
         "knowledgeAssetId",
         "Custom attribute used to assert a model's Asset ID",
         String.class,
-        false) ),
+        false)),
 
-    DOMAIN_TERMS_NAMESPACE_PATTERN( Opt.of(
+    DOMAIN_TERMS_NAMESPACE_PATTERN(Opt.of(
         PARAM_NAMESPACE + "domainTermsNamespacePattern",
         "(.*\\/clinicalsituations.*|.*\\/propositionalconcepts.*)",
         "Namespace URI patterns for domain concepts",
         String.class,
-        false) ),
+        false)),
 
-    ASSET_NAMESPACE( Opt.of(
+    ASSET_NAMESPACE(Opt.of(
         PARAM_NAMESPACE + "assetNamespace",
         Registry.MAYO_ASSETS_BASE_URI,
         "Base namespace for Knowledge Assets",
         String.class,
-        false) ),
+        false)),
 
-    ARTIFACT_NAMESPACE( Opt.of(
+    ARTIFACT_NAMESPACE(Opt.of(
         PARAM_NAMESPACE + "artifactNamespace",
         Registry.MAYO_ARTIFACTS_BASE_URI,
         "Base namespace for Knowledge Artifacts (models)",
         String.class,
-        false) ),
+        false)),
 
-    DEFAULT_VERSION_TAG( Opt.of(
+    DEFAULT_VERSION_TAG(Opt.of(
         PARAM_NAMESPACE + "defaultVersionTag",
         IdentifierConstants.VERSION_ZERO,
         "",
         String.class,
-        false) ),
+        false)),
     ;
 
     private Opt<TTWParams> opt;
 
-    TTWParams( Opt<TTWParams> opt ) {
+    TTWParams(Opt<TTWParams> opt) {
       this.opt = opt;
     }
 

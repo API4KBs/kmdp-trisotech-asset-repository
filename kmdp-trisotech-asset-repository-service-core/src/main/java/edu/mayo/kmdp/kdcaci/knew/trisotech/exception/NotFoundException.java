@@ -1,9 +1,16 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.exception;
 
-public class NotFoundException extends Exception {
+import edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries;
+import java.net.URI;
+import org.omg.spec.api4kp._20200801.ServerSideException;
 
-  public NotFoundException( String name ) {
-    super( name );
+public class NotFoundException extends ServerSideException {
+
+  public NotFoundException(
+      String title,
+      String detail,
+      URI instance) {
+    super(URI.create("https://www.omg.org/spec/API4KP/api4kp-kp/UnresolvedKnowledgeBase"),
+        title, ResponseCodeSeries.NotFound, detail, instance);
   }
-
 }

@@ -37,7 +37,7 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.tryNewVersionI
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestVersionException;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionException;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
@@ -90,6 +90,7 @@ public class IdentityMapper {
   NamespaceManager names;
 
   private boolean publishedOnly;
+  private boolean assetsOnly;
 
   private String defaultVersion;
 
@@ -105,25 +106,26 @@ public class IdentityMapper {
       config = new TTAssetRepositoryConfig();
     }
     publishedOnly = config.getTyped(TTWParams.PUBLISHED_ONLY);
+    assetsOnly = config.getTyped(TTWParams.ASSETS_ONLY);
     defaultVersion = config.getTyped(DEFAULT_VERSION_TAG);
   }
 
 
-  private Map<String,Set<String>> getArtifactDependencyMap() {
+  private Map<String, Set<String>> getArtifactDependencyMap() {
     return client.getDependencyMap();
   }
 
-  private Optional<Map<TTGraphTerms,String>> getStatementsByModel(String modelUri, boolean pub) {
+  private Optional<Map<TTGraphTerms, String>> getStatementsByModel(String artifactId, boolean pub) {
     if (pub) {
-      return Optional.ofNullable(client.getMetadataByModel(modelUri))
+      return Optional.ofNullable(client.getMetadataByModel(artifactId))
           .filter(soln -> soln.containsKey(STATE));
     } else {
-      return Optional.ofNullable(client.getMetadataByModel(modelUri));
+      return Optional.ofNullable(client.getMetadataByModel(artifactId));
     }
   }
 
 
-  private Optional<Map<TTGraphTerms,String>> getStatementsByAsset(UUID assetId, boolean pub) {
+  private Optional<Map<TTGraphTerms, String>> getStatementsByAsset(UUID assetId, boolean pub) {
     if (pub) {
       return Optional.ofNullable(client.getMetadataByAsset(assetId))
           .filter(soln -> soln.containsKey(STATE));
@@ -134,15 +136,19 @@ public class IdentityMapper {
 
 
   /**
-   * Get the Asset that matches the model for the modelUri provided. Will return the asset that maps
-   * to the LATEST version of the model.
+   * Get the Asset that matches the model for the modelUri provided.
+   * <p>
+   * Will return the asset that maps to the LATEST version of the model. Assumes that a given
+   * artifact (model) carries at most one version of an asset across all the versions of the
+   * artifact. I.e. once a model has been assigned an asset's versioned id, that id will not
+   * change.
    *
-   * @param modelUri the id for the model
+   * @param artifactId the id for the model
    * @return ResourceIdentifier for assetId of model
    */
-  public Optional<ResourceIdentifier> resolveModelToCurrentAssetId(String modelUri) {
-    logger.debug("getAssetId for modelUri: {}", modelUri);
-    return getStatementsByModel(modelUri, publishedOnly)
+  public Optional<ResourceIdentifier> resolveModelToCurrentAssetId(String artifactId) {
+    logger.debug("get assetId for artifactId: {}", artifactId);
+    return getStatementsByModel(artifactId, false)
         .map(soln -> {
           String statedIdStr = soln.get(ASSET_ID);
           URI statedId = URI.create(statedIdStr);
@@ -152,7 +158,7 @@ public class IdentityMapper {
               return newId(statedId.toString(), defaultVersion);
             } else {
               throw new IllegalStateException(
-                  "Invalid AssetID " + statedIdStr + " found on model " + modelUri);
+                  "Invalid AssetID " + statedIdStr + " found on model " + artifactId);
             }
           }
           return newVersionId(statedId);
@@ -161,24 +167,26 @@ public class IdentityMapper {
 
 
   /**
-   * Validates that the given assetID+versionTag corresponds to a model whose LATEST version
-   * is annotated with the corresponding enterprise Asset ID
+   * Validates that the given assetID+versionTag corresponds to a model whose LATEST version is
+   * annotated with the corresponding enterprise Asset ID
    *
    * @param assetId    The enterprise assetId looking for
    * @param versionTag The version of the enterprise asset looking for
-   * @param pub looking for any model, vs only published models
+   * @param pub        looking for any model, vs only published models
    * @return The enterprise asset version ID
-   * @throws NotLatestVersionException Because models only contains the LATEST version, the version
-   *                                   being requested might not be the latest. This exception is
-   *                                   thrown to indicate the version requested is not the latest
-   *                                   version. Consumers of the exception may then try an alternate
-   *                                   route to finding the version needed. The exception will
-   *                                   return the artifactId for the asset requested. The artifactId
-   *                                   can be used with Trisotech APIs
+   * @throws NotLatestAssetVersionException Because models only contains the LATEST version, the
+   *                                        version being requested might not be the latest. This
+   *                                        exception is thrown to indicate the version requested is
+   *                                        not the latest version. Consumers of the exception may
+   *                                        then try an alternate route to finding the version
+   *                                        needed. The exception will return the artifactId for the
+   *                                        asset requested. The artifactId can be used with
+   *                                        Trisotech APIs
    */
-  public Optional<ResourceIdentifier> resolveAssetToCurrentAssetId(UUID assetId, String versionTag, boolean pub)
-      throws NotLatestVersionException {
-    Optional<Map<TTGraphTerms,String>> soln = getStatementsByAsset(assetId, pub);
+  public Optional<ResourceIdentifier> resolveAssetToCurrentAssetId(UUID assetId, String versionTag,
+      boolean pub)
+      throws NotLatestAssetVersionException {
+    Optional<Map<TTGraphTerms, String>> soln = getStatementsByAsset(assetId, pub);
     if (soln.isPresent()) {
       String enterpriseAssetVersionId = soln.get().get(ASSET_ID);
       ResourceIdentifier versionId = newVersionId(URI.create(enterpriseAssetVersionId));
@@ -186,7 +194,10 @@ public class IdentityMapper {
         return Optional.of(versionId);
       } else {
         // there is an artifact, but the latest does not match the version seeking
-        throw new NotLatestVersionException(soln.get().get(MODEL));
+        throw new NotLatestAssetVersionException(
+            versionTag,
+            versionId.getVersionTag(),
+            soln.get().get(MODEL));
       }
     } else {
       return Optional.empty();
@@ -213,20 +224,21 @@ public class IdentityMapper {
    *
    * @param assetId enterprise asset version id
    * @return artifact Id for the asset. artifactId can be used with the APIs.
-   * @throws NotLatestVersionException Because models only contains the LATEST version, the version
-   *                                   being requested might not be the latest. This exception is
-   *                                   thrown to indicate the version requested is not the latest
-   *                                   version. Consumers of the exception may then try an alternate
-   *                                   route to finding the version needed. The exception will
-   *                                   return the artifactId for the asset requested. The artifactId
-   *                                   can be used with Trisotech APIs
+   * @throws NotLatestAssetVersionException Because models only contains the LATEST version, the
+   *                                        version being requested might not be the latest. This
+   *                                        exception is thrown to indicate the version requested is
+   *                                        not the latest version. Consumers of the exception may
+   *                                        then try an alternate route to finding the version
+   *                                        needed. The exception will return the artifactId for the
+   *                                        asset requested. The artifactId can be used with
+   *                                        Trisotech APIs
    */
-  public String getCurrentModelId(ResourceIdentifier assetId, boolean pub)
-      throws NotLatestVersionException, NotFoundException {
+  public String getCurrentModelId(ResourceIdentifier assetId)
+      throws NotLatestAssetVersionException, NotFoundException {
 
-    Optional<Map<TTGraphTerms,String>> solnOpt = getStatementsByAsset(assetId.getUuid(), pub);
+    Optional<Map<TTGraphTerms, String>> solnOpt = getStatementsByAsset(assetId.getUuid(), false);
     if (solnOpt.isPresent()) {
-      Map<TTGraphTerms,String> soln = solnOpt.get();
+      Map<TTGraphTerms, String> soln = solnOpt.get();
       Optional<ResourceIdentifier> rid
           = tryNewVersionId(URI.create(soln.get(ASSET_ID)));
 
@@ -243,14 +255,16 @@ public class IdentityMapper {
           // the requested version of the asset doesn't exist on the latest model, check if the
           // asset is the right asset for the model and if so, throw error with fileId
         } else if (soln.get(ASSET_ID).contains(assetId.getTag())) {
-          throw new NotLatestVersionException(soln.get(MODEL));
+          throw new NotLatestAssetVersionException(
+              assetId.getVersionTag(), rid.get().getVersionTag(), soln.get(MODEL));
         } else {
           throw new IllegalStateException("Inconsistent asset IDs");
         }
       }
     }
 
-    throw new NotFoundException(assetId.getTag());
+    throw new NotFoundException(
+        "Asset not found", "Unable to map Asset ID to model", assetId.getVersionId());
   }
 
   /**
@@ -268,36 +282,37 @@ public class IdentityMapper {
 
   /**
    * Resolves an id+version to a knowledge asset for which there exist (at least) one carrier model.
-   * (Note: a model should not implement more than one knowledge asset through its series)
-   * Finds the (one) model annotated with that asset id, starting with the most recent version
-   * of the model, and backtracking in history if necessary.
+   * (Note: a model should not implement more than one knowledge asset through its series) Finds the
+   * (one) model annotated with that asset id, starting with the most recent version of the model,
+   * and backtracking in history if necessary.
    *
-   * @param assetId The UUID of the asset (series)
+   * @param assetId         The UUID of the asset (series)
    * @param assetVersionTag the version of the asset
    * @return A ResourceIdentifier for the
-   *
-   * @throws NotLatestVersionException The requested assetId is associated with a version of a model
-   * that is not the latest version of that model
-   * @throws NotFoundException no model for the given asset version
+   * @throws NotLatestAssetVersionException The requested assetId is associated with a version of a
+   *                                        model that is not the latest version of that model
+   * @throws NotFoundException              no model for the given asset version
    */
   public ResourceIdentifier getCarrierArtifactId(UUID assetId, String assetVersionTag)
-      throws NotLatestVersionException, NotFoundException {
-    String modelUri = resolveInternalArtifactID(assetId, assetVersionTag, publishedOnly);
-    String modelVersion = getLatestCarrierVersionTag(assetId)
+      throws NotFoundException, NotLatestAssetVersionException {
+    String modelUri = null;
+    modelUri = resolveInternalArtifactID(assetId, assetVersionTag, publishedOnly);
+
+    Optional<TrisotechFileInfo> info = client.getLatestModelFileInfo(modelUri, publishedOnly);
+    String modelVersion = info.map(TrisotechFileInfo::getVersion)
         .orElse(defaultVersion);
-    Optional<String> modelUpdated = getLatestCarrierMostRecentUpdateDateTime(assetId);
+    Optional<String> modelUpdated = info.map(TrisotechFileInfo::getUpdated);
     return modelUpdated.isPresent()
-      ? names.rewriteInternalId(modelUri,modelVersion,modelUpdated.get())
-      : names.rewriteInternalId(modelUri,modelVersion);
+        ? names.rewriteInternalId(modelUri, modelVersion, modelUpdated.get())
+        : names.rewriteInternalId(modelUri, modelVersion);
   }
 
   /**
    * Get the fileId for use with the APIs from the internal model Id
    *
    * @param internalId the internal trisotech model ID
-   * @return the id that can be used with the APIs
-   * These values are the same now, but sometimes only have the tag of the internalId, and need the
-   * full uri for the queries now.
+   * @return the id that can be used with the APIs These values are the same now, but sometimes only
+   * have the tag of the internalId, and need the full uri for the queries now.
    */
   public Optional<String> resolveModelId(String internalId) {
     String modelURI;
@@ -336,7 +351,7 @@ public class IdentityMapper {
    * @return the mimetype as specified in the triples
    */
   public String getMimetype(String modelUri) {
-    return getStatementsByModel(modelUri, publishedOnly)
+    return getStatementsByModel(modelUri, false)
         .map(soln -> soln.get(MIME_TYPE))
         .orElseThrow(() ->
             new IllegalStateException("Model " + modelUri + "does not have a MIME type"));
@@ -381,16 +396,16 @@ public class IdentityMapper {
   /**
    * Get the Asset Type declared on the model, or the default based on the modeling language
    *
-   * @param modelId the id of the model
+   * @param info the metadata of the model
    * @return the asset type declared on the model, or a default
    */
-  public KnowledgeAssetType getDeclaredAssetTypeOrDefault(String modelId) {
-    return getStatementsByModel(modelId, true)
+  public KnowledgeAssetType getDeclaredAssetTypeOrDefault(TrisotechFileInfo info) {
+    return getStatementsByModel(info.getId(), false)
         .map(soln -> soln.get(ASSET_TYPE))
         .flatMap(type -> KnowledgeAssetTypeSeries.resolveId(type)
             .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(type)))
         .orElseGet(() -> {
-          String mime = getMimetype(modelId);
+          String mime = info.getMimetype();
           if (mime.contains("dmn")) {
             return KnowledgeAssetTypeSeries.Decision_Model;
           } else if (mime.contains("cmmn")) {
@@ -410,7 +425,7 @@ public class IdentityMapper {
    * @return ResourceIdentifier in appropriate format
    */
   private Optional<ResourceIdentifier> getLatestVersionArtifactId(String modelUri) {
-    Optional<Map<TTGraphTerms,String>> qsOpt =
+    Optional<Map<TTGraphTerms, String>> qsOpt =
         getStatementsByModel(modelUri, publishedOnly);
 
     Optional<ResourceIdentifier> ridOpt = qsOpt.map(qs -> {
@@ -435,8 +450,6 @@ public class IdentityMapper {
     }
     return ridOpt;
   }
-
-
 
 
   /**
@@ -518,13 +531,13 @@ public class IdentityMapper {
 
 
   private List<ResourceIdentifier> processDependencies(String artifactId,
-      BiFunction<String,String, Optional<ResourceIdentifier>> mapper) {
+      BiFunction<String, String, Optional<ResourceIdentifier>> mapper) {
     List<ResourceIdentifier> assets = new ArrayList<>();
 
     if (!Util.isEmpty(artifactId)) {
       // first find the artifact in the artifactToArtifact mapping
       getArtifactDependencyMap().forEach((k, v) -> {
-        if (matches(k,artifactId)) {
+        if (matches(k, artifactId)) {
           // once found, for each of the artifacts it is dependent on, find the asset id for those artifacts in the models
           v.forEach(dependent -> mapper.apply(dependent, k)
               .ifPresent(assets::add));
@@ -543,7 +556,7 @@ public class IdentityMapper {
   }
 
   private Optional<ResourceIdentifier> getRelatedResource(String dependent, String subject,
-      Function<String,Optional<ResourceIdentifier>> mapper) {
+      Function<String, Optional<ResourceIdentifier>> mapper) {
     logger.debug("dependent URI: {}", dependent);
 
     Optional<ResourceIdentifier> rid = mapper.apply(dependent);
@@ -560,20 +573,20 @@ public class IdentityMapper {
   /**
    * internalArtifactID is the id of the Carrier/model in Trisotech
    *
-   * @param assetId the assetId for which an artifact is needed
-   * @param versionTag the version of the asset requesting
+   * @param assetId       the assetId for which an artifact is needed
+   * @param versionTag    the version of the asset requesting
    * @param publishedOnly should any model be searched, vs only published models
    * @return the internalArtifactId or NotLatestVersionException
-   *
-   * The exception will be thrown if the latest version of the artifact does not
-   * map to the requested version of the asset.
+   * <p>
+   * The exception will be thrown if the latest version of the artifact does not map to the
+   * requested version of the asset.
    */
   public String resolveInternalArtifactID(UUID assetId, String versionTag, boolean publishedOnly)
-      throws NotLatestVersionException, NotFoundException {
+      throws NotLatestAssetVersionException, NotFoundException {
     // need to find the artifactId for this version of assetId
     // ResourceIdentifier built with assetId URI and versionTag; allows for finding the artifact associated with this asset/version
-    ResourceIdentifier id = SemanticIdentifier.newId(assetId,versionTag);
-    return getCurrentModelId(id, publishedOnly);
+    ResourceIdentifier id = SemanticIdentifier.newId(assetId, versionTag);
+    return getCurrentModelId(id);
   }
 
 
@@ -582,24 +595,29 @@ public class IdentityMapper {
    *
    * @param modelUri the Trisotech model ID to resolve to an enterprise ID
    * @return the enterprise ID
+   * @throws IllegalStateException if the model is expected to carry a Knowledge Asset but no ID has
+   *                               been asserted
    */
-  public ResourceIdentifier resolveEnterpriseAssetID(String modelUri) {
-    return resolveModelToCurrentAssetId(modelUri)
-        // Defensive exception. Published models should have an assetId | CAO | DS
-        .orElseThrow(() -> {
-          String modelName = client.getFileInfo(modelUri)
-              .map(TrisotechFileInfo::getName)
-              .orElse("(unknown)");
-          return new IllegalStateException(
-              "Defensive: Unable to resolve model ID " + modelUri
-                  + " for model " + modelName
-                  + " to a known Enterprise ID");
-        });
+  public Optional<ResourceIdentifier> resolveEnterpriseAssetID(String modelUri) {
+    Optional<ResourceIdentifier> assetId = resolveModelToCurrentAssetId(modelUri);
+    if (assetsOnly && assetId.isEmpty()) {
+      // Defensive exception. Published models should have an assetId | CAO | DS
+      String modelName = client.getLatestModelFileInfo(modelUri, false)
+          .map(TrisotechFileInfo::getName)
+          .orElse("(unknown)");
+      throw new IllegalStateException(
+          "Defensive: Unable to resolve model ID " + modelUri
+              + " for model " + modelName
+              + " to a known Enterprise ID");
+    } else {
+      return assetId;
+    }
   }
 
 
-  public Optional<ResourceIdentifier> getAssetIdForHistoricalArtifact(ResourceIdentifier artifactID) {
-    return client.getFileInfoByIdAndVersion(artifactID.getUuid(),artifactID.getVersionTag())
+  public Optional<ResourceIdentifier> getAssetIdForHistoricalArtifact(
+      ResourceIdentifier artifactID) {
+    return client.getFileInfoByIdAndVersion(artifactID.getUuid(), artifactID.getVersionTag())
         .flatMap(info -> client.getModel(info)
             .flatMap(this::extractAssetIdFromDocument));
   }
@@ -657,13 +675,13 @@ public class IdentityMapper {
   }
 
   public boolean isLatest(TrisotechFileInfo meta) {
-    return isLatest(meta.getId(),meta.getVersion());
+    return isLatest(meta.getId(), meta.getVersion());
   }
 
   /**
-   * Compares a modelId (in the TT namespace)
-   * with an artifactId (in the Enterprise namespace)
-   * based on having a common UUID
+   * Compares a modelId (in the TT namespace) with an artifactId (in the Enterprise namespace) based
+   * on having a common UUID
+   *
    * @param modelId
    * @param artifactId
    * @return

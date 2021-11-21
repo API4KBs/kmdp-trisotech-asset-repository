@@ -42,7 +42,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.w3c.dom.Document;
 
 @SpringBootTest
-@ContextConfiguration(classes = TrisotechAssetRepositoryConfig.class)
+@ContextConfiguration(classes = TrisotechAssetRepositoryTestConfig.class)
 @TestPropertySource(properties = {
 		"edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
 		"edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",

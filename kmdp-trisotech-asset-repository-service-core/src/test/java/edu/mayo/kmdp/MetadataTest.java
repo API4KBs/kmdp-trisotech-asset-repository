@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
@@ -32,7 +33,7 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntr
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestVersionException;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionException;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
@@ -56,11 +57,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
-@ContextConfiguration(classes = {TrisotechAssetRepositoryConfig.class})
+@ContextConfiguration(classes = {TrisotechAssetRepositoryTestConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",
-    "edu.mayo.kmdp.trisotechwrapper.baseUrl=https://mc.trisotech.com/" })
+    "edu.mayo.kmdp.trisotechwrapper.baseUrl=https://mc.trisotech.com/",
+    "edu.mayo.kmdp.application.flag.assetsOnly=true"})
 class MetadataTest {
 
   // FYI: IDE may complain about
@@ -224,7 +226,7 @@ class MetadataTest {
       enterpriseAssetVersion = mapper.resolveAssetToCurrentAssetId(
           UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
           "1.0.1", false);
-    } catch (NotLatestVersionException e) {
+    } catch (NotLatestAssetVersionException e) {
       fail();
     }
     assertEquals(
@@ -240,7 +242,7 @@ class MetadataTest {
           UUID.fromString("14ba1e7c-cb9a-427f-abf5-1420bf26e03c"),
           "1.0.1", false);
       assertTrue(uri.isEmpty());
-    } catch (NotLatestVersionException e) {
+    } catch (NotLatestAssetVersionException e) {
       fail(e.getMessage());
     }
   }
@@ -278,8 +280,8 @@ class MetadataTest {
 
   @Test
   void testGetEnterpriseAssetVersionIdForAsset_badVersion() {
-    NotLatestVersionException nlve = assertThrows(
-        NotLatestVersionException.class,
+    NotLatestAssetVersionException nlve = assertThrows(
+        NotLatestAssetVersionException.class,
         () -> mapper.resolveAssetToCurrentAssetId(
             UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"),
             "1.1.0", false));
@@ -297,7 +299,7 @@ class MetadataTest {
               "1.1.1", false);
       assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
           artifactId);
-    } catch (NotLatestVersionException | edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException e) {
+    } catch (NotLatestAssetVersionException | edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException e) {
       fail(
           "Should have artifact for specified asset: 3c66cf3a-93c4-4e09-b1aa-14088c76aded with version 1.1.1");
       e.printStackTrace();
@@ -306,8 +308,8 @@ class MetadataTest {
 
   @Test
   void testResolveInternalArtifactID_Published_NotLatestVersionException() {
-    NotLatestVersionException ave = assertThrows(
-        NotLatestVersionException.class,
+    NotLatestAssetVersionException ave = assertThrows(
+        NotLatestAssetVersionException.class,
         () -> mapper
             .resolveInternalArtifactID(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"),
                 "2.0.0",
@@ -322,7 +324,7 @@ class MetadataTest {
     NotFoundException nfe = assertThrows(NotFoundException.class,
         () -> mapper
             .resolveInternalArtifactID(assetId, "1.0.0-SNAPSHOT", false));
-    assertEquals(assetId.toString(), nfe.getMessage());
+    assertEquals(assetId, newVersionId(nfe.getInstance()).getUuid());
   }
 
   @Test
@@ -333,7 +335,7 @@ class MetadataTest {
               "1.1.1", true);
       assertEquals("http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068",
           artifactId);
-    } catch (NotLatestVersionException | NotFoundException e) {
+    } catch (NotLatestAssetVersionException | NotFoundException e) {
       fail(
           "Should have artifact for specified asset: 3c66cf3a-93c4-4e09-b1aa-14088c76aded and version 1.1.1");
       e.printStackTrace();
@@ -342,8 +344,8 @@ class MetadataTest {
 
   @Test
   void testResolveInternalArtifactID_Any_NotLatestVersionException() {
-    NotLatestVersionException ave = assertThrows(
-        NotLatestVersionException.class,
+    NotLatestAssetVersionException ave = assertThrows(
+        NotLatestAssetVersionException.class,
         () -> mapper
             .resolveInternalArtifactID(UUID.fromString("3c66cf3a-93c4-4e09-b1aa-14088c76aded"),
                 "2.0.0",
@@ -359,8 +361,7 @@ class MetadataTest {
         () -> mapper
             .resolveInternalArtifactID(assetId, "1.0.0-SNAPSHOT",
                 true));
-    assertEquals(assetId.toString(), nfe.getMessage());
-
+    assertEquals(assetId, newVersionId(nfe.getInstance()).getUuid());
   }
 
   @Test
@@ -375,7 +376,8 @@ class MetadataTest {
   void testResolveEnterpriseAssetID() {
     ResourceIdentifier assetID = mapper
         .resolveEnterpriseAssetID(
-            "http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068");
+            "http://www.trisotech.com/definitions/_5682fa26-b064-43c8-9475-1e4281e74068")
+        .orElseGet(Assertions::fail);
     assertEquals(
         "https://clinicalknowledgemanagement.mayo.edu/assets/3c66cf3a-93c4-4e09-b1aa-14088c76aded/versions/1.1.1",
         assetID.getVersionId().toString());

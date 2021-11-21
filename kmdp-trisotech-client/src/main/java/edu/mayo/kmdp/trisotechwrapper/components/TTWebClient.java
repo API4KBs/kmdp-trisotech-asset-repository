@@ -89,11 +89,10 @@ public class TTWebClient {
    */
   public List<TrisotechFileInfo> getModelVersions(
       final String repositoryId,
-      final String fileId,
-      final String mimetype) {
+      final String fileId) {
     URI uri;
     uri = fromHttpUrl(apiEndpoint + VERSIONS_PATH)
-        .build(repositoryId, fileId, getXmlMimeType(mimetype));
+        .build(repositoryId, fileId);
 
     logger.debug("uri string: {}", uri);
     return collectRepositoryContent(uri)

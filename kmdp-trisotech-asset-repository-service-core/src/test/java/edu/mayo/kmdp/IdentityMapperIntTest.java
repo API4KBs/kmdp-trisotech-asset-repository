@@ -24,7 +24,7 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.IdentityMapper;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestVersionException;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionException;
 import edu.mayo.kmdp.registry.Registry;
 import java.net.URI;
 import java.util.Optional;
@@ -44,7 +44,7 @@ import org.springframework.test.context.TestPropertySource;
  * the Trisotech server through SPARQL queries.
  */
 @SpringBootTest
-@ContextConfiguration(classes = {TrisotechAssetRepositoryConfig.class})
+@ContextConfiguration(classes = {TrisotechAssetRepositoryTestConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",
@@ -65,8 +65,8 @@ class IdentityMapperIntTest {
 
     String artifactId = null;
     try {
-      artifactId = identityMapper.getCurrentModelId(assetId, false);
-    } catch (NotLatestVersionException | NotFoundException e) {
+      artifactId = identityMapper.getCurrentModelId(assetId);
+    } catch (NotLatestAssetVersionException | NotFoundException e) {
       fail(e.getMessage());
     }
     assertEquals(expectedArtifactId, artifactId);
@@ -80,8 +80,8 @@ class IdentityMapperIntTest {
 
     String artifactId = null;
     try {
-      artifactId = identityMapper.getCurrentModelId(assetId, true);
-    } catch (NotLatestVersionException | NotFoundException e) {
+      artifactId = identityMapper.getCurrentModelId(assetId);
+    } catch (NotLatestAssetVersionException | NotFoundException e) {
       fail(e.getMessage());
     }
     assertEquals(expectedArtifactId, artifactId);
@@ -89,14 +89,19 @@ class IdentityMapperIntTest {
 
   @Test
   void getArtifactId_nonPublishedModel() {
-    // valid assetId; non-published model, so not in our query set
-    // Temporal Correlation Decision.dmn - exists, but not published
+    // valid assetId; non-published model
+    // Temporal Correlating Decision.dmn - exists, but not published
+    String expectedArtifactId = "http://www.trisotech.com/definitions/_c5da16dc-c17e-4e43-81b7-4bd73749d9fe";
     ResourceIdentifier assetId = newId(MAYO_ASSETS_BASE_URI_URI,
         "d2eeef7a-9248-4eaa-ab25-450e8359f512",
         "0.0.1");
-    NotFoundException artifactId = assertThrows(NotFoundException.class,
-        () -> identityMapper.getCurrentModelId(assetId, true));
-    assertEquals("d2eeef7a-9248-4eaa-ab25-450e8359f512", artifactId.getMessage());
+    String artifactId = null;
+    try {
+      artifactId = identityMapper.getCurrentModelId(assetId);
+      assertEquals(expectedArtifactId, artifactId);
+    } catch (NotLatestAssetVersionException | NotFoundException e) {
+      fail(e);
+    }
   }
 
   @Test
@@ -109,10 +114,10 @@ class IdentityMapperIntTest {
             "1.0.0");
 
     try {
-      String artifactId = identityMapper.getCurrentModelId(assetId, false);
+      String artifactId = identityMapper.getCurrentModelId(assetId);
       assertNotNull(artifactId);
       assertEquals(expectedArtifactId, artifactId);
-    } catch (NotLatestVersionException | NotFoundException e) {
+    } catch (NotLatestAssetVersionException | NotFoundException e) {
       fail(e.getMessage());
     }
   }
@@ -139,7 +144,7 @@ class IdentityMapperIntTest {
     try {
       enterpriseAssetVersionId = identityMapper
           .resolveAssetToCurrentAssetId(assetId, versionTag, false);
-    } catch (NotLatestVersionException e) {
+    } catch (NotLatestAssetVersionException e) {
       e.printStackTrace();
       fail(e.getMessage());
     }
@@ -159,7 +164,7 @@ class IdentityMapperIntTest {
     try {
       enterpriseAssetVersionId = identityMapper
           .resolveAssetToCurrentAssetId(assetId, versionTag, true);
-    } catch (NotLatestVersionException e) {
+    } catch (NotLatestAssetVersionException e) {
       e.printStackTrace();
       fail(e.getMessage());
     }

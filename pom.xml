@@ -7,7 +7,11 @@
   <parent>
     <groupId>edu.mayo.kmdp</groupId>
     <artifactId>kmdp-asset-repository-service-base</artifactId>
+<<<<<<< HEAD
     <version>11.0.3-SNAPSHOT</version>
+=======
+    <version>11.0.2-SNAPSHOT</version>
+>>>>>>> Update dependencies after tier I/II release
   </parent>
 
   <artifactId>kmdp-trisotech-asset-repository-service</artifactId>

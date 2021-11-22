@@ -79,6 +79,17 @@
 
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>omg-dmn-12</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>omg-cmmn-11</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-spring-monitoring</artifactId>
       <version>${kmdp.servers.version}</version>
     </dependency>

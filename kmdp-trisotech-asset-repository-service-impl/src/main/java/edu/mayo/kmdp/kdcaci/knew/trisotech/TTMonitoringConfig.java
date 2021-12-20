@@ -4,12 +4,13 @@ import edu.mayo.kmdp.health.datatype.ApplicationComponent;
 import edu.mayo.kmdp.health.datatype.MiscProperties;
 import edu.mayo.kmdp.health.datatype.Status;
 import edu.mayo.kmdp.health.utils.MonitorUtil;
-import edu.mayo.kmdp.terms.TermsHealthUtils;
+import edu.mayo.kmdp.terms.health.TermsHealthService;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import java.util.Map;
 import java.util.function.Supplier;
 import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
 import org.omg.spec.api4kp._20200801.services.KPComponent;
+import org.omg.spec.api4kp._20200801.services.KPServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,9 +30,16 @@ public class TTMonitoringConfig {
   String mainPlaceId;
 
   @Bean
-  Supplier<ApplicationComponent> terms(@Autowired @KPComponent(implementation = "broker")
-      TermsApiInternal terms) {
-    return TermsHealthUtils.diagnoseTermsServer(terms);
+  public Supplier<ApplicationComponent> termsHealth(
+      @Autowired @KPServer @KPComponent(implementation = "broker") TermsApiInternal termsApiInternal) {
+
+    return () -> {
+
+      TermsHealthService termsHealthService = new TermsHealthService(termsApiInternal);
+      return termsHealthService.assessHealth();
+
+    };
+
   }
 
   @Bean

@@ -41,7 +41,6 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionExcept
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
-import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
@@ -55,6 +54,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
@@ -125,12 +125,13 @@ public class IdentityMapper {
   }
 
 
-  private Optional<Map<TTGraphTerms, String>> getStatementsByAsset(UUID assetId, boolean pub) {
+  private Optional<Map<TTGraphTerms, String>> getStatementsByAsset(
+      UUID assetId, String assetVersionTag, boolean pub) {
     if (pub) {
-      return Optional.ofNullable(client.getMetadataByAsset(assetId))
+      return client.getMetadataByAsset(assetId, assetVersionTag)
           .filter(soln -> soln.containsKey(STATE));
     } else {
-      return Optional.ofNullable(client.getMetadataByAsset(assetId));
+      return client.getMetadataByAsset(assetId, assetVersionTag);
     }
   }
 
@@ -186,7 +187,7 @@ public class IdentityMapper {
   public Optional<ResourceIdentifier> resolveAssetToCurrentAssetId(UUID assetId, String versionTag,
       boolean pub)
       throws NotLatestAssetVersionException {
-    Optional<Map<TTGraphTerms, String>> soln = getStatementsByAsset(assetId, pub);
+    Optional<Map<TTGraphTerms, String>> soln = getStatementsByAsset(assetId, versionTag, pub);
     if (soln.isPresent()) {
       String enterpriseAssetVersionId = soln.get().get(ASSET_ID);
       ResourceIdentifier versionId = newVersionId(URI.create(enterpriseAssetVersionId));
@@ -202,20 +203,6 @@ public class IdentityMapper {
     } else {
       return Optional.empty();
     }
-  }
-
-
-  /**
-   * Need to be able to retrieve the asset ResourceIdentifier given the assetId NOTE: This only
-   * checks the information for the LATEST version of the model, which is available in the models.
-   *
-   * @param assetUUID the assetId to get the ResourceIdentifier for
-   * @return ResourceIdentifier for the assetId or Empty
-   */
-  public Optional<URI> getCurrentAssetSeriesUri(UUID assetUUID) {
-    return getStatementsByAsset(assetUUID, publishedOnly)
-        .map(soln -> asSeriesURI(
-            URI.create(soln.get(ASSET_ID))));
   }
 
 
@@ -236,7 +223,8 @@ public class IdentityMapper {
   public String getCurrentModelId(ResourceIdentifier assetId)
       throws NotLatestAssetVersionException, NotFoundException {
 
-    Optional<Map<TTGraphTerms, String>> solnOpt = getStatementsByAsset(assetId.getUuid(), false);
+    Optional<Map<TTGraphTerms, String>> solnOpt =
+        getStatementsByAsset(assetId.getUuid(), assetId.getVersionTag(), false);
     if (solnOpt.isPresent()) {
       Map<TTGraphTerms, String> soln = solnOpt.get();
       Optional<ResourceIdentifier> rid
@@ -275,7 +263,7 @@ public class IdentityMapper {
    * @return the fileId for the asset; the fileId can be used in the APIs
    */
   public Optional<String> getCurrentModelId(UUID assetId, boolean pub) {
-    return getStatementsByAsset(assetId, pub)
+    return getStatementsByAsset(assetId, IdentifierConstants.VERSION_LATEST, pub)
         .map(soln -> soln.get(MODEL));
   }
 
@@ -295,8 +283,7 @@ public class IdentityMapper {
    */
   public ResourceIdentifier getCarrierArtifactId(UUID assetId, String assetVersionTag)
       throws NotFoundException, NotLatestAssetVersionException {
-    String modelUri = null;
-    modelUri = resolveInternalArtifactID(assetId, assetVersionTag, publishedOnly);
+    String modelUri = resolveInternalArtifactID(assetId, assetVersionTag, publishedOnly);
 
     Optional<TrisotechFileInfo> info = client.getLatestModelFileInfo(modelUri, publishedOnly);
     String modelVersion = info.map(TrisotechFileInfo::getVersion)
@@ -336,8 +323,8 @@ public class IdentityMapper {
    * @param assetId The id of the asset looking for
    * @return the mimetype as specified in the triples
    */
-  public String getMimetype(UUID assetId) {
-    return getStatementsByAsset(assetId, false)
+  public String getMimetype(UUID assetId, String versionTag) {
+    return getStatementsByAsset(assetId, versionTag, false)
         .map(soln -> soln.get(MIME_TYPE))
         .orElseThrow(() ->
             new IllegalStateException("Asset " + assetId + "does not have a MIME type"));
@@ -459,9 +446,9 @@ public class IdentityMapper {
    * @param assetId The enterprise asset Id
    * @return the version of the artifact
    */
-  public Optional<String> getLatestCarrierVersionTag(UUID assetId) {
+  public Optional<String> getLatestCarrierVersionTag(UUID assetId, String versionTag) {
     // only publishedModels have a version
-    return getStatementsByAsset(assetId, true)
+    return getStatementsByAsset(assetId, versionTag, true)
         .map(soln -> soln.get(VERSION));
   }
 
@@ -472,9 +459,10 @@ public class IdentityMapper {
    * @param assetId The enterprise asset Id
    * @return the version of the artifact
    */
-  public Optional<String> getLatestCarrierTimestampedVersionTag(UUID assetId) {
+  public Optional<String> getLatestCarrierTimestampedVersionTag(
+      UUID assetId, String assetVersionTag) {
     // only publishedModels have a versionre
-    return getStatementsByAsset(assetId, true)
+    return getStatementsByAsset(assetId, assetVersionTag, true)
         .flatMap(soln -> {
           String versionTag = soln.get(VERSION);
           return Optional.ofNullable(soln.get(UPDATED))
@@ -483,29 +471,6 @@ public class IdentityMapper {
         });
   }
 
-  /**
-   * Get the updated dateTime of the artifact for the asset provided
-   *
-   * @param assetId The enterprise asset Id
-   * @return the updated value of the artifact
-   */
-  public Optional<String> getLatestCarrierMostRecentUpdateDateTime(UUID assetId) {
-    return getStatementsByAsset(assetId, publishedOnly)
-        .map(soln -> soln.get(UPDATED));
-  }
-
-  /**
-   * Get the updated dateTime of the artifact for the asset provided
-   *
-   * @param assetId The enterprise asset Id
-   * @return the updated field of the artifact in MS
-   */
-  public Optional<String> getLatestCarrierMostRecentUpdateTimestamp(UUID assetId) {
-    // only publishedModels have a version
-    return getStatementsByAsset(assetId, publishedOnly)
-        .map(soln -> soln.get(UPDATED))
-        .map(DateTimeUtil::dateTimeStrToMillis);
-  }
 
   /**
    * Given the internal id for the model, get the information about other models it imports. This is

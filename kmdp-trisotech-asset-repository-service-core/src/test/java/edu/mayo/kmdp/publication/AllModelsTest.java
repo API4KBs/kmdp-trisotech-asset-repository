@@ -11,6 +11,7 @@ import edu.mayo.kmdp.TrisotechAssetRepositoryTestConfig;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.Pointer;
@@ -128,4 +129,35 @@ class AllModelsTest {
         .orElseGet(Assertions::fail);
     assertFalse(xml.contains("Senseless Source"));
   }
+
+  @Test
+  void listAssetsManyVersions() {
+    List<String> assetNames = tar.listKnowledgeAssets().orElseGet(Assertions::fail)
+        .stream()
+        .map(Pointer::getName)
+        .collect(Collectors.toList());
+    assertFalse(assetNames.contains("AssetV1"));
+    assertTrue(assetNames.contains("AssetV2"));
+  }
+
+
+  @Test
+  void getAssetManyVersions() {
+    UUID assetId = UUID.fromString("39dfeec2-1037-4e93-a8cc-03b1ddf950dc");
+
+    KnowledgeAsset a1 = tar.getKnowledgeAssetVersion(assetId, "1.0.0")
+        .orElseGet(Assertions::fail);
+    KnowledgeAsset a2 = tar.getKnowledgeAssetVersion(assetId, "2.0.0")
+        .orElseGet(Assertions::fail);
+
+    assertEquals("AssetV1", a1.getName());
+    assertEquals("AssetV2", a2.getName());
+
+    KnowledgeAsset a0 = tar.getKnowledgeAsset(assetId)
+        .orElseGet(Assertions::fail);
+    assertEquals("AssetV2", a2.getName());
+    assertEquals("2.0.0", a0.getAssetId().getVersionTag());
+
+  }
+
 }

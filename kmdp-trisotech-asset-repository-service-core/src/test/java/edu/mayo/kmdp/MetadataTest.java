@@ -36,7 +36,6 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionException;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.Date;
@@ -201,25 +200,6 @@ class MetadataTest {
   }
 
   @Test
-  void testGetEnterpriseAssetIdForAsset() {
-    Optional<URI> enterpriseAsset = mapper
-        .getCurrentAssetSeriesUri(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
-    assertNotNull(enterpriseAsset);
-    assertEquals(
-        "https://clinicalknowledgemanagement.mayo.edu/assets/14321e7c-cb9a-427f-abf5-1420bf26e03c",
-        enterpriseAsset.map(Objects::toString).orElse(""));
-  }
-
-  @Test
-  void testGetEnterpriseAssetIdForAsset_empty() {
-    Optional<URI> enterpriseAsset = mapper
-        .getCurrentAssetSeriesUri(UUID.fromString("14421eac-cb9a-427f-abf5-1420bf26e03c"));
-    assertNotNull(enterpriseAsset);
-    assertFalse(enterpriseAsset.isPresent());
-    assertEquals(Optional.empty(), enterpriseAsset);
-  }
-
-  @Test
   void testGetEnterpriseAssetVersionIdForAsset() {
     Optional<ResourceIdentifier> enterpriseAssetVersion = Optional.empty();
     try {
@@ -250,7 +230,7 @@ class MetadataTest {
   @Test
   void testGetArtifactVersion() {
     Optional<String> artifactVersion = mapper
-        .getLatestCarrierVersionTag(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
+        .getLatestCarrierVersionTag(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"), "1.0.0");
     assertNotNull(artifactVersion);
     assertEquals("1.8.5", artifactVersion.orElse(""));
   }
@@ -260,7 +240,7 @@ class MetadataTest {
   void testGetArtifactVersionWithTimestamp() {
     Optional<String> artifactVersion = mapper
         .getLatestCarrierTimestampedVersionTag(
-            UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
+            UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"), "1.0.0");
     assertNotNull(artifactVersion);
     assertTrue(artifactVersion.orElse("").matches("\\d+\\.\\d+\\.\\d-\\d+"));
   }
@@ -268,11 +248,11 @@ class MetadataTest {
   @Test
   void testGetMimeType() {
     String mimetype = mapper
-        .getMimetype(UUID.fromString("bd0014e6-afbe-4006-b182-baa973f2929a"));
+        .getMimetype(UUID.fromString("bd0014e6-afbe-4006-b182-baa973f2929a"), "1.0.0");
     assertNotNull(mimetype);
     assertEquals("application/vnd.triso-dmn+json", mimetype);
 
-    mimetype = mapper.getMimetype(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"));
+    mimetype = mapper.getMimetype(UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c"), "1.0.0");
     assertNotNull(mimetype);
     assertFalse(mimetype.isEmpty());
     assertEquals("application/vnd.triso-cmmn+json", mimetype);

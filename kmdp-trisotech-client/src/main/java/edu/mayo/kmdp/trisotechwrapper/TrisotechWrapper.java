@@ -137,10 +137,10 @@ public class TrisotechWrapper {
    * <p>description: returns asset metadata from the cache</p>
    *
    * @param assetId The id of the asset
-   * @return Map<TTGraphTerms, String>
+   * @return Map<TTGraphTerms, String> if found
    */
-  public Map<TTGraphTerms, String> getMetadataByAsset(UUID assetId) {
-    return cacheManager.getMetadataByAsset(focusPlaceId, targetPath, assetId);
+  public Optional<Map<TTGraphTerms, String>> getMetadataByAsset(UUID assetId, String assetVersionTag) {
+    return cacheManager.getMetadataByAsset(focusPlaceId, targetPath, assetId, assetVersionTag);
   }
 
 

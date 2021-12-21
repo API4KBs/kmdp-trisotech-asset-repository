@@ -123,17 +123,6 @@ class IdentityMapperIntTest {
   }
 
   @Test
-  void getEnterpriseAssetIdForAsset() {
-    UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
-    String expectedEnterpriseId =
-        Registry.MAYO_ASSETS_BASE_URI + "14321e7c-cb9a-427f-abf5-1420bf26e03c";
-
-    Optional<URI> enterpriseAssetId = identityMapper.getCurrentAssetSeriesUri(assetId);
-    assertEquals(expectedEnterpriseId, enterpriseAssetId.orElseGet(Assertions::fail).toString());
-  }
-
-
-  @Test
   void getEnterpriseAssetVersionIdForAsset_published() {
     UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
     String versionTag = "1.0.1";
@@ -188,7 +177,7 @@ class IdentityMapperIntTest {
     UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
     String expectedArtifactVersion = "1.8.5";
 
-    Optional<String> artifactVersion = identityMapper.getLatestCarrierVersionTag(assetId);
+    Optional<String> artifactVersion = identityMapper.getLatestCarrierVersionTag(assetId, "1.0.1");
     assertEquals(expectedArtifactVersion, artifactVersion.orElseGet(Assertions::fail));
   }
 
@@ -285,7 +274,7 @@ class IdentityMapperIntTest {
   @Test
   void getMimetype_CMMN() {
     UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e03c");
-    String mimetype = identityMapper.getMimetype(assetId);
+    String mimetype = identityMapper.getMimetype(assetId, "1.0.0");
     assertNotNull(mimetype);
     assertEquals(CMMN_MIMETYPE, mimetype);
   }
@@ -293,7 +282,7 @@ class IdentityMapperIntTest {
   @Test
   void getMimetype_DMN() {
     UUID assetId = UUID.fromString("bd0014e6-afbe-4006-b182-baa973f2929a");
-    String mimetype = identityMapper.getMimetype(assetId);
+    String mimetype = identityMapper.getMimetype(assetId, "1.0.0");
     assertNotNull(mimetype);
     assertEquals(DMN_MIMETYPE, mimetype);
   }
@@ -302,7 +291,7 @@ class IdentityMapperIntTest {
   void getMimetype_invalidId() {
     UUID assetId = UUID.fromString("14321e7c-cb9a-427f-abf5-1420bf26e123");
     assertThrows(IllegalStateException.class, () ->
-        identityMapper.getMimetype(assetId));
+        identityMapper.getMimetype(assetId, "1.0.0"));
   }
 
   @Test

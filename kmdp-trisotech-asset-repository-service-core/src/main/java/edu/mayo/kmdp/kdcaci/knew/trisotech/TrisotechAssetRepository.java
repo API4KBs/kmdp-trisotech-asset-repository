@@ -15,12 +15,15 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeTypeByAssetType;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.Answer.conflict;
 import static org.omg.spec.api4kp._20200801.Answer.failed;
 import static org.omg.spec.api4kp._20200801.Answer.notFound;
 import static org.omg.spec.api4kp._20200801.Answer.succeed;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.timedSemverComparator;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
@@ -55,6 +58,7 @@ import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAss
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetRepositoryApiInternal;
 import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.KPServer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
@@ -273,7 +277,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
               .collect(Collectors.toList()))
           .orElse(Collections.emptyList()));
     }
-    return Answer.of(assetList);
+    return Answer.of(aggregateVersions(assetList));
   }
 
   @Override
@@ -281,6 +285,16 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     return client.clearCache()
         ? succeed()
         : failed();
+  }
+
+  private <T extends SemanticIdentifier> List<T> aggregateVersions(List<T> versionIdentifiers) {
+    return versionIdentifiers.stream()
+        .collect(groupingBy(SemanticIdentifier::getUuid))
+        .values().stream()
+        .map(l -> {
+          l.sort(timedSemverComparator());
+          return l.get(0);
+        }).collect(toList());
   }
 
   /**
@@ -348,9 +362,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       // verify artifact for asset matches the artifactId requested
       if (modelUri.contains(artifactId.toString())) {
         // confirm version too
-        Optional<String> artifactVersion = mapper.getLatestCarrierVersionTag(assetId);
+        Optional<String> artifactVersion = mapper.getLatestCarrierVersionTag(assetId, versionTag);
         Optional<String> artifactVersionTimestamp =
-            mapper.getLatestCarrierTimestampedVersionTag(assetId);
+            mapper.getLatestCarrierTimestampedVersionTag(assetId, versionTag);
 
         if (artifactVersion.orElse("").equals(artifactVersionTag)
             || artifactVersionTimestamp.orElse("").equals(artifactVersionTag)) {
@@ -468,7 +482,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     if (fileId.isEmpty()) {
       return notFound();
     }
-    String mimeType = mapper.getMimetype(assetId);
+    String mimeType = mapper.getMimetype(assetId, versionTag);
 
     // 1. Check if assetId is latest (no server call needed)
     // 2. If asset is not latest (exception), return NOT_FOUND
@@ -495,7 +509,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       // verify artifact for asset matches the artifactId requested
       if (tfi.isPresent() && internalId.contains(artifactId.toString())) {
         // confirm version too
-        Optional<String> artifactVersion = mapper.getLatestCarrierVersionTag(assetId);
+        Optional<String> artifactVersion = mapper.getLatestCarrierVersionTag(assetId, versionTag);
 
         if (artifactVersion.isPresent()) {
           if (artifactVersion.get().equals(artifactVersionTag)) {

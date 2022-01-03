@@ -39,6 +39,7 @@ pool:
 variables:
   - group: kmdp-platform-variables
   - group: kmdp-platform-dev-variables
+  - group: kmd-veracode
 
 # ------------------ PIPELINE STEPS  ------------------
 steps:

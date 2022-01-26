@@ -13,6 +13,7 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newKey;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 
+import com.github.zafarkhaja.semver.Version;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -20,11 +21,13 @@ import com.google.common.cache.RemovalListener;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -46,6 +49,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.VersionIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -215,6 +219,22 @@ public class TTCacheManager {
   private PlacePathIndex reindex(String focusPlaceId, String path) {
     ResultSet allModels = query(getQueryStringModels(), focusPlaceId);
     ResultSet relations = query(getQueryStringRelations(), focusPlaceId);
+
+//    ResultSet singleModel = query(getQueryAll()
+//        .replace("SELECT ?s", "SELECT")
+//        .replace("?s", "<http://www.trisotech.com/definitions/_dfed5c40-b742-487d-8e68-22bd346ff045>"), focusPlaceId);
+//      List<String> keys = new ArrayList<>(singleModel.getResultVars());
+//      keys.sort(String::compareTo);
+//      System.out.println(keys.stream().collect(Collectors.joining(";")));
+//      while (singleModel.hasNext()) {
+//        QuerySolution qs = singleModel.next();
+//        String entry = keys.stream()
+//            .map(k -> qs.get(k))
+//            .map(x -> x != null ? x.toString() : "n/a")
+//            .collect(Collectors.joining(";"));
+//        System.out.println(entry);
+//      }
+
     return new PlacePathIndex(focusPlaceId, path, allModels, relations, webClient);
   }
 
@@ -311,60 +331,116 @@ public class TTCacheManager {
     }
 
     private void indexModels(ResultSet modelSet) {
+
+      Set<EnumMap<TTGraphTerms, String>> solnSet = new HashSet<>();
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
         EnumMap<TTGraphTerms, String> metadata = toMap(soln);
+        solnSet.add(metadata);
+      }
 
-        String modelId = Optional.ofNullable(soln.getResource(MODEL.key))
-            .map(Resource::getURI).orElseThrow();
-        Optional<ResourceIdentifier> optAssetId = Optional.ofNullable(soln.getLiteral(ASSET_ID.key))
-            .map(Literal::getString)
+      Set<EnumMap<TTGraphTerms, String>> reducedSolnSet = reduce(solnSet);
+
+      for (EnumMap<TTGraphTerms, String> metadata : reducedSolnSet) {
+        String modelId = Optional.ofNullable(metadata.get(MODEL))
+            .orElseThrow();
+        indexByModel(modelId, metadata);
+
+        Optional<ResourceIdentifier> optAssetId = Optional.ofNullable(metadata.get(ASSET_ID))
             .map(id -> Util.isUUID(id)
                 ? newId(id)
                 : newVersionId(URI.create(id)));
+        indexByAsset(optAssetId, metadata);
+      }
+    }
 
-        // A given model/artifact can only carry one asset
-        if (modelsSolutionsByModelID.containsKey(modelId)) {
-          logger.error("model ID {} has multiple asset IDs {} and {}",
-              modelsSolutionsByModelID.get(modelId).get(ARTIFACT_NAME),
-              modelsSolutionsByModelID.get(modelId).get(ASSET_ID),
-              soln.get(ASSET_ID.key));
-        } else {
-          modelsSolutionsByModelID.put(modelId, metadata);
-        }
+    /**
+     * The KG supposedly returns {?m version ?v; update ?t} for the latest version and publication
+     * time. Occasionally (#1283569) multiple versions have been reported, resulting in unwanted and
+     * even spurious entries. This method and its delegates removes such duplicates.
+     * <p>
+     * Sorts by date, then by version, given that TT enforces date but not version sequencing
+     *
+     * @param solnSet
+     * @return
+     */
+    private Set<EnumMap<TTGraphTerms, String>> reduce(Set<EnumMap<TTGraphTerms, String>> solnSet) {
+      Map<String, List<EnumMap<TTGraphTerms, String>>> grouped = solnSet.stream()
+          .collect(Collectors.groupingBy(m -> m.get(MODEL)));
+      return grouped.entrySet().stream()
+          .map(e -> reduceForModel(e.getKey(), e.getValue()))
+          .collect(Collectors.toSet());
+    }
 
-        if (optAssetId.isPresent()) {
-          ResourceIdentifier assetId = optAssetId.get();
-          KeyIdentifier key = assetId.asKey();
-          if (modelsSolutionsByAssetID.containsKey(key)) {
-            // A given asset VERSION can only be carried by one model
-            // This limitation may be relaxed in the future, to allow for VARIANT models
-            // alternative carriers of the same asset
-            logger.error("Asset VERSION ID {} appears in {} and {}",
-                assetId,
-                modelsSolutionsByAssetID.get(key).get(ARTIFACT_NAME),
-                soln.get(ARTIFACT_NAME.key));
-          } else {
-            if (logger.isInfoEnabled()) {
-              logger.info(
-                  "Cache indexing {} - {} as asset {}",
-                  metadata.get(ARTIFACT_NAME),
-                  metadata.get(MODEL),
-                  metadata.get(ASSET_ID));
-            }
-            modelsSolutionsByAssetID.put(key, metadata);
-          }
+    private EnumMap<TTGraphTerms, String> reduceForModel(
+        String modelId, List<EnumMap<TTGraphTerms, String>> metas) {
+      if (metas.isEmpty()) {
+        throw new IllegalStateException(
+            "Impossible: no KG metadata for a KG-indexed model" + modelId);
+      }
+      if (metas.size() == 1) {
+        return metas.get(0);
+      }
+      return metas.stream()
+          .max(Comparator.comparing(this::getDateTime).thenComparing(this::getVersion))
+          .orElseThrow(() -> new IllegalStateException(
+              "Impossible: no KG metadata after sorting a nonempty collection for " + modelId));
+    }
+
+    private Date getDateTime(EnumMap<TTGraphTerms, String> m) {
+      return DateTimeUtil.parseDateTime(m.get(UPDATED));
+    }
+
+    private Version getVersion(EnumMap<TTGraphTerms, String> m) {
+      return VersionIdentifier.semVerOf(m.get(VERSION));
+    }
+
+    private void indexByAsset(
+        Optional<ResourceIdentifier> optAssetId,
+        EnumMap<TTGraphTerms, String> metadata) {
+      if (optAssetId.isPresent()) {
+        ResourceIdentifier assetId = optAssetId.get();
+        KeyIdentifier key = assetId.asKey();
+        if (modelsSolutionsByAssetID.containsKey(key)) {
+          // A given asset VERSION can only be carried by one model
+          // This limitation may be relaxed in the future, to allow for VARIANT models
+          // alternative carriers of the same asset
+          logger.error("Asset VERSION ID {} appears in {} and {}",
+              assetId,
+              modelsSolutionsByAssetID.get(key).get(ARTIFACT_NAME),
+              metadata.get(ARTIFACT_NAME));
         } else {
-          // ignore models with no AssetID
           if (logger.isInfoEnabled()) {
-            logger.info("Skipping model {} - {} with no Asset ID",
+            logger.info(
+                "Cache indexing {} - {} as asset {}",
                 metadata.get(ARTIFACT_NAME),
-                metadata.get(MODEL));
+                metadata.get(MODEL),
+                metadata.get(ASSET_ID));
           }
+          modelsSolutionsByAssetID.put(key, metadata);
+        }
+      } else {
+        // ignore models with no AssetID
+        if (logger.isInfoEnabled()) {
+          logger.info("Skipping model {} - {} with no Asset ID",
+              metadata.get(ARTIFACT_NAME),
+              metadata.get(MODEL));
         }
       }
     }
 
+    private void indexByModel(String modelId,
+        EnumMap<TTGraphTerms, String> metadata) {
+      // A given model/artifact can only carry one asset
+      if (modelsSolutionsByModelID.containsKey(modelId)) {
+        logger.error("model ID {} has multiple asset IDs {} and {}",
+            modelsSolutionsByModelID.get(modelId).get(ARTIFACT_NAME),
+            modelsSolutionsByModelID.get(modelId).get(ASSET_ID),
+            metadata.get(ASSET_ID));
+      } else {
+        modelsSolutionsByModelID.put(modelId, metadata);
+      }
+    }
 
     private EnumMap<TTGraphTerms, String> toMap(QuerySolution soln) {
       //?model ?assetId ?version ?state ?updated ?mimeType ?artifactName

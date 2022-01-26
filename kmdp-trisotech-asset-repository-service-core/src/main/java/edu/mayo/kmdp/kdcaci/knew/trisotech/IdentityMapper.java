@@ -285,13 +285,11 @@ public class IdentityMapper {
       throws NotFoundException, NotLatestAssetVersionException {
     String modelUri = resolveInternalArtifactID(assetId, assetVersionTag, publishedOnly);
 
-    Optional<TrisotechFileInfo> info = client.getLatestModelFileInfo(modelUri, publishedOnly);
-    String modelVersion = info.map(TrisotechFileInfo::getVersion)
-        .orElse(defaultVersion);
-    Optional<String> modelUpdated = info.map(TrisotechFileInfo::getUpdated);
-    return modelUpdated.isPresent()
-        ? names.rewriteInternalId(modelUri, modelVersion, modelUpdated.get())
-        : names.rewriteInternalId(modelUri, modelVersion);
+    return getLatestVersionArtifactId(modelUri)
+        .orElseThrow(() -> new NotFoundException(
+            "Artifact not found",
+            "Unable to find Carrier for Asset",
+            newId(assetId, assetVersionTag).getVersionId()));
   }
 
   /**
@@ -310,7 +308,8 @@ public class IdentityMapper {
     } else {
       modelURI = (TT_BASE_MODEL_URI + getTrailingPart(internalId));
     }
-    return getStatementsByModel(modelURI, publishedOnly).isPresent()
+    // check for presence to validate the ID - pub status is irrelevant
+    return getStatementsByModel(modelURI, false).isPresent()
         ? Optional.of(modelURI)
         : Optional.empty();
   }
@@ -405,37 +404,57 @@ public class IdentityMapper {
 
 
   /**
-   * get the system ID for the internal ID of the resource (artifact) only published models are
-   * considered
+   * Maps a model URI (artifact series ID) to a version-aware ResourceIdentifier. Resolves the URI
+   * to the latest version of the model, possibly excluding unpublished versions
    *
    * @param modelUri the resource for the artifact desired
    * @return ResourceIdentifier in appropriate format
    */
   private Optional<ResourceIdentifier> getLatestVersionArtifactId(String modelUri) {
+    // try the cached index first, failing fast
+    return getLatestVersionArtifactIdFromIndex(modelUri)
+        // otherwise contact the server
+        .or(() -> getLatestVersionArtifactIdFromServer(modelUri));
+  }
+
+  /**
+   * Lokos up the modelURI in the index cache, extracting the version information from the graph
+   * metadata, relative to the latest version of the model. If the modelURI is not found, returns
+   * (downstream operations will likely fail). If the index metadata does not fit the publication
+   * status constraint, or does not have a version, returns (caller method will try the server for
+   * previous published versions).
+   *
+   * @param modelUri
+   * @return
+   */
+  private Optional<ResourceIdentifier> getLatestVersionArtifactIdFromIndex(String modelUri) {
     Optional<Map<TTGraphTerms, String>> qsOpt =
-        getStatementsByModel(modelUri, publishedOnly);
-
-    Optional<ResourceIdentifier> ridOpt = qsOpt.map(qs -> {
-      if (qs.get(VERSION) != null) {
-        return qs.containsKey(UPDATED)
-            ? names.rewriteInternalId(qs.get(MODEL), qs.get(VERSION), qs.get(UPDATED))
-            : names.rewriteInternalId(qs.get(MODEL), qs.get(VERSION));
-      } else {
-        return names.rewriteInternalId(
-            qs.get(MODEL),
-            defaultVersion);
-      }
-    });
-
-    if (ridOpt.isEmpty()) {
-      // TODO: return something different? Error? CAO
-      logger.warn("Artifact {} is not a published model.", modelUri);
-      if (!publishedOnly) {
-        ridOpt = Optional.ofNullable(
-            names.rewriteInternalId(modelUri, defaultVersion));
-      }
+        getStatementsByModel(modelUri, false);
+    if (qsOpt.isEmpty()
+        || (publishedOnly && qsOpt.get().get(STATE) == null)
+        || qsOpt.get().get(VERSION) == null) {
+      return Optional.empty();
     }
-    return ridOpt;
+
+    return qsOpt.map(qs -> qs.containsKey(UPDATED)
+        ? names.rewriteInternalId(qs.get(MODEL), qs.get(VERSION), qs.get(UPDATED))
+        : names.rewriteInternalId(qs.get(MODEL), qs.get(VERSION)));
+  }
+
+  /**
+   * Resolves a model's version using server information, returning a versioned ResourceIdentifier.
+   *
+   * @param modelUri
+   * @return
+   */
+  private Optional<ResourceIdentifier> getLatestVersionArtifactIdFromServer(String modelUri) {
+    Optional<TrisotechFileInfo> info = client.getLatestModelFileInfo(modelUri, publishedOnly);
+    String modelVersion = info.map(TrisotechFileInfo::getVersion)
+        .orElse(defaultVersion);
+    Optional<String> modelUpdated = info.map(TrisotechFileInfo::getUpdated);
+    return Optional.ofNullable(modelUpdated.isPresent()
+        ? names.rewriteInternalId(modelUri, modelVersion, modelUpdated.get())
+        : names.rewriteInternalId(modelUri, modelVersion));
   }
 
 

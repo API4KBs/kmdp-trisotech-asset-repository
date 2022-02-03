@@ -317,6 +317,18 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     }
   }
 
+  /**
+   * Returns the raw BPM+ Model Artifact
+   * @param assetId
+   * @param versionTag
+   * @param xAccept
+   * @return
+   */
+  public Answer<byte[]> getKnowledgeAssetVersionCanonicalCarrierContent(
+      UUID assetId, String versionTag, String xAccept) {
+    return getKnowledgeAssetVersionCanonicalCarrier(assetId, versionTag, xAccept)
+        .flatOpt(KnowledgeCarrier::asBinary);
+  }
 
   /**
    * Retrieves (a copy of) a specific version of an Artifact. That Artifact must be known to the

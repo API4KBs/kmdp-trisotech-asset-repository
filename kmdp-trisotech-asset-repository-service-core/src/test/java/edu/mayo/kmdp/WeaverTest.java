@@ -456,7 +456,7 @@ class WeaverTest {
       assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
 
       NodeList decisions = dox.getElementsByTagName("semantic:decision");
-      assertEquals(2, decisions.getLength());
+      assertEquals(1, decisions.getLength());
 
       NodeList inputs = dox.getElementsByTagName("semantic:inputData");
       assertEquals(1, inputs.getLength());

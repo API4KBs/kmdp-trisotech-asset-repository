@@ -141,7 +141,11 @@ public class Weaver {
 
     // copyLink
     NodeList copies = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_COPYOFLINK);
-    weaveMetadata(asElementStream(copies));
+    weaveMetadata(asElementStream(copies)
+        .filter(this::isAcceleratorReuse));
+    asElementStream(copies)
+        .filter(reuse -> ! this.isAcceleratorReuse(reuse))
+        .forEach(reuse -> rewriteReuseLinks(reuse, dox));
 
     // reuseLink
     NodeList reuses = dox.getElementsByTagNameNS(TT_METADATA_NS, TT_REUSELINK);

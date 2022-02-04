@@ -392,7 +392,9 @@ public class TTCacheManager {
     }
 
     private Version getVersion(EnumMap<TTGraphTerms, String> m) {
-      return VersionIdentifier.semVerOf(m.get(VERSION));
+      return VersionIdentifier.semVerOf(
+          Optional.ofNullable(m.get(VERSION))
+              .orElse(IdentifierConstants.VERSION_ZERO_SNAPSHOT));
     }
 
     private void indexByAsset(

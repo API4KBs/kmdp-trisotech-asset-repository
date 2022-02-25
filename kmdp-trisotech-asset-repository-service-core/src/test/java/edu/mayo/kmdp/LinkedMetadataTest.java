@@ -36,14 +36,9 @@ import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
 @ContextConfiguration(classes = {TrisotechAssetRepositoryTestConfig.class})
-@TestPropertySource(properties = {
-    "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
-    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",
-    "edu.mayo.kmdp.trisotechwrapper.baseUrl=https://mc.trisotech.com/"})
 class LinkedMetadataTest {
 
   // FYI: IDE may complain about
@@ -133,14 +128,14 @@ class LinkedMetadataTest {
 
   @Test
   void testLinks() {
-    assertEquals(2, cmmnSurr.getLinks().size());
+    assertEquals(1, cmmnSurr.getLinks().size());
     List<Dependency> deps1 = cmmnSurr.getLinks().stream()
         .flatMap(StreamUtil.filterAs(Dependency.class))
         .filter(dep -> Depends_On.sameAs(dep.getRel()))
         .collect(Collectors.toList());
     assertEquals(1, deps1.size());
 
-    assertEquals(2, dmnSurr.getLinks().size());
+    assertEquals(1, dmnSurr.getLinks().size());
     List<Dependency> deps2 = dmnSurr.getLinks().stream()
         .flatMap(StreamUtil.filterAs(Dependency.class))
         .filter(dep -> Depends_On.sameAs(dep.getRel()))

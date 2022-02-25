@@ -25,16 +25,23 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>omg-dmn-12</artifactId>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>omg-cmmn-11</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>omg-bpmn-202</artifactId>
+      <scope>compile</scope>
     </dependency>
 
     <!-- internal -->
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
-      <artifactId>kmdp-datatype</artifactId>
+      <artifactId>kmdp-service-descr</artifactId>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
@@ -60,10 +67,6 @@
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
       <artifactId>hapi-fhir-structures-dstu3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>edu.mayo.kmdp.kdcaci.knew</groupId>
-      <artifactId>knew-terminology-content</artifactId>
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>

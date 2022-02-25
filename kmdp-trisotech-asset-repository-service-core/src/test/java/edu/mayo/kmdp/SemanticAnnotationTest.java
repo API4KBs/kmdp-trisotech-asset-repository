@@ -38,15 +38,10 @@ import org.omg.spec.api4kp._20200801.terms.model.ConceptDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.w3c.dom.Document;
 
 @SpringBootTest
 @ContextConfiguration(classes = TrisotechAssetRepositoryTestConfig.class)
-@TestPropertySource(properties = {
-		"edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
-		"edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",
-		"edu.mayo.kmdp.trisotechwrapper.baseUrl=https://mc.trisotech.com/"})
 class SemanticAnnotationTest {
 
 	@Autowired
@@ -59,7 +54,7 @@ class SemanticAnnotationTest {
 	Redactor redactor;
 
 	@Autowired
-	@KPComponent(implementation = "broker")
+	@KPComponent(implementation = "fhir")
 	TermsApiInternal terms;
 
 	@Test
@@ -79,7 +74,7 @@ class SemanticAnnotationTest {
 		try {
 			Optional<KnowledgeAsset> res = extractor.extract(new ByteArrayInputStream(dmn.get() ),
 			                                                 SemanticAnnotationTest.class.getResourceAsStream(metaPath));
-			if ( ! res.isPresent() ) {
+			if (res.isEmpty()) {
 				fail( "Unable to instantiate metadata object" );
 			}
 			KnowledgeAsset surr = res.get();

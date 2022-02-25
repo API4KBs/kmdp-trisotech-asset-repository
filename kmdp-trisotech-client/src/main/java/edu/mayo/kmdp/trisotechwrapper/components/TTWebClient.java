@@ -43,7 +43,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
-import org.apache.jena.ext.com.google.common.base.Strings;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -72,8 +71,11 @@ public class TTWebClient {
   private final String sparqlEndpoint;
   private final String token;
 
+  private final boolean online;
+
   public TTWebClient(TTWEnvironmentConfiguration cfg) {
-    apiEndpoint = cfg.getApiEndpoint();
+    online = cfg.getApiEndpoint().isPresent();
+    apiEndpoint = cfg.getApiEndpoint().orElse("");
     sparqlEndpoint = cfg.getBaseURL() + SPARQL_PATH;
     token = cfg.getToken();
   }
@@ -87,11 +89,14 @@ public class TTWebClient {
    * @param fileId       - file id of the model requested
    * @return list of modelFileInfo for all but the latest version of the model
    */
-  public List<TrisotechFileInfo> getModelVersions(
+  public List<TrisotechFileInfo> getModelPreviousVersions(
       final String repositoryId,
       final String fileId) {
-    URI uri;
-    uri = fromHttpUrl(apiEndpoint + VERSIONS_PATH)
+    if (!online) {
+      logger.warn("Client is offline - unable to upload model");
+      return emptyList();
+    }
+    var uri = fromHttpUrl(apiEndpoint + VERSIONS_PATH)
         .build(repositoryId, fileId);
 
     logger.debug("uri string: {}", uri);
@@ -111,6 +116,10 @@ public class TTWebClient {
    * @throws IOException if can't make the request
    */
   public Optional<TrisotechPlaceData> getPlaces() throws IOException {
+    if (!online) {
+      logger.warn("Client is offline - unable to get Place data");
+      return Optional.empty();
+    }
     URL url = new URL(apiEndpoint + REPOSITORY_PATH);
 
     HttpEntity<?> requestEntity = getHttpEntity();
@@ -159,12 +168,15 @@ public class TTWebClient {
   public void collectRepositoryContent(String directoryID,
       Map<String, TrisotechFileInfo> modelsArray,
       String path, String mimeType) {
-    URI uri;
+    if (!online) {
+      logger.warn("Client is offline - unable to gath Repository content");
+      return ;
+    }
     try {
       // NOTE: MUST Use UriComponentBuilder to handle '+' in the MimeType, otherwise it will be
       // double-encoded and request will fail to return all values expected
       // See: https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#web-uri-encoding for details
-      uri = fromHttpUrl(apiEndpoint
+      var uri = fromHttpUrl(apiEndpoint
           + CONTENT_PATH)
           .build(directoryID, mimeType, path);
 
@@ -291,6 +303,10 @@ public class TTWebClient {
       String mimeType, String version, String state,
       byte[] fileContents)
       throws IOException, HttpException {
+    if (! online) {
+      logger.warn("Client is offline - unable to upload model");
+      return;
+    }
 
     // first make sure mimetype is in correct format for API call
     mimeType = getXmlMimeType(mimeType);
@@ -324,7 +340,7 @@ public class TTWebClient {
 
     logger.debug("uri.toURL: {}", uri.toURL());
     HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
-    final String boundary = Strings.repeat("-", 15) + Long.toHexString(System.currentTimeMillis());
+    final String boundary = "-".repeat(15) + Long.toHexString(System.currentTimeMillis());
 
     conn.setDoInput(true);
     conn.setDoOutput(true);

@@ -6,7 +6,7 @@
   "mimetype" : "application/vnd.triso-dmn+json",
   "updated" : "2020-12-09T02:58:37Z",
   "updater" : "Orcutt, Cheryl A.",
-  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2Fjls+test+models&sku=http%3A%2F%2Fwww.trisotech.com%2Fdefinitions%2F_cdda3e01-7152-4888-a984-d938a7cecf6b&mimetype=application%2Fvnd.triso-dmn%2Bjson",
+  "url" : "https://trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2Fjls+test+models&sku=http%3A%2F%2Fwww.trisotech.com%2Fdefinitions%2F_cdda3e01-7152-4888-a984-d938a7cecf6b&mimetype=application%2Fvnd.triso-dmn%2Bjson",
   "version" : "1.0.2",
   "state" : "Published"
 }

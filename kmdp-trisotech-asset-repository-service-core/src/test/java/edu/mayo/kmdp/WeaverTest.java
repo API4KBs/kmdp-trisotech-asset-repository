@@ -74,8 +74,7 @@ import org.w3c.dom.NodeList;
 @ContextConfiguration(classes = {TrisotechAssetRepositoryTestConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
-    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",
-    "edu.mayo.kmdp.trisotechwrapper.baseUrl=https://mc.trisotech.com/"})
+    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
 class WeaverTest {
   
   Logger logger = LoggerFactory.getLogger(WeaverTest.class);
@@ -686,7 +685,7 @@ class WeaverTest {
   private <T extends Annotation> List<T> loadAnnotations(Document dox, SemanticAnnotationRelTypeSeries att,
                                                          Class<T> type) {
 
-    return XMLUtil.asElementStream(dox.getElementsByTagName("*"))
+      return XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         .filter(el -> el.getLocalName().equals(DMN_EL_EXTENSIONS))
         .map(Element::getChildNodes)
         .flatMap(XMLUtil::asElementStream)

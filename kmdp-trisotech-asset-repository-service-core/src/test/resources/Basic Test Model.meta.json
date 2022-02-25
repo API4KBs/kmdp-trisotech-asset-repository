@@ -6,7 +6,7 @@
   "mimetype" : "application/vnd.triso-cmmn+json",
   "updated" : "2020-09-29T13:24:52Z",
   "updater" : "Sottara, Davide",
-  "url" : "https://mc.trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2Fjls+test+models&sku=http%3A%2F%2Fwww.trisotech.com%2Fdefinitions%2F_81303f27-68f0-46ca-94ee-3be1f3605d77&mimetype=application%2Fvnd.triso-cmmn%2Bjson",
+  "url" : "https://trisotech.com/publicapi/repositoryfilecontent?repository=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf&path=%2Fjls+test+models&sku=http%3A%2F%2Fwww.trisotech.com%2Fdefinitions%2F_81303f27-68f0-46ca-94ee-3be1f3605d77&mimetype=application%2Fvnd.triso-cmmn%2Bjson",
   "version" : "1.0.0",
   "state" : "Draft"
 }

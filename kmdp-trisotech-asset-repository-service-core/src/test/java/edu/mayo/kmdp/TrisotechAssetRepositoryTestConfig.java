@@ -18,8 +18,9 @@ package edu.mayo.kmdp;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
-import edu.mayo.kmdp.terms.TermsProvider;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
+import org.omg.spec.api4kp._20200801.services.KPComponent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(
-    basePackageClasses = {TrisotechAssetRepository.class, TermsProvider.class, TrisotechWrapper.class})
+    basePackageClasses = {TrisotechAssetRepository.class, TrisotechWrapper.class})
 public class TrisotechAssetRepositoryTestConfig {
 
   @Value("${edu.mayo.kmdp.application.flag.publishedOnly:true}")
@@ -43,4 +44,9 @@ public class TrisotechAssetRepositoryTestConfig {
         .with(TTWParams.PUBLISHED_ONLY, Boolean.valueOf(publishedOnly));
   }
 
+  @Bean
+  @KPComponent(implementation = "fhir")
+  public TermsApiInternal mockTerms() {
+    return new MockTermsServer();
+  }
 }

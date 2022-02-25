@@ -81,6 +81,10 @@ public class TTCacheManager {
       @Override
       public PlacePathIndex load(final @Nonnull String placePath) {
         // the place ID is a UUID: 32 hex chars + 4 hypens
+        // 'placePath' concatenates placeId + placePath, but could be empty if not configured
+        if (Util.isEmpty(placePath) || placePath.length() < 36) {
+          return new EmptyPlacePathIndex();
+        }
         UUID placeId = Util.ensureUUID(placePath.substring(0, 36)).orElseThrow();
         String path = placePath.substring(36);
         return reindex(placeId.toString(), path);
@@ -220,21 +224,6 @@ public class TTCacheManager {
     ResultSet allModels = query(getQueryStringModels(), focusPlaceId);
     ResultSet relations = query(getQueryStringRelations(), focusPlaceId);
 
-//    ResultSet singleModel = query(getQueryAll()
-//        .replace("SELECT ?s", "SELECT")
-//        .replace("?s", "<http://www.trisotech.com/definitions/_dfed5c40-b742-487d-8e68-22bd346ff045>"), focusPlaceId);
-//      List<String> keys = new ArrayList<>(singleModel.getResultVars());
-//      keys.sort(String::compareTo);
-//      System.out.println(keys.stream().collect(Collectors.joining(";")));
-//      while (singleModel.hasNext()) {
-//        QuerySolution qs = singleModel.next();
-//        String entry = keys.stream()
-//            .map(k -> qs.get(k))
-//            .map(x -> x != null ? x.toString() : "n/a")
-//            .collect(Collectors.joining(";"));
-//        System.out.println(entry);
-//      }
-
     return new PlacePathIndex(focusPlaceId, path, allModels, relations, webClient);
   }
 
@@ -307,9 +296,9 @@ public class TTCacheManager {
 
       indexModels(allModels);
       indexRelationships(relations);
-      webClient.collectRepositoryContent(focusPlaceId, modelInfoCache, path, null);
+      Map<String,TrisotechFileInfo> index = collectRepositoryContent(webClient, focusPlaceId, path);
 
-      modelInfoCache = Collections.unmodifiableMap(modelInfoCache);
+      modelInfoCache = Collections.unmodifiableMap(new ConcurrentHashMap<>(index));
       artifactToArtifactDependencyMap = Collections.unmodifiableMap(
           artifactToArtifactDependencyMap);
     }
@@ -321,7 +310,7 @@ public class TTCacheManager {
       artifactToArtifactDependencyMap.clear();
     }
 
-    private void indexRelationships(ResultSet relations) {
+    protected void indexRelationships(ResultSet relations) {
       while (relations.hasNext()) {
         QuerySolution soln = relations.nextSolution();
         artifactToArtifactDependencyMap
@@ -330,7 +319,14 @@ public class TTCacheManager {
       }
     }
 
-    private void indexModels(ResultSet modelSet) {
+    protected Map<String, TrisotechFileInfo> collectRepositoryContent(
+        TTWebClient webClient, String focusPlaceId, String path) {
+      Map<String, TrisotechFileInfo> collector = new ConcurrentHashMap<>();
+      webClient.collectRepositoryContent(focusPlaceId, collector, path, null);
+      return collector;
+    }
+
+    protected void indexModels(ResultSet modelSet) {
 
       Set<EnumMap<TTGraphTerms, String>> solnSet = new HashSet<>();
       while (modelSet.hasNext()) {
@@ -471,4 +467,27 @@ public class TTCacheManager {
     }
   }
 
+  static class EmptyPlacePathIndex extends PlacePathIndex {
+
+    public EmptyPlacePathIndex() {
+      super(null, null, null, null, null);
+    }
+
+    @Override
+    protected Map<String, TrisotechFileInfo> collectRepositoryContent(TTWebClient webClient,
+        String focusPlaceId, String path) {
+      return Collections.emptyMap();
+    }
+
+    @Override
+    protected void indexRelationships(ResultSet relations) {
+      // do nothing
+    }
+
+    @Override
+    protected void indexModels(ResultSet modelSet) {
+      // do nothing
+    }
+
+  }
 }

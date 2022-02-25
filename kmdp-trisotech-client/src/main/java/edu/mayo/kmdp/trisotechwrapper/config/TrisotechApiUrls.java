@@ -14,23 +14,13 @@
 package edu.mayo.kmdp.trisotechwrapper.config;
 
 import static edu.mayo.kmdp.util.Util.isEmpty;
-import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Eligibility_Rule;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Cognitive_Process_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.omg.spec.api4kp._20200801.id.Term;
-import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
-import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
-import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TrisotechApiUrls {
+
+  static Logger logger = LoggerFactory.getLogger(TrisotechApiUrls.class);
 
   public static final String CMMN_UPPER = "CMMN";
   public static final String CMMN_LOWER = "cmmn";
@@ -80,7 +70,8 @@ public class TrisotechApiUrls {
     } else if (mime.contains(CMMN_LOWER)) {
       return CMMN_XML_MIMETYPE;
     } else {
-      throw new IllegalArgumentException("Unexpected MIME type " + mimetype);
+      logger.warn("Unexpected MIME type {}", mimetype);
+      return mimetype;
     }
   }
 
@@ -96,22 +87,13 @@ public class TrisotechApiUrls {
       // no filter
       return null;
     }
-    KnowledgeAssetType resolvedType = KnowledgeAssetTypeSeries.resolve(assetTypeTag)
-        .or(() -> ClinicalKnowledgeAssetTypeSeries.resolve(assetTypeTag))
-        .orElseThrow(() -> new IllegalArgumentException("Unexpected Asset Type " + assetTypeTag));
 
-    List<Term> impliedTypes = new ArrayList<>(Arrays.asList(resolvedType.getClosure()));
-    impliedTypes.add(resolvedType);
-
-    if (Decision_Model.isAnyOf(impliedTypes)
-        || Clinical_Decision_Model.isAnyOf(impliedTypes)
-        || Clinical_Eligibility_Rule.isAnyOf(impliedTypes)) {
+    if (assetTypeTag.contains("Decision") || assetTypeTag.contains("Rule")) {
       return getXmlMimeType(DMN_LOWER);
-    } else if (Case_Management_Model.isAnyOf(impliedTypes)
-        || Clinical_Case_Management_Model.isAnyOf(impliedTypes)) {
+    } else if (assetTypeTag.contains("Case")) {
       return getXmlMimeType(CMMN_LOWER);
-    } else if (Cognitive_Process_Model.isAnyOf(impliedTypes)
-        || Care_Process_Model.isAnyOf(impliedTypes)) {
+    } else if (assetTypeTag.contains("Process")
+        || assetTypeTag.contains("Pathway") || assetTypeTag.contains("Protocol")) {
       return getXmlMimeType(BPMN_LOWER);
     } else {
       throw new IllegalArgumentException("Unexpected Asset Type " + assetTypeTag);

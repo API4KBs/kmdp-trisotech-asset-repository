@@ -28,8 +28,6 @@ import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -41,12 +39,15 @@ import org.w3c.dom.Document;
 @Component
 public class MetadataIntrospector {
 
-  private static final Logger logger = LoggerFactory.getLogger(MetadataIntrospector.class);
 
   @Autowired
   private TrisotechIntrospectionStrategy strategy;
 
-  private Surrogate2Parser lifter = new Surrogate2Parser();
+  private final Surrogate2Parser lifter = new Surrogate2Parser();
+
+  public MetadataIntrospector(TrisotechIntrospectionStrategy delegate) {
+    this.strategy = delegate;
+  }
 
   public KnowledgeAsset extract(Document dox, TrisotechFileInfo meta) {
     return strategy.extractXML(dox, meta);

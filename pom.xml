@@ -31,7 +31,6 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <kmdp.servers.version>5.12.7-SNAPSHOT</kmdp.servers.version>
-    <clinical.terms.version>7.3.4-SNAPSHOT</clinical.terms.version>
   </properties>
 
   <dependencies>
@@ -43,15 +42,5 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>edu.mayo.kmdp.kdcaci.knew</groupId>
-        <artifactId>knew-terminology-content</artifactId>
-        <version>${clinical.terms.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
 </project>

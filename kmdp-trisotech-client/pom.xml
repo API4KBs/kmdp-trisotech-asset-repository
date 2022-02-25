@@ -18,14 +18,25 @@
 
 
   <dependencies>
+    <!-- Unlike the rest of the application,
+    the 'client' minimizes dependencies on the KMDP platform -->
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-utils</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>edu.mayo.kmdp.kdcaci.knew</groupId>
-      <artifactId>knew-terminology-content</artifactId>
+      <groupId>com.github.zafarkhaja</groupId>
+      <artifactId>java-semver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jvnet.jaxb2_commons</groupId>
+      <artifactId>jaxb2-basics-runtime</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-arq</artifactId>
     </dependency>
 
     <dependency>
@@ -72,43 +83,5 @@
     </dependency>
 
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <configuration>
-              <includeProjectDependencies>true</includeProjectDependencies>
-              <includePluginDependencies>true</includePluginDependencies>
-              <mainClass>edu.mayo.kmdp.terms.TerminologyIndexer</mainClass>
-              <arguments>
-                <argument>
-                  ${project.build.outputDirectory}${file.separator}terminologies.json
-                </argument>
-                <!-- Exclude 'SNAPSHOT' ontologies, whose version follows the pattern versions/yyyyMMdd-* -->
-                <!--                <argument>-->
-                <!--                  ^((?!versions\/\d{8}-).)*$-->
-                <!--                </argument>-->
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>edu.mayo.kmdp.terms</groupId>
-            <artifactId>kmdp-terminology-indexer</artifactId>
-            <version>${kmdp.servers.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

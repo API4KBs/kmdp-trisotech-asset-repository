@@ -45,7 +45,6 @@ import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.XPathUtil;
-import edu.mayo.ontology.taxonomies.clinicaltasks.ClinicalTaskSeries;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import java.net.URI;
@@ -87,7 +86,7 @@ public class Weaver {
   public static final String xmlns = "xmlns:";
 
   @Autowired
-  @KPComponent(implementation = "broker")
+  @KPComponent(implementation = "fhir")
   private TermsApiInternal terms;
 
   @Autowired
@@ -251,7 +250,8 @@ public class Weaver {
 
     if (DecisionTypeSeries.resolveId(uri).isPresent()) {
       return Captures;
-    } else if (ClinicalTaskSeries.resolveId(uri).isPresent()) {
+    } else if (uri.contains("/ClinicalTasks/")) {
+      // ^^ Pending standardization of a 'ClinicalTask' ontology
       return Captures;
     } else if (isDomainConcept(uri)) {
       String grandparent = el.getParentNode().getParentNode().getNodeName();

@@ -1,6 +1,5 @@
 package edu.mayo.kmdp.trisotechwrapper;
 
-import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI_URI;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeType;
 import static edu.mayo.kmdp.util.Util.isNotEmpty;
 import static java.util.Collections.emptyList;
@@ -18,7 +17,9 @@ import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
+import java.net.URI;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -49,6 +50,8 @@ import org.w3c.dom.Document;
 public class TrisotechWrapper {
 
   public static final String BASE_NAMESPACE = "http://www.trisotech.com/definitions/_";
+  // Note: some (legacy?) models use a language-specific namespace
+  public static final String BASE_CMMN_NAMESPACE = "http://www.trisotech.com/cmmn/definitions/_";
 
   private final Logger logger = LoggerFactory.getLogger(TrisotechWrapper.class);
 
@@ -64,6 +67,8 @@ public class TrisotechWrapper {
 
   TTCacheManager cacheManager;
 
+  URI publicNamespaceUri;
+
 
   @PostConstruct
   void init() {
@@ -76,6 +81,8 @@ public class TrisotechWrapper {
         .orElseThrow(() -> new IllegalStateException("Unable to determine target repository ID"));
 
     this.cacheManager = new TTCacheManager(webClient, trisoWrapperEnvironmentConfiguration);
+
+    this.publicNamespaceUri = URI.create(trisoWrapperEnvironmentConfiguration.getPublicNamespace());
 
   }
 
@@ -240,9 +247,9 @@ public class TrisotechWrapper {
    */
   public Optional<TrisotechFileInfo> getFileInfoByIdAndVersion(
       UUID fileUUID, String version) {
-    String fileId = BASE_NAMESPACE + fileUUID;
     // first get the mimetype to provide the correct XML-ready URL in the TrisotechFileInfo
-    return getFileInfoByIdAndVersion(fileId, version);
+    return getFileInfoByIdAndVersion(BASE_NAMESPACE + fileUUID, version)
+        .or(() -> getFileInfoByIdAndVersion(BASE_CMMN_NAMESPACE + fileUUID, version));
   }
 
 
@@ -352,6 +359,18 @@ public class TrisotechWrapper {
   }
 
   /**
+   * <p>description: returns all the file info for all the versions of the model for the default
+   * repository, previous to the most recent one</p>
+   *
+   * @param modelUri The modelUri for the model desired so that it includes the correct URl for
+   *                 downloading the model version.
+   * @return List<TrisotechFileInfo for all the non-current versions for that model
+   */
+  public List<TrisotechFileInfo> getModelPreviousVersions(String modelUri) {
+    return getModelPreviousVersions(focusPlaceId, modelUri);
+  }
+
+  /**
    * methodName: getModelVersions
    * <p>returns all the file info for all the versions of the model for the default repository</p>
    *
@@ -359,7 +378,24 @@ public class TrisotechWrapper {
    * @return List<TrisotechFileInfo> for all the versions for that model
    */
   public List<TrisotechFileInfo> getModelVersions(String repositoryId, String modelUri) {
-    return webClient.getModelVersions(repositoryId, modelUri);
+    var mostRecent =
+        Optional.ofNullable(cacheManager.getModelInfo(repositoryId, targetPath, modelUri));
+    var previous = webClient.getModelPreviousVersions(repositoryId, modelUri);
+    List<TrisotechFileInfo> history = new ArrayList<>(1 + previous.size());
+    mostRecent.ifPresent(history::add);
+    history.addAll(previous);
+    return history;
+  }
+
+  /**
+   * <p>returns all the file info for all the versions of the model for the default repository,
+   * except for the most recent one</p>
+   *
+   * @param modelUri The fileId for the model desired
+   * @return List<TrisotechFileInfo> for all the versions for that model except the current one
+   */
+  public List<TrisotechFileInfo> getModelPreviousVersions(String repositoryId, String modelUri) {
+    return webClient.getModelPreviousVersions(repositoryId, modelUri);
   }
 
   /**
@@ -397,7 +433,7 @@ public class TrisotechWrapper {
       String id = trisotechFileInfo.getId()
           .substring(trisotechFileInfo.getId().lastIndexOf('/') + 1).replace("_", "");
       return Optional.of(SemanticIdentifier
-          .newId(MAYO_ARTIFACTS_BASE_URI_URI, id, trisotechFileInfo.getVersion())
+          .newId(publicNamespaceUri, id, trisotechFileInfo.getVersion())
           .withEstablishedOn(DateTimeUtil.parseDateTime(trisotechFileInfo.getUpdated())));
     }
     logger.info("No published version for {}", trisotechFileInfo.getName());

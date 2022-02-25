@@ -445,12 +445,12 @@ public class TrisotechIntrospectionStrategy {
             nextArtifactVersion = client.getLatestModelFileInfo(model.getId(),false).orElse(null);
             if (null != nextArtifactVersion) {
                 nextVersionDate = Date.from(Instant.parse(nextArtifactVersion.getUpdated()));
+                logger.debug("nextArtifactVersion: {} {} {} ", nextArtifactVersion.getName(),
+                    nextArtifactVersion.getVersion(), nextArtifactVersion.getUpdated());
+                logger.debug("nextVersionDate: {}", nextVersionDate);
             }
         }
 
-        logger.debug("nextArtifactVersion: {} {} {} ", nextArtifactVersion.getName(),
-                nextArtifactVersion.getVersion(), nextArtifactVersion.getUpdated());
-        logger.debug("nextVersionDate: {}", nextVersionDate);
         // get versions of the imported artifacts
         List<ResourceIdentifier> artifactImports = mapper.getLatestArtifactDependencies(docId);
         for (ResourceIdentifier ri : artifactImports) {

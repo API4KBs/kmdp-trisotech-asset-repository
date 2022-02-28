@@ -62,7 +62,7 @@ public class TTWEnvironmentConfiguration {
         : null;
 
     if (logger.isDebugEnabled()) {
-      logger.debug("\n\n****token in PostConstruct is {} ", token);
+      logger.debug("\n\n****token in PostConstruct is {}... ", token.substring(0,5));
       logger.debug("repositoryName in PostConstruct is: {}", repositoryName);
       logger.debug("baseUrl in PostConstruct is: {}", baseURL);
       logger.debug("apiEndpoint in PostConstruct is {}", apiEndpoint + "*****\n\n");

@@ -47,6 +47,7 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.sparql.resultset.ResultSetMem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -142,6 +143,10 @@ public class TTWebClient {
    * repository in a JSON format
    */
   public Optional<TrisotechFileData> collectRepositoryContent(URI uri) {
+    if (!online) {
+      logger.warn("Client is offline - unable to collect repository content");
+      return Optional.empty();
+    }
 
     HttpEntity<?> requestEntity = getHttpEntity();
     RestTemplate restTemplate = new RestTemplate();
@@ -203,6 +208,11 @@ public class TTWebClient {
    * @return XML document
    */
   public Optional<Document> downloadXmlModel(String fromUrl) {
+    if (!online) {
+      logger.warn("Client is offline - unable to download model");
+      return Optional.empty();
+    }
+
     try {
       return tryDownloadXmlModel(fromUrl);
     } catch (HttpException | IOException e) {
@@ -232,6 +242,11 @@ public class TTWebClient {
    * @return XML document
    */
   public Optional<Document> tryDownloadXmlModel(String fromUrl) throws HttpException, IOException {
+    if (!online) {
+      logger.warn("Client is offline - unable to download model");
+      return Optional.empty();
+    }
+
     URL url = negotiate(fromUrl);
     HttpURLConnection conn = getHttpURLConnection(url);
 
@@ -393,6 +408,11 @@ public class TTWebClient {
   }
 
   public ResultSet askQuery(Query query) {
+    if (!online) {
+      logger.warn("Client is offline - unable to ask Query, returning empty ResultSet");
+      return new ResultSetMem();
+    }
+
     Header header = new BasicHeader(
         org.apache.http.HttpHeaders.AUTHORIZATION,
         getBearerTokenHeader());

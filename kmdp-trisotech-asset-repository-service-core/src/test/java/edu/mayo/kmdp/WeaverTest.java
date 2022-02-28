@@ -1,11 +1,11 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -62,7 +62,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -72,11 +71,8 @@ import org.w3c.dom.NodeList;
 
 @SpringBootTest
 @ContextConfiguration(classes = {TrisotechAssetRepositoryTestConfig.class})
-@TestPropertySource(properties = {
-    "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
-    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf"})
 class WeaverTest {
-  
+
   Logger logger = LoggerFactory.getLogger(WeaverTest.class);
 
   @Autowired
@@ -104,9 +100,9 @@ class WeaverTest {
       redactor.redact(weaver.weave(dox));
       //streamXMLDocument(dox, System.out);
 
-			assertTrue(validate( dox, DMN_1_2.getReferentId()));
+      assertTrue(validate(dox, DMN_1_2.getReferentId()));
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -119,11 +115,11 @@ class WeaverTest {
 
     try {
       redactor.redact(weaver.weave(dox));
-      assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
+      assertTrue(validate(dox, DMN_1_2.getReferentId()));
 
       //streamXMLDocument(dox, System.out);
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -136,7 +132,7 @@ class WeaverTest {
 
     try {
       redactor.redact(weaver.weave(dox));
-      assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
+      assertTrue(validate(dox, DMN_1_2.getReferentId()));
 
       assertEquals(0,
           XMLUtil.asElementStream(dox.getElementsByTagNameNS("*", "decisionService"))
@@ -147,7 +143,7 @@ class WeaverTest {
               .count());
       //streamXMLDocument(dox, System.out);
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -160,7 +156,7 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     assertTrue(true); // dummy
-		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
+    assertTrue(validate(dox, DMN_1_2.getReferentId()));
 
     try {
       redactor.redact(weaver.weave(dox));
@@ -178,23 +174,22 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
-
-			List<Annotation> props = loadAnnotations( dox, Captures, Annotation.class );
-			assertEquals(3, props.size());
-			Set<DecisionType> decisions = props.stream()
-            .map(Annotation::getRef)
-            .map(ConceptIdentifier::getUuid)
-            .map(DecisionTypeSeries::resolveUUID)
-            .flatMap(StreamUtil::trimStream)
-            .collect(Collectors.toSet());
-			assertEquals(3, decisions.size());
-			assertTrue(decisions.contains(Aggregation_Decision));
+      List<Annotation> props = loadAnnotations(dox, Captures, Annotation.class);
+      assertEquals(3, props.size());
+      Set<DecisionType> decisions = props.stream()
+          .map(Annotation::getRef)
+          .map(ConceptIdentifier::getUuid)
+          .map(DecisionTypeSeries::resolveUUID)
+          .flatMap(StreamUtil::trimStream)
+          .collect(Collectors.toSet());
+      assertEquals(3, decisions.size());
+      assertTrue(decisions.contains(Aggregation_Decision));
       assertTrue(decisions.contains(Assessment_Decision));
       assertTrue(decisions.contains(Naturalistic_Decision));
 
 
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -206,7 +201,7 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     assertTrue(true); // dummy
-		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
+    assertTrue(validate(dox, DMN_1_2.getReferentId()));
 
     try {
       redactor.redact(weaver.weave(dox));
@@ -225,7 +220,7 @@ class WeaverTest {
       assertTrue(verifyHrefs(dox));
 
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -237,7 +232,7 @@ class WeaverTest {
     Document dox = loadXMLDocument(resolveResource(path))
         .orElseGet(() -> fail("Unable to load document " + path));
 
-		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
+    assertTrue(validate(dox, DMN_1_2.getReferentId()));
 
     try {
       redactor.redact(weaver.weave(dox));
@@ -255,7 +250,7 @@ class WeaverTest {
 
       assertTrue(verifyHrefs(dox));
 
-      List<Annotation> props = loadAnnotations( dox, Captures, Annotation.class );
+      List<Annotation> props = loadAnnotations(dox, Captures, Annotation.class);
       assertEquals(6, props.size());
       Set<DecisionType> decisions = props.stream()
           .map(Annotation::getRef)
@@ -277,14 +272,14 @@ class WeaverTest {
               .equals(In_Terms_Of.getLabel())));
       assertEquals(3, props.size());
 
-      assertTrue( props.stream()
-          .anyMatch( ann -> ann.getRef().getName().contains("Test On Medication")));
+      assertTrue(props.stream()
+          .anyMatch(ann -> ann.getRef().getName().contains("13a3e25c-6848-373e-9676-8ecb62ab3e6a")));
 
-      assertTrue( props.stream()
-          .anyMatch( ann -> ann.getRef().getName().contains("Test Most Recent Observation")));
+      assertTrue(props.stream()
+          .anyMatch(ann -> ann.getRef().getName().contains("102f5949-fa9b-3531-85ba-28fafde21c2d")));
 
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -296,7 +291,7 @@ class WeaverTest {
         .orElseGet(() -> fail("Unable to load document " + path));
 
     assertTrue(true); // dummy
- 		assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
+    assertTrue(validate(dox, DMN_1_2.getReferentId()));
 
     try {
       redactor.redact(weaver.weave(dox));
@@ -320,17 +315,19 @@ class WeaverTest {
               .equals(In_Terms_Of.getLabel())));
       assertEquals(2, props.size());
 
-      assertTrue( props.stream()
-          .anyMatch( ann -> ann.getRef().getUuid().toString().equals("6c14a53a-7ce2-34aa-9cf1-a800317bebef")));
       assertTrue(props.stream()
-          .anyMatch( ann -> ann.getRef().getUuid().toString().equals("9296f375-a7ed-3c59-a972-4a7eb40c8820")));
+          .anyMatch(ann -> ann.getRef().getUuid().toString()
+              .equals("6c14a53a-7ce2-34aa-9cf1-a800317bebef")));
+      assertTrue(props.stream()
+          .anyMatch(ann -> ann.getRef().getUuid().toString()
+              .equals("9296f375-a7ed-3c59-a972-4a7eb40c8820")));
 
-      List<Annotation> props2 = loadAnnotations( dox, Captures, Annotation.class );
-      assertTrue( props2.stream()
-          .anyMatch( ann -> ann.getRef().getLabel().contains( "Computable Decision" ) ) );
+      List<Annotation> props2 = loadAnnotations(dox, Captures, Annotation.class);
+      assertTrue(props2.stream()
+          .anyMatch(ann -> ann.getRef().getLabel().contains("Computable Decision")));
 
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -366,7 +363,7 @@ class WeaverTest {
       assertEquals(0, relations.getLength());
 
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -401,7 +398,7 @@ class WeaverTest {
       assertEquals(0, relations.getLength());
 
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -437,7 +434,7 @@ class WeaverTest {
       assertEquals(0, relations.getLength());
 
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -452,7 +449,7 @@ class WeaverTest {
 
     try {
       redactor.redact(weaver.weave(dox));
-      assertTrue( validate( dox, DMN_1_2.getReferentId() ) );
+      assertTrue(validate(dox, DMN_1_2.getReferentId()));
 
       NodeList decisions = dox.getElementsByTagName("semantic:decision");
       assertEquals(1, decisions.getLength());
@@ -492,7 +489,7 @@ class WeaverTest {
 
       //streamXMLDocument(dox, System.out);
     } catch (IllegalStateException ie) {
-      logger.error(ie.getMessage(),ie);
+      logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
     }
   }
@@ -538,8 +535,9 @@ class WeaverTest {
         .forEach(element -> {
           Attr attr = element.getAttributeNode("href");
           checkAttribute(attr, "href");
-          if(containsTrisotechNamespace(attr)) {
-            fail("should NOT contain trisotech in attribute: " + attr.getName() + " : " + attr.getValue());
+          if (containsTrisotechNamespace(attr)) {
+            fail("should NOT contain trisotech in attribute: " + attr.getName() + " : "
+                + attr.getValue());
           }
         });
     return true;
@@ -673,7 +671,7 @@ class WeaverTest {
     NodeList elements = dox.getElementsByTagNameNS(TT_METADATA_NS, "*");
     asElementStream(elements).forEach(
         el -> {
-          if((TT_ATTACHMENT_ITEM.equals(el.getLocalName()))) {
+          if ((TT_ATTACHMENT_ITEM.equals(el.getLocalName()))) {
             fail("should not have " + el.getNodeName() + " elements anymore.");
           }
         }
@@ -682,14 +680,16 @@ class WeaverTest {
     return true;
   }
 
-  private <T extends Annotation> List<T> loadAnnotations(Document dox, SemanticAnnotationRelTypeSeries att,
-                                                         Class<T> type) {
+  private <T extends Annotation> List<T> loadAnnotations(Document dox,
+      SemanticAnnotationRelTypeSeries att,
+      Class<T> type) {
 
-      return XMLUtil.asElementStream(dox.getElementsByTagName("*"))
+    return XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         .filter(el -> el.getLocalName().equals(DMN_EL_EXTENSIONS))
         .map(Element::getChildNodes)
         .flatMap(XMLUtil::asElementStream)
-        .map(el -> JaxbUtil.unmarshall(Annotation.class,el))
+        .filter(el -> Annotation.class.getSimpleName().equalsIgnoreCase(el.getLocalName()))
+        .map(el -> JaxbUtil.unmarshall(Annotation.class, el))
         .flatMap(StreamUtil::trimStream)
         .filter(a -> att.asConceptIdentifier().equals(a.getRel()))
         .map(type::cast)

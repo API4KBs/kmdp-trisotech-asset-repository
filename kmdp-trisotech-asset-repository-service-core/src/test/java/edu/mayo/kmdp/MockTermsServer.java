@@ -32,12 +32,11 @@ public class MockTermsServer implements TermsApiInternal {
   }
 
   private Term mintNewTerm(String conceptTag) {
-    Term t = Term.newTerm(ns, conceptTag, "0.0.0", "Mock term" + conceptTag);
-    ConceptDescriptor cd = (ConceptDescriptor) ConceptDescriptor.toConceptDescriptor(t)
+    Term t = Term.newTerm(ns, conceptTag, "0.0.0", "Mock term " + conceptTag);
+
+    return ConceptDescriptor.toConceptDescriptor(t)
         .withEstablishedOn(t0)
         .withReferentId(ns);
-
-    return cd;
   }
 
 //

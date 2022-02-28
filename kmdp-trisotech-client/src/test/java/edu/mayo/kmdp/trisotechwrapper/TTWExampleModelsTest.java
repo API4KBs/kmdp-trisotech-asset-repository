@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.trisotechwrapper.TTWExampleModelsTest.ExampleTestConfig;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -28,7 +31,7 @@ import org.w3c.dom.Document;
  */
 @SpringBootTest
 @ActiveProfiles("dev")
-@ContextConfiguration(classes = {TrisotechWrapperConfig.class})
+@ContextConfiguration(classes = {ExampleTestConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=Trisotech Examples Working Space",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=4f5f5508-2137-4004-aef9-3ebef74f177d"})
@@ -159,9 +162,10 @@ class TTWExampleModelsTest {
 
 
 
-  private Optional<Document> getPublishedModelById(
-      TrisotechWrapper client, String fileId) {
-    return client.getLatestModelFileInfo(fileId, false)
-        .flatMap(client::getPublishedModel);
+  @Configuration
+  @ComponentScan(
+      basePackageClasses = {TrisotechWrapper.class})
+  public static class ExampleTestConfig {
+
   }
 }

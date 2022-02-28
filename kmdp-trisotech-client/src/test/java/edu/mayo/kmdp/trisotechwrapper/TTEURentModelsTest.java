@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.mayo.kmdp.trisotechwrapper.TTEURentModelsTest.EURentTestConfig;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,8 @@ import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -30,7 +33,7 @@ import org.w3c.dom.Document;
 
 @SpringBootTest
 @ActiveProfiles("dev")
-@ContextConfiguration(classes = {TrisotechWrapperConfig.class})
+@ContextConfiguration(classes = {EURentTestConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=EU-Rent",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=9b6b13d5-00e5-42fe-a844-51a1a4c78106"})
@@ -445,4 +448,10 @@ class TTEURentModelsTest {
         .flatMap(client::getPublishedModel);
   }
 
+  @Configuration
+  @ComponentScan(
+      basePackageClasses = {TrisotechWrapper.class})
+  public static class EURentTestConfig {
+
+  }
 }

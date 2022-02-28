@@ -1,26 +1,23 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package edu.mayo.kmdp.trisotech;
 
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import edu.mayo.kmdp.kdcaci.knew.trisotech.ServerConfig;
 import edu.mayo.kmdp.util.ws.JsonRestWSUtils.WithFHIR;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.KnowledgeAssetCatalogApi;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.client.ApiClientFactory;
@@ -36,10 +33,8 @@ import org.springframework.test.context.TestPropertySource;
     classes = Swagger2SpringBoot.class)
 @ContextConfiguration(classes = ServerConfig.class)
 @TestPropertySource(properties = {
-    "edu.mayo.kmdp.trisotechwrapper.repositoryName=MEA-Test",
-    "edu.mayo.kmdp.trisotechwrapper.repositoryPath=/",
-    "edu.mayo.kmdp.trisotechwrapper.repositoryId=d4aca01b-d446-4bc8-a6f0-85d84f4c1aaf",
-    "edu.mayo.kmdp.trisotechwrapper.baseUrl=https://mc.trisotech.com/"})
+    "edu.mayo.kmdp.trisotechwrapper.repositoryName=EU-Rent",
+    "edu.mayo.kmdp.trisotechwrapper.repositoryId=9b6b13d5-00e5-42fe-a844-51a1a4c78106"})
 class TrisotechAssetRepositoryClientTest {
 
   @LocalServerPort
@@ -47,15 +42,14 @@ class TrisotechAssetRepositoryClientTest {
 
   // confirm the client starts
   @Test
-  void contextLoad(){
+  void contextLoad() {
     ApiClientFactory client = new ApiClientFactory("http://localhost:" + port, WithFHIR.NONE);
     KnowledgeAssetCatalogApi tcat = KnowledgeAssetCatalogApi.newInstance(client);
 
-    int numAssets = tcat.listKnowledgeAssets()
+    tcat.listKnowledgeAssets()
         .map(List::size)
-        .orElse(-1);
+        .orElseGet(Assertions::fail);
 
-    assertTrue(numAssets > 0);
   }
 
 }

@@ -367,19 +367,6 @@ public class IdentityMapper {
   }
 
   /**
-   * Get the Asset Type declared on the model, if any
-   *
-   * @param modelId the id of the model
-   * @return an optional asset type declared in the model
-   */
-  public Optional<KnowledgeAssetType> getDeclaredAssetType(String modelId) {
-    return getStatementsByModel(modelId, true)
-        .map(soln -> soln.get(ASSET_TYPE))
-        .flatMap(type -> KnowledgeAssetTypeSeries.resolveId(type)
-            .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(type)));
-  }
-
-  /**
    * Get the Asset Type declared on the model, or the default based on the modeling language
    *
    * @param info the metadata of the model

@@ -26,8 +26,8 @@ import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.Semant
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Has_Primary_Subject;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
 import static java.nio.charset.Charset.defaultCharset;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
@@ -48,7 +48,6 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.Know
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Computable_Decision_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
@@ -77,7 +76,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
@@ -268,7 +266,8 @@ public class TrisotechIntrospectionStrategy {
                         "Invalid Language detected." + synRep.getLanguage());
         }
 
-        List<KnowledgeAssetType> formalType = detectFormalTypes(model, synRep);
+        List<KnowledgeAssetType> formalType =
+            singletonList(mapper.getDeclaredAssetTypeOrDefault(model));
 
         KnowledgeAssetCategorySeries formalCategory = inferFormalCategory(formalType);
 
@@ -331,23 +330,6 @@ public class TrisotechIntrospectionStrategy {
         } else {
             return Assessment_Predictive_And_Inferential_Models;
         }
-    }
-
-    private List<KnowledgeAssetType> detectFormalTypes(
-        TrisotechFileInfo model,
-        SyntacticRepresentation synRep) {
-        return mapper.getDeclaredAssetType(model.getId())
-            .map(Collections::singletonList)
-            .orElseGet(() -> {
-                switch (asEnum(synRep.getLanguage())) {
-                    case DMN_1_2:
-                        return asList(Decision_Model);
-                    case CMMN_1_1:
-                        return asList(Case_Management_Model);
-                    default:
-                        return emptyList();
-                }
-            });
     }
 
     private Collection<Link> mergeSorted(Collection<Link> link1, Collection<Link> link2) {

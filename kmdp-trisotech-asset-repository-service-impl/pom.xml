@@ -99,9 +99,6 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>spring-boot-info</artifactId>
-      </plugin>
-      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <executions>

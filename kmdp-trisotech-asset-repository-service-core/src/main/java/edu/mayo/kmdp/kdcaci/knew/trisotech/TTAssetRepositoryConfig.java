@@ -60,7 +60,7 @@ public class TTAssetRepositoryConfig extends
 
     DOMAIN_TERMS_NAMESPACE_PATTERN(Opt.of(
         PARAM_NAMESPACE + "domainTermsNamespacePattern",
-        "(.*\\/clinicalsituations.*|.*\\/propositionalconcepts.*)",
+        "(.*\\/api4kp.*|.*\\/clinicaltasks.*|.*\\/clinicalsituations.*|.*\\/propositionalconcepts.*)",
         "Namespace URI patterns for domain concepts",
         String.class,
         false)),

@@ -266,6 +266,8 @@ public class Weaver {
         default:
           return null;
       }
+    } else {
+      logger.warn("Dropping unrecognized concept " + uri);
     }
 
     return null;
@@ -275,7 +277,7 @@ public class Weaver {
     // the Terms service needs a UUID...
     URI uri = URI.create(uriStr);
     Answer<ConceptDescriptor> cdAns
-        = Answer.of(Optional.ofNullable(NameUtils.getTrailingPart(uri.toString())))
+        = Answer.ofTry(Optional.ofNullable(NameUtils.getTrailingPart(uri.toString())))
         .flatOpt(Util::ensureUUID)
         .flatMap(id -> terms.lookupTerm(id.toString())) ;
     if (!cdAns.isSuccess()) {

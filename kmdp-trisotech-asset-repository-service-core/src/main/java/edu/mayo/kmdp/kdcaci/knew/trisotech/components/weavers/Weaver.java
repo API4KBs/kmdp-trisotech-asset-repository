@@ -267,7 +267,7 @@ public class Weaver {
           return null;
       }
     } else {
-      logger.warn("Dropping unrecognized concept " + uri);
+      logger.warn("Dropping unrecognized concept {}", uri);
     }
 
     return null;

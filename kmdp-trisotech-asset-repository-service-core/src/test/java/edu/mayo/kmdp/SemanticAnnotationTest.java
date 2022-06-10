@@ -78,7 +78,7 @@ class SemanticAnnotationTest {
 				fail( "Unable to instantiate metadata object" );
 			}
 			KnowledgeAsset surr = res.get();
-			assertEquals( 3, surr.getAnnotation().size() );
+			assertEquals( 4, surr.getAnnotation().size() );
 			List<ConceptDescriptor> inputs = surr.getAnnotation().stream()
 					.filter( annotation -> In_Terms_Of.sameTermAs(annotation.getRel()) )
 					.map( annotation -> annotation.getRef().getUuid().toString())

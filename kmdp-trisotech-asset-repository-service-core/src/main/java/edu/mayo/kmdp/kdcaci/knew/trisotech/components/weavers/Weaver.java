@@ -250,7 +250,7 @@ public class Weaver {
 
     if (DecisionTypeSeries.resolveId(uri).isPresent()) {
       return Captures;
-    } else if (uri.contains("/ClinicalTasks/")) {
+    } else if (uri.contains("/ClinicalTasks")) {
       // ^^ Pending standardization of a 'ClinicalTask' ontology
       return Captures;
     } else if (isDomainConcept(uri)) {

@@ -1,11 +1,11 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -83,7 +83,7 @@ import org.w3c.dom.NodeList;
 public class Weaver {
 
   public static final Logger logger = LoggerFactory.getLogger(Weaver.class);
-  public static final String xmlns = "xmlns:";
+  public static final String XMLNS_PREFIX = "xmlns:";
 
   @Autowired
   @KPComponent(implementation = "fhir")
@@ -116,7 +116,7 @@ public class Weaver {
    */
   public Document weave(Document dox) {
     dox.getDocumentElement().setAttributeNS(W3C_XMLNS,
-        xmlns + "xsi",
+        XMLNS_PREFIX + "xsi",
         W3C_XSI);
 
     String surrPrefix = Registry
@@ -127,7 +127,7 @@ public class Weaver {
         .orElseThrow(IllegalStateException::new);
 
     dox.getDocumentElement().setAttributeNS(W3C_XMLNS,
-        xmlns + surrPrefix,
+        XMLNS_PREFIX + surrPrefix,
         surrNamespace);
 
     dox.getDocumentElement().setAttributeNS(W3C_XSI,
@@ -143,7 +143,7 @@ public class Weaver {
     weaveMetadata(asElementStream(copies)
         .filter(this::isAcceleratorReuse));
     asElementStream(copies)
-        .filter(reuse -> ! this.isAcceleratorReuse(reuse))
+        .filter(reuse -> !this.isAcceleratorReuse(reuse))
         .forEach(reuse -> rewriteReuseLinks(reuse, dox));
 
     // reuseLink
@@ -151,7 +151,7 @@ public class Weaver {
     weaveMetadata(asElementStream(reuses)
         .filter(this::isAcceleratorReuse));
     asElementStream(reuses)
-        .filter(reuse -> ! this.isAcceleratorReuse(reuse))
+        .filter(reuse -> !this.isAcceleratorReuse(reuse))
         .forEach(reuse -> rewriteReuseLinks(reuse, dox));
 
     // rewrite custom attribute 'asset ID'
@@ -199,16 +199,12 @@ public class Weaver {
   }
 
   /**
-   * DMN:
-   * m1:A hasRequirement m1:B* (reuse of m2:B)
-   * should be rewritten as
-   * m1:A hasRequirement m2:B
+   * DMN: m1:A hasRequirement m1:B* (reuse of m2:B) should be rewritten as m1:A hasRequirement m2:B
+   * <p>
+   * CMMN: Nothing to do - the XML also includes a proper external reference
    *
-   * CMMN:
-   * Nothing to do - the XML also includes a proper external reference
-   *
-   * @param reuseLink
-   * @param dox
+   * @param reuseLink the Element wrapping the link
+   * @param dox the model, as an XML document, that owns the element to be rewritten
    */
   private void rewriteReuseLinks(Element reuseLink, Document dox) {
     if (isCMMN(reuseLink.getOwnerDocument())) {
@@ -236,25 +232,29 @@ public class Weaver {
           attr.setValue(targetUri);
         });
 
-   reusingElement.getParentNode().removeChild(reusingElement);
+    reusingElement.getParentNode().removeChild(reusingElement);
   }
 
   /**
-   * Determine the SemanticAnnotatoin based on the uri.
+   * Determine the annotation relationship (the property of the annotation triple) based on the '
+   * concept (the object of the triple), and the context of use of the annotation.
+   * <p>
+   * For example, Data-related elements imply In_Terms_Of; Tasks imply Captures; and Decisions imply
+   * Defines.
    *
-   * @param el the document element under examination
-   * @return the SemanticAnnotationRelTypeSeries to be used in rewriting this element
+   * @param el the element holding the annotation information
+   * @return the {@link SemanticAnnotationRelTypeSeries} (proeprty) to be used in rewriting this
+   * element
    */
-  private SemanticAnnotationRelTypeSeries getSemanticAnnotation(Element el) {
+  private SemanticAnnotationRelTypeSeries getSemanticAnnotationRelationship(Element el) {
     String uri = el.getAttribute("uri");
 
     if (DecisionTypeSeries.resolveId(uri).isPresent()) {
       return Captures;
-    } else if (uri.contains("/ClinicalTasks")) {
-      // ^^ Pending standardization of a 'ClinicalTask' ontology
-      return Captures;
-    } else if (isDomainConcept(uri)) {
-      String grandparent = el.getParentNode().getParentNode().getNodeName();
+    }
+
+    String grandparent = el.getParentNode().getParentNode().getNodeName();
+    if (isDomainConcept(uri)) {
       switch (grandparent) {
         case "semantic:decision":
           return Defines;
@@ -263,15 +263,22 @@ public class Weaver {
           return In_Terms_Of;
         case "semantic:casePlanModel":
           return Has_Primary_Subject;
+        case "semantic:stage":
+        case "semantic:case":
+        case "semantic:task":
+        case "semantic:decisionTask":
+        case "semantic:processTask":
+        case "semantic:caseTask":
+        case "semantic:humanTask":
+          return Captures;
         default:
-          return null;
       }
-    } else {
-      logger.warn("Dropping unrecognized concept {}", uri);
     }
-
+    logger.warn("Unable to establish asset-concept relationship for concept {} on element type {}",
+        uri, grandparent);
     return null;
   }
+
 
   private boolean isDomainConcept(String uriStr) {
     // the Terms service needs a UUID...
@@ -279,7 +286,7 @@ public class Weaver {
     Answer<ConceptDescriptor> cdAns
         = Answer.ofTry(Optional.ofNullable(NameUtils.getTrailingPart(uri.toString())))
         .flatOpt(Util::ensureUUID)
-        .flatMap(id -> terms.lookupTerm(id.toString())) ;
+        .flatMap(id -> terms.lookupTerm(id.toString()));
     if (!cdAns.isSuccess()) {
       return false;
     }
@@ -293,7 +300,7 @@ public class Weaver {
 
   private void ensureCMMNDecisionTaskIntegrity(Document dox) {
     XPathUtil x = new XPathUtil();
-    asElementStream(x.xList(dox,"//cmmn:decisionTask[not(@decisionRef)]"))
+    asElementStream(x.xList(dox, "//cmmn:decisionTask[not(@decisionRef)]"))
         .forEach(decisionTask -> {
           Optional<Element> reuseNode = getReuseNode(x, decisionTask, TT_COPYOFLINK)
               .or(() -> getReuseNode(x, decisionTask, TT_REUSELINK));
@@ -303,16 +310,16 @@ public class Weaver {
           }
           URI ref = URI.create(reuseNode.get().getAttribute("uri"));
           String decisionTaskName = reuseNode.get().getAttribute("itemName");
-          String id = "_" + Util.uuid(ref.toString()).toString().replace("-","");
+          String id = "_" + Util.uuid(ref.toString()).toString().replace("-", "");
 
-          int numNamespaces = x.xList(dox,"//namespace::*").getLength();
-          String prefix = "ns" + (1000 + numNamespaces + 1 );
+          int numNamespaces = x.xList(dox, "//namespace::*").getLength();
+          String prefix = "ns" + (1000 + numNamespaces + 1);
 
-          dox.getDocumentElement().setAttribute(xmlns + prefix, URIUtil.normalizeURIString(ref));
+          dox.getDocumentElement().setAttribute(XMLNS_PREFIX + prefix, URIUtil.normalizeURIString(ref));
 
           decisionTask.setAttribute("decisionRef", id);
 
-          Element el = dox.createElementNS(CMMN_11_XMLNS,"decision");
+          Element el = dox.createElementNS(CMMN_11_XMLNS, "decision");
           el.setAttribute("implementationType", "http://www.omg.org/spec/CMMN/DecisionType/DMN1");
           el.setAttribute("name", decisionTaskName);
           el.setAttribute("id", id);
@@ -330,15 +337,13 @@ public class Weaver {
 
 
   /**
-   * weaveInputs will rewrite the href attribute
-   * of the tags given to be KMDP hrefs instead of
+   * weaveInputs will rewrite the href attribute of the tags given to be KMDP hrefs instead of
    * Trisotech
    *
    * @param dox the XML document being rewritten
    */
   private void weaveExternalReferences(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
-        // TODO: code review -- need to know which tags, or just check all hrefs? CAO
         .filter(el -> (el.getLocalName().equals("inputData")
             || el.getLocalName().equals("requiredInput")
             || el.getLocalName().equals("requiredKnowledge")
@@ -405,10 +410,17 @@ public class Weaver {
     }
   }
 
+  /**
+   * Rewrites each annotation Element as an {@link Annotation} - a structured (subject, property,
+   * object) where the subject is the asset, the object is the annotation concept, and the property
+   * is an (optional) relationship that connects the asset to the concept.
+   *
+   * @param metas a stream of annotation Elements to be rewritten
+   */
   private void weaveMetadata(Stream<Element> metas) {
     metas.forEach(
         el -> doInjectTerm(el,
-            getSemanticAnnotation(el),
+            getSemanticAnnotationRelationship(el),
             getConceptIdentifiers(el))
     );
   }
@@ -426,12 +438,12 @@ public class Weaver {
       ResourceIdentifier resourceIdentifier = SemanticIdentifier
           .newId(new URI(el.getAttribute("uri")));
 
-      Answer<ConceptDescriptor> term  = terms.lookupTerm(resourceIdentifier.getUuid().toString());
-      if(term.getOptionalValue().isPresent()) {
+      Answer<ConceptDescriptor> term = terms.lookupTerm(resourceIdentifier.getUuid().toString());
+      if (term.getOptionalValue().isPresent()) {
         concept = term.get()
             .asConceptIdentifier();
       } else {
-        if(logger.isWarnEnabled()) {
+        if (logger.isWarnEnabled()) {
           logger.warn("WARNING: resource ID {} failed in lookupTerm "
               + "and will be removed from the file", resourceIdentifier.getUuid());
         }
@@ -463,16 +475,15 @@ public class Weaver {
         .append(" ")
         .append("xsd/API4KP/surrogate/surrogate.xsd");
 
-
     if (isDMN(dox)) {
       sb.append(" ")
           .append(DMN_1_2.getReferentId())
           .append(" ").append(Registry.getValidationSchema(DMN_1_2.getReferentId())
-          .orElseThrow(IllegalStateException::new));
+              .orElseThrow(IllegalStateException::new));
     } else if (isCMMN(dox)) {
       sb.append(" ").append(CMMN_1_1)
           .append(" ").append(Registry.getValidationSchema(CMMN_1_1.getReferentId())
-          .orElseThrow(IllegalStateException::new));
+              .orElseThrow(IllegalStateException::new));
     }
 
     return sb.toString();

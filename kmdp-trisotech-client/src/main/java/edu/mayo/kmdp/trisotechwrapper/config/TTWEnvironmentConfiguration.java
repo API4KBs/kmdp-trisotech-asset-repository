@@ -50,7 +50,7 @@ public class TTWEnvironmentConfiguration {
   @Value("${edu.mayo.kmdp.trisotechwrapper.expiration:1440}")
   private String cacheExpiration;
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.namespace.public:https://clinicalknowledgemanagement.mayo.edu/artifacts}")
+  @Value("${edu.mayo.kmdp.trisotechwrapper.namespace.public:https://clinicalknowledgemanagement.mayo.edu/artifacts/}")
   private String publicNamespace;
 
   private String apiEndpoint;
@@ -58,7 +58,7 @@ public class TTWEnvironmentConfiguration {
   @PostConstruct
   public void init() {
     apiEndpoint = Util.isNotEmpty(baseURL)
-        ? baseURL + "/publicapi/"
+        ? buildApiEndpoint()
         : null;
 
     if (logger.isDebugEnabled()) {
@@ -78,6 +78,12 @@ public class TTWEnvironmentConfiguration {
     if (token.startsWith("edu.mayo") && token.contains("=")) {
       this.token = token.substring(token.indexOf('=') + 1);
     }
+  }
+
+  private String buildApiEndpoint() {
+    return baseURL
+        + (baseURL.endsWith("/") ? "" : "/")
+        + "publicapi/";
   }
 
   public String getBaseURL() {

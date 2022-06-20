@@ -11,7 +11,10 @@ public class TTConstants {
   public static final String W3C_XMLNS = "http://www.w3.org/2000/xmlns/";
   public static final String W3C_XSI = "http://www.w3.org/2001/XMLSchema-instance";
   public static final String CMMN_11_XMLNS = "http://www.omg.org/spec/CMMN/20151109/MODEL";
-  public static final String DMN_12_XMLNS = "http://www.omg.org/spec/DMN/20180521/MODEL";
+  public static final String DMN_12_XMLNS = "http://www.omg.org/spec/DMN/20180521/MODEL/";
+  public static final String DMN_13_XMLNS = "https://www.omg.org/spec/DMN/20191111/MODEL/";
+  public static final String DMN_14_XMLNS = "https://www.omg.org/spec/DMN/20211108/MODEL/";
+
   public static final String DMN = "DMN";
   public static final String CMMN = "CMMN";
 
@@ -29,6 +32,9 @@ public class TTConstants {
   public static final String TT_COPYOFLINK = "copyOfLink";
   public static final String TT_COMMENTS = "comments";
 
+  public static final String TT_INPUT_BINDINGS = "dataInputBindings";
+  public static final String TT_OUTPUT_BINDINGS = "dataOutputBindings";
+
   public static final String TT_DYNAMIC_DECISION_SERVICE = "dynamicDecisionService";
   public static final String TT_WHOLE_DECISION_SERVICE = "wholeModelDecisionService";
   public static final String TT_ATTACHMENT_ITEM = "attachment";
@@ -38,6 +44,8 @@ public class TTConstants {
   public static final String DMN_EL_DECISION = "decision";
   public static final String DMN_EL_DECISION_SERVICE = "decisionService";
   public static final String DMN_EL_EXTENSIONS = "extensionElements";
+
+  public static final String CMMN_EL_EXTENSIONS = "extensionElements";
 
   public static final String VALUE = "value";
   public static final String KEY = "key";

@@ -57,8 +57,11 @@ class TTWExampleModelsTest {
 
   @BeforeEach
   void setUp() {
+    var apiEndpoint = client.getConfig().getApiEndpoint();
+    Assumptions.assumeTrue(apiEndpoint.isPresent());
+
     ttRepositoryUrl =
-        client.getConfig().getApiEndpoint() + "/repositoryfilecontent?repository=";
+        apiEndpoint + "/repositoryfilecontent?repository=";
     testRepoId = client.getConfig().getRepositoryId();
 
     Assumptions.assumeFalse(client.listPlaces().isEmpty());

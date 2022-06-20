@@ -51,6 +51,7 @@ import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
@@ -600,13 +601,19 @@ class WeaverTest {
 
 
   private boolean checkAttribute(Attr attr, String namespace) {
-    if (attr.getLocalName().equals(namespace)
+    if (getAttributeName(attr).equals(namespace)
         && attr.getValue().contains("trisotech.com")) {
       fail("should not contain 'trisotech' in value: " + attr.getValue() + " for attribute: " + attr
           .getLocalName());
       return false;
     }
     return true;
+  }
+
+  private String getAttributeName(Attr attr) {
+    return Optional.ofNullable(attr.getLocalName())
+        .or(() -> Optional.ofNullable(attr.getName()))
+        .orElse("");
   }
 
 
@@ -624,7 +631,6 @@ class WeaverTest {
                       + " on parent: " + el.getNodeName());
                 }
               }
-
             }
         );
     return true;
@@ -639,6 +645,10 @@ class WeaverTest {
     NodeList elements = dox.getElementsByTagNameNS("*", "*");
     asElementStream(elements).forEach(
         el -> {
+          if (TT_METADATA_NS.equals(el.getNamespaceURI())) {
+            fail("Proprietary Element " + el.getLocalName() +
+                " id=" + el.getAttribute("id") + " has not been stripped");
+          }
           NamedNodeMap attributes = el.getAttributes();
           int attrSize = attributes.getLength();
           for (int i = 0; i < attrSize; i++) {

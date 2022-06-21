@@ -47,6 +47,7 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
+import edu.mayo.kmdp.util.XPathUtil;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionType;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
@@ -55,6 +56,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
@@ -67,6 +69,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
@@ -274,10 +277,12 @@ class WeaverTest {
       assertEquals(3, props.size());
 
       assertTrue(props.stream()
-          .anyMatch(ann -> ann.getRef().getName().contains("13a3e25c-6848-373e-9676-8ecb62ab3e6a")));
+          .anyMatch(
+              ann -> ann.getRef().getName().contains("13a3e25c-6848-373e-9676-8ecb62ab3e6a")));
 
       assertTrue(props.stream()
-          .anyMatch(ann -> ann.getRef().getName().contains("102f5949-fa9b-3531-85ba-28fafde21c2d")));
+          .anyMatch(
+              ann -> ann.getRef().getName().contains("102f5949-fa9b-3531-85ba-28fafde21c2d")));
 
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(), ie);
@@ -495,6 +500,147 @@ class WeaverTest {
     }
   }
 
+
+  @Test
+  @Disabled
+  void testRewriteCMMNInputs() {
+    String path = "/Case with DMN IO.raw.cmmn.xml";
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+
+    try {
+      redactor.redact(weaver.weave(dox));
+
+      assertTrue(verifyCaseFileItemDefinition(dox));
+      assertTrue(verifyRootNamespaces(dox));
+      assertTrue(verifyHrefs(dox));
+      assertTrue(verifyImportNamespace(dox));
+
+      assertTrue(confirmNoTrisoNameSpace(dox));
+
+      XPathUtil x = new XPathUtil();
+      var varNodes = x.xList(dox,
+          "//cmmn:input/cmmn:extensionElements/dmn:context/dmn:contextEntry/dmn:variable");
+      assertEquals(3, varNodes.getLength());
+
+      asElementStream(x.xList(dox, "//cmmn:input")).forEach(
+          taskInput -> {
+            String formalVar = taskInput.getAttribute("name");
+            String actualVar = x.xString(taskInput, ".//dmn:variable/@name");
+            assertEquals(formalVar, actualVar);
+          }
+      );
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(), ie);
+      fail(ie.getMessage());
+    }
+  }
+
+  @Test
+  @Disabled
+  void testRewriteCMMNInputsChaining() {
+    String path = "/Case with DMN IO advanced.raw.cmmn.xml";
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+
+    try {
+      redactor.redact(weaver.weave(dox));
+
+      XPathUtil x = new XPathUtil();
+
+      var decision1 = x.xNode(dox, "//cmmn:decisionTask[@name='Pt Old Assessment']");
+      assertNotNull(decision1);
+      var inputs1 = x.xList(decision1, ".//cmmn:input");
+      assertEquals(2, inputs1.getLength());
+
+      var decision2 = x.xNode(dox, "//cmmn:decisionTask[@name='Multi-Assessment Decision']");
+      assertNotNull(decision2);
+      var inputsExpr = x.xString(decision2,
+          ".//cmmn:input[@name='Dec Input']//dmn:literalExpression/dmn:text");
+      assertEquals("My Output", inputsExpr);
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(), ie);
+      fail(ie.getMessage());
+    }
+  }
+
+  @Test
+  @Disabled
+  void testRewriteCMMNOutputs() {
+    String path = "/Case with DMN IO.raw.cmmn.xml";
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+
+    try {
+      redactor.redact(weaver.weave(dox));
+
+
+      System.out.println(XMLUtil.toString(dox));
+
+
+      XPathUtil x = new XPathUtil();
+      var varNodes = x.xList(dox,
+          "//cmmn:output/cmmn:extensionElements/dmn:context/dmn:contextEntry/dmn:variable");
+      assertEquals(1, varNodes.getLength());
+
+      asElementStream(x.xList(dox, "//cmmn:output")).forEach(
+          taskOutput -> {
+            String cfiRef = taskOutput.getAttribute("bindingRef");
+            assertEquals("_e2e3a8fc-98d6-4170-8d10-c955931d404d", cfiRef);
+            String cfiName = x.xString(dox, "//cmmn:caseFileItem[@id='" + cfiRef + "']/@name");
+
+            String formalVar = taskOutput.getAttribute("name");
+            assertEquals("Pt Old", formalVar);
+
+            String actualVar = x.xString(taskOutput, ".//dmn:variable/@name");
+            assertEquals("My Output", actualVar);
+            assertEquals(cfiName, actualVar);
+          }
+      );
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(), ie);
+      fail(ie.getMessage());
+    }
+  }
+
+
+  @Test
+  @Disabled
+  void testRewriteCMMNOutputs2() {
+    String path = "/Case with DMN IO advanced.raw.cmmn.xml";
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+
+    try {
+      redactor.redact(weaver.weave(dox));
+
+      XPathUtil x = new XPathUtil();
+      Node manyDecision = x.xNode(dox,
+          "//cmmn:decisionTask[@name='Multi-Assessment Decision']");
+      assertNotNull(manyDecision);
+
+      asElementStream(x.xList(manyDecision, ".//cmmn:output"))
+          .forEach(taskOutput -> {
+            String formalVar = taskOutput.getAttribute("name");
+            String cfiRef = taskOutput.getAttribute("bindingRef");
+            String cfiName = x.xString(dox, "//cmmn:caseFileItem[@id='" + cfiRef + "']/@name");
+            String actualVar = x.xString(taskOutput, ".//dmn:variable/@name");
+
+            if ("Dec Out 1".equals(formalVar)) {
+              assertEquals("My Out 2", actualVar);
+              assertEquals(cfiName, actualVar);
+            } else if ("Dec Out 2".equals(formalVar)) {
+              assertEquals("My Out 3", actualVar);
+              assertEquals(cfiName, actualVar);
+            } else {
+              fail("Unrecognized output " + formalVar);
+            }
+          });
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(), ie);
+      fail(ie.getMessage());
+    }
+  }
 
   private boolean confirmDecisionURI(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))

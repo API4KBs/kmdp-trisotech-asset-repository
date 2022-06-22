@@ -63,14 +63,14 @@ public class Redactor {
     // remove spurious model elements
     removeTrisoElementsNotRetaining(dox);
 
+    // verify and remove any invalid caseFileItemDefinition items
+    verifyAndRemoveInvalidCaseFileItemDefinition(dox);
+
     // remove the namespace attributes
     removeProprietaryAttributesAndNS(dox);
 
     // remove additional Trisotech tags we don't need
     removeTrisoTagsNotRetaining(dox);
-
-    // verify and remove any invalid caseFileItemDefinition items
-    verifyAndRemoveInvalidCaseFileItemDefinition(dox);
 
     return dox;
   }
@@ -180,12 +180,15 @@ public class Redactor {
     NodeList elements = dox.getElementsByTagNameNS("*", "*");
     asElementStream(elements).forEach(
         el -> {
+          if (TT_METADATA_NS.equals(el.getNamespaceURI())) {
+            el.getParentNode().removeChild(el);
+          }
           NamedNodeMap attributes = el.getAttributes();
           int attrSize = attributes.getLength() - 1;
           for (int i = attrSize; i >= 0; i--) {
             Attr attr = (Attr) attributes.item(i);
             if ((attr != null) &&
-                // remove any of the Trisotech namespace attributes, and drools
+                // remove any of the Trisotech namespace attributes, and Drools
                 (TT_METADATA_NS.equals(attr.getNamespaceURI())
                     || TT_METADATA_NS.equals(attr.getValue())
                     || TT_DMN_12_NS.equals(attr.getNamespaceURI())
@@ -196,6 +199,7 @@ public class Redactor {
                     || DROOLS_NS.equals(attr.getValue())
                     || TT_META_EXPORTER.equals(attr.getLocalName())
                     || TT_META_EXPORTER_VERSION.equals(attr.getLocalName())
+                    || attr.getValue().contains(TRISOTECH_COM)
                 )
             ) {
               el.removeAttributeNode(attr);

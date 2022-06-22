@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<semantic:definitions xmlns:dmn="https://www.omg.org/spec/DMN/20191111/MODEL/"
+  xmlns:feel="https://www.omg.org/spec/DMN/20191111/FEEL/"
+  xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"
+  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+  exporter="Case Modeler"
+  exporterVersion="7.15.5" expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+  id="_893ada82-0139-4ccc-89ca-aa89d62ee7b2"
+  name="CFI Output" targetNamespace="http://www.trisotech.com/definitions/_893ada82-0139-4ccc-89ca-aa89d62ee7b2"
+  xmlns="http://www.trisotech.com/definitions/_893ada82-0139-4ccc-89ca-aa89d62ee7b2" triso:logoChoice="Default" xml:lang="en">
+  <semantic:case id="Case_e1423732-5079-4cf7-9a20-11571162f38d" name="My Case">
+    <semantic:caseFileModel>
+      <semantic:caseFileItem definitionRef="_a47e4c20-a060-4356-88ef-ed9efe41e696" id="_2bd0a687-7e99-4718-9e33-0339f4b047b6"
+        name="CFIone"/>
+      <semantic:caseFileItem definitionRef="_e85760a1-0c7e-4831-a9cd-5401398937c6" id="_55fc3c26-7d68-46f4-ad4a-c28ecf18e027"
+        name="CFItwo"/>
+    </semantic:caseFileModel>
+    <semantic:casePlanModel id="_e1423732-5079-4cf7-9a20-11571162f38d" name="My Case">
+      <semantic:planItem definitionRef="PID__5bab00c5-972b-479c-bccd-32fb8ce9f8f8"
+        id="_5bab00c5-972b-479c-bccd-32fb8ce9f8f8"/>
+      <semantic:stage id="PID__5bab00c5-972b-479c-bccd-32fb8ce9f8f8" name="Stage A">
+        <semantic:decisionTask decisionRef="_2143d2a051801db713050c1f25fe97dc" id="PID__9054a678-217d-4a01-8e97-0adbe2572e47"
+          name="Ask" triso:linkedTermsId="">
+          <semantic:defaultControl>
+            <semantic:manualActivationRule id="_184e66db-8359-46c9-94b2-14e682f4fd03"/>
+          </semantic:defaultControl>
+          <semantic:extensionElements>
+            <triso:dataInputBindings>
+              <dmn:context>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_86a33792-7a04-4348-8985-6b62302a299c">
+                    <dmn:text>"fuu" + "000"</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_1a9b82f3-9783-4a2c-bbc4-a17bd842eb58" name="Fo o"
+                    typeRef="feel:string" triso:inputRef="_6d443ff3-c7e6-4e1f-9ac9-d96e7aed5e0a"/>
+                </dmn:contextEntry>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_141d9304-4dcf-4e11-a51d-9805b4f01624">
+                    <dmn:text>"baz"</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_af4804e2-f827-48c5-af11-882c4cdbc069" name="Bar"
+                    typeRef="feel:string" triso:inputRef="_da9632a7-9a5d-4f97-bf55-289551503c70"/>
+                </dmn:contextEntry>
+              </dmn:context>
+            </triso:dataInputBindings>
+            <triso:dataOutputBindings>
+              <dmn:context>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_79df643e-032d-4d5f-a90b-55fa9c4e43ae">
+                    <dmn:text>Ask</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_64cfca3e-8f07-4642-a896-0203ce9485d7" name="CFIone"
+                    triso:caseFileItemRef="_2bd0a687-7e99-4718-9e33-0339f4b047b6"/>
+                </dmn:contextEntry>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_3f7d0e07-f84c-4a9d-a01a-cd35587ede7a">
+                    <dmn:text>Ask</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_fe0af7aa-5590-4a4f-a871-13403d6221b0" name="CFItwo"
+                    triso:caseFileItemRef="_55fc3c26-7d68-46f4-ad4a-c28ecf18e027"/>
+                </dmn:contextEntry>
+              </dmn:context>
+            </triso:dataOutputBindings>
+            <triso:reuseLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision" graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu"
+              id="_b070e9c2-064e-443b-8411-22bc6d0dee7d" itemName="Ask"
+              mimeType="application/vnd.triso-dmn+json"
+              modelName="Foo"
+              modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+              modelURI="http://www.trisotech.com/definitions/_8276a8ef-f7db-4449-aed5-5fb1cfde8017"
+              uri="http://www.trisotech.com/definitions/_8276a8ef-f7db-4449-aed5-5fb1cfde8017#_285ba3ed-dbf2-4fd8-a569-519cb8591b70"/>
+          </semantic:extensionElements>
+          <semantic:input id="_6d443ff3-c7e6-4e1f-9ac9-d96e7aed5e0a" name="Fo o"
+            triso:definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+            triso:structureRef="feel:string">
+            <semantic:extensionElements>
+              <triso:reuseLink graphType="http://www.trisotech.com/graph/1.0/element#Parameter" graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu"
+                id="_6cdca847-c7b6-40fe-85a2-ab1d4693940c" itemName="Fo o"
+                mimeType="application/vnd.triso-dmn+json"
+                modelName="Foo"
+                modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+                modelURI="http://www.trisotech.com/definitions/_8276a8ef-f7db-4449-aed5-5fb1cfde8017"
+                uri="http://www.trisotech.com/definitions/_8276a8ef-f7db-4449-aed5-5fb1cfde8017#_01d80704-bfd7-4622-b6b1-22fcc0438124-_d8d4d120-db4d-423d-893c-519d3eec148b"/>
+            </semantic:extensionElements>
+          </semantic:input>
+          <semantic:input id="_da9632a7-9a5d-4f97-bf55-289551503c70" name="Bar"
+            triso:definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+            triso:structureRef="feel:string">
+            <semantic:extensionElements>
+              <triso:reuseLink graphType="http://www.trisotech.com/graph/1.0/element#Parameter" graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu"
+                id="_45ad9444-de0e-4dfc-92ca-ad7fbce95b75" itemName="Bar"
+                mimeType="application/vnd.triso-dmn+json"
+                modelName="Foo"
+                modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+                modelURI="http://www.trisotech.com/definitions/_8276a8ef-f7db-4449-aed5-5fb1cfde8017"
+                uri="http://www.trisotech.com/definitions/_8276a8ef-f7db-4449-aed5-5fb1cfde8017#_29ea5042-3879-43c9-bdcd-8c7836589327-_75fdae4f-d351-4178-af0e-da93c231ae4a"/>
+            </semantic:extensionElements>
+          </semantic:input>
+          <semantic:output id="_51787e7b-fd56-4731-b291-2fd5fffd879b" name="Ask"
+            triso:definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+            triso:structureRef="feel:Any">
+            <semantic:extensionElements>
+              <triso:reuseLink graphType="http://www.trisotech.com/graph/1.0/element#Outcome" graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu"
+                id="_9a582293-61f9-485a-b4d2-a2eaf3538378" itemName="Ask"
+                mimeType="application/vnd.triso-dmn+json"
+                modelName="Foo"
+                modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+                modelURI="http://www.trisotech.com/definitions/_8276a8ef-f7db-4449-aed5-5fb1cfde8017"
+                uri="http://www.trisotech.com/definitions/_8276a8ef-f7db-4449-aed5-5fb1cfde8017#_285ba3ed-dbf2-4fd8-a569-519cb8591b70-outcome"/>
+            </semantic:extensionElements>
+          </semantic:output>
+        </semantic:decisionTask>
+        <semantic:planItem definitionRef="PID__9054a678-217d-4a01-8e97-0adbe2572e47"
+          id="_9054a678-217d-4a01-8e97-0adbe2572e47"/>
+      </semantic:stage>
+    </semantic:casePlanModel>
+    <semantic:extensionElements/>
+  </semantic:case>
+  <semantic:caseFileItemDefinition id="_e85760a1-0c7e-4831-a9cd-5401398937c6" name="CFItwo"/>
+  <semantic:caseFileItemDefinition id="_a47e4c20-a060-4356-88ef-ed9efe41e696" name="CFIone"/>
+  <semantic:decision externalRef="ns1:_285ba3ed-dbf2-4fd8-a569-519cb8591b70" id="_2143d2a051801db713050c1f25fe97dc"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Ask"
+    triso:modelId="_8276a8ef-f7db-4449-aed5-5fb1cfde8017"/>
+  <semantic:import
+    importType="https://www.omg.org/spec/DMN/20191111/MODEL/"
+    location="Foo.dmn" namespace="http://www.trisotech.com/definitions/_8276a8ef-f7db-4449-aed5-5fb1cfde8017"/>
+</semantic:definitions>

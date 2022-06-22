@@ -29,6 +29,8 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_SEMANTICLINK;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.VALUE;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.W3C_XMLNS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.W3C_XSI;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.DataBindingManipulator.rewriteInputDataBindings;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.DataBindingManipulator.rewriteOutputDataBindings;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
@@ -87,7 +89,7 @@ import org.w3c.dom.NodeList;
 @Component
 public class Weaver {
 
-  public static final Logger logger = LoggerFactory.getLogger(Weaver.class);
+  private static final Logger logger = LoggerFactory.getLogger(Weaver.class);
   public static final String XMLNS_PREFIX = "xmlns:";
 
   @Autowired
@@ -180,8 +182,13 @@ public class Weaver {
       ensureCMMNDecisionTaskIntegrity(dox);
     }
 
+    // CMMN Tasks with Data Mappings, supporting DMN (and BPMN) I/O bindings
+    rewriteInputDataBindings(dox);
+    rewriteOutputDataBindings(dox);
+
     return dox;
   }
+
 
   private void weaveAssetId(Document dox) {
     // looks for an Asset ID, and rewrites it as an annotation
@@ -235,7 +242,7 @@ public class Weaver {
    * CMMN: Nothing to do - the XML also includes a proper external reference
    *
    * @param reuseLink the Element wrapping the link
-   * @param dox the model, as an XML document, that owns the element to be rewritten
+   * @param dox       the model, as an XML document, that owns the element to be rewritten
    */
   private void rewriteReuseLinks(Element reuseLink, Document dox) {
     if (isCMMN(reuseLink.getOwnerDocument())) {
@@ -346,7 +353,8 @@ public class Weaver {
           int numNamespaces = x.xList(dox, "//namespace::*").getLength();
           String prefix = "ns" + (1000 + numNamespaces + 1);
 
-          dox.getDocumentElement().setAttribute(XMLNS_PREFIX + prefix, URIUtil.normalizeURIString(ref));
+          dox.getDocumentElement()
+              .setAttribute(XMLNS_PREFIX + prefix, URIUtil.normalizeURIString(ref));
 
           decisionTask.setAttribute("decisionRef", id);
 

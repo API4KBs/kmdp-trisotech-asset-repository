@@ -39,11 +39,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Abstract_Knowledge_Expression;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
+import edu.mayo.kmdp.language.LanguageDeSerializer;
+import edu.mayo.kmdp.language.common.cmmn.CMMN11Utils;
+import edu.mayo.kmdp.language.parsers.cmmn.v1_1.CMMN11Parser;
+import edu.mayo.kmdp.language.parsers.dmn.v1_2.DMN12Parser;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -55,11 +63,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.xml.bind.JAXBElement;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
+import org.omg.spec.cmmn._20151109.model.TCaseFileItem;
+import org.omg.spec.cmmn._20151109.model.TDecisionTask;
+import org.omg.spec.cmmn._20151109.model.TDefinitions;
+import org.omg.spec.dmn._20180521.model.TContext;
+import org.omg.spec.dmn._20180521.model.TLiteralExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -502,7 +516,6 @@ class WeaverTest {
 
 
   @Test
-  @Disabled
   void testRewriteCMMNInputs() {
     String path = "/Case with DMN IO.raw.cmmn.xml";
     Document dox = loadXMLDocument(resolveResource(path))
@@ -530,6 +543,11 @@ class WeaverTest {
             assertEquals(formalVar, actualVar);
           }
       );
+
+      var valueNode = (Element)
+          x.xNode(dox, "//cmmn:input[@name='Age At Admission']//dmn:literalExpression/dmn:text");
+      assertEquals("42", valueNode.getTextContent());
+
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(), ie);
       fail(ie.getMessage());
@@ -537,7 +555,47 @@ class WeaverTest {
   }
 
   @Test
-  @Disabled
+  void testParseAfterRewrite() {
+    String path = "/Case with DMN IO advanced.raw.cmmn.xml";
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+    try {
+      redactor.redact(weaver.weave(dox));
+
+      var parser = new LanguageDeSerializer(List.of(new CMMN11Parser(List.of(new DMN12Parser()))));
+      var cmmn = parser.applyLift(
+          AbstractCarrier.of(dox, rep(CMMN_1_1, XML_1_1)),
+              Abstract_Knowledge_Expression,
+              codedRep(CMMN_1_1),
+              null)
+          .flatOpt(kc -> kc.as(TDefinitions.class))
+          .orElseGet(Assertions::fail);
+
+      var inputCtx = CMMN11Utils.streamTasks(cmmn)
+          .flatMap(StreamUtil.filterAs(TDecisionTask.class))
+          .filter(dt -> "Multi-Assessment Decision".equals(dt.getName()))
+          .flatMap(d -> d.getInput().stream().filter(i -> i.getExtensionElements() != null))
+          .filter(i -> i.getBindingRef() instanceof TCaseFileItem)
+          .flatMap(i -> i.getExtensionElements().getAny().stream().findFirst().stream())
+          .flatMap(StreamUtil.filterAs(JAXBElement.class))
+          .map(JAXBElement::getValue)
+          .flatMap(StreamUtil.filterAs(TContext.class))
+          .findFirst()
+          .orElseGet(Assertions::fail);
+
+      assertEquals(1, inputCtx.getContextEntry().size());
+      var entry = inputCtx.getContextEntry().get(0);
+      assertEquals("Dec Input", entry.getVariable().getName());
+      assertEquals("My Output",
+          ((TLiteralExpression) entry.getExpression().getValue()).getText());
+
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(), ie);
+      fail(ie.getMessage());
+    }
+  }
+
+  @Test
   void testRewriteCMMNInputsChaining() {
     String path = "/Case with DMN IO advanced.raw.cmmn.xml";
     Document dox = loadXMLDocument(resolveResource(path))
@@ -565,7 +623,6 @@ class WeaverTest {
   }
 
   @Test
-  @Disabled
   void testRewriteCMMNOutputs() {
     String path = "/Case with DMN IO.raw.cmmn.xml";
     Document dox = loadXMLDocument(resolveResource(path))
@@ -573,10 +630,6 @@ class WeaverTest {
 
     try {
       redactor.redact(weaver.weave(dox));
-
-
-      System.out.println(XMLUtil.toString(dox));
-
 
       XPathUtil x = new XPathUtil();
       var varNodes = x.xList(dox,
@@ -605,7 +658,57 @@ class WeaverTest {
 
 
   @Test
-  @Disabled
+  void testRewriteCMMNMultiOutputs() {
+    String path = "/Case with DMN multiO.raw.cmmn.xml";
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+
+    try {
+      redactor.redact(weaver.weave(dox));
+      XPathUtil x = new XPathUtil();
+
+      System.out.println(XMLUtil.toString(dox));
+
+      var varNodes = x.xList(dox,
+          "//cmmn:output/cmmn:extensionElements/dmn:context/dmn:contextEntry/dmn:variable");
+      assertEquals(2, varNodes.getLength());
+
+      var parser = new LanguageDeSerializer(List.of(new CMMN11Parser(List.of(new DMN12Parser()))));
+      var cmmn = parser.applyLift(
+              AbstractCarrier.of(dox, rep(CMMN_1_1, XML_1_1)),
+              Abstract_Knowledge_Expression,
+              codedRep(CMMN_1_1),
+              null)
+          .flatOpt(kc -> kc.as(TDefinitions.class))
+          .orElseGet(Assertions::fail);
+
+      var outputs = CMMN11Utils.streamTasks(cmmn)
+          .flatMap(StreamUtil.filterAs(TDecisionTask.class))
+          .flatMap(dt -> dt.getOutput().stream())
+          .collect(Collectors.toList());
+
+      var check = outputs.stream().allMatch(
+          out -> {
+            if (!(out.getBindingRef() instanceof TCaseFileItem)) {
+              return false;
+            }
+            return out.getExtensionElements().getAny().stream()
+                .flatMap(StreamUtil.filterAs(JAXBElement.class))
+                .map(JAXBElement::getValue)
+                .flatMap(StreamUtil.filterAs(TContext.class))
+                .allMatch(c -> c.getContextEntry().size() == 1);
+          }
+      );
+      assertTrue(check);
+
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(), ie);
+      fail(ie.getMessage());
+    }
+  }
+
+
+  @Test
   void testRewriteCMMNOutputs2() {
     String path = "/Case with DMN IO advanced.raw.cmmn.xml";
     Document dox = loadXMLDocument(resolveResource(path))

@@ -7,6 +7,7 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.REPOSITORY_
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.SPARQL_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.VERSIONS_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeType;
+import static edu.mayo.kmdp.util.Util.isEmpty;
 import static java.net.URLEncoder.encode;
 import static java.util.Collections.emptyList;
 import static org.springframework.http.HttpHeaders.ACCEPT;
@@ -21,6 +22,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.Datum;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileData;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
+import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -94,7 +96,11 @@ public class TTWebClient {
       final String repositoryId,
       final String fileId) {
     if (!online) {
-      logger.warn("Client is offline - unable to upload model");
+      logger.warn("Client is offline - unable to retrieve Model Info");
+      return emptyList();
+    }
+    if (isEmpty(repositoryId) || isEmpty(fileId)) {
+      logger.warn("Missing repository or model ID, unable to retrieve Model Info");
       return emptyList();
     }
     var uri = fromHttpUrl(apiEndpoint + VERSIONS_PATH)
@@ -174,8 +180,12 @@ public class TTWebClient {
       Map<String, TrisotechFileInfo> modelsArray,
       String path, String mimeType) {
     if (!online) {
-      logger.warn("Client is offline - unable to gath Repository content");
+      logger.warn("Client is offline - unable to gather Repository content");
       return ;
+    }
+    if (Util.isEmpty(directoryID)) {
+      logger.warn("Missing directory ID - unable to gather Repository content");
+      return;
     }
     try {
       // NOTE: MUST Use UriComponentBuilder to handle '+' in the MimeType, otherwise it will be

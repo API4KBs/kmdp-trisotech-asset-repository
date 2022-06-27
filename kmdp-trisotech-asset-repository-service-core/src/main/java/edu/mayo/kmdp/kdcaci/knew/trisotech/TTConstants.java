@@ -47,6 +47,8 @@ public class TTConstants {
 
   public static final String CMMN_EL_EXTENSIONS = "extensionElements";
 
+  public static final String API4KP_PREFIX = "api4kp:";
+
   public static final String VALUE = "value";
   public static final String KEY = "key";
 

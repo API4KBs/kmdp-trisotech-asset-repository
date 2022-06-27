@@ -13,6 +13,7 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers;
 
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.API4KP_PREFIX;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.CMMN;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.CMMN_11_XMLNS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN;
@@ -33,6 +34,7 @@ import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.Semant
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Has_Primary_Subject;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
@@ -63,6 +65,9 @@ import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.KPComponent;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
+import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyType;
+import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.omg.spec.api4kp._20200801.terms.model.ConceptDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,6 +163,8 @@ public class Weaver {
     // necessary in case the asset ID has to be extracted from the file
     weaveAssetId(dox);
 
+    weaveNonBPMReferences(dox);
+
     // rewrite namespaces
     weaveNamespaces(dox);
 
@@ -184,6 +191,30 @@ public class Weaver {
         .filter(el -> asElementStream(el.getParentNode().getChildNodes())
             .noneMatch(sibling -> sibling.getLocalName().equals(TT_REUSELINK)))
         .forEach(this::rewriteAssetId);
+  }
+
+  private void weaveNonBPMReferences(Document dox) {
+    asElementStream(dox.getElementsByTagNameNS(TT_METADATA_NS, TT_CUSTOM_ATTRIBUTE_ATTR))
+        .filter(el -> el.getAttribute(KEY).startsWith(API4KP_PREFIX))
+        .forEach(relEl -> {
+
+          Optional<DependencyType> rel = DependencyTypeSeries.resolveTag(
+              relEl.getAttribute(KEY).substring(API4KP_PREFIX.length()));
+
+          if (rel.isPresent()) {
+            var taskElem = (Element) relEl.getParentNode().getParentNode();
+            if ("processTask".equals(taskElem.getLocalName())) {
+              ResourceIdentifier tgtAsset = newVersionId(URI.create(relEl.getAttribute(VALUE)));
+              Element processRefX = dox.createElementNS(CMMN_11_XMLNS, "processRefExpression");
+              processRefX.setAttributeNS(CMMN_11_XMLNS, "language",
+                  KnowledgeRepresentationLanguageSeries.API4KP.getReferentId().toString());
+              processRefX.setTextContent(
+                  rel.get().getTag() + " " + tgtAsset.getVersionId().toString());
+
+              taskElem.appendChild(processRefX);
+            }
+          }
+        });
   }
 
   private void rewriteAssetId(Element el) {

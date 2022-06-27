@@ -1,0 +1,11 @@
+{
+  "id" : "http://www.trisotech.com/definitions/_8f36dbcf-fae7-4744-85d6-517201cbdb73",
+  "sku" : "http://www.trisotech.com/definitions/_8f36dbcf-fae7-4744-85d6-517201cbdb73",
+  "name" : "Case with Process Def",
+  "path" : "/",
+  "mimetype" : "application/vnd.triso-cmmn+json",
+  "updated" : "2021-03-31T02:37:27Z",
+  "updater" : "Sottara, Davide",
+  "version" : "0.0.01",
+  "state" : "Draft"
+}

@@ -97,6 +97,7 @@ import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.Link;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
+import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
@@ -106,6 +107,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -357,7 +359,7 @@ public class TrisotechIntrospectionStrategy {
                 assetURIs = Stream.empty();
         }
 
-        return assetURIs
+        List<Link> links = assetURIs
                 .map(Attr::getValue)
                 .filter(Util::isNotEmpty)
                 // only supported URIs
@@ -379,6 +381,25 @@ public class TrisotechIntrospectionStrategy {
                 })
                 .map(id -> new Dependency().withRel(Depends_On).withHref(id))
                 .collect(Collectors.toList());
+
+        Stream<Element> linkElements;
+        switch (asEnum(language)) {
+            case CMMN_1_1:
+                linkElements = asElementStream(xPathUtil.xList(woven,
+                "//cmmn:processTask/cmmn:processRefExpression"));
+                break;
+            default:
+                linkElements = Stream.empty();
+        }
+        linkElements
+            .map(n -> n.getTextContent().trim().split(" "))
+            .filter(s -> DependencyTypeSeries.resolveTag(s[0]).isPresent())
+            .map(s ->  new Dependency()
+                .withRel(DependencyTypeSeries.resolveTag(s[0]).get())
+                .withHref(SemanticIdentifier.newVersionId(URI.create(s[1]))))
+            .forEach(links::add);
+
+        return links;
     }
 
     private String normalizeQualifiedName(String id) {

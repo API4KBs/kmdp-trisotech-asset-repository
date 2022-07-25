@@ -36,6 +36,7 @@ import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.Semant
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Has_Primary_Subject;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
+import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Is_About;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
@@ -67,8 +68,10 @@ import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.KPComponent;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
+import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyType;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.omg.spec.api4kp._20200801.terms.model.ConceptDescriptor;
 import org.slf4j.Logger;
@@ -290,6 +293,11 @@ public class Weaver {
     if (DecisionTypeSeries.resolveId(uri).isPresent()) {
       return Captures;
     }
+    if (KnowledgeAssetTypeSeries.resolveId(uri)
+        .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(uri)).isPresent()) {
+      // TODO should we materialize api4kp:expresses?
+      return null;
+    }
 
     String grandparent = el.getParentNode().getParentNode().getNodeName();
     if (isDomainConcept(uri)) {
@@ -309,6 +317,8 @@ public class Weaver {
         case "semantic:caseTask":
         case "semantic:humanTask":
           return Captures;
+        case "semantic:milestone":
+          return Is_About;
         default:
       }
     }

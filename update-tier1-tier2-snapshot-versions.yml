@@ -1,0 +1,109 @@
+### Update Tier 1 & Tier 2 Snapshot Versions for Develop Pipeline
+### Snapshot Branch Versioning Stategy: X.X.X-SNAPSHOT
+### Project :: kmdp-trisotech-asset-repository-service
+
+trigger: 
+  branches:
+    exclude:
+      - develop
+      - feature*
+  paths:
+    exclude:
+      - azure-pipelines-develop.yml
+      - azure-pipelines-features.yml
+      - release-notes.md
+      - README.md
+
+# Watches upstream build for success to run
+# resources:
+#   pipelines:
+#   - pipeline: newTerminologyContentDevelopUpdateTier1Tier2Dependencies
+#     source: kmdpBomDevelop
+#     trigger: 
+#       branches:
+#       - develop
+
+# Sets Virtual Machine to Run Pipeline on
+pool:
+  vmImage: 'ubuntu-latest'
+
+# Gets Variables from Azure DevOps Library
+variables: 
+  - group: kmdp-platform-variables
+
+# ------------------ PIPELINE STEPS  ------------------
+steps:
+# Outputs pipeline steps have started
+- script: |
+    echo Starting Develop Branch Update Tier 1 and Tier 2 Dependencies Pipeline!
+    echo Project :: kmdp-trisotech-asset-repository-service
+  displayName: 'Starting Pipeline Steps'
+
+# Gets .m2 Settings File from Azure DevOps Library
+# Downloads File for use in Pipeline
+- task: DownloadSecureFile@1
+  displayName: 'Downloads Secure .m2 Settings File'
+  name: settingsxml
+  inputs:
+    secureFile: settings-dev.xml
+
+# Write settings file to Build Server
+- task: PowerShell@2
+  displayName: 'Update m2 Settings File'
+  inputs:
+    targetType: 'inline'
+    script: |
+      New-Item -Type Directory -Force "${HOME}/.m2"
+      Copy-Item -Force "$(settingsxml.secureFilePath)" "${HOME}/.m2/settings.xml"
+
+# Authenticate to Maven Feed 
+- task: MavenAuthenticate@0
+  displayName: 'Maven Authenticate'
+  inputs:
+    artifactsFeeds: 'KMD'
+
+- task: PowerShell@2
+  displayName: Output Initial Variable Values
+  inputs:
+    targetType: 'inline'
+    script: |
+      [xml]$pomXml = Get-Content .\pom.xml
+      Write-Host --------------------------------
+      Write-Host Original POM Variables:
+      Write-Host ParentVersion: $pomXml.project.parent.version
+      Write-Host ServersVersion: $pomXml.project.properties."kmdp.servers.version"
+      Write-Host Will be updated to:
+      Write-Host NewParentVersion: $(tier1NewDevelopVersion)
+      Write-Host NewServersVersion: $(tier2NewDevelopVersion)
+      Write-Host --------------------------------
+
+- task: PowerShell@2
+  displayName: 'Update Tier 1 & Tier 2 Dependencies'
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host ----- Starting Checkout -----
+
+      # Checkout develop branch    
+      git checkout develop
+      # Update parent version & servers version
+      mvn versions:update-parent "-DparentVersion=$(tier1NewDevelopVersion)" -DallowSnapshots=true -ntp
+      mvn versions:set-property "-Dproperty=kmdp.servers.version" "-DnewVersion=$(tier2NewDevelopVersion)" -DallowSnapshots=true -ntp
+      mvn clean install -ntp
+
+- task: PowerShell@2
+  displayName: 'Output Updated Variables'
+  inputs:
+    targetType: 'inline'
+    script: |
+      [xml]$pomXml = Get-Content .\pom.xml
+      Write-Host --------------------------------
+      Write-Host Updated POM Variables:
+      Write-Host ParentVersion: $pomXml.project.parent.version
+      Write-Host ServersVersion: $pomXml.project.properties."kmdp.servers.version"
+
+# ------------------ END PIPELINE  ------------------
+# Outputs pipeline steps have ended
+- script: |
+    echo Ending Updating Develop Branch Tier 1 Tier 2 Dependencies!
+  displayName: 'Ending Pipeline Steps'

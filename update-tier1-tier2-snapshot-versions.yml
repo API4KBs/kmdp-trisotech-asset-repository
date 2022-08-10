@@ -17,7 +17,7 @@ trigger:
 # Watches upstream build for success to run
 # resources:
 #   pipelines:
-#   - pipeline: newTerminologyContentDevelopUpdateTier1Tier2Dependencies
+#   - pipeline: kmdpTrisotechAssetRepositoryServiceDevelopTier1Tier2Dependencies
 #     source: kmdpBomDevelop
 #     trigger: 
 #       branches:

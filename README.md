@@ -1,4 +1,7 @@
-# Trisotech Asset Repository
+# Knowledge Asset Repository - Trisotech Digital Enterprise Suite Facade
+
+Note: this software is provided as-is by Mayo Clinic. Trisotech Inc. is aware of
+this project at the time this is published, but has no other relationship with this codebase.
 
 The Trisotech Asset Repository is a wrapper around the Trisotech modeling web application.
 The code is meant to retrieve models from Trisotech and wrap them with the appropriate annotations to allow them to be placed in the MEA Asset Repository.

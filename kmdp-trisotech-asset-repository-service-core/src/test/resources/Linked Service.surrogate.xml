@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<surr:knowledgeAsset xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources" xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate" xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources" xmlns:api="https://www.omg.org/spec/API4KP/20200801/services" xmlns:id="https://www.omg.org/spec/API4KP/20200801/id" name="Linked Service">
+    <surr:formalType referentId="https://www.omg.org/spec/API4KP/api4kp-kao/DecisionModel" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#310adb96-1a21-3100-90eb-c7ef4fe270e7" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType/versions/20210401#310adb96-1a21-3100-90eb-c7ef4fe270e7" tag="DecisionModel" versionTag="20210401" name="decision model" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType" establishedOn="2021-04-01T00:00:00">
+        <id:uuid>310adb96-1a21-3100-90eb-c7ef4fe270e7</id:uuid>
+    </surr:formalType>
+    <surr:formalType referentId="https://www.omg.org/spec/API4KP/api4kp-ckao/ClinicalDecisionModel" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/ClinicalKnowledgeAssetType#619acfc8-9b9f-3ef4-b99d-708e61aaa078" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/ClinicalKnowledgeAssetType/versions/20210401#619acfc8-9b9f-3ef4-b99d-708e61aaa078" tag="ClinicalDecisionModel" versionTag="20210401" name="clinical decision model" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/ClinicalKnowledgeAssetType" establishedOn="2021-04-01T00:00:00">
+        <id:uuid>619acfc8-9b9f-3ef4-b99d-708e61aaa078</id:uuid>
+    </surr:formalType>
+    <surr:formalCategory referentId="https://www.omg.org/spec/API4KP/api4kp-kao/InferenceAsset" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory#d4b0e868-60c8-387d-a139-e3c35427bfb6" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory/versions/20210401#d4b0e868-60c8-387d-a139-e3c35427bfb6" tag="d4b0e868-60c8-387d-a139-e3c35427bfb6" versionTag="20210401" name="Assessment, Predictive and Inferential Models" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetCategory" establishedOn="2021-04-01T00:00:00">
+        <id:uuid>d4b0e868-60c8-387d-a139-e3c35427bfb6</id:uuid>
+    </surr:formalCategory>
+    <surr:assetId resourceId="urn:uuid:d723015a-2a0e-4a5a-91b7-0c128160b62c" versionId="urn:uuid:d723015a-2a0e-4a5a-91b7-0c128160b62c:0.0.0" tag="d723015a-2a0e-4a5a-91b7-0c128160b62c" versionTag="0.0.0" namespaceUri="urn:uuid:" establishedOn="2021-07-08T00:00:00">
+        <id:uuid>d723015a-2a0e-4a5a-91b7-0c128160b62c</id:uuid>
+    </surr:assetId>
+    <surr:carriers name="Linked Service" mimeType="model/dmn-v12">
+        <surr:localization referentId="https://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/English" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/ISO639-2-LanguageCode#78463a38-4a5a-34fa-95fa-73e2f506ecfc" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/ISO639-2-LanguageCode/versions/20190201#78463a38-4a5a-34fa-95fa-73e2f506ecfc" tag="en" versionTag="20190201" name="English" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/ISO639-2-LanguageCode" establishedOn="2019-02-01T00:00:00">
+            <id:uuid>78463a38-4a5a-34fa-95fa-73e2f506ecfc</id:uuid>
+        </surr:localization>
+        <surr:artifactId resourceId="https://clinicalknowledgemanagement.mayo.edu/artifacts/fc391287-da81-4bd4-8770-4dfc8f768a3a" versionId="https://clinicalknowledgemanagement.mayo.edu/artifacts/fc391287-da81-4bd4-8770-4dfc8f768a3a/versions/1.0.0-1625794661000" tag="fc391287-da81-4bd4-8770-4dfc8f768a3a" versionTag="1.0.0-1625794661000" namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/" establishedOn="2021-07-08T20:37:41">
+            <id:uuid>fc391287-da81-4bd4-8770-4dfc8f768a3a</id:uuid>
+        </surr:artifactId>
+        <surr:expressionCategory referentId="http://purl.org/dc/dcmitype/Software" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeArtifactCategory#719d067b-2291-38f0-bbcf-a1da4ac4dede" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeArtifactCategory/versions/2020-01-20#719d067b-2291-38f0-bbcf-a1da4ac4dede" tag="Software" versionTag="2020-01-20" name="Software" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeArtifactCategory" establishedOn="2021-07-08T00:00:00">
+            <id:uuid>719d067b-2291-38f0-bbcf-a1da4ac4dede</id:uuid>
+        </surr:expressionCategory>
+        <surr:representation>
+            <api:language referentId="https://www.omg.org/spec/DMN/1.2/" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KRLanguage#0bf050a2-fbd6-38c2-a4ce-323fd91c7b24" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KRLanguage/versions/20210401#0bf050a2-fbd6-38c2-a4ce-323fd91c7b24" tag="dmn-v12" versionTag="20210401" name="DMN 1.2" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/KRLanguage" establishedOn="2021-04-01T00:00:00">
+                <id:uuid>0bf050a2-fbd6-38c2-a4ce-323fd91c7b24</id:uuid>
+            </api:language>
+        </surr:representation>
+        <surr:lifecycle>
+            <surr:publicationStatus referentId="http://purl.org/spar/pso/draft" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus#f91b2829-bf86-33e3-9809-4e1dedb6f947" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus/versions/2014-02-01#f91b2829-bf86-33e3-9809-4e1dedb6f947" tag="draft" versionTag="2014-02-01" name="draft" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus" establishedOn="2021-07-08T00:00:00">
+                <id:uuid>f91b2829-bf86-33e3-9809-4e1dedb6f947</id:uuid>
+            </surr:publicationStatus>
+        </surr:lifecycle>
+    </surr:carriers>
+    <surr:surrogate mimeType="model/surr-v2+json">
+        <surr:artifactId resourceId="https://clinicalknowledgemanagement.mayo.edu/artifacts/56890798-26b1-388b-b408-22b21e2d04f0" versionId="https://clinicalknowledgemanagement.mayo.edu/artifacts/56890798-26b1-388b-b408-22b21e2d04f0/versions/1.0.0-1625794661000" tag="56890798-26b1-388b-b408-22b21e2d04f0" versionTag="1.0.0-1625794661000" namespaceUri="https://clinicalknowledgemanagement.mayo.edu/artifacts/" establishedOn="2021-07-08T00:00:00">
+            <id:uuid>56890798-26b1-388b-b408-22b21e2d04f0</id:uuid>
+        </surr:artifactId>
+        <surr:representation>
+            <api:language referentId="https://www.omg.org/spec/API4KP/20200801/metadata" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KRLanguage#00ef65f4-31fa-3ae9-83aa-be140d72d303" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KRLanguage/versions/20210401#00ef65f4-31fa-3ae9-83aa-be140d72d303" tag="surr-v2" versionTag="20210401" name="Knowledge Asset Surrogate 2.0" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/KRLanguage" establishedOn="2021-04-01T00:00:00">
+                <id:uuid>00ef65f4-31fa-3ae9-83aa-be140d72d303</id:uuid>
+            </api:language>
+            <api:format referentId="http://json.org/20171201" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KRFormat#466deec7-6ecd-35fc-a6d3-8571f6324d54" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/KRFormat/versions/20210401#466deec7-6ecd-35fc-a6d3-8571f6324d54" tag="json" versionTag="20210401" name="JSON" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/KRFormat" establishedOn="2021-04-01T00:00:00">
+                <id:uuid>466deec7-6ecd-35fc-a6d3-8571f6324d54</id:uuid>
+            </api:format>
+        </surr:representation>
+    </surr:surrogate>
+    <surr:links xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="surr:Dependency">
+        <surr:rel referentId="https://www.omg.org/spec/API4KP/api4kp/dependsOn" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/DependencyRelType#fdc5cdcb-de66-3674-8607-2a8ae01b6c38" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/DependencyRelType/versions/20210401#fdc5cdcb-de66-3674-8607-2a8ae01b6c38" tag="dependsOn" versionTag="20210401" name="depends on" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/DependencyRelType" establishedOn="2021-04-01T00:00:00">
+            <id:uuid>fdc5cdcb-de66-3674-8607-2a8ae01b6c38</id:uuid>
+        </surr:rel>
+        <surr:href resourceId="urn:uuid:15ec3f90-e43f-4491-b9fb-d6646237501c" versionId="urn:uuid:15ec3f90-e43f-4491-b9fb-d6646237501c:0.0.0" tag="15ec3f90-e43f-4491-b9fb-d6646237501c" versionTag="0.0.0" namespaceUri="urn:uuid:" establishedOn="2021-07-08T00:00:00">
+            <id:uuid>15ec3f90-e43f-4491-b9fb-d6646237501c</id:uuid>
+        </surr:href>
+    </surr:links>
+    <surr:lifecycle>
+        <surr:publicationStatus referentId="http://purl.org/spar/pso/draft" resourceId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus#f91b2829-bf86-33e3-9809-4e1dedb6f947" versionId="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus/versions/2014-02-01#f91b2829-bf86-33e3-9809-4e1dedb6f947" tag="draft" versionTag="2014-02-01" name="draft" namespaceUri="https://www.omg.org/spec/API4KP/20200801/taxonomy/PublicationStatus" establishedOn="2021-07-08T00:00:00">
+            <id:uuid>f91b2829-bf86-33e3-9809-4e1dedb6f947</id:uuid>
+        </surr:publicationStatus>
+    </surr:lifecycle>
+</surr:knowledgeAsset>

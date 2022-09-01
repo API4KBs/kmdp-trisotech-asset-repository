@@ -1,0 +1,50 @@
+# PREFIX sets up the namespaces to be used in the query
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX tt: <http://www.trisotech.com/graph/1.0/element#>
+PREFIX ttr: <http://www.trisotech.com/graph/1.0/elementRel#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# ?model is our variable we will expect in the output
+# ?model will be a DMN or CMMN model id
+# ?assetId is the enterprise ID that is associated with this artifact through a customAttribute; can vary by version
+# ?version is the latest version of the model
+# ?state is the published state of the model
+# ?updated is the date this version was last updated
+# ?mimeType helps with the ability to retrieve the correct filetype for the model
+# ?artifactName is the name of the model
+# because version is only on published models, not all models will be returned with this SELECT; can make version OPTIONAL
+# NOTE: just because a model is published, does NOT mean it is 'Published'
+SELECT ?model ?assetId ?assetType ?version ?state ?updated ?mimeType ?artifactName
+FROM NAMED ?
+WHERE {
+GRAPH ? {
+    # gets the customAttribute. This is where the knowledgeAsset is stored
+    ?customAttribute a tt:CustomAttribute .
+    # gets the customAttribute key value and only key values that are 'knowledgeAssetId' (case-insensitive)
+    ?customAttribute ttr:key ?key
+    # the 'i' makes the query case-insensitive
+    FILTER regex(?key, "knowledgeAssetId", "i") .
+    # gets the assetId
+    ?customAttribute ttr:value ?assetId .
+    ?node ttr:customAttribute ?customAttribute .
+    # the model identifier
+    ?node ttr:owner ?model .
+    # the model file name
+    ?model rdfs:label ?artifactName .
+    # gets the mimeType
+    ?model ttr:mimeType ?mimeType .
+    # gets the state - only latest state is returned; there will only be a state if the model is published
+    OPTIONAL { ?model ttr:state ?state } .
+    # gets the timestamp of last update
+    OPTIONAL { ?model ttr:updated ?updated } .
+    # gets the version - only latest version is returned; there will only be a version if the model is published
+    OPTIONAL { ?model ttr:version ?version } .
+    # gets the asset type from an annotation on the same element that carries the assetId
+    OPTIONAL { ?node ttr:semantic ?ann.
+               ?ann ttr:ref ?assetType.
+               FILTER regex(str(?assetType), '^.+(Clinical)?KnowledgeAssetType#.+') } .
+  }
+}

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>kmdp-trisotech-asset-repository-service</artifactId>
+    <groupId>edu.mayo.kmdp</groupId>
+    <version>4.8.6-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>kmdp-knowledge-asset-repository-trisotech</artifactId>
+  <version>4.8.6-SNAPSHOT</version>
+
+  <packaging>war</packaging>
+
+  <name>Trisotech :: Knowledge Asset Repository :: Server</name>
+
+
+  <!-- project -->
+  <dependencies>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-knowledge-asset-repository-trisotech-core</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-asset-repository-service-client</artifactId>
+      <version>${kmdp.impl.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

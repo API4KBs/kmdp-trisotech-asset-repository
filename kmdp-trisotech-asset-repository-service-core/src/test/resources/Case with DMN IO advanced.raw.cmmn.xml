@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<semantic:definitions xmlns:dmn="https://www.omg.org/spec/DMN/20191111/MODEL/"
+  xmlns:feel="https://www.omg.org/spec/DMN/20191111/FEEL/"
+  xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"
+  xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+  exporter="Case Modeler"
+  exporterVersion="7.15.5" expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+  id="_fe1571c7-ec61-42fa-9abb-6634a15e590a"
+  name="Tst CFI Output 2" targetNamespace="http://www.trisotech.com/definitions/_fe1571c7-ec61-42fa-9abb-6634a15e590a"
+  xmlns="http://www.trisotech.com/definitions/_fe1571c7-ec61-42fa-9abb-6634a15e590a" triso:logoChoice="Default" xml:lang="en">
+  <semantic:association id="_882269da-8926-482a-87b3-351cd3e83986"
+    sourceRef="_e2e3a8fc-98d6-4170-8d10-c955931d404d"
+    targetRef="_2cedb138-9197-4cbe-8dba-a276692e657e"/>
+  <semantic:association id="_2ff503e7-b0fc-4aee-b2d9-ea76d76a75a4"
+    sourceRef="_dba76dd1-a717-4a31-bf31-f294181ab746"
+    targetRef="_da9e29af-d8ae-440a-ae59-57e14c459cca"/>
+  <semantic:association id="_7bb6ac06-822a-48a4-aaf2-39bb1c61f2bc"
+    sourceRef="_da9e29af-d8ae-440a-ae59-57e14c459cca"
+    targetRef="_453ef2e7-9e74-414b-8fbc-f7095de94943"/>
+  <semantic:case id="Case_d2b368f4-434c-4a29-b245-2ea69f8e1487" name="Example Case">
+    <semantic:caseFileModel>
+      <semantic:caseFileItem definitionRef="_468a6227-dfeb-4b28-9bea-7c0126e4434c" id="_e2e3a8fc-98d6-4170-8d10-c955931d404d"
+        name="My Output"/>
+      <semantic:caseFileItem definitionRef="_fb915029-f5c3-4a4a-8395-8d3cbdc63b25" id="_dba76dd1-a717-4a31-bf31-f294181ab746"
+        name="My Out 2"/>
+      <semantic:caseFileItem definitionRef="_9b8baac2-265b-4bf6-87b5-f974216183e9" id="_453ef2e7-9e74-414b-8fbc-f7095de94943"
+        name="My Out 3"/>
+    </semantic:caseFileModel>
+    <semantic:casePlanModel id="_d2b368f4-434c-4a29-b245-2ea69f8e1487" name="Example Case">
+      <semantic:planItem definitionRef="PID__ed8d095d-4758-4f70-82a0-ecc8422d3cb1"
+        id="_ed8d095d-4758-4f70-82a0-ecc8422d3cb1"/>
+      <semantic:stage id="PID__ed8d095d-4758-4f70-82a0-ecc8422d3cb1" name="Example Stage">
+        <semantic:decisionTask decisionRef="_3891466ff3e6132e9bd65e8c955f56a8"
+          id="PID__2cedb138-9197-4cbe-8dba-a276692e657e" name="Pt Old Assessment"
+          triso:linkedTermsId="">
+          <semantic:defaultControl>
+            <semantic:manualActivationRule id="_9c9e1b2d-97ca-4a6e-99c0-5fd00bb2ce02"/>
+          </semantic:defaultControl>
+          <semantic:extensionElements>
+            <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision"
+              graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu" id="_169a0d6a-1674-4822-b3c8-e4508e097405"
+              itemName="Pt Old"
+              mimeType="application/vnd.triso-dmn+json"
+              modelName="Age Alternatives"
+              modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+              modelURI="http://www.trisotech.com/definitions/_6bd89a34-5b38-4d95-9b41-e65a75e94423"
+              uri="http://www.trisotech.com/definitions/_6bd89a34-5b38-4d95-9b41-e65a75e94423#_747105f2-e3e0-46da-9a7e-7c7c23637943"/>
+            <triso:dataInputBindings>
+              <dmn:context>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_6e179de4-769e-4f88-8344-04bab5888863">
+                    <dmn:text>42</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_1533cae7-670a-47a4-a10a-b923c38362d5" name="Age At Admission"
+                    typeRef="Age" triso:inputRef="_fa036aab-319d-47dd-ac6d-2ff2dda7a905"/>
+                </dmn:contextEntry>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_d2a5a918-7ee4-458b-a334-98cf67f1e505">
+                    <dmn:text>123</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_682da656-9217-433b-87bc-3913e5e373f5" name="Patient MRN"
+                    typeRef="feel:string" triso:inputRef="_62859dec-d5b5-462d-9d0d-018494e1307b"/>
+                </dmn:contextEntry>
+              </dmn:context>
+            </triso:dataInputBindings>
+            <triso:dataOutputBindings>
+              <dmn:context>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_b7b61210-a4f7-4174-98df-d3a75d3c07c9">
+                    <dmn:text>Pt Old + "AA"</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_4c4d370d-b01e-4a39-b8bd-07e87de0c528" name="My Output"
+                    typeRef="feel:Any"
+                    triso:caseFileItemRef="_e2e3a8fc-98d6-4170-8d10-c955931d404d"/>
+                </dmn:contextEntry>
+              </dmn:context>
+            </triso:dataOutputBindings>
+          </semantic:extensionElements>
+          <semantic:input id="_fa036aab-319d-47dd-ac6d-2ff2dda7a905" name="Age At Admission"
+            triso:definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+            triso:linkedTermsId=""
+            triso:structureRef="Age">
+            <semantic:extensionElements>
+              <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/element#Parameter"
+                graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu" id="_21a9e43a-a9f2-4a74-b99b-091c6fb54312"
+                itemName="Age At Admission"
+                mimeType="application/vnd.triso-dmn+json"
+                modelName="Age Alternatives"
+                modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+                modelURI="http://www.trisotech.com/definitions/_6bd89a34-5b38-4d95-9b41-e65a75e94423"
+                uri="http://www.trisotech.com/definitions/_6bd89a34-5b38-4d95-9b41-e65a75e94423#_5b5913f0-6fca-417c-a925-d517b082f2e5-_d5c3d44d-8b18-4e32-aba7-fe9d6d5f151c"/>
+            </semantic:extensionElements>
+          </semantic:input>
+          <semantic:input id="_62859dec-d5b5-462d-9d0d-018494e1307b" name="Patient MRN"
+            triso:definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+            triso:structureRef="feel:string">
+            <semantic:extensionElements>
+              <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/element#Parameter"
+                graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu" id="_ea6d3334-4730-449e-929b-427d2591d84d"
+                itemName="Patient MRN"
+                mimeType="application/vnd.triso-dmn+json"
+                modelName="Age Alternatives"
+                modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+                modelURI="http://www.trisotech.com/definitions/_6bd89a34-5b38-4d95-9b41-e65a75e94423"
+                uri="http://www.trisotech.com/definitions/_6bd89a34-5b38-4d95-9b41-e65a75e94423#_6f5f1802-c2c7-4608-828d-a519845fafde-_929185dc-afaa-4e4a-8d63-f5479bf6cde8"/>
+            </semantic:extensionElements>
+          </semantic:input>
+          <semantic:output id="_b458fcf5-a949-45ec-ad53-fce74d96515b" name="Pt Old"
+            triso:definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+            triso:linkedTermsId=""
+            triso:structureRef="feel:Any">
+            <semantic:extensionElements>
+              <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/element#Outcome"
+                graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu" id="_364c64fa-9de4-46eb-97c5-73627170d1c2"
+                itemName="Pt Old"
+                mimeType="application/vnd.triso-dmn+json"
+                modelName="Age Alternatives"
+                modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+                modelURI="http://www.trisotech.com/definitions/_6bd89a34-5b38-4d95-9b41-e65a75e94423"
+                uri="http://www.trisotech.com/definitions/_6bd89a34-5b38-4d95-9b41-e65a75e94423#_747105f2-e3e0-46da-9a7e-7c7c23637943-outcome"/>
+            </semantic:extensionElements>
+          </semantic:output>
+        </semantic:decisionTask>
+        <semantic:decisionTask decisionRef="_a3add91e66910a950627af4dde2fb9db"
+          id="PID__da9e29af-d8ae-440a-ae59-57e14c459cca" name="Multi-Assessment Decision"
+          triso:linkedTermsId="">
+          <semantic:defaultControl>
+            <semantic:manualActivationRule id="_85b1197a-294d-4995-aac8-6a4f736171a1"/>
+          </semantic:defaultControl>
+          <semantic:extensionElements>
+            <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/decision/element#DecisionService"
+              graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu" id="_9294902f-d8e9-48d6-9a4c-042e827f4f87"
+              itemName="Whole Model Decision Service"
+              mimeType="application/vnd.triso-dmn+json"
+              modelName="OneToMany Decision Service"
+              modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+              modelURI="http://www.trisotech.com/definitions/_26717301-c841-49ec-a888-89b540d678c1"
+              uri="http://www.trisotech.com/definitions/_26717301-c841-49ec-a888-89b540d678c1#_26717301-c841-49ec-a888-89b540d678c1_DS"/>
+            <triso:dataInputBindings>
+              <dmn:context>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_4bf77a8b-dc7f-4793-a4a2-4911e7ae3cd1">
+                    <dmn:text>My Output</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_c9662a81-dd62-4651-9157-6b1076bd4a26" name="Dec Input"
+                    typeRef="feel:string" triso:inputRef="_cccd865a-cae2-48f2-9f91-635523756fde"/>
+                </dmn:contextEntry>
+              </dmn:context>
+            </triso:dataInputBindings>
+            <triso:dataOutputBindings>
+              <dmn:context>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_69bca323-54c5-4a7c-8512-5f8b7afc4443">
+                    <dmn:text>Dec Out 1</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_ca02ea1d-5260-42c3-885d-d7ad14189cf6" name="My Out 2"
+                    triso:caseFileItemRef="_dba76dd1-a717-4a31-bf31-f294181ab746"/>
+                </dmn:contextEntry>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_7fb6cc78-dac7-440a-a58f-5acf11603c77">
+                    <dmn:text>Dec Out 2</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_e5a89deb-028e-4da8-8cdf-8bfd4586ccb2" name="My Out 3"
+                    triso:caseFileItemRef="_453ef2e7-9e74-414b-8fbc-f7095de94943"/>
+                </dmn:contextEntry>
+              </dmn:context>
+            </triso:dataOutputBindings>
+          </semantic:extensionElements>
+          <semantic:input id="_cccd865a-cae2-48f2-9f91-635523756fde" name="Dec Input"
+            triso:definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+            triso:structureRef="feel:string">
+            <semantic:extensionElements>
+              <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/element#Parameter"
+                graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu" id="_dbb90ac3-68f5-4985-8714-b43865bf9312"
+                itemName="Dec Input"
+                mimeType="application/vnd.triso-dmn+json"
+                modelName="OneToMany Decision Service"
+                modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+                modelURI="http://www.trisotech.com/definitions/_26717301-c841-49ec-a888-89b540d678c1"
+                uri="http://www.trisotech.com/definitions/_26717301-c841-49ec-a888-89b540d678c1#_26717301-c841-49ec-a888-89b540d678c1_DS-_6e559bd4-d291-4bb4-9186-a9163bc0b4bc-parameter"/>
+            </semantic:extensionElements>
+          </semantic:input>
+          <semantic:output id="_a6c9d935-e5fc-4d18-b818-5fe97b901425" name="Dec Out 1"
+            triso:definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+            triso:structureRef="feel:Any">
+            <semantic:extensionElements>
+              <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/element#Outcome"
+                graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu" id="_4bf7e3a0-a95d-43dd-a82d-f867546bbd61"
+                itemName="Dec Out 1"
+                mimeType="application/vnd.triso-dmn+json"
+                modelName="OneToMany Decision Service"
+                modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+                modelURI="http://www.trisotech.com/definitions/_26717301-c841-49ec-a888-89b540d678c1"
+                uri="http://www.trisotech.com/definitions/_26717301-c841-49ec-a888-89b540d678c1#_26717301-c841-49ec-a888-89b540d678c1_DS-_b5461c7d-b818-46de-9dce-d9474b03e377-outcome"/>
+            </semantic:extensionElements>
+          </semantic:output>
+          <semantic:output id="_bd9b4228-ff0a-4c30-bb6f-286b489e9cda" name="Dec Out 2"
+            triso:definitionType="http://www.trisotech.com/2015/triso/modeling/ItemDefinitionType"
+            triso:structureRef="feel:Any">
+            <semantic:extensionElements>
+              <triso:copyOfLink graphType="http://www.trisotech.com/graph/1.0/element#Outcome"
+                graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu" id="_15502f88-3de3-4e4d-bf21-e4d9d3bbbe17"
+                itemName="Dec Out 2"
+                mimeType="application/vnd.triso-dmn+json"
+                modelName="OneToMany Decision Service"
+                modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+                modelURI="http://www.trisotech.com/definitions/_26717301-c841-49ec-a888-89b540d678c1"
+                uri="http://www.trisotech.com/definitions/_26717301-c841-49ec-a888-89b540d678c1#_26717301-c841-49ec-a888-89b540d678c1_DS-_c6f0d9a2-53db-4417-b140-078c712f5006-outcome"/>
+            </semantic:extensionElements>
+          </semantic:output>
+        </semantic:decisionTask>
+        <semantic:planItem definitionRef="PID__da9e29af-d8ae-440a-ae59-57e14c459cca"
+          id="_da9e29af-d8ae-440a-ae59-57e14c459cca"/>
+        <semantic:planItem definitionRef="PID__2cedb138-9197-4cbe-8dba-a276692e657e"
+          id="_2cedb138-9197-4cbe-8dba-a276692e657e"/>
+        <semantic:planItem definitionRef="PID__1b4b08a6-b7d3-41ff-9bc8-a798daea09b4"
+          id="_1b4b08a6-b7d3-41ff-9bc8-a798daea09b4"/>
+        <semantic:processTask id="PID__1b4b08a6-b7d3-41ff-9bc8-a798daea09b4" name="Order Drugs">
+          <semantic:defaultControl>
+            <semantic:manualActivationRule id="_bb7f656f-3bf5-403a-8871-1dfe985152c6"/>
+          </semantic:defaultControl>
+          <semantic:extensionElements>
+            <triso:dataInputBindings>
+              <dmn:context>
+                <dmn:contextEntry>
+                  <dmn:literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_b04a7b93-7565-4c63-afbd-c42f86234bcf">
+                    <dmn:text>"https://ckm.m.e/a/123456-00000"</dmn:text>
+                  </dmn:literalExpression>
+                  <dmn:variable id="_8e414375-46b1-43b0-854e-2de151f245e3" name="Drug Regimen"
+                    triso:inputRef="_aae271fc-76b4-48cd-80c0-6ba711be9081"/>
+                </dmn:contextEntry>
+              </dmn:context>
+            </triso:dataInputBindings>
+          </semantic:extensionElements>
+          <semantic:input id="_aae271fc-76b4-48cd-80c0-6ba711be9081" name="Drug Regimen"/>
+        </semantic:processTask>
+      </semantic:stage>
+    </semantic:casePlanModel>
+    <semantic:extensionElements/>
+  </semantic:case>
+  <semantic:caseFileItemDefinition definitionType="XSD Element" id="_468a6227-dfeb-4b28-9bea-7c0126e4434c" name="My Output"
+    structureRef="Any"/>
+  <semantic:caseFileItemDefinition id="_84edd3f4-bd55-49dc-89fa-5bfcba297f8c" name="Drug Regimen"/>
+  <semantic:caseFileItemDefinition id="_fb915029-f5c3-4a4a-8395-8d3cbdc63b25" name="My Out 2"/>
+  <semantic:caseFileItemDefinition id="_9b8baac2-265b-4bf6-87b5-f974216183e9" name="My Out 3"/>
+  <semantic:decision externalRef="ns1:_747105f2-e3e0-46da-9a7e-7c7c23637943" id="_3891466ff3e6132e9bd65e8c955f56a8"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Pt Old"
+    triso:modelId="_6bd89a34-5b38-4d95-9b41-e65a75e94423"/>
+  <semantic:decision externalRef="ns2:_26717301-c841-49ec-a888-89b540d678c1_DS" id="_a3add91e66910a950627af4dde2fb9db"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Whole Model Decision Service"
+    triso:modelId="_26717301-c841-49ec-a888-89b540d678c1"/>
+  <semantic:extensionElements>
+    <triso:itemDefinitions>
+      <triso:itemDefinition isCollection="false" label="Age" name="Age">
+        <semantic:extensionElements>
+          <triso:reuseLink graphType="http://www.trisotech.com/graph/1.0/element#ItemDefinition"
+            graphURI="http://trisotech.com/graph/1.0/graph#%7Cpersonal%7C/sottara.davide%40mayo.edu" id="_f97a72d1-0da5-4917-ae35-8d64e1573a15"
+            itemName="Age"
+            mimeType="application/vnd.triso-businessentity+json"
+            modelName="KEM Data Modeling experiment"
+            modelType="http://www.trisotech.com/graph/1.0/element#BusinessEntityModel"
+            modelURI="http://www.trisotech.com/definitions/_d3890d1c-6b89-420e-8aef-a8ea8110669c"
+            uri="http://www.trisotech.com/definitions/_d3890d1c-6b89-420e-8aef-a8ea8110669c#Age"/>
+        </semantic:extensionElements>
+        <triso:itemComponent id="_de312b2e-00c0-4188-af9e-50d3bc67361e" isCollection="false"
+          name="years">
+          <triso:typeRef>number</triso:typeRef>
+        </triso:itemComponent>
+        <triso:itemComponent id="_adf20f39-16d2-4642-95c2-ab303b61c929" isCollection="false"
+          name="category">
+          <triso:allowedValues triso:constraintsType="enumeration">
+            <semantic:extensionElements>
+              <triso:constraintDetails>
+                <triso:choices>
+                  <triso:display>"young"</triso:display>
+                  <triso:value>"young"</triso:value>
+                </triso:choices>
+                <triso:choices>
+                  <triso:display>"adult"</triso:display>
+                  <triso:value>"adult"</triso:value>
+                </triso:choices>
+                <triso:choices>
+                  <triso:display>"old"</triso:display>
+                  <triso:value>"old"</triso:value>
+                </triso:choices>
+                <triso:display>"young", "adult", "old"</triso:display>
+              </triso:constraintDetails>
+            </semantic:extensionElements>
+            <triso:text>"young","adult","old"</triso:text>
+          </triso:allowedValues>
+          <triso:typeRef>string</triso:typeRef>
+        </triso:itemComponent>
+      </triso:itemDefinition>
+    </triso:itemDefinitions>
+  </semantic:extensionElements>
+  <semantic:import
+    importType="https://www.omg.org/spec/DMN/20191111/MODEL/"
+    location="Age Alternatives.dmn" namespace="http://www.trisotech.com/definitions/_6bd89a34-5b38-4d95-9b41-e65a75e94423"/>
+  <semantic:import
+    importType="https://www.omg.org/spec/DMN/20191111/MODEL/"
+    location="OneToMany Decision Service.dmn"
+    namespace="http://www.trisotech.com/definitions/_26717301-c841-49ec-a888-89b540d678c1"/>
+</semantic:definitions>

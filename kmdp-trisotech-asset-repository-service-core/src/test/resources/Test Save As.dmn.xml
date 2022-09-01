@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:definitions xmlns:ns1="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                 xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/e36338e7-500c-43a0-881d-22aa5dc538df"
+                 xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets/"
+                 xmlns:boxedext="https://www.trisotech.com/spec/DMN/20191111/EXT/"
+                 xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+                 xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/"
+                 xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/"
+                 xmlns:feel="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                 xmlns:i18n="http://www.omg.org/spec/BPMN/non-normative/extensions/i18n/1.0"
+                 xmlns:include1="https://clinicalknowledgemanagement.mayo.edu/artifacts/1b718a90-e60a-4989-be5f-c0db247c1a3f"
+                 xmlns:ns2="https://clinicalknowledgemanagement.mayo.edu/artifacts/"
+                 xmlns:ns3="https://clinicalknowledgemanagement.mayo.edu/artifacts/"
+                 xmlns:openapi="https://openapis.org/omg/extension/1.0"
+                 xmlns:rss="http://purl.org/rss/2.0/"
+                 xmlns:semantic="https://www.omg.org/spec/DMN/20191111/MODEL/"
+                 xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
+                 xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase"
+                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 id="_e36338e7-500c-43a0-881d-22aa5dc538df"
+                 name="Test Save As"
+                 namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/e36338e7-500c-43a0-881d-22aa5dc538df"
+                 xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd https://www.omg.org/spec/DMN/1.2/ http://www.omg.org/spec/DMN/20180521/MODEL/">
+   <ns1:extensionElements/>
+   <ns1:decision id="_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"
+                 name="Weaver Test 1 Decision">
+      <ns1:extensionElements/>
+      <ns1:variable id="_aeba48e7-a5e2-4a2f-a591-f5ddd5dc41cc"
+                    name="Weaver Test 1 Decision"
+                    typeRef="string"/>
+      <ns1:literalExpression id="_e38ca61b-db31-4025-9b58-2c7ca2d1ce4e" typeRef="string">
+         <ns1:text>42</ns1:text>
+      </ns1:literalExpression>
+   </ns1:decision>
+   <ns1:inputData id="_12873790-73be-4484-bec7-72cb8a6af004" name="Current Weight">
+      <ns1:extensionElements>
+         <surr:annotation xmlns:api="https://www.omg.org/spec/API4KP/20200801/services"
+                          xmlns:id="https://www.omg.org/spec/API4KP/20200801/id"
+                          xmlns:idx="https://www.omg.org/spec/API4KP/20200801/id/resources"
+                          xmlns:surrx="https://www.omg.org/spec/API4KP/20200801/surrogate/resources">
+            <surr:ref establishedOn="2020-12-17T00:00:00"
+                      name="Most Recent Weight"
+                      namespaceUri="https://ontology.mayo.edu/taxonomies/clinicalsituations"
+                      referentId="http://ontology.mayo.edu/ontologies/clinicalsituationontology/2d0e15f2-7676-3288-bfd1-3465eb5efff9"
+                      resourceId="https://ontology.mayo.edu/taxonomies/clinicalsituations#2d0e15f2-7676-3288-bfd1-3465eb5efff9"
+                      tag="2d0e15f2-7676-3288-bfd1-3465eb5efff9"
+                      versionId="https://ontology.mayo.edu/taxonomies/clinicalsituations/versions/20201222-000423#2d0e15f2-7676-3288-bfd1-3465eb5efff9"
+                      versionTag="20201222-000423">
+               <id:uuid>2d0e15f2-7676-3288-bfd1-3465eb5efff9</id:uuid>
+            </surr:ref>
+         </surr:annotation>
+      </ns1:extensionElements>
+      <ns1:variable id="_9b022735-4f62-4f8b-987c-b60ffce1f17b"
+                    name="Current Weight"
+                    typeRef="string"/>
+   </ns1:inputData>
+   <ns1:inputData id="_e6d4f102-4f65-40d1-bb1c-9d5b43799157" name="Current Height">
+      <ns1:variable id="_6b582b8c-1d76-4f34-9d74-553988d220c4"
+                    name="Current Height"
+                    typeRef="string"/>
+   </ns1:inputData>
+   <ns1:decisionService id="_cb8b0829-ebaa-465a-a654-8ba8a53c8793" name="Decision">
+      <ns1:variable id="_e4e11291-684f-4287-9cd4-dbfe2ffe1dc2"
+                    name="Decision"
+                    typeRef="Any"/>
+      <ns1:outputDecision href="#_a57a0349-d0d9-4381-8c14-bb4ecb0a61cf"/>
+   </ns1:decisionService>
+   <ns1:decisionService id="_2d9e4438-b341-432f-a081-fa4082003e68" name="">
+      <ns1:variable id="_497e538f-b91c-4daa-8cda-a690fb7596ce" name="" typeRef="Any"/>
+   </ns1:decisionService>
+   <ns2:DMNDI xmlns:ns2="http://www.omg.org/spec/DMN/20180521/DMNDI/"/>
+</ns1:definitions>

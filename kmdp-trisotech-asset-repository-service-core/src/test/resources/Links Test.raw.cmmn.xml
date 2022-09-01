@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"
+                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+                      xmlns="http://www.trisotech.com/definitions/_1d64d702-1f3f-42d9-8149-7e73c0231e84"
+                      xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
+                      xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC"
+                      xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
+                      xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      xmlns:i18n="http://www.omg.org/spec/BPMN/non-normative/extensions/i18n/1.0"
+                      xmlns:ns1="http://www.trisotech.com/definitions/_d18e1734-6f1f-46e9-bc6d-54745307f493"
+                      xmlns:rss="http://purl.org/rss/2.0/"
+                      xmlns:trisocmmn="http://www.trisotech.com/2014/triso/cmmn"
+                      exporter="Trisotech DES API Repository Conversion"
+                      exporterVersion="7.9.2"
+                      expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/"
+                      id="_1d64d702-1f3f-42d9-8149-7e73c0231e84"
+                      name="Links Test"
+                      targetNamespace="http://www.trisotech.com/definitions/_1d64d702-1f3f-42d9-8149-7e73c0231e84"
+                      triso:logoChoice="Default"
+                      triso:state="Draft"
+                      triso:version="1.0.0"
+                      xml:lang="en">
+   <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument"
+                                    id="_3c0b4233-241b-442d-8141-f92c834acf9f"
+                                    name="Fake Content"
+                                    structureRef="assets:937691e6-d9d5-4a4f-9c17-13542f82da5e:0.0.0"/>
+   <semantic:caseFileItemDefinition id="_c48aff72-d781-46a5-84d6-36a915454e0b" name="Fake Data"/>
+   <semantic:case id="Case_8d61c948-76a1-4b5f-9b18-641e1ed40f61" name="Linked Case">
+      <semantic:caseFileModel>
+         <semantic:caseFileItem definitionRef="_3c0b4233-241b-442d-8141-f92c834acf9f"
+                                id="_09b1cc79-3b26-4bf5-b672-32f85f84344c"
+                                name="Fake Content"/>
+         <semantic:caseFileItem definitionRef="_c48aff72-d781-46a5-84d6-36a915454e0b"
+                                id="_555b4609-7290-4828-ab56-1d57a2a25beb"
+                                name="Fake Data">
+            <semantic:extensionElements>
+               <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
+                                   graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                                   id="_2d47e524-1f19-4b33-ac08-8044ffdca4e0"
+                                   itemName="Test Has Condition"
+                                   modelName="Clinical Situations"
+                                   modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                                   type="graph"
+                                   uri="https://ontology.mayo.edu/taxonomies/clinicalsituations#24a056c5-7ee8-343d-869d-0e05de819c41"/>
+            </semantic:extensionElements>
+         </semantic:caseFileItem>
+      </semantic:caseFileModel>
+      <semantic:casePlanModel id="_8d61c948-76a1-4b5f-9b18-641e1ed40f61" name="Linked Case">
+         <semantic:extensionElements>
+            <triso:customAttribute id="_4ca1bc2a-4178-418d-ae2d-0cfe01a8968e"
+                                   key="knowledgeAssetId"
+                                   type="string"
+                                   value="urn:uuid:6181e58f-d85a-4ded-916e-65a6142deacb:0.0.0"/>
+         </semantic:extensionElements>
+         <semantic:planItem definitionRef="PID__57729d14-7025-4f45-bbdf-7a867677efb9"
+                            id="_57729d14-7025-4f45-bbdf-7a867677efb9"/>
+         <semantic:planItem definitionRef="PID__6885471a-f9c1-4622-812c-af743e11e281"
+                            id="_6885471a-f9c1-4622-812c-af743e11e281"/>
+         <semantic:planItem definitionRef="PID__f283d1d2-6fde-4c1a-8bb3-e5cb3be32f87"
+                            id="_f283d1d2-6fde-4c1a-8bb3-e5cb3be32f87"/>
+         <semantic:humanTask id="PID__57729d14-7025-4f45-bbdf-7a867677efb9" name="Do Something">
+            <semantic:extensionElements>
+               <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
+                                   graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                                   id="_9c12b292-b8f3-4197-b629-52c591cb0da6"
+                                   itemName="Educate"
+                                   modelName="ClinicalTasks - ClinicalTasks"
+                                   modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                                   type="graph"
+                                   uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#14e929a2-a22a-3107-8a38-692107b0f7c5"/>
+            </semantic:extensionElements>
+            <semantic:defaultControl>
+               <semantic:manualActivationRule id="_4b6d2a1f-d568-4842-9e80-aa738eea850b"/>
+            </semantic:defaultControl>
+         </semantic:humanTask>
+         <semantic:decisionTask decisionRef="_88133dc383f362004a511da2ed5b9153"
+                                id="PID__6885471a-f9c1-4622-812c-af743e11e281"
+                                name="Mock Decision"
+                                triso:linkedTermsId="">
+            <semantic:extensionElements>
+               <triso:reuseLink graphType="http://www.trisotech.com/graph/1.0/decision/element#Decision"
+                                id="_8c8c3ec6-1c1a-42fe-bafd-8c225868f682"
+                                itemName="Mock Decision"
+                                mimeType="application/vnd.triso-dmn+json"
+                                modelName="Links Decision"
+                                modelType="http://www.trisotech.com/graph/1.0/element#DMNModel"
+                                uri="http://www.trisotech.com/definitions/_d18e1734-6f1f-46e9-bc6d-54745307f493#_be8344df-e238-4315-bd62-93edd19fd690"/>
+            </semantic:extensionElements>
+            <semantic:defaultControl>
+               <semantic:manualActivationRule id="_57f76776-b968-4af6-8a35-2dd7524fab99"/>
+            </semantic:defaultControl>
+         </semantic:decisionTask>
+         <semantic:humanTask id="PID__f283d1d2-6fde-4c1a-8bb3-e5cb3be32f87"
+                             name="Do Something Again">
+            <semantic:extensionElements>
+               <triso:semanticLink graphType="http://www.trisotech.com/graph/1.0/element#Entity"
+                                   graphURI="http://trisotech.com/graph/1.0/graph#framework"
+                                   id="_783693db-efe5-4813-bc8a-aed32162d2cd"
+                                   itemName="Educate"
+                                   modelName="ClinicalTasks - ClinicalTasks"
+                                   modelType="http://www.trisotech.com/graph/1.0/element#Framework"
+                                   type="graph"
+                                   uri="https://ontology.mayo.edu/taxonomies/ClinicalTasks#14e929a2-a22a-3107-8a38-692107b0f7c5"/>
+            </semantic:extensionElements>
+            <semantic:defaultControl>
+               <semantic:manualActivationRule id="_e7cb1c54-d189-49eb-bdc6-94f8c6940022"/>
+            </semantic:defaultControl>
+         </semantic:humanTask>
+      </semantic:casePlanModel>
+   </semantic:case>
+   <semantic:decision externalRef="ns1:_be8344df-e238-4315-bd62-93edd19fd690"
+                      id="_88133dc383f362004a511da2ed5b9153"
+                      implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+                      name="Mock Decision"
+                      triso:modelId="_d18e1734-6f1f-46e9-bc6d-54745307f493"/>
+   <semantic:association id="_b1c05574-a407-4022-8de9-95a90c2c5ae0"
+                         sourceRef="_09b1cc79-3b26-4bf5-b672-32f85f84344c"
+                         targetRef="_57729d14-7025-4f45-bbdf-7a867677efb9"/>
+   <cmmndi:CMMNDI>
+      <cmmndi:CMMNDiagram cmmnElementRef="_1d64d702-1f3f-42d9-8149-7e73c0231e84"
+                          id="_8407edb3-b230-41b3-ae47-cb65b9f5c70c"
+                          name="Page 1">
+         <cmmndi:Size height="1050" width="1547"/>
+         <cmmndi:CMMNShape cmmnElementRef="_8d61c948-76a1-4b5f-9b18-641e1ed40f61"
+                           id="_1e43a9f5-6a6e-46c2-9e36-3db4b0671344">
+            <cmmndi:CMMNStyle>
+               <cmmndi:FillColor blue="255" green="255" red="255"/>
+               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+               <cmmndi:FontColor blue="0" green="0" red="0"/>
+            </cmmndi:CMMNStyle>
+            <dc:Bounds height="351" width="542" x="297.5" y="83"/>
+            <cmmndi:CMMNLabel triso:defaultBounds="true">
+               <dc:Bounds height="15" width="195" x="206" y="76.5"/>
+            </cmmndi:CMMNLabel>
+         </cmmndi:CMMNShape>
+         <cmmndi:CMMNShape cmmnElementRef="_57729d14-7025-4f45-bbdf-7a867677efb9"
+                           id="_031181b4-a424-4106-94a2-f34d4fd0269b">
+            <cmmndi:CMMNStyle>
+               <cmmndi:FillColor blue="255" green="255" red="255"/>
+               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+               <cmmndi:FontColor blue="0" green="0" red="0"/>
+            </cmmndi:CMMNStyle>
+            <dc:Bounds height="76" width="96" x="514.5" y="156"/>
+            <cmmndi:CMMNLabel triso:defaultBounds="true">
+               <dc:Bounds height="15" width="90" x="517.5" y="186.5"/>
+            </cmmndi:CMMNLabel>
+         </cmmndi:CMMNShape>
+         <cmmndi:CMMNShape cmmnElementRef="_09b1cc79-3b26-4bf5-b672-32f85f84344c"
+                           id="_3dca0721-8c05-471a-aa08-bf4b7502da88">
+            <cmmndi:CMMNStyle>
+               <cmmndi:FillColor blue="255" green="255" red="255"/>
+               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+               <cmmndi:FontColor blue="0" green="0" red="0"/>
+            </cmmndi:CMMNStyle>
+            <dc:Bounds height="40" width="34" x="405.5" y="174"/>
+            <cmmndi:CMMNLabel triso:defaultBounds="true">
+               <dc:Bounds height="15" width="110" x="367.5" y="211.5"/>
+            </cmmndi:CMMNLabel>
+         </cmmndi:CMMNShape>
+         <cmmndi:CMMNShape cmmnElementRef="_6885471a-f9c1-4622-812c-af743e11e281"
+                           id="_a03b0150-c89b-42fc-b48a-66680ab3f8eb">
+            <cmmndi:CMMNStyle>
+               <cmmndi:FillColor blue="255" green="255" red="255"/>
+               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+               <cmmndi:FontColor blue="0" green="0" red="0"/>
+            </cmmndi:CMMNStyle>
+            <dc:Bounds height="76" width="96" x="698.5" y="250"/>
+            <cmmndi:CMMNLabel triso:defaultBounds="true">
+               <dc:Bounds height="15" width="90" x="701.5" y="280.5"/>
+            </cmmndi:CMMNLabel>
+         </cmmndi:CMMNShape>
+         <cmmndi:CMMNShape cmmnElementRef="_555b4609-7290-4828-ab56-1d57a2a25beb"
+                           id="_7b62ee9d-e16e-47bc-b509-185feeba3843">
+            <cmmndi:CMMNStyle>
+               <cmmndi:FillColor blue="255" green="255" red="255"/>
+               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+               <cmmndi:FontColor blue="0" green="0" red="0"/>
+            </cmmndi:CMMNStyle>
+            <dc:Bounds height="40" width="34" x="605" y="307"/>
+            <cmmndi:CMMNLabel triso:defaultBounds="true">
+               <dc:Bounds height="15" width="110" x="567" y="344.5"/>
+            </cmmndi:CMMNLabel>
+         </cmmndi:CMMNShape>
+         <cmmndi:CMMNShape cmmnElementRef="_f283d1d2-6fde-4c1a-8bb3-e5cb3be32f87"
+                           id="_3a0c7d49-3450-46a2-9978-2d18513e2acd">
+            <cmmndi:CMMNStyle>
+               <cmmndi:FillColor blue="255" green="255" red="255"/>
+               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+               <cmmndi:FontColor blue="0" green="0" red="0"/>
+            </cmmndi:CMMNStyle>
+            <dc:Bounds height="76" width="96" x="425.5" y="307"/>
+            <cmmndi:CMMNLabel triso:defaultBounds="true">
+               <dc:Bounds height="30" width="90" x="428.5" y="330"/>
+            </cmmndi:CMMNLabel>
+         </cmmndi:CMMNShape>
+         <cmmndi:CMMNEdge cmmnElementRef="_b1c05574-a407-4022-8de9-95a90c2c5ae0"
+                          id="_7193c868-3327-4c7b-a548-0a573d64bba6">
+            <cmmndi:CMMNStyle>
+               <cmmndi:StrokeColor blue="0" green="0" red="0"/>
+               <cmmndi:FontColor blue="0" green="0" red="0"/>
+            </cmmndi:CMMNStyle>
+            <di:waypoint x="439.5" y="194"/>
+            <di:waypoint x="514.5" y="194"/>
+            <cmmndi:CMMNLabel triso:labelPosition="midbottom"/>
+         </cmmndi:CMMNEdge>
+      </cmmndi:CMMNDiagram>
+   </cmmndi:CMMNDI>
+</semantic:definitions>

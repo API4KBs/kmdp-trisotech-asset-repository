@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>kmdp-trisotech-asset-repository-service</artifactId>
+    <groupId>edu.mayo.kmdp</groupId>
+    <version>5.4.2-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>kmdp-knowledge-asset-repository-trisotech-core</artifactId>
+  <version>5.4.2-SNAPSHOT</version>
+
+  <name>Trisotech :: Knowledge Asset Repository :: Core</name>
+
+
+  <!-- project -->
+  <dependencies>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-trisotech-client</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>omg-dmn-12</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>omg-cmmn-11</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>omg-bpmn-202</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- internal -->
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-service-descr</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-rest-ws-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-asset-repository-service-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-asset-surrogate</artifactId>
+    </dependency>
+    <!-- external -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ca.uhn.hapi.fhir</groupId>
+      <artifactId>hapi-fhir-structures-dstu3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-knowledge-transrepresentation-core</artifactId>
+      <version>${kmdp.servers.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-terminology-provider</artifactId>
+      <version>${kmdp.servers.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>Saxon-HE</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+
+</project>

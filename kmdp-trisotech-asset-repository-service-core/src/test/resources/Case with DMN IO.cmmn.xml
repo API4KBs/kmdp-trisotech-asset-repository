@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:assets="https://clinicalknowledgemanagement.mayo.edu/assets/"
+  xmlns:dmn="https://www.omg.org/spec/DMN/20191111/MODEL/"
+  xmlns:feel="https://www.omg.org/spec/DMN/20191111/FEEL/"
+  xmlns:semantic="http://www.omg.org/spec/CMMN/20151109/MODEL"
+  xmlns:surr="https://www.omg.org/spec/API4KP/20200801/surrogate"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+  id="_fe1571c7-ec61-42fa-9abb-6634a15e590a"
+  name="Tst CFI Output 2"
+  targetNamespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/fe1571c7-ec61-42fa-9abb-6634a15e590a"
+  xmlns="https://clinicalknowledgemanagement.mayo.edu/artifacts/fe1571c7-ec61-42fa-9abb-6634a15e590a"
+  xml:lang="en"
+  xsi:schemaLocation="https://www.omg.org/spec/API4KP/20200801/surrogate xsd/API4KP/surrogate/surrogate.xsd CMMN_1_1 http://www.omg.org/spec/CMMN/20151109/MODEL">
+  <semantic:association id="_882269da-8926-482a-87b3-351cd3e83986"
+    sourceRef="_e2e3a8fc-98d6-4170-8d10-c955931d404d"
+    targetRef="_2cedb138-9197-4cbe-8dba-a276692e657e"/>
+  <semantic:case id="Case_d2b368f4-434c-4a29-b245-2ea69f8e1487" name="Example Case">
+    <semantic:caseFileModel>
+      <semantic:caseFileItem definitionRef="_468a6227-dfeb-4b28-9bea-7c0126e4434c"
+        id="_e2e3a8fc-98d6-4170-8d10-c955931d404d"
+        name="My Output"/>
+    </semantic:caseFileModel>
+    <semantic:casePlanModel id="_d2b368f4-434c-4a29-b245-2ea69f8e1487" name="Example Case">
+      <semantic:planItem definitionRef="PID__ed8d095d-4758-4f70-82a0-ecc8422d3cb1"
+        id="_ed8d095d-4758-4f70-82a0-ecc8422d3cb1"/>
+      <semantic:stage id="PID__ed8d095d-4758-4f70-82a0-ecc8422d3cb1" name="Example Stage">
+        <semantic:decisionTask decisionRef="_3891466ff3e6132e9bd65e8c955f56a8"
+          id="PID__2cedb138-9197-4cbe-8dba-a276692e657e"
+          name="Pt Old Assessment">
+          <semantic:defaultControl>
+            <semantic:manualActivationRule id="_9c9e1b2d-97ca-4a6e-99c0-5fd00bb2ce02"/>
+          </semantic:defaultControl>
+          <semantic:extensionElements/>
+          <semantic:input id="_fa036aab-319d-47dd-ac6d-2ff2dda7a905" name="Age At Admission">
+            <semantic:extensionElements>
+              <context xmlns="http://www.omg.org/spec/DMN/20180521/MODEL/">
+                <contextEntry>
+                  <literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_6e179de4-769e-4f88-8344-04bab5888863">
+                    <text>42</text>
+                  </literalExpression>
+                  <variable id="_1533cae7-670a-47a4-a10a-b923c38362d5"
+                    name="Age At Admission"
+                    typeRef="Age"/>
+                </contextEntry>
+              </context>
+            </semantic:extensionElements>
+          </semantic:input>
+          <semantic:input id="_62859dec-d5b5-462d-9d0d-018494e1307b" name="Patient MRN">
+            <semantic:extensionElements>
+              <context xmlns="http://www.omg.org/spec/DMN/20180521/MODEL/">
+                <contextEntry>
+                  <literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_d2a5a918-7ee4-458b-a334-98cf67f1e505">
+                    <text>123</text>
+                  </literalExpression>
+                  <variable id="_682da656-9217-433b-87bc-3913e5e373f5"
+                    name="Patient MRN"
+                    typeRef="feel:string"/>
+                </contextEntry>
+              </context>
+            </semantic:extensionElements>
+          </semantic:input>
+          <semantic:output bindingRef="_e2e3a8fc-98d6-4170-8d10-c955931d404d"
+            id="_b458fcf5-a949-45ec-ad53-fce74d96515b"
+            name="Pt Old">
+            <semantic:extensionElements>
+              <context xmlns="http://www.omg.org/spec/DMN/20180521/MODEL/">
+                <contextEntry>
+                  <literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_b7b61210-a4f7-4174-98df-d3a75d3c07c9">
+                    <text>Pt Old</text>
+                  </literalExpression>
+                  <variable id="_4c4d370d-b01e-4a39-b8bd-07e87de0c528"
+                    name="My Output"
+                    typeRef="feel:Any"/>
+                </contextEntry>
+              </context>
+            </semantic:extensionElements>
+          </semantic:output>
+        </semantic:decisionTask>
+        <semantic:planItem definitionRef="PID__1b4b08a6-b7d3-41ff-9bc8-a798daea09b4"
+          id="_1b4b08a6-b7d3-41ff-9bc8-a798daea09b4"/>
+        <semantic:planItem definitionRef="PID__2cedb138-9197-4cbe-8dba-a276692e657e"
+          id="_2cedb138-9197-4cbe-8dba-a276692e657e"/>
+        <semantic:processTask id="PID__1b4b08a6-b7d3-41ff-9bc8-a798daea09b4" name="Order Drugs">
+          <semantic:defaultControl>
+            <semantic:manualActivationRule id="_bb7f656f-3bf5-403a-8871-1dfe985152c6"/>
+          </semantic:defaultControl>
+          <semantic:extensionElements/>
+          <semantic:input id="_aae271fc-76b4-48cd-80c0-6ba711be9081" name="Drug Regimen">
+            <extensionElements xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL">
+              <context xmlns="http://www.omg.org/spec/DMN/20180521/MODEL/">
+                <contextEntry>
+                  <literalExpression expressionLanguage="https://www.omg.org/spec/DMN/20191111/FEEL/"
+                    id="_b04a7b93-7565-4c63-afbd-c42f86234bcf">
+                    <text>"https://ckm.m.e/a/123456-00000"</text>
+                  </literalExpression>
+                  <variable id="_8e414375-46b1-43b0-854e-2de151f245e3" name="Drug Regimen"/>
+                </contextEntry>
+              </context>
+            </extensionElements>
+          </semantic:input>
+        </semantic:processTask>
+      </semantic:stage>
+    </semantic:casePlanModel>
+    <semantic:extensionElements/>
+  </semantic:case>
+  <semantic:caseFileItemDefinition definitionType="XSD Element"
+    id="_468a6227-dfeb-4b28-9bea-7c0126e4434c"
+    name="My Output"
+    structureRef="Any"/>
+  <semantic:caseFileItemDefinition definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified"
+    id="_84edd3f4-bd55-49dc-89fa-5bfcba297f8c"
+    name="Drug Regimen"/>
+  <semantic:decision externalRef="ns1:_747105f2-e3e0-46da-9a7e-7c7c23637943"
+    id="_3891466ff3e6132e9bd65e8c955f56a8"
+    implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1"
+    name="Pt Old"/>
+  <semantic:extensionElements/>
+  <semantic:import importType="https://www.omg.org/spec/DMN/20191111/MODEL/"
+    location="Age Alternatives.dmn"
+    namespace="https://clinicalknowledgemanagement.mayo.edu/artifacts/6bd89a34-5b38-4d95-9b41-e65a75e94423"/>
+</semantic:definitions>

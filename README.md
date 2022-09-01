@@ -3,59 +3,72 @@
 Note: this software is provided as-is by Mayo Clinic. Trisotech Inc. is aware of
 this project at the time this is published, but has no other relationship with this codebase.
 
-The Trisotech Asset Repository is a wrapper around the Trisotech modeling web application.
-The code is meant to retrieve models from Trisotech and wrap them with the appropriate annotations to allow them to be placed in the MEA Asset Repository.
-The main components of the code are:
+The Trisotech Knowledge Asset Repository is a partial implementation of the API4KP Knowledge Asset
+Repository API, backed by an adapter built on the Trisotech Digital Enterprise Suite (TT DES) public
+API.
+This implementation is primarily focused on discovering and retrieving Knowledge Assets, expressed
+as BPM+ models. The server constructs API4KP conformant metadata, and redacts some of the
+dependencies
+on the DES proprietary extensions to the standards.
+
+The main components of this implementation are:
+
 1. The wrapper
 2. The weaver
-3. The extractor
+3. The metadata extractor
 
 ### The wrapper
 
-The TrisotechWrapper provides methods to access the data from Trisotech. It 'wraps' the Trisotech API.
-It is used primarily by the TrisotechAssetRepository which implements the Asset Repository interfaces.
-Much of the data is handled as a TrisotechFileInfo object. This object maps to the data returned from the Trisotech APIs.
-This is the same data returned to Postman.
+The TrisotechWrapper 'wraps' the native Trisotech API, handling authentication/authorization,
+constructing the HTTP ReST calls, and processing the responses.
 
-### The weaver
+### The weaver (+ redactor)
 
-The weaver takes the model file from Trisotech and parses through it to modify or 'weave' the data.
-For example, it will remove all the 'trisotech' tags from the file.
-Some will be replaced with KMDP-specific tags and information.
-Once this is all done, this woven file is the document fed to the extractor and returned in the surrogate.
+The weaver rewrites references to external entities (e.g. ontology concepts) and/or non-standard
+extensions with localized, standardized values.
 
-### The extractor
+### The metadata extractor (introspector)
 
-The extractor takes the output of the weaver plus the metadata (the TrisotechFileInfo) of the model and creates a surrogate.
-There are multiple pieces to the extractor:
-1. IdentityMapper
-    * IdentityMapper has information from Trisotech that was gathered from the SPARQL API provided by Trisotech. There are 3 different queries of data and they are all performed at service start up.
-2. MetadataExtractor
-    * Ties the mapper and the TrisotechExtractionStrategy together. Much of it is a wrapper for the strategy.
-3. TrisotechExtractionStrategy
-    * Handles the creation of the surrogate.
-    * Makes use of the wrapper and the mapper.
-    * Gets the output of the weaver.
-    
+The extractor uses the information contained in a BPM+ Knowledge Artifact ("model"), as well
+as some of the DES internal metadata, to create KnowledgeAsset surrogates
 
-### Compiling
+## User Instructions
 
-To compile locally requires using the token. 
+### Prerequisites
 
-Create a user environment variable with the name:
-`edu.mayo.kmdp.trisotechwrapper.trisotechToken`
+* The Wrapper requires a licensed instance of the Trisotech DES suite. The DES instance must support
+  the Trisotech Knowledge Graph SPARQL endpoint.
+* The current implementation can only access one Place at a time, and can be configured to further
+  target a specific folder within that Place.
+* Only CMMN and DMN models are supported at this point - BPMN coming soon !
 
-Give it the token value for its value.
-Then use the following to compile on the command line:
+IMPORTANT: To qualify as an API4KP Knowledge Assets, models must have exactly one model element
+annotated with a Custom attribute.
+The attribute name must be `knowledgeAssetId` and the value must be a URI that follows the pattern
+`{Base URL}/assets/{UUID}/versions/{SemVer Tag}`. Each model can not have more than one asset ID,
+and no two models in the same place can share the same asset ID.
+
+These constraints are considered subject to change
+
+### Build
+
+The server is a Spring Boot application compatible with Java 11 and Tomcat 9.x.
+
+To build, use Maven with a repository that contains the API4KP KMDP implementation jars
 `mvn clean install`
 
-ALTERNATIVELY: From the commandline, this can be done with a local properties file that just includes the token:
-`mvn -U clean install -Dmaven.javadoc.skip=true -Dspring.profiles.active=dev -Dspring.config.additional-location="file:<localpath>\tt.properties"`
+### Configuration
 
-The file can be named anything as long as it ends in .properties.
+The following properties need to be configured as (Spring) application properties:
 
-There is no longer a need to modify the project properties files. Instead use the environment variable or a .spring-tools.devtools.properties file.
-IF one of the properties file is modified to include the token, heed the warning:
+* `edu.mayo.kmdp.trisotechwrapper.baseUrl` - the base URL of the server instance,
+  e.g. https://bpm-health.trisotech.com/
+* `edu.mayo.kmdp.trisotechwrapper.repositoryId` - the UUID of the target Place to pull Assets from
+* `edu.mayo.kmdp.trisotechwrapper.repositoryName` - the name of the target Place to pull Assets from
+* `edu.mayo.kmdp.trisotechwrapper.repositoryName` - the path of the folder within the Place to pull
+  Assets from
+* `edu.mayo.kmdp.trisotechwrapper.trisotechToken` - the API bearer token used to connect to the DES
+  instance, obtainable from the DES instance itself. 
 
-** WARNING **
-DO NOT CHECK-IN THESE FILES WITH THE TOKEN!!!!
+
+

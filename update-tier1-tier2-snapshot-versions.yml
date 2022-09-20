@@ -39,6 +39,22 @@ steps:
     echo Project :: kmdp-trisotech-asset-repository-service
   displayName: 'Starting Pipeline Steps'
 
+# Sets Git Credentials on the VM set from variable group
+# $env:GIT_REDIRECT_STDERR = '2>&1' prevents unwanted errors
+- task: PowerShell@2
+  displayName: 'Git Config User'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      git config --global user.email "$env:GIT_USER_EMAIL"
+      git config --global user.name "$env:GIT_USER_NAME"
+      Write-Host Email: "$env:GIT_USER_EMAIL"
+      Write-Host User Name: "$env:GIT_USER_NAME"
+  env:
+    GIT_USER_EMAIL: $(gitUserEmail)
+    GIT_USER_NAME: $(gitUserName)
+
 # Gets .m2 Settings File from Azure DevOps Library
 # Downloads File for use in Pipeline
 - task: DownloadSecureFile@1
@@ -61,6 +77,17 @@ steps:
   displayName: 'Maven Authenticate'
   inputs:
     artifactsFeeds: 'KMD'
+
+# Sets JDK 11 for Pipeline
+# Runs Maven Goal: validate
+- task: Maven@3
+  displayName: 'Sets Pipeline to JDK 11'
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'validate'
+    options: '-ntp'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
 
 - task: PowerShell@2
   displayName: Output Initial Variable Values
@@ -89,7 +116,14 @@ steps:
       # Update parent version & servers version
       mvn versions:update-parent "-DparentVersion=$(tier1NewDevelopVersion)" -DallowSnapshots=true -ntp
       mvn versions:set-property "-Dproperty=kmdp.servers.version" "-DnewVersion=$(tier2NewDevelopVersion)" -DallowSnapshots=true -ntp
-      mvn clean install -ntp
+      mvn clean install -ntp -DskipTests
+      git add pom.xml
+      git commit -m "updated tier 1 & tier 2 dependencies versions"
+      git push "https://kmd:$env:SYSTEM_ACCESSTOKEN@dev.azure.com/mclm/KMD/_git/kmdp-trisotech-asset-repository-service"
+
+      Write-Host ------------ Ending Checkout --------------------
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
 - task: PowerShell@2
   displayName: 'Output Updated Variables'

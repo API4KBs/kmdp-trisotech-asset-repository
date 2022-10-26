@@ -17,12 +17,15 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.API4KP_PREFIX;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.CMMN;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.CMMN_11_XMLNS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN_IMPORT;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN_IMPORTTYPE;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.KEY;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TRISOTECH_COM;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_ACCELERATOR_ENTTIY;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_ACCELERATOR_MODEL;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_COPYOFLINK;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CUSTOM_ATTRIBUTE_ATTR;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_LIBRARIES;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_METADATA_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_REUSELINK;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_SEMANTICLINK;
@@ -409,7 +412,10 @@ public class Weaver {
 
   private void weaveImport(Document dox) {
     asElementStream(dox.getElementsByTagName("*"))
-        .filter(el -> el.getLocalName().equals("import"))
+        .filter(el -> el.getLocalName().equals(DMN_IMPORT))
+        // rewrite the 'import model', but do not rewrite the 'import library'
+        // FUTURE: at least not until FEEL libs become Assets
+        .filter(el -> !TT_LIBRARIES.equals(el.getAttribute(DMN_IMPORTTYPE)))
         .forEach(el -> {
               Attr attr = el.getAttributeNode("namespace");
               rewriteValue(attr);

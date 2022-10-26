@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20180521/MODEL/"
+                      xmlns:triso="http://www.trisotech.com/2015/triso/modeling"
+                      id="_250866fc-5073-42ee-9907-708ee148193d"
+                      name="Decision with Reuse"
+                      namespace="http://www.trisotech.com/definitions/_250866fc-5073-42ee-9907-708ee148193d"
+                      xmlns="http://www.trisotech.com/definitions/_250866fc-5073-42ee-9907-708ee148193d"
+                      xml:lang="en">
+   <semantic:extensionElements/>
+   <semantic:import importType="http://www.omg.org/spec/DMN/20180521/MODEL/"
+     name="Basic Decision Model"
+     namespace="http://www.trisotech.com/definitions/_ee0c768a-a0d4-4052-a6ea-fc0a3889b356"
+     triso:fileId="eyJmIjp7InNrdSI6Imh0dHA6Ly93d3cudHJpc290ZWNoLmNvbS9kZWZpbml0aW9ucy9fZWUwYzc2OGEtYTBkNC00MDUyLWE2ZWEtZmMwYTM4ODliMzU2IiwibmFtZSI6IkJhc2ljIERlY2lzaW9uIE1vZGVsIn0sInIiOnsiYXBpa2V5IjoiMjkyMDAzZjY5ODQwZTcxMiJ9fQ=="
+     triso:fileName="MEA-Test/jls test models/Basic Decision Model"/>
+   <semantic:import importType="https://www.trisotech.com/libraries" name="nn" namespace="https://www.trisotech.com/libraries/nn"/>
+
+   <semantic:inputData id="_a3551fb5-ba9c-40cf-9c4b-5116495158e9" name="Input Z">
+      <semantic:extensionElements/>
+      <semantic:variable id="_8e3de11d-f532-44ce-90f1-61402e471845"
+                         name="Input Z"
+                         typeRef="string"/>
+   </semantic:inputData>
+
+</semantic:definitions>

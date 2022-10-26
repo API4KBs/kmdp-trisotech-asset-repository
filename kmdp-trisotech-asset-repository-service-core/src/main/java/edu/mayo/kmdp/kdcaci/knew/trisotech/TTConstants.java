@@ -22,6 +22,8 @@ public class TTConstants {
   public static final String TT_DMN_12_NS = "http://www.trisotech.com/2016/triso/dmn";
   public static final String TT_CMMN_11_NS = "http://www.trisotech.com/2014/triso/cmmn";
 
+  public static final String TT_LIBRARIES = "https://www.trisotech.com/libraries";
+
   public static final String TT_META_EXPORTER = "exporter";
   public static final String TT_META_EXPORTER_VERSION = "exporterVersion";
 
@@ -45,6 +47,9 @@ public class TTConstants {
   public static final String DMN_EL_DECISION_SERVICE = "decisionService";
   public static final String DMN_EL_EXTENSIONS = "extensionElements";
 
+  public static final String DMN_IMPORT = "import";
+
+  public static final String DMN_IMPORTTYPE = "importType";
   public static final String CMMN_EL_EXTENSIONS = "extensionElements";
 
   public static final String API4KP_PREFIX = "api4kp:";

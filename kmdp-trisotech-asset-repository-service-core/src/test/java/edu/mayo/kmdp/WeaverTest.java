@@ -745,6 +745,28 @@ class WeaverTest {
     }
   }
 
+  @Test
+  void testRemoveLibraryImports() {
+    String path = "/TestImports.raw.xml";
+    Document dox = loadXMLDocument(resolveResource(path))
+        .orElseGet(() -> fail("Unable to load document " + path));
+
+    try {
+      redactor.redact(weaver.weave(dox));
+
+      XPathUtil x = new XPathUtil();
+      NodeList imports = x.xList(dox,
+          "//dmn:import");
+      assertEquals(1, imports.getLength());
+
+      assertEquals("http://www.omg.org/spec/DMN/20180521/MODEL/",
+          imports.item(0).getAttributes().getNamedItem("importType").getNodeValue());
+    } catch (IllegalStateException ie) {
+      logger.error(ie.getMessage(), ie);
+      fail(ie.getMessage());
+    }
+  }
+
   private boolean confirmDecisionURI(Document dox) {
     XMLUtil.asElementStream(dox.getElementsByTagName("*"))
         .filter(el -> el.getLocalName().equals(DMN_EL_DECISION))

@@ -13,7 +13,10 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors;
 
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN_12_XMLNS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN_EL_DECISION_SERVICE;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN_IMPORT;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN_IMPORTTYPE;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DROOLS_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TRISOTECH_COM;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_ATTACHMENT_ITEM;
@@ -23,6 +26,7 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_COPYOFLINK;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CUSTOM_ATTRIBUTE_ATTR;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_DMN_12_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_DYNAMIC_DECISION_SERVICE;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_LIBRARIES;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_METADATA_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_META_EXPORTER;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_META_EXPORTER_VERSION;
@@ -66,6 +70,8 @@ public class Redactor {
     // verify and remove any invalid caseFileItemDefinition items
     verifyAndRemoveInvalidCaseFileItemDefinition(dox);
 
+    removeUnsupportedImports(dox);
+
     // remove the namespace attributes
     removeProprietaryAttributesAndNS(dox);
 
@@ -73,6 +79,23 @@ public class Redactor {
     removeTrisoTagsNotRetaining(dox);
 
     return dox;
+  }
+
+  /**
+   * Model imports are lifted into Asset-Asset dependencies
+   * <p>
+   * However, Models may import resources that are not treated as Assets
+   * <p>
+   * For the time being, we remove the import, but this logic may be refined in FUTURE
+   *
+   * @param dox
+   */
+  private void removeUnsupportedImports(Document dox) {
+    XMLUtil.asElementStream(dox.getElementsByTagNameNS(DMN_12_XMLNS, DMN_IMPORT))
+        .filter(el -> TT_LIBRARIES.equals(el.getAttribute(DMN_IMPORTTYPE)))
+        .forEach(element ->
+            element.getParentNode().removeChild(element)
+        );
   }
 
   private void removeTrisoElementsNotRetaining(Document dox) {

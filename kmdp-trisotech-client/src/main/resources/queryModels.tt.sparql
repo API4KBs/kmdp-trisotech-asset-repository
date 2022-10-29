@@ -31,7 +31,7 @@ GRAPH ? {
     ?customAttribute ttr:value ?assetId .
     ?node ttr:customAttribute ?customAttribute .
     # the model identifier
-    ?node ttr:owner ?model .
+    ?node ttr:owner* ?model .
     # the model file name
     ?model rdfs:label ?artifactName .
     # gets the mimeType

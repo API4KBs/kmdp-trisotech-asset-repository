@@ -115,692 +115,695 @@ import org.w3c.dom.Element;
 @Component
 public class TrisotechIntrospectionStrategy {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(TrisotechIntrospectionStrategy.class);
+  private static final Logger logger = LoggerFactory
+      .getLogger(TrisotechIntrospectionStrategy.class);
 
-    @Autowired
-    TrisotechWrapper client;
+  @Autowired
+  TrisotechWrapper client;
 
-    @Autowired
-    IdentityMapper mapper;
+  @Autowired
+  IdentityMapper mapper;
 
-    @Autowired
-    NamespaceManager names;
+  @Autowired
+  NamespaceManager names;
 
-    @Autowired(required = false)
-    TTAssetRepositoryConfig config;
+  @Autowired(required = false)
+  TTAssetRepositoryConfig config;
 
-    public static final String CMMN_DEFINITIONS = "//cmmn:definitions";
-    public static final String DMN_DEFINITIONS = "//dmn:definitions";
-    private static final String SEMANTIC_EXTENSION_ELEMENTS = "semantic:extensionElements";
-    private static final String EXTENSION_ELEMENTS = "extensionElements";
+  public static final String CMMN_DEFINITIONS = "//cmmn:definitions";
+  public static final String DMN_DEFINITIONS = "//dmn:definitions";
+  private static final String SEMANTIC_EXTENSION_ELEMENTS = "semantic:extensionElements";
+  private static final String EXTENSION_ELEMENTS = "extensionElements";
 
-    private final XPathUtil xPathUtil = new XPathUtil();
+  private final XPathUtil xPathUtil = new XPathUtil();
 
-    public TrisotechIntrospectionStrategy() {
-        //
+  public TrisotechIntrospectionStrategy() {
+    //
+  }
+
+  @PostConstruct
+  void init() {
+    if (config == null) {
+      config = new TTAssetRepositoryConfig();
+    }
+  }
+
+
+  /**
+   * Generates a {@link KnowledgeAsset} Surrogate from the introspection of a BPM+ model, combined
+   * with the information in its corresponding Trisotech's internal manifest
+   * <p>
+   * FUTURE: Currently supports DMN and CMMN models, but not BPMN
+   * <p>
+   * Note that, at this point, the model document has already been standardized using the
+   * {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor}, and (re)annotated
+   * using the {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver}
+   *
+   * @param dox      the BPM+ model artifact to extract metadata from
+   * @param manifest the model's internal manifest
+   * @return a KnowledgeAsset surrogate with metadata for that model
+   * @see #extractSurrogateFromDocument(Document, TrisotechFileInfo, ResourceIdentifier)
+   */
+  public KnowledgeAsset extractSurrogateFromDocument(Document dox, TrisotechFileInfo manifest) {
+    Optional<ResourceIdentifier> tryAssetID;
+    if (mapper.isLatest(manifest)) {
+      // this only works when trying to process the LATEST version
+      // since the Enterprise Graph does not contain historical information
+      tryAssetID = mapper.resolveModelToCurrentAssetId(manifest.getId())
+          .or(() -> mapper.extractAssetIdFromDocument(dox));
+    } else {
+      tryAssetID = mapper.extractAssetIdFromDocument(dox);
     }
 
-    @PostConstruct
-    void init() {
-        if (config == null) {
-            config = new TTAssetRepositoryConfig();
-        }
+    if (tryAssetID.isEmpty()) {
+      logger.warn("Model {} does not have an Asset ID - providing a random one", manifest.getId());
+    }
+    ResourceIdentifier assetID = tryAssetID
+        .orElse(randomAssetId(names.getAssetNamespace()));
+
+    var id = dox.getDocumentElement().getAttribute("id");
+
+    if (logger.isDebugEnabled()) {
+      logger.debug("assetID: {} : {}", assetID.getResourceId(), assetID.getVersionTag());
+      logger.debug("the id found in woven document {}", id);
     }
 
-
-    /**
-     * Generates a {@link KnowledgeAsset} Surrogate from the introspection of a BPM+ model, combined
-     * with the information in its corresponding Trisotech's internal manifest
-     * <p>
-     * FUTURE: Currently supports DMN and CMMN models, but not BPMN
-     * <p>
-     * Note that, at this point, the model document has already been standardized using the
-     * {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor}, and (re)annotated
-     * using the {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver}
-     *
-     * @param dox  the BPM+ model artifact to extract metadata from
-     * @param manifest the model's internal manifest
-     * @return a KnowledgeAsset surrogate with metadata for that model
-     * @see #extractSurrogateFromDocument(Document, TrisotechFileInfo, ResourceIdentifier)
-     */
-    public KnowledgeAsset extractSurrogateFromDocument(Document dox, TrisotechFileInfo manifest) {
-        Optional<ResourceIdentifier> tryAssetID;
-        if (mapper.isLatest(manifest)) {
-            // this only works when trying to process the LATEST version
-            // since the Enterprise Graph does not contain historical information
-            tryAssetID = mapper.resolveModelToCurrentAssetId(manifest.getId())
-                    .or(() -> mapper.extractAssetIdFromDocument(dox));
-        } else {
-            tryAssetID = mapper.extractAssetIdFromDocument(dox);
-        }
-
-        if (tryAssetID.isEmpty()) {
-            logger.warn("Model {} does not have an Asset ID - providing a random one", manifest.getId());
-        }
-        ResourceIdentifier assetID = tryAssetID
-                .orElse(randomAssetId(names.getAssetNamespace()));
-
-        var id = dox.getDocumentElement().getAttribute("id");
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("assetID: {} : {}", assetID.getResourceId(), assetID.getVersionTag());
-            logger.debug("the id found in woven document {}", id);
-        }
-
-        if (id.isEmpty()) {
-            logger.error("No ID found in the woven document");
-            return new KnowledgeAsset();
-        }
-
-        return extractSurrogateFromDocument(dox, manifest, assetID);
+    if (id.isEmpty()) {
+      logger.error("No ID found in the woven document");
+      return new KnowledgeAsset();
     }
 
-    /**
-     * Generates a {@link KnowledgeAsset} Surrogate from the introspection of a BPM+ model, combined
-     * with the information in its corresponding Trisotech's internal manifest, assuming that the
-     * model is a manifestation of the Asset with the given ID.
-     * <p>
-     * FUTURE: Currently supports DMN and CMMN models, but not BPMN
-     * <p>
-     * Note that, at this point, the model document has already been standardized using the
-     * {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor}, and (re)annotated
-     * using the {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver}
-     *
-     * @param dox  the BPM+ model artifact to extract metadata from
-     * @param manifest the model's internal manifest
-     * @return a KnowledgeAsset surrogate with metadata for that model
-     */
-    private KnowledgeAsset extractSurrogateFromDocument(
-        Document dox,
-        TrisotechFileInfo manifest,
-        ResourceIdentifier assetID) {
+    return extractSurrogateFromDocument(dox, manifest, assetID);
+  }
 
-        if (logger.isTraceEnabled()) {
-            Optional<String> modelToString = JSonUtil.printJson(manifest);
-            String wovenToString = XMLUtil.toString(dox);
-            logger.debug("Attempting to extract XML KnowledgeAsset with document: {}", wovenToString);
-            logger.debug("Attempting to extract XML KnowledgeAsset with trisotechFileInfo: {}", modelToString);
-            logger.debug("Attempting to extract XML KnowledgeAsset with ResourceIdentifier: {}", assetID);
-        }
+  /**
+   * Generates a {@link KnowledgeAsset} Surrogate from the introspection of a BPM+ model, combined
+   * with the information in its corresponding Trisotech's internal manifest, assuming that the
+   * model is a manifestation of the Asset with the given ID.
+   * <p>
+   * FUTURE: Currently supports DMN and CMMN models, but not BPMN
+   * <p>
+   * Note that, at this point, the model document has already been standardized using the
+   * {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor}, and (re)annotated
+   * using the {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver}
+   *
+   * @param dox      the BPM+ model artifact to extract metadata from
+   * @param manifest the model's internal manifest
+   * @return a KnowledgeAsset surrogate with metadata for that model
+   */
+  private KnowledgeAsset extractSurrogateFromDocument(
+      Document dox,
+      TrisotechFileInfo manifest,
+      ResourceIdentifier assetID) {
 
-        KnowledgeAsset surr;
-
-        // Publication Status
-        var lifecycle = getArtifactPublicationStatus(manifest);
-
-        // Identifiers
-        var artifactId = extractArtifactId(dox, manifest);
-
-        var formalType = mapper.getDeclaredAssetTypeOrDefault(manifest);
-
-        var formalCategory = inferFormalCategory(formalType);
-
-        var annotations = extractAnnotations(dox);
-
-        // get the language for the document to set the appropriate values
-        var synRep = getRepLanguage(dox)
-            .orElseThrow(() -> new IllegalStateException("Invalid language detected"));
-
-        // artifact<->artifact relation
-        var importedArtifactIds = getArtifactImports(artifactId, manifest);
-
-        // asset<->asset relations
-        // assets are derived from the artifact relations
-        var importedAssets = getAssetImports(artifactId, importedArtifactIds, manifest);
-
-
-        // towards the ideal
-        surr = new org.omg.spec.api4kp._20200801.surrogate.resources.KnowledgeAsset()
-                .withAssetId(assetID)
-                .withName(manifest.getName().trim())
-                .withFormalCategory(formalCategory)
-                .withFormalType(formalType)
-                .withLifecycle(lifecycle)
-                .withLinks(mergeSortedLinks(
-                        getRelatedAssets(importedAssets),
-                        getOtherDependencies(dox, synRep.getLanguage())))
-                // carriers
-                .withCarriers(new KnowledgeArtifact()
-                        .withArtifactId(artifactId)
-                        .withName(manifest.getName().trim())
-                        .withLifecycle(lifecycle)
-                        .withLocalization(English)
-                        .withExpressionCategory(Software)
-                        .withRepresentation(synRep)
-                        .withMimeType(codedRep(synRep))
-                        .withLinks( // artifact - artifact relation/dependency
-                                getRelatedArtifacts(importedArtifactIds))
-                )
-                .withSurrogate(
-                        new KnowledgeArtifact()
-                                .withArtifactId(newId(
-                                        names.getArtifactNamespace(),
-                                        defaultSurrogateUUID(assetID, Knowledge_Asset_Surrogate_2_0),
-                                        toSemVer(artifactId.getVersionTag())))
-                                .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, JSON))
-                                .withMimeType(codedRep(Knowledge_Asset_Surrogate_2_0, JSON))
-                );
-
-        addSemanticAnnotations(surr, annotations);
-
-        if (logger.isTraceEnabled()) {
-            logger.debug(
-                    "surrogate in JSON format: {} ", writeJsonAsString(surr).orElse("n/a"));
-        }
-
-        return surr;
+    if (logger.isTraceEnabled()) {
+      Optional<String> modelToString = JSonUtil.printJson(manifest);
+      String wovenToString = XMLUtil.toString(dox);
+      logger.debug("Attempting to extract XML KnowledgeAsset with document: {}", wovenToString);
+      logger.debug("Attempting to extract XML KnowledgeAsset with trisotechFileInfo: {}",
+          modelToString);
+      logger.debug("Attempting to extract XML KnowledgeAsset with ResourceIdentifier: {}", assetID);
     }
 
-    /* ----------------------------------------------------------------------------------------- */
+    KnowledgeAsset surr;
 
-    /**
-     * Creates an Artifact Id for the given model.
-     * <p>
-     * The Artifact Id is derived from the Trisotech native model Id. At this point, the namespace has
-     * already been rewritten. This method further parses the Id, combining it with the version (tag)
-     * and a time stamp.
-     *
-     * @param dox      the model which contains the un-versioned artifact URI
-     * @param manifest the Trisotech metadata
-     * @return the structured Artifact Id, as a {@link ResourceIdentifier}
-     * @see #getArtifactID(Document)
-     */
-    private ResourceIdentifier extractArtifactId(Document dox, TrisotechFileInfo manifest) {
-        Optional<String> docId = getArtifactID(dox);
-        if (logger.isDebugEnabled()) {
-            logger.debug("The document id found from document is: {}", docId);
-        }
-        if (docId.isEmpty()) {
-            // error out. Can't proceed w/o Artifact -- How did we get this far?
-            throw new IllegalStateException("Failed to find artifactId in Document");
-        }
+    // Publication Status
+    var lifecycle = getArtifactPublicationStatus(manifest);
 
-        Date modelDate = Date.from(Instant.parse(manifest.getUpdated()));
-        String artifactTag = docId.get();
-        String artifactVersionTag = manifest.getVersion() == null
-            ? applyTimestampToVersion(config.getTyped(DEFAULT_VERSION_TAG, String.class),
-            modelDate.getTime())
-            : applyTimestampToVersion(toSemVer(manifest.getVersion()), modelDate.getTime());
+    // Identifiers
+    var artifactId = extractArtifactId(dox, manifest);
 
-        // for the surrogate, want the version of the artifact
-        ResourceIdentifier artifactID =
-            newVersionId(URI.create(artifactTag), artifactVersionTag)
-                .withEstablishedOn(modelDate);
+    var formalType = mapper.getDeclaredAssetTypeOrDefault(manifest);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("The document artifactId ResourceIdentifier found is: {}", artifactID);
-        }
-        return artifactID;
+    var formalCategory = inferFormalCategory(formalType);
+
+    var annotations = extractAnnotations(dox);
+
+    // get the language for the document to set the appropriate values
+    var synRep = getRepLanguage(dox)
+        .orElseThrow(() -> new IllegalStateException("Invalid language detected"));
+
+    // artifact<->artifact relation
+    var importedArtifactIds = getArtifactImports(artifactId, manifest);
+
+    // asset<->asset relations
+    // assets are derived from the artifact relations
+    var importedAssets = getAssetImports(artifactId, importedArtifactIds, manifest);
+
+    // towards the ideal
+    surr = new org.omg.spec.api4kp._20200801.surrogate.resources.KnowledgeAsset()
+        .withAssetId(assetID)
+        .withName(manifest.getName().trim())
+        .withFormalCategory(formalCategory)
+        .withFormalType(formalType)
+        .withLifecycle(lifecycle)
+        .withLinks(mergeSortedLinks(
+            getRelatedAssets(importedAssets),
+            getOtherDependencies(dox, synRep.getLanguage())))
+        // carriers
+        .withCarriers(new KnowledgeArtifact()
+            .withArtifactId(artifactId)
+            .withName(manifest.getName().trim())
+            .withLifecycle(lifecycle)
+            .withLocalization(English)
+            .withExpressionCategory(Software)
+            .withRepresentation(synRep)
+            .withMimeType(codedRep(synRep))
+            .withLinks( // artifact - artifact relation/dependency
+                getRelatedArtifacts(importedArtifactIds))
+        )
+        .withSurrogate(
+            new KnowledgeArtifact()
+                .withArtifactId(newId(
+                    names.getArtifactNamespace(),
+                    defaultSurrogateUUID(assetID, Knowledge_Asset_Surrogate_2_0),
+                    toSemVer(artifactId.getVersionTag())))
+                .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, JSON))
+                .withMimeType(codedRep(Knowledge_Asset_Surrogate_2_0, JSON))
+        );
+
+    addSemanticAnnotations(surr, annotations);
+
+    if (logger.isTraceEnabled()) {
+      logger.debug(
+          "surrogate in JSON format: {} ", writeJsonAsString(surr).orElse("n/a"));
     }
 
+    return surr;
+  }
 
-    /**
-     * Extracts the Artifact ID URI from the XML attribute in the source model.
-     * <p>
-     * Assumes that the Artifact Id is used as the document namespace
-     *
-     * @param dox the XML model
-     * @return the model default namespace, assumed to be the artifact Id
-     */
-    public Optional<String> getArtifactID(Document dox) {
-        Optional<KnowledgeRepresentationLanguage> lang = detectRepLanguage(dox);
-        return lang.map(l -> {
-            switch (asEnum(l)) {
-                case DMN_1_2:
-                    return xPathUtil.xString(dox, "//*/@namespace");
-                case CMMN_1_1:
-                    return xPathUtil.xString(dox, "//*/@targetNamespace");
-                default:
-                    return null;
-            }
-        });
+  /* ----------------------------------------------------------------------------------------- */
+
+  /**
+   * Creates an Artifact Id for the given model.
+   * <p>
+   * The Artifact Id is derived from the Trisotech native model Id. At this point, the namespace has
+   * already been rewritten. This method further parses the Id, combining it with the version (tag)
+   * and a time stamp.
+   *
+   * @param dox      the model which contains the un-versioned artifact URI
+   * @param manifest the Trisotech metadata
+   * @return the structured Artifact Id, as a {@link ResourceIdentifier}
+   * @see #getArtifactID(Document)
+   */
+  private ResourceIdentifier extractArtifactId(Document dox, TrisotechFileInfo manifest) {
+    Optional<String> docId = getArtifactID(dox);
+    if (logger.isDebugEnabled()) {
+      logger.debug("The document id found from document is: {}", docId);
+    }
+    if (docId.isEmpty()) {
+      // error out. Can't proceed w/o Artifact -- How did we get this far?
+      throw new IllegalStateException("Failed to find artifactId in Document");
     }
 
-    /* ----------------------------------------------------------------------------------------- */
+    Date modelDate = Date.from(Instant.parse(manifest.getUpdated()));
+    String artifactTag = docId.get();
+    String artifactVersionTag = manifest.getVersion() == null
+        ? applyTimestampToVersion(config.getTyped(DEFAULT_VERSION_TAG, String.class),
+        modelDate.getTime())
+        : applyTimestampToVersion(toSemVer(manifest.getVersion()), modelDate.getTime());
 
-    /**
-     * Determines the {@link KnowledgeAssetCategory} for a given {@link KnowledgeAssetType}, based
-     * on the hierarchies defined in the API4KP ontology.
-     *
-     * @param formalType the {@link KnowledgeAssetType}
-     * @return the broader, parent {@link KnowledgeAssetCategory}
-     */
-    private KnowledgeAssetCategorySeries inferFormalCategory(KnowledgeAssetType formalType) {
-        if (isA(formalType, Clinical_Rule)) {
-            return Rules_Policies_And_Guidelines;
-        }
-        if (isA(formalType, Case_Management_Model)) {
-            return Plans_Processes_Pathways_And_Protocol_Definitions;
-        }
-        if (isA(formalType, Decision_Model)) {
-            return Assessment_Predictive_And_Inferential_Models;
-        }
-        throw new UnsupportedOperationException(
-            "Unable to infer category for asset type " + formalType.getName());
+    // for the surrogate, want the version of the artifact
+    ResourceIdentifier artifactID =
+        newVersionId(URI.create(artifactTag), artifactVersionTag)
+            .withEstablishedOn(modelDate);
+
+    if (logger.isDebugEnabled()) {
+      logger.debug("The document artifactId ResourceIdentifier found is: {}", artifactID);
+    }
+    return artifactID;
+  }
+
+
+  /**
+   * Extracts the Artifact ID URI from the XML attribute in the source model.
+   * <p>
+   * Assumes that the Artifact Id is used as the document namespace
+   *
+   * @param dox the XML model
+   * @return the model default namespace, assumed to be the artifact Id
+   */
+  public Optional<String> getArtifactID(Document dox) {
+    Optional<KnowledgeRepresentationLanguage> lang = detectRepLanguage(dox);
+    return lang.map(l -> {
+      switch (asEnum(l)) {
+        case DMN_1_2:
+          return xPathUtil.xString(dox, "//*/@namespace");
+        case CMMN_1_1:
+          return xPathUtil.xString(dox, "//*/@targetNamespace");
+        default:
+          return null;
+      }
+    });
+  }
+
+  /* ----------------------------------------------------------------------------------------- */
+
+  /**
+   * Determines the {@link KnowledgeAssetCategory} for a given {@link KnowledgeAssetType}, based on
+   * the hierarchies defined in the API4KP ontology.
+   *
+   * @param formalType the {@link KnowledgeAssetType}
+   * @return the broader, parent {@link KnowledgeAssetCategory}
+   */
+  private KnowledgeAssetCategorySeries inferFormalCategory(KnowledgeAssetType formalType) {
+    if (isA(formalType, Clinical_Rule)) {
+      return Rules_Policies_And_Guidelines;
+    }
+    if (isA(formalType, Case_Management_Model)) {
+      return Plans_Processes_Pathways_And_Protocol_Definitions;
+    }
+    if (isA(formalType, Decision_Model)) {
+      return Assessment_Predictive_And_Inferential_Models;
+    }
+    throw new UnsupportedOperationException(
+        "Unable to infer category for asset type " + formalType.getName());
+  }
+
+  /**
+   * Determines whether subType is equivalent to, or subclass of, superType
+   *
+   * @param subType   the candidate narrower concept
+   * @param superType the candidate broader concept
+   * @return true if subType is narrower or equal to superType
+   */
+  private boolean isA(KnowledgeAssetType subType, KnowledgeAssetType superType) {
+    return subType.sameTermAs(superType)
+        || Arrays.stream(subType.getAncestors()).anyMatch(t -> t.sameTermAs(superType));
+  }
+
+  /* ----------------------------------------------------------------------------------------- */
+
+
+  private List<Link> getOtherDependencies(
+      Document woven,
+      KnowledgeRepresentationLanguage language) {
+    Stream<Attr> assetURIs;
+    switch (asEnum(language)) {
+      case DMN_1_2:
+        assetURIs = asAttributeStream(xPathUtil.xList(woven,
+            "//dmn:knowledgeSource[not(./dmn:type='*/*')]/@locationURI"));
+        break;
+      case CMMN_1_1:
+        assetURIs = asAttributeStream(xPathUtil.xList(woven,
+            "//cmmn:caseFileItemDefinition[@definitionType='http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument']/@structureRef"));
+        break;
+      default:
+        assetURIs = Stream.empty();
     }
 
-    /**
-     * Determines whether subType is equivalent to, or subclass of, superType
-     *
-     * @param subType the candidate narrower concept
-     * @param superType the candidate broader concept
-     * @return true if subType is narrower or equal to superType
-     */
-    private boolean isA(KnowledgeAssetType subType, KnowledgeAssetType superType) {
-        return subType.sameTermAs(superType)
-            || Arrays.stream(subType.getAncestors()).anyMatch(t -> t.sameTermAs(superType));
-    }
-
-    /* ----------------------------------------------------------------------------------------- */
-
-
-    private List<Link> getOtherDependencies(
-            Document woven,
-            KnowledgeRepresentationLanguage language) {
-        Stream<Attr> assetURIs;
-        switch (asEnum(language)) {
-            case DMN_1_2:
-                assetURIs = asAttributeStream(xPathUtil.xList(woven,
-                        "//dmn:knowledgeSource[not(./dmn:type='*/*')]/@locationURI"));
-                break;
-            case CMMN_1_1:
-                assetURIs = asAttributeStream(xPathUtil.xList(woven,
-                        "//cmmn:caseFileItemDefinition[@definitionType='http://www.omg.org/spec/CMMN/DefinitionType/CMISDocument']/@structureRef"));
-                break;
-            default:
-                assetURIs = Stream.empty();
-        }
-
-        List<Link> links = assetURIs
-                .map(Attr::getValue)
-                .filter(Util::isNotEmpty)
-                // only supported URIs
-                .filter(str -> str.startsWith("urn:")
-                        || str.startsWith(names.getAssetNamespace().toString())
-                        || str.startsWith("assets:"))
-                .map(this::normalizeQualifiedName)
-                .map(URI::create)
-                .map(SemanticIdentifier::newVersionId)
-                .map(id -> {
-                    if (id.getVersionId() == null) {
-                        String separator = id.getResourceId().toString().startsWith("urn") ? ":" : "/";
-                        return newVersionId(
-                                URI.create(id.getNamespaceUri().toString() + separator + UUID.fromString(id.getTag())),
-                                VERSION_ZERO_SNAPSHOT);
-                    } else {
-                        return id;
-                    }
-                })
-                .map(id -> new Dependency().withRel(Depends_On).withHref(id))
-                .collect(Collectors.toList());
-
-        Stream<Element> linkElements;
-        switch (asEnum(language)) {
-            case CMMN_1_1:
-                linkElements = asElementStream(xPathUtil.xList(woven,
-                "//cmmn:processTask/cmmn:processRefExpression"));
-                break;
-            default:
-                linkElements = Stream.empty();
-        }
-        linkElements
-            .map(n -> n.getTextContent().trim().split(" "))
-            .filter(s -> DependencyTypeSeries.resolveTag(s[0]).isPresent())
-            .map(s ->  new Dependency()
-                .withRel(DependencyTypeSeries.resolveTag(s[0]).get())
-                .withHref(SemanticIdentifier.newVersionId(URI.create(s[1]))))
-            .forEach(links::add);
-
-        return links;
-    }
-
-    private String normalizeQualifiedName(String id) {
-        if (id.startsWith("assets:")) {
-            String str = id.replace("assets:", names.getAssetNamespace().toString());
-            if (str.contains(":")) {
-                str = str.replace(":", IdentifierConstants.VERSIONS);
-            }
-            return str;
-        } else {
+    List<Link> links = assetURIs
+        .map(Attr::getValue)
+        .filter(Util::isNotEmpty)
+        // only supported URIs
+        .filter(str -> str.startsWith("urn:")
+            || str.startsWith(names.getAssetNamespace().toString())
+            || str.startsWith("assets:"))
+        .map(this::normalizeQualifiedName)
+        .map(URI::create)
+        .map(SemanticIdentifier::newVersionId)
+        .map(id -> {
+          if (id.getVersionId() == null) {
+            String separator = id.getResourceId().toString().startsWith("urn") ? ":" : "/";
+            return newVersionId(
+                URI.create(
+                    id.getNamespaceUri().toString() + separator + UUID.fromString(id.getTag())),
+                VERSION_ZERO_SNAPSHOT);
+          } else {
             return id;
-        }
+          }
+        })
+        .map(id -> new Dependency().withRel(Depends_On).withHref(id))
+        .collect(Collectors.toList());
+
+    Stream<Element> linkElements;
+    switch (asEnum(language)) {
+      case CMMN_1_1:
+        linkElements = asElementStream(xPathUtil.xList(woven,
+            "//cmmn:processTask/cmmn:processRefExpression"));
+        break;
+      default:
+        linkElements = Stream.empty();
+    }
+    linkElements
+        .map(n -> n.getTextContent().trim().split(" "))
+        .filter(s -> DependencyTypeSeries.resolveTag(s[0]).isPresent())
+        .map(s -> new Dependency()
+            .withRel(DependencyTypeSeries.resolveTag(s[0]).get())
+            .withHref(SemanticIdentifier.newVersionId(URI.create(s[1]))))
+        .forEach(links::add);
+
+    return links;
+  }
+
+  private String normalizeQualifiedName(String id) {
+    if (id.startsWith("assets:")) {
+      String str = id.replace("assets:", names.getAssetNamespace().toString());
+      if (str.contains(":")) {
+        str = str.replace(":", IdentifierConstants.VERSIONS);
+      }
+      return str;
+    } else {
+      return id;
+    }
+  }
+
+  private List<ResourceIdentifier> getArtifactImports(ResourceIdentifier artifactId,
+      TrisotechFileInfo model) {
+    // if dealing with the latest of the model, return the latest of the imports
+    List<ResourceIdentifier> imports;
+    if (mapper.isLatest(model.getId(), model.getVersion())) {
+      imports = mapper.getLatestArtifactDependencies(artifactId.getResourceId().toString());
+    } else {
+      imports = getImportVersions(artifactId, model);
+    }
+    return imports != null ? imports : emptyList();
+  }
+
+  private List<ResourceIdentifier> getAssetImports(
+      ResourceIdentifier artifactId,
+      List<ResourceIdentifier> importedArtifactIds,
+      TrisotechFileInfo model) {
+    if (mapper.isLatest(model.getId(), model.getVersion())) {
+      return mapper.getLatestAssetDependencies(artifactId.getResourceId().toString());
+    } else {
+      return importedArtifactIds
+          .stream()
+          .map(aid -> mapper.getAssetIdForHistoricalArtifact(aid))
+          .flatMap(StreamUtil::trimStream)
+          .collect(Collectors.toList());
+    }
+  }
+
+  /**
+   * Need to get the correct versions of the dependent artifacts for this artifact. It is possible
+   * the latest artifact by date may not be the latest artifact by version. Need to get the latest
+   * version
+   *
+   * @param artifactId the id used to query from Trisotech
+   * @param model      the latest model information
+   * @return the list of ResourceIdentifier for the dependencies
+   */
+  private List<ResourceIdentifier> getImportVersions(ResourceIdentifier artifactId,
+      TrisotechFileInfo model) {
+    List<ResourceIdentifier> dependencies = new ArrayList<>();
+    // need to find the dependency artifact versions that map to this artifact version
+    // using this algorithm:
+    // map to the 'latest' version of the dependency that is not timestamped later then the next
+    // version of this artifact
+    logger.debug(
+        "current artifactVersion: {} {} {} ",
+        model.getName(), model.getVersion(), model.getUpdated());
+    // getTrisotechModelVersions returns all versions of the model EXCEPT the latest
+    List<TrisotechFileInfo> artifactModelVersions
+        = client.getModelVersions(model.getId());
+    // get next version
+    TrisotechFileInfo nextArtifactVersion = null;
+    Date artifactDate = Date.from(Instant.parse(model.getUpdated()));
+    Date nextVersionDate = null;
+    for (TrisotechFileInfo tfi : artifactModelVersions) {
+      // compare timestamp
+      // Need to compare version too? yes, per e-mail exchange w/Davide 04/21
+      nextVersionDate = Date.from(Instant.parse(tfi.getUpdated()));
+      if (nextVersionDate.after(artifactDate) && tfi.getVersion() != null &&
+          (Version.valueOf(tfi.getVersion()).greaterThan(Version.valueOf(model.getVersion())))) {
+        nextArtifactVersion = tfi;
+        break;
+      }
+    }
+    // the latest version is NOT included in the list of versions;
+    // if next is null, it needs to be set to latest
+    if (null == nextArtifactVersion) {
+      nextArtifactVersion = client.getLatestModelFileInfo(model.getId(), false).orElse(null);
+      if (null != nextArtifactVersion) {
+        nextVersionDate = Date.from(Instant.parse(nextArtifactVersion.getUpdated()));
+        logger.debug("nextArtifactVersion: {} {} {} ", nextArtifactVersion.getName(),
+            nextArtifactVersion.getVersion(), nextArtifactVersion.getUpdated());
+        logger.debug("nextVersionDate: {}", nextVersionDate);
+      }
     }
 
-    private List<ResourceIdentifier> getArtifactImports(ResourceIdentifier artifactId, TrisotechFileInfo model) {
-        // if dealing with the latest of the model, return the latest of the imports
-        List<ResourceIdentifier> imports;
-        if (mapper.isLatest(model.getId(), model.getVersion())) {
-            imports = mapper.getLatestArtifactDependencies(artifactId.getResourceId().toString());
-        } else {
-            imports = getImportVersions(artifactId, model);
-        }
-        return imports != null ? imports : emptyList();
-    }
-
-    private List<ResourceIdentifier> getAssetImports(
-        ResourceIdentifier artifactId,
-        List<ResourceIdentifier> importedArtifactIds,
-        TrisotechFileInfo model) {
-        if (mapper.isLatest(model.getId(), model.getVersion())) {
-            return mapper.getLatestAssetDependencies(artifactId.getResourceId().toString());
-        } else {
-            return importedArtifactIds
-                .stream()
-                .map(aid -> mapper.getAssetIdForHistoricalArtifact(aid))
-                .flatMap(StreamUtil::trimStream)
-                .collect(Collectors.toList());
-        }
-    }
-
-    /**
-     * Need to get the correct versions of the dependent artifacts for this artifact. It is possible
-     * the latest artifact by date may not be the latest artifact by version. Need to get the latest
-     * version
-     *
-     * @param artifactId the id used to query from Trisotech
-     * @param model the latest model information
-     * @return the list of ResourceIdentifier for the dependencies
-     */
-    private List<ResourceIdentifier> getImportVersions(ResourceIdentifier artifactId, TrisotechFileInfo model) {
-        List<ResourceIdentifier> dependencies = new ArrayList<>();
-        // need to find the dependency artifact versions that map to this artifact version
-        // using this algorithm:
-        // map to the 'latest' version of the dependency that is not timestamped later then the next
-        // version of this artifact
-        logger.debug(
-                "current artifactVersion: {} {} {} ",
-                model.getName(), model.getVersion(), model.getUpdated());
-        // getTrisotechModelVersions returns all versions of the model EXCEPT the latest
-        List<TrisotechFileInfo> artifactModelVersions
-                = client.getModelVersions(model.getId());
-        // get next version
-        TrisotechFileInfo nextArtifactVersion = null;
-        Date artifactDate = Date.from(Instant.parse(model.getUpdated()));
-        Date nextVersionDate = null;
-        for (TrisotechFileInfo tfi : artifactModelVersions) {
-            // compare timestamp
-            // Need to compare version too? yes, per e-mail exchange w/Davide 04/21
-            nextVersionDate = Date.from(Instant.parse(tfi.getUpdated()));
-            if (nextVersionDate.after(artifactDate) && tfi.getVersion() != null &&
-                    (Version.valueOf(tfi.getVersion()).greaterThan(Version.valueOf(model.getVersion())))) {
-                nextArtifactVersion = tfi;
-                break;
-            }
-        }
-        // the latest version is NOT included in the list of versions;
-        // if next is null, it needs to be set to latest
-        if (null == nextArtifactVersion) {
-            nextArtifactVersion = client.getLatestModelFileInfo(model.getId(),false).orElse(null);
-            if (null != nextArtifactVersion) {
-                nextVersionDate = Date.from(Instant.parse(nextArtifactVersion.getUpdated()));
-                logger.debug("nextArtifactVersion: {} {} {} ", nextArtifactVersion.getName(),
-                    nextArtifactVersion.getVersion(), nextArtifactVersion.getUpdated());
-                logger.debug("nextVersionDate: {}", nextVersionDate);
-            }
-        }
-
-        // get versions of the imported artifacts
-        List<ResourceIdentifier> artifactImports =
-            mapper.getLatestArtifactDependencies(artifactId.getResourceId().toString());
-        for (ResourceIdentifier ri : artifactImports) {
-            logger.debug("have resourceIdentifier from artifactImports: {} ", ri.getVersionId());
-            String importedModelID = mapper.resolveModelId(ri.getTag()).orElseThrow();
-            List<TrisotechFileInfo> importVersions =
-                    client.getModelVersions(importedModelID);
-            // will need to use convertInternalId to get the KMDP resourceId to return
-            // use the tag of the artifact with the version and timestamp found to match
-            if (importVersions.isEmpty()) {
-                return dependencies;
-            }
-            TrisotechFileInfo matchVersion = findVersionMatch(importVersions, artifactDate,
-                    nextVersionDate);
-            if (null != matchVersion) { // shouldn't happen
-                dependencies.add(names.rewriteInternalId(ri.getTag(),
-                        matchVersion.getVersion(),
-                        matchVersion.getUpdated()));
-            }
-        }
+    // get versions of the imported artifacts
+    List<ResourceIdentifier> artifactImports =
+        mapper.getLatestArtifactDependencies(artifactId.getResourceId().toString());
+    for (ResourceIdentifier ri : artifactImports) {
+      logger.debug("have resourceIdentifier from artifactImports: {} ", ri.getVersionId());
+      String importedModelID = mapper.resolveModelId(ri.getTag()).orElseThrow();
+      List<TrisotechFileInfo> importVersions =
+          client.getModelVersions(importedModelID);
+      // will need to use convertInternalId to get the KMDP resourceId to return
+      // use the tag of the artifact with the version and timestamp found to match
+      if (importVersions.isEmpty()) {
         return dependencies;
+      }
+      TrisotechFileInfo matchVersion = findVersionMatch(importVersions, artifactDate,
+          nextVersionDate);
+      if (null != matchVersion) { // shouldn't happen
+        dependencies.add(names.rewriteInternalId(ri.getTag(),
+            matchVersion.getVersion(),
+            matchVersion.getUpdated()));
+      }
     }
+    return dependencies;
+  }
 
-    /**
-     * When looking for matches for imported versions, need to identify the correct version for THIS
-     * version of the artifact. Finding the correct version relies on knowing what the *next* version
-     * of this artifact is.
-     *
-     * @param importVersions  versions of the imported models for this model
-     * @param artifactDate    the date for this model
-     * @param nextVersionDate the date for the next version of this model
-     * @return the TrisotechFileInfo for the version of the import that is correct for THIS version of
-     * the model
-     */
-    private TrisotechFileInfo findVersionMatch(List<TrisotechFileInfo> importVersions,
-                                               Date artifactDate, Date nextVersionDate) {
-        // as loop through the dependency versions, need to keep track of the previous one
-        // as artifact version will depend on the dependency version that is
-        // JUST BEFORE the next version of the artifact
-        TrisotechFileInfo prevVersion;
-        TrisotechFileInfo thisVersion = null;
-        TrisotechFileInfo matchVersion = null;
-        for (TrisotechFileInfo tfi : importVersions) {
-            prevVersion = thisVersion;
-            Date depDate = Date.from(Instant.parse(tfi.getUpdated()));
+  /**
+   * When looking for matches for imported versions, need to identify the correct version for THIS
+   * version of the artifact. Finding the correct version relies on knowing what the *next* version
+   * of this artifact is.
+   *
+   * @param importVersions  versions of the imported models for this model
+   * @param artifactDate    the date for this model
+   * @param nextVersionDate the date for the next version of this model
+   * @return the TrisotechFileInfo for the version of the import that is correct for THIS version of
+   * the model
+   */
+  private TrisotechFileInfo findVersionMatch(List<TrisotechFileInfo> importVersions,
+      Date artifactDate, Date nextVersionDate) {
+    // as loop through the dependency versions, need to keep track of the previous one
+    // as artifact version will depend on the dependency version that is
+    // JUST BEFORE the next version of the artifact
+    TrisotechFileInfo prevVersion;
+    TrisotechFileInfo thisVersion = null;
+    TrisotechFileInfo matchVersion = null;
+    for (TrisotechFileInfo tfi : importVersions) {
+      prevVersion = thisVersion;
+      Date depDate = Date.from(Instant.parse(tfi.getUpdated()));
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("version: {}", tfi.getVersion());
-                logger.debug("updated: {}", tfi.getUpdated());
-                // find the version that is a match for the artifact
+      if (logger.isDebugEnabled()) {
+        logger.debug("version: {}", tfi.getVersion());
+        logger.debug("updated: {}", tfi.getUpdated());
+        // find the version that is a match for the artifact
 
-                logger.debug("dependency date: {} ", depDate);
-                logger.debug("nextVersion compareTo depDate: {}",
-                    nextVersionDate.compareTo(depDate));
-                logger.debug("artifactDate compareTo depDate: {}", artifactDate.compareTo(depDate));
-                logger.debug("depDate before artifactDate? {}", depDate.before(artifactDate));
-                logger.debug("depDate after artifactDate? {}", depDate.after(artifactDate));
-                logger.debug("depDate before nextDate? {}", depDate.before(nextVersionDate));
-                logger.debug("depDate after nextDate? {}", depDate.after(nextVersionDate));
-            }
-            // will need to use convertInternalId to get the KMDP resourceId to return
-            if ((depDate.after(artifactDate)) &&
-                    ((depDate.before(nextVersionDate)) ||
-                            (depDate.after(nextVersionDate)))) {
-                matchVersion = prevVersion;
-            }
-            if (matchVersion != null) {
-                break; // for loop
-            }
-            thisVersion = tfi;
-        }
-        if (null != matchVersion) {
-            return matchVersion;
-        } else {
-            return thisVersion;
-        }
+        logger.debug("dependency date: {} ", depDate);
+        logger.debug("nextVersion compareTo depDate: {}",
+            nextVersionDate.compareTo(depDate));
+        logger.debug("artifactDate compareTo depDate: {}", artifactDate.compareTo(depDate));
+        logger.debug("depDate before artifactDate? {}", depDate.before(artifactDate));
+        logger.debug("depDate after artifactDate? {}", depDate.after(artifactDate));
+        logger.debug("depDate before nextDate? {}", depDate.before(nextVersionDate));
+        logger.debug("depDate after nextDate? {}", depDate.after(nextVersionDate));
+      }
+      // will need to use convertInternalId to get the KMDP resourceId to return
+      if ((depDate.after(artifactDate)) &&
+          ((depDate.before(nextVersionDate)) ||
+              (depDate.after(nextVersionDate)))) {
+        matchVersion = prevVersion;
+      }
+      if (matchVersion != null) {
+        break; // for loop
+      }
+      thisVersion = tfi;
     }
-
-
-    /**
-     * create the information to be returned identifying the artifacts that are imported by the
-     * artifact being processed.
-     *
-     * @param theTargetArtifactId The list of artifact IDs for the imports to the current version of
-     *                            the model being processed
-     * @return The Link information for the imports; only keeping the identifier
-     */
-    private Collection<Link> getRelatedArtifacts(List<ResourceIdentifier> theTargetArtifactId) {
-        return theTargetArtifactId.stream()
-                // TODO: Do something different for null id? means related artifact was not published
-                //  log warning was already noted in gathering of related artifacts CAO
-                .filter(Objects::nonNull)
-                .map(resourceIdentifier -> new Dependency().withRel(Imports)
-                        .withHref(resourceIdentifier))
-                .collect(toList());
-
+    if (null != matchVersion) {
+      return matchVersion;
+    } else {
+      return thisVersion;
     }
+  }
 
-    /**
-     * Similar to the relatedArtifacts, related Assets are the asset identifiers for the artifacts
-     * that are imported or used (dependency) of the current processed artifact. Want to retain the
-     * identifiers.
-     *
-     * @param theTargetAssetId the list of assets this model depends on
-     * @return the link information for the assets; only keeping the identifier
-     */
-    private Collection<Link> getRelatedAssets(List<ResourceIdentifier> theTargetAssetId) {
-        return theTargetAssetId.stream()
-                .map(resourceIdentifier ->
-                        new Dependency()
-                                .withRel(Imports)
-                                .withHref(resourceIdentifier))
-                .collect(toList());
+
+  /**
+   * create the information to be returned identifying the artifacts that are imported by the
+   * artifact being processed.
+   *
+   * @param theTargetArtifactId The list of artifact IDs for the imports to the current version of
+   *                            the model being processed
+   * @return The Link information for the imports; only keeping the identifier
+   */
+  private Collection<Link> getRelatedArtifacts(List<ResourceIdentifier> theTargetArtifactId) {
+    return theTargetArtifactId.stream()
+        // TODO: Do something different for null id? means related artifact was not published
+        //  log warning was already noted in gathering of related artifacts CAO
+        .filter(Objects::nonNull)
+        .map(resourceIdentifier -> new Dependency().withRel(Imports)
+            .withHref(resourceIdentifier))
+        .collect(toList());
+
+  }
+
+  /**
+   * Similar to the relatedArtifacts, related Assets are the asset identifiers for the artifacts
+   * that are imported or used (dependency) of the current processed artifact. Want to retain the
+   * identifiers.
+   *
+   * @param theTargetAssetId the list of assets this model depends on
+   * @return the link information for the assets; only keeping the identifier
+   */
+  private Collection<Link> getRelatedAssets(List<ResourceIdentifier> theTargetAssetId) {
+    return theTargetAssetId.stream()
+        .map(resourceIdentifier ->
+            new Dependency()
+                .withRel(Imports)
+                .withHref(resourceIdentifier))
+        .collect(toList());
+  }
+
+
+  private Collection<Link> mergeSortedLinks(Collection<Link> link1, Collection<Link> link2) {
+    return Stream.concat(
+            link1.stream(),
+            link2.stream())
+        .sorted(comparing(l -> l.getHref().getTag()))
+        .collect(Collectors.toList());
+  }
+
+  /* ----------------------------------------------------------------------------------------- */
+
+  /**
+   * Injects a List of Annotations, extracted from a model, into that model's surrogate.
+   * <p>
+   * Filters, sorts and de-duplicates the Annotations in the process
+   *
+   * @param surr        the Surrogate to be augmented
+   * @param annotations the List of {@link Annotation} to inject
+   */
+  protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
+    List<Annotation> annos = annotations.stream()
+        .filter(ann -> Captures.sameTermAs(ann.getRel())
+            || Defines.sameTermAs(ann.getRel())
+            || Has_Primary_Subject.sameTermAs(ann.getRel())
+            || Has_Focus.sameTermAs(ann.getRel())
+            || In_Terms_Of.sameTermAs(ann.getRel()))
+        .map(ann -> (Annotation) ann.copyTo(new Annotation()))
+        .collect(Collectors.toList());
+
+    List<Annotation> uniqueAnnos = new LinkedList<>();
+    for (Annotation ann : annos) {
+      if (uniqueAnnos.stream()
+          .noneMatch(a ->
+              a.getRef().sameTermAs(ann.getRef())
+                  && a.getRel().sameTermAs(ann.getRel()))) {
+        uniqueAnnos.add(ann);
+      }
     }
+    Comparator<Annotation> comp = comparing(annotation -> annotation.getRel().getTag());
+    comp = comp.thenComparing(ann -> ann.getRef().getTag());
+    uniqueAnnos.stream()
+        .sorted(comp)
+        .forEach(surr::withAnnotation);
+  }
 
 
-    private Collection<Link> mergeSortedLinks(Collection<Link> link1, Collection<Link> link2) {
-        return Stream.concat(
-                link1.stream(),
-                link2.stream())
-            .sorted(comparing(l -> l.getHref().getTag()))
-            .collect(Collectors.toList());
+  /**
+   * Pulls the semantic {@link Annotation} from the model.
+   * <p>
+   * Note that the {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver} should have
+   * already rewritten the annotations into the platform format
+   *
+   * @param dox the annotated model
+   * @return the List of {@link Annotation} in the model
+   */
+  private List<Annotation> extractAnnotations(Document dox) {
+    List<Annotation> annos = asElementStream(
+        dox.getDocumentElement().getElementsByTagName(SEMANTIC_EXTENSION_ELEMENTS))
+        .filter(Objects::nonNull)
+        .filter(el -> el.getLocalName().equals(EXTENSION_ELEMENTS))
+        .flatMap(el -> asElementStream(el.getChildNodes()))
+        .filter(child -> child.getLocalName().equals("annotation"))
+        .map(child -> unmarshall(Annotation.class, Annotation.class, child))
+        .flatMap(StreamUtil::trimStream)
+        .collect(java.util.stream.Collectors.toCollection(LinkedList::new));
+
+    logger.debug("end of extractAnnotations; have annos size: {} ", annos.size());
+    return annos;
+  }
+
+  /* ----------------------------------------------------------------------------------------- */
+
+
+  /**
+   * Constructs a {@link SyntacticRepresentation} for the binary encoded manifestation of a given
+   * model.
+   *
+   * @param dox the model
+   * @return the {@link SyntacticRepresentation} at the Encoded level
+   */
+  public Optional<SyntacticRepresentation> getRepLanguage(Document dox) {
+    if (dox == null) {
+      return Optional.empty();
     }
-
-    /* ----------------------------------------------------------------------------------------- */
-
-    /**
-     * Injects a List of Annotations, extracted from a model, into that model's surrogate.
-     * <p>
-     * Filters, sorts and de-duplicates the Annotations in the process
-     *
-     * @param surr        the Surrogate to be augmented
-     * @param annotations the List of {@link Annotation} to inject
-     */
-    protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
-        List<Annotation> annos = annotations.stream()
-                .filter(ann -> Captures.sameTermAs(ann.getRel())
-                        || Defines.sameTermAs(ann.getRel())
-                        || Has_Primary_Subject.sameTermAs(ann.getRel())
-                        || Has_Focus.sameTermAs(ann.getRel())
-                        || In_Terms_Of.sameTermAs(ann.getRel()))
-                .map(ann -> (Annotation) ann.copyTo(new Annotation()))
-                .collect(Collectors.toList());
-
-        List<Annotation> uniqueAnnos = new LinkedList<>();
-        for (Annotation ann : annos) {
-            if (uniqueAnnos.stream()
-                    .noneMatch(a ->
-                            a.getRef().sameTermAs(ann.getRef())
-                                    && a.getRel().sameTermAs(ann.getRel()))) {
-                uniqueAnnos.add(ann);
-            }
-        }
-        Comparator<Annotation> comp = comparing(annotation -> annotation.getRel().getTag());
-        comp = comp.thenComparing(ann -> ann.getRef().getTag());
-        uniqueAnnos.stream()
-                .sorted(comp)
-                .forEach(surr::withAnnotation);
+    if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
+      return Optional.of(rep(CMMN_1_1, XML_1_1, defaultCharset(), Encodings.DEFAULT));
     }
-
-
-    /**
-     * Pulls the semantic {@link Annotation} from the model.
-     * <p>
-     * Note that the {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver} should have
-     * already rewritten the annotations into the platform format
-     *
-     * @param dox the annotated model
-     * @return the List of {@link Annotation} in the model
-     */
-    private List<Annotation> extractAnnotations(Document dox) {
-        List<Annotation> annos = asElementStream(
-                dox.getDocumentElement().getElementsByTagName(SEMANTIC_EXTENSION_ELEMENTS))
-                .filter(Objects::nonNull)
-                .filter(el -> el.getLocalName().equals(EXTENSION_ELEMENTS))
-                .flatMap(el -> asElementStream(el.getChildNodes()))
-                .filter(child -> child.getLocalName().equals("annotation"))
-                .map(child -> unmarshall(Annotation.class, Annotation.class, child))
-                .flatMap(StreamUtil::trimStream)
-                .collect(java.util.stream.Collectors.toCollection(LinkedList::new));
-
-        logger.debug("end of extractAnnotations; have annos size: {} ", annos.size());
-        return annos;
+    if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
+      return Optional.of(rep(DMN_1_2, XML_1_1, defaultCharset(), Encodings.DEFAULT));
     }
+    return Optional.empty();
+  }
 
-    /* ----------------------------------------------------------------------------------------- */
-
-
-    /**
-     * Constructs a {@link SyntacticRepresentation} for the binary encoded manifestation of a given
-     * model.
-     *
-     * @param dox the model
-     * @return the {@link SyntacticRepresentation} at the Encoded level
-     */
-    public Optional<SyntacticRepresentation> getRepLanguage(Document dox) {
-        if (dox == null) {
-            return Optional.empty();
-        }
-        if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
-            return Optional.of(rep(CMMN_1_1, XML_1_1, defaultCharset(), Encodings.DEFAULT));
-        }
-        if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
-            return Optional.of(rep(DMN_1_2, XML_1_1, defaultCharset(), Encodings.DEFAULT));
-        }
-        return Optional.empty();
+  /**
+   * Detects the {@link KnowledgeRepresentationLanguage} used in a model.
+   *
+   * @param dox the model
+   * @return the {@link KnowledgeRepresentationLanguage}
+   */
+  public Optional<KnowledgeRepresentationLanguage> detectRepLanguage(Document dox) {
+    if (dox == null) {
+      return Optional.empty();
     }
-
-    /**
-     * Detects the {@link KnowledgeRepresentationLanguage} used in a model.
-     *
-     * @param dox the model
-     * @return the {@link KnowledgeRepresentationLanguage}
-     */
-    public Optional<KnowledgeRepresentationLanguage> detectRepLanguage(Document dox) {
-        if (dox == null) {
-            return Optional.empty();
-        }
-        if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
-            return Optional.of(CMMN_1_1);
-        }
-        if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
-            return Optional.of(DMN_1_2);
-        }
-        return Optional.empty();
+    if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
+      return Optional.of(CMMN_1_1);
     }
-
-
-    /* ----------------------------------------------------------------------------------------- */
-
-    /**
-     * Converts the Trisotech internal publication status to the platform {@link Publication}
-     * <p>
-     * Note that the instance data reflects, strictly speaking, the publication status of the model
-     * Artifact, not the carried Asset itself
-     *
-     * @param manifest the internal model manifest.
-     * @return a {@link Publication} object, to be used as a {@link KnowledgeAsset} surrogate fragment
-     */
-    private Publication getArtifactPublicationStatus(TrisotechFileInfo manifest) {
-        Publication lifecycle = new Publication();
-        if (isNotEmpty(manifest.getState())) {
-            switch (manifest.getState()) {
-                case "Published":
-                    lifecycle.withPublicationStatus(Published);
-                    break;
-                case "Draft":
-                    lifecycle.withPublicationStatus(Draft);
-                    break;
-                case "Pending Approval":
-                    lifecycle.withPublicationStatus(Final_Draft);
-                    break;
-                default:
-                    throw new IllegalStateException("Unrecognized state " + manifest.getState());
-            }
-        } else {
-            lifecycle.withPublicationStatus(Unpublished);
-        }
-        logger.debug("lifecycle = {}", lifecycle.getPublicationStatus());
-
-        return lifecycle;
+    if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
+      return Optional.of(DMN_1_2);
     }
+    return Optional.empty();
+  }
+
+
+  /* ----------------------------------------------------------------------------------------- */
+
+  /**
+   * Converts the Trisotech internal publication status to the platform {@link Publication}
+   * <p>
+   * Note that the instance data reflects, strictly speaking, the publication status of the model
+   * Artifact, not the carried Asset itself
+   *
+   * @param manifest the internal model manifest.
+   * @return a {@link Publication} object, to be used as a {@link KnowledgeAsset} surrogate fragment
+   */
+  private Publication getArtifactPublicationStatus(TrisotechFileInfo manifest) {
+    Publication lifecycle = new Publication();
+    if (isNotEmpty(manifest.getState())) {
+      switch (manifest.getState()) {
+        case "Published":
+          lifecycle.withPublicationStatus(Published);
+          break;
+        case "Draft":
+          lifecycle.withPublicationStatus(Draft);
+          break;
+        case "Pending Approval":
+          lifecycle.withPublicationStatus(Final_Draft);
+          break;
+        default:
+          throw new IllegalStateException("Unrecognized state " + manifest.getState());
+      }
+    } else {
+      lifecycle.withPublicationStatus(Unpublished);
+    }
+    logger.debug("lifecycle = {}", lifecycle.getPublicationStatus());
+
+    return lifecycle;
+  }
 }

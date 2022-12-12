@@ -320,9 +320,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   /**
    * Returns the raw BPM+ Model Artifact for the given Asset Id/Version
-   * @param assetId the asset ID
+   *
+   * @param assetId    the asset ID
    * @param versionTag the version tag
-   * @param xAccept content negotiation (not used)
+   * @param xAccept    content negotiation (not used)
    * @return the binary artifact
    */
   @Override
@@ -335,7 +336,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   /**
    * Retrieves (a copy of) a specific version of an Artifact. That Artifact must be known to the
    * client to carry at least one expression, in some language, of the given Knowledge Asset.
-   * corresponds to this uri: /cat/assets/{assetId}/versions/{versionTag}/carriers/{artifactId}/versions/{artifactVersionTag}
+   * corresponds to this uri:
+   * /cat/assets/{assetId}/versions/{versionTag}/carriers/{artifactId}/versions/{artifactVersionTag}
    * only return if the assetId/version is associated with the artifactid/version provided
    *
    * @param assetId            enterprise asset ID
@@ -563,7 +565,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .flatMap(x -> dowloadLatestModelVersion(x, publishedOnly));
 
     ResourceIdentifier artifactId = mapper.getCarrierArtifactId(assetId, versionTag);
-    return modelDox.flatMap(xml -> buildCarrierFromNativeModel(assetId, versionTag, artifactId, xml));
+    return modelDox.flatMap(
+        xml -> buildCarrierFromNativeModel(assetId, versionTag, artifactId, xml));
   }
 
   private Optional<KnowledgeCarrier> buildCarrierFromNativeModel(

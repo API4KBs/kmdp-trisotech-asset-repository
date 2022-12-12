@@ -17,6 +17,7 @@ import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeTypeByAssetType;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.Answer.conflict;
 import static org.omg.spec.api4kp._20200801.Answer.failed;
@@ -24,14 +25,26 @@ import static org.omg.spec.api4kp._20200801.Answer.notFound;
 import static org.omg.spec.api4kp._20200801.Answer.succeed;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.timedSemverComparator;
+import static org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder.decodeAll;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Calculation_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Contextualization_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Eligibility_Rule;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Enrollment_Rule;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Guidance_Rule;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Inference_Rule;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Cognitive_Care_Process_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Computable_Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Naturalistic_Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.ReSTful_Service_Specification;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Semantic_Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
@@ -40,6 +53,7 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionException;
+import edu.mayo.kmdp.language.translators.surrogate.v2.SurrogateV2toHTMLTranslator;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.StreamUtil;
@@ -56,6 +70,7 @@ import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetCatalogApiInternal;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetRepositoryApiInternal;
+import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.TransxionApiInternal._applyTransrepresent;
 import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
@@ -63,7 +78,10 @@ import org.omg.spec.api4kp._20200801.services.KPServer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.services.repository.KnowledgeAssetCatalog;
+import org.omg.spec.api4kp._20200801.services.repository.asset.KARSHrefBuilder;
+import org.omg.spec.api4kp._20200801.services.repository.asset.KARSHrefBuilder.HrefType;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
 import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
@@ -99,6 +117,11 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   private Redactor redactor;
 
   @Autowired(required = false)
+  private KARSHrefBuilder hrefBuilder;
+
+  private final _applyTransrepresent htmlTranslator = new SurrogateV2toHTMLTranslator();
+
+  @Autowired(required = false)
   private TTAssetRepositoryConfig configuration;
   @Autowired
   private NamespaceManager names;
@@ -114,6 +137,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     if (configuration == null) {
       configuration = new TTAssetRepositoryConfig();
     }
+    if (hrefBuilder == null) {
+      hrefBuilder = new KARSHrefBuilder(configuration);
+    }
     publishedOnly = configuration.getTyped(TTWParams.PUBLISHED_ONLY);
   }
 
@@ -126,12 +152,25 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .withSurrogateModels(rep(Knowledge_Asset_Surrogate_2_0, XML_1_1))
         .withSupportedAssetTypes(
             Decision_Model,
+            Semantic_Decision_Model,
+            Naturalistic_Decision_Model,
             Computable_Decision_Model,
             Clinical_Decision_Model,
+
             Care_Process_Model,
             Cognitive_Care_Process_Model,
+            Case_Management_Model,
             Clinical_Case_Management_Model,
-            Clinical_Eligibility_Rule));
+
+            Clinical_Eligibility_Rule,
+            Clinical_Rule,
+            Clinical_Calculation_Rule,
+            Clinical_Contextualization_Rule,
+            Clinical_Guidance_Rule,
+            Clinical_Enrollment_Rule,
+            Clinical_Inference_Rule,
+
+            ReSTful_Service_Specification));
   }
 
 
@@ -149,6 +188,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   @Override
   public Answer<KnowledgeAsset> getKnowledgeAsset(UUID assetId, String xAccept) {
     // need the modelId of the model in order to query for modelInfo
+    if (negotiateHTML(xAccept)) {
+      return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
+    }
+
     Optional<String> modelId = mapper.getCurrentModelId(assetId, false);
 
     if (modelId.isEmpty()) {
@@ -168,6 +211,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       String versionTag, String xAccept) {
     // For assetId, find artifactId; For assetId/versionTag, is latest artifactId/version a match?
     // if not, get versions of artifactId and weave each one to get assetId/version
+    if (negotiateHTML(xAccept)) {
+      return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
+    }
+
     try {
       String internalId = mapper.resolveInternalArtifactID(assetId, versionTag, publishedOnly);
 
@@ -259,7 +306,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             ptr = assetId.map(id -> id.toPointer()
                 .withType(
                     mapper.getDeclaredAssetTypeOrDefault(trisotechFileInfo).getReferentId())
-                .withName(trisotechFileInfo.getName()));
+                .withName(trisotechFileInfo.getName())
+                .withHref(hrefBuilder.getHref(id, HrefType.ASSET))
+            );
+
             return ptr;
           } catch (IllegalStateException ise) {
             logger.error(ise.getMessage(), ise);
@@ -404,6 +454,26 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       return Answer.failed(nfe);
     }
     return notFound();
+  }
+
+  @Override
+  public Answer<KnowledgeCarrier> getKnowledgeAssetCanonicalSurrogate(UUID assetId,
+      String xAccept) {
+    var surr = getKnowledgeAsset(assetId, null)
+        .map(SurrogateHelper::carry);
+    return negotiateHTML(xAccept)
+        ? surr.flatMap(ka -> htmlTranslator.applyTransrepresent(ka, codedRep(HTML), null))
+        : surr;
+  }
+
+  @Override
+  public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalSurrogate(UUID assetId,
+      String versionTag, String xAccept) {
+    var surr = getKnowledgeAssetVersion(assetId, versionTag, null)
+        .map(SurrogateHelper::carry);
+    return negotiateHTML(xAccept)
+        ? surr.flatMap(ka -> htmlTranslator.applyTransrepresent(ka, codedRep(HTML), null))
+        : surr;
   }
 
   /**
@@ -610,6 +680,12 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   private Optional<Document> dowloadLatestModelVersion(String modelId, boolean publishedOnly) {
     return client.getModelById(modelId, publishedOnly);
+  }
+
+  private boolean negotiateHTML(String xAccept) {
+    return decodeAll(xAccept).stream().findFirst()
+        .filter(wr -> HTML.sameAs(wr.getRep().getLanguage()))
+        .isPresent();
   }
 
 }

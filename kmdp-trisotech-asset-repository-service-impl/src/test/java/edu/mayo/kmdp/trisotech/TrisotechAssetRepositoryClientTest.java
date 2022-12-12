@@ -14,7 +14,7 @@
 package edu.mayo.kmdp.trisotech;
 
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.ServerConfig;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.TTServerConfig;
 import edu.mayo.kmdp.util.ws.JsonRestWSUtils.WithFHIR;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -31,7 +31,7 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest(
     webEnvironment = WebEnvironment.RANDOM_PORT,
     classes = Swagger2SpringBoot.class)
-@ContextConfiguration(classes = ServerConfig.class)
+@ContextConfiguration(classes = TTServerConfig.class)
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=EU-Rent",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=9b6b13d5-00e5-42fe-a844-51a1a4c78106"})

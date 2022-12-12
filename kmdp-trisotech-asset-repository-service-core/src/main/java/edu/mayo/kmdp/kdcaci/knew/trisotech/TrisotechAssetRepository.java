@@ -152,10 +152,11 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     Optional<String> modelId = mapper.getCurrentModelId(assetId, false);
 
     if (modelId.isEmpty()) {
-      return Answer.of(Optional.empty());
+      return Answer.ofTry(Optional.empty(), newId(assetId),
+          () -> "No Asset found for the given ID");
     }
     // get the modelInfo for the latest artifactVersion
-    return Answer.of(
+    return Answer.ofTry(
         client.getLatestModelFileInfo(modelId.get(), publishedOnly)
             .flatMap(modelInfo ->
                 getKnowledgeAssetForModel(modelId.get(), modelInfo)));
@@ -170,7 +171,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     try {
       String internalId = mapper.resolveInternalArtifactID(assetId, versionTag, publishedOnly);
 
-      return Answer.of(
+      return Answer.ofTry(
           client.getLatestModelFileInfo(internalId, publishedOnly)
               .flatMap(tfi -> getKnowledgeAssetForModel(internalId, tfi)));
     } catch (NotLatestAssetVersionException e) {
@@ -309,7 +310,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalCarrier(UUID assetId,
       String versionTag, String extAccept) {
     try {
-      return Answer.of(getCarrier(assetId, versionTag));
+      return Answer.ofTry(getCarrier(assetId, versionTag));
     } catch (NotLatestAssetVersionException e) {
       return getKnowledgeCarrierFromOtherVersion(assetId, versionTag, e.getModelUri(), null);
     } catch (NotFoundException e) {
@@ -318,12 +319,13 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
   /**
-   * Returns the raw BPM+ Model Artifact
-   * @param assetId
-   * @param versionTag
-   * @param xAccept
-   * @return
+   * Returns the raw BPM+ Model Artifact for the given Asset Id/Version
+   * @param assetId the asset ID
+   * @param versionTag the version tag
+   * @param xAccept content negotiation (not used)
+   * @return the binary artifact
    */
+  @Override
   public Answer<byte[]> getKnowledgeAssetVersionCanonicalCarrierContent(
       UUID assetId, String versionTag, String xAccept) {
     return getKnowledgeAssetVersionCanonicalCarrier(assetId, versionTag, xAccept)
@@ -380,7 +382,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
         if (artifactVersion.orElse("").equals(artifactVersionTag)
             || artifactVersionTimestamp.orElse("").equals(artifactVersionTag)) {
-          return Answer.of(getCarrier(assetId, versionTag));
+          return Answer.ofTry(getCarrier(assetId, versionTag));
         } else {
           // artifactId matched, but not version; get other versions to see if one of them matches
           return getKnowledgeCarrierFromOtherVersion(
@@ -461,8 +463,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           && assetVersionTag.equals(resolvedAssetId.getVersionTag())
           && (modelVersionTag == null || modelVersionTag.equals(model.getVersion()))) {
 
-        return Answer.of(
-            getCarrier(
+        return Answer.ofTry(
+            buildCarrierFromNativeModel(
                 assetId,
                 assetVersionTag,
                 names.rewriteInternalId(model),
@@ -561,10 +563,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .flatMap(x -> dowloadLatestModelVersion(x, publishedOnly));
 
     ResourceIdentifier artifactId = mapper.getCarrierArtifactId(assetId, versionTag);
-    return modelDox.flatMap(xml -> getCarrier(assetId, versionTag, artifactId, xml));
+    return modelDox.flatMap(xml -> buildCarrierFromNativeModel(assetId, versionTag, artifactId, xml));
   }
 
-  private Optional<KnowledgeCarrier> getCarrier(
+  private Optional<KnowledgeCarrier> buildCarrierFromNativeModel(
       UUID assetId, String versionTag,
       ResourceIdentifier artifactId, Document dox) {
 

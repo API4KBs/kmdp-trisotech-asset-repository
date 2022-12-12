@@ -24,6 +24,7 @@ import edu.mayo.kmdp.util.JSonUtil;
 import java.io.InputStream;
 import java.util.Optional;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
+import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.DeserializeApiInternal._applyLower;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
@@ -43,14 +44,14 @@ public class MetadataIntrospector {
   @Autowired
   private TrisotechIntrospectionStrategy strategy;
 
-  private final Surrogate2Parser lifter = new Surrogate2Parser();
+  private final _applyLower serializer = new Surrogate2Parser();
 
   public MetadataIntrospector(TrisotechIntrospectionStrategy delegate) {
     this.strategy = delegate;
   }
 
   public KnowledgeAsset extract(Document dox, TrisotechFileInfo meta) {
-    return strategy.extractXML(dox, meta);
+    return strategy.extractSurrogateFromDocument(dox, meta);
   }
 
   public Optional<KnowledgeAsset> extract(InputStream resource, InputStream meta) {
@@ -68,7 +69,7 @@ public class MetadataIntrospector {
         .map(SurrogateHelper::carry);
 
     return kc.map(
-        ast -> lifter.applyLower(
+        ast -> serializer.applyLower(
             ast,
             Encoded_Knowledge_Expression,
             codedRep,
@@ -78,8 +79,8 @@ public class MetadataIntrospector {
     );
   }
 
-  public Optional<SyntacticRepresentation> getRepLanguage(Document document, boolean concrete) {
-    return strategy.getRepLanguage(document, concrete);
+  public Optional<SyntacticRepresentation> getRepLanguage(Document document) {
+    return strategy.getRepLanguage(document);
   }
 
 }

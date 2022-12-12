@@ -119,13 +119,13 @@ class TrisotechExtractionStrategyTest {
 
   @Test
   void getRepLanguage() {
-    Optional<SyntacticRepresentation> dmnRep = this.tes.getRepLanguage(dmnDox, false);
+    Optional<SyntacticRepresentation> dmnRep = this.tes.getRepLanguage(dmnDox);
     assertEquals("DMN_1_2", dmnRep.orElseGet(Assertions::fail).getLanguage().toString());
 
-    Optional<SyntacticRepresentation> cmmnRep = this.tes.getRepLanguage(cmmnDox, false);
+    Optional<SyntacticRepresentation> cmmnRep = this.tes.getRepLanguage(cmmnDox);
     assertEquals("CMMN_1_1", cmmnRep.orElseGet(Assertions::fail).getLanguage().toString());
 
-    Optional<SyntacticRepresentation> badRep = this.tes.getRepLanguage(badDox, false);
+    Optional<SyntacticRepresentation> badRep = this.tes.getRepLanguage(badDox);
     assertEquals(Optional.empty(), badRep);
   }
 

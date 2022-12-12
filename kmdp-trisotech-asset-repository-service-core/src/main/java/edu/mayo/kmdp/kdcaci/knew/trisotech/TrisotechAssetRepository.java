@@ -413,7 +413,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    * @return SyntacticRepresentation which has the values set for the language of this model
    */
   private SyntacticRepresentation getLanguageRepresentationForModel(Document dox) {
-    return extractor.getRepLanguage(dox, true)
+    return extractor.getRepLanguage(dox)
         .orElse(null);
   }
 

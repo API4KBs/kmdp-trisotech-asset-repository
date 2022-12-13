@@ -433,15 +433,9 @@ class TTEURentModelsTest {
 
   @Test
   final void testGetPlaces() {
-    String key = EU_RENT_REPO;
-
     Map<String, String> placeMap = client.listPlaces();
     assertNotNull(placeMap);
     assertFalse(placeMap.isEmpty());
-
-    System.out.println(placeMap);
-    assertTrue(placeMap.containsKey(key));
-    assertEquals("EU-Rent", placeMap.get(key));
   }
 
 

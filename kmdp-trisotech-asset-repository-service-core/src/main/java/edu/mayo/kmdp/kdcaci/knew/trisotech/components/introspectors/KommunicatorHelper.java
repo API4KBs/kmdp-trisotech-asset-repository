@@ -1,5 +1,11 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultArtifactId;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.KommunicatorHelper.KommunicatorDescr.FileDescr;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.KommunicatorHelper.KommunicatorDescr.RepoDescr;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
@@ -9,8 +15,10 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,9 +59,23 @@ public class KommunicatorHelper {
       helper.getKommunicatorLink(manifest)
           .ifPresent(link ->
               surr.withCarriers(new KnowledgeArtifact()
+                  .withArtifactId(makeArtifactId(surr.getAssetId(), manifest.getMimetype()))
                   .withName(manifest.getName().trim() + " -- Kommunicator Preview")
                   .withLocator(link)));
     }
+  }
+
+  private static ResourceIdentifier makeArtifactId(ResourceIdentifier assetId, String mimetype) {
+    KnowledgeRepresentationLanguage baseLang;
+    if (mimetype.contains("bpmn")) {
+      baseLang = BPMN_2_0;
+    } else if (mimetype.contains("cmmn")) {
+      baseLang = CMMN_1_1;
+    } else {
+      baseLang = DMN_1_2;
+    }
+    var id = defaultArtifactId(assetId, baseLang);
+    return defaultArtifactId(id, HTML);
   }
 
   /**

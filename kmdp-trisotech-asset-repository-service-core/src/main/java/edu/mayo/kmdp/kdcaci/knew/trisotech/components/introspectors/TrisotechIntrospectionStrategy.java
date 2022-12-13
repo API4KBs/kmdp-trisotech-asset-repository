@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams.DEFAULT_VERSION_TAG;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.KommunicatorHelper.tryAddKommunicatorLink;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper.applyTimestampToVersion;
 import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
 import static edu.mayo.kmdp.util.JaxbUtil.unmarshall;
@@ -129,6 +130,9 @@ public class TrisotechIntrospectionStrategy {
 
   @Autowired(required = false)
   TTAssetRepositoryConfig config;
+
+  @Autowired(required = false)
+  KommunicatorHelper kommunicatorHelper;
 
   public static final String CMMN_DEFINITIONS = "//cmmn:definitions";
   public static final String DMN_DEFINITIONS = "//dmn:definitions";
@@ -270,8 +274,7 @@ public class TrisotechIntrospectionStrategy {
             .withRepresentation(synRep)
             .withMimeType(codedRep(synRep))
             .withLinks( // artifact - artifact relation/dependency
-                getRelatedArtifacts(importedArtifactIds))
-        )
+                getRelatedArtifacts(importedArtifactIds)))
         .withSurrogate(
             new KnowledgeArtifact()
                 .withArtifactId(newId(
@@ -283,6 +286,8 @@ public class TrisotechIntrospectionStrategy {
         );
 
     addSemanticAnnotations(surr, annotations);
+
+    tryAddKommunicatorLink(kommunicatorHelper, manifest, surr);
 
     if (logger.isTraceEnabled()) {
       logger.debug(

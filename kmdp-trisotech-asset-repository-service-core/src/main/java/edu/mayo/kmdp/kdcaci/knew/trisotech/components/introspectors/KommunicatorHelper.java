@@ -1,6 +1,8 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultArtifactId;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory.KnowledgeArtifactCategorySeries.Interactive_Resource;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
@@ -57,23 +59,32 @@ public class KommunicatorHelper {
       KnowledgeAsset surr) {
     if (helper != null) {
       helper.getKommunicatorLink(manifest)
-          .ifPresent(link ->
+          .ifPresent(link -> {
+              var lang = detectLanguage(manifest.getMimetype());
               surr.withCarriers(new KnowledgeArtifact()
-                  .withArtifactId(makeArtifactId(surr.getAssetId(), manifest.getMimetype()))
+                  .withArtifactId(makeArtifactId(surr.getAssetId(), lang))
+                  .withRepresentation(rep(lang))
+                  .withExpressionCategory(Interactive_Resource)
                   .withName(manifest.getName().trim() + " -- Kommunicator Preview")
-                  .withLocator(link)));
+                  .withLocator(link));
+          });
     }
   }
 
-  private static ResourceIdentifier makeArtifactId(ResourceIdentifier assetId, String mimetype) {
+  private static KnowledgeRepresentationLanguage detectLanguage(String mimeType) {
     KnowledgeRepresentationLanguage baseLang;
-    if (mimetype.contains("bpmn")) {
+    if (mimeType.contains("bpmn")) {
       baseLang = BPMN_2_0;
-    } else if (mimetype.contains("cmmn")) {
+    } else if (mimeType.contains("cmmn")) {
       baseLang = CMMN_1_1;
     } else {
       baseLang = DMN_1_2;
     }
+    return baseLang;
+  }
+
+  private static ResourceIdentifier makeArtifactId(
+      ResourceIdentifier assetId, KnowledgeRepresentationLanguage baseLang) {
     var id = defaultArtifactId(assetId, baseLang);
     return defaultArtifactId(id, HTML);
   }

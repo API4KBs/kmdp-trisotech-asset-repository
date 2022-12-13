@@ -201,7 +201,7 @@ class MetadataTest {
     assertEquals(expectedFileId, fileId.getResourceId().toString());
 
     // test w/version
-    fileId = names.rewriteInternalId(internalId, versionTag, updated);
+    fileId = names.rewriteInternalId(internalId, versionTag, null, updated);
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
     assertEquals(expectedVersionTag, fileId.getVersionTag());

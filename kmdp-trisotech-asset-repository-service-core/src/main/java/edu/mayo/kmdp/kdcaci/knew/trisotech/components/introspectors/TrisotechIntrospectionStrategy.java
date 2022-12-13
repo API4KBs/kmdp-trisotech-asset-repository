@@ -432,18 +432,20 @@ public class TrisotechIntrospectionStrategy {
         .map(id -> {
           if (id.getVersionId() == null) {
             String separator = id.getResourceId().toString().startsWith("urn") ? ":" : "/";
-            String label = ofNullable(xPathUtil.xNode(woven,
-                "//*[@locationURI='"+id+"' or @structureRef='"+id+"']/@name"))
-                .map(Node::getNodeValue)
-                .orElse(null);
             return newVersionId(
                 URI.create(
                     id.getNamespaceUri().toString() + separator + UUID.fromString(id.getTag())),
-                VERSION_ZERO_SNAPSHOT)
-                .withName(label);
+                VERSION_ZERO_SNAPSHOT);
           } else {
             return id;
           }
+        })
+        .map(id -> {
+          String label = ofNullable(xPathUtil.xNode(woven,
+              "//*[@locationURI='" + id + "' or @structureRef='" + id + "']/@name"))
+              .map(Node::getNodeValue)
+              .orElse(null);
+          return id.withName(label);
         })
         .map(id -> new Dependency().withRel(Depends_On).withHref(id))
         .collect(Collectors.toList());

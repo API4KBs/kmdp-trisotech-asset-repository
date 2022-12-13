@@ -129,14 +129,27 @@ public class TrisotechWrapper {
   }
 
   /**
-   * methodName: getMetadataByModel
-   * <p>description: returns model metadata from the cache</p>
+   * Returns the key Asset metadata, as per the TT KG, for a given BPM model carrier
+   * <p>
+   * (Assumption: one model carries one Asset)
    *
    * @param modelUri The uri of the Trisotech model
    * @return Map<TTGraphTerms, String>
    */
   public Map<TTGraphTerms, String> getMetadataByModel(String modelUri) {
     return cacheManager.getMetadataByModel(focusPlaceId, targetPath, modelUri);
+  }
+
+  /**
+   * Returns the key Service Asset metadata, as per the TT KG, for a given BPM model carrier
+   * <p>
+   * (Assumption: one model may define 0..N inference services)
+   *
+   * @param modelUri The uri of the Trisotech model
+   * @return Map<TTGraphTerms, String>
+   */
+  public Stream<Map<TTGraphTerms, String>> getServiceMetadataByModel(String modelUri) {
+    return cacheManager.getServiceMetadataByModel(focusPlaceId, targetPath, modelUri);
   }
 
   /**

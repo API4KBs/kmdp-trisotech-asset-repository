@@ -1,0 +1,34 @@
+# PREFIX sets up the namespaces to be used in the query
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX tt: <http://www.trisotech.com/graph/1.0/element#>
+PREFIX ttr: <http://www.trisotech.com/graph/1.0/elementRel#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?model ?assetId ?serviceId ?assetType
+FROM NAMED ?
+WHERE {
+GRAPH ? {
+    ?customAttribute a tt:CustomAttribute .
+    ?customAttribute ttr:key ?key
+    FILTER regex(?key, "knowledgeAssetId", "i") .
+    ?customAttribute ttr:value ?assetId .
+
+    ?node ttr:customAttribute ?customAttribute .
+    ?node ttr:owner* ?model .
+
+    ?customAttribute2 a tt:CustomAttribute .
+    ?customAttribute2 ttr:key ?key2
+    FILTER regex(?key2, "serviceAssetId", "i") .
+    ?customAttribute2 ttr:value ?serviceId .
+
+    ?node2 ttr:customAttribute ?customAttribute2 .
+    ?node2 ttr:owner* ?model .
+
+    OPTIONAL { ?node2 ttr:semantic ?ann.
+               ?ann ttr:ref ?assetType.
+               FILTER regex(str(?assetType), '^.+(Clinical)?KnowledgeAssetType#.+') } .
+  }
+}

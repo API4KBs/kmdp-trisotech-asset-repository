@@ -26,6 +26,7 @@ public class NamespaceManager {
   private URI assetNamespace;
 
   private String assetIDKey;
+  private String serviceAssetIDKey;
 
   private String defaultVersion;
 
@@ -40,6 +41,7 @@ public class NamespaceManager {
     artifactNamespace = URI.create(config.getTyped(TTWParams.ARTIFACT_NAMESPACE));
     assetNamespace = URI.create(config.getTyped(TTWParams.ASSET_NAMESPACE));
     assetIDKey = config.getTyped(TTWParams.ASSET_ID_ATTRIBUTE);
+    serviceAssetIDKey = config.getTyped(TTWParams.SERVICE_ASSET_ID_ATTRIBUTE);
   }
 
 
@@ -128,6 +130,10 @@ public class NamespaceManager {
 
   public String getAssetIDKey() {
     return assetIDKey;
+  }
+
+  public String getServiceAssetIDKey() {
+    return serviceAssetIDKey;
   }
 
 }

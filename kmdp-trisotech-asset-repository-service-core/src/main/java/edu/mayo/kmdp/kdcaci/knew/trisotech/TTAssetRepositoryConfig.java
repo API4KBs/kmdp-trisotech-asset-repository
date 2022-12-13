@@ -58,6 +58,13 @@ public class TTAssetRepositoryConfig extends
         String.class,
         false)),
 
+    SERVICE_ASSET_ID_ATTRIBUTE(Opt.of(
+        PARAM_NAMESPACE + "serviceAssetIdAttributeName",
+        "serviceAssetId",
+        "Custom attribute used to assert a Service (Spec) Asset ID",
+        String.class,
+        false)),
+
     DOMAIN_TERMS_NAMESPACE_PATTERN(Opt.of(
         PARAM_NAMESPACE + "domainTermsNamespacePattern",
         "(.*\\/api4kp.*|.*\\/clinicaltasks.*|.*\\/clinicalsituations.*|.*\\/propositionalconcepts.*)",

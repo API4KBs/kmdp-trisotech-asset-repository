@@ -54,6 +54,7 @@ import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
@@ -116,12 +117,23 @@ public class IdentityMapper {
     return client.getDependencyMap();
   }
 
+
   private Optional<Map<TTGraphTerms, String>> getStatementsByModel(String artifactId, boolean pub) {
     if (pub) {
       return Optional.ofNullable(client.getMetadataByModel(artifactId))
           .filter(soln -> soln.containsKey(STATE));
     } else {
       return Optional.ofNullable(client.getMetadataByModel(artifactId));
+    }
+  }
+
+  private Stream<Map<TTGraphTerms, String>> getServiceStatementsByModel(
+      String artifactId, boolean pub) {
+    if (pub) {
+      return client.getServiceMetadataByModel(artifactId)
+          .filter(soln -> soln.containsKey(STATE));
+    } else {
+      return client.getServiceMetadataByModel(artifactId);
     }
   }
 
@@ -138,7 +150,7 @@ public class IdentityMapper {
 
 
   /**
-   * Get the Asset that matches the model for the modelUri provided.
+   * Get the Asset Id that matches the model for the modelUri provided.
    * <p>
    * Will return the asset that maps to the LATEST version of the model. Assumes that a given
    * artifact (model) carries at most one version of an asset across all the versions of the
@@ -151,21 +163,46 @@ public class IdentityMapper {
   public Optional<ResourceIdentifier> resolveModelToCurrentAssetId(String artifactId) {
     logger.debug("get assetId for artifactId: {}", artifactId);
     return getStatementsByModel(artifactId, false)
-        .map(soln -> {
-          String statedIdStr = soln.get(ASSET_ID);
-          URI statedId = URI.create(statedIdStr);
-          if (statedId.getScheme() == null) {
-            // need to investigate why 'tags' get detected as assetIds
-            if (Util.isUUID(statedIdStr)) {
-              return newId(statedId.toString(), defaultVersion);
-            } else {
-              throw new IllegalStateException(
-                  "Invalid AssetID " + statedIdStr + " found on model " + artifactId);
-            }
-          }
-          return newVersionId(statedId)
-              .withName(soln.get(ARTIFACT_NAME));
-        });
+        .map(this::toAssetId);
+  }
+
+  /**
+   * Get the Service Asset Id(s) declared by the LATEST version of the model that matches the
+   * provided Model id.
+   *
+   * @param artifactId the id for the model
+   * @return ResourceIdentifier for any service asset declared referenced by the model, as a Stream
+   */
+  public Stream<ResourceIdentifier> resolveModelToCurrentServiceAssetIds(String artifactId) {
+    logger.debug("Try Service AssetId for artifactId: {}", artifactId);
+    return getServiceStatementsByModel(artifactId, false)
+        .map(this::toAssetId);
+  }
+
+  /**
+   * Parses a Model's Asset Id into a versioned ResourceIdentifier.
+   * <p>
+   * Both Service and Knowledge Asset Ids are asserted on a Model as custom attributes, and
+   * retrieved via the Knowledge Graph, as part of the semantic metadata.
+   *
+   * @param soln a model's KG semantic metadata
+   * @return the model's Asset Id as a {@link ResourceIdentifier}
+   * @throws IllegalStateException if the metadata does not contain a valid asset Id
+   */
+  private ResourceIdentifier toAssetId(Map<TTGraphTerms, String> soln) {
+    String statedIdStr = soln.get(ASSET_ID);
+    URI statedId = URI.create(statedIdStr);
+    if (statedId.getScheme() == null) {
+      // need to investigate why 'tags' get detected as assetIds
+      if (Util.isUUID(statedIdStr)) {
+        return newId(statedId.toString(), defaultVersion);
+      } else {
+        throw new IllegalStateException(
+            "Invalid AssetID " + statedIdStr + " found on model " + soln.get(ARTIFACT_NAME));
+      }
+    }
+    return newVersionId(statedId)
+        .withName(soln.get(ARTIFACT_NAME));
   }
 
 
@@ -391,6 +428,23 @@ public class IdentityMapper {
         });
   }
 
+  /**
+   * Retrieves the {@link KnowledgeAssetType} for a given asset Id.
+   * <p>
+   * Supports both Knowledge Assets and Service Assets, using the semantic metadata annotated on the
+   * model, and queried via Knowledge Graph
+   *
+   * @param assetId The Asset versioned Id
+   * @return the KnowledgeAssetType associated to the asset according to the carrier model's
+   * annotations, if any
+   */
+  public Optional<KnowledgeAssetType> getDeclaredAssetType(ResourceIdentifier assetId) {
+    return getStatementsByAsset(assetId.getUuid(), assetId.getVersionTag(), false)
+        .map(soln -> soln.get(ASSET_TYPE))
+        .flatMap(type -> KnowledgeAssetTypeSeries.resolveId(type)
+            .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(type)));
+  }
+
 
   /**
    * Maps a model URI (artifact series ID) to a version-aware ResourceIdentifier. Resolves the URI
@@ -427,7 +481,7 @@ public class IdentityMapper {
 
     return qsOpt.map(qs -> qs.containsKey(UPDATED)
         ? names.rewriteInternalId(
-            qs.get(MODEL), qs.get(VERSION), qs.get(ARTIFACT_NAME), qs.get(UPDATED))
+        qs.get(MODEL), qs.get(VERSION), qs.get(ARTIFACT_NAME), qs.get(UPDATED))
         : names.rewriteInternalId(
             qs.get(MODEL), qs.get(VERSION), qs.get(ARTIFACT_NAME)));
   }
@@ -589,6 +643,20 @@ public class IdentityMapper {
     } else {
       return assetId;
     }
+  }
+
+  /**
+   * Resolves any Service Asset Ids for a given model.
+   * <p>
+   * Delegates to {@link #resolveModelToCurrentServiceAssetIds(String)}. Unlike
+   * {@link #resolveEnterpriseAssetID(String)}, there is no requirement for a model to be associated
+   * to any service, so no additional checks are put in place
+   *
+   * @param modelUri the ID of the Trisotech model
+   * @return the enterprise ID of the Service Assets, as a possibly empty Stream
+   */
+  public Stream<ResourceIdentifier> resolveEnterpriseServiceIDs(String modelUri) {
+    return resolveModelToCurrentServiceAssetIds(modelUri);
   }
 
 

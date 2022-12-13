@@ -5,6 +5,7 @@ import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_ID;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_TYPE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MIME_TYPE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MODEL;
+import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.SERVICE_ID;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.STATE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.UPDATED;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.VERSION;
@@ -25,6 +26,7 @@ import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.FileUtil;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -39,6 +41,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
@@ -117,6 +120,15 @@ public class TTCacheManager {
   public Map<TTGraphTerms, String> getMetadataByModel(String repoId, String path, String modelUri) {
     return pathIndexes.getUnchecked(indexKey(repoId, path))
         .modelsSolutionsByModelID.get(modelUri);
+  }
+
+  public Stream<Map<TTGraphTerms, String>> getServiceMetadataByModel(String repoId, String path,
+      String modelUri) {
+    var place = pathIndexes.getUnchecked(indexKey(repoId, path));
+
+    return Optional.ofNullable(place.modelToServiceMap.get(modelUri)).stream()
+        .flatMap(List::stream)
+        .map(serviceId -> place.modelsSolutionsByAssetID.get(serviceId));
   }
 
   /**
@@ -223,8 +235,9 @@ public class TTCacheManager {
   private PlacePathIndex reindex(String focusPlaceId, String path) {
     ResultSet allModels = query(getQueryStringModels(), focusPlaceId);
     ResultSet relations = query(getQueryStringRelations(), focusPlaceId);
+    ResultSet services = query(getQueryStringServices(), focusPlaceId);
 
-    return new PlacePathIndex(focusPlaceId, path, allModels, relations, webClient);
+    return new PlacePathIndex(focusPlaceId, path, allModels, relations, services, webClient);
   }
 
 
@@ -257,7 +270,8 @@ public class TTCacheManager {
    * @return the query string to query the relations between models
    */
   private String getQueryStringRelations() {
-    return FileUtil.read(TrisotechWrapper.class.getResourceAsStream("/queryRelations.tt.sparql"))
+    return FileUtil.read(TrisotechWrapper.class
+            .getResourceAsStream("/queryRelations.tt.sparql"))
         .orElseThrow(IllegalStateException::new);
   }
 
@@ -270,37 +284,80 @@ public class TTCacheManager {
    * @return the query string needed to query the models
    */
   private String getQueryStringModels() {
-    return FileUtil.read(TrisotechWrapper.class.getResourceAsStream("/queryModels.tt.sparql"))
+    return FileUtil.read(TrisotechWrapper.class
+            .getResourceAsStream("/queryModels.tt.sparql"))
+        .orElseThrow(IllegalStateException::new);
+  }
+
+  /**
+   * Build the queryString needed to query models for asset / service relationships
+   *
+   * @return the query string needed to query the models / asset / service relatioships
+   */
+  private String getQueryStringServices() {
+    return FileUtil.read(TrisotechWrapper.class
+            .getResourceAsStream("/queryServiceToModels.tt.sparql"))
         .orElseThrow(IllegalStateException::new);
   }
 
 
+  /**
+   * Cache and index of the models, by root path within a focus Place
+   * <p>
+   * Supports Knowledge Assets and Service Assets, with mappings as follows
+   * <ul>
+   *   <li>Service/Knowledge Asset Id => Semantic Metadata</li>
+   *   <li>Model (Knowledge Artifact) Id => Semantic Metadata</li>
+   *   <li>Model (Knowledge Artifact) Id => Artifact Metadata</li>
+   *   <li>Model (Knowledge Artifact) Id => (0..N) Service Asset Id</li>
+   *   <li>Model (Knowledge Artifact) Id => (0..N) Model (Knowledge Artifact) Id</li>
+   * </ul>
+   * <p>
+   * Note that there is no Artifact Id to Asset Id mapping, because the Asset Id is part of the
+   * Semantic Metadata Record, and there is a 'to one' relationship between a Model/Artifact
+   * and an Asset.
+   */
   static class PlacePathIndex {
 
-    // Cache and index by path within the focus Place
+    /**
+     * map of Model Id to Trisotech 'manifest'
+     */
     Map<String, TrisotechFileInfo> modelInfoCache;
 
-    // map of artifact relations (artifact = model)
+    /**
+     * map of artifact to artifact relations (artifact = model)
+     */
     Map<String, Set<String>> artifactToArtifactDependencyMap;
 
+    /**
+     * map of Asset Id to semantic metadata
+     */
     Map<KeyIdentifier, EnumMap<TTGraphTerms, String>> modelsSolutionsByAssetID;
+    /**
+     * map of Model Id to semantic metadata
+     */
     Map<String, EnumMap<TTGraphTerms, String>> modelsSolutionsByModelID;
 
+    /**
+     * map of Model Id to Service Asset Id
+     */
+    Map<String, List<KeyIdentifier>> modelToServiceMap;
+
     public PlacePathIndex(String focusPlaceId, String path,
-        ResultSet allModels, ResultSet relations,
+        ResultSet allModels, ResultSet relations, ResultSet services,
         TTWebClient webClient) {
       artifactToArtifactDependencyMap = new ConcurrentHashMap<>();
       modelsSolutionsByAssetID = new ConcurrentHashMap<>();
       modelsSolutionsByModelID = new ConcurrentHashMap<>();
-      modelInfoCache = new ConcurrentHashMap<>();
+      modelToServiceMap = new ConcurrentHashMap<>();
 
       indexModels(allModels);
       indexRelationships(relations);
-      Map<String,TrisotechFileInfo> index = collectRepositoryContent(webClient, focusPlaceId, path);
+      indexServices(services);
+      Map<String, TrisotechFileInfo> index = collectRepositoryContent(webClient, focusPlaceId,
+          path);
 
-      modelInfoCache = Collections.unmodifiableMap(new ConcurrentHashMap<>(index));
-      artifactToArtifactDependencyMap = Collections.unmodifiableMap(
-          artifactToArtifactDependencyMap);
+      modelInfoCache = new ConcurrentHashMap<>(index);
     }
 
     public void destroy() {
@@ -310,6 +367,12 @@ public class TTCacheManager {
       artifactToArtifactDependencyMap.clear();
     }
 
+    /**
+     * Indexes dependencies between BPM+ models, by the source model that 'depends on' a target
+     * model.
+     *
+     * @param relations the dependencies, as queried from the Trisotech KG
+     */
     protected void indexRelationships(ResultSet relations) {
       while (relations.hasNext()) {
         QuerySolution soln = relations.nextSolution();
@@ -319,6 +382,44 @@ public class TTCacheManager {
       }
     }
 
+    /**
+     * Indexes relationships between (computable) BPM+ models, and the Decision/Process Services
+     * that expose them.
+     * <p>
+     * Assuming the models are annotated with Service Asset Ids, and that one model can expose
+     * multiple services, maps:
+     * <ul>
+     *   <li>eacn Model Id to the Service Asset Ids exposed by that model</li>
+     *   <li>each Service Asset Id to its semantic metadata descriptor</li>
+     * </ul>
+     * <p>
+     * The semantic metadata descriptor of a service asset is partially inferred from the semantic
+     * metadata of the underlying knowledge asset
+     *
+     * @param services the service asset semantic metadata, as queried from the Trisotech KG
+     */
+    protected void indexServices(ResultSet services) {
+      while (services.hasNext()) {
+        QuerySolution soln = services.nextSolution();
+        EnumMap<TTGraphTerms, String> links = toMap(soln);
+        var modelId = links.get(MODEL);
+        var assetId = toResourceId(links.get(ASSET_ID));
+        var serviceId = toResourceId(links.get(SERVICE_ID));
+
+        modelToServiceMap.computeIfAbsent(modelId, k -> new ArrayList<>())
+            .add(serviceId.asKey());
+
+        EnumMap<TTGraphTerms, String> map = new EnumMap<>(TTGraphTerms.class);
+        map.putAll(modelsSolutionsByAssetID.get(assetId.asKey()));
+        map.put(ASSET_ID, links.get(SERVICE_ID));
+        if (links.containsKey(ASSET_TYPE)) {
+          map.put(ASSET_TYPE, links.get(ASSET_TYPE));
+        }
+        modelsSolutionsByAssetID.put(serviceId.asKey(), map);
+      }
+    }
+
+
     protected Map<String, TrisotechFileInfo> collectRepositoryContent(
         TTWebClient webClient, String focusPlaceId, String path) {
       Map<String, TrisotechFileInfo> collector = new ConcurrentHashMap<>();
@@ -326,6 +427,14 @@ public class TTCacheManager {
       return collector;
     }
 
+    /**
+     * Indexes BPM+ models, mapping each model ID to a minimum set of semantic metadata elements
+     * that describe the model / asset relationship. If the model carries an enterprise asset (i.e.
+     * has an asset id), the metadata is also indexed by that asset id.
+     *
+     * @param modelSet the model metadata, as queried from the Trisotech KG
+     * @see TTGraphTerms
+     */
     protected void indexModels(ResultSet modelSet) {
 
       Set<EnumMap<TTGraphTerms, String>> solnSet = new HashSet<>();
@@ -343,12 +452,11 @@ public class TTCacheManager {
         indexByModel(modelId, metadata);
 
         Optional<ResourceIdentifier> optAssetId = Optional.ofNullable(metadata.get(ASSET_ID))
-            .map(id -> Util.isUUID(id)
-                ? newId(id)
-                : newVersionId(URI.create(id)));
+            .map(this::toResourceId);
         indexByAsset(optAssetId, metadata);
       }
     }
+
 
     /**
      * The KG supposedly returns {?m version ?v; update ?t} for the latest version and publication
@@ -444,33 +552,47 @@ public class TTCacheManager {
       //?model ?assetId ?version ?state ?updated ?mimeType ?artifactName
       EnumMap<TTGraphTerms, String> map = new EnumMap<>(TTGraphTerms.class);
 
-      map.put(MODEL, soln.getResource(MODEL.key).getURI());
-      map.put(ASSET_ID, soln.getLiteral(ASSET_ID.key).getString());
-      map.put(ARTIFACT_NAME, soln.getLiteral(ARTIFACT_NAME.key).getString());
-      map.put(MIME_TYPE, soln.getLiteral(MIME_TYPE.key).getString());
+      addResource(MODEL, soln, map);
+      addLiteral(ASSET_ID, soln, map);
+      addLiteral(SERVICE_ID, soln, map);
 
-      Optional.ofNullable(soln.getLiteral(VERSION.key))
-          .map(Literal::getString)
-          .ifPresent(v -> map.put(VERSION, v));
-      Optional.ofNullable(soln.getLiteral(STATE.key))
-          .map(Literal::getString)
-          .ifPresent(s -> map.put(STATE, s));
-      Optional.ofNullable(soln.getLiteral(UPDATED.key))
-          .map(Literal::getString)
-          .ifPresent(u -> map.put(UPDATED, u));
+      addLiteral(ARTIFACT_NAME, soln, map);
+      addLiteral(MIME_TYPE, soln, map);
 
-      Optional.ofNullable(soln.getResource(ASSET_TYPE.key))
-          .map(Resource::getURI)
-          .ifPresent(t -> map.put(ASSET_TYPE, t));
+      addLiteral(VERSION, soln, map);
+      addLiteral(STATE, soln, map);
+      addLiteral(UPDATED, soln, map);
+
+      addResource(ASSET_TYPE, soln, map);
 
       return map;
+    }
+
+    private void addResource(
+        TTGraphTerms graphTerm, QuerySolution soln, EnumMap<TTGraphTerms, String> map) {
+      Optional.ofNullable(soln.getResource(graphTerm.key))
+          .map(Resource::getURI)
+          .ifPresent(t -> map.put(graphTerm, t));
+    }
+
+    private void addLiteral(
+        TTGraphTerms graphTerm, QuerySolution soln, EnumMap<TTGraphTerms, String> map) {
+      Optional.ofNullable(soln.getLiteral(graphTerm.key))
+          .map(Literal::getString)
+          .ifPresent(t -> map.put(graphTerm, t));
+    }
+
+    private ResourceIdentifier toResourceId(String id) {
+      return Util.isUUID(id)
+          ? newId(id)
+          : newVersionId(URI.create(id));
     }
   }
 
   static class EmptyPlacePathIndex extends PlacePathIndex {
 
     public EmptyPlacePathIndex() {
-      super(null, null, null, null, null);
+      super(null, null, null, null, null, null);
     }
 
     @Override
@@ -486,6 +608,11 @@ public class TTCacheManager {
 
     @Override
     protected void indexModels(ResultSet modelSet) {
+      // do nothing
+    }
+
+    @Override
+    protected void indexServices(ResultSet modelSet) {
       // do nothing
     }
 

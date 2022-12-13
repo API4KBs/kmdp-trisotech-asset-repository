@@ -204,6 +204,12 @@ public class Weaver {
         .filter(el -> asElementStream(el.getParentNode().getChildNodes())
             .noneMatch(sibling -> sibling.getLocalName().equals(TT_REUSELINK)))
         .forEach(this::rewriteAssetId);
+
+    asElementStream(dox.getElementsByTagNameNS(TT_METADATA_NS, TT_CUSTOM_ATTRIBUTE_ATTR))
+        .filter(el -> names.getServiceAssetIDKey().equals(el.getAttribute(KEY)))
+        .filter(el -> asElementStream(el.getParentNode().getChildNodes())
+            .noneMatch(sibling -> sibling.getLocalName().equals(TT_REUSELINK)))
+        .forEach(this::rewriteAssetId);
   }
 
   private void weaveNonBPMReferences(Document dox) {

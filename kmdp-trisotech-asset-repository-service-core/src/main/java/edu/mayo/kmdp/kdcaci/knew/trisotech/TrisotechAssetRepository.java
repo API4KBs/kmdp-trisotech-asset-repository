@@ -56,7 +56,6 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionExcept
 import edu.mayo.kmdp.language.translators.surrogate.v2.SurrogateV2toHTMLTranslator;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
-import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
 import java.util.Collections;
@@ -64,6 +63,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import org.apache.http.HttpException;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
@@ -297,26 +297,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     List<Pointer> assetList = trisotechFileInfoList.stream()
         .skip((null == offset) ? 0 : offset)
         .limit((null == limit || limit < 0) ? Integer.MAX_VALUE : limit)
-        .map(trisotechFileInfo -> {
-          Optional<Pointer> ptr = Optional.empty();
-          // getId from fileInfo is the fileID
-          try {
-            Optional<ResourceIdentifier> assetId = mapper
-                .resolveEnterpriseAssetID(trisotechFileInfo.getId());
-            ptr = assetId.map(id -> id.toPointer()
-                .withType(
-                    mapper.getDeclaredAssetTypeOrDefault(trisotechFileInfo).getReferentId())
-                .withName(trisotechFileInfo.getName())
-                .withHref(hrefBuilder.getHref(id, HrefType.ASSET))
-            );
-
-            return ptr;
-          } catch (IllegalStateException ise) {
-            logger.error(ise.getMessage(), ise);
-          }
-          return ptr;
-        })
-        .flatMap(StreamUtil::trimStream)
+        .flatMap(this::getAssetPointersForModel)
         .collect(Collectors.toList());
 
     if (assetTypeTag != null) {
@@ -329,6 +310,59 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .orElse(Collections.emptyList()));
     }
     return Answer.of(aggregateVersions(assetList));
+  }
+
+  /**
+   * Retrieves Pointers to all Assets declared by a given Model
+   * <p>
+   * In general, a Model carries one Knowledge Asset, and referencs 0 to many Service Assets
+   *
+   * @param trisotechFileInfo the Model manifest
+   * @return the Asset Pointers, in a Stream
+   */
+  private Stream<Pointer> getAssetPointersForModel(TrisotechFileInfo trisotechFileInfo) {
+    // getId from fileInfo is the fileID
+    try {
+      var assetId = mapper
+          .resolveEnterpriseAssetID(trisotechFileInfo.getId());
+      var ptr1 = assetId.map(id -> id.toPointer()
+          .withType(
+              mapper.getDeclaredAssetType(id)
+                  .orElseGet(() -> getDefaultAssetType(trisotechFileInfo.getMimetype()))
+                  .getReferentId())
+          .withName(trisotechFileInfo.getName())
+          .withHref(hrefBuilder.getHref(id, HrefType.ASSET))
+      );
+
+      var serviceIds = mapper
+          .resolveEnterpriseServiceIDs(trisotechFileInfo.getId());
+      var ptr2 = serviceIds.map(id -> id.toPointer()
+          .withType(
+              mapper.getDeclaredAssetType(id)
+                  .orElse(ReSTful_Service_Specification)
+                  .getReferentId())
+          .withName(trisotechFileInfo.getName() + " (API)")
+          .withHref(hrefBuilder.getHref(id, HrefType.ASSET))
+      );
+
+      return Stream.concat(ptr1.stream(), ptr2);
+    } catch (IllegalStateException ise) {
+      logger.error(ise.getMessage(), ise);
+      return Stream.empty();
+    }
+  }
+
+  private KnowledgeAssetType getDefaultAssetType(String mime) {
+    if (mime.contains("dmn")) {
+      return KnowledgeAssetTypeSeries.Decision_Model;
+    } else if (mime.contains("cmmn")) {
+      return KnowledgeAssetTypeSeries.Case_Management_Model;
+    } else if (mime.contains("bpmn")) {
+      // TODO - we need 'process model' in the KAO
+      return KnowledgeAssetTypeSeries.Protocol;
+    } else {
+      throw new IllegalStateException("Unrecognized model type " + mime);
+    }
   }
 
   @Override
@@ -456,6 +490,17 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     return notFound();
   }
 
+  /**
+   * Retrieves the canonical surrogate for the latest version of an asset, wrapped in a
+   * KnowledgeCarrier
+   * <p>
+   * Supports minimal content negotiation between the default format, and the basic HTML
+   * transrepresentation
+   *
+   * @param assetId the Asset Id
+   * @param xAccept the generalized mime type
+   * @return the Surrogate, in a KnowledgeCarrier
+   */
   @Override
   public Answer<KnowledgeCarrier> getKnowledgeAssetCanonicalSurrogate(UUID assetId,
       String xAccept) {
@@ -466,9 +511,21 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         : surr;
   }
 
+  /**
+   * Retrieves the canonical surrogate for the given version of an asset, wrapped in a
+   * KnowledgeCarrier
+   * <p>
+   * Supports minimal content negotiation between the default format, and the basic HTML
+   * transrepresentation
+   *
+   * @param assetId    the Asset Id
+   * @param versionTag the Asset version tag
+   * @param xAccept    the generalized mime type
+   * @return the Surrogate, in a KnowledgeCarrier
+   */
   @Override
-  public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalSurrogate(UUID assetId,
-      String versionTag, String xAccept) {
+  public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalSurrogate(
+      UUID assetId, String versionTag, String xAccept) {
     var surr = getKnowledgeAssetVersion(assetId, versionTag, null)
         .map(SurrogateHelper::carry);
     return negotiateHTML(xAccept)

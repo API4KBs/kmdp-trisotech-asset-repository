@@ -21,6 +21,7 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CUSTOM_ATTRIBUT
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_METADATA_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.VALUE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper.applyTimestampToVersion;
+import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ARTIFACT_NAME;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_ID;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_TYPE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MIME_TYPE;
@@ -162,7 +163,8 @@ public class IdentityMapper {
                   "Invalid AssetID " + statedIdStr + " found on model " + artifactId);
             }
           }
-          return newVersionId(statedId);
+          return newVersionId(statedId)
+              .withName(soln.get(ARTIFACT_NAME));
         });
   }
 
@@ -424,8 +426,10 @@ public class IdentityMapper {
     }
 
     return qsOpt.map(qs -> qs.containsKey(UPDATED)
-        ? names.rewriteInternalId(qs.get(MODEL), qs.get(VERSION), qs.get(UPDATED))
-        : names.rewriteInternalId(qs.get(MODEL), qs.get(VERSION)));
+        ? names.rewriteInternalId(
+            qs.get(MODEL), qs.get(VERSION), qs.get(ARTIFACT_NAME), qs.get(UPDATED))
+        : names.rewriteInternalId(
+            qs.get(MODEL), qs.get(VERSION), qs.get(ARTIFACT_NAME)));
   }
 
   /**
@@ -438,10 +442,12 @@ public class IdentityMapper {
     Optional<TrisotechFileInfo> info = client.getLatestModelFileInfo(modelUri, publishedOnly);
     String modelVersion = info.map(TrisotechFileInfo::getVersion)
         .orElse(defaultVersion);
+    String label = info.map(TrisotechFileInfo::getName)
+        .orElse(null);
     Optional<String> modelUpdated = info.map(TrisotechFileInfo::getUpdated);
     return Optional.ofNullable(modelUpdated.isPresent()
-        ? names.rewriteInternalId(modelUri, modelVersion, modelUpdated.get())
-        : names.rewriteInternalId(modelUri, modelVersion));
+        ? names.rewriteInternalId(modelUri, modelVersion, label, modelUpdated.get())
+        : names.rewriteInternalId(modelUri, modelVersion, label));
   }
 
 
@@ -611,7 +617,8 @@ public class IdentityMapper {
     List<ResourceIdentifier> ids = asElementStream(metas)
         .filter(this::isIdentifier)
         .map(el -> el.getAttribute(VALUE))
-        .map(id -> SemanticIdentifier.newVersionId(URI.create(id)))
+        .map(id -> SemanticIdentifier.newVersionId(URI.create(id))
+            .withName(getName(dox)))
         .collect(Collectors.toList());
 
     return ids.isEmpty() ? Optional.empty() : Optional.ofNullable(ids.get(0));
@@ -622,7 +629,13 @@ public class IdentityMapper {
     String idNode = xPath.xString(dox, "//*[local-name()='resourceIdentifier']/@versionId");
     return Optional.ofNullable(idNode)
         .map(URI::create)
-        .map(SemanticIdentifier::newVersionId);
+        .map(SemanticIdentifier::newVersionId)
+        .map(id -> id.withName(getName(dox)));
+  }
+
+
+  private String getName(Document dox) {
+    return dox.getDocumentElement().getAttribute("name");
   }
 
   private boolean isIdentifier(Element el) {

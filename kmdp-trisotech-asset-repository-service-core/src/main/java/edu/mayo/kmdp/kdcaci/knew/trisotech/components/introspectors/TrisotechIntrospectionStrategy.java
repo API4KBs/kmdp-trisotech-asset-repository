@@ -29,6 +29,7 @@ import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.Semant
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
@@ -108,6 +109,7 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Extract the data from the woven (by the Weaver) document to create KnowledgeAsset from model
@@ -430,10 +432,15 @@ public class TrisotechIntrospectionStrategy {
         .map(id -> {
           if (id.getVersionId() == null) {
             String separator = id.getResourceId().toString().startsWith("urn") ? ":" : "/";
+            String label = ofNullable(xPathUtil.xNode(woven,
+                "//*[@locationURI='"+id+"' or @structureRef='"+id+"']/@name"))
+                .map(Node::getNodeValue)
+                .orElse(null);
             return newVersionId(
                 URI.create(
                     id.getNamespaceUri().toString() + separator + UUID.fromString(id.getTag())),
-                VERSION_ZERO_SNAPSHOT);
+                VERSION_ZERO_SNAPSHOT)
+                .withName(label);
           } else {
             return id;
           }

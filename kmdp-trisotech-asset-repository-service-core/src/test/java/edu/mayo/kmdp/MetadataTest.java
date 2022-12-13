@@ -195,7 +195,7 @@ class MetadataTest {
     String expectedVersionTag = applyTimestampToVersion(versionTag, modelDate.getTime());
 
     // test w/o a version
-    ResourceIdentifier fileId = names.rewriteInternalId(internalId, null);
+    ResourceIdentifier fileId = names.rewriteInternalId(internalId, null, "Test model");
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
     assertEquals(expectedFileId, fileId.getResourceId().toString());

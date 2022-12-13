@@ -60,6 +60,7 @@ public class NamespaceManager {
     return rewriteInternalId(
         info.getId(),
         info.getVersion(),
+        info.getName(),
         parseDateTime(info.getUpdated())
     );
   }
@@ -67,19 +68,21 @@ public class NamespaceManager {
   public ResourceIdentifier rewriteInternalId(
       String internalId,
       String versionTag,
+      String label,
       String establishedOn) {
-    return rewriteInternalId(internalId,versionTag,parseDateTime(establishedOn));
+    return rewriteInternalId(internalId, versionTag, label, parseDateTime(establishedOn));
   }
 
   public ResourceIdentifier rewriteInternalId(
       String internalId,
-      String versionTag) {
-    return rewriteInternalId(internalId, versionTag, new Date());
+      String versionTag,
+      String label) {
+    return rewriteInternalId(internalId, versionTag, label, new Date());
   }
 
   public ResourceIdentifier rewriteInternalId(
       String internalId) {
-    return rewriteInternalId(internalId, null);
+    return rewriteInternalId(internalId, null, null);
   }
 
   /**
@@ -92,6 +95,7 @@ public class NamespaceManager {
   public ResourceIdentifier rewriteInternalId(
       String internalId,
       String versionTag,
+      String label,
       Date establishedOn) {
     // fast way to determine if internalId is a full URI, or a UUID tag
     String artifactUUID = internalId.charAt(0) == TT_BASE_MODEL_URI.charAt(0)  // == 'h'
@@ -102,6 +106,7 @@ public class NamespaceManager {
 
     String stampedVersionTag = vTag + "-" + timestamp.getTime();
     return newId(getArtifactNamespace(), artifactUUID, stampedVersionTag)
+        .withName(label)
         .withEstablishedOn(timestamp);
   }
 

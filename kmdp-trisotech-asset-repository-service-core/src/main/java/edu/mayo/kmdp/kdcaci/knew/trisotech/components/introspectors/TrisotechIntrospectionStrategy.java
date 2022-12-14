@@ -15,18 +15,16 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams.DEFAULT_VERSION_TAG;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.KommunicatorHelper.tryAddKommunicatorLink;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.addSemanticAnnotations;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.detectRepLanguage;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.extractAnnotations;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.getDefaultAssetType;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.getRepLanguage;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper.applyTimestampToVersion;
 import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
-import static edu.mayo.kmdp.util.JaxbUtil.unmarshall;
 import static edu.mayo.kmdp.util.Util.isNotEmpty;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
-import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
-import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Defines;
-import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Has_Focus;
-import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Has_Primary_Subject;
-import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
-import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
@@ -50,9 +48,6 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.Know
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
-import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.asEnum;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
@@ -76,9 +71,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -86,12 +79,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
-import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
-import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.surrogate.Dependency;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
@@ -135,11 +125,6 @@ public class TrisotechIntrospectionStrategy {
 
   @Autowired(required = false)
   KommunicatorHelper kommunicatorHelper;
-
-  public static final String CMMN_DEFINITIONS = "//cmmn:definitions";
-  public static final String DMN_DEFINITIONS = "//dmn:definitions";
-  private static final String SEMANTIC_EXTENSION_ELEMENTS = "semantic:extensionElements";
-  private static final String EXTENSION_ELEMENTS = "extensionElements";
 
   private final XPathUtil xPathUtil = new XPathUtil();
 
@@ -217,7 +202,7 @@ public class TrisotechIntrospectionStrategy {
    * @param manifest the model's internal manifest
    * @return a KnowledgeAsset surrogate with metadata for that model
    */
-  private KnowledgeAsset extractSurrogateFromDocument(
+  public KnowledgeAsset extractSurrogateFromDocument(
       Document dox,
       TrisotechFileInfo manifest,
       ResourceIdentifier assetID) {
@@ -225,10 +210,10 @@ public class TrisotechIntrospectionStrategy {
     if (logger.isTraceEnabled()) {
       Optional<String> modelToString = JSonUtil.printJson(manifest);
       String wovenToString = XMLUtil.toString(dox);
-      logger.debug("Attempting to extract XML KnowledgeAsset with document: {}", wovenToString);
-      logger.debug("Attempting to extract XML KnowledgeAsset with trisotechFileInfo: {}",
+      logger.trace("Attempting to extract XML KnowledgeAsset with document: {}", wovenToString);
+      logger.trace("Attempting to extract XML KnowledgeAsset with trisotechFileInfo: {}",
           modelToString);
-      logger.debug("Attempting to extract XML KnowledgeAsset with ResourceIdentifier: {}", assetID);
+      logger.trace("Attempting to extract XML KnowledgeAsset with ResourceIdentifier: {}", assetID);
     }
 
     KnowledgeAsset surr;
@@ -239,11 +224,12 @@ public class TrisotechIntrospectionStrategy {
     // Identifiers
     var artifactId = extractArtifactId(dox, manifest);
 
-    var formalType = mapper.getDeclaredAssetTypeOrDefault(manifest);
+    var formalType = mapper.getDeclaredAssetType(assetID)
+        .orElseGet(() -> getDefaultAssetType(manifest.getMimetype()));
 
     var formalCategory = inferFormalCategory(formalType);
 
-    var annotations = extractAnnotations(dox);
+    var annotations = extractAnnotations(dox.getDocumentElement());
 
     // get the language for the document to set the appropriate values
     var synRep = getRepLanguage(dox)
@@ -292,7 +278,7 @@ public class TrisotechIntrospectionStrategy {
     tryAddKommunicatorLink(kommunicatorHelper, manifest, surr);
 
     if (logger.isTraceEnabled()) {
-      logger.debug(
+      logger.trace(
           "surrogate in JSON format: {} ", writeJsonAsString(surr).orElse("n/a"));
     }
 
@@ -681,110 +667,6 @@ public class TrisotechIntrospectionStrategy {
         .sorted(comparing(l -> l.getHref().getTag()))
         .collect(Collectors.toList());
   }
-
-  /* ----------------------------------------------------------------------------------------- */
-
-  /**
-   * Injects a List of Annotations, extracted from a model, into that model's surrogate.
-   * <p>
-   * Filters, sorts and de-duplicates the Annotations in the process
-   *
-   * @param surr        the Surrogate to be augmented
-   * @param annotations the List of {@link Annotation} to inject
-   */
-  protected void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
-    List<Annotation> annos = annotations.stream()
-        .filter(ann -> Captures.sameTermAs(ann.getRel())
-            || Defines.sameTermAs(ann.getRel())
-            || Has_Primary_Subject.sameTermAs(ann.getRel())
-            || Has_Focus.sameTermAs(ann.getRel())
-            || In_Terms_Of.sameTermAs(ann.getRel()))
-        .map(ann -> (Annotation) ann.copyTo(new Annotation()))
-        .collect(Collectors.toList());
-
-    List<Annotation> uniqueAnnos = new LinkedList<>();
-    for (Annotation ann : annos) {
-      if (uniqueAnnos.stream()
-          .noneMatch(a ->
-              a.getRef().sameTermAs(ann.getRef())
-                  && a.getRel().sameTermAs(ann.getRel()))) {
-        uniqueAnnos.add(ann);
-      }
-    }
-    Comparator<Annotation> comp = comparing(annotation -> annotation.getRel().getTag());
-    comp = comp.thenComparing(ann -> ann.getRef().getTag());
-    uniqueAnnos.stream()
-        .sorted(comp)
-        .forEach(surr::withAnnotation);
-  }
-
-
-  /**
-   * Pulls the semantic {@link Annotation} from the model.
-   * <p>
-   * Note that the {@link edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver} should have
-   * already rewritten the annotations into the platform format
-   *
-   * @param dox the annotated model
-   * @return the List of {@link Annotation} in the model
-   */
-  private List<Annotation> extractAnnotations(Document dox) {
-    List<Annotation> annos = asElementStream(
-        dox.getDocumentElement().getElementsByTagName(SEMANTIC_EXTENSION_ELEMENTS))
-        .filter(Objects::nonNull)
-        .filter(el -> el.getLocalName().equals(EXTENSION_ELEMENTS))
-        .flatMap(el -> asElementStream(el.getChildNodes()))
-        .filter(child -> child.getLocalName().equals("annotation"))
-        .map(child -> unmarshall(Annotation.class, Annotation.class, child))
-        .flatMap(StreamUtil::trimStream)
-        .collect(java.util.stream.Collectors.toCollection(LinkedList::new));
-
-    logger.debug("end of extractAnnotations; have annos size: {} ", annos.size());
-    return annos;
-  }
-
-  /* ----------------------------------------------------------------------------------------- */
-
-
-  /**
-   * Constructs a {@link SyntacticRepresentation} for the binary encoded manifestation of a given
-   * model.
-   *
-   * @param dox the model
-   * @return the {@link SyntacticRepresentation} at the Encoded level
-   */
-  public Optional<SyntacticRepresentation> getRepLanguage(Document dox) {
-    if (dox == null) {
-      return Optional.empty();
-    }
-    if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
-      return Optional.of(rep(CMMN_1_1, XML_1_1, defaultCharset(), Encodings.DEFAULT));
-    }
-    if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
-      return Optional.of(rep(DMN_1_2, XML_1_1, defaultCharset(), Encodings.DEFAULT));
-    }
-    return Optional.empty();
-  }
-
-  /**
-   * Detects the {@link KnowledgeRepresentationLanguage} used in a model.
-   *
-   * @param dox the model
-   * @return the {@link KnowledgeRepresentationLanguage}
-   */
-  public Optional<KnowledgeRepresentationLanguage> detectRepLanguage(Document dox) {
-    if (dox == null) {
-      return Optional.empty();
-    }
-    if (xPathUtil.xNode(dox, CMMN_DEFINITIONS) != null) {
-      return Optional.of(CMMN_1_1);
-    }
-    if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
-      return Optional.of(DMN_1_2);
-    }
-    return Optional.empty();
-  }
-
 
   /* ----------------------------------------------------------------------------------------- */
 

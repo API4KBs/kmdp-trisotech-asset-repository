@@ -365,6 +365,7 @@ public class TTCacheManager {
       modelsSolutionsByAssetID.clear();
       modelsSolutionsByModelID.clear();
       artifactToArtifactDependencyMap.clear();
+      modelToServiceMap.clear();
     }
 
     /**

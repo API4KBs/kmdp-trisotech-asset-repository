@@ -13,6 +13,8 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.getDefaultAssetType;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechServiceIntrospectionStrategy.mintServiceName;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeTypeByAssetType;
 import static java.util.stream.Collectors.groupingBy;
@@ -49,6 +51,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
@@ -202,7 +205,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     return Answer.ofTry(
         client.getLatestModelFileInfo(modelId.get(), publishedOnly)
             .flatMap(modelInfo ->
-                getKnowledgeAssetForModel(modelId.get(), modelInfo)));
+                getKnowledgeAssetForModel(assetId, modelId.get(), modelInfo)));
   }
 
 
@@ -220,7 +223,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
       return Answer.ofTry(
           client.getLatestModelFileInfo(internalId, publishedOnly)
-              .flatMap(tfi -> getKnowledgeAssetForModel(internalId, tfi)));
+              .flatMap(tfi -> getKnowledgeAssetForModel(assetId, internalId, tfi)));
     } catch (NotLatestAssetVersionException e) {
       // this can happen, but is not good practice to have different versions
       // of an asset on the same model - mostly because it's very inefficient
@@ -265,7 +268,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
                   mapper.extractAssetIdFromDocument(dox)
                       .filter(axId -> versionTag.equals(axId.getVersionTag())
                           && assetId.equals(axId.getUuid()))
-                      .flatMap(axId -> getKnowledgeAssetForModel(dox, modelVersionInfo))
+                      .flatMap(axId -> getKnowledgeAssetForModel(assetId, dox, modelVersionInfo))
               );
 
       if (surr.isPresent()) {
@@ -341,7 +344,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
               mapper.getDeclaredAssetType(id)
                   .orElse(ReSTful_Service_Specification)
                   .getReferentId())
-          .withName(trisotechFileInfo.getName() + " (API)")
+          .withName(mintServiceName(trisotechFileInfo, id.getName()))
           .withHref(hrefBuilder.getHref(id, HrefType.ASSET))
       );
 
@@ -352,18 +355,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     }
   }
 
-  private KnowledgeAssetType getDefaultAssetType(String mime) {
-    if (mime.contains("dmn")) {
-      return KnowledgeAssetTypeSeries.Decision_Model;
-    } else if (mime.contains("cmmn")) {
-      return KnowledgeAssetTypeSeries.Case_Management_Model;
-    } else if (mime.contains("bpmn")) {
-      // TODO - we need 'process model' in the KAO
-      return KnowledgeAssetTypeSeries.Protocol;
-    } else {
-      throw new IllegalStateException("Unrecognized model type " + mime);
-    }
-  }
 
   @Override
   public Answer<Void> clearKnowledgeAssetCatalog() {
@@ -542,7 +533,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    * @return SyntacticRepresentation which has the values set for the language of this model
    */
   private SyntacticRepresentation getLanguageRepresentationForModel(Document dox) {
-    return extractor.getRepLanguage(dox)
+    return TrisotechMetadataHelper.getRepLanguage(dox)
         .orElse(null);
   }
 
@@ -714,14 +705,15 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
 
   private Optional<KnowledgeAsset> getKnowledgeAssetForModel(
+      UUID assetId,
       String modelId,
       TrisotechFileInfo modelInfo) {
     return dowloadLatestModelVersion(modelId, publishedOnly)
-        .flatMap(dox -> getKnowledgeAssetForModel(dox, modelInfo));
+        .flatMap(dox -> getKnowledgeAssetForModel(assetId, dox, modelInfo));
   }
 
   private Optional<KnowledgeAsset> getKnowledgeAssetForModel(
-      Document dox, TrisotechFileInfo modelInfo) {
+      UUID assetId, Document dox, TrisotechFileInfo modelInfo) {
     Optional<Document> modelDocument = Optional.of(dox);
 
     // weave in KMD information
@@ -731,7 +723,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
     // extract data from Trisotech format to OMG format
     return wovenDocument
-        .map(wd -> extractor.extract(wd, modelInfo));
+        .flatMap(wd ->
+            extractor.extract(assetId, wd, modelInfo));
   }
 
 

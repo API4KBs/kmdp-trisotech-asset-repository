@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechIntrospectionStrategy;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import java.io.InputStream;
@@ -30,8 +31,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
-import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.w3c.dom.Document;
 
@@ -119,27 +118,27 @@ class TrisotechExtractionStrategyTest {
 
   @Test
   void getRepLanguage() {
-    Optional<SyntacticRepresentation> dmnRep = this.tes.getRepLanguage(dmnDox);
+    var dmnRep = TrisotechMetadataHelper.getRepLanguage(dmnDox);
     assertEquals("DMN_1_2", dmnRep.orElseGet(Assertions::fail).getLanguage().toString());
 
-    Optional<SyntacticRepresentation> cmmnRep = this.tes.getRepLanguage(cmmnDox);
+    var cmmnRep = TrisotechMetadataHelper.getRepLanguage(cmmnDox);
     assertEquals("CMMN_1_1", cmmnRep.orElseGet(Assertions::fail).getLanguage().toString());
 
-    Optional<SyntacticRepresentation> badRep = this.tes.getRepLanguage(badDox);
+    var badRep = TrisotechMetadataHelper.getRepLanguage(badDox);
     assertEquals(Optional.empty(), badRep);
   }
 
   @Test
   void detectRepLanguage() {
-    Optional<KnowledgeRepresentationLanguage> dmnRep = this.tes.detectRepLanguage(dmnDox);
+    var dmnRep = TrisotechMetadataHelper.detectRepLanguage(dmnDox);
     assertEquals("DMN 1.2", dmnRep.orElseGet(Assertions::fail).getLabel());
     assertEquals(KnowledgeRepresentationLanguageSeries.DMN_1_2, dmnRep.orElseGet(Assertions::fail));
 
-    Optional<KnowledgeRepresentationLanguage> cmmnRep = this.tes.detectRepLanguage(cmmnDox);
+    var cmmnRep = TrisotechMetadataHelper.detectRepLanguage(cmmnDox);
     assertEquals("CMMN 1.1", cmmnRep.orElseGet(Assertions::fail).getLabel());
     assertEquals(KnowledgeRepresentationLanguageSeries.CMMN_1_1, cmmnRep.orElseGet(Assertions::fail));
 
-    Optional<KnowledgeRepresentationLanguage> badRep = this.tes.detectRepLanguage(badDox);
+    var badRep = TrisotechMetadataHelper.detectRepLanguage(badDox);
     assertEquals(Optional.empty(), badRep);
   }
 

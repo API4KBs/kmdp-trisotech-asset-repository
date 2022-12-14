@@ -405,28 +405,6 @@ public class IdentityMapper {
         .map(soln -> soln.get(VERSION));
   }
 
-  /**
-   * Get the Asset Type declared on the model, or the default based on the modeling language
-   *
-   * @param info the metadata of the model
-   * @return the asset type declared on the model, or a default
-   */
-  public KnowledgeAssetType getDeclaredAssetTypeOrDefault(TrisotechFileInfo info) {
-    return getStatementsByModel(info.getId(), false)
-        .map(soln -> soln.get(ASSET_TYPE))
-        .flatMap(type -> KnowledgeAssetTypeSeries.resolveId(type)
-            .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(type)))
-        .orElseGet(() -> {
-          String mime = info.getMimetype();
-          if (mime.contains("dmn")) {
-            return KnowledgeAssetTypeSeries.Decision_Model;
-          } else if (mime.contains("cmmn")) {
-            return KnowledgeAssetTypeSeries.Case_Management_Model;
-          } else {
-            throw new IllegalStateException("Unrecognized model type " + mime);
-          }
-        });
-  }
 
   /**
    * Retrieves the {@link KnowledgeAssetType} for a given asset Id.

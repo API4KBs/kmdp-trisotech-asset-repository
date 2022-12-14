@@ -89,7 +89,7 @@ class LinkedMetadataTest {
       assertTrue(dmn.isPresent());
       byte[] annotatedDMN = dmn.get();
       dmnSurr = extractor.extract(new ByteArrayInputStream(annotatedDMN),
-          LinkedMetadataTest.class.getResourceAsStream(dmnMetaPath))
+              LinkedMetadataTest.class.getResourceAsStream(dmnMetaPath))
           .orElseGet(Assertions::fail);
 
       Optional<byte[]> svc = XMLUtil
@@ -100,7 +100,7 @@ class LinkedMetadataTest {
       assertTrue(svc.isPresent());
       byte[] annotatedSVC = svc.get();
       svcSurr = extractor.extract(new ByteArrayInputStream(annotatedSVC),
-          LinkedMetadataTest.class.getResourceAsStream(dmnSvcMetaPath))
+              LinkedMetadataTest.class.getResourceAsStream(dmnSvcMetaPath))
           .orElseGet(Assertions::fail);
 
       Optional<byte[]> cmmn = XMLUtil
@@ -111,7 +111,7 @@ class LinkedMetadataTest {
       assertTrue(cmmn.isPresent());
       byte[] annotatedCMMN = cmmn.get();
       cmmnSurr = extractor.extract(new ByteArrayInputStream(annotatedCMMN),
-          LinkedMetadataTest.class.getResourceAsStream(cmmnMetaPath))
+              LinkedMetadataTest.class.getResourceAsStream(cmmnMetaPath))
           .orElseGet(Assertions::fail);
 
       constructed = true;

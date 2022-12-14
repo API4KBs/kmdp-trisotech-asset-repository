@@ -114,7 +114,8 @@ class MetadataTest {
   @Test
   void testExtraction() {
     try {
-      Optional<KnowledgeAsset> res = extractor.extract(new ByteArrayInputStream(annotatedDMN),
+      Optional<KnowledgeAsset> res = extractor.extract(
+          new ByteArrayInputStream(annotatedDMN),
           MetadataTest.class.getResourceAsStream(metaPath));
       if (res.isEmpty()) {
         fail("Unable to instantiate metadata object");
@@ -157,13 +158,13 @@ class MetadataTest {
   @Test
   void testToXML() {
     assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedDMN),
-        MetadataTest.class.getResourceAsStream(metaPath),
-        xmlCodedRep)
+            MetadataTest.class.getResourceAsStream(metaPath),
+            xmlCodedRep)
 //        .map(String::new).map(Util::printOut)
         .isPresent());
     assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedCMMN),
-        MetadataTest.class.getResourceAsStream(cmmnMetaPath),
-        xmlCodedRep)
+            MetadataTest.class.getResourceAsStream(cmmnMetaPath),
+            xmlCodedRep)
 //        .map(String::new).map(Util::printOut)
         .isPresent());
   }
@@ -171,13 +172,13 @@ class MetadataTest {
   @Test
   void testToJson() {
     assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedDMN),
-        MetadataTest.class.getResourceAsStream(metaPath),
-        jsonCodedRep)
+            MetadataTest.class.getResourceAsStream(metaPath),
+            jsonCodedRep)
 //        .map(String::new).map(Util::printOut)
         .isPresent());
     assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedCMMN),
-        MetadataTest.class.getResourceAsStream(cmmnMetaPath),
-        jsonCodedRep)
+            MetadataTest.class.getResourceAsStream(cmmnMetaPath),
+            jsonCodedRep)
 //        .map(String::new).map(Util::printOut)
         .isPresent());
   }

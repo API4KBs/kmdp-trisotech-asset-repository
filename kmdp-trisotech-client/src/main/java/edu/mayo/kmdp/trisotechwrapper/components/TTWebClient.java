@@ -3,6 +3,7 @@ package edu.mayo.kmdp.trisotechwrapper.components;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CONTENT_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CONTENT_PATH_POST;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CONTENT_PATH_POST_WITH_VERSION;
+import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.EXEC_ARTIFACTS_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.REPOSITORY_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.SPARQL_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.VERSIONS_PATH;
@@ -19,6 +20,7 @@ import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.Datum;
+import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifactData;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileData;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
@@ -59,8 +61,7 @@ import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 
 /**
- * (ReST) web client for the TT DES
- * Handles auth*ion and web calls
+ * (ReST) web client for the TT DES Handles auth*ion and web calls
  */
 public class TTWebClient {
 
@@ -135,7 +136,7 @@ public class TTWebClient {
     return
         Optional.ofNullable(
             restTemplate.exchange(
-                url.toString(), HttpMethod.GET, requestEntity, TrisotechPlaceData.class)
+                    url.toString(), HttpMethod.GET, requestEntity, TrisotechPlaceData.class)
                 .getBody());
 
   }
@@ -181,7 +182,7 @@ public class TTWebClient {
       String path, String mimeType) {
     if (!online) {
       logger.warn("Client is offline - unable to gather Repository content");
-      return ;
+      return;
     }
     if (Util.isEmpty(directoryID)) {
       logger.warn("Missing directory ID - unable to gather Repository content");
@@ -231,6 +232,29 @@ public class TTWebClient {
     }
   }
 
+  /**
+   * Retrieves the execution artifacts in a given execution environment
+   *
+   * @param execEnv the unique name of the environment
+   * @return the {@link TrisotechExecutionArtifactData}, if any
+   */
+  public Optional<TrisotechExecutionArtifactData> getExecutionArtifacts(String execEnv)
+      throws IOException {
+    if (!online) {
+      logger.warn("Client is offline - unable to get Execution Artifacts data");
+      return Optional.empty();
+    }
+    URL url = new URL(apiEndpoint + EXEC_ARTIFACTS_PATH);
+
+    HttpEntity<?> requestEntity = getHttpEntity();
+    RestTemplate restTemplate = new RestTemplate();
+
+    return Optional.ofNullable(restTemplate.exchange(
+            url.toString(), HttpMethod.GET, requestEntity, TrisotechExecutionArtifactData.class,
+            execEnv)
+        .getBody());
+
+  }
 
 
   private HttpHeaders getHttpHeaders() {
@@ -328,7 +352,7 @@ public class TTWebClient {
       String mimeType, String version, String state,
       byte[] fileContents)
       throws IOException, HttpException {
-    if (! online) {
+    if (!online) {
       logger.warn("Client is offline - unable to upload model");
       return;
     }

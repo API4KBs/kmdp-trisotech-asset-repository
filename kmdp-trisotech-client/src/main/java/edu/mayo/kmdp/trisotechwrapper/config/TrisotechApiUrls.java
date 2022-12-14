@@ -43,6 +43,8 @@ public class TrisotechApiUrls {
   // versions of specific file within specified repository
   public static final String VERSIONS_PATH = "repositoryfileversion?repository={repo}&id={fileId}";
 
+  public static final String EXEC_ARTIFACTS_PATH = "executionrepositoryartifact?name={execEnv}";
+
   public static final String SPARQL_PATH = "/ds/query";
 
   // return DMN files in XML format

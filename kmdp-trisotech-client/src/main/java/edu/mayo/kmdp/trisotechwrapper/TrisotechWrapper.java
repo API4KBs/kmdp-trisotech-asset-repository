@@ -9,6 +9,7 @@ import edu.mayo.kmdp.trisotechwrapper.components.TTCacheManager;
 import edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms;
 import edu.mayo.kmdp.trisotechwrapper.components.TTWebClient;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifact;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
@@ -159,7 +160,8 @@ public class TrisotechWrapper {
    * @param assetId The id of the asset
    * @return Map<TTGraphTerms, String> if found
    */
-  public Optional<Map<TTGraphTerms, String>> getMetadataByAsset(UUID assetId, String assetVersionTag) {
+  public Optional<Map<TTGraphTerms, String>> getMetadataByAsset(UUID assetId,
+      String assetVersionTag) {
     return cacheManager.getMetadataByAsset(focusPlaceId, targetPath, assetId, assetVersionTag);
   }
 
@@ -574,6 +576,27 @@ public class TrisotechWrapper {
               .collect(Collectors.toMap(
                   TrisotechPlace::getId,
                   TrisotechPlace::getName
+              )))
+          .orElse(Collections.emptyMap());
+    } catch (IOException e) {
+      logger.error(e.getMessage(), e);
+      return Collections.emptyMap();
+    }
+  }
+
+  /**
+   * Lists the TrisotechExecutionArtifact available on a given execution environment
+   *
+   * @param env the name of the execution environment
+   * @return the execution artifacts, indexed by name
+   */
+  public Map<String, TrisotechExecutionArtifact> listExecutionArtifacts(String env) {
+    try {
+      return webClient.getExecutionArtifacts(env)
+          .map(txd -> txd.getData().stream()
+              .collect(Collectors.toMap(
+                  TrisotechExecutionArtifact::getName,
+                  x -> x
               )))
           .orElse(Collections.emptyMap());
     } catch (IOException e) {

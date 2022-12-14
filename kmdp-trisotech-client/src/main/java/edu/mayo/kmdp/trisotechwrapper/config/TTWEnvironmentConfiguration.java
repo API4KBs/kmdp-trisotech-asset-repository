@@ -47,6 +47,9 @@ public class TTWEnvironmentConfiguration {
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId:}")
   private String repositoryId;
 
+  @Value("${edu.mayo.kmdp.trisotechwrapper.executionEnv:ckedev}")
+  private String executionEnvironment;
+
   @Value("${edu.mayo.kmdp.trisotechwrapper.expiration:1440}")
   private String cacheExpiration;
 
@@ -116,5 +119,9 @@ public class TTWEnvironmentConfiguration {
 
   public String getPublicNamespace() {
     return publicNamespace;
+  }
+
+  public String getExecutionEnvironment() {
+    return executionEnvironment;
   }
 }

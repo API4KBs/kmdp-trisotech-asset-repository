@@ -66,6 +66,10 @@ public class TrisotechServiceIntrospectionStrategy {
   @Autowired
   IdentityMapper mapper;
 
+  @Autowired
+  ServiceLibraryHelper libraryHelper;
+
+
   private final XPathUtil xPathUtil = new XPathUtil();
 
   public TrisotechServiceIntrospectionStrategy() {
@@ -108,8 +112,8 @@ public class TrisotechServiceIntrospectionStrategy {
         .withLifecycle(lifecycle)
         // carriers
         .withCarriers(
-            buildOpenAPICarrier(serviceAssetId, lifecycle, serviceName),
-            buildSwaggerUICarrier(serviceAssetId, lifecycle, serviceName))
+            buildOpenAPICarrier(serviceAssetId, lifecycle, serviceName, manifest),
+            buildSwaggerUICarrier(serviceAssetId, lifecycle, serviceName, manifest))
         .withSurrogate(
             new KnowledgeArtifact()
                 .withArtifactId(defaultSurrogateId(serviceAssetId, Knowledge_Asset_Surrogate_2_0))
@@ -131,8 +135,8 @@ public class TrisotechServiceIntrospectionStrategy {
 
   private KnowledgeArtifact buildSwaggerUICarrier(
       ResourceIdentifier assetId, Publication lifecycle,
-      String serviceName) {
-    return new KnowledgeArtifact()
+      String serviceName, TrisotechFileInfo manifest) {
+    var ka = new KnowledgeArtifact()
         .withArtifactId(defaultArtifactId(assetId, HTML))
         .withName(serviceName)
         .withLifecycle(lifecycle)
@@ -140,14 +144,18 @@ public class TrisotechServiceIntrospectionStrategy {
         .withExpressionCategory(Interactive_Resource)
         .withRepresentation(rep(HTML))
         .withMimeType(codedRep(HTML));
+    libraryHelper.tryResolveSwagger(manifest)
+        .ifPresent(ka::withLocator);
+    return ka;
   }
 
   private KnowledgeArtifact buildOpenAPICarrier(
-      ResourceIdentifier assetId, Publication lifecycle, String serviceName) {
+      ResourceIdentifier assetId, Publication lifecycle, String serviceName,
+      TrisotechFileInfo manifest) {
     //FIXME TT actually uses OAS3.x (3.0.1), but that needs to be registered first
     var synRep = rep(OpenAPI_2_X, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
 
-    return new KnowledgeArtifact()
+    var ka = new KnowledgeArtifact()
         .withArtifactId(defaultArtifactId(assetId, OpenAPI_2_X))
         .withName(serviceName)
         .withLifecycle(lifecycle)
@@ -155,6 +163,9 @@ public class TrisotechServiceIntrospectionStrategy {
         .withExpressionCategory(Software)
         .withRepresentation(synRep)
         .withMimeType(codedRep(synRep));
+    libraryHelper.tryResolveOpenAPI(manifest)
+        .ifPresent(ka::withLocator);
+    return ka;
   }
 
   /**

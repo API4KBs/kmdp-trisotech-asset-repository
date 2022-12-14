@@ -29,7 +29,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OpenAPI_2_X;
-import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
+import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.IdentityMapper;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
@@ -43,12 +43,11 @@ import org.omg.spec.api4kp._20200801.surrogate.Dependency;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Extract the data from the woven (by the Weaver) document to create KnowledgeAsset from model
@@ -56,9 +55,6 @@ import org.w3c.dom.Element;
  */
 @Component
 public class TrisotechServiceIntrospectionStrategy {
-
-  private static final Logger logger = LoggerFactory
-      .getLogger(TrisotechServiceIntrospectionStrategy.class);
 
   @Autowired
   TrisotechWrapper client;
@@ -98,7 +94,7 @@ public class TrisotechServiceIntrospectionStrategy {
       ResourceIdentifier serviceAssetId) {
 
     var serviceNode = selectNode(dox, serviceAssetId);
-    var serviceName = mintServiceName(manifest, serviceNode.getAttribute("name"));
+    var serviceName = serviceNode.getAttribute("name");
 
     // Publication Status
     var lifecycle = getArtifactPublicationStatus();
@@ -106,7 +102,7 @@ public class TrisotechServiceIntrospectionStrategy {
     // towards the ideal
     var surrogate = new org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset()
         .withAssetId(serviceAssetId)
-        .withName(serviceName)
+        .withName(mintExternalServiceName(manifest, serviceName))
         .withFormalCategory(Plans_Processes_Pathways_And_Protocol_Definitions)
         .withFormalType(ReSTful_Service_Specification)
         .withLifecycle(lifecycle)
@@ -133,6 +129,21 @@ public class TrisotechServiceIntrospectionStrategy {
     return surrogate;
   }
 
+  /**
+   * Creates a {@link KnowledgeArtifact} metadata component for the Swagger UI variant manifestation
+   * of the Service (spec)
+   * <p>
+   * Since it is always conceivable to create this artifact, the metadata will be generated
+   * regardless of its availability. Then, the Service Library will be consulted, to check whether
+   * the service is deployed, and a manifestation of the artifact can be acquired at a given URL.
+   *
+   * @param assetId     The Service Asset ID
+   * @param lifecycle   the publication status (FIXME - needs improvement)
+   * @param serviceName the formal name of the Service (matches the Service Library)
+   * @param manifest    the manifest of the model from which the service is built
+   * @return the metadata for the service OpenAPI spec
+   * @see ServiceLibraryHelper#tryResolveSwaggerUI(String, TrisotechFileInfo)
+   */
   private KnowledgeArtifact buildSwaggerUICarrier(
       ResourceIdentifier assetId, Publication lifecycle,
       String serviceName, TrisotechFileInfo manifest) {
@@ -144,11 +155,26 @@ public class TrisotechServiceIntrospectionStrategy {
         .withExpressionCategory(Interactive_Resource)
         .withRepresentation(rep(HTML))
         .withMimeType(codedRep(HTML));
-    libraryHelper.tryResolveSwagger(manifest)
+    libraryHelper.tryResolveSwaggerUI(serviceName, manifest)
         .ifPresent(ka::withLocator);
     return ka;
   }
 
+  /**
+   * Creates a {@link KnowledgeArtifact} metadata component for the OpenAPI3+JSON manifestation of
+   * the Service (spec)
+   * <p>
+   * Since it is always conceivable to create this artifact, the metadata will be generated
+   * regardless of its availability. Then, the Service Library will be consulted, to check whether
+   * the service is deployed, and a manifestation of the artifact can be acquired at a given URL.
+   *
+   * @param assetId     The Service Asset ID
+   * @param lifecycle   the publication status (FIXME - needs improvement)
+   * @param serviceName the formal name of the Service (matches the Service Library)
+   * @param manifest    the manifest of the model from which the service is built
+   * @return the metadata for the service OpenAPI spec
+   * @see ServiceLibraryHelper#tryResolveOpenAPIspec(String, TrisotechFileInfo)
+   */
   private KnowledgeArtifact buildOpenAPICarrier(
       ResourceIdentifier assetId, Publication lifecycle, String serviceName,
       TrisotechFileInfo manifest) {
@@ -163,7 +189,7 @@ public class TrisotechServiceIntrospectionStrategy {
         .withExpressionCategory(Software)
         .withRepresentation(synRep)
         .withMimeType(codedRep(synRep));
-    libraryHelper.tryResolveOpenAPI(manifest)
+    libraryHelper.tryResolveOpenAPIspec(serviceName, manifest)
         .ifPresent(ka::withLocator);
     return ka;
   }
@@ -183,12 +209,52 @@ public class TrisotechServiceIntrospectionStrategy {
   /* ----------------------------------------------------------------------------------------- */
 
 
-  private Element selectNode(Document dox, ResourceIdentifier assetId) {
-    return (Element) xPathUtil.xNode(dox,
-        "//dmn:decisionService[.//@resourceId='" + assetId.getResourceId() + "']");
+  /**
+   * Selects the node in the XML document that better represents the Service Assets
+   * <p>
+   * In DMN, dmn:decisionService nodes are mapped to deployable artifacts; in BPMN, bpmn:process
+   * nodes are mapped instead. Assumes that the node of interest is annotated with the given
+   * serviceAssetId
+   *
+   * @param dox            the model artifact
+   * @param serviceAssetId the serviceAssetId
+   * @return the XML Element that represents the part of the model exposed as a service
+   */
+  private Element selectNode(Document dox, ResourceIdentifier serviceAssetId) {
+    return selectDecisionServiceNode(dox, serviceAssetId)
+        .or(() -> selectProcessNode(dox, serviceAssetId))
+        .or(() -> selectAnyNode(dox, serviceAssetId))
+        .filter(Element.class::isInstance)
+        .map(Element.class::cast)
+        .orElseThrow(() -> new IllegalStateException(
+            "Unable to find expected serviceAssetId in XML : " + serviceAssetId
+        ));
   }
 
-  public static String mintServiceName(TrisotechFileInfo manifest, String serviceName) {
+  private Optional<Node> selectDecisionServiceNode(Document dox, ResourceIdentifier assetId) {
+    return Optional.ofNullable(xPathUtil.xNode(dox,
+        "//dmn:decisionService[.//@resourceId='" + assetId.getResourceId() + "']"));
+  }
+
+  private Optional<Node> selectProcessNode(Document dox, ResourceIdentifier assetId) {
+    return Optional.ofNullable(xPathUtil.xNode(dox,
+        "//bpmn:process[.//@resourceId='" + assetId.getResourceId() + "']"));
+  }
+
+  private Optional<? extends Node> selectAnyNode(Document dox, ResourceIdentifier assetId) {
+    return Optional.ofNullable(xPathUtil.xNode(dox,
+        "//*[descendant::*/@resourceId='" + assetId.getResourceId() + "']"));
+  }
+
+
+  /**
+   * Creates a label/title for the Service Asset
+   *
+   * @param manifest    the model metadata
+   * @param serviceName the service element name
+   * @return a human-oriented label
+   */
+  public static String mintExternalServiceName(TrisotechFileInfo manifest, String serviceName) {
     var n = manifest.getName();
     if (serviceName != null) {
       n = n + " - " + serviceName;
@@ -197,9 +263,13 @@ public class TrisotechServiceIntrospectionStrategy {
     return n;
   }
 
+  /**
+   * TODO - revisit based on the publication/versioning strategy being developed
+   * @return
+   */
   private Publication getArtifactPublicationStatus() {
     // FIXME Consider Published/Unpublished based on the presence in the SL
     return new Publication()
-        .withPublicationStatus(Published);
+        .withPublicationStatus(Draft);
   }
 }

@@ -47,6 +47,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.Know
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Protocol;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.asEnum;
@@ -250,7 +251,9 @@ public class TrisotechIntrospectionStrategy {
         .withFormalType(formalType)
         .withLifecycle(lifecycle)
         .withLinks(mergeSortedLinks(
-            getRelatedAssets(importedAssets),
+            mergeSortedLinks(
+                getRelatedAssets(importedAssets),
+                getRelatedServices(manifest)),
             getOtherDependencies(dox, synRep.getLanguage())))
         // carriers
         .withCarriers(new KnowledgeArtifact()
@@ -344,6 +347,8 @@ public class TrisotechIntrospectionStrategy {
           return xPathUtil.xString(dox, "//*/@namespace");
         case CMMN_1_1:
           return xPathUtil.xString(dox, "//*/@targetNamespace");
+        case BPMN_2_0:
+          return xPathUtil.xString(dox, "//*/@targetNamespace");
         default:
           return null;
       }
@@ -369,6 +374,9 @@ public class TrisotechIntrospectionStrategy {
     if (isA(formalType, Decision_Model)) {
       return Assessment_Predictive_And_Inferential_Models;
     }
+    if (isA(formalType, Protocol)) {
+      return Plans_Processes_Pathways_And_Protocol_Definitions;
+    }
     throw new UnsupportedOperationException(
         "Unable to infer category for asset type " + formalType.getName());
   }
@@ -387,6 +395,15 @@ public class TrisotechIntrospectionStrategy {
 
   /* ----------------------------------------------------------------------------------------- */
 
+
+  private Collection<Link> getRelatedServices(TrisotechFileInfo manifest) {
+    return mapper.resolveModelToCurrentServiceAssetIds(manifest.getId())
+        .map(svc -> new Dependency()
+            .withHref(svc
+                .withName(svc.getName() + " (API)"))
+            .withRel(DependencyTypeSeries.Is_Supplemented_By))
+        .collect(toList());
+  }
 
   private List<Link> getOtherDependencies(
       Document woven,

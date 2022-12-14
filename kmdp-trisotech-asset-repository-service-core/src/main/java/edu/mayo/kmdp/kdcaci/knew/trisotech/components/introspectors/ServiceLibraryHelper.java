@@ -11,6 +11,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Helper class that can query the status, and/or builds references (URLs), to the resources exposed
+ * via a combination of the Trisotech public API and the ServiceLibrary
+ * <p>
+ * The former is used for discovery of the deployed artifacts, whose metadata is necessary to build
+ * the URLs pointing to the latter, where the runtime environments can be accessed.
+ */
 @Component
 public class ServiceLibraryHelper {
 
@@ -20,18 +27,36 @@ public class ServiceLibraryHelper {
   @Autowired
   private TTWEnvironmentConfiguration envConfig;
 
-  public Optional<TrisotechExecutionArtifact> checkIsDeployed(TrisotechFileInfo info) {
-    var exec = client.listExecutionArtifacts(envConfig.getExecutionEnvironment())
-        .get(info.getName());
-    return Optional.ofNullable(exec);
+  /**
+   * Determines whether a Service is deployed to an execution environment
+   * <p>
+   * Note that this implementation targets one specific execution environment, which is configurable
+   * but not at runtime. FUTURE?
+   *
+   * @param serviceName the internal name of the service
+   * @param manifest    the artifact metadata of the model exposed as a service
+   * @return a descriptor of the deployed artifact, if the service is deployed
+   */
+  public Optional<TrisotechExecutionArtifact> checkIsDeployed(String serviceName,
+      TrisotechFileInfo manifest) {
+    var execs = client.listExecutionArtifacts(envConfig.getExecutionEnvironment());
+    // DMN executables - the whole model is mapped to a service
+    return Optional.ofNullable(execs.get(manifest.getName()))
+        // BPMN executables - each process is mapped to a service
+        .or(() -> Optional.ofNullable(execs.get(serviceName)));
   }
 
-  public Optional<URI> tryResolveSwagger(TrisotechFileInfo manifest) {
-    return checkIsDeployed(manifest)
-        .flatMap(this::buildSwaggerUI);
+  /**
+   * @param serviceName the internal name of the service
+   * @param manifest    the artifact metadata of the model exposed as a service
+   * @return a URL pointing to the Service's Swagger UI, if the service is deployed
+   */
+  public Optional<URI> tryResolveSwaggerUI(String serviceName, TrisotechFileInfo manifest) {
+    return checkIsDeployed(serviceName, manifest)
+        .flatMap(this::buildSwaggerUserInterfaceURL);
   }
 
-  private Optional<URI> buildSwaggerUI(TrisotechExecutionArtifact x) {
+  private Optional<URI> buildSwaggerUserInterfaceURL(TrisotechExecutionArtifact x) {
     var publicApi = envConfig.getApiEndpoint();
     if (publicApi.isEmpty()) {
       return Optional.empty();
@@ -39,21 +64,34 @@ public class ServiceLibraryHelper {
 
     var url = publicApi.get()
         + "doc/?url=/"
-        + getOpenAPIUrl(x);
+        + getEndpointUrl(x);
     return Optional.of(URI.create(url));
   }
 
-  public Optional<URI> tryResolveOpenAPI(TrisotechFileInfo manifest) {
-    return checkIsDeployed(manifest)
-        .map(this::buildOpenAPI);
+
+  /**
+   * @param serviceName the internal name of the service
+   * @param manifest    the artifact metadata of the model exposed as a service
+   * @return a URL pointing to the Service's OpenAPI spec, if the service is deployed
+   */
+  public Optional<URI> tryResolveOpenAPIspec(String serviceName, TrisotechFileInfo manifest) {
+    return checkIsDeployed(serviceName, manifest)
+        .map(this::buildOpenAPIspecURL);
   }
 
-  private URI buildOpenAPI(TrisotechExecutionArtifact x) {
-    var url = envConfig.getBaseURL() + getOpenAPIUrl(x);
+  private URI buildOpenAPIspecURL(TrisotechExecutionArtifact x) {
+    var url = envConfig.getBaseURL() + getEndpointUrl(x);
     return URI.create(url);
   }
 
-  private String getOpenAPIUrl(TrisotechExecutionArtifact x) {
+  /**
+   * Assembles the relative endpoint (path) for a specific version of a specific service deployed in
+   * the Service Library.
+   *
+   * @param x the execution artifact metadata
+   * @return a (relative) path to where the execution artifact is exposed
+   */
+  private String getEndpointUrl(TrisotechExecutionArtifact x) {
     return "execution"
         + "/" + x.getLanguage()
         + "/api/openapi"

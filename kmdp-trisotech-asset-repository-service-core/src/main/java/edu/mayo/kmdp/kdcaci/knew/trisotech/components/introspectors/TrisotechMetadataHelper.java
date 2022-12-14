@@ -11,6 +11,7 @@ import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Comparator.comparing;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
@@ -43,6 +44,7 @@ public class TrisotechMetadataHelper {
 
   public static final String CMMN_DEFINITIONS = "//cmmn:definitions";
   public static final String DMN_DEFINITIONS = "//dmn:definitions";
+  public static final String BPMN_DEFINITIONS = "//bpmn:definitions";
 
   private static final XPathUtil xPathUtil = new XPathUtil();
 
@@ -146,6 +148,9 @@ public class TrisotechMetadataHelper {
     if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
       return Optional.of(rep(DMN_1_2, XML_1_1, defaultCharset(), Encodings.DEFAULT));
     }
+    if (xPathUtil.xNode(dox, BPMN_DEFINITIONS) != null) {
+      return Optional.of(rep(BPMN_2_0, XML_1_1, defaultCharset(), Encodings.DEFAULT));
+    }
     return Optional.empty();
   }
 
@@ -164,6 +169,9 @@ public class TrisotechMetadataHelper {
     }
     if (xPathUtil.xNode(dox, DMN_DEFINITIONS) != null) {
       return Optional.of(DMN_1_2);
+    }
+    if (xPathUtil.xNode(dox, BPMN_DEFINITIONS) != null) {
+      return Optional.of(BPMN_2_0);
     }
     return Optional.empty();
   }

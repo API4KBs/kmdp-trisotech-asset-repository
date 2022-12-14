@@ -508,11 +508,11 @@ public class TrisotechWrapper {
    */
   public Optional<Document> downloadXmlModel(String fromUrl) {
     Optional<Document> document = webClient.downloadXmlModel(fromUrl);
-    if (logger.isDebugEnabled() && document.isPresent()) {
+    if (logger.isTraceEnabled() && document.isPresent()) {
       String documentToString = XMLUtil.toString(document.get());
 
-      logger.debug("The URL passed to download XML from is {}", fromUrl);
-      logger.debug("The document XML found is {}", documentToString);
+      logger.trace("The URL passed to download XML from is {}", fromUrl);
+      logger.trace("The document XML found is {}", documentToString);
 
     }
     return document;

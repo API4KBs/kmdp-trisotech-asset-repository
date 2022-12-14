@@ -14,7 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.getDefaultAssetType;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechServiceIntrospectionStrategy.mintServiceName;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechServiceIntrospectionStrategy.mintExternalServiceName;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeTypeByAssetType;
 import static java.util.stream.Collectors.groupingBy;
@@ -344,7 +344,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
               mapper.getDeclaredAssetType(id)
                   .orElse(ReSTful_Service_Specification)
                   .getReferentId())
-          .withName(mintServiceName(trisotechFileInfo, id.getName()))
+          .withName(mintExternalServiceName(trisotechFileInfo, id.getName()))
           .withHref(hrefBuilder.getHref(id, HrefType.ASSET))
       );
 

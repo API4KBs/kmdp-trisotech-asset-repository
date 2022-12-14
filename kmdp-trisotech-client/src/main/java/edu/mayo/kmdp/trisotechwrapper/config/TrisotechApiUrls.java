@@ -52,7 +52,7 @@ public class TrisotechApiUrls {
   // return CMMN files in XML format
   public static final String CMMN_XML_MIMETYPE = "application/cmmn-1-1+xml";
   // return BPMN files in XML format
-  public static final String BPMN_XML_MIMETYPE = "application/bpmn-2-1+xml";
+  public static final String BPMN_XML_MIMETYPE = "application/bpmn-2-0+xml";
 
 
   /**
@@ -71,6 +71,8 @@ public class TrisotechApiUrls {
       return DMN_XML_MIMETYPE;
     } else if (mime.contains(CMMN_LOWER)) {
       return CMMN_XML_MIMETYPE;
+    } else if (mime.contains(BPMN_LOWER)) {
+      return BPMN_XML_MIMETYPE;
     } else {
       logger.warn("Unexpected MIME type {}", mimetype);
       return mimetype;

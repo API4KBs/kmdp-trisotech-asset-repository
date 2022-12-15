@@ -17,6 +17,7 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.Triso
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechServiceIntrospectionStrategy.mintExternalServiceName;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeTypeByAssetType;
+import static edu.mayo.kmdp.util.PropertiesUtil.serializeProps;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
@@ -61,9 +62,11 @@ import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -498,7 +501,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     var surr = getKnowledgeAsset(assetId, null)
         .map(SurrogateHelper::carry);
     return negotiateHTML(xAccept)
-        ? surr.flatMap(ka -> htmlTranslator.applyTransrepresent(ka, codedRep(HTML), null))
+        ? surr.flatMap(this::toHtml)
         : surr;
   }
 
@@ -520,7 +523,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     var surr = getKnowledgeAssetVersion(assetId, versionTag, null)
         .map(SurrogateHelper::carry);
     return negotiateHTML(xAccept)
-        ? surr.flatMap(ka -> htmlTranslator.applyTransrepresent(ka, codedRep(HTML), null))
+        ? surr.flatMap(this::toHtml)
         : surr;
   }
 
@@ -736,6 +739,31 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     return decodeAll(xAccept).stream().findFirst()
         .filter(wr -> HTML.sameAs(wr.getRep().getLanguage()))
         .isPresent();
+  }
+
+  /**
+   * Converts a Surrogate, wrapped in a KnowledgeCarrier, to its HTML variant
+   * <p>
+   * Redirects the Asset namespace base URI to this server, making the links in the HTML more
+   * navigable. Note that this redirect is a best effort operation, which is not guaranteed.
+   *
+   * @param surrogateCarrier the KnowledgeAsset, in a KnowledgeCarrier
+   * @return the KnowledgeAsset HTML variant, in a KnowledgeCarrier, wrapped by Answer
+   */
+  private Answer<KnowledgeCarrier> toHtml(KnowledgeCarrier surrogateCarrier) {
+    String xCfg = null;
+    try {
+      Properties props = new Properties();
+      var host = URI.create(hrefBuilder.getHost());
+      var ns = names.getAssetNamespace();
+      var redirect = new URI(host.getScheme(), null, host.getHost(), host.getPort(),
+          host.getPath() + "/cat" + ns.getPath(), null, null);
+      props.put(ns.toString(), redirect.toString());
+      xCfg = serializeProps(props);
+    } catch (Exception e) {
+      // fall back to not rewriting the URIs/URLs
+    }
+    return htmlTranslator.applyTransrepresent(surrogateCarrier, codedRep(HTML), xCfg);
   }
 
 }

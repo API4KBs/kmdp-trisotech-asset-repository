@@ -16,7 +16,7 @@ public class TTServerContextAwareHrefBuilder extends KARSHrefBuilder {
   }
 
   @Override
-  protected String getHost() {
+  public String getHost() {
     try {
       return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
     } catch (Exception e) {

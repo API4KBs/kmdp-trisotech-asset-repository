@@ -1,15 +1,16 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifact;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriUtils;
 
 /**
  * Helper class that can query the status, and/or builds references (URLs), to the resources exposed
@@ -53,10 +54,11 @@ public class ServiceLibraryHelper {
    */
   public Optional<URI> tryResolveSwaggerUI(String serviceName, TrisotechFileInfo manifest) {
     return checkIsDeployed(serviceName, manifest)
-        .flatMap(this::buildSwaggerUserInterfaceURL);
+        .flatMap(x -> buildSwaggerUserInterfaceURL(x, serviceName));
   }
 
-  private Optional<URI> buildSwaggerUserInterfaceURL(TrisotechExecutionArtifact x) {
+  private Optional<URI> buildSwaggerUserInterfaceURL(
+      TrisotechExecutionArtifact x, String serviceName) {
     var publicApi = envConfig.getApiEndpoint();
     if (publicApi.isEmpty()) {
       return Optional.empty();
@@ -64,7 +66,7 @@ public class ServiceLibraryHelper {
 
     var url = publicApi.get()
         + "doc/?url=/"
-        + getEndpointUrl(x);
+        + getEndpointUrl(x, serviceName);
     return Optional.of(URI.create(url));
   }
 
@@ -76,11 +78,11 @@ public class ServiceLibraryHelper {
    */
   public Optional<URI> tryResolveOpenAPIspec(String serviceName, TrisotechFileInfo manifest) {
     return checkIsDeployed(serviceName, manifest)
-        .map(this::buildOpenAPIspecURL);
+        .map(x -> buildOpenAPIspecURL(x, serviceName));
   }
 
-  private URI buildOpenAPIspecURL(TrisotechExecutionArtifact x) {
-    var url = envConfig.getBaseURL() + getEndpointUrl(x);
+  private URI buildOpenAPIspecURL(TrisotechExecutionArtifact x, String serviceName) {
+    var url = envConfig.getBaseURL() + getEndpointUrl(x, serviceName);
     return URI.create(url);
   }
 
@@ -88,17 +90,18 @@ public class ServiceLibraryHelper {
    * Assembles the relative endpoint (path) for a specific version of a specific service deployed in
    * the Service Library.
    *
-   * @param x the execution artifact metadata
+   * @param x           the execution artifact metadata
+   * @param serviceName the name of the service
    * @return a (relative) path to where the execution artifact is exposed
    */
-  private String getEndpointUrl(TrisotechExecutionArtifact x) {
+  private String getEndpointUrl(TrisotechExecutionArtifact x, String serviceName) {
     return "execution"
         + "/" + x.getLanguage()
         + "/api/openapi"
         + "/" + envConfig.getExecutionEnvironment()
         + "/" + x.getGroupId()
         + "/" + x.getArtifactId()
-        + "/" + URLEncoder.encode(x.getName(), StandardCharsets.UTF_8)
+        + ("dmn".equals(x.getLanguage()) ? "/" + UriUtils.encode(serviceName, UTF_8) : "")
         + "/" + x.getVersion();
   }
 }

@@ -312,11 +312,14 @@ public class Weaver {
     if (isDomainConcept(uri)) {
       switch (grandparent) {
         case "semantic:decision":
+        case "semantic:dataOutput":
           return Defines;
         case "semantic:inputData":
+        case "semantic:dataInput":
         case "semantic:caseFileItem":
           return In_Terms_Of;
         case "semantic:casePlanModel":
+        case "semantic:relationship": // BPMN top level / canvas annotations
           return Has_Primary_Subject;
         case "semantic:stage":
         case "semantic:case":

@@ -413,9 +413,6 @@ public class TTCacheManager {
         EnumMap<TTGraphTerms, String> map = new EnumMap<>(TTGraphTerms.class);
         map.putAll(modelsSolutionsByAssetID.get(assetId.asKey()));
         map.put(ASSET_ID, links.get(SERVICE_ID));
-        if (links.containsKey(ASSET_TYPE)) {
-          map.put(ASSET_TYPE, links.get(ASSET_TYPE));
-        }
         modelsSolutionsByAssetID.put(serviceId.asKey(), map);
       }
     }

@@ -21,6 +21,9 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTServerContextAwareHrefBu
 import edu.mayo.kmdp.terms.TermsProvider;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.util.ws.ContentNegotiationFilter;
+import edu.mayo.kmdp.util.ws.PointerHTMLAdapter;
+import java.util.List;
+import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +66,11 @@ public class TTServerConfig {
   @Bean
   HttpMessageConverter<KnowledgeCarrier> knowledgeCarrierToHTMLAdapter() {
     return new HTMLAdapter();
+  }
+
+  @Bean
+  HttpMessageConverter<List<Pointer>> pointerToHTMLAdapter() {
+    return new PointerHTMLAdapter();
   }
 
 }

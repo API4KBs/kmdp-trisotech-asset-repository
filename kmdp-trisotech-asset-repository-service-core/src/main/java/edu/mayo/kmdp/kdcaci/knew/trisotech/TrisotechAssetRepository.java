@@ -22,6 +22,8 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
+import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofMixedAnonymousComposite;
+import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformAnonymousComposite;
 import static org.omg.spec.api4kp._20200801.Answer.conflict;
 import static org.omg.spec.api4kp._20200801.Answer.failed;
 import static org.omg.spec.api4kp._20200801.Answer.notFound;
@@ -65,9 +67,11 @@ import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,9 +82,11 @@ import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetCatalogApiInternal;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetRepositoryApiInternal;
 import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.TransxionApiInternal._applyTransrepresent;
+import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
 import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.KPServer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
@@ -598,6 +604,54 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       }
     }
     return notFound();
+  }
+
+  @Override
+  public Answer<CompositeKnowledgeCarrier> getAnonymousCompositeKnowledgeAssetCarrier(UUID assetId,
+      String versionTag, String xAccept) {
+    var rootId = newId(assetId, versionTag);
+    Set<KeyIdentifier> closure = getAssetClosure(rootId);
+
+    Answer<Set<KnowledgeCarrier>> componentArtifacts = closure.stream()
+        .map(comp -> getKnowledgeAssetVersionCanonicalCarrier(comp.getUuid(),
+            comp.getVersionTag(),
+            xAccept))
+        .collect(Answer.toSet());
+
+    return componentArtifacts
+        .map(comps -> ofMixedAnonymousComposite(rootId, comps));
+  }
+
+  @Override
+  public Answer<CompositeKnowledgeCarrier> getAnonymousCompositeKnowledgeAssetSurrogate(
+      UUID assetId, String versionTag, String xAccept) {
+    var rootId = newId(assetId, versionTag);
+    Set<KeyIdentifier> closure = getAssetClosure(rootId);
+
+    Answer<Set<KnowledgeCarrier>> componentSurrogates = closure.stream()
+        .map(comp -> getKnowledgeAssetVersion(comp.getUuid(),
+            comp.getVersionTag(),
+            xAccept)
+            .map(SurrogateHelper::carry))
+        .collect(Answer.toSet());
+
+    return componentSurrogates
+        .map(comps -> ofUniformAnonymousComposite(rootId, comps));
+  }
+
+  private Set<KeyIdentifier> getAssetClosure(ResourceIdentifier rootId) {
+    Set<KeyIdentifier> acc = new HashSet<>();
+    closure(rootId, acc);
+    return acc;
+  }
+
+  private void closure(ResourceIdentifier currId, Set<KeyIdentifier> acc) {
+    var key = currId.asKey();
+    if (!acc.contains(key)) {
+      acc.add(key);
+      mapper.getLatestAssetDependencies(mapper.getCurrentModelId(currId))
+          .forEach(dep -> closure(dep, acc));
+    }
   }
 
   /**

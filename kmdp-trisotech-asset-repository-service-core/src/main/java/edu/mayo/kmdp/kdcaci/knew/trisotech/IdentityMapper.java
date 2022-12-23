@@ -46,6 +46,7 @@ import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -544,14 +545,13 @@ public class IdentityMapper {
     List<ResourceIdentifier> assets = new ArrayList<>();
 
     if (!Util.isEmpty(artifactId)) {
-      // first find the artifact in the artifactToArtifact mapping
-      getArtifactDependencyMap().forEach((k, v) -> {
-        if (matches(k, artifactId)) {
-          // once found, for each of the artifacts it is dependent on, find the asset id for those artifacts in the models
-          v.forEach(dependent -> mapper.apply(dependent, k)
+      var key = artifactId;
+      if (key.startsWith(names.getArtifactNamespace().toString())) {
+        key = key.replace(names.getArtifactNamespace().toString(),TT_BASE_MODEL_URI);
+      }
+      getArtifactDependencyMap().getOrDefault(key, Collections.emptySet())
+          .forEach(dependent -> mapper.apply(dependent, artifactId)
               .ifPresent(assets::add));
-        }
-      });
     }
     return assets;
   }

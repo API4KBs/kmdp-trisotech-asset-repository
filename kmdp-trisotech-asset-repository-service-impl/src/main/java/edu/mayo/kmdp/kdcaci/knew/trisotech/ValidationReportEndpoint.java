@@ -35,6 +35,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zalando.problem.Problem;
 
+/**
+ * Adapter class that exposes the {@link CCPMProfileCMMNValidator} and
+ * {@link CCPMProfileDMNValidator} as a web endpoint
+ * <p>
+ * Supplements a {@link TrisotechAssetRepository}, and uses it as a source of models to validate.
+ * Adapts the 'shape' of the models to fit the expected input of the Validators - a Set of
+ * Asset/Artifact pairs. Formats the results into basic HTML.
+ * <p>
+ * This class should eventually be refactored to separate the presentation layer, and/or deployed
+ * separately
+ */
 @RestController
 public class ValidationReportEndpoint {
 
@@ -50,12 +61,22 @@ public class ValidationReportEndpoint {
   LanguageDeSerializer parser = new LanguageDeSerializer(
       Arrays.asList(new Surrogate2Parser(), new DMN12Parser(), new CMMN11Parser()));
 
+  /**
+   * Runs the {@link CCPMProfileDMNValidator} and {@link CCPMProfileDMNValidator} on a cCPM, given
+   * the Asset id / version of the root case model (though one could reference a naturalistic
+   * decision model)
+   *
+   * @param assetId    Root Asset Id
+   * @param versionTag Root Asset Version
+   * @param refresh    force the refresh of the underlying TTW before running validation
+   * @return the report, in HTML
+   */
   @GetMapping(value = "/validate/ccpms/{assetId}/versions/{versionTag}",
       produces = "text/html")
   public ResponseEntity<byte[]> validateAsset(
       @PathVariable UUID assetId,
       @PathVariable String versionTag,
-      @RequestParam(required=false, value = "refresh") String refresh) {
+      @RequestParam(required = false, value = "refresh") String refresh) {
 
     if (Boolean.parseBoolean(refresh)) {
       triso.deleteKnowledgeAssets();
@@ -68,16 +89,19 @@ public class ValidationReportEndpoint {
 
   private Answer<byte[]> buildReport(UUID assetId, String versionTag) {
     try {
+      /* Retrieves the CCPM, and reshapes it into a List of Asset/Artifact pairs */
       var payloads = compose(assetId, versionTag);
       if (payloads.isFailure()) {
         return Answer.of(payloads.printExplanation().getBytes());
       }
 
+      /* Runs the validation logic */
       var results = payloads.get().stream()
           .map(pair -> validator.applyValidate(pair, null))
           .reduce(Answer::merge)
           .map(Explainer::getExplanation);
 
+      /* Formats the report as basic HTML */
       var report = results.map(x -> toHTML(x, hrefBuilder))
           .map(String::getBytes);
 
@@ -140,7 +164,8 @@ public class ValidationReportEndpoint {
   }
 
 
-  protected String toHTML(KnowledgeCarrier explanation, TTServerContextAwareHrefBuilder hrefBuilder) {
+  protected String toHTML(KnowledgeCarrier explanation,
+      TTServerContextAwareHrefBuilder hrefBuilder) {
     return ProblemTableWriter.write(
         explanation.componentsAs(Problem.class).collect(Collectors.toList()), hrefBuilder);
   }
@@ -205,7 +230,7 @@ public class ValidationReportEndpoint {
     private static String cells(Stream<String> values, boolean header) {
       var t = header ? "th" : "td";
       return values.map(
-              x -> String.format("<%s %s>%s</%s>",t, color(x), x, t))
+              x -> String.format("<%s %s>%s</%s>", t, color(x), x, t))
           .collect(Collectors.joining());
     }
 

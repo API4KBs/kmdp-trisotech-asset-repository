@@ -1,5 +1,6 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Abstract_Knowledge_Expression;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTServerContextAwareHrefBuilder;
@@ -11,6 +12,7 @@ import edu.mayo.kmdp.language.parsers.surrogate.v2.Surrogate2Parser;
 import edu.mayo.kmdp.language.validators.cmmn.v1_1.CCPMProfileCMMNValidator;
 import edu.mayo.kmdp.language.validators.dmn.v1_2.CCPMProfileDMNValidator;
 import edu.mayo.kmdp.util.ws.ResponseHelper;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -21,6 +23,7 @@ import java.util.stream.Stream;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.Explainer;
 import org.omg.spec.api4kp._20200801.Severity;
+import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
@@ -60,6 +63,26 @@ public class ValidationReportEndpoint {
 
   LanguageDeSerializer parser = new LanguageDeSerializer(
       Arrays.asList(new Surrogate2Parser(), new DMN12Parser(), new CMMN11Parser()));
+
+
+  @GetMapping(value = "/validate/ccpms",
+      produces = "text/html")
+  public ResponseEntity<List<Pointer>> listValidatableCCPMs() {
+
+    var cases = triso.listKnowledgeAssets(
+        Clinical_Case_Management_Model.getTag(), null, null, 0, -1);
+    cases.ifSuccess(ptrs -> ptrs.forEach(this::rewriteUrl));
+
+    return ResponseHelper.asResponse(cases);
+  }
+
+  private void rewriteUrl(Pointer ptr) {
+    var original = ptr.getHref().toString();
+    var updated = original.replace("/cat/assets", "/validate/ccpms");
+    var versioned = updated + "/versions/" + ptr.getVersionTag();
+    ptr.setHref(URI.create(versioned));
+  }
+
 
   /**
    * Runs the {@link CCPMProfileDMNValidator} and {@link CCPMProfileDMNValidator} on a cCPM, given

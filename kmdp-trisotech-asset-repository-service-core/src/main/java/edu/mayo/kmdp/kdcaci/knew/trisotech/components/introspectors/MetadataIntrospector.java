@@ -13,13 +13,13 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
-import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_ID;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 import static java.util.Optional.ofNullable;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
 
 import edu.mayo.kmdp.language.parsers.surrogate.v2.Surrogate2Parser;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import edu.mayo.kmdp.trisotechwrapper.components.SemanticFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import java.io.InputStream;
@@ -96,7 +96,8 @@ public class MetadataIntrospector {
   private ResolvedAssetId categorizeAsset(UUID assetId, String modelId) {
     var idStr = assetId.toString();
 
-    var isModel = ofNullable(client.getMetadataByModel(modelId).get(ASSET_ID))
+    var isModel = ofNullable(client.getMetadataByModel(modelId))
+        .map(SemanticFileInfo::getAssetId)
         .filter(id -> id.contains(idStr))
         .map(id -> SemanticIdentifier.newVersionId(URI.create(id)));
 
@@ -105,7 +106,7 @@ public class MetadataIntrospector {
     }
 
     var isService = client.getServiceMetadataByModel(modelId)
-        .map(m -> m.get(ASSET_ID))
+        .map(SemanticFileInfo::getAssetId)
         .filter(id -> id != null && id.contains(idStr))
         .findFirst()
         .map(id -> SemanticIdentifier.newVersionId(URI.create(id)));

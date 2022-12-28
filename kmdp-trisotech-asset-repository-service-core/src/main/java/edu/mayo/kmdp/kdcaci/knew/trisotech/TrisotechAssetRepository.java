@@ -73,6 +73,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -115,6 +116,31 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     KnowledgeAssetRepositoryApiInternal {
 
   private static final Logger logger = LoggerFactory.getLogger(TrisotechAssetRepository.class);
+
+  private static final List<KnowledgeAssetType> SUPPORTED_ASSET_TYPES = List.of(
+      Naturalistic_Decision_Model,
+      Computable_Decision_Model,
+      Clinical_Decision_Model,
+      Semantic_Decision_Model,
+      Decision_Model,
+
+      Clinical_Case_Management_Model,
+      Care_Process_Model,
+      Cognitive_Care_Process_Model,
+      Case_Management_Model,
+
+      Clinical_Eligibility_Rule,
+      Clinical_Enrollment_Rule,
+      Clinical_Calculation_Rule,
+      Clinical_Contextualization_Rule,
+      Clinical_Guidance_Rule,
+      Clinical_Inference_Rule,
+      Clinical_Rule,
+
+      ReSTful_Service_Specification,
+
+      Protocol
+  );
 
   @Autowired
   private TrisotechWrapper client;
@@ -163,29 +189,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .withId(newId(BASE_UUID_URN_URI, "TTW"))
         .withOwner("KMDP / MEA")
         .withSurrogateModels(rep(Knowledge_Asset_Surrogate_2_0, XML_1_1))
-        .withSupportedAssetTypes(
-            Decision_Model,
-            Semantic_Decision_Model,
-            Naturalistic_Decision_Model,
-            Computable_Decision_Model,
-            Clinical_Decision_Model,
-
-            Care_Process_Model,
-            Cognitive_Care_Process_Model,
-            Case_Management_Model,
-            Clinical_Case_Management_Model,
-
-            Clinical_Eligibility_Rule,
-            Clinical_Rule,
-            Clinical_Calculation_Rule,
-            Clinical_Contextualization_Rule,
-            Clinical_Guidance_Rule,
-            Clinical_Enrollment_Rule,
-            Clinical_Inference_Rule,
-
-            ReSTful_Service_Specification,
-
-            Protocol));
+        .withSupportedAssetTypes(SUPPORTED_ASSET_TYPES));
   }
 
 
@@ -341,10 +345,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       var assetId = mapper
           .resolveEnterpriseAssetID(trisotechFileInfo.getId());
       var ptr1 = assetId.map(id -> id.toPointer()
-          .withType(
-              mapper.getDeclaredAssetType(id)
-                  .orElseGet(() -> getDefaultAssetType(trisotechFileInfo.getMimetype()))
-                  .getReferentId())
+          .withType(getRepresentativeType(id,
+              () -> getDefaultAssetType(trisotechFileInfo.getMimetype())))
           .withName(trisotechFileInfo.getName())
           .withHref(hrefBuilder.getHref(id, HrefType.ASSET_VERSION))
       );
@@ -352,10 +354,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       var serviceIds = mapper
           .resolveEnterpriseServiceIDs(trisotechFileInfo.getId());
       var ptr2 = serviceIds.map(id -> id.toPointer()
-          .withType(
-              mapper.getDeclaredAssetType(id)
-                  .orElse(ReSTful_Service_Specification)
-                  .getReferentId())
+          .withType(getRepresentativeType(id, () -> ReSTful_Service_Specification))
           .withName(mintExternalServiceName(trisotechFileInfo, id.getName()))
           .withHref(hrefBuilder.getHref(id, HrefType.ASSET_VERSION))
       );
@@ -365,6 +364,21 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       logger.error(ise.getMessage(), ise);
       return Stream.empty();
     }
+  }
+
+  private URI getRepresentativeType(ResourceIdentifier id, Supplier<KnowledgeAssetType> defaultType) {
+    List<KnowledgeAssetType> types = mapper.getDeclaredAssetTypes(id, defaultType);
+    if (types.isEmpty()) {
+      throw new IllegalStateException(
+          "No asset types detected even in presence of a default supplier");
+    }
+    // there should always be at least one type
+    var preferred = SUPPORTED_ASSET_TYPES.stream()
+        .filter(type -> type.isAnyOf(types))
+        .findFirst()
+        .orElseThrow(() ->
+            new IllegalStateException("Unsupported asset type(s) detected " + types));
+    return preferred.getReferentId();
   }
 
 

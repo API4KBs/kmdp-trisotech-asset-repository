@@ -5,8 +5,8 @@ import static edu.mayo.kmdp.util.Util.isNotEmpty;
 import static java.util.Collections.emptyList;
 import static org.omg.spec.api4kp._20200801.id.VersionIdentifier.toSemVer;
 
+import edu.mayo.kmdp.trisotechwrapper.components.SemanticFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.components.TTCacheManager;
-import edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms;
 import edu.mayo.kmdp.trisotechwrapper.components.TTWebClient;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifact;
@@ -135,9 +135,9 @@ public class TrisotechWrapper {
    * (Assumption: one model carries one Asset)
    *
    * @param modelUri The uri of the Trisotech model
-   * @return Map<TTGraphTerms, String>
+   * @return SemanticFileInfo
    */
-  public Map<TTGraphTerms, String> getMetadataByModel(String modelUri) {
+  public SemanticFileInfo getMetadataByModel(String modelUri) {
     return cacheManager.getMetadataByModel(focusPlaceId, targetPath, modelUri);
   }
 
@@ -147,9 +147,9 @@ public class TrisotechWrapper {
    * (Assumption: one model may define 0..N inference services)
    *
    * @param modelUri The uri of the Trisotech model
-   * @return Map<TTGraphTerms, String>
+   * @return SemanticFileInfo
    */
-  public Stream<Map<TTGraphTerms, String>> getServiceMetadataByModel(String modelUri) {
+  public Stream<SemanticFileInfo> getServiceMetadataByModel(String modelUri) {
     return cacheManager.getServiceMetadataByModel(focusPlaceId, targetPath, modelUri);
   }
 
@@ -158,9 +158,9 @@ public class TrisotechWrapper {
    * <p>description: returns asset metadata from the cache</p>
    *
    * @param assetId The id of the asset
-   * @return Map<TTGraphTerms, String> if found
+   * @return SemanticFileInfo if found
    */
-  public Optional<Map<TTGraphTerms, String>> getMetadataByAsset(UUID assetId,
+  public Optional<SemanticFileInfo> getMetadataByAsset(UUID assetId,
       String assetVersionTag) {
     return cacheManager.getMetadataByAsset(focusPlaceId, targetPath, assetId, assetVersionTag);
   }

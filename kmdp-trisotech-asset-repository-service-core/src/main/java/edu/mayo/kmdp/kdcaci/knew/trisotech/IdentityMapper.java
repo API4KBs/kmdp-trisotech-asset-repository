@@ -21,14 +21,6 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CUSTOM_ATTRIBUT
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_METADATA_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.VALUE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper.applyTimestampToVersion;
-import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ARTIFACT_NAME;
-import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_ID;
-import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_TYPE;
-import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MIME_TYPE;
-import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MODEL;
-import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.STATE;
-import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.UPDATED;
-import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.VERSION;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.NameUtils.getTrailingPart;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
@@ -40,8 +32,9 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionException;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
-import edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms;
+import edu.mayo.kmdp.trisotechwrapper.components.SemanticFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
@@ -54,6 +47,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -119,31 +113,31 @@ public class IdentityMapper {
   }
 
 
-  private Optional<Map<TTGraphTerms, String>> getStatementsByModel(String artifactId, boolean pub) {
+  private Optional<SemanticFileInfo> getStatementsByModel(String artifactId, boolean pub) {
     if (pub) {
       return Optional.ofNullable(client.getMetadataByModel(artifactId))
-          .filter(soln -> soln.containsKey(STATE));
+          .filter(soln -> soln.hasPublicationState());
     } else {
       return Optional.ofNullable(client.getMetadataByModel(artifactId));
     }
   }
 
-  private Stream<Map<TTGraphTerms, String>> getServiceStatementsByModel(
+  private Stream<SemanticFileInfo> getServiceStatementsByModel(
       String artifactId, boolean pub) {
     if (pub) {
       return client.getServiceMetadataByModel(artifactId)
-          .filter(soln -> soln.containsKey(STATE));
+          .filter(soln -> soln.hasPublicationState());
     } else {
       return client.getServiceMetadataByModel(artifactId);
     }
   }
 
 
-  private Optional<Map<TTGraphTerms, String>> getStatementsByAsset(
+  private Optional<SemanticFileInfo> getStatementsByAsset(
       UUID assetId, String assetVersionTag, boolean pub) {
     if (pub) {
       return client.getMetadataByAsset(assetId, assetVersionTag)
-          .filter(soln -> soln.containsKey(STATE));
+          .filter(soln -> soln.hasPublicationState());
     } else {
       return client.getMetadataByAsset(assetId, assetVersionTag);
     }
@@ -190,8 +184,8 @@ public class IdentityMapper {
    * @return the model's Asset Id as a {@link ResourceIdentifier}
    * @throws IllegalStateException if the metadata does not contain a valid asset Id
    */
-  private ResourceIdentifier toAssetId(Map<TTGraphTerms, String> soln) {
-    String statedIdStr = soln.get(ASSET_ID);
+  private ResourceIdentifier toAssetId(SemanticFileInfo soln) {
+    String statedIdStr = soln.getAssetId();
     URI statedId = URI.create(statedIdStr);
     if (statedId.getScheme() == null) {
       // need to investigate why 'tags' get detected as assetIds
@@ -199,11 +193,11 @@ public class IdentityMapper {
         return newId(statedId.toString(), defaultVersion);
       } else {
         throw new IllegalStateException(
-            "Invalid AssetID " + statedIdStr + " found on model " + soln.get(ARTIFACT_NAME));
+            "Invalid AssetID " + statedIdStr + " found on model " + soln.getModelName());
       }
     }
     return newVersionId(statedId)
-        .withName(soln.get(ARTIFACT_NAME));
+        .withName(soln.getModelName());
   }
 
 
@@ -227,9 +221,9 @@ public class IdentityMapper {
   public Optional<ResourceIdentifier> resolveAssetToCurrentAssetId(UUID assetId, String versionTag,
       boolean pub)
       throws NotLatestAssetVersionException {
-    Optional<Map<TTGraphTerms, String>> soln = getStatementsByAsset(assetId, versionTag, pub);
+    Optional<SemanticFileInfo> soln = getStatementsByAsset(assetId, versionTag, pub);
     if (soln.isPresent()) {
-      String enterpriseAssetVersionId = soln.get().get(ASSET_ID);
+      String enterpriseAssetVersionId = soln.get().getAssetId();
       ResourceIdentifier versionId = newVersionId(URI.create(enterpriseAssetVersionId));
       if (versionTag.equals(versionId.getVersionTag())) {
         return Optional.of(versionId);
@@ -238,7 +232,7 @@ public class IdentityMapper {
         throw new NotLatestAssetVersionException(
             versionTag,
             versionId.getVersionTag(),
-            soln.get().get(MODEL));
+            soln.get().getModelId());
       }
     } else {
       return Optional.empty();
@@ -263,12 +257,12 @@ public class IdentityMapper {
   public String getCurrentModelId(ResourceIdentifier assetId)
       throws NotLatestAssetVersionException, NotFoundException {
 
-    Optional<Map<TTGraphTerms, String>> solnOpt =
+    Optional<SemanticFileInfo> solnOpt =
         getStatementsByAsset(assetId.getUuid(), assetId.getVersionTag(), false);
     if (solnOpt.isPresent()) {
-      Map<TTGraphTerms, String> soln = solnOpt.get();
+      SemanticFileInfo soln = solnOpt.get();
       Optional<ResourceIdentifier> rid
-          = tryNewVersionId(URI.create(soln.get(ASSET_ID)));
+          = tryNewVersionId(URI.create(soln.getAssetId()));
 
       if (logger.isDebugEnabled()) {
         logger.debug("assetId.getResourceId(): {}", assetId.getResourceId());
@@ -279,12 +273,12 @@ public class IdentityMapper {
       if (rid.isPresent()) {
         // versionId value has the UUID of the asset/versions/versionTag, so this will match id and version
         if (rid.get().asKey().equals(assetId.asKey())) {
-          return soln.get(MODEL);
+          return soln.getModelId();
           // the requested version of the asset doesn't exist on the latest model, check if the
           // asset is the right asset for the model and if so, throw error with fileId
-        } else if (soln.get(ASSET_ID).contains(assetId.getTag())) {
+        } else if (soln.getAssetId().contains(assetId.getTag())) {
           throw new NotLatestAssetVersionException(
-              assetId.getVersionTag(), rid.get().getVersionTag(), soln.get(MODEL));
+              assetId.getVersionTag(), rid.get().getVersionTag(), soln.getModelId());
         } else {
           throw new IllegalStateException("Inconsistent asset IDs");
         }
@@ -304,7 +298,7 @@ public class IdentityMapper {
    */
   public Optional<String> getCurrentModelId(UUID assetId, boolean pub) {
     return getStatementsByAsset(assetId, IdentifierConstants.VERSION_LATEST, pub)
-        .map(soln -> soln.get(MODEL));
+        .map(SemanticFileInfo::getModelId);
   }
 
 
@@ -364,7 +358,7 @@ public class IdentityMapper {
    */
   public String getMimetype(UUID assetId, String versionTag) {
     return getStatementsByAsset(assetId, versionTag, false)
-        .map(soln -> soln.get(MIME_TYPE))
+        .map(SemanticFileInfo::getMimeType)
         .orElseThrow(() ->
             new IllegalStateException("Asset " + assetId + "does not have a MIME type"));
   }
@@ -378,7 +372,7 @@ public class IdentityMapper {
    */
   public String getMimetype(String modelUri) {
     return getStatementsByModel(modelUri, false)
-        .map(soln -> soln.get(MIME_TYPE))
+        .map(SemanticFileInfo::getMimeType)
         .orElseThrow(() ->
             new IllegalStateException("Model " + modelUri + "does not have a MIME type"));
   }
@@ -392,7 +386,7 @@ public class IdentityMapper {
    */
   public Optional<String> getPublicationState(String modelUri) {
     return getStatementsByModel(modelUri, publishedOnly)
-        .map(soln -> soln.get(STATE));
+        .map(SemanticFileInfo::getPublicationState);
   }
 
   /**
@@ -403,7 +397,7 @@ public class IdentityMapper {
    */
   public Optional<String> getLatestVersionTag(String modelId) {
     return getStatementsByModel(modelId, true)
-        .map(soln -> soln.get(VERSION));
+        .map(SemanticFileInfo::getModelVersion);
   }
 
 
@@ -417,11 +411,19 @@ public class IdentityMapper {
    * @return the KnowledgeAssetType associated to the asset according to the carrier model's
    * annotations, if any
    */
-  public Optional<KnowledgeAssetType> getDeclaredAssetType(ResourceIdentifier assetId) {
-    return getStatementsByAsset(assetId.getUuid(), assetId.getVersionTag(), false)
-        .map(soln -> soln.get(ASSET_TYPE))
-        .flatMap(type -> KnowledgeAssetTypeSeries.resolveId(type)
-            .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(type)));
+  public List<KnowledgeAssetType> getDeclaredAssetTypes(
+      ResourceIdentifier assetId,
+      Supplier<KnowledgeAssetType> defaultType) {
+    var declared = getStatementsByAsset(assetId.getUuid(), assetId.getVersionTag(), false)
+        .map(soln -> soln.getAssetTypes().stream()
+            .map(type -> KnowledgeAssetTypeSeries.resolveId(type)
+                .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(type)))
+            .flatMap(StreamUtil::trimStream)
+            .collect(Collectors.toList()))
+        .orElse(Collections.emptyList());
+    return declared.isEmpty()
+        ? List.of(defaultType.get())
+        : declared;
   }
 
 
@@ -450,19 +452,19 @@ public class IdentityMapper {
    * @return
    */
   private Optional<ResourceIdentifier> getLatestVersionArtifactIdFromIndex(String modelUri) {
-    Optional<Map<TTGraphTerms, String>> qsOpt =
+    Optional<SemanticFileInfo> qsOpt =
         getStatementsByModel(modelUri, false);
     if (qsOpt.isEmpty()
-        || (publishedOnly && qsOpt.get().get(STATE) == null)
-        || qsOpt.get().get(VERSION) == null) {
+        || (publishedOnly && qsOpt.get().getPublicationState() == null)
+        || qsOpt.get().getModelVersion() == null) {
       return Optional.empty();
     }
 
-    return qsOpt.map(qs -> qs.containsKey(UPDATED)
+    return qsOpt.map(qs -> qs.getLastUpdated() != null
         ? names.rewriteInternalId(
-        qs.get(MODEL), qs.get(VERSION), qs.get(ARTIFACT_NAME), qs.get(UPDATED))
+        qs.getModelId(), qs.getModelVersion(), qs.getModelName(), qs.getLastUpdated())
         : names.rewriteInternalId(
-            qs.get(MODEL), qs.get(VERSION), qs.get(ARTIFACT_NAME)));
+            qs.getModelId(), qs.getModelVersion(), qs.getModelName()));
   }
 
   /**
@@ -494,7 +496,7 @@ public class IdentityMapper {
   public Optional<String> getLatestCarrierVersionTag(UUID assetId, String versionTag) {
     // only publishedModels have a version
     return getStatementsByAsset(assetId, versionTag, true)
-        .map(soln -> soln.get(VERSION));
+        .map(SemanticFileInfo::getModelVersion);
   }
 
   /**
@@ -509,8 +511,8 @@ public class IdentityMapper {
     // only publishedModels have a versionre
     return getStatementsByAsset(assetId, assetVersionTag, true)
         .flatMap(soln -> {
-          String versionTag = soln.get(VERSION);
-          return Optional.ofNullable(soln.get(UPDATED))
+          String versionTag = soln.getModelVersion();
+          return Optional.ofNullable(soln.getLastUpdated())
               .map(timestamp ->
                   applyTimestampToVersion(versionTag, parseDateTime(timestamp).getTime()));
         });

@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -117,12 +116,12 @@ public class TTCacheManager {
         .artifactToArtifactDependencyMap;
   }
 
-  public Map<TTGraphTerms, String> getMetadataByModel(String repoId, String path, String modelUri) {
+  public SemanticFileInfo getMetadataByModel(String repoId, String path, String modelUri) {
     return pathIndexes.getUnchecked(indexKey(repoId, path))
         .modelsSolutionsByModelID.get(modelUri);
   }
 
-  public Stream<Map<TTGraphTerms, String>> getServiceMetadataByModel(String repoId, String path,
+  public Stream<SemanticFileInfo> getServiceMetadataByModel(String repoId, String path,
       String modelUri) {
     var place = pathIndexes.getUnchecked(indexKey(repoId, path));
 
@@ -147,10 +146,10 @@ public class TTCacheManager {
    * @return The core metadata for the candidate model that carries the requested asset, if any,
    * with caveats on the asset version.
    */
-  public Optional<Map<TTGraphTerms, String>> getMetadataByAsset(
+  public Optional<SemanticFileInfo> getMetadataByAsset(
       String repoId, String path, UUID assetId, String assetVersionTag) {
     KeyIdentifier searchKey = newKey(assetId, assetVersionTag);
-    Map<KeyIdentifier, EnumMap<TTGraphTerms, String>> index =
+    Map<KeyIdentifier, SemanticFileInfo> index =
         pathIndexes.getUnchecked(indexKey(repoId, path)).modelsSolutionsByAssetID;
 
     if (index.containsKey(searchKey)) {
@@ -332,11 +331,11 @@ public class TTCacheManager {
     /**
      * map of Asset Id to semantic metadata
      */
-    Map<KeyIdentifier, EnumMap<TTGraphTerms, String>> modelsSolutionsByAssetID;
+    Map<KeyIdentifier, SemanticFileInfo> modelsSolutionsByAssetID;
     /**
      * map of Model Id to semantic metadata
      */
-    Map<String, EnumMap<TTGraphTerms, String>> modelsSolutionsByModelID;
+    Map<String, SemanticFileInfo> modelsSolutionsByModelID;
 
     /**
      * map of Model Id to Service Asset Id
@@ -402,17 +401,17 @@ public class TTCacheManager {
     protected void indexServices(ResultSet services) {
       while (services.hasNext()) {
         QuerySolution soln = services.nextSolution();
-        EnumMap<TTGraphTerms, String> links = toMap(soln);
-        var modelId = links.get(MODEL);
-        var assetId = toResourceId(links.get(ASSET_ID));
-        var serviceId = toResourceId(links.get(SERVICE_ID));
+        SemanticFileInfo links = toMap(soln);
+        var modelId = links.getModelId();
+        var assetId = toResourceId(links.getAssetId());
+        var serviceId = toResourceId(links.getServiceId());
 
         modelToServiceMap.computeIfAbsent(modelId, k -> new ArrayList<>())
             .add(serviceId.asKey());
 
-        EnumMap<TTGraphTerms, String> map = new EnumMap<>(TTGraphTerms.class);
+        SemanticFileInfo map = new SemanticFileInfo();
         map.putAll(modelsSolutionsByAssetID.get(assetId.asKey()));
-        map.put(ASSET_ID, links.get(SERVICE_ID));
+        map.put(ASSET_ID, links.getServiceId());
         modelsSolutionsByAssetID.put(serviceId.asKey(), map);
       }
     }
@@ -435,21 +434,21 @@ public class TTCacheManager {
      */
     protected void indexModels(ResultSet modelSet) {
 
-      Set<EnumMap<TTGraphTerms, String>> solnSet = new HashSet<>();
+      Set<SemanticFileInfo> solnSet = new HashSet<>();
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
-        EnumMap<TTGraphTerms, String> metadata = toMap(soln);
+        SemanticFileInfo metadata = toMap(soln);
         solnSet.add(metadata);
       }
 
-      Set<EnumMap<TTGraphTerms, String>> reducedSolnSet = reduce(solnSet);
+      Set<SemanticFileInfo> reducedSolnSet = reduce(solnSet);
 
-      for (EnumMap<TTGraphTerms, String> metadata : reducedSolnSet) {
-        String modelId = Optional.ofNullable(metadata.get(MODEL))
+      for (SemanticFileInfo metadata : reducedSolnSet) {
+        String modelId = Optional.ofNullable(metadata.getModelId())
             .orElseThrow();
         indexByModel(modelId, metadata);
 
-        Optional<ResourceIdentifier> optAssetId = Optional.ofNullable(metadata.get(ASSET_ID))
+        Optional<ResourceIdentifier> optAssetId = Optional.ofNullable(metadata.getAssetId())
             .map(this::toResourceId);
         indexByAsset(optAssetId, metadata);
       }
@@ -466,16 +465,16 @@ public class TTCacheManager {
      * @param solnSet
      * @return
      */
-    private Set<EnumMap<TTGraphTerms, String>> reduce(Set<EnumMap<TTGraphTerms, String>> solnSet) {
-      Map<String, List<EnumMap<TTGraphTerms, String>>> grouped = solnSet.stream()
-          .collect(Collectors.groupingBy(m -> m.get(MODEL)));
+    private Set<SemanticFileInfo> reduce(Set<SemanticFileInfo> solnSet) {
+      Map<String, List<SemanticFileInfo>> grouped = solnSet.stream()
+          .collect(Collectors.groupingBy(SemanticFileInfo::getModelId));
       return grouped.entrySet().stream()
           .map(e -> reduceForModel(e.getKey(), e.getValue()))
           .collect(Collectors.toSet());
     }
 
-    private EnumMap<TTGraphTerms, String> reduceForModel(
-        String modelId, List<EnumMap<TTGraphTerms, String>> metas) {
+    private SemanticFileInfo reduceForModel(
+        String modelId, List<SemanticFileInfo> metas) {
       if (metas.isEmpty()) {
         throw new IllegalStateException(
             "Impossible: no KG metadata for a KG-indexed model" + modelId);
@@ -489,19 +488,19 @@ public class TTCacheManager {
               "Impossible: no KG metadata after sorting a nonempty collection for " + modelId));
     }
 
-    private Date getDateTime(EnumMap<TTGraphTerms, String> m) {
-      return DateTimeUtil.parseDateTime(m.get(UPDATED));
+    private Date getDateTime(SemanticFileInfo m) {
+      return DateTimeUtil.parseDateTime(m.getLastUpdated());
     }
 
-    private Version getVersion(EnumMap<TTGraphTerms, String> m) {
+    private Version getVersion(SemanticFileInfo m) {
       return VersionIdentifier.semVerOf(
-          Optional.ofNullable(m.get(VERSION))
+          Optional.ofNullable(m.getModelVersion())
               .orElse(IdentifierConstants.VERSION_ZERO_SNAPSHOT));
     }
 
     private void indexByAsset(
         Optional<ResourceIdentifier> optAssetId,
-        EnumMap<TTGraphTerms, String> metadata) {
+        SemanticFileInfo metadata) {
       if (optAssetId.isPresent()) {
         ResourceIdentifier assetId = optAssetId.get();
         KeyIdentifier key = assetId.asKey();
@@ -511,15 +510,15 @@ public class TTCacheManager {
           // alternative carriers of the same asset
           logger.error("Asset VERSION ID {} appears in {} and {}",
               assetId,
-              modelsSolutionsByAssetID.get(key).get(ARTIFACT_NAME),
-              metadata.get(ARTIFACT_NAME));
+              modelsSolutionsByAssetID.get(key).getModelName(),
+              metadata.getModelName());
         } else {
           if (logger.isInfoEnabled()) {
             logger.info(
                 "Cache indexing {} - {} as asset {}",
-                metadata.get(ARTIFACT_NAME),
-                metadata.get(MODEL),
-                metadata.get(ASSET_ID));
+                metadata.getModelName(),
+                metadata.getModelId(),
+                metadata.getAssetId());
           }
           modelsSolutionsByAssetID.put(key, metadata);
         }
@@ -527,57 +526,57 @@ public class TTCacheManager {
         // ignore models with no AssetID
         if (logger.isInfoEnabled()) {
           logger.info("Skipping model {} - {} with no Asset ID",
-              metadata.get(ARTIFACT_NAME),
-              metadata.get(MODEL));
+              metadata.getModelName(),
+              metadata.getModelId());
         }
       }
     }
 
     private void indexByModel(String modelId,
-        EnumMap<TTGraphTerms, String> metadata) {
+        SemanticFileInfo metadata) {
       // A given model/artifact can only carry one asset
       if (modelsSolutionsByModelID.containsKey(modelId)) {
         logger.error("model ID {} has multiple asset IDs {} and {}",
-            modelsSolutionsByModelID.get(modelId).get(ARTIFACT_NAME),
-            modelsSolutionsByModelID.get(modelId).get(ASSET_ID),
-            metadata.get(ASSET_ID));
+            modelsSolutionsByModelID.get(modelId).getModelName(),
+            modelsSolutionsByModelID.get(modelId).getAssetId(),
+            metadata.getAssetId());
       } else {
         modelsSolutionsByModelID.put(modelId, metadata);
       }
     }
 
-    private EnumMap<TTGraphTerms, String> toMap(QuerySolution soln) {
+    private SemanticFileInfo toMap(QuerySolution soln) {
       //?model ?assetId ?version ?state ?updated ?mimeType ?artifactName
-      EnumMap<TTGraphTerms, String> map = new EnumMap<>(TTGraphTerms.class);
+      SemanticFileInfo sinfo = new SemanticFileInfo();
 
-      addResource(MODEL, soln, map);
-      addLiteral(ASSET_ID, soln, map);
-      addLiteral(SERVICE_ID, soln, map);
+      addResource(MODEL, soln, sinfo);
+      addLiteral(ASSET_ID, soln, sinfo);
+      addLiteral(SERVICE_ID, soln, sinfo);
 
-      addLiteral(ARTIFACT_NAME, soln, map);
-      addLiteral(MIME_TYPE, soln, map);
+      addLiteral(ARTIFACT_NAME, soln, sinfo);
+      addLiteral(MIME_TYPE, soln, sinfo);
 
-      addLiteral(VERSION, soln, map);
-      addLiteral(STATE, soln, map);
-      addLiteral(UPDATED, soln, map);
+      addLiteral(VERSION, soln, sinfo);
+      addLiteral(STATE, soln, sinfo);
+      addLiteral(UPDATED, soln, sinfo);
 
-      addResource(ASSET_TYPE, soln, map);
+      addResource(ASSET_TYPE, soln, sinfo);
 
-      return map;
+      return sinfo;
     }
 
     private void addResource(
-        TTGraphTerms graphTerm, QuerySolution soln, EnumMap<TTGraphTerms, String> map) {
+        TTGraphTerms graphTerm, QuerySolution soln, SemanticFileInfo sinfo) {
       Optional.ofNullable(soln.getResource(graphTerm.key))
           .map(Resource::getURI)
-          .ifPresent(t -> map.put(graphTerm, t));
+          .ifPresent(t -> sinfo.put(graphTerm, t));
     }
 
     private void addLiteral(
-        TTGraphTerms graphTerm, QuerySolution soln, EnumMap<TTGraphTerms, String> map) {
+        TTGraphTerms graphTerm, QuerySolution soln, SemanticFileInfo sinfo) {
       Optional.ofNullable(soln.getLiteral(graphTerm.key))
           .map(Literal::getString)
-          .ifPresent(t -> map.put(graphTerm, t));
+          .ifPresent(t -> sinfo.put(graphTerm, t));
     }
 
     private ResourceIdentifier toResourceId(String id) {

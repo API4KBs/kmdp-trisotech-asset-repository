@@ -228,10 +228,10 @@ public class TrisotechIntrospectionStrategy {
     // Identifiers
     var artifactId = extractArtifactId(dox, manifest);
 
-    var formalType = mapper.getDeclaredAssetType(assetID)
-        .orElseGet(() -> getDefaultAssetType(manifest.getMimetype()));
+    var formalTypes = mapper.getDeclaredAssetTypes(assetID,
+        () -> getDefaultAssetType(manifest.getMimetype()));
 
-    var formalCategory = inferFormalCategory(formalType);
+    var formalCategory = inferFormalCategory(assetID, formalTypes);
 
     var annotations = extractAnnotations(dox.getDocumentElement());
 
@@ -251,7 +251,7 @@ public class TrisotechIntrospectionStrategy {
         .withAssetId(assetID)
         .withName(manifest.getName().trim())
         .withFormalCategory(formalCategory)
-        .withFormalType(formalType)
+        .withFormalType(formalTypes)
         .withLifecycle(lifecycle)
         .withLinks(mergeSortedLinks(
             mergeSortedLinks(
@@ -359,6 +359,22 @@ public class TrisotechIntrospectionStrategy {
   }
 
   /* ----------------------------------------------------------------------------------------- */
+
+  private KnowledgeAssetCategorySeries inferFormalCategory(
+      ResourceIdentifier assetId, List<KnowledgeAssetType> formalTypes) {
+    var categories = formalTypes.stream()
+        .map(this::inferFormalCategory)
+        .collect(Collectors.toSet());
+    if (categories.size() > 1) {
+      logger.warn("Detected multiple categories in asset {} : {}, due to types {}",
+          assetId, categories, formalTypes);
+    }
+    if (categories.isEmpty()) {
+      logger.error("Unable to determine formal category for asset {}, given types {}",
+          assetId, formalTypes);
+    }
+    return categories.iterator().next();
+  }
 
   /**
    * Determines the {@link KnowledgeAssetCategory} for a given {@link KnowledgeAssetType}, based on

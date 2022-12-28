@@ -78,9 +78,8 @@ public class ValidationReportEndpoint {
 
   private void rewriteUrl(Pointer ptr) {
     var original = ptr.getHref().toString();
-    var updated = original.replace("/cat/assets", "/validate/ccpms");
-    var versioned = updated + "/versions/" + ptr.getVersionTag();
-    ptr.setHref(URI.create(versioned));
+    var rerouted = original.replace("/cat/assets", "/validate/ccpms");
+    ptr.setHref(URI.create(rerouted));
   }
 
 

@@ -7,7 +7,7 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?model ?assetId ?serviceId ?assetType
+SELECT ?model ?assetId ?serviceId ?assetType ?artifactName
 FROM NAMED ?
 WHERE {
 GRAPH ? {
@@ -25,6 +25,7 @@ GRAPH ? {
     ?customAttribute2 ttr:value ?serviceId .
 
     ?node2 ttr:customAttribute ?customAttribute2 .
+    ?node2 rdfs:label ?artifactName .
     ?node2 ttr:owner* ?model .
 
     OPTIONAL { ?node2 ttr:semantic ?ann.

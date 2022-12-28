@@ -366,11 +366,25 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     }
   }
 
-  private URI getRepresentativeType(ResourceIdentifier id, Supplier<KnowledgeAssetType> defaultType) {
+  /**
+   * Chooses one Asset Type to use in an asset Pointer, even when the asset has multiple types, or
+   * no types at all.
+   * <p>
+   * Selects one of the types, based on the ranked preference of {@link #SUPPORTED_ASSET_TYPES}
+   *
+   * @param id          the asset Id (pointer)
+   * @param defaultType the type to be used if the asset does not declare a type explicitly
+   * @return the ontology URI of the chosen asset type
+   */
+  private URI getRepresentativeType(ResourceIdentifier id,
+      Supplier<KnowledgeAssetType> defaultType) {
     List<KnowledgeAssetType> types = mapper.getDeclaredAssetTypes(id, defaultType);
     if (types.isEmpty()) {
       throw new IllegalStateException(
           "No asset types detected even in presence of a default supplier");
+    }
+    if (types.size() == 1) {
+      return types.get(0).getReferentId();
     }
     // there should always be at least one type
     var preferred = SUPPORTED_ASSET_TYPES.stream()

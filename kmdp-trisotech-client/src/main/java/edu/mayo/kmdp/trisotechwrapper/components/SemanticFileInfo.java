@@ -3,6 +3,11 @@ package edu.mayo.kmdp.trisotechwrapper.components;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * POJO that holds the values of the semantic annotations extracted from the TT KG, via SPARQL
+ *
+ * @see TTGraphTerms
+ */
 public class SemanticFileInfo {
 
   private String assetId;
@@ -23,6 +28,11 @@ public class SemanticFileInfo {
 
   private String modelName;
 
+  /**
+   * Copy method that sets the values of 'this' to the values of 'other'
+   *
+   * @param other the other {@link SemanticFileInfo}
+   */
   public void putAll(SemanticFileInfo other) {
     this.assetId = other.assetId;
 
@@ -39,11 +49,85 @@ public class SemanticFileInfo {
 
     this.mimeType = other.mimeType;
 
-    this.lastUpdated = other.mimeType;
+    this.lastUpdated = other.lastUpdated;
 
     this.modelName = other.modelName;
   }
 
+  /**
+   * Merge method combines the values of 'other' into 'this'.
+   * <p>
+   * Atomic values are copied over unless already set. Collection values are combined
+   *
+   * @param other the other {@link SemanticFileInfo}
+   */
+  public SemanticFileInfo merge(SemanticFileInfo other) {
+    if (other == this) {
+      return this;
+    }
+
+    if (!hasAssetId()) {
+      this.assetId = other.assetId;
+    }
+
+    if (!hasServiceId()) {
+      this.serviceId = other.serviceId;
+    }
+
+    this.assetTypes.addAll(other.assetTypes);
+
+    if (!hasModelId()) {
+      this.modelId = other.modelId;
+    }
+
+    if (!hasModelVersion()) {
+      this.modelVersion = other.modelVersion;
+    }
+
+    if (!hasPublicationState()) {
+      this.publicationState = other.publicationState;
+    }
+
+    if (!hasMimeType()) {
+      this.mimeType = other.mimeType;
+    }
+
+    if (!hasLastUpdated()) {
+      this.lastUpdated = other.lastUpdated;
+    }
+
+    if (!hasModelName()) {
+      this.modelName = other.modelName;
+    }
+
+    return this;
+  }
+
+  /**
+   * Map-like Setter for collection fields
+   *
+   * @param key the key that denotes the field to set
+   * @param values the values to set
+   * @return this {@link SemanticFileInfo} with the updated value
+   */
+  public SemanticFileInfo put(TTGraphTerms key, List<String> values) {
+    if (key == TTGraphTerms.ASSET_TYPE) {
+      this.assetTypes.clear();
+      this.assetTypes.addAll(values);
+    } else {
+      throw new UnsupportedOperationException(
+          "Unable to handle " + key + " with multiple values");
+    }
+    return this;
+  }
+
+  /**
+   * Map-like Setter
+   *
+   * @param key the key that denotes the field to set
+   * @param value the value to set
+   * @return this {@link SemanticFileInfo} with the updated value
+   */
   public SemanticFileInfo put(TTGraphTerms key, String value) {
     switch (key) {
       case MIME_TYPE:
@@ -73,6 +157,8 @@ public class SemanticFileInfo {
       case ARTIFACT_NAME:
         this.modelName = value;
         break;
+      default:
+        throw new UnsupportedOperationException("Unable to handle " + key);
     }
     return this;
   }

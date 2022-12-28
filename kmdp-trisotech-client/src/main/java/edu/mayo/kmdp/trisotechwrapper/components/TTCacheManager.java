@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -401,18 +402,35 @@ public class TTCacheManager {
     protected void indexServices(ResultSet services) {
       while (services.hasNext()) {
         QuerySolution soln = services.nextSolution();
+        // asset + service joint metadata
         SemanticFileInfo links = toMap(soln);
         var modelId = links.getModelId();
         var assetId = toResourceId(links.getAssetId());
         var serviceId = toResourceId(links.getServiceId());
+        var serviceName = links.getModelName();
 
+        // (asset <=) model => service link
         modelToServiceMap.computeIfAbsent(modelId, k -> new ArrayList<>())
             .add(serviceId.asKey());
 
-        SemanticFileInfo map = new SemanticFileInfo();
-        map.putAll(modelsSolutionsByAssetID.get(assetId.asKey()));
-        map.put(ASSET_ID, links.getServiceId());
-        modelsSolutionsByAssetID.put(serviceId.asKey(), map);
+        // asset metadata
+        var assetInfo = modelsSolutionsByAssetID.get(assetId.asKey());
+
+        // service metadata
+        SemanticFileInfo serviceInfo = new SemanticFileInfo();
+        // share metadata with asset. Everything is in common, except the following:
+        serviceInfo.putAll(assetInfo);
+
+        // override asset Id
+        serviceInfo.put(ASSET_ID, links.getServiceId());
+        // override model name with service name
+        serviceInfo.put(ARTIFACT_NAME, serviceName);
+        // set service id
+        serviceInfo.put(SERVICE_ID, links.getServiceId());
+        // override asset types
+        serviceInfo.put(ASSET_TYPE, links.getAssetTypes());
+
+        modelsSolutionsByAssetID.put(serviceId.asKey(), serviceInfo);
       }
     }
 
@@ -482,10 +500,14 @@ public class TTCacheManager {
       if (metas.size() == 1) {
         return metas.get(0);
       }
-      return metas.stream()
+      var topInfo = metas.stream()
           .max(Comparator.comparing(this::getDateTime).thenComparing(this::getVersion))
           .orElseThrow(() -> new IllegalStateException(
               "Impossible: no KG metadata after sorting a nonempty collection for " + modelId));
+      return metas.stream()
+          .filter(si -> Objects.equals(si.getLastUpdated(), topInfo.getLastUpdated())
+              && Objects.equals(si.getModelVersion(), topInfo.getModelVersion()))
+          .reduce(topInfo, SemanticFileInfo::merge);
     }
 
     private Date getDateTime(SemanticFileInfo m) {

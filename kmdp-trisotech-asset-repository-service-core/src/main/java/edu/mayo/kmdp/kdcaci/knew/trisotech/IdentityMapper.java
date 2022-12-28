@@ -137,7 +137,7 @@ public class IdentityMapper {
       UUID assetId, String assetVersionTag, boolean pub) {
     if (pub) {
       return client.getMetadataByAsset(assetId, assetVersionTag)
-          .filter(soln -> soln.hasPublicationState());
+          .filter(SemanticFileInfo::hasPublicationState);
     } else {
       return client.getMetadataByAsset(assetId, assetVersionTag);
     }

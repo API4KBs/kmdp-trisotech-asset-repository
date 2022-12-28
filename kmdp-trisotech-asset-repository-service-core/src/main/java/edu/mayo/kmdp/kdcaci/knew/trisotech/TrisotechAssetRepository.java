@@ -346,7 +346,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
                   .orElseGet(() -> getDefaultAssetType(trisotechFileInfo.getMimetype()))
                   .getReferentId())
           .withName(trisotechFileInfo.getName())
-          .withHref(hrefBuilder.getHref(id, HrefType.ASSET))
+          .withHref(hrefBuilder.getHref(id, HrefType.ASSET_VERSION))
       );
 
       var serviceIds = mapper
@@ -357,7 +357,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
                   .orElse(ReSTful_Service_Specification)
                   .getReferentId())
           .withName(mintExternalServiceName(trisotechFileInfo, id.getName()))
-          .withHref(hrefBuilder.getHref(id, HrefType.ASSET))
+          .withHref(hrefBuilder.getHref(id, HrefType.ASSET_VERSION))
       );
 
       return Stream.concat(ptr1.stream(), ptr2);

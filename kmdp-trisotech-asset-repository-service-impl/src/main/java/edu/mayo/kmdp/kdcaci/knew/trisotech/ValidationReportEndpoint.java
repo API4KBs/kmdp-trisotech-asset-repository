@@ -258,16 +258,19 @@ public class ValidationReportEndpoint {
 
     private static Object color(String x) {
       if (Severity.ERR.name().equalsIgnoreCase(x)) {
-        return "bgcolor='#FFCCCB'";
+        return "style='background-color:#FFCCCB'";
       }
       if (Severity.INF.name().equalsIgnoreCase(x)) {
-        return "bgcolor='#C5E3EC'";
+        return "style='background-color:#C5E3EC'";
       }
       if (Severity.WRN.name().equalsIgnoreCase(x)) {
-        return "bgcolor='#FFFFE0'";
+        return "style='background-color:#FFFFE0'";
       }
       if (Severity.OK.name().equalsIgnoreCase(x)) {
-        return "bgcolor='CCFFCC'";
+        return "style='background-color:#CCFFCC'";
+      }
+      if (Severity.FATAL.name().equalsIgnoreCase(x)) {
+        return "style='background-color:black; color:red'";
       }
       return "";
     }

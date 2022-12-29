@@ -101,7 +101,7 @@ public class ValidationReportEndpoint {
       @RequestParam(required = false, value = "refresh") String refresh) {
 
     if (Boolean.parseBoolean(refresh)) {
-      triso.deleteKnowledgeAssets();
+      triso.clearKnowledgeAssetCatalog();
     }
 
     var report = buildReport(assetId, versionTag);

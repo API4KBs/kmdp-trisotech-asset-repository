@@ -18,7 +18,7 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.HTMLAdapter;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTServerContextAwareHrefBuilder;
-import edu.mayo.kmdp.terms.TermsProvider;
+import edu.mayo.kmdp.terms.TermsBrokerImpl;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.util.ws.ContentNegotiationFilter;
 import edu.mayo.kmdp.util.ws.PointerHTMLAdapter;
@@ -35,7 +35,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageConverter;
 
 @Configuration
-@ComponentScan(basePackageClasses = {TrisotechAssetRepository.class, TermsProvider.class, TrisotechWrapper.class})
+@ComponentScan(basePackageClasses = {TrisotechAssetRepository.class, TermsBrokerImpl.class, TrisotechWrapper.class})
 @PropertySource(value={"classpath:application.properties"})
 public class TTServerConfig {
 

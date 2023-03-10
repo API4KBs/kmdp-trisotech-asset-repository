@@ -1,0 +1,169 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+trigger: none
+
+resources:
+  webhooks:
+    - webhook: hook
+      connection: TrisotechHook
+      filters:
+        - path: container
+          value: kmcontainerregistry.azurecr.io/playground
+
+
+variables:
+  - group: ml-artreg-trisotech-kmdp-p
+  - group: km-container-registry
+  - name: dockerRegistryServiceConnection
+    value: "mclmprod"
+  - name: tag
+    value: '$(Build.BuildId)'
+  - name: dockerfilePath
+    value: "$(Build.SourcesDirectory)/Dockerfile"
+  - name: targetImage
+    value: "kmd/playground"
+  - name: targetRegistry
+    value: "mclmprod.azurecr.io"
+
+
+
+stages:
+- stage: PullContainerImage
+  displayName: Pull image
+  jobs:
+  - job: Pull
+    displayName: Pull image
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: CmdLine@2
+      displayName: 'Docker login to Trisotech interim registry'
+      inputs:
+        script: "echo '$(kmcr.password)' | docker login --username $(kmcr.username) --password-stdin kmcontainerregistry.azurecr.io"
+
+    - task: CmdLine@2
+      displayName: 'Pull container image'
+      inputs:
+        script: 'docker pull ${{ parameters.hook.container }}'
+    
+    - task: Bash@3
+      displayName: Save image tar file
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker image save -o $(Pipeline.Workspace)/image.tar ${{ parameters.hook.container }}
+                          
+    - task: PublishPipelineArtifact@1
+      displayName: Publish image to pipeline
+      inputs:
+        artifactName: container-image
+        targetPath: '$(Pipeline.Workspace)/image.tar'  
+    
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.SourcesDirectory)/host'
+        artifact: 'k8s-deployment-configuration'
+        publishLocation: 'pipeline'
+
+# - stage: PublishGcp
+#   displayName: Push Image to Google Artifact Registry
+#   dependsOn:
+#     - PullContainerImage
+#   condition: succeeded()
+#   jobs:
+#   - job: Publish
+#     displayName: Publish
+#     pool:
+#       name: MCC Applications
+#     steps:
+#     - task: MCCVaultIntegration@1
+#       displayName: "MCC Vault Integration"
+#       name: mccvault
+#       inputs:
+#         vaultActionType: 'gcpCreds'
+#         gcpSecretType: 'token'
+#         GcpCredRoleset: '$(Vault.Roleset)'
+#         Namespace: '$(Vault.Namespace)'
+#         RoleId: '$(Vault.RoleId)'
+#         SecretId: '$(Vault.SecretId)'
+#         HostUri: 'vault.mayo.edu:8200'
+    
+#     - task: CmdLine@2
+#       displayName: 'Docker Login to Google Artifact Registry'
+#       inputs:
+#         script: 'docker login -u oauth2accesstoken -p $(mccvault.VaultResult) https://$(GCR.Name)'
+    
+#     - task: DownloadPipelineArtifact@2
+#       inputs:
+#         artifact: container-image
+#         path: '$(System.ArtifactsDirectory)/'
+
+#     - bash: |
+#         docker load --input $(System.ArtifactsDirectory)/image.tar
+#       displayName: Docker load image
+
+#     - bash: |
+#         docker image ls
+#       displayName: List images
+    
+#     - task: CmdLine@2
+#       displayName: 'Adjust image tag'
+#       inputs:
+#         script: 'docker tag $(trisotechImage)  $(GCR.Name)/km/calculators:$(tag)'
+    
+#     - bash: |
+#         docker image ls
+#       displayName: List images
+
+#     - bash: |
+#         docker push $(GCR.Name)/km/calculators:$(tag)
+#       displayName: Publish to Google Artifact Registry
+    
+#     - task: ImportExportVariables@1
+#       inputs:
+#         action: 'Export'
+
+
+- stage: PublishAzure
+  displayName: Push Image to Azure Container Registry
+  dependsOn:
+    - PullContainerImage
+  condition: succeeded()
+  jobs:
+  - job: Publish
+    displayName: Publish
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifact: container-image
+        path: '$(System.ArtifactsDirectory)/'
+
+    - bash: |
+        docker load --input $(System.ArtifactsDirectory)/image.tar
+      displayName: Docker load image
+    
+    - task: CmdLine@2
+      displayName: 'Adjust image tag'
+      inputs:
+        script: 'docker tag ${{ parameters.hook.container }}  $(targetRegistry)/$(targetImage):$(tag)'
+
+    - bash: |
+        docker image ls
+      displayName: List images
+
+    - task: Docker@2
+      displayName: 'Push to Azure Container Registry'
+      inputs:
+        containerRegistry: 'mclmprod'
+        repository: '$(targetImage)'
+        tags: '$(tag)'
+        command: 'push'
+
+    - task: ImportExportVariables@1
+      inputs:
+        action: "Export"
+        

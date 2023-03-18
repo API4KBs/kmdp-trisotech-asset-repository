@@ -1,0 +1,5091 @@
+{
+  "diagramId": "_7944bf0b-540b-4c15-9407-1d4ea113afe6",
+  "modelVersion": 5.07,
+  "properties": {
+    "name": "Diagnosis of Celiac Vernacular",
+    "targetNamespace": "http://www.trisotech.com/definitions/_7944bf0b-540b-4c15-9407-1d4ea113afe6",
+    "defaultLanguage": "en",
+    "extensionElements": [
+      {
+        "key": "knowledgeAssetId",
+        "value": "https://clinicalknowledgemanagement.mayo.edu/assets/eb9e9dc6-4bad-4377-8818-2da0122afb8e/versions/0.0.1",
+        "type": "string",
+        "namespace": "http://www.trisotech.com/2015/triso/modeling",
+        "id": "_8af2a03c-9ec9-4e72-9617-a7324288ef17",
+        "semanticType": "customAttribute"
+      }
+    ]
+  },
+  "extendedProperties": {
+    "selectedTabId": "_4b1dbad6-5ebd-4a82-ad97-fa56e5fb2ccd",
+    "selectedTabTypeId": "diagram",
+    "logoChoice": "Default",
+    "customLogo": null
+  },
+  "itemModelElements": {
+    "bottomTab": [
+      {
+        "resourceId": "_801168e3-ff12-4293-922c-3fad38c0323c",
+        "properties": {
+          "ref": "_4b1dbad6-5ebd-4a82-ad97-fa56e5fb2ccd",
+          "tabType": "diagram",
+          "isSelected": true
+        },
+        "stencil": {
+          "id": "bottomTab"
+        },
+        "itemModelElements": {}
+      }
+    ],
+    "itemDefinition": [
+      {
+        "resourceId": "fhirFamilyMemberHistory",
+        "properties": {
+          "name": "fhirFamilyMemberHistory",
+          "documentation": "Significant health conditions for a person related to the patient relevant in the context of care for the patient.",
+          "extensionElements": [
+            {
+              "id": "_a82e770b-24e0-4e19-b091-9c7b7730614d",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirFamilyMemberHistory",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirFamilyMemberHistory",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_d3f2154f-c5cd-4aca-af16-e438f9ad2546",
+              "properties": {
+                "name": "resourceType",
+                "documentation": "This is a FamilyMemberHistory resource",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_7069feda-d7a7-4de4-87c1-45fca19e8990",
+              "properties": {
+                "name": "id",
+                "documentation": "The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_2c8aa610-b9fd-437c-90aa-a5081ae19bb6",
+              "properties": {
+                "name": "meta",
+                "documentation": "The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirMeta"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_022d8a3b-749e-457e-a5da-03d02aab90a9",
+              "properties": {
+                "name": "implicitRules",
+                "documentation": "A reference to a set of rules that were followed when the resource was constructed, and which must be understood when processing the content. Often, this is a reference to an implementation guide that defines the special rules along with other profiles etc.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_9e30da2f-9b4a-4424-9761-fccc565cfe85",
+              "properties": {
+                "name": "language",
+                "documentation": "The base language in which the resource is written.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_4f588381-0e77-406c-9516-add39823b4ab",
+              "properties": {
+                "name": "text",
+                "documentation": "A human-readable narrative that contains a summary of the resource and can be used to represent the content of the resource to a human. The narrative need not encode all the structured data, but is required to contain sufficient detail to make it \"clinically safe\" for a human to just read the narrative. Resource definitions may define what content should be represented in the narrative to ensure clinical safety.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirNarrative"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_f682fd21-ef7e-4957-9acd-c7ea403b6a00",
+              "properties": {
+                "name": "contained",
+                "documentation": "These resources do not have an independent existence apart from the resource that contains them - they cannot be identified independently, and nor can they have their own independent transaction scope.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "feel:Any"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_c8f78d4b-8804-490c-b796-5dfaf2012acd",
+              "properties": {
+                "name": "identifier",
+                "documentation": "Business identifiers assigned to this family member history by the performer or other systems which remain constant as the resource is updated and propagates from server to server.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "fhirIdentifier"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_5dc34b5d-9fde-43ea-9f45-a9275a12d912",
+              "properties": {
+                "name": "instantiatesCanonical",
+                "documentation": "The URL pointing to a FHIR-defined protocol, guideline, orderset or other definition that is adhered to in whole or in part by this FamilyMemberHistory.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_beee6f4c-ff55-48af-8779-0e5366fe0ca6",
+              "properties": {
+                "name": "instantiatesUri",
+                "documentation": "The URL pointing to an externally maintained protocol, guideline, orderset or other definition that is adhered to in whole or in part by this FamilyMemberHistory.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_b03cb990-15b3-4e64-9af1-1507579fc964",
+              "properties": {
+                "name": "status",
+                "documentation": "A code specifying the status of the record of the family history of a specific family member.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                },
+                "allowedValues": {
+                  "text": {
+                    "content": "\"completed\",\"entered-in-error\",\"partial\",\"health-unknown\""
+                  },
+                  "extensionElements": [
+                    {
+                      "id": "_70c88220-c23a-427e-ad7f-d6f1ef7d0b89",
+                      "semanticType": "constraintDetails",
+                      "namespace": "http://www.trisotech.com/2015/triso/modeling",
+                      "value": {
+                        "content": "\"completed\",\"entered-in-error\",\"partial\",\"health-unknown\""
+                      },
+                      "display": {
+                        "content": "\"completed\", \"entered-in-error\", \"partial\", \"health-unknown\""
+                      },
+                      "constraintsType": "enumeration",
+                      "choices": [
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"completed\""
+                          },
+                          "display": {
+                            "content": "\"completed\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"entered-in-error\""
+                          },
+                          "display": {
+                            "content": "\"entered-in-error\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"partial\""
+                          },
+                          "display": {
+                            "content": "\"partial\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"health-unknown\""
+                          },
+                          "display": {
+                            "content": "\"health-unknown\""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_c201c3b5-46f4-476b-a68e-1cee07be3685",
+              "properties": {
+                "name": "dataAbsentReason",
+                "documentation": "Describes why the family member's history is not available.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirCodeableConcept"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_fd81c0d1-298f-4da2-97f2-c622d832f5fe",
+              "properties": {
+                "name": "patient",
+                "documentation": "The person who this history concerns.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirReference"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_45ba52fc-8251-456b-bb10-7c1a1127737e",
+              "properties": {
+                "name": "date",
+                "documentation": "The date (and possibly time) when the family member history was recorded or last updated.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:dateTime"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_3a50abba-ef3f-4812-a176-b0ae4b08e96a",
+              "properties": {
+                "name": "name",
+                "documentation": "This will either be a name or a description; e.g. \"Aunt Susan\", \"my cousin with the red hair\".",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_cb992cda-b030-438b-b9fc-1e116c4cc2eb",
+              "properties": {
+                "name": "relationship",
+                "documentation": "The type of relationship this person has to the patient (father, mother, brother etc.).",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirCodeableConcept"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_e071b703-0daa-43cb-88cf-dad531c6be2a",
+              "properties": {
+                "name": "sex",
+                "documentation": "The birth sex of the family member.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirCodeableConcept"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_ad013d57-765a-46dc-b7a6-004a6a8fb3e8",
+              "properties": {
+                "name": "bornPeriod",
+                "documentation": "The actual or approximate date of birth of the relative.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirPeriod"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_a648c09a-5690-4207-a0da-98150494af7a",
+              "properties": {
+                "name": "bornDate",
+                "documentation": "The actual or approximate date of birth of the relative.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:date"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_62d571c9-5796-4654-8d6c-602291fd429d",
+              "properties": {
+                "name": "bornString",
+                "documentation": "The actual or approximate date of birth of the relative.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_d7a0f076-11ec-4518-a1f1-3447fcd4e9c0",
+              "properties": {
+                "name": "ageAge",
+                "documentation": "The age of the relative at the time the family member history is recorded.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirAge"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_228da89f-0062-4918-8f69-3c2c9898139b",
+              "properties": {
+                "name": "ageRange",
+                "documentation": "The age of the relative at the time the family member history is recorded.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirRange"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_3878eed4-0de6-4e96-9adf-116afe798b6e",
+              "properties": {
+                "name": "ageString",
+                "documentation": "The age of the relative at the time the family member history is recorded.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_d63ed3bd-bad8-4ead-a4e0-563d1327531d",
+              "properties": {
+                "name": "estimatedAge",
+                "documentation": "If true, indicates that the age value specified is an estimated value.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:boolean"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_6b3176de-3f7b-4cb1-bef8-96ec2952776c",
+              "properties": {
+                "name": "deceasedBoolean",
+                "documentation": "Deceased flag or the actual or approximate age of the relative at the time of death for the family member history record.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:boolean"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_06d6d606-d0df-45c7-8bb2-8643d72ba34e",
+              "properties": {
+                "name": "deceasedAge",
+                "documentation": "Deceased flag or the actual or approximate age of the relative at the time of death for the family member history record.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirAge"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_c570afbb-2486-4225-b23b-cfb8e60660a1",
+              "properties": {
+                "name": "deceasedRange",
+                "documentation": "Deceased flag or the actual or approximate age of the relative at the time of death for the family member history record.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirRange"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_c852de24-378a-4d1b-b1c4-75d6a0fd1529",
+              "properties": {
+                "name": "deceasedDate",
+                "documentation": "Deceased flag or the actual or approximate age of the relative at the time of death for the family member history record.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:date"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_5b66eea8-f3f8-4d3b-abfc-eab113cc9b72",
+              "properties": {
+                "name": "deceasedString",
+                "documentation": "Deceased flag or the actual or approximate age of the relative at the time of death for the family member history record.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_602a7d7c-1d94-49e9-9c6d-c1b44e0f2e31",
+              "properties": {
+                "name": "reasonCode",
+                "documentation": "Describes why the family member history occurred in coded or textual form.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "fhirCodeableConcept"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_e7d262e2-d620-4aad-b8a5-5eb451e701ad",
+              "properties": {
+                "name": "reasonReference",
+                "documentation": "Indicates a Condition, Observation, AllergyIntolerance, or QuestionnaireResponse that justifies this family member history event.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "fhirReference"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_e5d2200c-cf1f-4494-a2bd-962f0e52d679",
+              "properties": {
+                "name": "note",
+                "documentation": "This property allows a non condition-specific note to the made about the related person. Ideally, the note would be in the condition property, but this is not always possible.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "fhirAnnotation"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_c6792b8a-b14e-4a1c-b610-4c7cbb0f17a7",
+              "properties": {
+                "name": "condition",
+                "documentation": "The significant Conditions (or condition) that the family member had. This is a repeating section to allow a system to represent more than one condition per resource, though there is nothing stopping multiple resources - one per condition.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "fhirFamilyMemberHistory_Condition"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirMeta",
+        "properties": {
+          "name": "fhirMeta",
+          "documentation": "The metadata about a resource. This is content in the resource that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.",
+          "extensionElements": [
+            {
+              "id": "_8f688672-dc0f-4974-9c06-6820e241ab9f",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirMeta",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirMeta",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_5c0313ff-f42d-4f14-aae1-10a3772256b2",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_fba1a483-0b14-47a0-bf01-341be4be6c4b",
+              "properties": {
+                "name": "versionId",
+                "documentation": "The version specific identifier, as it appears in the version portion of the URL. This value changes when the resource is created, updated, or deleted.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_4c522556-a6d8-44e0-9e22-ec18c49c0a36",
+              "properties": {
+                "name": "lastUpdated",
+                "documentation": "When the resource last changed - e.g. when the version changed.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_96c759d8-9110-43fc-81bd-1c8f1647f307",
+              "properties": {
+                "name": "source",
+                "documentation": "A uri that identifies the source system of the resource. This provides a minimal amount of [[[Provenance]]] information that can be used to track or differentiate the source of information in the resource. The source may identify another FHIR server, document, message, database, etc.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_3b1fb8eb-6a2c-4b2c-9ca8-b14958755f42",
+              "properties": {
+                "name": "profile",
+                "documentation": "A list of profiles (references to [[[StructureDefinition]]] resources) that this resource claims to conform to. The URL is a reference to [[[StructureDefinition.url]]].",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_0bc5c6ed-aaad-4176-9a8b-5387b3a8aac9",
+              "properties": {
+                "name": "security",
+                "documentation": "Security labels applied to this resource. These tags connect specific resources to the overall security policy and infrastructure.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "fhirCoding"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_fb90e7e9-4611-4eea-93f7-c557be553c82",
+              "properties": {
+                "name": "tag",
+                "documentation": "Tags applied to this resource. Tags are intended to be used to identify and relate resources to process and workflow, and applications are not required to consider the tags when interpreting the meaning of a resource.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "fhirCoding"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirCoding",
+        "properties": {
+          "name": "fhirCoding",
+          "documentation": "A reference to a code defined by a terminology system.",
+          "extensionElements": [
+            {
+              "id": "_d2c9ccc7-bf0e-4b79-ab1f-614aafe2f60b",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirCoding",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirCoding",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_0537acbc-3281-4c59-9cba-edb30b2bddf9",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_8c571298-df9a-4354-9446-8640d0a7bf39",
+              "properties": {
+                "name": "system",
+                "documentation": "The identification of the code system that defines the meaning of the symbol in the code.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_c400b515-8efd-47fe-8e21-168f6a3d6f1f",
+              "properties": {
+                "name": "version",
+                "documentation": "The version of the code system which was used when choosing this code. Note that a well-maintained code system does not need the version reported, because the meaning of codes is consistent across versions. However this cannot consistently be assured, and when the meaning is not guaranteed to be consistent, the version SHOULD be exchanged.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_3552b605-7f8e-4f87-8444-c0b8915f371a",
+              "properties": {
+                "name": "code",
+                "documentation": "A symbol in syntax defined by the system. The symbol may be a predefined code or an expression in a syntax defined by the coding system (e.g. post-coordination).",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_82e45873-4c46-42d8-a73d-c4337b7839bb",
+              "properties": {
+                "name": "display",
+                "documentation": "A representation of the meaning of the code in the system, following the rules of the system.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_5395a5c7-70a9-406d-b90f-823148fc8324",
+              "properties": {
+                "name": "userSelected",
+                "documentation": "Indicates that this coding was chosen by a user directly - e.g. off a pick list of available items (codes or displays).",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:boolean"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirNarrative",
+        "properties": {
+          "name": "fhirNarrative",
+          "documentation": "A human-readable summary of the resource conveying the essential clinical and business information for the resource.",
+          "extensionElements": [
+            {
+              "id": "_f0fcc5d1-2853-46c1-8151-0cc38773f53a",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirNarrative",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirNarrative",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_31def9f5-789a-47a6-a708-5cfd1845b697",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_85eb50b2-a8b9-4441-b3bc-08333800c540",
+              "properties": {
+                "name": "status",
+                "documentation": "The status of the narrative - whether it's entirely generated (from just the defined data or the extensions too), or whether a human authored it and it may contain additional data.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                },
+                "allowedValues": {
+                  "text": {
+                    "content": "\"extensions\",\"generated\",\"additional\",\"empty\""
+                  },
+                  "extensionElements": [
+                    {
+                      "id": "_0630f052-3aae-49b6-8fc0-4e1512c8fd73",
+                      "semanticType": "constraintDetails",
+                      "namespace": "http://www.trisotech.com/2015/triso/modeling",
+                      "value": {
+                        "content": "\"extensions\",\"generated\",\"additional\",\"empty\""
+                      },
+                      "display": {
+                        "content": "\"extensions\", \"generated\", \"additional\", \"empty\""
+                      },
+                      "constraintsType": "enumeration",
+                      "choices": [
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"extensions\""
+                          },
+                          "display": {
+                            "content": "\"extensions\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"generated\""
+                          },
+                          "display": {
+                            "content": "\"generated\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"additional\""
+                          },
+                          "display": {
+                            "content": "\"additional\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"empty\""
+                          },
+                          "display": {
+                            "content": "\"empty\""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_03bc3f30-6fc6-4608-9c4e-9f39bb13b75e",
+              "properties": {
+                "name": "div",
+                "documentation": "The actual narrative content, a stripped down version of XHTML.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirIdentifier",
+        "properties": {
+          "name": "fhirIdentifier",
+          "documentation": "An identifier - identifies some entity uniquely and unambiguously. Typically this is used for business identifiers.",
+          "extensionElements": [
+            {
+              "id": "_b41a344e-0d1c-4be8-ac98-4aafb9be25c9",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirIdentifier",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirIdentifier",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_5aedb2f0-4fd8-4165-a0be-e3fae1cc9b5a",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_b8c2edb8-61d1-47e6-8188-2836b82b317f",
+              "properties": {
+                "name": "use",
+                "documentation": "The purpose of this identifier.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                },
+                "allowedValues": {
+                  "text": {
+                    "content": "\"official\",\"usual\",\"temp\",\"secondary\",\"old\""
+                  },
+                  "extensionElements": [
+                    {
+                      "id": "_dc0f3b62-a779-4cb2-82e2-ce7fcf7cef52",
+                      "semanticType": "constraintDetails",
+                      "namespace": "http://www.trisotech.com/2015/triso/modeling",
+                      "value": {
+                        "content": "\"official\",\"usual\",\"temp\",\"secondary\",\"old\""
+                      },
+                      "display": {
+                        "content": "\"official\", \"usual\", \"temp\", \"secondary\", \"old\""
+                      },
+                      "constraintsType": "enumeration",
+                      "choices": [
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"official\""
+                          },
+                          "display": {
+                            "content": "\"official\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"usual\""
+                          },
+                          "display": {
+                            "content": "\"usual\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"temp\""
+                          },
+                          "display": {
+                            "content": "\"temp\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"secondary\""
+                          },
+                          "display": {
+                            "content": "\"secondary\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"old\""
+                          },
+                          "display": {
+                            "content": "\"old\""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_44cfe360-6d86-4841-a70f-2644ce4d3afe",
+              "properties": {
+                "name": "type",
+                "documentation": "A coded type for the identifier that can be used to determine which identifier to use for a specific purpose.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirCodeableConcept"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_16070a82-3bf9-4dea-9eed-5b0c4ca45895",
+              "properties": {
+                "name": "system",
+                "documentation": "Establishes the namespace for the value - that is, a URL that describes a set values that are unique.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_c2d1e736-0c42-4e83-9bd7-e7cae4b19e22",
+              "properties": {
+                "name": "value",
+                "documentation": "The portion of the identifier typically relevant to the user and which is unique within the context of the system.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_a5ff9369-b2c1-4647-b270-886c1f1e6a00",
+              "properties": {
+                "name": "period",
+                "documentation": "Time period during which identifier is/was valid for use.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirPeriod"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_1bbf8f9a-5144-4b46-bc7a-78a20f9bc43e",
+              "properties": {
+                "name": "assigner",
+                "documentation": "Organization that issued/manages the identifier.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirReference"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirCodeableConcept",
+        "properties": {
+          "name": "fhirCodeableConcept",
+          "documentation": "A concept that may be defined by a formal reference to a terminology or ontology or may be provided by text.",
+          "extensionElements": [
+            {
+              "id": "_f5d2dc8e-e2b0-4aa9-b044-bd8785c63804",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirCodeableConcept",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirCodeableConcept",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_6959c26a-e2d8-4ddc-a327-86c13764ec62",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_96e067a0-b44b-4ff0-b72d-6737ff963b9b",
+              "properties": {
+                "name": "coding",
+                "documentation": "A reference to a code defined by a terminology system.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "fhirCoding"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_b1c46c19-397a-4f15-847a-72e96ab6ac17",
+              "properties": {
+                "name": "text",
+                "documentation": "A human language representation of the concept as seen/selected/uttered by the user who entered the data and/or which represents the intended meaning of the user.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirReference",
+        "properties": {
+          "name": "fhirReference",
+          "documentation": "A reference from one resource to another.",
+          "extensionElements": [
+            {
+              "id": "_7a966f1d-6223-4698-a86a-8adb769f4de4",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirReference",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirReference",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_a916a827-c157-42e2-a094-fd198b6d636c",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_2848b0b2-bdc9-45d6-adf3-bfc0d721f3a4",
+              "properties": {
+                "name": "reference",
+                "documentation": "A reference to a location at which the other resource is found. The reference may be a relative reference, in which case it is relative to the service base URL, or an absolute URL that resolves to the location where the resource is found. The reference may be version specific or not. If the reference is not to a FHIR RESTful server, then it should be assumed to be version specific. Internal fragment references (start with '#') refer to contained resources.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_e4fb8a46-101f-400f-b695-077d84688713",
+              "properties": {
+                "name": "type",
+                "documentation": "The expected type of the target of the reference. If both Reference.type and Reference.reference are populated and Reference.reference is a FHIR URL, both SHALL be consistent.\n\nThe type is the Canonical URL of Resource Definition that is the type this reference refers to. References are URLs that are relative to http://hl7.org/fhir/StructureDefinition/ e.g. \"Patient\" is a reference to http://hl7.org/fhir/StructureDefinition/Patient. Absolute URLs are only allowed for logical models (and can only be used in references in logical models, not resources).",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_d778f882-b3eb-4eda-a3df-784ded3720e3",
+              "properties": {
+                "name": "identifier",
+                "documentation": "An identifier for the target resource. This is used when there is no way to reference the other resource directly, either because the entity it represents is not available through a FHIR server, or because there is no way for the author of the resource to convert a known identifier to an actual location. There is no requirement that a Reference.identifier point to something that is actually exposed as a FHIR instance, but it SHALL point to a business concept that would be expected to be exposed as a FHIR instance, and that instance would need to be of a FHIR resource type allowed by the reference.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirIdentifier"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_45e50de8-2081-42d4-a65f-09bdf11a341f",
+              "properties": {
+                "name": "display",
+                "documentation": "Plain text narrative that identifies the resource in addition to the resource reference.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirPeriod",
+        "properties": {
+          "name": "fhirPeriod",
+          "documentation": "A time period defined by a start and end date and optionally time.",
+          "extensionElements": [
+            {
+              "id": "_20dea1fc-31f0-4283-b545-fbf8489eb394",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirPeriod",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirPeriod",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_de13f15a-be01-469f-8116-8934e10b0d7b",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_5ee66d76-36cd-464e-9f4d-20c8eadd67fb",
+              "properties": {
+                "name": "start",
+                "documentation": "The start of the period. The boundary is inclusive.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:dateTime"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_9c072186-e2c1-4475-bbde-77f7b7d08d7e",
+              "properties": {
+                "name": "end",
+                "documentation": "The end of the period. If the end of the period is missing, it means no end was known or planned at the time the instance was created. The start may be in the past, and the end date in the future, which means that period is expected/planned to end at that time.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:dateTime"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirAge",
+        "properties": {
+          "name": "fhirAge",
+          "documentation": "A duration of time during which an organism (or a process) has existed.",
+          "extensionElements": [
+            {
+              "id": "_6f74049b-762c-4581-a160-b90bade82c3f",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirAge",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirAge",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_92286a70-2ec6-4efa-a758-5a37c5c7971e",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_fb29162f-209f-4384-ba60-93d0647c8647",
+              "properties": {
+                "name": "value",
+                "documentation": "The value of the measured amount. The value includes an implicit precision in the presentation of the value.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:number"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_db9f3c21-c86b-45c3-8c98-deb4dace3ac9",
+              "properties": {
+                "name": "comparator",
+                "documentation": "How the value should be understood and represented - whether the actual value is greater or less than the stated value due to measurement issues; e.g. if the comparator is \"<\" , then the real value is < stated value.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                },
+                "allowedValues": {
+                  "text": {
+                    "content": "\"<\",\"<=\",\">=\",\">\""
+                  },
+                  "extensionElements": [
+                    {
+                      "id": "_dde6fc9c-ebe1-4c17-abdb-d4d261355a41",
+                      "semanticType": "constraintDetails",
+                      "namespace": "http://www.trisotech.com/2015/triso/modeling",
+                      "value": {
+                        "content": "\"<\",\"<=\",\">=\",\">\""
+                      },
+                      "display": {
+                        "content": "\"<\", \"<=\", \">=\", \">\""
+                      },
+                      "constraintsType": "enumeration",
+                      "choices": [
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"<\""
+                          },
+                          "display": {
+                            "content": "\"<\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"<=\""
+                          },
+                          "display": {
+                            "content": "\"<=\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\">=\""
+                          },
+                          "display": {
+                            "content": "\">=\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\">\""
+                          },
+                          "display": {
+                            "content": "\">\""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_f1671588-bdb6-43ca-86fe-ac2cd210122d",
+              "properties": {
+                "name": "unit",
+                "documentation": "A human-readable form of the unit.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_505c5c4e-30cb-4554-9057-a1790639bcb2",
+              "properties": {
+                "name": "system",
+                "documentation": "The identification of the system that provides the coded form of the unit.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_021ba4cb-2865-4430-a1ba-593580f88ac2",
+              "properties": {
+                "name": "code",
+                "documentation": "A computer processable form of the unit in some unit representation system.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirRange",
+        "properties": {
+          "name": "fhirRange",
+          "documentation": "A set of ordered Quantities defined by a low and high limit.",
+          "extensionElements": [
+            {
+              "id": "_81a0d1cf-cd5c-4b01-a431-96536e2eadb5",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirRange",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirRange",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_a24e8c34-8e00-4b29-a4fa-5b48d746631f",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_6550f35e-cead-4199-b114-8ca81f511a7f",
+              "properties": {
+                "name": "low",
+                "documentation": "The low limit. The boundary is inclusive.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirQuantity"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_b9cdd9c6-ba0f-4f46-9357-8ec6bce972fa",
+              "properties": {
+                "name": "high",
+                "documentation": "The high limit. The boundary is inclusive.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirQuantity"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirQuantity",
+        "properties": {
+          "name": "fhirQuantity",
+          "documentation": "A measured amount (or an amount that can potentially be measured). Note that measured amounts include amounts that are not precisely quantified, including amounts involving arbitrary units and floating currencies.",
+          "extensionElements": [
+            {
+              "id": "_7657826d-9a5b-4e9e-9562-cb39910b5a9c",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirQuantity",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirQuantity",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_a0ac183f-2175-426c-b148-3a28e1a84d5a",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_01044725-c5fe-4122-9ec5-6f2ad9931792",
+              "properties": {
+                "name": "value",
+                "documentation": "The value of the measured amount. The value includes an implicit precision in the presentation of the value.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:number"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_3cf2c1d7-f212-41e3-a3f2-cb02d2003bd8",
+              "properties": {
+                "name": "comparator",
+                "documentation": "How the value should be understood and represented - whether the actual value is greater or less than the stated value due to measurement issues; e.g. if the comparator is \"<\" , then the real value is < stated value.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                },
+                "allowedValues": {
+                  "text": {
+                    "content": "\"<\",\"<=\",\">=\",\">\""
+                  },
+                  "extensionElements": [
+                    {
+                      "id": "_d57d0cd7-1cc5-4a61-a2af-91a0a78c0ee5",
+                      "semanticType": "constraintDetails",
+                      "namespace": "http://www.trisotech.com/2015/triso/modeling",
+                      "value": {
+                        "content": "\"<\",\"<=\",\">=\",\">\""
+                      },
+                      "display": {
+                        "content": "\"<\", \"<=\", \">=\", \">\""
+                      },
+                      "constraintsType": "enumeration",
+                      "choices": [
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"<\""
+                          },
+                          "display": {
+                            "content": "\"<\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\"<=\""
+                          },
+                          "display": {
+                            "content": "\"<=\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\">=\""
+                          },
+                          "display": {
+                            "content": "\">=\""
+                          }
+                        },
+                        {
+                          "semanticType": "choice",
+                          "value": {
+                            "content": "\">\""
+                          },
+                          "display": {
+                            "content": "\">\""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_30c3230e-36e0-4ba2-96e8-ebdcaa90fc4c",
+              "properties": {
+                "name": "unit",
+                "documentation": "A human-readable form of the unit.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_cd78fb1a-d3cf-437a-ad0d-2334845adb78",
+              "properties": {
+                "name": "system",
+                "documentation": "The identification of the system that provides the coded form of the unit.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_bf5841a3-ffae-4d8f-8b27-c445e016374f",
+              "properties": {
+                "name": "code",
+                "documentation": "A computer processable form of the unit in some unit representation system.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirAnnotation",
+        "properties": {
+          "name": "fhirAnnotation",
+          "documentation": "A  text note which also  contains information about who made the statement and when.",
+          "extensionElements": [
+            {
+              "id": "_70e84a26-7fb2-4745-a2f8-d2ed145c2f4c",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirAnnotation",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirAnnotation",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_33e5bfde-ed33-44f8-822c-1de4da2bacdc",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_bcba45b3-f990-4f4f-bc3c-46f2aefa3ecd",
+              "properties": {
+                "name": "authorReference",
+                "documentation": "The individual responsible for making the annotation.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirReference"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_b565b988-5449-403b-96aa-9cbdf7bd848d",
+              "properties": {
+                "name": "authorString",
+                "documentation": "The individual responsible for making the annotation.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_0a77354c-a400-490f-9992-2fb5f2922f32",
+              "properties": {
+                "name": "time",
+                "documentation": "Indicates when this particular annotation was made.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:dateTime"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_4494b88d-3ad9-49c1-9f50-cd6c65f410c6",
+              "properties": {
+                "name": "text",
+                "documentation": "The text of the annotation in markdown format.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resourceId": "fhirFamilyMemberHistory_Condition",
+        "properties": {
+          "name": "fhirFamilyMemberHistory_Condition",
+          "documentation": "Significant health conditions for a person related to the patient relevant in the context of care for the patient.",
+          "extensionElements": [
+            {
+              "id": "_0cabab2d-1762-41be-a270-f9ec6de8fb08",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "FHIR R4",
+              "itemName": "fhirFamilyMemberHistory_Condition",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+              "modelURI": "http://hl7.org/fhir",
+              "uri": "http://hl7.org/fhir#fhirFamilyMemberHistory_Condition",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#ItemDefinition",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#framework"
+            }
+          ],
+          "isCollection": false
+        },
+        "stencil": {
+          "id": "itemDefinition"
+        },
+        "itemModelElements": {
+          "itemComponent": [
+            {
+              "resourceId": "_735c577c-c5f6-47e9-bd14-63e93fa1ed55",
+              "properties": {
+                "name": "id",
+                "documentation": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_943cf26f-fb77-41d3-a33b-9836a9cd7265",
+              "properties": {
+                "name": "code",
+                "documentation": "The actual condition specified. Could be a coded condition (like MI or Diabetes) or a less specific string like 'cancer' depending on how much is known about the condition and the capabilities of the creating system.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirCodeableConcept"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_63801a76-3849-498b-9586-27e528bd330f",
+              "properties": {
+                "name": "outcome",
+                "documentation": "Indicates what happened following the condition.  If the condition resulted in death, deceased date is captured on the relation.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirCodeableConcept"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_8472e8f8-9f3f-484b-8b15-8c59076db6ef",
+              "properties": {
+                "name": "contributedToDeath",
+                "documentation": "This condition contributed to the cause of death of the related person. If contributedToDeath is not populated, then it is unknown.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:boolean"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_c88dbafe-7e10-4213-89d8-481667593892",
+              "properties": {
+                "name": "onsetAge",
+                "documentation": "Either the age of onset, range of approximate age or descriptive string can be recorded.  For conditions with multiple occurrences, this describes the first known occurrence.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirAge"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_a87419ad-274a-442f-b846-ee4be5d5f0db",
+              "properties": {
+                "name": "onsetRange",
+                "documentation": "Either the age of onset, range of approximate age or descriptive string can be recorded.  For conditions with multiple occurrences, this describes the first known occurrence.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirRange"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_63a4feb9-3b14-4acf-a50e-4227d3d0a32d",
+              "properties": {
+                "name": "onsetPeriod",
+                "documentation": "Either the age of onset, range of approximate age or descriptive string can be recorded.  For conditions with multiple occurrences, this describes the first known occurrence.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "fhirPeriod"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_cc0715f9-0182-40f8-9d5a-e9ef8f20e98e",
+              "properties": {
+                "name": "onsetString",
+                "documentation": "Either the age of onset, range of approximate age or descriptive string can be recorded.  For conditions with multiple occurrences, this describes the first known occurrence.",
+                "extensionElements": [],
+                "isCollection": false,
+                "typeRef": {
+                  "content": "feel:string"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            },
+            {
+              "resourceId": "_5af26b85-b13f-4192-91a0-f55e3ca9cfd8",
+              "properties": {
+                "name": "note",
+                "documentation": "An area where general notes can be placed about this specific condition.",
+                "extensionElements": [],
+                "isCollection": true,
+                "typeRef": {
+                  "content": "fhirAnnotation"
+                }
+              },
+              "stencil": {
+                "id": "itemComponent"
+              },
+              "itemModelElements": {
+                "itemComponent": []
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "nodeModelElements": [
+    {
+      "resourceId": "_0f579e0a-11b7-4f65-b7bf-afa4942e68a4",
+      "properties": {
+        "name": "Page 1",
+        "extensionElements": []
+      },
+      "stencil": {
+        "id": "businessEntityDiagram"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_e3f8ddfa-4394-41b3-aae6-585e5caa891d",
+      "properties": {
+        "name": "Celiac Disease",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_6e563050-795a-4207-8f2f-850edccb261d",
+            "value": "396331005",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Celiac disease (disorder)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_5bd8fe5d-3aff-4bde-b569-f6b9e12a7e3b",
+      "properties": {
+        "name": "Has Celiac Disease",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "id": "_fb1eb4ef-87ac-4619-a5df-c8eb18ab16d8",
+            "uri": "https://ontology.mayo.edu/taxonomies/clinicalsituations#84ec1519-cadc-3390-b7e8-2004edd0255c",
+            "itemName": "Patient Having Condition Now",
+            "modelName": "Clinical Situations Patterns",
+            "modelURI": "http://ontology.mayo.edu/ontologies/clinicalsituationontology/",
+            "graphURI": "http://trisotech.com/graph/1.0/graph#framework",
+            "graphType": "http://www.trisotech.com/graph/1.0/element#Entity",
+            "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+            "type": "graph",
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "semanticLink"
+          },
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "Situation"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_6218db78-d4fa-4716-8072-cf02b9d695a9",
+      "properties": {
+        "name": "FMH of Celiac Disease",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "id": "_51f9f980-27d9-4d1b-9c76-10370ff2ad77",
+            "uri": "https://ontology.mayo.edu/taxonomies/clinicalsituations#00548a10-47c1-3066-853b-3050647544bc",
+            "itemName": "Biological Family Member Having Condition Ever",
+            "modelName": "Clinical Situations Patterns",
+            "modelURI": "http://ontology.mayo.edu/ontologies/clinicalsituationontology/",
+            "graphURI": "http://trisotech.com/graph/1.0/graph#framework",
+            "graphType": "http://www.trisotech.com/graph/1.0/element#Entity",
+            "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+            "type": "graph",
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "semanticLink"
+          },
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "Situation"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "fhirFamilyMemberHistory",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_de567e27-daec-480d-899b-a073ba123243",
+      "properties": {
+        "name": "Has Suspected Celiac Disease",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "id": "_10ba6cdb-3072-4961-a235-384a42f009da",
+            "uri": "https://ontology.mayo.edu/taxonomies/clinicalsituations#84ec1519-cadc-3390-b7e8-2004edd0255c",
+            "itemName": "Patient Having Condition Now",
+            "modelName": "Clinical Situations Patterns",
+            "modelURI": "http://ontology.mayo.edu/ontologies/clinicalsituationontology/",
+            "graphURI": "http://trisotech.com/graph/1.0/graph#framework",
+            "graphType": "http://www.trisotech.com/graph/1.0/element#Entity",
+            "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+            "type": "graph",
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "semanticLink"
+          },
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "Situation"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_63ae2905-96c7-4204-9e4f-23378ed2b037",
+      "properties": {
+        "name": "finding",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_bcdd5c90-061d-49cb-9ed6-4f2d79458228",
+            "value": "246090004",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Associated finding (attribute)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_cb43a5c5-3010-4e65-924d-47955010c72a",
+      "properties": {
+        "name": "Has Confirmed Dx of Celiac Disease",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "id": "_005a05a3-ca97-4cbe-9bb6-b5122f6b621d",
+            "uri": "https://ontology.mayo.edu/taxonomies/clinicalsituations#84ec1519-cadc-3390-b7e8-2004edd0255c",
+            "itemName": "Patient Having Condition Now",
+            "modelName": "Clinical Situations Patterns",
+            "modelURI": "http://ontology.mayo.edu/ontologies/clinicalsituationontology/",
+            "graphURI": "http://trisotech.com/graph/1.0/graph#framework",
+            "graphType": "http://www.trisotech.com/graph/1.0/element#Entity",
+            "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+            "type": "graph",
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "semanticLink"
+          },
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "Situation"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_0bce4d36-1edd-4412-b0c6-4c37100b7bb8",
+      "properties": {
+        "name": "Blood Relative",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_47099bf9-f79f-499b-8ea4-66574b370e9c",
+            "value": "125679009",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Blood relative (person)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_5118bded-9bca-4218-a081-0de07ae6e040",
+      "properties": {
+        "name": "subject",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_08ab55df-1f7c-4944-a7f0-66bb9c89800c",
+            "value": "408732007",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Subject relationship context (attribute)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_ba579ba8-867b-405b-b32a-7eaaaa4687fd",
+      "properties": {
+        "name": "Confirmed Present",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_abb672c7-9a67-4d98-b410-0b30f78606f8",
+            "value": "410605003",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Confirmed present (qualifier value)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_578b2157-6150-40e2-977a-63424663ddfe",
+      "properties": {
+        "name": "Suspected",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_a6e99c54-5980-474c-a02e-b610b1f5adef",
+      "properties": {
+        "name": "status",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_b4edd1cf-31c5-4f7e-8da7-d2f4b90bc7d2",
+            "value": "408729009",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Finding context (attribute)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_b7cfbd79-6d4b-474d-8028-69f6dfd5439a",
+      "properties": {
+        "name": "Has Celiac Disease with Ulceration",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "Situation"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_eb48541a-668a-4f7b-865c-837570dfa388",
+      "properties": {
+        "name": "Intestinal Ulceration",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_3db67bfd-7260-4696-b431-daff82650c00",
+            "value": "85942002",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Ulceration of intestine (disorder)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_2b41f1ce-47cf-4e81-9756-5a6e98e059a2",
+      "properties": {
+        "name": "Celiac Disease with Ulceration",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_caca1f40-a608-4da0-8e14-a68dfba1f9d9",
+      "properties": {
+        "name": "Monitored for Celiac Disease",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "Situation"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          },
+          {
+            "id": "_963d5ae0-235f-4c8a-9815-b440ccbad3da",
+            "uri": "https://ontology.mayo.edu/taxonomies/clinicalsituations#65538031-5ece-414e-be1e-58153f951f51",
+            "itemName": "Patient Intervention Scheduled",
+            "modelName": "Clinical Situations Patterns",
+            "modelURI": "http://ontology.mayo.edu/ontologies/clinicalsituationontology/",
+            "graphURI": "http://trisotech.com/graph/1.0/graph#framework",
+            "graphType": "http://www.trisotech.com/graph/1.0/element#Entity",
+            "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+            "type": "graph",
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "semanticLink"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_73138185-22b2-42b1-9960-33574b10099b",
+      "properties": {
+        "name": "Celiac Disease Monitoring Regime",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_34751f5c-c3fa-4a15-9e34-cdee3b060303",
+      "properties": {
+        "name": "intervention",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_99025369-0a5e-4a8d-97be-c5010cd62d71",
+            "value": "363589002",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Associated procedure (attribute)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_81234caf-f62e-4f0e-b87b-c43025887e5c",
+      "properties": {
+        "name": "focus",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_b4548364-ff8c-49e8-8b94-add69eab3014",
+            "value": "363702006",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Has focus (attribute)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_e019dfa4-065e-4733-8eef-7df3966a3974",
+      "properties": {
+        "name": "Regime",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_901d32a7-a7ce-4aac-a4cc-878bb0942e6a",
+            "value": "243120004",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Regimes and therapies (regime/therapy)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    }
+  ],
+  "edgeModelElements": [
+    {
+      "resourceId": "_130b38d0-f7a2-4a2f-b719-160e175359b4",
+      "properties": {
+        "name": "finding",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:name-html": "<span style=\"color: #e5185c;\"><u>finding</u></span>",
+        "triso:linkedTermsId": [
+          "_63ae2905-96c7-4204-9e4f-23378ed2b037"
+        ]
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_5bd8fe5d-3aff-4bde-b569-f6b9e12a7e3b",
+      "targetRef": "_e3f8ddfa-4394-41b3-aae6-585e5caa891d"
+    },
+    {
+      "resourceId": "_4a7e46e5-ac4a-4d0b-8435-b8f7f4dc7af4",
+      "properties": {
+        "name": "finding",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:linkedTermsId": [
+          "_63ae2905-96c7-4204-9e4f-23378ed2b037"
+        ],
+        "triso:name-html": "<span style=\"color: #e5185c;\"><u>finding</u></span>"
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_6218db78-d4fa-4716-8072-cf02b9d695a9",
+      "targetRef": "_e3f8ddfa-4394-41b3-aae6-585e5caa891d"
+    },
+    {
+      "resourceId": "_2babc4d8-e040-4f52-8db2-d21205e51717",
+      "properties": {
+        "name": "subject",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:linkedTermsId": [
+          "_5118bded-9bca-4218-a081-0de07ae6e040"
+        ],
+        "triso:name-html": "<span id=\"_3694e141-1e0a-4868-88cf-2f0f024dbd35\" class=\"linked-term\" data-termid=\"_5118bded-9bca-4218-a081-0de07ae6e040\">subject</span>"
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_6218db78-d4fa-4716-8072-cf02b9d695a9",
+      "targetRef": "_0bce4d36-1edd-4412-b0c6-4c37100b7bb8"
+    },
+    {
+      "resourceId": "_60b6067e-b353-4e11-ad44-cdf938b84f13",
+      "properties": {
+        "name": "status",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:linkedTermsId": [
+          "_a6e99c54-5980-474c-a02e-b610b1f5adef"
+        ],
+        "triso:name-html": "<span id=\"_4be11ffa-9634-44e6-9f55-6aa6245ac12f\" class=\"linked-term\" data-termid=\"_a6e99c54-5980-474c-a02e-b610b1f5adef\">status</span>"
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_de567e27-daec-480d-899b-a073ba123243",
+      "targetRef": "_578b2157-6150-40e2-977a-63424663ddfe"
+    },
+    {
+      "resourceId": "_8c062490-466c-4f21-a8ef-9fecb106d117",
+      "properties": {
+        "name": "status",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:linkedTermsId": [
+          "_a6e99c54-5980-474c-a02e-b610b1f5adef"
+        ],
+        "triso:name-html": "<span id=\"_89bcd521-1cb0-4208-8525-8189fb8e3832\" class=\"linked-term\" data-termid=\"_a6e99c54-5980-474c-a02e-b610b1f5adef\">status</span>"
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_cb43a5c5-3010-4e65-924d-47955010c72a",
+      "targetRef": "_ba579ba8-867b-405b-b32a-7eaaaa4687fd"
+    },
+    {
+      "resourceId": "_66c7b7a9-4084-4bae-9a1b-513859ec341e",
+      "properties": {
+        "name": "",
+        "documentation": "",
+        "extensionElements": []
+      },
+      "stencil": {
+        "id": "isA"
+      },
+      "sourceRef": "_2b41f1ce-47cf-4e81-9756-5a6e98e059a2",
+      "targetRef": "_eb48541a-668a-4f7b-865c-837570dfa388"
+    },
+    {
+      "resourceId": "_f51274a2-9309-4e28-974f-27cfaa9957f1",
+      "properties": {
+        "name": "",
+        "documentation": "",
+        "extensionElements": []
+      },
+      "stencil": {
+        "id": "isA"
+      },
+      "sourceRef": "_2b41f1ce-47cf-4e81-9756-5a6e98e059a2",
+      "targetRef": "_e3f8ddfa-4394-41b3-aae6-585e5caa891d"
+    },
+    {
+      "resourceId": "_c8435c50-4287-4285-8e51-5bc20cf4376e",
+      "properties": {
+        "name": "intervention",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:name-html": "<span id=\"_499647e9-7483-497d-a08a-aaf16f968632\" class=\"linked-term\" data-termid=\"_34751f5c-c3fa-4a15-9e34-cdee3b060303\">intervention</span>",
+        "triso:linkedTermsId": [
+          "_34751f5c-c3fa-4a15-9e34-cdee3b060303"
+        ]
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_caca1f40-a608-4da0-8e14-a68dfba1f9d9",
+      "targetRef": "_73138185-22b2-42b1-9960-33574b10099b"
+    },
+    {
+      "resourceId": "_9c97ca0d-8903-4c54-9344-f2b8dd8d5ce1",
+      "properties": {
+        "name": "focus",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:name-html": "<span id=\"_1e5ed313-6ad1-4b41-ac55-c78e536c1348\" class=\"linked-term\" data-termid=\"_81234caf-f62e-4f0e-b87b-c43025887e5c\">focus</span>",
+        "triso:linkedTermsId": [
+          "_81234caf-f62e-4f0e-b87b-c43025887e5c"
+        ]
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_73138185-22b2-42b1-9960-33574b10099b",
+      "targetRef": "_e3f8ddfa-4394-41b3-aae6-585e5caa891d"
+    },
+    {
+      "resourceId": "_fbdac1fc-d99b-442f-8279-9ef50010f9da",
+      "properties": {
+        "name": "",
+        "documentation": "",
+        "extensionElements": []
+      },
+      "stencil": {
+        "id": "isA"
+      },
+      "sourceRef": "_73138185-22b2-42b1-9960-33574b10099b",
+      "targetRef": "_e019dfa4-065e-4733-8eef-7df3966a3974"
+    },
+    {
+      "resourceId": "_c788017d-a531-472b-bad9-58234447ff6f",
+      "properties": {
+        "name": "finding",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:linkedTermsId": [
+          "_63ae2905-96c7-4204-9e4f-23378ed2b037"
+        ],
+        "triso:name-html": "<span id=\"_5a0d6335-509b-4ff8-94bf-08028d02208a\" class=\"linked-term\" data-termid=\"_63ae2905-96c7-4204-9e4f-23378ed2b037\">finding</span>"
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_de567e27-daec-480d-899b-a073ba123243",
+      "targetRef": "_e3f8ddfa-4394-41b3-aae6-585e5caa891d"
+    },
+    {
+      "resourceId": "_41197574-73b7-46a1-960d-e45d7683a3c5",
+      "properties": {
+        "name": "finding",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:linkedTermsId": [
+          "_63ae2905-96c7-4204-9e4f-23378ed2b037"
+        ],
+        "triso:name-html": "<span id=\"_32630532-25a7-4615-8147-75e519cbfdaa\" class=\"linked-term\" data-termid=\"_63ae2905-96c7-4204-9e4f-23378ed2b037\">finding</span>"
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_cb43a5c5-3010-4e65-924d-47955010c72a",
+      "targetRef": "_e3f8ddfa-4394-41b3-aae6-585e5caa891d"
+    },
+    {
+      "resourceId": "_eaea65f6-e8f6-4de2-9e10-5fa6005be04d",
+      "properties": {
+        "name": "finding",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:linkedTermsId": [
+          "_63ae2905-96c7-4204-9e4f-23378ed2b037"
+        ],
+        "triso:name-html": "<span id=\"_c2a0a3b6-2059-4eb7-a9ce-e5dd8fb74ca9\" class=\"linked-term\" data-termid=\"_63ae2905-96c7-4204-9e4f-23378ed2b037\">finding</span>"
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_b7cfbd79-6d4b-474d-8028-69f6dfd5439a",
+      "targetRef": "_2b41f1ce-47cf-4e81-9756-5a6e98e059a2"
+    }
+  ],
+  "pages": [
+    {
+      "resourceId": "_4b1dbad6-5ebd-4a82-ad97-fa56e5fb2ccd",
+      "properties": {
+        "fontcolor": ""
+      },
+      "stencil": {
+        "id": "businessEntityDiagram"
+      },
+      "outgoingRefs": [],
+      "modelElementRef": "_0f579e0a-11b7-4f65-b7bf-afa4942e68a4",
+      "bounds": {
+        "upperLeft": {
+          "x": 0,
+          "y": 0
+        },
+        "lowerRight": {
+          "x": 1485,
+          "y": 1050
+        }
+      },
+      "extendedProperties": {
+        "collaborationId": "_0a920502-dd6b-46a3-87ad-3d68fd6ad09f",
+        "contentId": "_5d057e21-b971-4084-a8d3-2f3ce20e11d2",
+        "scrollTop": 23,
+        "scrollLeft": 3
+      },
+      "childShapes": [
+        {
+          "resourceId": "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_e3f8ddfa-4394-41b3-aae6-585e5caa891d",
+          "bounds": {
+            "upperLeft": {
+              "x": 589,
+              "y": 341
+            },
+            "lowerRight": {
+              "x": 685,
+              "y": 401
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_f33f0d36-0718-4dd7-ae31-981e42dafd7f",
+            "_7ac2cb9e-3a4f-4799-9a2a-d3b47f61dad4",
+            "_f2db6ae6-70ec-4125-8897-3ed9100b385d",
+            "_9c88777c-fc83-444c-a64b-2e6efb87e36d",
+            "_e2cd48a8-5d0a-42c6-acd5-7f44ef3a164e",
+            "_765d16c7-5fe7-459a-a542-c0ed6f2026cf"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 11,
+              "y": 22,
+              "width": 74,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_87f750cc-3aa4-418e-9f74-06e536a794b8",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_f33f0d36-0718-4dd7-ae31-981e42dafd7f"
+          ],
+          "modelElementRef": "_5bd8fe5d-3aff-4bde-b569-f6b9e12a7e3b",
+          "bounds": {
+            "upperLeft": {
+              "x": 659,
+              "y": 495
+            },
+            "lowerRight": {
+              "x": 755,
+              "y": 555
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_dfdaf061-bd0b-4da8-a348-3a0e60488d08",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_7ac2cb9e-3a4f-4799-9a2a-d3b47f61dad4",
+            "_9ca52290-62f5-476b-9584-ed10c938ca9f"
+          ],
+          "modelElementRef": "_6218db78-d4fa-4716-8072-cf02b9d695a9",
+          "bounds": {
+            "upperLeft": {
+              "x": 316,
+              "y": 341
+            },
+            "lowerRight": {
+              "x": 412,
+              "y": 401
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_4e6763ed-1a4a-4edc-8865-b7172c0e9fa9",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_5b08961b-89e4-4f99-b7cb-dc3a71d2edbe",
+            "_e2cd48a8-5d0a-42c6-acd5-7f44ef3a164e"
+          ],
+          "modelElementRef": "_de567e27-daec-480d-899b-a073ba123243",
+          "bounds": {
+            "upperLeft": {
+              "x": 883,
+              "y": 481
+            },
+            "lowerRight": {
+              "x": 979,
+              "y": 541
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_4255ad6a-5a5b-4f1d-b9d6-0105982f5d3a",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_bb3efa9c-e072-48f6-9486-c988873b4075",
+            "_765d16c7-5fe7-459a-a542-c0ed6f2026cf"
+          ],
+          "modelElementRef": "_cb43a5c5-3010-4e65-924d-47955010c72a",
+          "bounds": {
+            "upperLeft": {
+              "x": 491,
+              "y": 593
+            },
+            "lowerRight": {
+              "x": 587,
+              "y": 653
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_84a28cef-2c49-4c38-84ed-a0ef262edc0f",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_0bce4d36-1edd-4412-b0c6-4c37100b7bb8",
+          "bounds": {
+            "upperLeft": {
+              "x": 232,
+              "y": 201
+            },
+            "lowerRight": {
+              "x": 328,
+              "y": 261
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_9ca52290-62f5-476b-9584-ed10c938ca9f"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 12.5,
+              "y": 22,
+              "width": 71,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_60be11dc-00ef-4a15-8863-e8ccd1555dd7",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_ba579ba8-867b-405b-b32a-7eaaaa4687fd",
+          "bounds": {
+            "upperLeft": {
+              "x": 323,
+              "y": 593
+            },
+            "lowerRight": {
+              "x": 419,
+              "y": 653
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_bb3efa9c-e072-48f6-9486-c988873b4075"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_576f85f5-73d7-4d22-a7eb-93bb111d9b4b",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_578b2157-6150-40e2-977a-63424663ddfe",
+          "bounds": {
+            "upperLeft": {
+              "x": 883,
+              "y": 621
+            },
+            "lowerRight": {
+              "x": 979,
+              "y": 681
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_5b08961b-89e4-4f99-b7cb-dc3a71d2edbe"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 22,
+              "y": 22,
+              "width": 52,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_6474311e-d303-4740-bd5b-2729e0528f64",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_c4128d4a-88ea-447b-ac9a-0496cd578d8d"
+          ],
+          "modelElementRef": "_b7cfbd79-6d4b-474d-8028-69f6dfd5439a",
+          "bounds": {
+            "upperLeft": {
+              "x": 848,
+              "y": 96
+            },
+            "lowerRight": {
+              "x": 944,
+              "y": 156
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 6.5,
+              "width": 90,
+              "height": 47
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 47
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_073dd79f-fe20-4e86-b1a6-c0571ab272e0",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_eb48541a-668a-4f7b-865c-837570dfa388",
+          "bounds": {
+            "upperLeft": {
+              "x": 512,
+              "y": 68
+            },
+            "lowerRight": {
+              "x": 608,
+              "y": 128
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_a35e50dc-ee03-4307-80dd-f49f0a3c1af0"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_5eb4a051-a32e-4065-bf08-92d83de72d7c",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_a35e50dc-ee03-4307-80dd-f49f0a3c1af0",
+            "_f2db6ae6-70ec-4125-8897-3ed9100b385d"
+          ],
+          "modelElementRef": "_2b41f1ce-47cf-4e81-9756-5a6e98e059a2",
+          "bounds": {
+            "upperLeft": {
+              "x": 638,
+              "y": 159
+            },
+            "lowerRight": {
+              "x": 734,
+              "y": 219
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_c4128d4a-88ea-447b-ac9a-0496cd578d8d"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_2e306541-8d63-47af-909f-c2e95d798983",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_0de45b11-b567-4ce1-8a32-fc9be1a019f3"
+          ],
+          "modelElementRef": "_caca1f40-a608-4da0-8e14-a68dfba1f9d9",
+          "bounds": {
+            "upperLeft": {
+              "x": 1170,
+              "y": 334
+            },
+            "lowerRight": {
+              "x": 1266,
+              "y": 394
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_e68a176d-6065-4995-a4d4-ba0483e67a3e",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_9c88777c-fc83-444c-a64b-2e6efb87e36d",
+            "_9b32c212-06f1-4f58-9997-ccdf7c3b206e"
+          ],
+          "modelElementRef": "_73138185-22b2-42b1-9960-33574b10099b",
+          "bounds": {
+            "upperLeft": {
+              "x": 932,
+              "y": 362
+            },
+            "lowerRight": {
+              "x": 1028,
+              "y": 422
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_0de45b11-b567-4ce1-8a32-fc9be1a019f3"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 6.5,
+              "width": 90,
+              "height": 47
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 47
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_32fdad4d-56ad-4eb7-8134-a92c5e551649",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_e019dfa4-065e-4733-8eef-7df3966a3974",
+          "bounds": {
+            "upperLeft": {
+              "x": 932,
+              "y": 236
+            },
+            "lowerRight": {
+              "x": 1028,
+              "y": 296
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_9b32c212-06f1-4f58-9997-ccdf7c3b206e"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 29,
+              "y": 22,
+              "width": 38,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_f33f0d36-0718-4dd7-ae31-981e42dafd7f",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+          ],
+          "modelElementRef": "_130b38d0-f7a2-4a2f-b719-160e175359b4",
+          "bounds": {
+            "upperLeft": {
+              "x": 656.7249556784517,
+              "y": 401.3020073598379
+            },
+            "lowerRight": {
+              "x": 687.2750443215483,
+              "y": 494.6979926401621
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_87f750cc-3aa4-418e-9f74-06e536a794b8"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "bottom",
+            "rotation": 0,
+            "bounds": {
+              "x": 675.2750244140625,
+              "y": 466.697998046875,
+              "width": 33,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 675.2750443215483,
+              "y": 482.6979926401621,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 675.2750443215483,
+              "y": 482.6979926401621
+            }
+          },
+          "dockers": [
+            {
+              "x": 48,
+              "y": 60
+            },
+            {
+              "x": 48,
+              "y": 0
+            }
+          ],
+          "sourceRef": "_87f750cc-3aa4-418e-9f74-06e536a794b8",
+          "targetRef": "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+        },
+        {
+          "resourceId": "_7ac2cb9e-3a4f-4799-9a2a-d3b47f61dad4",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+          ],
+          "modelElementRef": "_4a7e46e5-ac4a-4d0b-8435-b8f7f4dc7af4",
+          "bounds": {
+            "upperLeft": {
+              "x": 413,
+              "y": 370
+            },
+            "lowerRight": {
+              "x": 588,
+              "y": 372
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_dfdaf061-bd0b-4da8-a348-3a0e60488d08"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {
+              "x": 425,
+              "y": 376,
+              "width": 33,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 425,
+              "y": 376,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 425,
+              "y": 376
+            }
+          },
+          "dockers": [
+            {
+              "x": 96,
+              "y": 30
+            },
+            {
+              "x": 0,
+              "y": 30
+            }
+          ],
+          "sourceRef": "_dfdaf061-bd0b-4da8-a348-3a0e60488d08",
+          "targetRef": "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+        },
+        {
+          "resourceId": "_9ca52290-62f5-476b-9584-ed10c938ca9f",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_84a28cef-2c49-4c38-84ed-a0ef262edc0f"
+          ],
+          "modelElementRef": "_2babc4d8-e040-4f52-8db2-d21205e51717",
+          "bounds": {
+            "upperLeft": {
+              "x": 280.67904198161744,
+              "y": 261.73409943958643
+            },
+            "lowerRight": {
+              "x": 353.32095801838256,
+              "y": 340.26590056041357
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_dfdaf061-bd0b-4da8-a348-3a0e60488d08"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "bottom",
+            "rotation": 0,
+            "bounds": {
+              "x": 341.3209533691406,
+              "y": 312.2658996582031,
+              "width": 35,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 341.32095801838256,
+              "y": 328.26590056041357,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 341.32095801838256,
+              "y": 328.26590056041357
+            }
+          },
+          "dockers": [
+            {
+              "x": 38,
+              "y": 0
+            },
+            {
+              "x": 48,
+              "y": 60
+            }
+          ],
+          "sourceRef": "_dfdaf061-bd0b-4da8-a348-3a0e60488d08",
+          "targetRef": "_84a28cef-2c49-4c38-84ed-a0ef262edc0f"
+        },
+        {
+          "resourceId": "_5b08961b-89e4-4f99-b7cb-dc3a71d2edbe",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_576f85f5-73d7-4d22-a7eb-93bb111d9b4b"
+          ],
+          "modelElementRef": "_60b6067e-b353-4e11-ad44-cdf938b84f13",
+          "bounds": {
+            "upperLeft": {
+              "x": 930,
+              "y": 542
+            },
+            "lowerRight": {
+              "x": 932,
+              "y": 620
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_4e6763ed-1a4a-4edc-8865-b7172c0e9fa9"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "right",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {
+              "x": 889,
+              "y": 554,
+              "width": 30,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 919,
+              "y": 554,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 919,
+              "y": 554
+            }
+          },
+          "dockers": [
+            {
+              "x": 48,
+              "y": 60
+            },
+            {
+              "x": 48,
+              "y": 0
+            }
+          ],
+          "sourceRef": "_4e6763ed-1a4a-4edc-8865-b7172c0e9fa9",
+          "targetRef": "_576f85f5-73d7-4d22-a7eb-93bb111d9b4b"
+        },
+        {
+          "resourceId": "_bb3efa9c-e072-48f6-9486-c988873b4075",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_60be11dc-00ef-4a15-8863-e8ccd1555dd7"
+          ],
+          "modelElementRef": "_8c062490-466c-4f21-a8ef-9fecb106d117",
+          "bounds": {
+            "upperLeft": {
+              "x": 419.90625,
+              "y": 622
+            },
+            "lowerRight": {
+              "x": 490.09375,
+              "y": 624
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_4255ad6a-5a5b-4f1d-b9d6-0105982f5d3a"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "right",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {
+              "x": 448.09375,
+              "y": 635,
+              "width": 30,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 478.09375,
+              "y": 635,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 478.09375,
+              "y": 635
+            }
+          },
+          "dockers": [
+            {
+              "x": 96,
+              "y": 30
+            },
+            {
+              "x": 0,
+              "y": 30
+            }
+          ],
+          "sourceRef": "_4255ad6a-5a5b-4f1d-b9d6-0105982f5d3a",
+          "targetRef": "_60be11dc-00ef-4a15-8863-e8ccd1555dd7"
+        },
+        {
+          "resourceId": "_a35e50dc-ee03-4307-80dd-f49f0a3c1af0",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "isA"
+          },
+          "outgoingRefs": [
+            "_073dd79f-fe20-4e86-b1a6-c0571ab272e0"
+          ],
+          "modelElementRef": "_66c7b7a9-4084-4bae-9a1b-513859ec341e",
+          "bounds": {
+            "upperLeft": {
+              "x": 560.8369696139736,
+              "y": 128.5472493629827
+            },
+            "lowerRight": {
+              "x": 637.1630303860264,
+              "y": 178.4527506370173
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_5eb4a051-a32e-4065-bf08-92d83de72d7c"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "right",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {},
+            "webbounds": {},
+            "anchorPoint": {
+              "x": 625.1630303860264,
+              "y": 190.4527506370173
+            }
+          },
+          "dockers": [
+            {
+              "x": 0,
+              "y": 20
+            },
+            {
+              "x": 48,
+              "y": 60
+            }
+          ],
+          "sourceRef": "_5eb4a051-a32e-4065-bf08-92d83de72d7c",
+          "targetRef": "_073dd79f-fe20-4e86-b1a6-c0571ab272e0"
+        },
+        {
+          "resourceId": "_f2db6ae6-70ec-4125-8897-3ed9100b385d",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "isA"
+          },
+          "outgoingRefs": [
+            "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+          ],
+          "modelElementRef": "_f51274a2-9309-4e28-974f-27cfaa9957f1",
+          "bounds": {
+            "upperLeft": {
+              "x": 647.2312611446204,
+              "y": 219.97289171185125
+            },
+            "lowerRight": {
+              "x": 675.7687388553796,
+              "y": 340.0271082881487
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_5eb4a051-a32e-4065-bf08-92d83de72d7c"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "right",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {},
+            "webbounds": {},
+            "anchorPoint": {
+              "x": 663.7687388553796,
+              "y": 231.97289171185125
+            }
+          },
+          "dockers": [
+            {
+              "x": 38,
+              "y": 60
+            },
+            {
+              "x": 58,
+              "y": 0
+            }
+          ],
+          "sourceRef": "_5eb4a051-a32e-4065-bf08-92d83de72d7c",
+          "targetRef": "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+        },
+        {
+          "resourceId": "_0de45b11-b567-4ce1-8a32-fc9be1a019f3",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_e68a176d-6065-4995-a4d4-ba0483e67a3e"
+          ],
+          "modelElementRef": "_c8435c50-4287-4285-8e51-5bc20cf4376e",
+          "bounds": {
+            "upperLeft": {
+              "x": 1028.9811085529868,
+              "y": 364.1934580245326
+            },
+            "lowerRight": {
+              "x": 1169.0188914470132,
+              "y": 391.8065419754674
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_2e306541-8d63-47af-909f-c2e95d798983"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "right",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {
+              "x": 1100.0189208984375,
+              "y": 376.1934509277344,
+              "width": 57,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 1157.0188914470132,
+              "y": 376.1934580245326,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 1157.0188914470132,
+              "y": 376.1934580245326
+            }
+          },
+          "dockers": [
+            {
+              "x": 0,
+              "y": 30
+            },
+            {
+              "x": 96,
+              "y": 30
+            }
+          ],
+          "sourceRef": "_2e306541-8d63-47af-909f-c2e95d798983",
+          "targetRef": "_e68a176d-6065-4995-a4d4-ba0483e67a3e"
+        },
+        {
+          "resourceId": "_9c88777c-fc83-444c-a64b-2e6efb87e36d",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+          ],
+          "modelElementRef": "_9c97ca0d-8903-4c54-9344-f2b8dd8d5ce1",
+          "bounds": {
+            "upperLeft": {
+              "x": 685.9922159524867,
+              "y": 361.12452912764
+            },
+            "lowerRight": {
+              "x": 931.0077840475133,
+              "y": 391.87547087236
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_e68a176d-6065-4995-a4d4-ba0483e67a3e"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "right",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {
+              "x": 892.0078125,
+              "y": 403.8754577636719,
+              "width": 27,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 919.0077840475133,
+              "y": 403.87547087236,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 919.0077840475133,
+              "y": 403.87547087236
+            }
+          },
+          "dockers": [
+            {
+              "x": 0,
+              "y": 30
+            },
+            {
+              "x": 96,
+              "y": 20
+            }
+          ],
+          "sourceRef": "_e68a176d-6065-4995-a4d4-ba0483e67a3e",
+          "targetRef": "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+        },
+        {
+          "resourceId": "_9b32c212-06f1-4f58-9997-ccdf7c3b206e",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "isA"
+          },
+          "outgoingRefs": [
+            "_32fdad4d-56ad-4eb7-8134-a92c5e551649"
+          ],
+          "modelElementRef": "_fbdac1fc-d99b-442f-8279-9ef50010f9da",
+          "bounds": {
+            "upperLeft": {
+              "x": 979,
+              "y": 297
+            },
+            "lowerRight": {
+              "x": 981,
+              "y": 361
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_e68a176d-6065-4995-a4d4-ba0483e67a3e"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "bottom",
+            "rotation": 0,
+            "bounds": {},
+            "webbounds": {},
+            "anchorPoint": {
+              "x": 992,
+              "y": 356
+            }
+          },
+          "dockers": [
+            {
+              "x": 48,
+              "y": 0
+            },
+            {
+              "x": 48,
+              "y": 60
+            }
+          ],
+          "sourceRef": "_e68a176d-6065-4995-a4d4-ba0483e67a3e",
+          "targetRef": "_32fdad4d-56ad-4eb7-8134-a92c5e551649"
+        },
+        {
+          "resourceId": "_e2cd48a8-5d0a-42c6-acd5-7f44ef3a164e",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+          ],
+          "modelElementRef": "_c788017d-a531-472b-bad9-58234447ff6f",
+          "bounds": {
+            "upperLeft": {
+              "x": 685.9207517206746,
+              "y": 381.39014903418416
+            },
+            "lowerRight": {
+              "x": 920.0792482793254,
+              "y": 480.60985096581584
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_4e6763ed-1a4a-4edc-8865-b7172c0e9fa9"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "bottom",
+            "rotation": 0,
+            "bounds": {
+              "x": 908.0792236328125,
+              "y": 452.60986328125,
+              "width": 33,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 908.0792482793254,
+              "y": 468.60985096581584,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 908.0792482793254,
+              "y": 468.60985096581584
+            }
+          },
+          "dockers": [
+            {
+              "x": 38,
+              "y": 0
+            },
+            {
+              "x": 96,
+              "y": 40
+            }
+          ],
+          "sourceRef": "_4e6763ed-1a4a-4edc-8865-b7172c0e9fa9",
+          "targetRef": "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+        },
+        {
+          "resourceId": "_765d16c7-5fe7-459a-a542-c0ed6f2026cf",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+          ],
+          "modelElementRef": "_41197574-73b7-46a1-960d-e45d7683a3c5",
+          "bounds": {
+            "upperLeft": {
+              "x": 539.3763770469559,
+              "y": 401.9264665771223
+            },
+            "lowerRight": {
+              "x": 616.6236229530441,
+              "y": 592.0735334228777
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_4255ad6a-5a5b-4f1d-b9d6-0105982f5d3a"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "bottom",
+            "rotation": 0,
+            "bounds": {
+              "x": 551.3764038085938,
+              "y": 571.0735473632812,
+              "width": 33,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 551.3763770469559,
+              "y": 587.0735334228777,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 551.3763770469559,
+              "y": 587.0735334228777
+            }
+          },
+          "dockers": [
+            {
+              "x": 48,
+              "y": 0
+            },
+            {
+              "x": 28,
+              "y": 60
+            }
+          ],
+          "sourceRef": "_4255ad6a-5a5b-4f1d-b9d6-0105982f5d3a",
+          "targetRef": "_a8cfcead-63dd-45ea-ad0a-e58ebbb60b29"
+        },
+        {
+          "resourceId": "_c4128d4a-88ea-447b-ac9a-0496cd578d8d",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_5eb4a051-a32e-4065-bf08-92d83de72d7c"
+          ],
+          "modelElementRef": "_eaea65f6-e8f6-4de2-9e10-5fa6005be04d",
+          "bounds": {
+            "upperLeft": {
+              "x": 734.8752415354393,
+              "y": 126.48368611169012
+            },
+            "lowerRight": {
+              "x": 847.1247584645607,
+              "y": 188.51631388830987
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_6474311e-d303-4740-bd5b-2729e0528f64"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "right",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {
+              "x": 802.124755859375,
+              "y": 138.4836883544922,
+              "width": 33,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 835.1247584645607,
+              "y": 138.48368611169013,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 835.1247584645607,
+              "y": 138.48368611169013
+            }
+          },
+          "dockers": [
+            {
+              "x": 0,
+              "y": 30
+            },
+            {
+              "x": 96,
+              "y": 30
+            }
+          ],
+          "sourceRef": "_6474311e-d303-4740-bd5b-2729e0528f64",
+          "targetRef": "_5eb4a051-a32e-4065-bf08-92d83de72d7c"
+        }
+      ]
+    }
+  ]
+}

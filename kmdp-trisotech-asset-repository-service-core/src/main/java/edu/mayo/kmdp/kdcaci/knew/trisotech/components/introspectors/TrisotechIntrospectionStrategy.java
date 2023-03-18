@@ -48,8 +48,11 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory._
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Rules_Policies_And_Guidelines;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Terminology_Ontology_And_Assertional_KBs;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Formal_Ontology;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Lexicon;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Protocol;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
@@ -352,6 +355,8 @@ public class TrisotechIntrospectionStrategy {
           return xPathUtil.xString(dox, "//*/@targetNamespace");
         case BPMN_2_0:
           return xPathUtil.xString(dox, "//*/@targetNamespace");
+        case MVF_1_0:
+          return xPathUtil.xString(dox, "/mvf:mVFDictionary/mvf:reference");
         default:
           return null;
       }
@@ -395,6 +400,9 @@ public class TrisotechIntrospectionStrategy {
     }
     if (isA(formalType, Protocol) || isA(formalType, Care_Process_Model)) {
       return Plans_Processes_Pathways_And_Protocol_Definitions;
+    }
+    if (isA(formalType, Lexicon) || isA(formalType, Formal_Ontology)) {
+      return Terminology_Ontology_And_Assertional_KBs;
     }
     throw new UnsupportedOperationException(
         "Unable to infer category for asset type " + formalType.getName());

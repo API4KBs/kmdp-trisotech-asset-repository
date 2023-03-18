@@ -4,12 +4,15 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CONTENT_PAT
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CONTENT_PATH_POST;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CONTENT_PATH_POST_WITH_VERSION;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.EXEC_ARTIFACTS_PATH;
+import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.KEM_JSON_MIMETYPE;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.REPOSITORY_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.SPARQL_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.VERSIONS_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeType;
 import static edu.mayo.kmdp.util.Util.isEmpty;
+import static java.net.URLDecoder.decode;
 import static java.net.URLEncoder.encode;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyList;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -18,12 +21,17 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import edu.mayo.kmdp.trisotechwrapper.components.operators.KEMtoMVFTranslator;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.Datum;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifactData;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileData;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
+import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemModel;
+import edu.mayo.kmdp.util.JSonUtil;
+import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
@@ -34,7 +42,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -52,6 +59,8 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.sparql.resultset.ResultSetMem;
+import org.omg.spec.mvf._20220702.mvf.MVFDictionary;
+import org.omg.spec.mvf._20220702.mvf.ObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -225,11 +234,39 @@ public class TTWebClient {
     }
 
     try {
-      return tryDownloadXmlModel(fromUrl);
+      if (decode(fromUrl, UTF_8).contains(KEM_JSON_MIMETYPE)) {
+        // convert KEM to a more standard form, then process as BPM+
+        return tryDownloadKEM(fromUrl);
+      } else{
+        return tryDownloadXmlModel(fromUrl);
+      }
     } catch (HttpException | IOException e) {
       logger.error(e.getMessage(), e);
       return Optional.empty();
     }
+  }
+
+  /**
+   * Intercepts a request to download a KEM Model, so that it can be translated
+   * into a standard form (MVF), with a standard serialization (XML).
+   *
+   * The choice of XML (vs JSON) is driven by alignment with the other standard
+   * languages, all of which have a primary XML-based serialization
+   *
+   * @param fromUrl the TT DES URL where the model to be downloaded is available
+   * @return the KEM model, as a MVF/XML document
+   * @throws HttpException
+   * @throws IOException
+   */
+  private Optional<Document> tryDownloadKEM(String fromUrl) throws HttpException, IOException {
+    return tryDownloadNativeModel(fromUrl)
+        .flatMap(j -> JSonUtil.parseJson(j, KemModel.class))
+        .map(k -> new KEMtoMVFTranslator().translate(k))
+        .flatMap(mvg -> JaxbUtil.marshallDox(
+            List.of(MVFDictionary.class),
+            mvg,
+            new ObjectFactory()::createMVFDictionary,
+            JaxbUtil.defaultProperties()));
   }
 
   /**
@@ -292,6 +329,27 @@ public class TTWebClient {
   }
 
   /**
+   * Download the actual model in its TT internal JSON-based form.
+   *
+   * @param fromUrl String representing an ENCODED URI
+   * @return JsonNode
+   */
+  public Optional<JsonNode> tryDownloadNativeModel(String fromUrl)
+      throws HttpException, IOException {
+    if (!online) {
+      logger.warn("Client is offline - unable to download model");
+      return Optional.empty();
+    }
+
+    URL url = negotiate(fromUrl);
+    HttpURLConnection conn = getHttpURLConnection(url);
+
+    Optional<JsonNode> document = JSonUtil.readJson(conn.getInputStream());
+    conn.disconnect();
+    return document;
+  }
+
+  /**
    * Stub method for content negotiation
    */
   private URL negotiate(String url) throws MalformedURLException {
@@ -307,7 +365,7 @@ public class TTWebClient {
   private String negotiateMimeType(String comp) {
     int idx = comp.indexOf('=');
     String xmlMimeType = getXmlMimeType(comp.substring(idx + 1));
-    return comp.substring(0, idx) + "=" + encode(xmlMimeType, StandardCharsets.UTF_8);
+    return comp.substring(0, idx) + "=" + encode(xmlMimeType, UTF_8);
   }
 
   private HttpURLConnection getHttpURLConnection(URL url) throws IOException, HttpException {

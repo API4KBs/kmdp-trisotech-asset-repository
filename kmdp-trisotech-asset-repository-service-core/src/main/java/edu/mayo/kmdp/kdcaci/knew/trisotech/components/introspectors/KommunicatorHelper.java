@@ -7,6 +7,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.MVF_1_0;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.KommunicatorHelper.KommunicatorDescr.FileDescr;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.KommunicatorHelper.KommunicatorDescr.RepoDescr;
@@ -77,8 +78,12 @@ public class KommunicatorHelper {
       baseLang = BPMN_2_0;
     } else if (mimeType.contains("cmmn")) {
       baseLang = CMMN_1_1;
-    } else {
+    } else if (mimeType.contains("dmn")) {
       baseLang = DMN_1_2;
+    } else if (mimeType.contains("businessentity")) {
+      baseLang = MVF_1_0;
+    } else {
+      throw new UnsupportedOperationException("Unable to map " + mimeType + " to a KRR Language");
     }
     return baseLang;
   }

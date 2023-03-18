@@ -14,6 +14,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.MVF_1_0;
 
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XPathUtil;
@@ -45,6 +46,7 @@ public class TrisotechMetadataHelper {
   public static final String CMMN_DEFINITIONS = "//cmmn:definitions";
   public static final String DMN_DEFINITIONS = "//dmn:definitions";
   public static final String BPMN_DEFINITIONS = "//bpmn:definitions";
+  public static final String MVF_DEFINITIONS = "//mvf:mVFDictionary";
 
   private static final XPathUtil xPathUtil = new XPathUtil();
 
@@ -122,6 +124,8 @@ public class TrisotechMetadataHelper {
       return KnowledgeAssetTypeSeries.Decision_Model;
     } else if (mime.contains("cmmn")) {
       return KnowledgeAssetTypeSeries.Case_Management_Model;
+    } else if (mime.contains("businessentity")) {
+      return KnowledgeAssetTypeSeries.Lexicon;
     } else if (mime.contains("bpmn")) {
       // TODO - we need 'process model' in the KAO
       return KnowledgeAssetTypeSeries.Protocol;
@@ -151,6 +155,9 @@ public class TrisotechMetadataHelper {
     if (xPathUtil.xNode(dox, BPMN_DEFINITIONS) != null) {
       return Optional.of(rep(BPMN_2_0, XML_1_1, defaultCharset(), Encodings.DEFAULT));
     }
+    if (xPathUtil.xNode(dox, MVF_DEFINITIONS) != null) {
+      return Optional.of(rep(MVF_1_0, XML_1_1, defaultCharset(), Encodings.DEFAULT));
+    }
     return Optional.empty();
   }
 
@@ -172,6 +179,9 @@ public class TrisotechMetadataHelper {
     }
     if (xPathUtil.xNode(dox, BPMN_DEFINITIONS) != null) {
       return Optional.of(BPMN_2_0);
+    }
+    if (xPathUtil.xNode(dox, MVF_DEFINITIONS) != null) {
+      return Optional.of(MVF_1_0);
     }
     return Optional.empty();
   }

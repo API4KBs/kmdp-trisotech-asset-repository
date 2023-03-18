@@ -1,0 +1,444 @@
+{
+  "diagramId": "_38849b1a-3553-4325-90a6-48f2db30b939",
+  "modelVersion": 5.07,
+  "properties": {
+    "name": "CSO in KEM tests",
+    "targetNamespace": "http://www.trisotech.com/definitions/_38849b1a-3553-4325-90a6-48f2db30b939",
+    "defaultLanguage": "en",
+    "extensionElements": []
+  },
+  "extendedProperties": {
+    "selectedTabId": "_021c5fea-9029-4a09-a4b4-63a707ed3c1b",
+    "selectedTabTypeId": "diagram",
+    "logoChoice": "Default",
+    "customLogo": null
+  },
+  "itemModelElements": {
+    "bottomTab": [
+      {
+        "resourceId": "_07f50ab7-cd44-403c-84ad-b63f68a77fe5",
+        "properties": {
+          "ref": "_021c5fea-9029-4a09-a4b4-63a707ed3c1b",
+          "tabType": "diagram",
+          "isSelected": true
+        },
+        "stencil": {
+          "id": "bottomTab"
+        },
+        "itemModelElements": {}
+      }
+    ],
+    "businessRulesCategory": []
+  },
+  "nodeModelElements": [
+    {
+      "resourceId": "_e6354758-a16b-4366-ae90-d135f2478b1d",
+      "properties": {
+        "name": "Page 1",
+        "extensionElements": []
+      },
+      "stencil": {
+        "id": "businessEntityDiagram"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_e311b639-d651-45ec-8de0-86bc1bd4523e",
+      "properties": {
+        "name": "Prior Encounter with Emergency Medicine",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "id": "_4d17808e-644a-4083-addb-f451fc4876dc",
+            "uri": "https://ontology.mayo.edu/taxonomies/clinicalsituations#72f4ef9f-2954-47c2-8ed3-10115c9004af",
+            "itemName": "Patient Having Prior Encounter with Specialty",
+            "modelName": "Clinical Situations Patterns",
+            "modelURI": "http://ontology.mayo.edu/ontologies/clinicalsituationontology/",
+            "graphURI": "http://trisotech.com/graph/1.0/graph#framework",
+            "graphType": "http://www.trisotech.com/graph/1.0/element#Entity",
+            "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+            "type": "graph",
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "semanticLink"
+          },
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "Situation"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [
+          "Emergency Encounter"
+        ],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_4838dda2-24ca-46c3-b645-79f49b7c9f58",
+      "properties": {
+        "text": "test",
+        "documentation": "",
+        "extensionElements": []
+      },
+      "stencil": {
+        "id": "textAnnotation"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_7126befb-3ff5-4c78-98f6-ba439c2240a4",
+      "properties": {
+        "name": "Emergency Medicine",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "Specialty"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [
+          {
+            "id": "_508eb8b4-4b37-4e0c-85f7-16c9193aaaf4",
+            "value": "773568002",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Emergency medicine (qualifier value)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    }
+  ],
+  "edgeModelElements": [
+    {
+      "resourceId": "_7fec986a-2271-4efb-8907-823c7eca9ba1",
+      "properties": {
+        "name": "has target",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_e311b639-d651-45ec-8de0-86bc1bd4523e",
+      "targetRef": "_7126befb-3ff5-4c78-98f6-ba439c2240a4"
+    }
+  ],
+  "pages": [
+    {
+      "resourceId": "_021c5fea-9029-4a09-a4b4-63a707ed3c1b",
+      "properties": {
+        "fontcolor": ""
+      },
+      "stencil": {
+        "id": "businessEntityDiagram"
+      },
+      "outgoingRefs": [],
+      "modelElementRef": "_e6354758-a16b-4366-ae90-d135f2478b1d",
+      "bounds": {
+        "upperLeft": {
+          "x": 0,
+          "y": 0
+        },
+        "lowerRight": {
+          "x": 1485,
+          "y": 1050
+        }
+      },
+      "extendedProperties": {
+        "collaborationId": "_1b0f7f8b-0e06-4528-85aa-d08b96b462c5",
+        "contentId": "_c550de81-db72-4389-9101-1c40c238ff53",
+        "scrollTop": 0,
+        "scrollLeft": 96
+      },
+      "childShapes": [
+        {
+          "resourceId": "_5fc55e99-c6e1-453d-95c5-7ad1f819c737",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_88da4401-dbf8-4759-8118-e34ddf2faf0c"
+          ],
+          "modelElementRef": "_e311b639-d651-45ec-8de0-86bc1bd4523e",
+          "bounds": {
+            "upperLeft": {
+              "x": 701,
+              "y": 250
+            },
+            "lowerRight": {
+              "x": 797,
+              "y": 310
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 6.5,
+              "width": 90,
+              "height": 47
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 47
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_0f1efd0e-e762-4506-9e7e-97dc98fa96c6",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "textAnnotation"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_4838dda2-24ca-46c3-b645-79f49b7c9f58",
+          "bounds": {
+            "upperLeft": {
+              "x": 206.00000001247986,
+              "y": 161.5703125
+            },
+            "lowerRight": {
+              "x": 577.9999999875201,
+              "y": 413.8203125
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "left",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 5,
+              "y": 3,
+              "width": 341,
+              "height": 247
+            },
+            "webbounds": {
+              "x": 5,
+              "y": 126.125,
+              "width": 367,
+              "height": 247
+            },
+            "anchorPoint": {
+              "x": 5,
+              "y": 126.125
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_80089d53-1d65-42e1-ab09-65602eefdeeb",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_7126befb-3ff5-4c78-98f6-ba439c2240a4",
+          "bounds": {
+            "upperLeft": {
+              "x": 939,
+              "y": 250
+            },
+            "lowerRight": {
+              "x": 1035,
+              "y": 310
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_88da4401-dbf8-4759-8118-e34ddf2faf0c"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_88da4401-dbf8-4759-8118-e34ddf2faf0c",
+          "properties": {
+            "linecolor": "#3366FF",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_80089d53-1d65-42e1-ab09-65602eefdeeb"
+          ],
+          "modelElementRef": "_7fec986a-2271-4efb-8907-823c7eca9ba1",
+          "bounds": {
+            "upperLeft": {
+              "x": 798,
+              "y": 279
+            },
+            "lowerRight": {
+              "x": 938,
+              "y": 281
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_5fc55e99-c6e1-453d-95c5-7ad1f819c737"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {
+              "x": 810,
+              "y": 285,
+              "width": 49,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 810,
+              "y": 285,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 810,
+              "y": 285
+            }
+          },
+          "dockers": [
+            {
+              "x": 96,
+              "y": 30
+            },
+            {
+              "x": 0,
+              "y": 30
+            }
+          ],
+          "sourceRef": "_5fc55e99-c6e1-453d-95c5-7ad1f819c737",
+          "targetRef": "_80089d53-1d65-42e1-ab09-65602eefdeeb"
+        }
+      ]
+    }
+  ]
+}

@@ -28,6 +28,7 @@ public class TrisotechApiUrls {
   public static final String DMN_UPPER = "DMN";
   public static final String BPMN_LOWER = "bpmn";
   public static final String BPMN_UPPER = "BPMN";
+  public static final String KEM_LOWER = "businessentity";
 
   private TrisotechApiUrls() {
     throw new IllegalStateException("Utility class");
@@ -53,6 +54,7 @@ public class TrisotechApiUrls {
   public static final String CMMN_XML_MIMETYPE = "application/cmmn-1-1+xml";
   // return BPMN files in XML format
   public static final String BPMN_XML_MIMETYPE = "application/bpmn-2-0+xml";
+  public static final String KEM_JSON_MIMETYPE = "application/vnd.triso-businessentity+json";
 
 
   /**
@@ -71,6 +73,8 @@ public class TrisotechApiUrls {
       return DMN_XML_MIMETYPE;
     } else if (mime.contains(CMMN_LOWER)) {
       return CMMN_XML_MIMETYPE;
+    } else if (mime.contains(KEM_LOWER)) {
+      return KEM_JSON_MIMETYPE;
     } else if (mime.contains(BPMN_LOWER)) {
       return BPMN_XML_MIMETYPE;
     } else {

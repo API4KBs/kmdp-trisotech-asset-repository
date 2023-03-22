@@ -61,11 +61,6 @@ stages:
         artifactName: container-image
         targetPath: '$(Pipeline.Workspace)/image.tar'  
     
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(Build.SourcesDirectory)/host'
-        artifact: 'k8s-deployment-configuration'
-        publishLocation: 'pipeline'
 
 # - stage: PublishGcp
 #   displayName: Push Image to Google Artifact Registry

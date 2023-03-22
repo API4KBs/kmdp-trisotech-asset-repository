@@ -111,14 +111,14 @@ stages:
 #     - task: CmdLine@2
 #       displayName: 'Adjust image tag'
 #       inputs:
-#         script: 'docker tag $(trisotechImage)  $(GCR.Name)/km/calculators:$(tag)'
+#         script: 'docker tag $(trisotechImage)  $(GCR.Name)/km/playground:$(tag)'
     
 #     - bash: |
 #         docker image ls
 #       displayName: List images
 
 #     - bash: |
-#         docker push $(GCR.Name)/km/calculators:$(tag)
+#         docker push $(GCR.Name)/km/playground:$(tag)
 #       displayName: Publish to Google Artifact Registry
     
 #     - task: ImportExportVariables@1

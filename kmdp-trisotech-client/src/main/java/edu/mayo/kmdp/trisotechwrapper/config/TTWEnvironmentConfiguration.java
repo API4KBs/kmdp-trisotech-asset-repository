@@ -56,6 +56,9 @@ public class TTWEnvironmentConfiguration {
   @Value("${edu.mayo.kmdp.trisotechwrapper.namespace.public:https://clinicalknowledgemanagement.mayo.edu/artifacts/}")
   private String publicNamespace;
 
+  @Value("${edu.mayo.kmdp.application.flag.allowAnonymous:false}")
+  private boolean allowAnonymous;
+
   private String apiEndpoint;
 
   @PostConstruct
@@ -123,5 +126,9 @@ public class TTWEnvironmentConfiguration {
 
   public String getExecutionEnvironment() {
     return executionEnvironment;
+  }
+
+  public boolean isAllowAnonymous() {
+    return allowAnonymous;
   }
 }

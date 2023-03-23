@@ -1,11 +1,11 @@
 # PREFIX sets up the namespaces to be used in the query
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX tt: <http://www.trisotech.com/graph/1.0/element#>
-PREFIX ttr: <http://www.trisotech.com/graph/1.0/elementRel#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX graph:     <http://www.trisotech.com/graph/1.0/element#>
+PREFIX graphrel:  <http://www.trisotech.com/graph/1.0/elementRel#>
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
+PREFIX owl:       <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs:      <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd:       <http://www.w3.org/2001/XMLSchema#>
 
 # ?model is our variable we will expect in the output
 # ?model will be a DMN or CMMN model id
@@ -21,30 +21,31 @@ SELECT ?model ?assetId ?assetType ?version ?state ?updated ?mimeType ?artifactNa
 FROM NAMED ?
 WHERE {
 GRAPH ? {
-    # gets the customAttribute. This is where the knowledgeAsset is stored
-    ?customAttribute a tt:CustomAttribute .
-    # gets the customAttribute key value and only key values that are 'knowledgeAssetId' (case-insensitive)
-    ?customAttribute ttr:key ?key
-    # the 'i' makes the query case-insensitive
-    FILTER regex(?key, "knowledgeAssetId", "i") .
-    # gets the assetId
-    ?customAttribute ttr:value ?assetId .
-    ?node ttr:customAttribute ?customAttribute .
-    # the model identifier
-    ?node ttr:owner* ?model .
+    ?model rdf:type graph:Model .
+
+    # asset Id - optional
+    OPTIONAL {
+      ?customAttribute a graph:CustomAttribute .
+      ?customAttribute graphrel:key ?key
+      FILTER regex(?key, "knowledgeAssetId", "i") .
+      ?customAttribute graphrel:value ?assetId .
+      ?node graphrel:customAttribute ?customAttribute .
+      ?node graphrel:owner* ?model .
+    }
+
     # the model file name
     ?model rdfs:label ?artifactName .
     # gets the mimeType
-    ?model ttr:mimeType ?mimeType .
+    ?model graphrel:mimeType ?mimeType .
     # gets the state - only latest state is returned; there will only be a state if the model is published
-    OPTIONAL { ?model ttr:state ?state } .
+    OPTIONAL { ?model graphrel:state ?state } .
     # gets the timestamp of last update
-    OPTIONAL { ?model ttr:updated ?updated } .
+    OPTIONAL { ?model graphrel:updated ?updated } .
     # gets the version - only latest version is returned; there will only be a version if the model is published
-    OPTIONAL { ?model ttr:version ?version } .
+    OPTIONAL { ?model graphrel:version ?version } .
     # gets the asset type from an annotation on the same element that carries the assetId
-    OPTIONAL { ?node ttr:semantic ?ann.
-               ?ann ttr:ref ?assetType.
+    OPTIONAL { ?node graphrel:semantic ?ann.
+               ?ann graphrel:ref ?assetType.
                FILTER regex(str(?assetType), '^.+(Clinical)?KnowledgeAssetType#.+') } .
   }
 }

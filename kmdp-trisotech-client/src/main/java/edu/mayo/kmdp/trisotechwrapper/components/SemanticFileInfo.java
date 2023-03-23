@@ -236,5 +236,7 @@ public class SemanticFileInfo {
     return modelName != null;
   }
 
-
+  public void assertAssetId(String assetId) {
+    this.assetId = assetId;
+  }
 }

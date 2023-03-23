@@ -74,6 +74,7 @@ import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,6 +90,8 @@ import javax.annotation.PostConstruct;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
+import org.omg.spec.api4kp._20200801.services.repository.asset.KARSHrefBuilder;
 import org.omg.spec.api4kp._20200801.surrogate.Dependency;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
@@ -129,6 +132,9 @@ public class TrisotechIntrospectionStrategy {
 
   @Autowired(required = false)
   TTAssetRepositoryConfig config;
+
+  @Autowired(required = false)
+  KARSHrefBuilder hrefBuilder;
 
   @Autowired(required = false)
   KommunicatorHelper kommunicatorHelper;
@@ -262,16 +268,8 @@ public class TrisotechIntrospectionStrategy {
                 getRelatedServices(manifest)),
             getOtherDependencies(dox, synRep.getLanguage())))
         // carriers
-        .withCarriers(new KnowledgeArtifact()
-            .withArtifactId(artifactId)
-            .withName(manifest.getName().trim())
-            .withLifecycle(lifecycle)
-            .withLocalization(English)
-            .withExpressionCategory(Software)
-            .withRepresentation(synRep)
-            .withMimeType(codedRep(synRep))
-            .withLinks( // artifact - artifact relation/dependency
-                getRelatedArtifacts(importedArtifactIds)))
+        .withCarriers(buildDefaultCarrierMetadata(
+            assetID, artifactId, manifest.getName().trim(), lifecycle, synRep, importedArtifactIds))
         .withSurrogate(
             new KnowledgeArtifact()
                 .withArtifactId(newId(
@@ -292,6 +290,65 @@ public class TrisotechIntrospectionStrategy {
     }
 
     return surr;
+  }
+
+  /**
+   * Constructs the default KnowledgeArtifact carrier metadata object given the parameters.
+   * <p>
+   * The default carrier is the BPM+ model exportable, usually in standard XML, from the DES server
+   *
+   * @param assetId             the asset ID
+   * @param artifactId          the artifact ID
+   * @param name                the model name
+   * @param lifecycle           the publication status and dates
+   * @param synRep              the artifact {@link SyntacticRepresentation}
+   * @param importedArtifactIds the artifact dependencies
+   * @return a {@link KnowledgeArtifact} carrier metadata object
+   */
+  private KnowledgeArtifact buildDefaultCarrierMetadata(
+      ResourceIdentifier assetId,
+      ResourceIdentifier artifactId,
+      String name,
+      Publication lifecycle,
+      SyntacticRepresentation synRep,
+      List<ResourceIdentifier> importedArtifactIds) {
+    var carrier = new KnowledgeArtifact()
+        .withArtifactId(artifactId)
+        .withName(name)
+        .withLifecycle(lifecycle)
+        .withLocalization(English)
+        .withExpressionCategory(Software)
+        .withRepresentation(synRep)
+        .withMimeType(codedRep(synRep))
+        .withLinks( // artifact - artifact relation/dependency
+            getRelatedArtifacts(importedArtifactIds));
+    tryLocateDefaultArtifact(assetId)
+        .ifPresent(carrier::withLocator);
+    return carrier;
+  }
+
+  /**
+   * Maps the asset ID to the default location of the default artifact on this Asset Repository
+   * server, if deployed as a web service.
+   * <p>
+   * Maps to [base URL]/cat/assets/{assetId}/versions/{assetVersion}/carrier/content
+   *
+   * @param assetID the asset ID.
+   * @return the URL, as a URI, if able to determine
+   */
+  private Optional<URI> tryLocateDefaultArtifact(
+      ResourceIdentifier assetID) {
+    if (hrefBuilder == null) {
+      return Optional.empty();
+    }
+    try {
+      return Optional.of(
+          hrefBuilder.getAssetDefaultContent(
+              assetID.getUuid(), assetID.getVersionTag()).toURI());
+    } catch (URISyntaxException e) {
+      logger.warn(e.getMessage(), e);
+      return Optional.empty();
+    }
   }
 
   /* ----------------------------------------------------------------------------------------- */

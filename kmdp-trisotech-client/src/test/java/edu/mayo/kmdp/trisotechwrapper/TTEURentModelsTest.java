@@ -131,8 +131,7 @@ class TTEURentModelsTest {
     assertEquals(version, file.getVersion());
 
     // expect same results with repository provided
-    fileVersions = client.getModelVersions(testRepoId,
-        DMN_PUB_TEST_1_ID);
+    fileVersions = client.getModelVersions(DMN_PUB_TEST_1_ID);
     assertNotNull(fileVersions);
     assertEquals(1, fileVersions.size());
 
@@ -248,7 +247,7 @@ class TTEURentModelsTest {
     assertEquals(version, file.getVersion());
 
     // expect same results with repository provided
-    fileVersions = client.getModelVersions(testRepoId, DMN_PUB_TEST_1_ID);
+    fileVersions = client.getModelVersions(DMN_PUB_TEST_1_ID);
     assertNotNull(fileVersions);
     assertEquals(1, fileVersions.size());
 

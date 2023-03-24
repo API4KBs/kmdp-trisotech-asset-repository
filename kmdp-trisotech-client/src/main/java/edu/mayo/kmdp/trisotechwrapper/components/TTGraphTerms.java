@@ -10,7 +10,8 @@ public enum TTGraphTerms {
   MIME_TYPE( "?mimeType" ),
   VERSION( "?version" ),
   UPDATED( "?updated" ),
-  ARTIFACT_NAME( "?artifactName" );
+  ARTIFACT_NAME( "?artifactName" ),
+  SERVICE_FRAGMENT( "?serviceNode" );
 
   String key;
 

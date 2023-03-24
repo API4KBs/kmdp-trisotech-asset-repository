@@ -1,12 +1,12 @@
 # PREFIX sets up the namespaces to be used in the query
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX tt: <http://www.trisotech.com/graph/1.0/element#>
-PREFIX ttr: <http://www.trisotech.com/graph/1.0/elementRel#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX dmn: <http://www.trisotech.com/graph/1.0/decision/element#>
+PREFIX rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX graph:     <http://www.trisotech.com/graph/1.0/element#>
+PREFIX graphrel:  <http://www.trisotech.com/graph/1.0/elementRel#>
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
+PREFIX owl:       <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs:      <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd:       <http://www.w3.org/2001/XMLSchema#>
+PREFIX dmn:       <http://www.trisotech.com/graph/1.0/decision/element#>
 
 # SPARQL queries only get the LATEST version information for all models
 
@@ -17,16 +17,16 @@ GRAPH ? {
   {
     ?from ?relType ?rel .
     # relations can be as semantic, copyOf or reuse, and dmn->dmn are includes
-    FILTER(?relType in(ttr:semantic, ttr:copyOf, ttr:reuse, dmn:include))
-    ?rel ttr:ref? ?toElement .
+    FILTER(?relType in(graphrel:semantic, graphrel:copyOf, graphrel:reuse, dmn:include))
+    ?rel graphrel:ref? ?toElement .
     # remove references to self
-    FILTER (!EXISTS { ?toElement rdf:type  tt:Ref . } ) .
-    ?from ttr:owner? ?fromModel .
-    ?fromModel a tt:Model .
-    ?fromModel ttr:mimeType ?fromMimetype .
-    ?toElement ttr:owner? ?toModel .
-    ?toModel a tt:Model .
-    ?toModel ttr:mimeType ?toMimetype
+    FILTER (!EXISTS { ?toElement rdf:type  graph:Ref . } ) .
+    ?from graphrel:owner? ?fromModel .
+    ?fromModel a graph:Model .
+    ?fromModel graphrel:mimeType ?fromMimetype .
+    ?toElement graphrel:owner? ?toModel .
+    ?toModel a graph:Model .
+    ?toModel graphrel:mimeType ?toMimetype
   }
 }
 }

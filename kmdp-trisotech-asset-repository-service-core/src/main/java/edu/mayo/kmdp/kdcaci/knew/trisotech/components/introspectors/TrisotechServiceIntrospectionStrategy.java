@@ -15,6 +15,8 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.addSemanticAnnotations;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.extractAnnotations;
+import static edu.mayo.kmdp.trisotechwrapper.components.SemanticFileInfo.mintAssetIdForAnonymous;
+import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultArtifactId;
@@ -33,6 +35,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.Publicati
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.IdentityMapper;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.nio.charset.Charset;
@@ -64,6 +67,9 @@ public class TrisotechServiceIntrospectionStrategy {
 
   @Autowired
   ServiceLibraryHelper libraryHelper;
+
+  @Autowired
+  TTWEnvironmentConfiguration cfg;
 
 
   private final XPathUtil xPathUtil = new XPathUtil();
@@ -233,12 +239,21 @@ public class TrisotechServiceIntrospectionStrategy {
 
   private Optional<Node> selectDecisionServiceNode(Document dox, ResourceIdentifier assetId) {
     return Optional.ofNullable(xPathUtil.xNode(dox,
-        "//dmn:decisionService[.//@resourceId='" + assetId.getResourceId() + "']"));
+            "//dmn:decisionService[.//@resourceId='" + assetId.getResourceId() + "']"))
+        .or(() -> findAnonymousMatch("//dmn:decisionService", dox, assetId));
   }
 
   private Optional<Node> selectProcessNode(Document dox, ResourceIdentifier assetId) {
     return Optional.ofNullable(xPathUtil.xNode(dox,
-        "//bpmn:process[.//@resourceId='" + assetId.getResourceId() + "']"));
+            "//bpmn:process[.//@resourceId='" + assetId.getResourceId() + "']"))
+        .or(() -> findAnonymousMatch("//bpmn:process", dox, assetId));
+  }
+
+  private Optional<Element> findAnonymousMatch(String xpath, Document dox, ResourceIdentifier assetId) {
+    return asElementStream(xPathUtil.xList(dox, xpath))
+        .filter(e -> mintAssetIdForAnonymous(cfg.getPublicAssetNamespace(), e.getAttribute("id"), null)
+            .getUuid().equals(assetId.getUuid()))
+        .findFirst();
   }
 
   private Optional<? extends Node> selectAnyNode(Document dox, ResourceIdentifier assetId) {

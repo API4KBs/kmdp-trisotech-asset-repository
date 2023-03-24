@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.trisotechwrapper.config;
 
 import edu.mayo.kmdp.util.Util;
+import java.net.URI;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -53,10 +54,13 @@ public class TTWEnvironmentConfiguration {
   @Value("${edu.mayo.kmdp.trisotechwrapper.expiration:1440}")
   private String cacheExpiration;
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.namespace.public:https://clinicalknowledgemanagement.mayo.edu/artifacts/}")
-  private String publicNamespace;
+  @Value("${edu.mayo.kmdp.trisotechwrapper.namespace.public:https://clinicalknowledgemanagement.mayo.edu/assets/}")
+  private URI publicAssetNamespace;
 
-  @Value("${edu.mayo.kmdp.application.flag.allowAnonymous:false}")
+  @Value("${edu.mayo.kmdp.trisotechwrapper.namespace.public:https://clinicalknowledgemanagement.mayo.edu/artifacts/}")
+  private URI publicArtifactNamespace;
+
+  @Value("${edu.mayo.kmdp.application.flag.allowAnonymous:true}")
   private boolean allowAnonymous;
 
   private String apiEndpoint;
@@ -120,8 +124,20 @@ public class TTWEnvironmentConfiguration {
     return repositoryPath;
   }
 
-  public String getPublicNamespace() {
-    return publicNamespace;
+  public URI getPublicAssetNamespace() {
+    return publicAssetNamespace;
+  }
+
+  public void setPublicAssetNamespace(URI publicAssetNamespace) {
+    this.publicAssetNamespace = publicAssetNamespace;
+  }
+
+  public URI getPublicArtifactNamespace() {
+    return publicArtifactNamespace;
+  }
+
+  public void setPublicArtifactNamespace(URI publicArtifactNamespace) {
+    this.publicArtifactNamespace = publicArtifactNamespace;
   }
 
   public String getExecutionEnvironment() {

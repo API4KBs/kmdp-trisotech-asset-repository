@@ -83,7 +83,7 @@ public class TrisotechWrapper {
 
     this.cacheManager = new TTCacheManager(webClient, trisoWrapperEnvironmentConfiguration);
 
-    this.publicNamespaceUri = URI.create(trisoWrapperEnvironmentConfiguration.getPublicNamespace());
+    this.publicNamespaceUri = trisoWrapperEnvironmentConfiguration.getPublicArtifactNamespace();
 
   }
 
@@ -599,7 +599,7 @@ public class TrisotechWrapper {
                   x -> x
               )))
           .orElse(Collections.emptyMap());
-    } catch (IOException e) {
+    } catch (Exception e) {
       logger.error(e.getMessage(), e);
       return Collections.emptyMap();
     }

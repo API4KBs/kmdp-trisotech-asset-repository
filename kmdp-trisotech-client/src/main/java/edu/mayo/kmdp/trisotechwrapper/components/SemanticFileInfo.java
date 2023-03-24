@@ -1,7 +1,17 @@
 package edu.mayo.kmdp.trisotechwrapper.components;
 
+import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
+import static edu.mayo.kmdp.util.DateTimeUtil.toLocalDate;
+import static java.lang.String.format;
+
+import edu.mayo.kmdp.util.NameUtils;
+import edu.mayo.kmdp.util.Util;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
+import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 
 /**
  * POJO that holds the values of the semantic annotations extracted from the TT KG, via SPARQL
@@ -13,6 +23,8 @@ public class SemanticFileInfo {
   private String assetId;
 
   private String serviceId;
+
+  private String serviceFragmentId;
 
   private final List<String> assetTypes = new ArrayList<>(3);
 
@@ -52,6 +64,8 @@ public class SemanticFileInfo {
     this.lastUpdated = other.lastUpdated;
 
     this.modelName = other.modelName;
+
+    this.serviceFragmentId = other.serviceFragmentId;
   }
 
   /**
@@ -157,6 +171,9 @@ public class SemanticFileInfo {
       case ARTIFACT_NAME:
         this.modelName = value;
         break;
+      case SERVICE_FRAGMENT:
+        this.serviceFragmentId = value;
+        break;
       default:
         throw new UnsupportedOperationException("Unable to handle " + key);
     }
@@ -199,6 +216,9 @@ public class SemanticFileInfo {
     return modelName;
   }
 
+  public String getServiceFragmentId() {
+    return serviceFragmentId;
+  }
 
   public boolean hasAssetId() {
     return assetId != null;
@@ -236,7 +256,49 @@ public class SemanticFileInfo {
     return modelName != null;
   }
 
+  public boolean hasServiceFragmentId() {
+    return serviceFragmentId != null;
+  }
+
   public void assertAssetId(String assetId) {
     this.assetId = assetId;
+  }
+
+  public void assertServiceAssetId(String serviceId) {
+    this.serviceId = serviceId;
+  }
+
+
+  /**
+   * Generates a predictable asset ID for the knowledge Asset implicitly carried by a model, as a
+   * knowledge artifact.
+   * <p>
+   * Re-hashes the UUID of the model to obtain an asset UUID Uses a CalVer SNAPSHOT version tag,
+   * based on the model last update date, approximated to the Year/Month - assuming models are
+   * up-to-date, and updated around the time the knowledge is revised
+   *
+   * @param elementId A model Id, or a Decision Service ID, or a BPMN TODO?
+   * @param lastUpdated the date when the element's owner model was last updated
+   * @return a candidate Asset ID
+   */
+  public static ResourceIdentifier mintAssetIdForAnonymous(
+      URI baseUri, String elementId, String lastUpdated) {
+    var localId = NameUtils.getTrailingPart(elementId);
+    if (Util.isEmpty(localId)) {
+      throw new IllegalStateException(
+          "Defensive! Unable to determine anonymous asset ID for element " + elementId);
+    }
+    var guid = Util.uuid(localId);
+
+    String versionTag;
+    if (lastUpdated != null) {
+      var lastUpdate = toLocalDate(parseDateTime(lastUpdated)).atStartOfDay();
+      versionTag = format("%04d.%02d.0-SNAPSHOT", lastUpdate.getYear(),
+          lastUpdate.getMonthValue());
+    } else {
+      versionTag = IdentifierConstants.VERSION_ZERO_SNAPSHOT;
+    }
+
+    return SemanticIdentifier.newId(baseUri, guid, versionTag);
   }
 }

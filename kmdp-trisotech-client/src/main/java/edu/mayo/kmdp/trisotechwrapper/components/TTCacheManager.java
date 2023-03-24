@@ -1,18 +1,17 @@
 package edu.mayo.kmdp.trisotechwrapper.components;
 
+import static edu.mayo.kmdp.trisotechwrapper.components.SemanticFileInfo.mintAssetIdForAnonymous;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ARTIFACT_NAME;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_ID;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.ASSET_TYPE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MIME_TYPE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.MODEL;
+import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.SERVICE_FRAGMENT;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.SERVICE_ID;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.STATE;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.UPDATED;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTGraphTerms.VERSION;
 import static edu.mayo.kmdp.trisotechwrapper.components.TTWebClient.TRISOTECH_GRAPH;
-import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
-import static edu.mayo.kmdp.util.DateTimeUtil.toLocalDate;
-import static java.lang.String.format;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newKey;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
@@ -22,7 +21,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
-import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
@@ -75,7 +73,7 @@ public class TTCacheManager {
 
   public TTCacheManager(TTWebClient webClient, TTWEnvironmentConfiguration cfg) {
     this.webClient = webClient;
-    this.pathIndexes = initCache(Long.parseLong(cfg.getCacheExpiration()), cfg.isAllowAnonymous());
+    this.pathIndexes = initCache(Long.parseLong(cfg.getCacheExpiration()), cfg);
   }
 
   public boolean clearCache() {
@@ -84,7 +82,7 @@ public class TTCacheManager {
   }
 
   private LoadingCache<String, PlacePathIndex> initCache(final long expirationMinutes,
-      boolean allowAnonymous) {
+      TTWEnvironmentConfiguration cfg) {
     CacheLoader<String, PlacePathIndex> loader = new CacheLoader<>() {
       @Override
       public PlacePathIndex load(final @Nonnull String placePath) {
@@ -95,7 +93,7 @@ public class TTCacheManager {
         }
         UUID placeId = Util.ensureUUID(placePath.substring(0, 36)).orElseThrow();
         String path = placePath.substring(36);
-        return reindex(placeId.toString(), path, allowAnonymous);
+        return reindex(placeId.toString(), path, cfg);
       }
     };
     return CacheBuilder.newBuilder()
@@ -237,13 +235,14 @@ public class TTCacheManager {
   }
 
 
-  private PlacePathIndex reindex(String focusPlaceId, String path, boolean allowsAnonymous) {
+  private PlacePathIndex reindex(String focusPlaceId, String path,
+      TTWEnvironmentConfiguration cfg) {
     ResultSet allModels = query(getQueryStringModels(), focusPlaceId);
     ResultSet relations = query(getQueryStringRelations(), focusPlaceId);
     ResultSet services = query(getQueryStringServices(), focusPlaceId);
 
     return new PlacePathIndex(
-        focusPlaceId, path, allModels, relations, services, webClient, allowsAnonymous);
+        focusPlaceId, path, allModels, relations, services, webClient, cfg);
   }
 
 
@@ -353,16 +352,16 @@ public class TTCacheManager {
 
     public PlacePathIndex(String focusPlaceId, String path,
         ResultSet allModels, ResultSet relations, ResultSet services,
-        TTWebClient webClient, boolean allowsAnonymousFlag) {
+        TTWebClient webClient, TTWEnvironmentConfiguration cfg) {
       artifactToArtifactDependencyMap = new ConcurrentHashMap<>();
       modelsSolutionsByAssetID = new ConcurrentHashMap<>();
       modelsSolutionsByModelID = new ConcurrentHashMap<>();
       modelToServiceMap = new ConcurrentHashMap<>();
-      allowsAnonymousAssets = allowsAnonymousFlag;
+      allowsAnonymousAssets = cfg.isAllowAnonymous();
 
-      indexModels(allModels);
+      indexModels(allModels, cfg);
       indexRelationships(relations);
-      indexServices(services);
+      indexServices(services, cfg);
       Map<String, TrisotechFileInfo> index = collectRepositoryContent(webClient, focusPlaceId,
           path);
 
@@ -407,16 +406,17 @@ public class TTCacheManager {
      * metadata of the underlying knowledge asset
      *
      * @param services the service asset semantic metadata, as queried from the Trisotech KG
+     * @param cfg      the environment configuration
      */
-    protected void indexServices(ResultSet services) {
+    protected void indexServices(ResultSet services, TTWEnvironmentConfiguration cfg) {
       while (services.hasNext()) {
         QuerySolution soln = services.nextSolution();
         // asset + service joint metadata
-        SemanticFileInfo links = toMap(soln);
-        var modelId = links.getModelId();
-        var assetId = toResourceId(links.getAssetId());
-        var serviceId = toResourceId(links.getServiceId());
-        var serviceName = links.getModelName();
+        SemanticFileInfo serviceModelLink = toMap(soln, cfg);
+        var modelId = serviceModelLink.getModelId();
+        var assetId = toResourceId(serviceModelLink.getAssetId());
+        var serviceId = toResourceId(serviceModelLink.getServiceId());
+        var serviceName = serviceModelLink.getModelName();
 
         // (asset <=) model => service link
         modelToServiceMap.computeIfAbsent(modelId, k -> new ArrayList<>())
@@ -431,13 +431,13 @@ public class TTCacheManager {
         serviceInfo.putAll(assetInfo);
 
         // override asset Id
-        serviceInfo.put(ASSET_ID, links.getServiceId());
+        serviceInfo.put(ASSET_ID, serviceModelLink.getServiceId());
         // override model name with service name
         serviceInfo.put(ARTIFACT_NAME, serviceName);
         // set service id
-        serviceInfo.put(SERVICE_ID, links.getServiceId());
+        serviceInfo.put(SERVICE_ID, serviceModelLink.getServiceId());
         // override asset types
-        serviceInfo.put(ASSET_TYPE, links.getAssetTypes());
+        serviceInfo.put(ASSET_TYPE, serviceModelLink.getAssetTypes());
 
         modelsSolutionsByAssetID.put(serviceId.asKey(), serviceInfo);
       }
@@ -457,14 +457,15 @@ public class TTCacheManager {
      * has an asset id), the metadata is also indexed by that asset id.
      *
      * @param modelSet the model metadata, as queried from the Trisotech KG
+     * @param cfg      the environment configuration
      * @see TTGraphTerms
      */
-    protected void indexModels(ResultSet modelSet) {
+    protected void indexModels(ResultSet modelSet, TTWEnvironmentConfiguration cfg) {
 
       Set<SemanticFileInfo> solnSet = new HashSet<>();
       while (modelSet.hasNext()) {
         QuerySolution soln = modelSet.nextSolution();
-        SemanticFileInfo metadata = toMap(soln);
+        SemanticFileInfo metadata = toMap(soln, cfg);
         solnSet.add(metadata);
       }
 
@@ -563,25 +564,6 @@ public class TTCacheManager {
       }
     }
 
-    /**
-     * Generates a predictable asset ID for the knowledge Asset implicitly carried by a model, as a
-     * knowledge artifact.
-     * <p>
-     * Re-hashes the UUID of the model to obtain an asset UUID Uses a CalVer SNAPSHOT version tag,
-     * based on the model last update date, approximated to the Year/Month - assuming models are
-     * up-to-date, and updated around the time the knowledge is revised
-     *
-     * @param metadata The artifact metadata, which does not include an ASSET_ID
-     * @return a candidate Asset ID
-     */
-    private String mintAssetIdForAnonymous(SemanticFileInfo metadata) {
-      var guid = Util.uuid(metadata.getModelId());
-
-      var lastUpdate = toLocalDate(parseDateTime(metadata.getLastUpdated())).atStartOfDay();
-      var calver = format("%04d.%02d.0-SNAPSHOT", lastUpdate.getYear(), lastUpdate.getMonthValue());
-
-      return format("%s%s:%s", Registry.BASE_UUID_URN, guid, calver);
-    }
 
     private void indexByModel(String modelId,
         SemanticFileInfo metadata) {
@@ -596,13 +578,14 @@ public class TTCacheManager {
       }
     }
 
-    private SemanticFileInfo toMap(QuerySolution soln) {
+    private SemanticFileInfo toMap(QuerySolution soln, TTWEnvironmentConfiguration cfg) {
       //?model ?assetId ?version ?state ?updated ?mimeType ?artifactName
       SemanticFileInfo sinfo = new SemanticFileInfo();
 
       addResource(MODEL, soln, sinfo);
       addLiteral(ASSET_ID, soln, sinfo);
       addLiteral(SERVICE_ID, soln, sinfo);
+      addResource(SERVICE_FRAGMENT, soln, sinfo);
 
       addLiteral(ARTIFACT_NAME, soln, sinfo);
       addLiteral(MIME_TYPE, soln, sinfo);
@@ -613,10 +596,20 @@ public class TTCacheManager {
 
       addResource(ASSET_TYPE, soln, sinfo);
 
-      if (sinfo.getAssetId() == null && allowsAnonymousAssets) {
-        var assetId = mintAssetIdForAnonymous(sinfo);
+      if (!sinfo.hasAssetId() && allowsAnonymousAssets) {
+        var assetId =
+            mintAssetIdForAnonymous(cfg.getPublicAssetNamespace(), sinfo.getModelId(),
+                sinfo.getLastUpdated());
         logger.debug("Assigned asset ID {} to model {}", assetId, sinfo.getModelId());
-        sinfo.assertAssetId(assetId);
+        sinfo.assertAssetId(assetId.getVersionId().toString());
+      }
+      if (sinfo.hasServiceFragmentId() && !sinfo.hasServiceId() && allowsAnonymousAssets) {
+        var serviceAssetId =
+            mintAssetIdForAnonymous(cfg.getPublicAssetNamespace(), sinfo.getServiceFragmentId(),
+                sinfo.getLastUpdated());
+        logger.debug("Assigned Service asset ID {} to service {} in model {}",
+            serviceAssetId, sinfo.getServiceFragmentId(), sinfo.getModelId());
+        sinfo.assertServiceAssetId(serviceAssetId.getVersionId().toString());
       }
 
       return sinfo;
@@ -646,7 +639,7 @@ public class TTCacheManager {
   static class EmptyPlacePathIndex extends PlacePathIndex {
 
     public EmptyPlacePathIndex() {
-      super(null, null, null, null, null, null, false);
+      super(null, null, null, null, null, null, new TTWEnvironmentConfiguration());
     }
 
     @Override
@@ -661,12 +654,12 @@ public class TTCacheManager {
     }
 
     @Override
-    protected void indexModels(ResultSet modelSet) {
+    protected void indexModels(ResultSet modelSet, TTWEnvironmentConfiguration cfg) {
       // do nothing
     }
 
     @Override
-    protected void indexServices(ResultSet modelSet) {
+    protected void indexServices(ResultSet modelSet, TTWEnvironmentConfiguration cfg) {
       // do nothing
     }
 

@@ -8,12 +8,9 @@ import edu.mayo.kmdp.health.datatype.MiscProperties;
 import edu.mayo.kmdp.health.datatype.Status;
 import edu.mayo.kmdp.health.utils.MonitorUtil;
 import edu.mayo.kmdp.terms.TermsFHIRFacade;
-import edu.mayo.kmdp.terms.health.TermsHealthService;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import java.util.Map;
 import java.util.function.Supplier;
-import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
-import org.omg.spec.api4kp._20200801.services.KPComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -35,15 +32,6 @@ public class TTMonitoringConfig {
 
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId:nil}")
   String mainPlaceId;
-
-  @Bean
-  public Supplier<ApplicationComponent> termsHealth(
-      @Autowired @KPComponent(implementation = "fhir") TermsApiInternal termsApiInternal) {
-    return () -> {
-      TermsHealthService termsHealthService = new TermsHealthService(termsApiInternal);
-      return termsHealthService.assessHealth();
-    };
-  }
 
   @Bean
   Supplier<ApplicationComponent> ttServer(

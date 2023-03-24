@@ -48,7 +48,6 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRe
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
 import edu.mayo.kmdp.registry.Registry;
-import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -56,27 +55,21 @@ import edu.mayo.kmdp.util.XPathUtil;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
-import org.omg.spec.api4kp._20200801.Answer;
-import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
-import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
-import org.omg.spec.api4kp._20200801.services.KPComponent;
+import org.omg.spec.api4kp._20200801.id.Term;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyType;
 import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
-import org.omg.spec.api4kp._20200801.terms.model.ConceptDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,10 +90,6 @@ public class Weaver {
 
   private static final Logger logger = LoggerFactory.getLogger(Weaver.class);
   public static final String XMLNS_PREFIX = "xmlns:";
-
-  @Autowired
-  @KPComponent(implementation = "fhir")
-  private TermsApiInternal terms;
 
   @Autowired
   private NamespaceManager names;
@@ -341,20 +330,7 @@ public class Weaver {
 
 
   private boolean isDomainConcept(String uriStr) {
-    // the Terms service needs a UUID...
-    URI uri = URI.create(uriStr);
-    Answer<ConceptDescriptor> cdAns
-        = Answer.ofTry(Optional.ofNullable(NameUtils.getTrailingPart(uri.toString())))
-        .flatOpt(Util::ensureUUID)
-        .flatMap(id -> terms.lookupTerm(id.toString()));
-    if (!cdAns.isSuccess()) {
-      return false;
-    }
-    String ns = cdAns.map(ConceptIdentifier::getNamespaceUri)
-        .map(URI::toString)
-        .orElse("");
-
-    return names.isDomainConcept(ns);
+    return names.isDomainConcept(Term.newTerm(URI.create(uriStr)).getNamespaceUri());
   }
 
 
@@ -497,26 +473,14 @@ public class Weaver {
     }
 
     List<ConceptIdentifier> conceptIdentifiers = new ArrayList<>();
-    ConceptIdentifier concept = null;
     try {
-      ResourceIdentifier resourceIdentifier = SemanticIdentifier
-          .newId(new URI(el.getAttribute("uri")));
-
-      Answer<ConceptDescriptor> term = terms.lookupTerm(resourceIdentifier.getUuid().toString());
-      if (term.getOptionalValue().isPresent()) {
-        concept = term.get()
-            .asConceptIdentifier();
-      } else {
-        if (logger.isWarnEnabled()) {
-          logger.warn("WARNING: resource ID {} failed in lookupTerm "
-              + "and will be removed from the file", resourceIdentifier.getUuid());
-        }
-        return conceptIdentifiers;
-      }
-    } catch (URISyntaxException | IllegalArgumentException e) {
-      logger.error(String.format("%s%s", e.getMessage(), Arrays.toString(e.getStackTrace())));
+      var concept = Term.newTerm(URI.create(el.getAttribute("uri")))
+          .asConceptIdentifier()
+          .withName(el.getAttribute("itemName"));
+      conceptIdentifiers.add(concept);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
     }
-    conceptIdentifiers.add(concept);
 
     return conceptIdentifiers;
   }

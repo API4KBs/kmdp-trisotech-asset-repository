@@ -17,9 +17,6 @@ package edu.mayo.kmdp;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
-import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
-import org.omg.spec.api4kp._20200801.services.KPComponent;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,9 +25,5 @@ import org.springframework.context.annotation.Configuration;
     basePackageClasses = {TrisotechAssetRepository.class, TrisotechWrapper.class})
 public class TrisotechAssetRepositoryTestConfig {
 
-  @Bean
-  @KPComponent(implementation = "fhir")
-  public TermsApiInternal mockTerms() {
-    return new MockTermsServer();
-  }
+
 }

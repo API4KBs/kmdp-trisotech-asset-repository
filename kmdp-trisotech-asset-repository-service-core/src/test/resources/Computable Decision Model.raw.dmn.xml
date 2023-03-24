@@ -61,7 +61,7 @@
                              modelName="KnowledgeAssetTypes - 20190801"
                              modelType="http://www.trisotech.com/graph/1.0/element#Framework"
                              type="graph"
-                             uri="https://ontology.mayo.edu/taxonomies/KAO/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
+                             uri="https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#56b58fc2-b66f-3175-878e-bc3ef01cb916"/>
          <triso:customAttribute id="_598bbdb1-5647-4ea9-b74f-39ec0fe2d7a8"
                                 key="knowledgeAssetId"
                                 type="string"

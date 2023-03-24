@@ -292,11 +292,11 @@ class WeaverTest {
 
       assertTrue(props.stream()
           .anyMatch(
-              ann -> ann.getRef().getName().contains("13a3e25c-6848-373e-9676-8ecb62ab3e6a")));
+              ann -> ann.getRef().getTag().contains("13a3e25c-6848-373e-9676-8ecb62ab3e6a")));
 
       assertTrue(props.stream()
           .anyMatch(
-              ann -> ann.getRef().getName().contains("102f5949-fa9b-3531-85ba-28fafde21c2d")));
+              ann -> ann.getRef().getTag().contains("102f5949-fa9b-3531-85ba-28fafde21c2d")));
 
     } catch (IllegalStateException ie) {
       logger.error(ie.getMessage(), ie);

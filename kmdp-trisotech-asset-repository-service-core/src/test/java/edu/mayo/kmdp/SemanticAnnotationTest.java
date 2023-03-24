@@ -27,16 +27,14 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._20200801.Answer;
-import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
-import org.omg.spec.api4kp._20200801.services.KPComponent;
+import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
-import org.omg.spec.api4kp._20200801.terms.model.ConceptDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -55,9 +53,6 @@ class SemanticAnnotationTest {
   @Autowired
   Redactor redactor;
 
-  @Autowired
-  @KPComponent(implementation = "fhir")
-  TermsApiInternal terms;
 
   @Test
   void testExtraction() {
@@ -80,13 +75,11 @@ class SemanticAnnotationTest {
         fail("Unable to instantiate metadata object");
       }
       KnowledgeAsset surr = res.get();
-      assertEquals(4, surr.getAnnotation().size());
-      List<ConceptDescriptor> inputs = surr.getAnnotation().stream()
+      assertEquals(3, surr.getAnnotation().size());
+      List<ConceptIdentifier> inputs = surr.getAnnotation().stream()
           .filter(annotation -> In_Terms_Of.sameTermAs(annotation.getRel()))
-          .map(annotation -> annotation.getRef().getUuid().toString())
-          .map(terms::lookupTerm)
-          .collect(Answer.toList())
-          .orElse(Collections.emptyList());
+          .map(Annotation::getRef)
+          .collect(Collectors.toList());
       assertEquals(2, inputs.size());
       assertTrue(inputs.stream()
           .anyMatch(
@@ -95,12 +88,10 @@ class SemanticAnnotationTest {
           .anyMatch(
               input -> input.getUuid().toString().equals("9296f375-a7ed-3c59-a972-4a7eb40c8820")));
 
-      List<ConceptDescriptor> decisions = surr.getAnnotation().stream()
+      List<ConceptIdentifier> decisions = surr.getAnnotation().stream()
           .filter(annotation -> Captures.sameTermAs(annotation.getRel()))
-          .map(annotation -> annotation.getRef().getUuid().toString())
-          .map(terms::lookupTerm)
-          .collect(Answer.toList())
-          .orElse(Collections.emptyList());
+          .map(Annotation::getRef)
+          .collect(Collectors.toList());
 
       assertEquals(1, decisions.size());
       assertTrue(decisions.stream()
@@ -138,12 +129,10 @@ class SemanticAnnotationTest {
       }
       KnowledgeAsset surr = res.get();
 
-      List<ConceptDescriptor> inputs = surr.getAnnotation().stream()
+      List<String> inputs = surr.getAnnotation().stream()
           .filter(annotation -> In_Terms_Of.sameTermAs(annotation.getRel()))
           .map(annotation -> annotation.getRef().getUuid().toString())
-          .map(terms::lookupTerm)
-          .collect(Answer.toList())
-          .orElse(Collections.emptyList());
+          .collect(Collectors.toList());
 
       // FIXME "Dictionary inputs are not resolved (sex, race)"
       assertEquals(2, inputs.size());

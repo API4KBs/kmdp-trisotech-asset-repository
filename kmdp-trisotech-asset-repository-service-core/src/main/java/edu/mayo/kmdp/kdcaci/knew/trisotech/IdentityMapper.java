@@ -14,13 +14,13 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams.DEFAULT_VERSION_TAG;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.KEY;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_BASE_MODEL_URI;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CUSTOM_ATTRIBUTE_ATTR;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_METADATA_NS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.VALUE;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper.applyTimestampToVersion;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTWParams.DEFAULT_VERSION_TAG;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.NameUtils.getTrailingPart;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
@@ -28,11 +28,12 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.tryNewVersionId;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionException;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticFileInfo;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
@@ -81,7 +82,7 @@ public class IdentityMapper {
   TrisotechWrapper client;
 
   @Autowired(required = false)
-  TTAssetRepositoryConfig config;
+  TTWEnvironmentConfiguration config;
 
   @Autowired
   NamespaceManager names;
@@ -100,10 +101,10 @@ public class IdentityMapper {
   @PostConstruct
   void init() {
     if (config == null) {
-      config = new TTAssetRepositoryConfig();
+      config = new TTWEnvironmentConfiguration();
     }
-    publishedOnly = config.getTyped(TTWParams.PUBLISHED_ONLY);
-    assetsOnly = config.getTyped(TTWParams.ASSETS_ONLY);
+    publishedOnly = config.getTyped(TTWParams.PUBLISHED_ONLY_FLAG);
+    assetsOnly = config.getTyped(TTWParams.ASSETS_ONLY_FLAG);
     defaultVersion = config.getTyped(DEFAULT_VERSION_TAG);
   }
 

@@ -53,7 +53,6 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
@@ -62,6 +61,8 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionException;
 import edu.mayo.kmdp.language.translators.surrogate.v2.SurrogateV2toHTMLTranslator;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
@@ -161,7 +162,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   private final _applyTransrepresent htmlTranslator = new SurrogateV2toHTMLTranslator();
 
   @Autowired(required = false)
-  private TTAssetRepositoryConfig configuration;
+  private TTWEnvironmentConfiguration configuration;
   @Autowired
   private NamespaceManager names;
 
@@ -174,12 +175,12 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   @PostConstruct
   void init() {
     if (configuration == null) {
-      configuration = new TTAssetRepositoryConfig();
+      configuration = new TTWEnvironmentConfiguration();
     }
     if (hrefBuilder == null) {
       hrefBuilder = new KARSHrefBuilder(configuration);
     }
-    publishedOnly = configuration.getTyped(TTWParams.PUBLISHED_ONLY);
+    publishedOnly = configuration.getTyped(TTWParams.PUBLISHED_ONLY_FLAG);
   }
 
   @Override
@@ -187,7 +188,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     return Answer.of(new KnowledgeAssetCatalog()
         .withName("KMDP Trisotech DES Wrapper")
         .withId(newId(BASE_UUID_URN_URI, "TTW"))
-        .withOwner("KMDP / MEA")
         .withSurrogateModels(rep(Knowledge_Asset_Surrogate_2_0, XML_1_1))
         .withSupportedAssetTypes(SUPPORTED_ASSET_TYPES));
   }

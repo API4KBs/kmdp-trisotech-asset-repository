@@ -13,138 +13,126 @@
  */
 package edu.mayo.kmdp.trisotechwrapper.config;
 
-import edu.mayo.kmdp.util.Util;
-import java.net.URI;
+import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.apiEndpoint;
+
+import edu.mayo.kmdp.ConfigProperties;
+import edu.mayo.kmdp.util.PropertiesUtil;
 import java.util.Optional;
+import java.util.Properties;
 import javax.annotation.PostConstruct;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
  * This class is used to set the static context in the TrisotechWrapper.
- * @Value cannot be used with static values.
- * @Value is needed to set the token and repository needed in TrisotechWrapper so those values
- * (especially the token) are NOT in the codebase.
  */
 @Component
-public class TTWEnvironmentConfiguration {
+public class TTWEnvironmentConfiguration extends
+    ConfigProperties<TTWEnvironmentConfiguration, TTWParams> {
 
   private static final Logger logger = LoggerFactory.getLogger(TTWEnvironmentConfiguration.class);
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.baseUrl:}")
-  private String baseURL;
+  private static final Properties DEFAULTS = defaulted(TTWParams.class);
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.trisotechToken:}")
-  private String token;
+  @Autowired
+  private Environment env;
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryName:}")
-  private String repositoryName;
+  public TTWEnvironmentConfiguration() {
+    super(DEFAULTS);
+  }
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryPath:/}")
-  private String repositoryPath;
+  public TTWEnvironmentConfiguration(Properties defaults) {
+    super(defaults);
+  }
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId:}")
-  private String repositoryId;
+  @Override
+  public TTWParams[] properties() {
+    return TTWParams.values();
+  }
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.executionEnv:ckedev}")
-  private String executionEnvironment;
+  @Override
+  public String encode() {
+    return PropertiesUtil.serializeProps(this);
+  }
 
-  @Value("${edu.mayo.kmdp.trisotechwrapper.expiration:1440}")
-  private String cacheExpiration;
-
-  @Value("${edu.mayo.kmdp.trisotechwrapper.namespace.public:https://clinicalknowledgemanagement.mayo.edu/assets/}")
-  private URI publicAssetNamespace;
-
-  @Value("${edu.mayo.kmdp.trisotechwrapper.namespace.public:https://clinicalknowledgemanagement.mayo.edu/artifacts/}")
-  private URI publicArtifactNamespace;
-
-  @Value("${edu.mayo.kmdp.application.flag.allowAnonymous:true}")
-  private boolean allowAnonymous;
-
-  private String apiEndpoint;
 
   @PostConstruct
-  public void init() {
-    apiEndpoint = Util.isNotEmpty(baseURL)
-        ? buildApiEndpoint()
-        : null;
+  public TTWEnvironmentConfiguration init() {
+    scanEnvironment();
 
-    if (logger.isDebugEnabled()) {
-      logger.debug("\n\n****token in PostConstruct is {}... ", token.substring(0,5));
-      logger.debug("repositoryName in PostConstruct is: {}", repositoryName);
-      logger.debug("baseUrl in PostConstruct is: {}", baseURL);
-      logger.debug("apiEndpoint in PostConstruct is {}", apiEndpoint + "*****\n\n");
-    }
-    if (Util.isEmpty(token)) {
+    ensureVariablesSet();
+
+    if (get(TTWParams.API_TOKEN).isEmpty()) {
       logger.warn("No bearer token detected - Unable to connect to the TT DES");
     }
-    if (Util.isEmpty(repositoryName) || Util.isEmpty(repositoryId)) {
+    if (get(TTWParams.REPOSITORY_ID).isEmpty() || get(TTWParams.REPOSITORY_NAME).isEmpty()) {
       logger.warn("No target Place/Repository configuration detected "
           + "- Unable to retrieve models");
     }
 
-    if (token.startsWith("edu.mayo") && token.contains("=")) {
-      this.token = token.substring(token.indexOf('=') + 1);
+    return this;
+  }
+
+  /**
+   * Infers any derived configuration variable value
+   *
+   * Sets the TT DES public API endpoint, given the base URL
+   */
+  private void ensureVariablesSet() {
+    Optional<String> baseURL = tryGetTyped(TTWParams.BASE_URL);
+    Optional<String> apiEndpoint = tryGetTyped(TTWParams.API_ENDPOINT);
+    if (apiEndpoint.isEmpty() && baseURL.isPresent()) {
+      setTyped(TTWParams.API_ENDPOINT, apiEndpoint(baseURL.get()));
     }
   }
 
-  private String buildApiEndpoint() {
-    return baseURL
-        + (baseURL.endsWith("/") ? "" : "/")
-        + "publicapi/";
+  /**
+   * Acquires the configuration values set in the environment
+   */
+  private void scanEnvironment() {
+    for (var param : TTWParams.values()) {
+      var sysValue = sanitize(env.getProperty(param.getName()));
+      if (sysValue != null) {
+        this.setTyped(param, sysValue);
+        if (logger.isInfoEnabled()) {
+          logger.info("Configuration param {} detected - using value {}",
+              param,
+              print(param, sysValue));
+        }
+      }
+    }
   }
 
-  public String getBaseURL() {
-    return baseURL;
+  /**
+   * Ensures the configuration values do not carry attack vectors
+   *
+   * @param varValue the candiadte config value, as provided by the environment
+   * @return a sanitized value
+   */
+  private String sanitize(String varValue) {
+    return varValue != null
+        ? Encode.forJava(varValue)
+        : null;
   }
 
-  public Optional<String> getApiEndpoint() {
-    return Optional.ofNullable(apiEndpoint);
+  /**
+   * Formats a configuration variable value for printing/logging
+   * <p>
+   * Obfuscates the secrets
+   *
+   * @param param the config variable
+   * @param sysValue the config variable value
+   * @return the value, in a form suitable for printing
+   */
+  private String print(TTWParams param, String sysValue) {
+    if (param == TTWParams.API_TOKEN) {
+      return sysValue.substring(0, 10);
+    }
+    return sysValue;
   }
 
-  public String getToken() {
-    return token;
-  }
-
-  public String getRepositoryName() {
-    return repositoryName;
-  }
-
-  public String getCacheExpiration() {
-    return cacheExpiration;
-  }
-
-  public String getRepositoryId() {
-    return repositoryId;
-  }
-
-  public String getPath() {
-    return repositoryPath;
-  }
-
-  public URI getPublicAssetNamespace() {
-    return publicAssetNamespace;
-  }
-
-  public void setPublicAssetNamespace(URI publicAssetNamespace) {
-    this.publicAssetNamespace = publicAssetNamespace;
-  }
-
-  public URI getPublicArtifactNamespace() {
-    return publicArtifactNamespace;
-  }
-
-  public void setPublicArtifactNamespace(URI publicArtifactNamespace) {
-    this.publicArtifactNamespace = publicArtifactNamespace;
-  }
-
-  public String getExecutionEnvironment() {
-    return executionEnvironment;
-  }
-
-  public boolean isAllowAnonymous() {
-    return allowAnonymous;
-  }
 }

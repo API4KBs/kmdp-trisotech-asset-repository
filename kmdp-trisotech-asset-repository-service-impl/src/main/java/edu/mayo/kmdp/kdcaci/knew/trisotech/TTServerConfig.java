@@ -15,18 +15,17 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.HTMLAdapter;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTServerContextAwareHrefBuilder;
 import edu.mayo.kmdp.terms.TermsBrokerImpl;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.util.ws.ContentNegotiationFilter;
 import edu.mayo.kmdp.util.ws.PointerHTMLAdapter;
 import java.util.List;
 import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -39,21 +38,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 @PropertySource(value={"classpath:application.properties"})
 public class TTServerConfig {
 
-  @Value("${edu.mayo.kmdp.application.flag.publishedOnly:false}")
-  private String publishedOnly;
-
-  @Value("${edu.mayo.kmdp.application.flag.assetsOnly:true}")
-  private String assetsOnly;
-
   @Bean
-  public TTAssetRepositoryConfig config() {
-    return new TTAssetRepositoryConfig()
-        .with(TTWParams.PUBLISHED_ONLY, Boolean.valueOf(publishedOnly))
-        .with(TTWParams.ASSETS_ONLY, Boolean.valueOf(assetsOnly));
-  }
-
-  @Bean
-  public TTServerContextAwareHrefBuilder hrefBuilder(@Autowired TTAssetRepositoryConfig cfg) {
+  public TTServerContextAwareHrefBuilder hrefBuilder(@Autowired TTWEnvironmentConfiguration cfg) {
     return new TTServerContextAwareHrefBuilder(cfg);
   }
 

@@ -15,13 +15,10 @@
  */
 package edu.mayo.kmdp;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import org.omg.spec.api4kp._20200801.api.terminology.v4.server.TermsApiInternal;
 import org.omg.spec.api4kp._20200801.services.KPComponent;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -30,19 +27,6 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(
     basePackageClasses = {TrisotechAssetRepository.class, TrisotechWrapper.class})
 public class TrisotechAssetRepositoryTestConfig {
-
-  @Value("${edu.mayo.kmdp.application.flag.publishedOnly:true}")
-  private String publishedOnly;
-
-  @Value("${edu.mayo.kmdp.application.flag.assetsOnly:true}")
-  private String assetsOnly;
-
-  @Bean
-  public TTAssetRepositoryConfig config() {
-    return new TTAssetRepositoryConfig()
-        .with(TTWParams.ASSETS_ONLY, Boolean.valueOf(assetsOnly))
-        .with(TTWParams.PUBLISHED_ONLY, Boolean.valueOf(publishedOnly));
-  }
 
   @Bean
   @KPComponent(implementation = "fhir")

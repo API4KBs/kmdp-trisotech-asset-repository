@@ -4,6 +4,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifact;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import java.net.URI;
@@ -40,7 +41,8 @@ public class ServiceLibraryHelper {
    */
   public Optional<TrisotechExecutionArtifact> checkIsDeployed(String serviceName,
       TrisotechFileInfo manifest) {
-    var execs = client.listExecutionArtifacts(envConfig.getExecutionEnvironment());
+    var execs = client.listExecutionArtifacts(
+        envConfig.getTyped(TTWParams.SERVICE_LIBRARY_ENVIRONMENT));
     // DMN executables - the whole model is mapped to a service
     return Optional.ofNullable(execs.get(manifest.getName()))
         // BPMN executables - each process is mapped to a service
@@ -59,7 +61,7 @@ public class ServiceLibraryHelper {
 
   private Optional<URI> buildSwaggerUserInterfaceURL(
       TrisotechExecutionArtifact x, String serviceName) {
-    var publicApi = envConfig.getApiEndpoint();
+    var publicApi = envConfig.tryGetTyped(TTWParams.API_ENDPOINT);
     if (publicApi.isEmpty()) {
       return Optional.empty();
     }
@@ -82,7 +84,7 @@ public class ServiceLibraryHelper {
   }
 
   private URI buildOpenAPIspecURL(TrisotechExecutionArtifact x, String serviceName) {
-    var url = envConfig.getBaseURL() + getEndpointUrl(x, serviceName);
+    var url = envConfig.getTyped(TTWParams.BASE_URL) + getEndpointUrl(x, serviceName);
     return URI.create(url);
   }
 
@@ -98,7 +100,7 @@ public class ServiceLibraryHelper {
     return "execution"
         + "/" + x.getLanguage()
         + "/api/openapi"
-        + "/" + envConfig.getExecutionEnvironment()
+        + "/" + envConfig.getTyped(TTWParams.SERVICE_LIBRARY_ENVIRONMENT)
         + "/" + x.getGroupId()
         + "/" + x.getArtifactId()
         + ("dmn".equals(x.getLanguage()) ? "/" + UriUtils.encode(serviceName, UTF_8) : "")

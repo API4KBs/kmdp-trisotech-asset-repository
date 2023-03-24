@@ -13,7 +13,6 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams.DEFAULT_VERSION_TAG;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.KommunicatorHelper.tryAddKommunicatorLink;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.addSemanticAnnotations;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.detectRepLanguage;
@@ -21,6 +20,7 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.Triso
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.getDefaultAssetType;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.getRepLanguage;
 import static edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper.applyTimestampToVersion;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTWParams.DEFAULT_VERSION_TAG;
 import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
 import static edu.mayo.kmdp.util.Util.isNotEmpty;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
@@ -65,8 +65,8 @@ import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.Publicati
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.IdentityMapper;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.StreamUtil;
@@ -131,7 +131,7 @@ public class TrisotechIntrospectionStrategy {
   NamespaceManager names;
 
   @Autowired(required = false)
-  TTAssetRepositoryConfig config;
+  TTWEnvironmentConfiguration config;
 
   @Autowired(required = false)
   KARSHrefBuilder hrefBuilder;
@@ -148,7 +148,7 @@ public class TrisotechIntrospectionStrategy {
   @PostConstruct
   void init() {
     if (config == null) {
-      config = new TTAssetRepositoryConfig();
+      config = new TTWEnvironmentConfiguration();
     }
   }
 

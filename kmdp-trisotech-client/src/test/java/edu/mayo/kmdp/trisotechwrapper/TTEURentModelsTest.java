@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.TTEURentModelsTest.EURentTestConfig;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import java.util.Date;
 import java.util.List;
@@ -63,12 +64,13 @@ class TTEURentModelsTest {
 
   @BeforeEach
   void setUp() {
-    var apiEndpoint = client.getConfig().getApiEndpoint();
+    var apiEndpoint = client.getConfig().get(TTWParams.API_ENDPOINT);
     Assumptions.assumeTrue(apiEndpoint.isPresent());
 
     ttRepositoryUrl =
         apiEndpoint.get() + "/repositoryfilecontent?repository=";
-    testRepoId = client.getConfig().getRepositoryId();
+    testRepoId = client.getConfig().get(TTWParams.REPOSITORY_ID)
+        .orElseGet(Assertions::fail);
 
     Assumptions.assumeFalse(client.listPlaces().isEmpty());
   }

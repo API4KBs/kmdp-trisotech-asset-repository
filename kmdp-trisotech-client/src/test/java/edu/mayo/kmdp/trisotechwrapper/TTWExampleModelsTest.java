@@ -7,10 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.TTWExampleModelsTest.ExampleTestConfig;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +49,6 @@ class TTWExampleModelsTest {
   private static final String DMN_PUB_ID_1 = "http://www.trisotech.com/definitions/_27188a19-403f-471c-8ac3-843c270f8065";
 
 
-
   @Autowired
   TrisotechWrapper client;
 
@@ -57,12 +59,13 @@ class TTWExampleModelsTest {
 
   @BeforeEach
   void setUp() {
-    var apiEndpoint = client.getConfig().getApiEndpoint();
+    var apiEndpoint = client.getConfig().tryGetTyped(TTWParams.API_ENDPOINT, URI.class);
     Assumptions.assumeTrue(apiEndpoint.isPresent());
 
     ttRepositoryUrl =
         apiEndpoint + "/repositoryfilecontent?repository=";
-    testRepoId = client.getConfig().getRepositoryId();
+    testRepoId = client.getConfig().get(TTWParams.REPOSITORY_ID)
+        .orElseGet(Assertions::fail);
 
     Assumptions.assumeFalse(client.listPlaces().isEmpty());
   }
@@ -141,7 +144,6 @@ class TTWExampleModelsTest {
   }
 
 
-
   @Test
   final void testGetPublishedDmnModels() {
     List<TrisotechFileInfo> publishedModels =
@@ -162,7 +164,6 @@ class TTWExampleModelsTest {
     assertTrue(placeMap.containsKey(key));
     assertEquals("Trisotech Examples Working Space", placeMap.get(key));
   }
-
 
 
   @Configuration

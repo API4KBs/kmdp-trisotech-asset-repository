@@ -12,6 +12,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.KommunicatorHelper.KommunicatorDescr.FileDescr;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.KommunicatorHelper.KommunicatorDescr.RepoDescr;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import java.net.URI;
@@ -120,7 +121,7 @@ public class KommunicatorHelper {
    * @return a Kommunicator URL
    */
   private URI buildURI(String encodedRef) {
-    String sb = ttEnv.getBaseURL()
+    String sb = ttEnv.getTyped(TTWParams.BASE_URL)
         + KOMM_BASE
         + KOMM_ENDPOINT
         + encodedRef;
@@ -153,14 +154,14 @@ public class KommunicatorHelper {
     if (ttEnv == null) {
       return Optional.empty();
     }
-    var api = ttEnv.getApiEndpoint();
+    var api = ttEnv.tryGetTyped(TTWParams.API_ENDPOINT, URI.class);
     if (api.isPresent()) {
       var rd = new RepoDescr(
-          ttEnv.getRepositoryName(),
+          ttEnv.getTyped(TTWParams.REPOSITORY_NAME),
           // ttEnv.getToken(), // do not include the API key - not necessary with SSO
           null,
-          api.get(),
-          ttEnv.getRepositoryId()
+          api.get().toString(),
+          ttEnv.getTyped(TTWParams.REPOSITORY_ID)
       );
       return Optional.of(rd);
     }

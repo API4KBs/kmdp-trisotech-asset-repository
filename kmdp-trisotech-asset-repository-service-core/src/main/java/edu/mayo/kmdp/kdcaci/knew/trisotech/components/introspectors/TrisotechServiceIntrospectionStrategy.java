@@ -36,6 +36,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.Publicati
 import edu.mayo.kmdp.kdcaci.knew.trisotech.IdentityMapper;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.nio.charset.Charset;
@@ -251,7 +252,8 @@ public class TrisotechServiceIntrospectionStrategy {
 
   private Optional<Element> findAnonymousMatch(String xpath, Document dox, ResourceIdentifier assetId) {
     return asElementStream(xPathUtil.xList(dox, xpath))
-        .filter(e -> mintAssetIdForAnonymous(cfg.getPublicAssetNamespace(), e.getAttribute("id"), null)
+        .filter(e -> mintAssetIdForAnonymous(
+            cfg.getTyped(TTWParams.ASSET_NAMESPACE), e.getAttribute("id"), null)
             .getUuid().equals(assetId.getUuid()))
         .findFirst();
   }

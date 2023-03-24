@@ -4,7 +4,8 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_BASE_MODEL_URI;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.TTAssetRepositoryConfig.TTWParams;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class NamespaceManager {
 
   @Autowired(required = false)
-  TTAssetRepositoryConfig config;
+  TTWEnvironmentConfiguration config;
 
   private Pattern domainConceptPattern;
   private URI artifactNamespace;
@@ -33,13 +34,13 @@ public class NamespaceManager {
   @PostConstruct
   public void init() {
     if (config == null) {
-      config = new TTAssetRepositoryConfig();
+      config = new TTWEnvironmentConfiguration();
     }
     defaultVersion = config.getTyped(TTWParams.DEFAULT_VERSION_TAG);
     domainConceptPattern =
         Pattern.compile(config.getTyped(TTWParams.DOMAIN_TERMS_NAMESPACE_PATTERN));
-    artifactNamespace = URI.create(config.getTyped(TTWParams.ARTIFACT_NAMESPACE));
-    assetNamespace = URI.create(config.getTyped(TTWParams.ASSET_NAMESPACE));
+    artifactNamespace = config.getTyped(TTWParams.ARTIFACT_NAMESPACE);
+    assetNamespace = config.getTyped(TTWParams.ASSET_NAMESPACE);
     assetIDKey = config.getTyped(TTWParams.ASSET_ID_ATTRIBUTE);
     serviceAssetIDKey = config.getTyped(TTWParams.SERVICE_ASSET_ID_ATTRIBUTE);
   }

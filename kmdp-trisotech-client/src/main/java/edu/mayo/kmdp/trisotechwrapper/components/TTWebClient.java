@@ -24,6 +24,7 @@ import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.trisotechwrapper.components.operators.KEMtoMVFTranslator;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.Datum;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifactData;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileData;
@@ -80,17 +81,18 @@ public class TTWebClient {
 
   private static final Logger logger = LoggerFactory.getLogger(TTWebClient.class);
 
-  private final String apiEndpoint;
+  private final URI apiEndpoint;
   private final String sparqlEndpoint;
   private final String token;
 
   private final boolean online;
 
   public TTWebClient(TTWEnvironmentConfiguration cfg) {
-    online = cfg.getApiEndpoint().isPresent();
-    apiEndpoint = cfg.getApiEndpoint().orElse("");
-    sparqlEndpoint = cfg.getBaseURL() + SPARQL_PATH;
-    token = cfg.getToken();
+    online = cfg.get(TTWParams.API_ENDPOINT).isPresent()
+        && cfg.get(TTWParams.API_TOKEN).isPresent();
+    apiEndpoint = cfg.getTyped(TTWParams.API_ENDPOINT);
+    sparqlEndpoint = cfg.getTyped(TTWParams.BASE_URL) + SPARQL_PATH;
+    token = cfg.getTyped(TTWParams.API_TOKEN);
   }
 
   /**

@@ -9,6 +9,7 @@ import edu.mayo.kmdp.trisotechwrapper.components.SemanticFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.components.TTCacheManager;
 import edu.mayo.kmdp.trisotechwrapper.components.TTWebClient;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifact;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
@@ -57,7 +58,7 @@ public class TrisotechWrapper {
   private final Logger logger = LoggerFactory.getLogger(TrisotechWrapper.class);
 
   @Autowired
-  private TTWEnvironmentConfiguration trisoWrapperEnvironmentConfiguration;
+  private TTWEnvironmentConfiguration cfg;
 
   // Place in the DES that this Wrapper points to
   private String focusPlaceId;
@@ -73,17 +74,21 @@ public class TrisotechWrapper {
 
   @PostConstruct
   void init() {
-    this.webClient = new TTWebClient(trisoWrapperEnvironmentConfiguration);
+    this.webClient = new TTWebClient(cfg);
 
-    this.targetPath = trisoWrapperEnvironmentConfiguration.getPath();
+    this.targetPath = cfg.getTyped(TTWParams.REPOSITORY_PATH);
 
-    this.focusPlaceId = Optional.ofNullable(trisoWrapperEnvironmentConfiguration.getRepositoryId())
-        .or(() -> getRepositoryId(trisoWrapperEnvironmentConfiguration.getRepositoryName()))
-        .orElseThrow(() -> new IllegalStateException("Unable to determine target repository ID"));
+    this.focusPlaceId = cfg.tryGetTyped(TTWParams.REPOSITORY_ID, String.class)
+        .or(() -> cfg.tryGetTyped(TTWParams.REPOSITORY_NAME, String.class)
+            .flatMap(this::getRepositoryId))
+        .orElseGet(() -> {
+          logger.warn("Unable to determine a target repository/place ID");
+          return null;
+        });
 
-    this.cacheManager = new TTCacheManager(webClient, trisoWrapperEnvironmentConfiguration);
+    this.cacheManager = new TTCacheManager(webClient, cfg);
 
-    this.publicNamespaceUri = trisoWrapperEnvironmentConfiguration.getPublicArtifactNamespace();
+    this.publicNamespaceUri = cfg.getTyped(TTWParams.ARTIFACT_NAMESPACE);
 
   }
 
@@ -113,10 +118,9 @@ public class TrisotechWrapper {
    */
   public TTWEnvironmentConfiguration getConfig() {
     if (logger.isDebugEnabled()) {
-      logger
-          .debug("The current Trisotech configuration is {}", trisoWrapperEnvironmentConfiguration);
+      logger.debug("The current Trisotech configuration is {}", cfg);
     }
-    return trisoWrapperEnvironmentConfiguration;
+    return cfg;
   }
 
   /**

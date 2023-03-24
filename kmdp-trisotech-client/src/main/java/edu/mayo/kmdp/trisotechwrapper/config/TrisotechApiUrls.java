@@ -58,6 +58,17 @@ public class TrisotechApiUrls {
 
 
   /**
+   * Derives the public API endpoint for a given DES server instance
+   * @param baseURL the DES server base URL
+   * @return the DES API endpoint
+   */
+  public static String apiEndpoint(String baseURL) {
+    return baseURL
+        + (baseURL.endsWith("/") ? "" : "/")
+        + "publicapi/";
+  }
+
+  /**
    * get the XML-specified mimeType for transferring XML files with Trisotech
    *
    * @param mimetype the mimetype specified through file information

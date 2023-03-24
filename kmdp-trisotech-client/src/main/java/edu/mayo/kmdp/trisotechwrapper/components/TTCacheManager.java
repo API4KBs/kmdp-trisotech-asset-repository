@@ -23,6 +23,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import edu.mayo.kmdp.util.FileUtil;
@@ -73,7 +74,7 @@ public class TTCacheManager {
 
   public TTCacheManager(TTWebClient webClient, TTWEnvironmentConfiguration cfg) {
     this.webClient = webClient;
-    this.pathIndexes = initCache(Long.parseLong(cfg.getCacheExpiration()), cfg);
+    this.pathIndexes = initCache(cfg.getTyped(TTWParams.CACHE_EXPIRATION), cfg);
   }
 
   public boolean clearCache() {
@@ -357,7 +358,7 @@ public class TTCacheManager {
       modelsSolutionsByAssetID = new ConcurrentHashMap<>();
       modelsSolutionsByModelID = new ConcurrentHashMap<>();
       modelToServiceMap = new ConcurrentHashMap<>();
-      allowsAnonymousAssets = cfg.isAllowAnonymous();
+      allowsAnonymousAssets = cfg.getTyped(TTWParams.ANONYMOUS_ASSETS_FLAG);
 
       indexModels(allModels, cfg);
       indexRelationships(relations);
@@ -598,14 +599,16 @@ public class TTCacheManager {
 
       if (!sinfo.hasAssetId() && allowsAnonymousAssets) {
         var assetId =
-            mintAssetIdForAnonymous(cfg.getPublicAssetNamespace(), sinfo.getModelId(),
+            mintAssetIdForAnonymous(cfg.getTyped(TTWParams.ASSET_NAMESPACE),
+                sinfo.getModelId(),
                 sinfo.getLastUpdated());
         logger.debug("Assigned asset ID {} to model {}", assetId, sinfo.getModelId());
         sinfo.assertAssetId(assetId.getVersionId().toString());
       }
       if (sinfo.hasServiceFragmentId() && !sinfo.hasServiceId() && allowsAnonymousAssets) {
         var serviceAssetId =
-            mintAssetIdForAnonymous(cfg.getPublicAssetNamespace(), sinfo.getServiceFragmentId(),
+            mintAssetIdForAnonymous(cfg.getTyped(TTWParams.ASSET_NAMESPACE),
+                sinfo.getServiceFragmentId(),
                 sinfo.getLastUpdated());
         logger.debug("Assigned Service asset ID {} to service {} in model {}",
             serviceAssetId, sinfo.getServiceFragmentId(), sinfo.getModelId());

@@ -13,17 +13,17 @@
  */
 package edu.mayo.kmdp;
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN_EL_DECISION;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DMN_EL_EXTENSIONS;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.DROOLS_NS;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_ATTACHMENT_ITEM;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_CMMN_11_NS;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_DMN_12_NS;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_METADATA_NS;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_META_EXPORTER;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_META_EXPORTER_VERSION;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_RELATIONSHIP;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TTConstants.TT_SEMANTICLINK;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.DMN_EL_DECISION;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.DMN_EL_EXTENSIONS;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.DROOLS_NS;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.TT_ATTACHMENT_ITEM;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.TT_CMMN_11_NS;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.TT_DMN_12_NS;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.TT_METADATA_NS;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.TT_META_EXPORTER;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.TT_META_EXPORTER_VERSION;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.TT_RELATIONSHIP;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.TT_SEMANTICLINK;
 import static edu.mayo.kmdp.util.Util.resolveResource;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
@@ -46,8 +46,8 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Abstract_Knowledge_Expression;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.language.LanguageDeSerializer;
 import edu.mayo.kmdp.language.common.cmmn.CMMN11Utils;
 import edu.mayo.kmdp.language.parsers.cmmn.v1_1.CMMN11Parser;

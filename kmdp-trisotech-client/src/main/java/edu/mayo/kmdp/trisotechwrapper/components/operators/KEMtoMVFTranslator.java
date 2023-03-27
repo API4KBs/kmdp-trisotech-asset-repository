@@ -1,13 +1,13 @@
 package edu.mayo.kmdp.trisotechwrapper.components.operators;
 
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
-import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMUtils.ensureVocabulary;
-import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMUtils.getArtifactId;
-import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMUtils.getAssetId;
-import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMUtils.getKEMConcepts;
-import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMUtils.getSemanticAnnotation;
-import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMUtils.getVocabName;
-import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMUtils.toConceptId;
+import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.ensureVocabulary;
+import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getArtifactId;
+import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getAssetId;
+import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getKEMConcepts;
+import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getSemanticAnnotation;
+import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getVocabName;
+import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.toConceptId;
 
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.Code;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.EdgeModelElement;
@@ -54,8 +54,7 @@ public class KEMtoMVFTranslator {
   }
 
   /**
-   * Default Constructor Creates a {@link KEMtoMVFTranslator} with a
-   * {@link ClinicalSituationKEMtoMVFTranslatorAddOn} extension
+   * Default Constructor Creates a {@link KEMtoMVFTranslator}
    */
   public KEMtoMVFTranslator() {
     this(Collections.emptyList());

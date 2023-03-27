@@ -27,7 +27,7 @@ import org.omg.spec.api4kp._20200801.ServerSideException;
  */
 public class NotLatestAssetVersionException extends ServerSideException {
 
-  private String modelUri;
+  private final String modelUri;
 
   public NotLatestAssetVersionException(
       String requestedVersion,

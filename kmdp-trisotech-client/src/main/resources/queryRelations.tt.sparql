@@ -15,18 +15,21 @@ FROM NAMED ?
 WHERE {
 GRAPH ? {
   {
-    ?from ?relType ?rel .
+    ?from ?relType ?toElement .
     # relations can be as semantic, copyOf or reuse, and dmn->dmn are includes
     FILTER(?relType in(graphrel:semantic, graphrel:copyOf, graphrel:reuse, dmn:include))
-    ?rel graphrel:ref? ?toElement .
-    # remove references to self
-    FILTER (!EXISTS { ?toElement rdf:type  graph:Ref . } ) .
+
     ?from graphrel:owner? ?fromModel .
     ?fromModel a graph:Model .
     ?fromModel graphrel:mimeType ?fromMimetype .
+    FILTER (?fromMimetype NOT IN("application/vnd.triso-capability+json","application/vnd.triso-landscaping+json","application/vnd.triso-discovery+json" ))
+
     ?toElement graphrel:owner? ?toModel .
     ?toModel a graph:Model .
-    ?toModel graphrel:mimeType ?toMimetype
+    ?toModel graphrel:mimeType ?toMimetype .
+    FILTER (?toMimetype NOT IN("application/vnd.triso-capability+json","application/vnd.triso-landscaping+json","application/vnd.triso-discovery+json" ))
+
+    FILTER(?fromModel != ?toModel)
   }
 }
 }

@@ -13,18 +13,23 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper.getDefaultAssetType;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechServiceIntrospectionStrategy.mintExternalServiceName;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DocumentHelper.extractAssetIdFromDocument;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.getDeclaredAssetTypes;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.getDefaultAssetType;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.getRepLanguage;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeTypeByAssetType;
+import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.applyTimestampToVersion;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getXmlMimeTypeByAssetType;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.ASSET_ID_ATTRIBUTE;
+import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.PropertiesUtil.serializeProps;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofMixedAnonymousComposite;
 import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformAnonymousComposite;
-import static org.omg.spec.api4kp._20200801.Answer.conflict;
 import static org.omg.spec.api4kp._20200801.Answer.failed;
 import static org.omg.spec.api4kp._20200801.Answer.notFound;
 import static org.omg.spec.api4kp._20200801.Answer.succeed;
@@ -54,22 +59,22 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionException;
 import edu.mayo.kmdp.language.translators.surrogate.v2.SurrogateV2toHTMLTranslator;
-import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
+import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
+import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
+import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
-import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XMLUtil;
-import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -78,7 +83,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
-import org.apache.http.HttpException;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetCatalogApiInternal;
@@ -100,7 +104,6 @@ import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
 import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
-import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,17 +147,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   );
 
   @Autowired
-  private TrisotechWrapper client;
+  private TTAPIAdapter client;
 
-  @Autowired
-  private IdentityMapper mapper;
-
-  @Autowired
-  private Weaver weaver;
   @Autowired
   private MetadataIntrospector extractor;
-  @Autowired
-  private Redactor redactor;
 
   @Autowired(required = false)
   private KARSHrefBuilder hrefBuilder;
@@ -163,10 +159,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   @Autowired(required = false)
   private TTWEnvironmentConfiguration configuration;
+
   @Autowired
   private NamespaceManager names;
-
-  private boolean publishedOnly;
 
   public TrisotechAssetRepository() {
     //
@@ -180,7 +175,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     if (hrefBuilder == null) {
       hrefBuilder = new KARSHrefBuilder(configuration);
     }
-    publishedOnly = configuration.getTyped(TTWParams.PUBLISHED_ONLY_FLAG);
+    names = new DefaultNamespaceManager(configuration);
   }
 
   @Override
@@ -211,17 +206,14 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
     }
 
-    Optional<String> modelId = mapper.getCurrentModelId(assetId, false);
+    var models = client.getMetadataByAssetId(assetId, xAccept).collect(toList());
 
-    if (modelId.isEmpty()) {
+    if (models.isEmpty()) {
       return Answer.ofTry(Optional.empty(), newId(assetId),
           () -> "No Asset found for the given ID");
     }
     // get the modelInfo for the latest artifactVersion
-    return Answer.ofTry(
-        client.getLatestModelFileInfo(modelId.get(), publishedOnly)
-            .flatMap(modelInfo ->
-                getKnowledgeAssetForModel(assetId, modelId.get(), modelInfo)));
+    return Answer.ofTry(getKnowledgeAssetForModels(assetId, models));
   }
 
 
@@ -235,11 +227,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     }
 
     try {
-      String internalId = mapper.resolveInternalArtifactID(assetId, versionTag, publishedOnly);
+      var carrierInfo = client.getMetadataByAssetId(assetId, versionTag).collect(toList());
 
-      return Answer.ofTry(
-          client.getLatestModelFileInfo(internalId, publishedOnly)
-              .flatMap(tfi -> getKnowledgeAssetForModel(assetId, internalId, tfi)));
+      return Answer.ofTry(getKnowledgeAssetForModels(assetId, carrierInfo));
     } catch (NotLatestAssetVersionException e) {
       // this can happen, but is not good practice to have different versions
       // of an asset on the same model - mostly because it's very inefficient
@@ -266,8 +256,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    */
   private KnowledgeAsset findArtifactVersionForAsset(String internalId, UUID assetId,
       String versionTag) throws NotFoundException {
+    var currentInfo = client.getMetadataByModelId(internalId).orElseThrow();
     List<TrisotechFileInfo> modelVersions =
-        client.getModelVersions(internalId);
+        client.getVersionsMetadataByModelId(internalId);
 
     // reverse the list so the most recent version that matches is selected
     // there can be multiple versions of the artifact that map to one version of asset
@@ -278,13 +269,16 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         continue;
       }
 
+      var versionInfo = new SemanticModelInfo(modelVersionInfo, currentInfo);
       Optional<KnowledgeAsset> surr =
           client.getModel(modelVersionInfo)
               .flatMap(dox ->
-                  mapper.extractAssetIdFromDocument(dox)
+                  extractAssetIdFromDocument(dox, configuration.getTyped(ASSET_ID_ATTRIBUTE))
                       .filter(axId -> versionTag.equals(axId.getVersionTag())
                           && assetId.equals(axId.getUuid()))
-                      .flatMap(axId -> getKnowledgeAssetForModel(assetId, dox, modelVersionInfo))
+                      .flatMap(
+                          axId -> getKnowledgeAssetForModels(
+                              assetId, Map.of(versionInfo, Optional.of(dox))))
               );
 
       if (surr.isPresent()) {
@@ -310,25 +304,26 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   @Override
   public Answer<List<Pointer>> listKnowledgeAssets(String assetTypeTag, String assetAnnotationTag,
       String assetAnnotationConcept, Integer offset, Integer limit) {
-    List<TrisotechFileInfo> trisotechFileInfoList
-        = client.getModelsFileInfo(getXmlMimeTypeByAssetType(assetTypeTag), publishedOnly);
+    var trisotechFileInfoList
+        = client.listModels(getXmlMimeTypeByAssetType(assetTypeTag));
 
-    List<Pointer> assetList = trisotechFileInfoList.stream()
+    var stream = trisotechFileInfoList
         .skip((null == offset) ? 0 : offset)
         .limit((null == limit || limit < 0) ? Integer.MAX_VALUE : limit)
         .flatMap(this::getAssetPointersForModel)
-        .collect(Collectors.toList());
+        .filter(ptr -> matchesType(ptr, assetTypeTag));
 
-    if (assetTypeTag != null) {
-      Optional<KnowledgeAssetType> type = KnowledgeAssetTypeSeries.resolveTag(assetTypeTag)
-          .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveTag(assetTypeTag));
-      return Answer.of(type.map(ConceptTerm::getReferentId)
-          .map(typeUri -> assetList.stream()
-              .filter(ptr -> ptr.getType().equals(typeUri))
-              .collect(Collectors.toList()))
-          .orElse(Collections.emptyList()));
+    return Answer.of(aggregateVersions(stream));
+  }
+
+  private boolean matchesType(Pointer ptr, String assetTypeTag) {
+    if (assetTypeTag == null) {
+      return true;
     }
-    return Answer.of(aggregateVersions(assetList));
+    var filterType = KnowledgeAssetTypeSeries.resolveTag(assetTypeTag)
+        .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveTag(assetTypeTag));
+    return filterType.isPresent() &&
+        filterType.get().getReferentId().equals(ptr.getType());
   }
 
   /**
@@ -336,34 +331,40 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    * <p>
    * In general, a Model carries one Knowledge Asset, and referencs 0 to many Service Assets
    *
-   * @param trisotechFileInfo the Model manifest
+   * @param info the Model manifest
    * @return the Asset Pointers, in a Stream
    */
-  private Stream<Pointer> getAssetPointersForModel(TrisotechFileInfo trisotechFileInfo) {
+  private Stream<Pointer> getAssetPointersForModel(SemanticModelInfo info) {
     // getId from fileInfo is the fileID
     try {
-      var assetId = mapper
-          .resolveEnterpriseAssetID(trisotechFileInfo.getId());
-      var ptr1 = assetId.map(id -> id.toPointer()
-          .withType(getRepresentativeType(id,
-              () -> getDefaultAssetType(trisotechFileInfo.getMimetype())))
-          .withName(trisotechFileInfo.getName())
-          .withHref(hrefBuilder.getHref(id, HrefType.ASSET_VERSION))
-      );
-
-      var serviceIds = mapper
-          .resolveEnterpriseServiceIDs(trisotechFileInfo.getId());
-      var ptr2 = serviceIds.map(id -> id.toPointer()
-          .withType(getRepresentativeType(id, () -> ReSTful_Service_Specification))
-          .withName(mintExternalServiceName(trisotechFileInfo, id.getName()))
-          .withHref(hrefBuilder.getHref(id, HrefType.ASSET_VERSION))
-      );
-
-      return Stream.concat(ptr1.stream(), ptr2);
+      var assetId = names.modelToAssetId(info);
+      return assetId.map(aid ->
+              Stream.concat(toAssetPointer(aid, info), toServicePointer(info)))
+          .orElseGet(Stream::empty);
     } catch (IllegalStateException ise) {
       logger.error(ise.getMessage(), ise);
       return Stream.empty();
     }
+  }
+
+  private Stream<Pointer> toServicePointer(SemanticModelInfo info) {
+    return info.getExposedServices().stream()
+        .map(sid -> {
+              var id = names.assetKeyToId(sid);
+              return id.toPointer()
+                  .withType(getRepresentativeType(id, () -> ReSTful_Service_Specification))
+                  .withName(info.getName() + "API TODO")
+                  .withHref(hrefBuilder.getHref(id, HrefType.ASSET_VERSION));
+            }
+        );
+  }
+
+  private Stream<Pointer> toAssetPointer(ResourceIdentifier aid, SemanticModelInfo info) {
+    return Stream.of(aid.toPointer()
+        .withType(getRepresentativeType(aid,
+            () -> getDefaultAssetType(info.getMimetype())))
+        .withName(info.getName())
+        .withHref(hrefBuilder.getHref(aid, HrefType.ASSET_VERSION)));
   }
 
   /**
@@ -378,11 +379,11 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    */
   private URI getRepresentativeType(ResourceIdentifier id,
       Supplier<KnowledgeAssetType> defaultType) {
-    List<KnowledgeAssetType> types = mapper.getDeclaredAssetTypes(id, defaultType);
-    if (types.isEmpty()) {
-      throw new IllegalStateException(
-          "No asset types detected even in presence of a default supplier");
-    }
+    var types = client.getMetadataByAssetId(id.getUuid(), id.getVersionTag())
+        .flatMap(info -> getDeclaredAssetTypes(info, defaultType).stream())
+        .distinct()
+        .collect(toList());
+
     if (types.size() == 1) {
       return types.get(0).getReferentId();
     }
@@ -398,13 +399,16 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   @Override
   public Answer<Void> clearKnowledgeAssetCatalog() {
-    return client.clearCache()
-        ? succeed()
-        : failed();
+    try {
+      client.rescan();
+      return succeed();
+    } catch (Exception e) {
+      return failed(e);
+    }
   }
 
-  private <T extends SemanticIdentifier> List<T> aggregateVersions(List<T> versionIdentifiers) {
-    return versionIdentifiers.stream()
+  private <T extends SemanticIdentifier> List<T> aggregateVersions(Stream<T> versionIdentifiers) {
+    return versionIdentifiers
         .collect(groupingBy(SemanticIdentifier::getUuid))
         .values().stream()
         .map(l -> {
@@ -425,7 +429,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalCarrier(UUID assetId,
       String versionTag, String extAccept) {
     try {
-      return Answer.ofTry(getCarrier(assetId, versionTag));
+      return Answer.ofTry(getLatestAndGreatestCarrier(assetId, versionTag));
     } catch (NotLatestAssetVersionException e) {
       return getKnowledgeCarrierFromOtherVersion(assetId, versionTag, e.getModelUri(), null);
     } catch (NotFoundException e) {
@@ -464,46 +468,16 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   public Answer<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(UUID assetId,
       String versionTag, UUID artifactId, String artifactVersionTag, String xAccept) {
 
-    Optional<String> fileId = mapper.getCurrentModelId(assetId, false);
-    // fileId is not found in the extractor for the assetId provided; fail
-    if (fileId.isEmpty()) {
-      return notFound();
-    }
-    //  1. Check  if assetId is latest (no server call needed)
-    //  2. If assetId is not latest (exception), query versions from server
-    //  3. process versions; if found, return succeed, else 404
-    //  4. else if assetId is latest (no exception), get the artifact & confirm the one requested
-    //  5. if artifact matches request, check version
-    //  6. if version of artifact matches request, process
-    //  7. else, version does not match, query other versions from server
-    //  8. see step #3
-    // first check asset id -- save server calls until needed.
     try {
-      // getEnterpriseAssetVersionIdForAsset will throw exception if doesn't exist on latest
-      Optional<ResourceIdentifier> enterpriseVersionAssetId = mapper
-          .resolveAssetToCurrentAssetId(assetId, versionTag, false);
-
-      if (enterpriseVersionAssetId.isEmpty()) {
-        // should never happen...
-        return notFound();
-      }
-
-      // asset matches for latest, now check the artifact for asset
-      String modelUri = mapper.resolveInternalArtifactID(assetId, versionTag, false);
-      // verify artifact for asset matches the artifactId requested
-      if (modelUri.contains(artifactId.toString())) {
-        // confirm version too
-        Optional<String> artifactVersion = mapper.getLatestCarrierVersionTag(assetId, versionTag);
-        Optional<String> artifactVersionTimestamp =
-            mapper.getLatestCarrierTimestampedVersionTag(assetId, versionTag);
-
-        if (artifactVersion.orElse("").equals(artifactVersionTag)
-            || artifactVersionTimestamp.orElse("").equals(artifactVersionTag)) {
-          return Answer.ofTry(getCarrier(assetId, versionTag));
+      Optional<SemanticModelInfo> manifest = getCarrierInfo(assetId, versionTag, artifactId);
+      if (manifest.isPresent()) {
+        var info = manifest.get();
+        if (matchesVersion(info, artifactVersionTag)) {
+          return Answer.ofTry(getCarrier(assetId, versionTag, artifactId));
         } else {
           // artifactId matched, but not version; get other versions to see if one of them matches
           return getKnowledgeCarrierFromOtherVersion(
-              assetId, versionTag, modelUri, artifactVersionTag);
+              assetId, versionTag, info.getId(), artifactVersionTag);
         }
       }
     } catch (NotLatestAssetVersionException e) {
@@ -519,6 +493,13 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       return Answer.failed(nfe);
     }
     return notFound();
+  }
+
+  private boolean matchesVersion(SemanticModelInfo info, String artifactVersionTag) {
+    return Objects.equals(info.getVersion(), artifactVersionTag)
+        || Objects.equals(
+        applyTimestampToVersion(info.getVersion(), parseDateTime(info.getUpdated()).getTime()),
+        artifactVersionTag);
   }
 
   /**
@@ -564,18 +545,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         : surr;
   }
 
-  /**
-   * Get the Representation for the language of the model given the model document. creates a
-   * Representation object that can be used in .withRepresentation() method of creating a Carrier,
-   * for example.
-   *
-   * @param dox the document of the model
-   * @return SyntacticRepresentation which has the values set for the language of this model
-   */
-  private SyntacticRepresentation getLanguageRepresentationForModel(Document dox) {
-    return TrisotechMetadataHelper.getRepLanguage(dox)
-        .orElse(null);
-  }
 
   /**
    * when asset version does not match for model (artifact) version given, need to search all
@@ -596,7 +565,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       String modelUri,
       String modelVersionTag) {
     List<TrisotechFileInfo> modelVersions =
-        client.getModelVersions(modelUri);
+        client.getVersionsMetadataByModelId(modelUri);
     // reverse the list so the most recent version that matches is selected
     // there can be multiple versions of the artifact that map to one version of asset
     Collections.reverse(modelVersions);
@@ -613,8 +582,14 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
       Document dox = downloadXml.get();
       // check assetId for each version
-      Optional<ResourceIdentifier> assetOpt = mapper.extractAssetIdFromDocument(dox);
+      Optional<ResourceIdentifier> assetOpt =
+          extractAssetIdFromDocument(dox, configuration.getTyped(ASSET_ID_ATTRIBUTE));
       if (assetOpt.isEmpty()) {
+        continue;
+      }
+
+      var rep = getRepLanguage(model.getMimetype());
+      if (rep.isEmpty()) {
         continue;
       }
 
@@ -623,11 +598,12 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           && assetVersionTag.equals(resolvedAssetId.getVersionTag())
           && (modelVersionTag == null || modelVersionTag.equals(model.getVersion()))) {
 
-        return Answer.ofTry(
+        return Answer.of(
             buildCarrierFromNativeModel(
                 assetId,
                 assetVersionTag,
-                names.rewriteInternalId(model),
+                names.modelToArtifactId(model),
+                rep.get(),
                 dox));
       }
     }
@@ -638,7 +614,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   public Answer<CompositeKnowledgeCarrier> getAnonymousCompositeKnowledgeAssetCarrier(UUID assetId,
       String versionTag, String xAccept) {
     var rootId = newId(assetId, versionTag);
-    Set<KeyIdentifier> closure = getAssetClosure(rootId);
+    Set<KeyIdentifier> closure = getAssetClosure(rootId)
+        .collect(Collectors.toSet());
 
     Answer<Set<KnowledgeCarrier>> componentArtifacts = closure.stream()
         .map(comp -> getKnowledgeAssetVersionCanonicalCarrier(comp.getUuid(),
@@ -654,7 +631,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   public Answer<CompositeKnowledgeCarrier> getAnonymousCompositeKnowledgeAssetSurrogate(
       UUID assetId, String versionTag, String xAccept) {
     var rootId = newId(assetId, versionTag);
-    Set<KeyIdentifier> closure = getAssetClosure(rootId);
+    Set<KeyIdentifier> closure = getAssetClosure(rootId)
+        .collect(Collectors.toSet());
 
     Answer<Set<KnowledgeCarrier>> componentSurrogates = closure.stream()
         .map(comp -> getKnowledgeAssetVersion(comp.getUuid(),
@@ -667,157 +645,92 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .map(comps -> ofUniformAnonymousComposite(rootId, comps));
   }
 
-  private Set<KeyIdentifier> getAssetClosure(ResourceIdentifier rootId) {
-    Set<KeyIdentifier> acc = new HashSet<>();
-    closure(rootId, acc);
-    return acc;
+  private Stream<KeyIdentifier> getAssetClosure(ResourceIdentifier assetRoot) {
+    return client.getMetadataByAssetId(assetRoot.getUuid(), assetRoot.getVersionTag())
+        .flatMap(this::getAssetClosure);
   }
 
-  private void closure(ResourceIdentifier currId, Set<KeyIdentifier> acc) {
-    var key = currId.asKey();
-    if (!acc.contains(key)) {
-      acc.add(key);
-      mapper.getLatestAssetDependencies(mapper.getCurrentModelId(currId))
-          .forEach(dep -> closure(dep, acc));
-    }
+  private Stream<KeyIdentifier> getAssetClosure(SemanticModelInfo modelRoot) {
+    return Stream.concat(
+        Stream.ofNullable(modelRoot.getAssetKey()),
+        modelRoot.getModelDependencies().stream()
+            .flatMap(depId -> client.getMetadataByModelId(depId).stream())
+            .flatMap(this::getAssetClosure));
   }
 
-  /**
-   * Support for updating a model 'in place' The assetId, versionTag, artifactId and
-   * artifactVersionTag should match the current model, any mismatch will fail as NOT_FOUND.
-   *
-   * @param assetId            enterprise asset ID
-   * @param versionTag         version for the asset
-   * @param artifactId         artifact ID
-   * @param artifactVersionTag version for the artifact
-   * @param exemplar           updated artifact to be posted to the server
-   * @return return status
-   */
-  @Override
-  public Answer<Void> setKnowledgeAssetCarrierVersion(UUID assetId, String versionTag,
-      UUID artifactId, String artifactVersionTag, byte[] exemplar) {
-    String internalId;
-    Optional<String> fileId = mapper.getCurrentModelId(assetId, false);
 
-    // fileId is not found in the extractor for the assetId provided; fail
-    // At this time, not allowing for create, so if no fileId, fail
-    if (fileId.isEmpty()) {
-      return notFound();
-    }
-    String mimeType = mapper.getMimetype(assetId, versionTag);
-
-    // 1. Check if assetId is latest (no server call needed)
-    // 2. If asset is not latest (exception), return NOT_FOUND
-    // 3. If asset is latest (no exception), get the artifact & confirm it matches the one requested
-    // 4. If artifact matches request, check version
-    // 5. If version of artifact matches request, process
-    // 6. If version of artifact does not match, return NOT_FOUND
-    // first check asset id -- save server calls until needed
-    try {
-      // getEnterpriseAssetVersionIdForAsset will throw exception if doesn't exist on latest
-      Optional<ResourceIdentifier> enterpriseVersionAssetId = mapper
-          .resolveAssetToCurrentAssetId(assetId, versionTag, false);
-      if (enterpriseVersionAssetId
-          .isEmpty()) { // should never happen, as exception should be thrown instead
-        return notFound();
-      }
-
-      // asset matches for latest, now check the artifact for asset
-      internalId = mapper.resolveInternalArtifactID(assetId, versionTag, false);
-      Optional<TrisotechFileInfo> tfi =
-          fileId
-              .flatMap(x -> client.getLatestModelFileInfo(x, false));
-
-      // verify artifact for asset matches the artifactId requested
-      if (tfi.isPresent() && internalId.contains(artifactId.toString())) {
-        // confirm version too
-        Optional<String> artifactVersion = mapper.getLatestCarrierVersionTag(assetId, versionTag);
-
-        if (artifactVersion.isPresent()) {
-          if (artifactVersion.get().equals(artifactVersionTag)) {
-            uploadFile(artifactVersionTag, exemplar, tfi.get(), mimeType);
-            return succeed();
-          } else {
-            return conflict();
-          }
-        } else {
-          // ok for version to not be present, in fact, preferred
-          uploadFile(null, exemplar, tfi.get(), mimeType);
-          return succeed();
-        }
-      }
-    } catch (NotLatestAssetVersionException | NotFoundException e) {
-      return notFound();
-    } catch (IOException | HttpException e) {
-      logger.error(e.getMessage(), e);
-      return Answer.failed(e);
-    }
-    return notFound();
-  }
-
-  private void uploadFile(String artifactVersionTag, byte[] exemplar,
-      TrisotechFileInfo trisotechFileInfo, String mimeType) throws IOException, HttpException {
-    client
-        .uploadXmlModel(trisotechFileInfo.getPath(), trisotechFileInfo.getName(), mimeType,
-            artifactVersionTag,
-            trisotechFileInfo.getState(), exemplar);
+  private Optional<SemanticModelInfo> getCarrierInfo(
+      UUID assetId, String versionTag, UUID artifactId) {
+    return client.getMetadataByAssetId(assetId, versionTag)
+        .filter(info -> info.getId().contains(artifactId.toString()))
+        .findFirst();
   }
 
   private Optional<KnowledgeCarrier> getCarrier(
-      UUID assetId, String versionTag) throws NotFoundException, NotLatestAssetVersionException {
-
-    Optional<Document> modelDox = mapper
-        .getCurrentModelId(assetId, false)
-        .flatMap(x -> dowloadLatestModelVersion(x, publishedOnly));
-
-    ResourceIdentifier artifactId = mapper.getCarrierArtifactId(assetId, versionTag);
-    return modelDox.flatMap(
-        xml -> buildCarrierFromNativeModel(assetId, versionTag, artifactId, xml));
+      UUID assetId, String versionTag, UUID artifactId)
+      throws NotFoundException, NotLatestAssetVersionException {
+    var manifest = getCarrierInfo(assetId, versionTag, artifactId);
+    return manifest.flatMap(info -> getCarrierByModel(assetId, versionTag, info));
   }
 
-  private Optional<KnowledgeCarrier> buildCarrierFromNativeModel(
+
+  private Optional<KnowledgeCarrier> getLatestAndGreatestCarrier(
+      UUID assetId, String versionTag)
+      throws NotFoundException, NotLatestAssetVersionException {
+    var manifest = client.getMetadataByAssetId(assetId, versionTag)
+        .sorted()
+        .findFirst();
+    return manifest.flatMap(info -> getCarrierByModel(assetId, versionTag, info));
+  }
+
+  private Optional<KnowledgeCarrier> getCarrierByModel(
+      UUID assetId, String versionTag, SemanticModelInfo info)
+      throws NotFoundException, NotLatestAssetVersionException {
+
+    return
+        getRepLanguage(info).flatMap(lang ->
+            client.getModel(info).map(xml ->
+                buildCarrierFromNativeModel(
+                    assetId,
+                    versionTag,
+                    names.modelToArtifactId(info.getId(), info.getVersion(), info.getName()),
+                    lang,
+                    xml)));
+  }
+
+  private KnowledgeCarrier buildCarrierFromNativeModel(
       UUID assetId, String versionTag,
-      ResourceIdentifier artifactId, Document dox) {
+      ResourceIdentifier artifactId,
+      SyntacticRepresentation rep,
+      Document dox) {
 
-    Optional<Document> modelDox = Optional.of(dox)
-        .map(weaver::weave)
-        .map(redactor::redact);
-
-    return modelDox.map(xml ->
-        AbstractCarrier.of(XMLUtil.toByteArray(xml))
-            .withRepresentation(getLanguageRepresentationForModel(xml))
+    return
+        AbstractCarrier.of(XMLUtil.toByteArray(dox))
+            .withRepresentation(rep)
             .withArtifactId(artifactId)
-            .withAssetId(newId(names.getAssetNamespace(), assetId, versionTag))
-    );
+            .withLabel(artifactId.getName())
+            .withAssetId(newId(names.getAssetNamespace(), assetId, versionTag));
+
   }
 
 
-  private Optional<KnowledgeAsset> getKnowledgeAssetForModel(
+  private Optional<KnowledgeAsset> getKnowledgeAssetForModels(
       UUID assetId,
-      String modelId,
-      TrisotechFileInfo modelInfo) {
-    return dowloadLatestModelVersion(modelId, publishedOnly)
-        .flatMap(dox -> getKnowledgeAssetForModel(assetId, dox, modelInfo));
+      Collection<SemanticModelInfo> modelInfos) {
+    var models = modelInfos.stream()
+        .collect(toMap(
+            info -> info,
+            info -> client.getModel(info)
+        ));
+    return getKnowledgeAssetForModels(assetId, models);
   }
 
-  private Optional<KnowledgeAsset> getKnowledgeAssetForModel(
-      UUID assetId, Document dox, TrisotechFileInfo modelInfo) {
-    Optional<Document> modelDocument = Optional.of(dox);
-
-    // weave in KMD information
-    Optional<Document> wovenDocument = modelDocument
-        .map(weaver::weave)
-        .map(redactor::redact);
+  private Optional<KnowledgeAsset> getKnowledgeAssetForModels(
+      UUID assetId,
+      Map<SemanticModelInfo, Optional<Document>> modelInfos) {
 
     // extract data from Trisotech format to OMG format
-    return wovenDocument
-        .flatMap(wd ->
-            extractor.extract(assetId, wd, modelInfo));
-  }
-
-
-  private Optional<Document> dowloadLatestModelVersion(String modelId, boolean publishedOnly) {
-    return client.getModelById(modelId, publishedOnly);
+    return extractor.introspect(assetId, modelInfos);
   }
 
   private boolean negotiateHTML(String xAccept) {

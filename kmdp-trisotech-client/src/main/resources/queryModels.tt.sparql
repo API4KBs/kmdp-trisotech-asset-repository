@@ -17,11 +17,20 @@ PREFIX xsd:       <http://www.w3.org/2001/XMLSchema#>
 # ?artifactName is the name of the model
 # because version is only on published models, not all models will be returned with this SELECT; can make version OPTIONAL
 # NOTE: just because a model is published, does NOT mean it is 'Published'
-SELECT ?model ?assetId ?assetType ?version ?state ?updated ?mimeType ?artifactName
+SELECT ?model ?assetId ?assetType ?version ?state ?updated ?updater ?mimeType ?artifactName ?path
 FROM NAMED ?
 WHERE {
 GRAPH ? {
     ?model rdf:type graph:Model .
+
+    # the model file name
+    ?model rdfs:label ?artifactName .
+    # gets the mimeType
+    ?model graphrel:mimeType ?mimeType .
+    FILTER (?mimeType NOT IN("application/vnd.triso-capability+json","application/vnd.triso-landscaping+json","application/vnd.triso-discovery+json" ))
+
+    # gets the path
+    ?model graphrel:path ?path .
 
     # asset Id - optional
     OPTIONAL {
@@ -33,14 +42,12 @@ GRAPH ? {
       ?node graphrel:owner* ?model .
     }
 
-    # the model file name
-    ?model rdfs:label ?artifactName .
-    # gets the mimeType
-    ?model graphrel:mimeType ?mimeType .
     # gets the state - only latest state is returned; there will only be a state if the model is published
     OPTIONAL { ?model graphrel:state ?state } .
     # gets the timestamp of last update
     OPTIONAL { ?model graphrel:updated ?updated } .
+    # gets the timestamp of last update
+    OPTIONAL { ?model graphrel:updater ?updater } .
     # gets the version - only latest version is returned; there will only be a version if the model is published
     OPTIONAL { ?model graphrel:version ?version } .
     # gets the asset type from an annotation on the same element that carries the assetId
@@ -49,3 +56,4 @@ GRAPH ? {
                FILTER regex(str(?assetType), '^.+(Clinical)?KnowledgeAssetType#.+') } .
   }
 }
+GROUP BY ?model ?assetId ?assetType ?version ?state ?updated ?updater ?mimeType ?artifactName ?path

@@ -14,7 +14,8 @@
 package edu.mayo.kmdp;
 
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
-import static edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper.applyTimestampToVersion;
+import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.applyTimestampToVersion;
+import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,10 +25,10 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
+import edu.mayo.kmdp.components.TestMetadataIntrospector;
+import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
@@ -53,7 +54,7 @@ class MetadataTest {
   // FYI: IDE may complain about
   // the following two not being able to be autowired, but the code works.
   @Autowired
-  private MetadataIntrospector extractor;
+  private TestMetadataIntrospector extractor;
 
   @Autowired
   NamespaceManager names;
@@ -114,7 +115,7 @@ class MetadataTest {
   @Test
   void testExtraction() {
     try {
-      Optional<KnowledgeAsset> res = extractor.extract(
+      Optional<KnowledgeAsset> res = extractor.extractMetadata(
           new ByteArrayInputStream(annotatedDMN),
           MetadataTest.class.getResourceAsStream(metaPath));
       if (res.isEmpty()) {
@@ -196,13 +197,13 @@ class MetadataTest {
     String expectedVersionTag = applyTimestampToVersion(versionTag, modelDate.getTime());
 
     // test w/o a version
-    ResourceIdentifier fileId = names.rewriteInternalId(internalId, null, "Test model");
+    ResourceIdentifier fileId = names.modelToArtifactId(internalId, null, "Test model");
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
     assertEquals(expectedFileId, fileId.getResourceId().toString());
 
     // test w/version
-    fileId = names.rewriteInternalId(internalId, versionTag, null, updated);
+    fileId = names.modelToArtifactId(internalId, versionTag, null, parseDateTime(updated));
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
     assertEquals(expectedVersionTag, fileId.getVersionTag());

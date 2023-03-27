@@ -1,28 +1,26 @@
 package edu.mayo.kmdp.trisotechwrapper;
 
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CMMN_LOWER;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.DMN_LOWER;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.CMMN;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.DMN;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
-import static java.util.UUID.fromString;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.TTEURentModelsTest.EURentTestConfig;
-import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -55,32 +53,26 @@ class TTEURentModelsTest {
 
 
   @Autowired
-  TrisotechWrapper client;
-
-  private String ttRepositoryUrl;
-
-  private String testRepoId;
+  TTAPIAdapter client;
 
 
   @BeforeEach
   void setUp() {
-    var apiEndpoint = client.getConfig().get(TTWParams.API_ENDPOINT);
-    Assumptions.assumeTrue(apiEndpoint.isPresent());
+    var apiEndpoint = client.getConfig().get(TTWConfigParamsDef.API_ENDPOINT);
+    assumeTrue(apiEndpoint.isPresent());
 
-    ttRepositoryUrl =
-        apiEndpoint.get() + "/repositoryfilecontent?repository=";
-    testRepoId = client.getConfig().get(TTWParams.REPOSITORY_ID)
+    client.getConfig().get(TTWConfigParamsDef.REPOSITORY_ID)
         .orElseGet(Assertions::fail);
 
-    Assumptions.assumeFalse(client.listPlaces().isEmpty());
+    assumeFalse(client.listAccessiblePlaces().isEmpty());
   }
 
 
   @Test
   final void testGetDmnModels() {
-    List<TrisotechFileInfo> dmnModels
-        = client.getModelsFileInfo("dmn", false);
-    assertNotNull(dmnModels);
+    var dmnModels
+        = client.listModels("dmn");
+    assertFalse(dmnModels.findAny().isEmpty());
   }
 
 
@@ -94,14 +86,16 @@ class TTEURentModelsTest {
 
   @Test
   final void testGetLatestVersionInfoDMN() {
-    TrisotechFileInfo latestFileInfo = client.getLatestModelFileInfo(DMN_PUB_TEST_1_ID, false)
+    TrisotechFileInfo latestFileInfo = client.getMetadataByModelId(DMN_PUB_TEST_1_ID)
         .orElseGet(Assertions::fail);
-    List<TrisotechFileInfo> historyInfos = client.getModelPreviousVersions(DMN_PUB_TEST_1_ID);
+    var historyInfos = client.getVersionsMetadataByModelId(DMN_PUB_TEST_1_ID);
+    historyInfos = historyInfos.subList(1, historyInfos.size());
     assertTrue(historyInfos.isEmpty());
 
     String fileId = latestFileInfo.getId();
     String version = latestFileInfo.getVersion();
     Date updateDate = parseDateTime(latestFileInfo.getUpdated());
+    assertNotNull(updateDate);
 
     assertTrue(historyInfos.stream().allMatch(hx -> fileId.equals(hx.getId())));
     List<TrisotechFileInfo> versionHistoryInfos = historyInfos.stream()
@@ -117,7 +111,7 @@ class TTEURentModelsTest {
   @Test
   final void testGetModelVersionsDMN() {
     String version = "1.2";
-    List<TrisotechFileInfo> fileVersions = client.getModelVersions(DMN_PUB_TEST_1_ID);
+    List<TrisotechFileInfo> fileVersions = client.getVersionsMetadataByModelId(DMN_PUB_TEST_1_ID);
     assertNotNull(fileVersions);
     assertEquals(1, fileVersions.size());
 
@@ -131,7 +125,7 @@ class TTEURentModelsTest {
     assertEquals(version, file.getVersion());
 
     // expect same results with repository provided
-    fileVersions = client.getModelVersions(DMN_PUB_TEST_1_ID);
+    fileVersions = client.getVersionsMetadataByModelId(DMN_PUB_TEST_1_ID);
     assertNotNull(fileVersions);
     assertEquals(1, fileVersions.size());
 
@@ -149,11 +143,11 @@ class TTEURentModelsTest {
   @Test
   final void testGetLatestVersionArtifactIdCMMN() {
     String expectedVersion = "1.2";
-    ResourceIdentifier versionIdentifier = client.getLatestVersionId(CMMN_PUB_TEST_1_ID)
-        .orElse(null);
-    assertNotNull(versionIdentifier);
-    assertEquals(CMMN_PUB_TEST_1_TAG, versionIdentifier.getTag());
-    assertEquals(expectedVersion, versionIdentifier.getVersionTag());
+    var sinfo =
+        client.getMetadataByModelId(CMMN_PUB_TEST_1_ID)
+            .orElseGet(Assertions::fail);
+    assertTrue(sinfo.getId().contains(CMMN_PUB_TEST_1_TAG));
+    assertEquals(expectedVersion, sinfo.getVersion());
   }
 
 
@@ -175,57 +169,25 @@ class TTEURentModelsTest {
   final void testGetLatestVersionArtifactIdDMN() {
     // Weaver Test 1
     String expectedVersion = "1.2";
-    String expectedVersionId = "https://clinicalknowledgemanagement.mayo.edu/artifacts/"
-        + "a199c656-4291-4f10-9941-e2b53cd52efc/versions/"
-        + expectedVersion;
 
-    ResourceIdentifier versionIdentifier =
-        client.getLatestVersionId(DMN_PUB_TEST_1_ID)
-            .orElse(null);
-    assertNotNull(versionIdentifier);
-    assertEquals(DMN_PUB_TEST_1_TAG, versionIdentifier.getTag());
-    assertEquals(expectedVersion, versionIdentifier.getVersionTag());
-    assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
-    assertNotNull(versionIdentifier.getEstablishedOn());
-  }
-
-  @Test
-  final void testGetLatestVersionTrisotechFileInfoDMN() {
-    String expectedVersion = "1.2";
-    String expectedVersionId = "https://clinicalknowledgemanagement.mayo.edu/artifacts/"
-        + "a199c656-4291-4f10-9941-e2b53cd52efc/versions/"
-        + expectedVersion;
-
-    TrisotechFileInfo trisotechFileInfo = client.getLatestModelFileInfo(DMN_PUB_TEST_1_ID, false)
-        .orElse(null);
-    assertNotNull(trisotechFileInfo);
-    ResourceIdentifier versionIdentifier = client.getLatestVersionId(trisotechFileInfo)
-        .orElse(null);
-    assertNotNull(versionIdentifier);
-    assertEquals(DMN_PUB_TEST_1_TAG, versionIdentifier.getTag());
-    assertEquals(expectedVersion, versionIdentifier.getVersionTag());
-    assertNotNull(versionIdentifier.getEstablishedOn());
-    assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
+    var info = client.getMetadataByModelId(DMN_PUB_TEST_1_ID)
+        .orElseGet(Assertions::fail);
+    assertTrue(info.getId().contains(DMN_PUB_TEST_1_TAG));
+    assertEquals(expectedVersion, info.getVersion());
+    assertNotNull(info.getUpdated());
   }
 
 
   @Test
   final void testGetLatestVersionTrisotechFileInfoCMMN() {
     String expectedVersion = "1.2";
-    String expectedVersionId = "https://clinicalknowledgemanagement.mayo.edu/artifacts/"
-        + "c09c87e0-a727-4dcd-8c8b-db70934d6688/versions/"
-        + expectedVersion;
 
-    TrisotechFileInfo trisotechFileInfo = client.getLatestModelFileInfo(CMMN_PUB_TEST_1_ID, false)
-        .orElse(null);
-    assertNotNull(trisotechFileInfo);
-    ResourceIdentifier versionIdentifier = client.getLatestVersionId(trisotechFileInfo)
-        .orElse(null);
-    assertNotNull(versionIdentifier);
-    assertEquals(CMMN_PUB_TEST_1_TAG, versionIdentifier.getTag());
-    assertEquals(expectedVersion, versionIdentifier.getVersionTag());
-    assertNotNull(versionIdentifier.getEstablishedOn());
-    assertEquals(expectedVersionId, versionIdentifier.getVersionId().toString());
+    var info = client.getMetadataByModelId(CMMN_PUB_TEST_1_ID)
+        .orElseGet(Assertions::fail);
+    assertTrue(info.getId().contains(CMMN_PUB_TEST_1_TAG));
+    assertEquals(expectedVersion, info.getVersion());
+    assertNotNull(info.getUpdated());
+
   }
 
 
@@ -233,7 +195,7 @@ class TTEURentModelsTest {
   final void testGetModelVersionsWithRepositoryDMN() {
     String version = "1.2";
     List<TrisotechFileInfo> fileVersions = client
-        .getModelVersions(DMN_PUB_TEST_1_ID);
+        .getVersionsMetadataByModelId(DMN_PUB_TEST_1_ID);
     assertNotNull(fileVersions);
     assertEquals(1, fileVersions.size()); // 7/9/2019 -- should be at least 15
 
@@ -247,7 +209,7 @@ class TTEURentModelsTest {
     assertEquals(version, file.getVersion());
 
     // expect same results with repository provided
-    fileVersions = client.getModelVersions(DMN_PUB_TEST_1_ID);
+    fileVersions = client.getVersionsMetadataByModelId(DMN_PUB_TEST_1_ID);
     assertNotNull(fileVersions);
     assertEquals(1, fileVersions.size());
 
@@ -265,7 +227,7 @@ class TTEURentModelsTest {
   @Test
   final void testGetModelVersionsCMMN() {
     List<TrisotechFileInfo> fileVersions = client
-        .getModelVersions(CMMN_PUB_TEST_1_ID);
+        .getVersionsMetadataByModelId(CMMN_PUB_TEST_1_ID);
     assertNotNull(fileVersions);
     assertEquals(1, fileVersions.size());
 
@@ -284,7 +246,7 @@ class TTEURentModelsTest {
   final void testGetModelInfoByIdAndVersionCMMN() {
     String expectedVersion = "1.2";
     TrisotechFileInfo fileInfo = client
-        .getFileInfoByIdAndVersion(fromString(CMMN_PUB_TEST_1_TAG), expectedVersion)
+        .getMetadataByModelIdAndVersion(CMMN_PUB_TEST_1_ID, expectedVersion)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals(expectedVersion, fileInfo.getVersion());
@@ -296,7 +258,7 @@ class TTEURentModelsTest {
   final void testGetModelInfoByIdAndVersionDMN() {
     String expectedVersion = "1.2";
     var fileInfo =
-        client.getFileInfoByIdAndVersion(fromString(DMN_PUB_TEST_1_TAG), expectedVersion)
+        client.getMetadataByModelIdAndVersion(DMN_PUB_TEST_1_ID, expectedVersion)
             .orElse(null);
     assertNotNull(fileInfo);
     assertEquals(expectedVersion, fileInfo.getVersion());
@@ -304,7 +266,7 @@ class TTEURentModelsTest {
 
     String expectedVersion2 = "1.2";
     var fileInfo2 =
-        client.getFileInfoByIdAndVersion(fromString(DMN_PUB_TEST_2_TAG), expectedVersion2)
+        client.getMetadataByModelIdAndVersion(DMN_PUB_TEST_2_ID, expectedVersion2)
             .orElse(null);
     assertNotNull(fileInfo2);
     assertEquals(expectedVersion2, fileInfo2.getVersion());
@@ -354,24 +316,25 @@ class TTEURentModelsTest {
 
   @Test
   final void testGetPublishedModelByIdWithFileInfoCMMN() {
-    List<TrisotechFileInfo> trisotechFileInfos =
-        client.getModelsFileInfo("cmmn", false);
-    TrisotechFileInfo trisotechFileInfo = trisotechFileInfos.stream()
+    var trisotechFileInfos =
+        client.listModels("cmmn");
+    TrisotechFileInfo trisotechFileInfo = trisotechFileInfos
         .filter((f) -> f.getId().equals(CMMN_PUB_TEST_1_ID))
         .findAny()
         .orElse(null);
     assertNotNull(trisotechFileInfo);
 
     Optional<Document> dox = client
-        .getPublishedModel(trisotechFileInfo);
+        .getModel(trisotechFileInfo);
     assertTrue(dox.isPresent());
   }
 
 
   @Test
   final void testGetPublishedCmmnModels() {
-    List<TrisotechFileInfo> publishedModels =
-        client.getModelsFileInfo("cmmn", true);
+    var publishedModels =
+        client.listModels("cmmn")
+            .collect(Collectors.toList());
     assertNotNull(publishedModels);
     assertEquals(1, publishedModels.size());
   }
@@ -379,8 +342,9 @@ class TTEURentModelsTest {
 
   @Test
   final void testGetPublishedDmnModels() {
-    List<TrisotechFileInfo> publishedModels =
-        client.getModelsFileInfo("dmn", true);
+    var publishedModels =
+        client.listModels("dmn")
+            .collect(Collectors.toList());
     assertNotNull(publishedModels);
     assertEquals(4, publishedModels.size());
   }
@@ -388,34 +352,33 @@ class TTEURentModelsTest {
 
   @Test
   final void testGetModelInfoDMN() {
-    TrisotechFileInfo fileInfo = client.getLatestModelFileInfo(DMN_PUB_TEST_1_ID, false)
+    TrisotechFileInfo fileInfo = client.getMetadataByModelId(DMN_PUB_TEST_1_ID)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals("Determine the Repair Location", fileInfo.getName());
     assertEquals(DMN_PUB_TEST_1_ID, fileInfo.getId());
     assertTrue(fileInfo.getUrl().contains("&mimetype="));
-    assertTrue(fileInfo.getMimetype().contains(DMN_LOWER));
+    assertTrue(fileInfo.getMimetype().contains(DMN.getTag()));
   }
 
 
   @Test
   final void testGetModelInfoCMMN() {
-    TrisotechFileInfo fileInfo = client.getLatestModelFileInfo(CMMN_PUB_TEST_1_ID, false)
+    TrisotechFileInfo fileInfo = client.getMetadataByModelId(CMMN_PUB_TEST_1_ID)
         .orElse(null);
     assertNotNull(fileInfo);
     assertEquals("Roadside Assistance", fileInfo.getName());
     assertEquals(CMMN_PUB_TEST_1_ID, fileInfo.getId());
     assertTrue(fileInfo.getUrl().contains("&mimetype="));
-    assertTrue(fileInfo.getMimetype().contains(CMMN_LOWER));
+    assertTrue(fileInfo.getMimetype().contains(CMMN.getTag()));
   }
 
 
   @Test
   final void testDownloadXmlModelDMN() {
-    String repositoryFileUrl = ttRepositoryUrl + EU_RENT_REPO
-        + "&mimetype=application%2Fdmn-1-2%2Bxml&path=/&sku=" + DMN_PUB_TEST_1_ID;
     assertDoesNotThrow(() -> {
-      Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
+      Optional<Document> dox = client.getMetadataByModelId(DMN_PUB_TEST_1_ID)
+          .flatMap(info -> client.getModel(info));
       assertTrue(dox.isPresent());
     });
   }
@@ -423,10 +386,9 @@ class TTEURentModelsTest {
 
   @Test
   final void testDownloadXmlModelCMMN() {
-    String repositoryFileUrl = ttRepositoryUrl + EU_RENT_REPO
-        + "&mimetype=application%2Fcmmn-1-1%2Bxml&path=/&sku=" + CMMN_PUB_TEST_1_ID;
     assertDoesNotThrow(() -> {
-      Optional<Document> dox = client.downloadXmlModel(repositoryFileUrl);
+      Optional<Document> dox = client.getMetadataByModelId(CMMN_PUB_TEST_1_ID)
+          .flatMap(info -> client.getModel(info));
       assertTrue(dox.isPresent());
     });
   }
@@ -434,21 +396,23 @@ class TTEURentModelsTest {
 
   @Test
   final void testGetPlaces() {
-    Map<String, String> placeMap = client.listPlaces();
+    var placeMap = client.getCacheablePlaces();
     assertNotNull(placeMap);
     assertFalse(placeMap.isEmpty());
+    assertEquals(1, placeMap.size());
+    assertTrue(placeMap.containsKey(EU_RENT_REPO));
   }
 
 
   private Optional<Document> getPublishedModelById(
-      TrisotechWrapper client, String fileId) {
-    return client.getLatestModelFileInfo(fileId, false)
-        .flatMap(client::getPublishedModel);
+      TTAPIAdapter client, String fileId) {
+    return client.getMetadataByModelId(fileId)
+        .flatMap(client::getModel);
   }
 
   @Configuration
   @ComponentScan(
-      basePackageClasses = {TrisotechWrapper.class})
+      basePackageClasses = {TTWrapper.class})
   public static class EURentTestConfig {
 
   }

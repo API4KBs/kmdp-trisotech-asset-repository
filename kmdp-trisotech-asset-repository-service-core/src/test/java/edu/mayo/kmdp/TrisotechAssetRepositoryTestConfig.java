@@ -15,15 +15,24 @@
  */
 package edu.mayo.kmdp;
 
+import edu.mayo.kmdp.components.TestMetadataIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
-import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.ModelIntrospector;
+import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 @ComponentScan(
-    basePackageClasses = {TrisotechAssetRepository.class, TrisotechWrapper.class})
+    basePackageClasses = {TrisotechAssetRepository.class, TTAPIAdapter.class})
 public class TrisotechAssetRepositoryTestConfig {
 
+  @Bean
+  @Primary
+  TestMetadataIntrospector extractor() {
+    return new TestMetadataIntrospector(new ModelIntrospector());
+  }
 
 }

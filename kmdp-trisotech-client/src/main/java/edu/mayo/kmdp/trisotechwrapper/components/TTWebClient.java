@@ -1,19 +1,18 @@
 package edu.mayo.kmdp.trisotechwrapper.components;
 
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CONTENT_PATH;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CONTENT_PATH_POST;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.CONTENT_PATH_POST_WITH_VERSION;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.EXEC_ARTIFACTS_PATH;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.KEM_JSON_MIMETYPE;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.REPOSITORY_PATH;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.SPARQL_PATH;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.VERSIONS_PATH;
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.getXmlMimeType;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.CONTENT_PATH_POST;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.CONTENT_PATH_POST_WITH_VERSION;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.EXEC_ARTIFACTS_PATH;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.REPOSITORY_PATH;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.SPARQL_PATH;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.VERSIONS_PATH;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.KEM_JSON;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getXmlMimeType;
 import static edu.mayo.kmdp.util.Util.isEmpty;
 import static java.net.URLDecoder.decode;
 import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Collections.emptyList;
+import static org.apache.jena.query.QueryExecutionFactory.sparqlService;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -23,8 +22,8 @@ import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.mayo.kmdp.trisotechwrapper.components.operators.KEMtoMVFTranslator;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
-import edu.mayo.kmdp.trisotechwrapper.config.TTWParams;
 import edu.mayo.kmdp.trisotechwrapper.models.Datum;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifactData;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileData;
@@ -33,7 +32,6 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemModel;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
-import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -46,9 +44,9 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.client.HttpClient;
@@ -56,9 +54,8 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.sparql.resultset.ResultSetMem;
 import org.omg.spec.mvf._20220702.mvf.MVFDictionary;
 import org.omg.spec.mvf._20220702.mvf.ObjectFactory;
@@ -73,10 +70,10 @@ import org.w3c.dom.Document;
 /**
  * (ReST) web client for the TT DES Handles auth*ion and web calls
  */
-public class TTWebClient {
+public class TTWebClient implements TTDigitalEnterpriseServerClient {
 
   // SPARQL Strings
-  public static final String TRISOTECH_GRAPH = "http://trisotech.com/graph/1.0/graph#";
+
   private static final String CRLF = "\r\n";
 
   private static final Logger logger = LoggerFactory.getLogger(TTWebClient.class);
@@ -88,11 +85,25 @@ public class TTWebClient {
   private final boolean online;
 
   public TTWebClient(TTWEnvironmentConfiguration cfg) {
-    online = cfg.get(TTWParams.API_ENDPOINT).isPresent()
-        && cfg.get(TTWParams.API_TOKEN).isPresent();
-    apiEndpoint = cfg.getTyped(TTWParams.API_ENDPOINT);
-    sparqlEndpoint = cfg.getTyped(TTWParams.BASE_URL) + SPARQL_PATH;
-    token = cfg.getTyped(TTWParams.API_TOKEN);
+    online = cfg.get(TTWConfigParamsDef.API_ENDPOINT).isPresent()
+        && cfg.get(TTWConfigParamsDef.API_TOKEN).isPresent();
+    apiEndpoint = cfg.getTyped(TTWConfigParamsDef.API_ENDPOINT);
+    sparqlEndpoint = cfg.getTyped(TTWConfigParamsDef.BASE_URL) + SPARQL_PATH;
+    token = cfg.getTyped(TTWConfigParamsDef.API_TOKEN);
+  }
+
+  public Optional<TrisotechFileInfo> getModelLatestVersion(
+      final String repositoryId,
+      final String fileId) {
+    if (isEmpty(repositoryId) || isEmpty(fileId)) {
+      logger.warn("Missing repository or model ID, unable to retrieve Model Info");
+      return Optional.empty();
+    }
+    var uri = fromHttpUrl(apiEndpoint + REPOSITORY_PATH)
+        .build(repositoryId, fileId);
+
+    return collectRepositoryContent(uri)
+        .findFirst();
   }
 
   /**
@@ -104,26 +115,23 @@ public class TTWebClient {
    * @param fileId       - file id of the model requested
    * @return list of modelFileInfo for all but the latest version of the model
    */
+  @Override
   public List<TrisotechFileInfo> getModelPreviousVersions(
       final String repositoryId,
       final String fileId) {
     if (!online) {
-      logger.warn("Client is offline - unable to retrieve Model Info");
-      return emptyList();
+      logger.warn("Client is offline - unable to get model history data");
+      return Collections.emptyList();
     }
     if (isEmpty(repositoryId) || isEmpty(fileId)) {
       logger.warn("Missing repository or model ID, unable to retrieve Model Info");
-      return emptyList();
+      return Collections.emptyList();
     }
+
     var uri = fromHttpUrl(apiEndpoint + VERSIONS_PATH)
         .build(repositoryId, fileId);
 
-    logger.debug("uri string: {}", uri);
     return collectRepositoryContent(uri)
-        .map(TrisotechFileData::getData)
-        .orElse(emptyList())
-        .stream()
-        .map(Datum::getFile)
         .collect(Collectors.toList());
   }
 
@@ -134,6 +142,7 @@ public class TTWebClient {
    * @return Object that contains the list of places in a JSON format
    * @throws IOException if can't make the request
    */
+  @Override
   public Optional<TrisotechPlaceData> getPlaces() throws IOException {
     if (!online) {
       logger.warn("Client is offline - unable to get Place data");
@@ -160,67 +169,22 @@ public class TTWebClient {
    * @return object that contains a list of all the files and directories found in the requested
    * repository in a JSON format
    */
-  public Optional<TrisotechFileData> collectRepositoryContent(URI uri) {
+  protected Stream<TrisotechFileInfo> collectRepositoryContent(URI uri) {
     if (!online) {
-      logger.warn("Client is offline - unable to collect repository content");
-      return Optional.empty();
+      logger.warn("Client is offline - unable to retrieve Model Info");
+      return Stream.empty();
     }
 
     HttpEntity<?> requestEntity = getHttpEntity();
     RestTemplate restTemplate = new RestTemplate();
     // ******* NOTE: MUST send URI here to avoid further encoding, otherwise it will be double-encoded and request
     // will fail to return all the values expected ********
-    return Optional.ofNullable(
+    var data =
         restTemplate.exchange(uri, HttpMethod.GET, requestEntity, TrisotechFileData.class)
-            .getBody());
-  }
-
-  /**
-   * get the content of the repository (place) Content can include files and folders This method
-   * will traverse folders to return only files. CAUTION: while mimeType can be ignored, in order to
-   * retrieve XML files, the mimeType MUST be set to a specific value and will only work for a
-   * specific type of file (DMN/CMMN) at a time
-   *
-   * @param directoryID directory/place/repository ID
-   * @param modelsArray array of models found; method is recursive; this will contain the data upon
-   *                    return; it is expected modelsArray will be initialized prior to call
-   * @param path        path of a folder
-   * @param mimeType    what type of files requesting from repository; no mimeType will retrieve all
-   *                    file types
-   */
-  public void collectRepositoryContent(String directoryID,
-      Map<String, TrisotechFileInfo> modelsArray,
-      String path, String mimeType) {
-    if (!online) {
-      logger.warn("Client is offline - unable to gather Repository content");
-      return;
-    }
-    if (Util.isEmpty(directoryID)) {
-      logger.warn("Missing directory ID - unable to gather Repository content");
-      return;
-    }
-    try {
-      // NOTE: MUST Use UriComponentBuilder to handle '+' in the MimeType, otherwise it will be
-      // double-encoded and request will fail to return all values expected
-      // See: https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#web-uri-encoding for details
-      var uri = fromHttpUrl(apiEndpoint
-          + CONTENT_PATH)
-          .build(directoryID, mimeType, path);
-
-      Optional<TrisotechFileData> fileData = collectRepositoryContent(uri);
-      fileData.map(TrisotechFileData::getData).orElse(emptyList())
-          .forEach(datum -> {
-            if (null != datum.getFile()) {
-              modelsArray.put(datum.getFile().getId(), datum.getFile());
-            } else { // assume folder?
-              collectRepositoryContent(directoryID, modelsArray,
-                  datum.getFolder().getPath(), mimeType);
-            }
-          });
-
-    } catch (Exception e) {
-      logger.error(e.getMessage(), e);
-    }
+            .getBody();
+    return data != null
+        ? data.getData().stream().map(Datum::getFile)
+        : Stream.empty();
   }
 
   /**
@@ -229,6 +193,7 @@ public class TTWebClient {
    * @param fromUrl String representing an ENCODED URI
    * @return XML document
    */
+  @Override
   public Optional<Document> downloadXmlModel(String fromUrl) {
     if (!online) {
       logger.warn("Client is offline - unable to download model");
@@ -236,7 +201,7 @@ public class TTWebClient {
     }
 
     try {
-      if (decode(fromUrl, UTF_8).contains(KEM_JSON_MIMETYPE)) {
+      if (decode(fromUrl, UTF_8).contains(KEM_JSON.getMimeType())) {
         // convert KEM to a more standard form, then process as BPM+
         return tryDownloadKEM(fromUrl);
       } else{
@@ -277,6 +242,7 @@ public class TTWebClient {
    * @param execEnv the unique name of the environment
    * @return the {@link TrisotechExecutionArtifactData}, if any
    */
+  @Override
   public Optional<TrisotechExecutionArtifactData> getExecutionArtifacts(String execEnv)
       throws IOException {
     if (!online) {
@@ -408,6 +374,7 @@ public class TTWebClient {
    * @throws IOException   unable to load the source document
    * @throws HttpException if TT Digital Enterprise Server refuses the request
    */
+  @Override
   public void uploadXmlModel(String repositoryId, String path, String name,
       String mimeType, String version, String state,
       byte[] fileContents)
@@ -501,6 +468,7 @@ public class TTWebClient {
     return "Bearer " + token;
   }
 
+  @Override
   public ResultSet askQuery(Query query) {
     if (!online) {
       logger.warn("Client is offline - unable to ask Query, returning empty ResultSet");
@@ -514,10 +482,10 @@ public class TTWebClient {
     HttpClient httpClient = HttpClientBuilder.create()
         .setDefaultHeaders(Collections.singleton(header))
         .build();
-    QueryExecution qexec = QueryExecutionFactory
-        .sparqlService(sparqlEndpoint, query, httpClient);
 
-    return qexec.execSelect();
+    try(var qexec = sparqlService(sparqlEndpoint, query, httpClient)) {
+      return ResultSetFactory.copyResults(qexec.execSelect());
+    }
   }
 
 }

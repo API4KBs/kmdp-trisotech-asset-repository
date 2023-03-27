@@ -16,14 +16,16 @@ package edu.mayo.kmdp;
 import static edu.mayo.kmdp.util.Util.resolveResource;
 import static edu.mayo.kmdp.util.XMLUtil.loadXMLDocument;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechIntrospectionStrategy;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.TrisotechMetadataHelper;
-import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DefaultMetadataIntrospector;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.ModelIntrospector;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper;
+import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
+import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.util.JSonUtil;
 import java.io.InputStream;
 import java.util.Optional;
@@ -36,16 +38,14 @@ import org.w3c.dom.Document;
 
 class TrisotechExtractionStrategyTest {
 
-  TrisotechIntrospectionStrategy tes;
+  ModelIntrospector tes;
   String dmnPath = "/Weaver Test 1.dmn.xml";
   String dmnMeta = "/Weaver Test 1.meta.json";
   String cmmnPath = "/Weave Test 1.cmmn.xml";
   String cmmnMeta = "/Weave Test 1.meta.json";
   String basicCasePath = "/Basic Case Model.raw.cmmn.xml";
-  String basicCaseWovenPath = "/Basic Case Model.cmmn.xml";
   String basicCaseMeta = "/Basic Case Model.meta.json";
   String basicDecisionPath = "/Basic Decision Model.raw.dmn.xml";
-  String basicDecisionWovenPath = "/Basic Decision Model.dmn.xml";
   String basicDecisionMeta = "/Basic Decision Model.meta.json";
 
   Document dmnDox;
@@ -53,19 +53,19 @@ class TrisotechExtractionStrategyTest {
   Document badDox;
   Document basicCaseDox;
   Document basicDecisionDox;
-  TrisotechFileInfo dmnFile;
-  TrisotechFileInfo cmmnFile;
-  TrisotechFileInfo badFile;
-  TrisotechFileInfo basicCaseFile;
-  TrisotechFileInfo basicDecisionFile;
+  SemanticModelInfo dmnFile;
+  SemanticModelInfo cmmnFile;
+  SemanticModelInfo basicCaseFile;
+  SemanticModelInfo basicDecisionFile;
 
   @BeforeEach
   void setUp() {
-    this.tes = new TrisotechIntrospectionStrategy();
-    InputStream dmnStream = MetadataIntrospector.class.getResourceAsStream(dmnMeta);
-    InputStream cmmnStream = MetadataIntrospector.class.getResourceAsStream(cmmnMeta);
-    InputStream baseCaseStream = MetadataIntrospector.class.getResourceAsStream(basicCaseMeta);
-    InputStream basicDecisionStream = MetadataIntrospector.class
+    this.tes = new ModelIntrospector(null,
+        new DefaultNamespaceManager(new TTWEnvironmentConfiguration()));
+    InputStream dmnStream = DefaultMetadataIntrospector.class.getResourceAsStream(dmnMeta);
+    InputStream cmmnStream = DefaultMetadataIntrospector.class.getResourceAsStream(cmmnMeta);
+    InputStream baseCaseStream = DefaultMetadataIntrospector.class.getResourceAsStream(basicCaseMeta);
+    InputStream basicDecisionStream = DefaultMetadataIntrospector.class
         .getResourceAsStream(basicDecisionMeta);
 
     dmnDox = loadXMLDocument(resolveResource(dmnPath))
@@ -77,13 +77,13 @@ class TrisotechExtractionStrategyTest {
     basicDecisionDox = loadXMLDocument(resolveResource(basicDecisionPath))
         .orElseGet(() -> fail("Unable to load document " + basicDecisionPath));
     dmnFile = JSonUtil.readJson(dmnStream)
-        .flatMap((j) -> JSonUtil.parseJson(j, TrisotechFileInfo.class)).orElseGet(Assertions::fail);
+        .flatMap((j) -> JSonUtil.parseJson(j, SemanticModelInfo.class)).orElseGet(Assertions::fail);
     cmmnFile = JSonUtil.readJson(cmmnStream)
-        .flatMap((j) -> JSonUtil.parseJson(j, TrisotechFileInfo.class)).orElseGet(Assertions::fail);
+        .flatMap((j) -> JSonUtil.parseJson(j, SemanticModelInfo.class)).orElseGet(Assertions::fail);
     basicCaseFile = JSonUtil.readJson(baseCaseStream)
-        .flatMap((j) -> JSonUtil.parseJson(j, TrisotechFileInfo.class)).orElseGet(Assertions::fail);
+        .flatMap((j) -> JSonUtil.parseJson(j, SemanticModelInfo.class)).orElseGet(Assertions::fail);
     basicDecisionFile = JSonUtil.readJson(basicDecisionStream)
-        .flatMap((j) -> JSonUtil.parseJson(j, TrisotechFileInfo.class)).orElseGet(Assertions::fail);
+        .flatMap((j) -> JSonUtil.parseJson(j, SemanticModelInfo.class)).orElseGet(Assertions::fail);
 
   }
 
@@ -102,43 +102,40 @@ class TrisotechExtractionStrategyTest {
   void getArtifactID() {
 
     String expectedDMNId = "https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068";
-    Optional<String> value = this.tes.getArtifactID(dmnDox);
-    assertNotNull(value.orElseGet(Assertions::fail));
-    assertEquals(expectedDMNId, value.orElseGet(Assertions::fail));
+    var value = this.tes.extractArtifactId(dmnFile);
+    assertEquals(expectedDMNId, value.getResourceId().toString());
 
     String expectedCMMNId = "https://clinicalknowledgemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9";
-    value = this.tes.getArtifactID(cmmnDox);
-    assertNotNull(value.orElseGet(Assertions::fail));
-    assertEquals(expectedCMMNId, value.orElseGet(Assertions::fail));
+    value = this.tes.extractArtifactId(cmmnFile);
+    assertEquals(expectedCMMNId, value.getResourceId().toString());
 
-    value = this.tes.getArtifactID(badDox);
-    assertFalse(value.isPresent());
-
+    assertThrows(Exception.class,
+        () -> this.tes.extractArtifactId(new SemanticModelInfo()));
   }
 
   @Test
   void getRepLanguage() {
-    var dmnRep = TrisotechMetadataHelper.getRepLanguage(dmnDox);
+    var dmnRep = MetadataHelper.getRepLanguage(dmnFile);
     assertEquals("DMN_1_2", dmnRep.orElseGet(Assertions::fail).getLanguage().toString());
 
-    var cmmnRep = TrisotechMetadataHelper.getRepLanguage(cmmnDox);
+    var cmmnRep = MetadataHelper.getRepLanguage(cmmnFile);
     assertEquals("CMMN_1_1", cmmnRep.orElseGet(Assertions::fail).getLanguage().toString());
 
-    var badRep = TrisotechMetadataHelper.getRepLanguage(badDox);
+    var badRep = MetadataHelper.getRepLanguage(new SemanticModelInfo());
     assertEquals(Optional.empty(), badRep);
   }
 
   @Test
   void detectRepLanguage() {
-    var dmnRep = TrisotechMetadataHelper.detectRepLanguage(dmnDox);
+    var dmnRep = MetadataHelper.detectRepLanguage(dmnFile);
     assertEquals("DMN 1.2", dmnRep.orElseGet(Assertions::fail).getLabel());
-    assertEquals(KnowledgeRepresentationLanguageSeries.DMN_1_2, dmnRep.orElseGet(Assertions::fail));
+    assertEquals(DMN_1_2, dmnRep.orElseGet(Assertions::fail));
 
-    var cmmnRep = TrisotechMetadataHelper.detectRepLanguage(cmmnDox);
+    var cmmnRep = MetadataHelper.detectRepLanguage(cmmnFile);
     assertEquals("CMMN 1.1", cmmnRep.orElseGet(Assertions::fail).getLabel());
     assertEquals(KnowledgeRepresentationLanguageSeries.CMMN_1_1, cmmnRep.orElseGet(Assertions::fail));
 
-    var badRep = TrisotechMetadataHelper.detectRepLanguage(badDox);
+    var badRep = MetadataHelper.detectRepLanguage(new SemanticModelInfo());
     assertEquals(Optional.empty(), badRep);
   }
 

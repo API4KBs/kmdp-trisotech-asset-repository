@@ -6,6 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+/**
+ * {@link KARSHrefBuilder} that uses the Spring context to determine the base URL, so that URI-based
+ * links can be mapped to URLs bound to the server deployment
+ */
 public class TTServerContextAwareHrefBuilder extends KARSHrefBuilder {
 
   private static final Logger logger = LoggerFactory.getLogger(

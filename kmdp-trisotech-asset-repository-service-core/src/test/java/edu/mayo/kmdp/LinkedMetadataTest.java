@@ -17,11 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.IdentityMapper;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.NamespaceManager;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
+import edu.mayo.kmdp.components.TestMetadataIntrospector;
+import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
@@ -44,13 +43,10 @@ class LinkedMetadataTest {
   // FYI: IDE may complain about
   // the following two not being able to be autowired, but the code works.
   @Autowired
-  private MetadataIntrospector extractor;
+  private TestMetadataIntrospector extractor;
 
   @Autowired
   NamespaceManager names;
-
-  @Autowired
-  private IdentityMapper mapper;
 
   @Autowired
   private Weaver weaver;
@@ -88,7 +84,7 @@ class LinkedMetadataTest {
           .map(XMLUtil::toByteArray);
       assertTrue(dmn.isPresent());
       byte[] annotatedDMN = dmn.get();
-      dmnSurr = extractor.extract(new ByteArrayInputStream(annotatedDMN),
+      dmnSurr = extractor.extractMetadata(new ByteArrayInputStream(annotatedDMN),
               LinkedMetadataTest.class.getResourceAsStream(dmnMetaPath))
           .orElseGet(Assertions::fail);
 
@@ -99,7 +95,7 @@ class LinkedMetadataTest {
           .map(XMLUtil::toByteArray);
       assertTrue(svc.isPresent());
       byte[] annotatedSVC = svc.get();
-      svcSurr = extractor.extract(new ByteArrayInputStream(annotatedSVC),
+      svcSurr = extractor.extractMetadata(new ByteArrayInputStream(annotatedSVC),
               LinkedMetadataTest.class.getResourceAsStream(dmnSvcMetaPath))
           .orElseGet(Assertions::fail);
 
@@ -110,7 +106,7 @@ class LinkedMetadataTest {
           .map(XMLUtil::toByteArray);
       assertTrue(cmmn.isPresent());
       byte[] annotatedCMMN = cmmn.get();
-      cmmnSurr = extractor.extract(new ByteArrayInputStream(annotatedCMMN),
+      cmmnSurr = extractor.extractMetadata(new ByteArrayInputStream(annotatedCMMN),
               LinkedMetadataTest.class.getResourceAsStream(cmmnMetaPath))
           .orElseGet(Assertions::fail);
 

@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.redactors.Redactor;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.weavers.Weaver;
+import edu.mayo.kmdp.components.TestMetadataIntrospector;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -45,7 +45,7 @@ import org.w3c.dom.Document;
 class SemanticAnnotationTest {
 
   @Autowired
-  MetadataIntrospector extractor;
+  TestMetadataIntrospector extractor;
 
   @Autowired
   Weaver dmnWeaver;
@@ -68,7 +68,7 @@ class SemanticAnnotationTest {
     assertTrue(dmn.isPresent());
 
     try {
-      Optional<KnowledgeAsset> res = extractor.extract(
+      Optional<KnowledgeAsset> res = extractor.extractMetadata(
           new ByteArrayInputStream(dmn.get()),
           SemanticAnnotationTest.class.getResourceAsStream(metaPath));
       if (res.isEmpty()) {
@@ -121,7 +121,7 @@ class SemanticAnnotationTest {
     //XMLUtil.streamXMLDocument(dox.get(), System.out);
 
     try {
-      Optional<KnowledgeAsset> res = extractor.extract(
+      Optional<KnowledgeAsset> res = extractor.extractMetadata(
           new ByteArrayInputStream(dmn.get()),
           SemanticAnnotationTest.class.getResourceAsStream(metaPath));
       if (res.isEmpty()) {
@@ -159,7 +159,7 @@ class SemanticAnnotationTest {
         .flatMap(str -> JSonUtil.parseJson(str, TrisotechFileInfo.class))
         .orElseGet(Assertions::fail);
 
-    var asset = extractor.extract(cmmn.get(), info)
+    var asset = extractor.extractMetadata(cmmn.get(), info)
         .orElseGet(Assertions::fail);
 
     System.out.println(XMLUtil.toString(cmmn.get()));

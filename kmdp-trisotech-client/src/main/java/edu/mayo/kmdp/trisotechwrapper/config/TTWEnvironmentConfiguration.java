@@ -13,12 +13,14 @@
  */
 package edu.mayo.kmdp.trisotechwrapper.config;
 
-import static edu.mayo.kmdp.trisotechwrapper.config.TrisotechApiUrls.apiEndpoint;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.apiEndpoint;
 
 import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.util.PropertiesUtil;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
@@ -32,11 +34,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TTWEnvironmentConfiguration extends
-    ConfigProperties<TTWEnvironmentConfiguration, TTWParams> {
+    ConfigProperties<TTWEnvironmentConfiguration, TTWConfigParamsDef> {
 
   private static final Logger logger = LoggerFactory.getLogger(TTWEnvironmentConfiguration.class);
 
-  private static final Properties DEFAULTS = defaulted(TTWParams.class);
+  private static final Properties DEFAULTS = defaulted(TTWConfigParamsDef.class);
 
   @Autowired
   private Environment env;
@@ -44,14 +46,18 @@ public class TTWEnvironmentConfiguration extends
   public TTWEnvironmentConfiguration() {
     super(DEFAULTS);
   }
+  public TTWEnvironmentConfiguration(Environment env) {
+    super(DEFAULTS);
+    this.env = env;
+  }
 
   public TTWEnvironmentConfiguration(Properties defaults) {
     super(defaults);
   }
 
   @Override
-  public TTWParams[] properties() {
-    return TTWParams.values();
+  public TTWConfigParamsDef[] properties() {
+    return TTWConfigParamsDef.values();
   }
 
   @Override
@@ -66,10 +72,12 @@ public class TTWEnvironmentConfiguration extends
 
     ensureVariablesSet();
 
-    if (get(TTWParams.API_TOKEN).isEmpty()) {
+    if (get(TTWConfigParamsDef.API_TOKEN).isEmpty()) {
       logger.warn("No bearer token detected - Unable to connect to the TT DES");
     }
-    if (get(TTWParams.REPOSITORY_ID).isEmpty() || get(TTWParams.REPOSITORY_NAME).isEmpty()) {
+    if ((get(TTWConfigParamsDef.REPOSITORY_ID).isEmpty()
+        || get(TTWConfigParamsDef.REPOSITORY_NAME).isEmpty())
+        && get(TTWConfigParamsDef.REPOSITORY_PATHS).isEmpty()) {
       logger.warn("No target Place/Repository configuration detected "
           + "- Unable to retrieve models");
     }
@@ -82,11 +90,11 @@ public class TTWEnvironmentConfiguration extends
    *
    * Sets the TT DES public API endpoint, given the base URL
    */
-  private void ensureVariablesSet() {
-    Optional<String> baseURL = tryGetTyped(TTWParams.BASE_URL);
-    Optional<String> apiEndpoint = tryGetTyped(TTWParams.API_ENDPOINT);
+  public void ensureVariablesSet() {
+    Optional<String> baseURL = tryGetTyped(TTWConfigParamsDef.BASE_URL);
+    Optional<String> apiEndpoint = tryGetTyped(TTWConfigParamsDef.API_ENDPOINT);
     if (apiEndpoint.isEmpty() && baseURL.isPresent()) {
-      setTyped(TTWParams.API_ENDPOINT, apiEndpoint(baseURL.get()));
+      setTyped(TTWConfigParamsDef.API_ENDPOINT, apiEndpoint(baseURL.get()));
     }
   }
 
@@ -94,7 +102,7 @@ public class TTWEnvironmentConfiguration extends
    * Acquires the configuration values set in the environment
    */
   private void scanEnvironment() {
-    for (var param : TTWParams.values()) {
+    for (var param : TTWConfigParamsDef.values()) {
       var sysValue = sanitize(env.getProperty(param.getName()));
       if (sysValue != null) {
         this.setTyped(param, sysValue);
@@ -128,11 +136,19 @@ public class TTWEnvironmentConfiguration extends
    * @param sysValue the config variable value
    * @return the value, in a form suitable for printing
    */
-  private String print(TTWParams param, String sysValue) {
-    if (param == TTWParams.API_TOKEN) {
-      return sysValue.substring(0, 10);
+  private String print(TTWConfigParamsDef param, String sysValue) {
+    if (param == TTWConfigParamsDef.API_TOKEN && sysValue != null) {
+      return sysValue.substring(0, Math.min(sysValue.length(), 10));
     }
     return sysValue;
+  }
+
+  @Override
+  public synchronized String toString() {
+    var vals = Arrays.stream(TTWConfigParamsDef.values())
+        .map(k -> k + "=" + print(k, get(k).orElse("")))
+        .collect(Collectors.joining(", "));
+    return "{" + vals + "}";
   }
 
 }

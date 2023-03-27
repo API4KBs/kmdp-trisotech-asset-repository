@@ -7,7 +7,6 @@ import edu.mayo.kmdp.health.datatype.ApplicationComponent;
 import edu.mayo.kmdp.health.datatype.MiscProperties;
 import edu.mayo.kmdp.health.datatype.Status;
 import edu.mayo.kmdp.health.utils.MonitorUtil;
-import edu.mayo.kmdp.terms.TermsFHIRFacade;
 import edu.mayo.kmdp.trisotechwrapper.TrisotechWrapper;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -22,7 +21,6 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 @ComponentScan(basePackageClasses = {
     TrisotechWrapper.class,
-    TermsFHIRFacade.class,
     HealthEndPoint.class,
     StateEndPoint.class,
     VersionEndPoint.class})

@@ -94,7 +94,7 @@ class PlaceScopeHelperTest {
     }
 
     @Override
-    public Optional<Document> downloadXmlModel(String fromUrl) {
+    public Optional<Document> downloadXmlModel(TrisotechFileInfo tt) {
       throw new UnsupportedOperationException();
     }
 

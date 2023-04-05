@@ -5,6 +5,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import java.net.URI;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
@@ -74,7 +75,7 @@ public interface NamespaceManager {
 
 
   /**
-   * Builds an Artifact Id from a model URI, a Model version, a label and a last update Date
+   * Builds an Artifact Id from a model URI, a Model version, a label, and a last update Date
    *
    * @param modelUri      the internal Id of the Model
    * @param versionTag    the version of the Model
@@ -82,12 +83,40 @@ public interface NamespaceManager {
    * @param establishedOn the Date when this version was last touched
    * @return an artifact Id
    */
+  default ResourceIdentifier modelToArtifactId(
+      @Nonnull final String modelUri,
+      @Nullable final String versionTag,
+      @Nullable final String label,
+      @Nullable final Date establishedOn) {
+    return modelToArtifactId(modelUri, versionTag, label, null, establishedOn);
+  }
+
+  /**
+   * Builds an Artifact Id from a model URI, a Model version, a label, a publication state and a
+   * last update Date
+   *
+   * @param modelUri      the internal Id of the Model
+   * @param versionTag    the version of the Model
+   * @param label         the name of the Model
+   * @param state         the publication state of the Model
+   * @param establishedOn the Date when this version was last touched
+   * @return an artifact Id
+   */
   ResourceIdentifier modelToArtifactId(
       @Nonnull final String modelUri,
       @Nullable final String versionTag,
       @Nullable final String label,
+      @Nullable final String state,
       @Nullable final Date establishedOn);
 
+
+  /**
+   * Inverse-maps an Artifact's UUID to an internal TT model URI
+   *
+   * @param artifactId the artifact UUID
+   * @return an internal model Id (URI)
+   */
+  String artifactToModelId(UUID artifactId);
 
   /**
    * Predicate

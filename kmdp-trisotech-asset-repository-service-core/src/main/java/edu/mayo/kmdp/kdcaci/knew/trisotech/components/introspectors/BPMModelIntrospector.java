@@ -13,13 +13,13 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.addSemanticAnnotations;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.detectRepLanguage;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.extractAnnotations;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.getDeclaredAssetTypes;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.getDefaultAssetType;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.getRepLanguage;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.tryAddKommunicatorLink;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.addSemanticAnnotations;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.detectRepLanguage;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.extractAnnotations;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDeclaredAssetTypes;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultAssetType;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getRepLanguage;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.tryAddKommunicatorLink;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
 import static edu.mayo.kmdp.util.Util.isNotEmpty;
@@ -113,10 +113,10 @@ import org.w3c.dom.Node;
  * data.
  */
 @Component
-public class ModelIntrospector {
+public class BPMModelIntrospector {
 
   private static final Logger logger = LoggerFactory
-      .getLogger(ModelIntrospector.class);
+      .getLogger(BPMModelIntrospector.class);
 
   @Autowired
   TTAPIAdapter client;
@@ -132,11 +132,11 @@ public class ModelIntrospector {
 
   private final XPathUtil xPathUtil = new XPathUtil();
 
-  public ModelIntrospector() {
+  public BPMModelIntrospector() {
     //
   }
 
-  public ModelIntrospector(TTAPIAdapter client, NamespaceManager names) {
+  public BPMModelIntrospector(TTAPIAdapter client, NamespaceManager names) {
     this.client = client;
     this.names = names;
   }
@@ -387,6 +387,7 @@ public class ModelIntrospector {
     if (categories.isEmpty()) {
       logger.error("Unable to determine formal category for asset {}, given types {}",
           assetId, formalTypes);
+      return null;
     }
     return categories.iterator().next();
   }
@@ -537,9 +538,10 @@ public class ModelIntrospector {
     return carriers.stream()
         .flatMap(info -> info.getModelDependencies().stream()
             .flatMap(modelRef -> client.getMetadataByModelId(modelRef)
-                .map(SemanticModelInfo::getAssetKey).stream()))
+                .map(ref ->
+                    names.assetKeyToId(ref.getAssetKey()).withName(ref.getName()))
+                .stream()))
         .distinct()
-        .map(names::assetKeyToId)
         .collect(toList());
   }
 

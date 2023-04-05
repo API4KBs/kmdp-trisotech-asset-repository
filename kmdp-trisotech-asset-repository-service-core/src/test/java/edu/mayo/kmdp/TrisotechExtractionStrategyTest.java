@@ -21,8 +21,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DefaultMetadataIntrospector;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.ModelIntrospector;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMModelIntrospector;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper;
 import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
@@ -38,7 +38,7 @@ import org.w3c.dom.Document;
 
 class TrisotechExtractionStrategyTest {
 
-  ModelIntrospector tes;
+  BPMModelIntrospector tes;
   String dmnPath = "/Weaver Test 1.dmn.xml";
   String dmnMeta = "/Weaver Test 1.meta.json";
   String cmmnPath = "/Weave Test 1.cmmn.xml";
@@ -60,7 +60,7 @@ class TrisotechExtractionStrategyTest {
 
   @BeforeEach
   void setUp() {
-    this.tes = new ModelIntrospector(null,
+    this.tes = new BPMModelIntrospector(null,
         new DefaultNamespaceManager(new TTWEnvironmentConfiguration()));
     InputStream dmnStream = DefaultMetadataIntrospector.class.getResourceAsStream(dmnMeta);
     InputStream cmmnStream = DefaultMetadataIntrospector.class.getResourceAsStream(cmmnMeta);
@@ -115,27 +115,27 @@ class TrisotechExtractionStrategyTest {
 
   @Test
   void getRepLanguage() {
-    var dmnRep = MetadataHelper.getRepLanguage(dmnFile);
+    var dmnRep = BPMMetadataHelper.getRepLanguage(dmnFile);
     assertEquals("DMN_1_2", dmnRep.orElseGet(Assertions::fail).getLanguage().toString());
 
-    var cmmnRep = MetadataHelper.getRepLanguage(cmmnFile);
+    var cmmnRep = BPMMetadataHelper.getRepLanguage(cmmnFile);
     assertEquals("CMMN_1_1", cmmnRep.orElseGet(Assertions::fail).getLanguage().toString());
 
-    var badRep = MetadataHelper.getRepLanguage(new SemanticModelInfo());
+    var badRep = BPMMetadataHelper.getRepLanguage(new SemanticModelInfo());
     assertEquals(Optional.empty(), badRep);
   }
 
   @Test
   void detectRepLanguage() {
-    var dmnRep = MetadataHelper.detectRepLanguage(dmnFile);
+    var dmnRep = BPMMetadataHelper.detectRepLanguage(dmnFile);
     assertEquals("DMN 1.2", dmnRep.orElseGet(Assertions::fail).getLabel());
     assertEquals(DMN_1_2, dmnRep.orElseGet(Assertions::fail));
 
-    var cmmnRep = MetadataHelper.detectRepLanguage(cmmnFile);
+    var cmmnRep = BPMMetadataHelper.detectRepLanguage(cmmnFile);
     assertEquals("CMMN 1.1", cmmnRep.orElseGet(Assertions::fail).getLabel());
     assertEquals(KnowledgeRepresentationLanguageSeries.CMMN_1_1, cmmnRep.orElseGet(Assertions::fail));
 
-    var badRep = MetadataHelper.detectRepLanguage(new SemanticModelInfo());
+    var badRep = BPMMetadataHelper.detectRepLanguage(new SemanticModelInfo());
     assertEquals(Optional.empty(), badRep);
   }
 

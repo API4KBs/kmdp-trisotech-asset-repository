@@ -131,7 +131,7 @@ public final class AssetCacheHelper {
         .build(new CacheLoader<>() {
           @Override
           public @Nullable Document load(@NonNull SemanticModelInfo key) {
-            return webClient.downloadXmlModel(key.getUrl())
+            return webClient.downloadXmlModel(key)
                 .map(preProcessor)
                 .orElse(null);
           }

@@ -8,7 +8,7 @@ import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.randomAss
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DefaultMetadataIntrospector;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.ModelIntrospector;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMModelIntrospector;
 import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
 import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
@@ -34,7 +34,7 @@ public class TestMetadataIntrospector extends DefaultMetadataIntrospector {
       .getLogger(TestMetadataIntrospector.class);
 
   public TestMetadataIntrospector(
-      ModelIntrospector delegate) {
+      BPMModelIntrospector delegate) {
     super(delegate);
   }
 

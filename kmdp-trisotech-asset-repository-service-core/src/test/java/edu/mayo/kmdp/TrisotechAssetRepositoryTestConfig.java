@@ -17,7 +17,7 @@ package edu.mayo.kmdp;
 
 import edu.mayo.kmdp.components.TestMetadataIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechAssetRepository;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.ModelIntrospector;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMModelIntrospector;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -32,7 +32,7 @@ public class TrisotechAssetRepositoryTestConfig {
   @Bean
   @Primary
   TestMetadataIntrospector extractor() {
-    return new TestMetadataIntrospector(new ModelIntrospector());
+    return new TestMetadataIntrospector(new BPMModelIntrospector());
   }
 
 }

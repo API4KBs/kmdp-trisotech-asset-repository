@@ -13,8 +13,8 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.addSemanticAnnotations;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.extractAnnotations;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.addSemanticAnnotations;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.extractAnnotations;
 import static edu.mayo.kmdp.trisotechwrapper.components.graph.PlacePathIndex.mintAssetIdForAnonymous;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
@@ -64,7 +64,7 @@ import org.w3c.dom.Node;
  * data.
  */
 @Component
-public class ServiceIntrospector {
+public class BPMServiceIntrospector {
 
   @Autowired
   TTAPIAdapter client;
@@ -78,7 +78,7 @@ public class ServiceIntrospector {
 
   private final XPathUtil xPathUtil = new XPathUtil();
 
-  public ServiceIntrospector() {
+  public BPMServiceIntrospector() {
     //
   }
 

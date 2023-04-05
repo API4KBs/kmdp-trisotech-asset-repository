@@ -117,6 +117,15 @@ public class CaffeineCacheManager implements CachingTTWKnowledgeStore {
   }
 
   @Override
+  public Stream<SemanticModelInfo> listAllModelsInfoByPlaceAndMimeClass(
+      @Nonnull final String placeId,
+      @Nullable final String mimeType) {
+    return Stream.ofNullable(this.getPlaceCache().get(TrisotechPlace.key(placeId)))
+        .flatMap(ppi -> ppi.getModelToManifestMappings().values().stream())
+        .filter(si -> mimeType == null || mimeMatches(mimeType, si.getMimetype()));
+  }
+
+  @Override
   public Optional<SemanticModelInfo> getMetadataByArtifact(
       @Nonnull final String modelUri) {
     return forceAllPlaces().flatMap(ppi ->

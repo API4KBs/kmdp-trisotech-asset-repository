@@ -40,6 +40,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -190,24 +191,24 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
   /**
    * Download the actual model in its XML form. Does NOT care if model is published or not
    *
-   * @param fromUrl String representing an ENCODED URI
+   * @param from String representing an ENCODED URI
    * @return XML document
    */
   @Override
-  public Optional<Document> downloadXmlModel(String fromUrl) {
+  public Optional<Document> downloadXmlModel(TrisotechFileInfo from) {
     if (!online) {
       logger.warn("Client is offline - unable to download model");
       return Optional.empty();
     }
-
     try {
-      if (decode(fromUrl, UTF_8).contains(KEM_JSON.getMimeType())) {
+      var fromUrl = negotiate(from);
+      if (decode(fromUrl.toString(), UTF_8).contains(KEM_JSON.getMimeType())) {
         // convert KEM to a more standard form, then process as BPM+
         return tryDownloadKEM(fromUrl);
       } else{
         return tryDownloadXmlModel(fromUrl);
       }
-    } catch (HttpException | IOException e) {
+    } catch (HttpException | IOException | URISyntaxException e) {
       logger.error(e.getMessage(), e);
       return Optional.empty();
     }
@@ -225,7 +226,7 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
    * @throws HttpException
    * @throws IOException
    */
-  private Optional<Document> tryDownloadKEM(String fromUrl) throws HttpException, IOException {
+  private Optional<Document> tryDownloadKEM(URL fromUrl) throws HttpException, IOException {
     return tryDownloadNativeModel(fromUrl)
         .flatMap(j -> JSonUtil.parseJson(j, KemModel.class))
         .map(k -> new KEMtoMVFTranslator().translate(k))
@@ -280,14 +281,13 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
    * @param fromUrl String representing an ENCODED URI
    * @return XML document
    */
-  public Optional<Document> tryDownloadXmlModel(String fromUrl) throws HttpException, IOException {
+  public Optional<Document> tryDownloadXmlModel(URL fromUrl) throws HttpException, IOException {
     if (!online) {
       logger.warn("Client is offline - unable to download model");
       return Optional.empty();
     }
 
-    URL url = negotiate(fromUrl);
-    HttpURLConnection conn = getHttpURLConnection(url);
+    HttpURLConnection conn = getHttpURLConnection(fromUrl);
 
     // using XMLUtil to load the XML Document properly sets up the document for
     // conversion by setting namespaceaware
@@ -302,25 +302,21 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
    * @param fromUrl String representing an ENCODED URI
    * @return JsonNode
    */
-  public Optional<JsonNode> tryDownloadNativeModel(String fromUrl)
+  public Optional<JsonNode> tryDownloadNativeModel(URL fromUrl)
       throws HttpException, IOException {
     if (!online) {
       logger.warn("Client is offline - unable to download model");
       return Optional.empty();
     }
 
-    URL url = negotiate(fromUrl);
-    HttpURLConnection conn = getHttpURLConnection(url);
+    HttpURLConnection conn = getHttpURLConnection(fromUrl);
 
     Optional<JsonNode> document = JSonUtil.readJson(conn.getInputStream());
     conn.disconnect();
     return document;
   }
 
-  /**
-   * Stub method for content negotiation
-   */
-  private URL negotiate(String url) throws MalformedURLException {
+  private URL oldNegotiate(String url) throws MalformedURLException {
     String[] comps = url.split("&");
     String recomp = Arrays.stream(comps)
         .map(comp -> comp.startsWith("mimetype=")
@@ -332,8 +328,29 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
 
   private String negotiateMimeType(String comp) {
     int idx = comp.indexOf('=');
-    String xmlMimeType = getXmlMimeType(comp.substring(idx + 1));
+    String xmlMimeType = getXmlMimeType(comp.substring(idx + 1)).orElse(null);
     return comp.substring(0, idx) + "=" + encode(xmlMimeType, UTF_8);
+  }
+
+  /**
+   * Stub method for content negotiation
+   */
+  private URL negotiate(TrisotechFileInfo from) throws MalformedURLException, URISyntaxException {
+    var parts = from.getUrl().split("\\?");
+    var qry = parts[1];
+    var queryParams = Arrays.stream(qry.split("&"))
+        .map(c -> c.split("="))
+        .collect(Collectors.toMap(
+            s -> s[0],
+            s -> s[1]
+        ));
+    var mime = queryParams.getOrDefault("mimetype", from.getMimetype());
+    getXmlMimeType(mime).ifPresent(m ->
+      queryParams.put("mimetype", encode(m, UTF_8)));
+    var query = queryParams.entrySet().stream()
+        .map(e -> e.getKey() + "=" + e.getValue())
+        .collect(Collectors.joining("&"));
+    return new URL(parts[0] + "?" + query);
   }
 
   private HttpURLConnection getHttpURLConnection(URL url) throws IOException, HttpException {
@@ -385,7 +402,7 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
     }
 
     // first make sure mimetype is in correct format for API call
-    mimeType = getXmlMimeType(mimeType);
+    mimeType = getXmlMimeType(mimeType).orElse(mimeType);
     URI uri;
 
     // NOTE: MUST Use UriComponentBuilder to handle '+' in the MimeType, otherwise it will be

@@ -52,17 +52,17 @@ public class DefaultMetadataIntrospector implements MetadataIntrospector {
   }
 
   @Autowired
-  protected ModelIntrospector strategy;
+  protected BPMModelIntrospector strategy;
 
   @Autowired
   protected TTAPIAdapter client;
 
   @Autowired
-  protected ServiceIntrospector serviceStrategy;
+  protected BPMServiceIntrospector serviceStrategy;
 
   protected final _applyLower serializer = new Surrogate2Parser();
 
-  public DefaultMetadataIntrospector(ModelIntrospector delegate) {
+  public DefaultMetadataIntrospector(BPMModelIntrospector delegate) {
     this.strategy = delegate;
   }
 

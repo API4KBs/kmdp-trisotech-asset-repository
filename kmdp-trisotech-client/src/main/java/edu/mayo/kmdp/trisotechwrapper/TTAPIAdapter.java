@@ -32,41 +32,53 @@ public interface TTAPIAdapter {
   Stream<SemanticModelInfo> listModels(
       @Nullable String xmlMimeType);
 
+  default Stream<SemanticModelInfo> listModelsByPlace(
+      @Nonnull final String placeId) {
+    return listModelsByPlace(placeId, null);
+  }
+
+  Stream<SemanticModelInfo> listModelsByPlace(
+      @Nonnull final String placeId,
+      @Nullable final String xmlMimeType);
+
   Map<String, TrisotechPlace> listAccessiblePlaces();
   Map<TrisotechPlace, Set<String>> getCachedPlaceScopes();
   Map<String, TrisotechPlace> getCacheablePlaces();
 
 
   Map<String, TrisotechExecutionArtifact> listExecutionArtifacts(
-      String env);
+      @Nullable final String env);
 
   Optional<TrisotechExecutionArtifact> getExecutionArtifact(
       @Nonnull final String serviceName,
       @Nonnull final TrisotechFileInfo manifest);
 
   Optional<SemanticModelInfo> getMetadataByModelId(
-      String modelUri);
+      @Nonnull final String modelUri);
 
   List<TrisotechFileInfo> getVersionsMetadataByModelId(
-      String modelUri);
+      @Nonnull final String modelUri);
 
   Optional<TrisotechFileInfo> getMetadataByModelIdAndVersion(
-      String fileId, String fileVersion);
+      @Nonnull final String fileId,
+      @Nonnull final String fileVersion);
 
   Stream<SemanticModelInfo> getServicesMetadataByModelId(
-      String modelUri);
+      @Nonnull final String modelUri);
 
   Stream<SemanticModelInfo> getMetadataByAssetId(
-      UUID assetId, String assetVersionTag);
+      @Nonnull final UUID assetId,
+      @Nonnull final String assetVersionTag);
 
   Optional<Document> getModelById(
-      String modelUri);
+      @Nonnull final String modelUri);
 
   Optional<Document> getModelByIdAndVersion(
-      String modelUri, String version);
+      @Nonnull final String modelUri,
+      @Nonnull final String version);
 
   Optional<Document> getModel(
-      TrisotechFileInfo trisotechFileInfo);
+      @Nonnull final TrisotechFileInfo trisotechFileInfo);
 
   Optional<CachingTTWKnowledgeStore> getCacheManager();
 

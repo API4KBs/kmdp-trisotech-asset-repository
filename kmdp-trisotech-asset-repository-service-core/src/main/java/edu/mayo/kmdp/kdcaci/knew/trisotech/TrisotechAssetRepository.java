@@ -14,14 +14,13 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DocumentHelper.extractAssetIdFromDocument;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.getDeclaredAssetTypes;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.getDefaultAssetType;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataHelper.getRepLanguage;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDeclaredAssetTypes;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultAssetType;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getRepLanguage;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
-import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.applyTimestampToVersion;
+import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.matchesVersion;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getXmlMimeTypeByAssetType;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.ASSET_ID_ATTRIBUTE;
-import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.PropertiesUtil.serializeProps;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -74,7 +73,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -495,13 +493,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     return notFound();
   }
 
-  private boolean matchesVersion(SemanticModelInfo info, String artifactVersionTag) {
-    return Objects.equals(info.getVersion(), artifactVersionTag)
-        || Objects.equals(
-        applyTimestampToVersion(info.getVersion(), parseDateTime(info.getUpdated()).getTime()),
-        artifactVersionTag);
-  }
-
   /**
    * Retrieves the canonical surrogate for the latest version of an asset, wrapped in a
    * KnowledgeCarrier
@@ -757,6 +748,11 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       var redirect = new URI(host.getScheme(), null, host.getHost(), host.getPort(),
           host.getPath() + "/cat" + ns.getPath(), null, null);
       props.put(ns.toString(), redirect.toString());
+
+      var ns2 = names.getArtifactNamespace();
+      var redirect2 = new URI(host.getScheme(), null, host.getHost(), host.getPort(),
+          host.getPath() + "/repos/_" + ns2.getPath(), null, null);
+      props.put(ns2.toString(), redirect2.toString());
       xCfg = serializeProps(props);
     } catch (Exception e) {
       // fall back to not rewriting the URIs/URLs

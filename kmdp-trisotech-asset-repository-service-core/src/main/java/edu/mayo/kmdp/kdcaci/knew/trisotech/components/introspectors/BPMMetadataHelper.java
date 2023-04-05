@@ -1,6 +1,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
 import static edu.mayo.kmdp.trisotechwrapper.components.execution.KommunicatorHelper.getKommunicatorLink;
+import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.JaxbUtil.unmarshall;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
@@ -51,13 +52,13 @@ import org.w3c.dom.Element;
 /**
  * Helper class that gathers functions used across the various Asset metadata introspectors
  */
-public class MetadataHelper {
+public class BPMMetadataHelper {
 
   private static final String SEMANTIC_EXTENSION_ELEMENTS = "semantic:extensionElements";
   private static final String EXTENSION_ELEMENTS = "extensionElements";
 
 
-  protected MetadataHelper() {
+  protected BPMMetadataHelper() {
     // functions only
   }
 
@@ -228,7 +229,8 @@ public class MetadataHelper {
                 .map(lang ->
                     new KnowledgeArtifact()
                         .withArtifactId(
-                            defaultArtifactId(artifactId, HTML))
+                            defaultArtifactId(artifactId, HTML)
+                                .withEstablishedOn(parseDateTime(manifest.getUpdated())))
                         .withRepresentation(rep(lang))
                         .withExpressionCategory(Interactive_Resource)
                         .withLifecycle(new Publication()

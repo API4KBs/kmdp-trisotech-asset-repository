@@ -53,6 +53,11 @@
     </dependency>
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>kmdp-artifact-repository-service-controllers</artifactId>
+      <version>${kmdp.impl.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-asset-surrogate</artifactId>
     </dependency>
     <!-- external -->

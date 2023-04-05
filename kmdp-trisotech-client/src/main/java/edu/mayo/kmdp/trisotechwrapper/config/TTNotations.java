@@ -7,6 +7,7 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.KEM;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.UNSUPPORTED;
 import static edu.mayo.kmdp.util.Util.isEmpty;
 
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,13 +68,13 @@ public enum TTNotations {
    * @return the XML mimetype specfication to be used in API calls
    * @throws IllegalArgumentException if a type other than "dmn" and "cmmn" is requested
    */
-  public static String getXmlMimeType(String mimetype) {
+  public static Optional<String> getXmlMimeType(String mimetype) {
     if (isEmpty(mimetype)) {
-      return null;
+      return Optional.empty();
     }
     var lang = detectTTLanguage(mimetype);
     var xmlMime = getXmlMimeType(lang);
-    return xmlMime != null ? xmlMime : mimetype;
+    return Optional.of(xmlMime != null ? xmlMime : mimetype);
   }
 
   private static String getXmlMimeType(TTLanguages lang) {

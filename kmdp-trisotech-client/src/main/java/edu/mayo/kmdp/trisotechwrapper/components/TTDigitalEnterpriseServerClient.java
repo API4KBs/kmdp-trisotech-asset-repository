@@ -19,7 +19,7 @@ public interface TTDigitalEnterpriseServerClient {
 
   Optional<TrisotechPlaceData> getPlaces() throws IOException;
 
-  Optional<Document> downloadXmlModel(String fromUrl);
+  Optional<Document> downloadXmlModel(TrisotechFileInfo from);
 
   Optional<TrisotechExecutionArtifactData> getExecutionArtifacts(String execEnv)
       throws IOException;

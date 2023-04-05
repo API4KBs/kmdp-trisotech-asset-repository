@@ -53,6 +53,20 @@ public interface TTWKnowledgeStore {
       @Nullable final String mimeType);
 
   /**
+   * Returns manifests for all available Models in a given Place, possibly filtering by MIME type.
+   * <p>
+   * If no mimeType is provided, no filtering should be applied.
+   *
+   * @param placeid  the placeId
+   * @param mimeType an optional mimeType filter, as the representative of a MIME class of
+   *                 equivalent types
+   * @return Manifests for all available Models in the Place, possibly filtered, as a Stream
+   */
+  Stream<SemanticModelInfo> listAllModelsInfoByPlaceAndMimeClass(
+      @Nonnull final String placeid,
+      @Nullable final String mimeType);
+
+  /**
    * Retrieves the Manifest for the Model with a given model Id
    *
    * @param modelUri the Id of the Model

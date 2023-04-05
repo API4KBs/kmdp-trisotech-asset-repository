@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.HTMLAdapter;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTRepoContextAwareHrefBuilder;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTServerContextAwareHrefBuilder;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
@@ -43,6 +44,11 @@ public class TTServerConfig {
   @Bean
   public TTServerContextAwareHrefBuilder hrefBuilder(@Autowired TTWEnvironmentConfiguration cfg) {
     return new TTServerContextAwareHrefBuilder(cfg);
+  }
+
+  @Bean
+  public TTRepoContextAwareHrefBuilder artfHrefBuilder(@Autowired TTWEnvironmentConfiguration cfg) {
+    return new TTRepoContextAwareHrefBuilder(cfg);
   }
 
   @Bean

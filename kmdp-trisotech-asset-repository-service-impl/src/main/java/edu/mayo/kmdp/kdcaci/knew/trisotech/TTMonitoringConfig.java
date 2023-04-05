@@ -12,9 +12,11 @@ import edu.mayo.kmdp.health.datatype.Status;
 import edu.mayo.kmdp.health.utils.MonitorUtil;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.components.cache.CachingTTWKnowledgeStore;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +29,14 @@ import org.springframework.core.env.ConfigurableEnvironment;
 /**
  * Spring Configuration class for the TTW monitorable components.
  * <p>
- * Health-monitorable components include the DES server, as well as the internal caches
+ * In addition to the default implementation provided by {@link HealthEndPoint}, monitors the
+ * following internal components:
+ *
+ * <ul>
+ *   <li>the {@link TTAPIAdapter}, as a proxy for the TT DES server API</li>
+ *   <li>the {@link CachingTTWKnowledgeStore}'s Place Cache, as a proxy for the TT DES Knowledge Graph</li>>
+ *   <li>the {@link CachingTTWKnowledgeStore}'s Model Cache, as a proxy for the TT DES Model Repository</li>>
+ * </ul>
  */
 @ComponentScan(basePackageClasses = {
     TTAPIAdapter.class,
@@ -41,10 +50,18 @@ public class TTMonitoringConfig {
   @Value("${edu.mayo.kmdp.trisotechwrapper.repositoryId:nil}")
   String mainPlaceId;
 
+  /**
+   * Creates a representation of the TT DES server (APIs) as a health-monitored
+   * {@link ApplicationComponent}
+   *
+   * @param env    the system Environment
+   * @param client the DES server client
+   * @return the DES Server health status, as an {@link ApplicationComponent}
+   */
   @Bean
   Supplier<ApplicationComponent> ttServer(
-      @Autowired ConfigurableEnvironment env,
-      @Autowired TTAPIAdapter client) {
+      @Autowired @Nonnull final ConfigurableEnvironment env,
+      @Autowired @Nonnull final TTAPIAdapter client) {
     MiscProperties mp = new MiscProperties();
     MonitorUtil.getAppProperties(env).forEach((prop, value) -> {
       var safeVal = MonitorUtil.defaultIsSecret(prop)
@@ -63,20 +80,44 @@ public class TTMonitoringConfig {
     };
   }
 
+  /**
+   * Creates a representation of the TTW Place Cache, as a health-monitored
+   * {@link ApplicationComponent}
+   *
+   * @param client the DES server client
+   * @return the TTW Place Cache health status, as an {@link ApplicationComponent}
+   */
   @Bean
   Supplier<ApplicationComponent> placeCache(
-      @Autowired TTAPIAdapter client) {
-    return () -> cacheComponent(client, "Place Cache", CachingTTWKnowledgeStore::getPlaceCache);
+      @Autowired @Nonnull final TTAPIAdapter client) {
+    return () -> cacheComponent(client, "Place Cache",
+        c -> c.getCacheManager().map(CachingTTWKnowledgeStore::getPlaceCache));
   }
 
+  /**
+   * Creates a representation of the TTW Models Cache, as a health-monitored
+   * {@link ApplicationComponent}
+   *
+   * @param client the DES server client
+   * @return the TTW Models Cache health status, as an {@link ApplicationComponent}
+   */
   @Bean
   Supplier<ApplicationComponent> modelsCache(
-      @Autowired TTAPIAdapter client) {
-    return () -> cacheComponent(client, "Models Cache", CachingTTWKnowledgeStore::getModelCache);
+      @Autowired @Nonnull final TTAPIAdapter client) {
+    return () -> cacheComponent(client, "Models Cache",
+        c -> c.getCacheManager().map(CachingTTWKnowledgeStore::getModelCache));
   }
 
 
-  private void diagnoseTTAdapter(TTAPIAdapter client, ApplicationComponent c) {
+  /**
+   * Determines the health status of the TT DES server, updating its {@link ApplicationComponent}
+   *
+   * @param client the DES client
+   * @param c      the DES client health status descriptor, to be updated
+   */
+  private void diagnoseTTAdapter(
+      @Nonnull final TTAPIAdapter client,
+      @Nonnull final ApplicationComponent c) {
     var accessible = client.listAccessiblePlaces().values();
     var configured = client.getCacheablePlaces().values();
     var usable = configured.stream()
@@ -97,22 +138,44 @@ public class TTMonitoringConfig {
     }
   }
 
+  /**
+   * Determines the health status of a TTW Cache, updating its {@link ApplicationComponent}
+   *
+   * @param client the DES client
+   * @param name   the name of the Cache component
+   * @param mapper the selector to choose the desired cache from the client
+   */
   private ApplicationComponent cacheComponent(
       TTAPIAdapter client,
       String name,
-      Function<CachingTTWKnowledgeStore, Cache<?, ?>> mapper) {
+      Function<TTAPIAdapter, Optional<Cache<?, ?>>> mapper) {
     ApplicationComponent c = new ApplicationComponent();
     c.setName(name);
-    c.status(Status.UP);
-    var cacheMgr = client.getCacheManager();
-    c.setStatusMessage(cacheMgr.isPresent() ? "Present" : "Absent");
 
+    return client.getCacheManager()
+        .flatMap(m -> mapper.apply(client))
+        .map(cache -> describeCache(cache, c))
+        .orElseGet(() -> {
+          c.status(Status.IMPAIRED);
+          c.setStatusMessage("Absent");
+          return c;
+        });
+  }
+
+  /**
+   * Decorates a {@link Cache}'s diagnostic {@link ApplicationComponent} with descriptors of that
+   * Cache's health status
+   *
+   * @param cache the Cache to be described
+   * @param c     the {@link ApplicationComponent} descriptor
+   * @return c, with added status and properties
+   */
+  private ApplicationComponent describeCache(Cache<?, ?> cache, ApplicationComponent c) {
     MiscProperties mp = new MiscProperties();
-    if (cacheMgr.isPresent()) {
-      var cache = mapper.apply(cacheMgr.get());
-      mp.put("estimatedSize", Long.toString(cache.estimatedSize()));
-      mp.put("stats", cache.stats().toString());
-    }
+    c.status(Status.UP);
+    c.setStatusMessage("Present");
+    mp.put("estimatedSize", Long.toString(cache.estimatedSize()));
+    mp.put("stats", cache.stats().toString());
     c.setDetails(mp);
     return c;
   }

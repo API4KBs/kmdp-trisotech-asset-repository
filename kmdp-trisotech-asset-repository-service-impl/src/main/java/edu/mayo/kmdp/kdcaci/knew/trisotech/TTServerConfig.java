@@ -32,36 +32,64 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageConverter;
 
 /**
- * Spring Configuration that ensures all necessary Components are loaded.
+ * Primary Spring Configuration that ensures all necessary Components are loaded in the TTW.
  * <p>
- * Adapts any class that is not configured as Bean/Component
+ * Adapts any class that is not natively configured as Bean/Component
  */
 @Configuration
 @ComponentScan(basePackageClasses = {TrisotechAssetRepository.class, TTAPIAdapter.class})
 @PropertySource(value = {"classpath:application.properties"})
 public class TTServerConfig {
 
+  /**
+   * HrefBuilder use to map Asset Repository API endpoints
+   *
+   * @param cfg the environment configuration
+   * @return a servlet context-aware {@link TTServerContextAwareHrefBuilder}
+   */
   @Bean
   public TTServerContextAwareHrefBuilder hrefBuilder(@Autowired TTWEnvironmentConfiguration cfg) {
     return new TTServerContextAwareHrefBuilder(cfg);
   }
 
+  /**
+   * HrefBuilder use to map Artifact Repository API endpoints
+   *
+   * @param cfg the environment configuration
+   * @return a servlet context-aware {@link TTRepoContextAwareHrefBuilder}
+   */
   @Bean
   public TTRepoContextAwareHrefBuilder artfHrefBuilder(@Autowired TTWEnvironmentConfiguration cfg) {
     return new TTRepoContextAwareHrefBuilder(cfg);
   }
 
+  /**
+   * {@link ContentNegotiationFilter} used to normalize Accept/X-Accept headers
+   *
+   * @return a {@link ContentNegotiationFilter}
+   */
   @Bean
   @Order(1)
   public ContentNegotiationFilter negotiationFilter() {
     return new ContentNegotiationFilter();
   }
 
+  /**
+   * Adapter to unwrap Artifacts/Surrogates in HTML format
+   *
+   * @return a {@link HTMLAdapter}
+   */
   @Bean
   HttpMessageConverter<KnowledgeCarrier> knowledgeCarrierToHTMLAdapter() {
     return new HTMLAdapter();
   }
 
+  /**
+   * Adapter to display 'catalog' pages (Lists of Pointers) as HTML, when the client is a user agent
+   * that accepts text/html, e.g. a browser
+   *
+   * @return a {@link PointerHTMLAdapter}
+   */
   @Bean
   HttpMessageConverter<List<Pointer>> pointerToHTMLAdapter() {
     return new PointerHTMLAdapter();

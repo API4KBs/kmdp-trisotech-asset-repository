@@ -58,9 +58,18 @@ public class ValidationReportEndpoint {
   @Autowired
   TTServerContextAwareHrefBuilder hrefBuilder;
 
+  /**
+   * The core validator logic.
+   * <p>
+   * Applies verification rules to the DMN and CMMN models that are assumed to fit the "Cognitive
+   * Care Process Model" profile
+   */
   LanguageValidator validator = new LanguageValidator(
       Arrays.asList(new CCPMProfileDMNValidator(), new CCPMProfileCMMNValidator()));
 
+  /**
+   * Parser for CMMN 1.1. and DMN 1.2 models
+   */
   LanguageDeSerializer parser = new LanguageDeSerializer(
       Arrays.asList(new Surrogate2Parser(), new DMN12Parser(), new CMMN11Parser()));
 
@@ -186,6 +195,13 @@ public class ValidationReportEndpoint {
   }
 
 
+  /**
+   * Renders the validation results as a basic HTML table for quick pre/view
+   *
+   * @param explanation the validation results
+   * @param hrefBuilder the URL mapper
+   * @return the validation results, as HTML content
+   */
   protected String toHTML(KnowledgeCarrier explanation,
       TTServerContextAwareHrefBuilder hrefBuilder) {
     return ProblemTableWriter.write(

@@ -13,6 +13,7 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechArtifactRepository.ALL_REPOS;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DocumentHelper.extractAssetIdFromDocument;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDeclaredAssetTypes;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultAssetType;
@@ -21,6 +22,7 @@ import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.matchesVersion;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getXmlMimeTypeByAssetType;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.ASSET_ID_ATTRIBUTE;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.DEFAULT_VERSION_TAG;
 import static edu.mayo.kmdp.util.PropertiesUtil.serializeProps;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -470,7 +472,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       Optional<SemanticModelInfo> manifest = getCarrierInfo(assetId, versionTag, artifactId);
       if (manifest.isPresent()) {
         var info = manifest.get();
-        if (matchesVersion(info, artifactVersionTag)) {
+        if (matchesVersion(info, artifactVersionTag,
+            () -> configuration.getTyped(DEFAULT_VERSION_TAG))) {
           return Answer.ofTry(getCarrier(assetId, versionTag, artifactId));
         } else {
           // artifactId matched, but not version; get other versions to see if one of them matches
@@ -751,7 +754,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
       var ns2 = names.getArtifactNamespace();
       var redirect2 = new URI(host.getScheme(), null, host.getHost(), host.getPort(),
-          host.getPath() + "/repos/_" + ns2.getPath(), null, null);
+          host.getPath() + "/repos/" + ALL_REPOS + ns2.getPath(), null, null);
       props.put(ns2.toString(), redirect2.toString());
       xCfg = serializeProps(props);
     } catch (Exception e) {

@@ -1,5 +1,6 @@
 package edu.mayo.kmdp.trisotechwrapper;
 
+import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.DEFAULT_VERSION_TAG;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newKey;
 
@@ -26,6 +27,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -228,10 +230,12 @@ public class TTWrapper implements TTAPIAdapter {
       @Nonnull final String modelVersion) {
     return getMetadataByModelId(modelUri)
         .map(TrisotechFileInfo.class::cast)
-        .filter(trisotechFileInfo -> matchesVersion(trisotechFileInfo, modelVersion))
+        .filter(trisotechFileInfo -> matchesVersion(trisotechFileInfo, modelVersion,
+            this::defaultVersion))
         .or(() ->
             getVersionsMetadataByModelId(modelUri).stream()
-                .filter(trisotechFileInfo -> matchesVersion(trisotechFileInfo, modelVersion))
+                .filter(trisotechFileInfo -> matchesVersion(trisotechFileInfo, modelVersion,
+                    this::defaultVersion))
                 .findFirst());
   }
 
@@ -258,7 +262,7 @@ public class TTWrapper implements TTAPIAdapter {
       // not found
       return Optional.empty();
     }
-    return latest.filter(info -> matchesVersion(info, modelVersion))
+    return latest.filter(info -> matchesVersion(info, modelVersion, this::defaultVersion))
         // if versionTag matches latest, return from cache
         .flatMap(this::getModel)
         // else, will not be in cache - need to access the server
@@ -270,7 +274,7 @@ public class TTWrapper implements TTAPIAdapter {
   public List<TrisotechFileInfo> getVersionsMetadataByModelId(
       @Nonnull final String modelUri) {
     var mostRecent = cacheManager.getMetadataByArtifact(modelUri);
-    if (mostRecent.isEmpty()) {
+    if (mostRecent.isEmpty() || mostRecent.map(SemanticModelInfo::getPlaceId).isEmpty()) {
       return Collections.emptyList();
     }
     var previous = webClient.getModelPreviousVersions(mostRecent.get().getPlaceId(), modelUri);
@@ -374,7 +378,7 @@ public class TTWrapper implements TTAPIAdapter {
       String modelVersion) {
 
     return getVersionsMetadataByModelId(modelUri).stream()
-        .filter(fi -> matchesVersion(fi, modelVersion))
+        .filter(fi -> matchesVersion(fi, modelVersion, this::defaultVersion))
         .findFirst()
         .flatMap(tt -> webClient.downloadXmlModel(tt));
   }
@@ -406,18 +410,34 @@ public class TTWrapper implements TTAPIAdapter {
    * <p>
    * Compares the given version to the manifest's {@link TrisotechFileInfo#getVersion}, either with
    * or without the timestamp implied by the {@link TrisotechFileInfo#getUpdated()}
+   * <p>
+   * When a manifest does not include an actual version tag (i.e. info.version is null), typically
+   * because the Model version is unpublished, a default version tag will be used. Since the choice
+   * of
    *
-   * @param info         the Model manifest
-   * @param modelVersion the target version
+   * @param info           the Model manifest
+   * @param modelVersion   the target version
+   * @param defaultVersion a client-provided definition of the default version, used in the comparison of
+   *                       manifests of unpublished Models
    * @return if the given modelVersion matches the version in the manifest, with or without the
    * Model timestamp
    */
   public static boolean matchesVersion(
       @Nonnull final TrisotechFileInfo info,
-      @Nonnull final String modelVersion) {
-    return Objects.equals(info.getVersion(), modelVersion)
+      @Nonnull final String modelVersion,
+      @Nonnull final Supplier<String> defaultVersion) {
+    var ver = Optional.ofNullable(info.getVersion()).orElseGet(defaultVersion);
+    return Objects.equals(ver, modelVersion)
         || Objects.equals(
-        applyTimestampToVersion(info.getVersion(), parseDateTime(info.getUpdated()).getTime()),
+        applyTimestampToVersion(ver, parseDateTime(info.getUpdated()).getTime()),
         modelVersion);
+  }
+
+
+  /**
+   * @return the default version tag implicitly associated to 'null' (unpublished) Model versions
+   */
+  protected String defaultVersion() {
+    return cfg.getTyped(DEFAULT_VERSION_TAG);
   }
 }

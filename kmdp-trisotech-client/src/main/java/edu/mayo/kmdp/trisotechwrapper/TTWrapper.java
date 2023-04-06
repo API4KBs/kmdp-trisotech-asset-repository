@@ -2,13 +2,14 @@ package edu.mayo.kmdp.trisotechwrapper;
 
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newKey;
-import static org.omg.spec.api4kp._20200801.id.VersionIdentifier.toSemVer;
 
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
 import edu.mayo.kmdp.trisotechwrapper.components.TTDigitalEnterpriseServerClient;
 import edu.mayo.kmdp.trisotechwrapper.components.TTWebClient;
 import edu.mayo.kmdp.trisotechwrapper.components.cache.CachingTTWKnowledgeStore;
 import edu.mayo.kmdp.trisotechwrapper.components.cache.CaffeineCacheManager;
+import edu.mayo.kmdp.trisotechwrapper.components.graph.PlacePathIndex;
 import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
 import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
@@ -16,12 +17,9 @@ import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifact;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
-import edu.mayo.kmdp.util.Util;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +31,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,32 +39,59 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
 /**
- *
+ * {@inheritDoc}
+ * <p>
+ * Primary implemntation of the {@link TTAPIAdapter}
  */
 @Component
 public class TTWrapper implements TTAPIAdapter {
 
+  /**
+   * Logger
+   */
   private final Logger logger = LoggerFactory.getLogger(TTWrapper.class);
 
+  /**
+   * Environment Configuration
+   */
   @Autowired
   private TTWEnvironmentConfiguration cfg;
 
+  /**
+   * {@link Weaver}, to annotate and rewrite proprietary elements in Models
+   */
   @Autowired
-  private Weaver weaver;
-  @Autowired
-  private Redactor redactor;
+  protected Weaver weaver;
 
+  /**
+   * {@link Redactor}, to remove unncessary fragments
+   */
+  @Autowired
+  protected Redactor redactor;
+
+  /**
+   * Web Client, to interact with the DES web API
+   */
   TTDigitalEnterpriseServerClient webClient;
 
+  /**
+   * Cache Maager, to Index Place/Paths and Cache Models
+   */
   CachingTTWKnowledgeStore cacheManager;
 
   @PostConstruct
   void init() {
     this.webClient = initWebClient(cfg);
-
     this.cacheManager = initCacheManager(webClient, cfg);
   }
 
+  /**
+   * Initializes the {@link CachingTTWKnowledgeStore}
+   *
+   * @param webClient the DES client, used to (re)load the cache content
+   * @param cfg       the environment configuration
+   * @return the initialized {@link CachingTTWKnowledgeStore}
+   */
   protected CachingTTWKnowledgeStore initCacheManager(
       @Nonnull final TTDigitalEnterpriseServerClient webClient,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
@@ -75,75 +101,43 @@ public class TTWrapper implements TTAPIAdapter {
         cfg);
   }
 
+  /**
+   * Initializes the {@link TTDigitalEnterpriseServerClient}
+   *
+   * @param cfg the environment configuration
+   * @return the initialized {@link TTDigitalEnterpriseServerClient}
+   */
   protected TTDigitalEnterpriseServerClient initWebClient(
       @Nonnull final TTWEnvironmentConfiguration cfg) {
     return new TTWebClient(cfg);
   }
 
 
-  /**
-   * methodName: applyTimestampToVersion
-   * <p>
-   * Combines a versionTag with a timestamp in a consistent way. TT allows to reuse version tags,
-   * effectively not making the assumption that versions should be immutable.
-   * </p>
-   * <p>
-   * Timestamps are used to reconcile the approaches, and differentiate between distinct (immutable)
-   * "versions" of the same (mutable) "version"
-   * </p>
-   *
-   * @param versionTag The version tag of the Trisotech model
-   * @param timeStamp  The timestamp of the retrieved model
-   * @return String
-   */
-  public static String applyTimestampToVersion(
-      @Nonnull final String versionTag,
-      long timeStamp) {
-    return versionTag + "-" + timeStamp;
-  }
-
-  public static boolean matchesVersion(TrisotechFileInfo info, String artifactVersionTag) {
-    return Objects.equals(info.getVersion(), artifactVersionTag)
-        || Objects.equals(
-        applyTimestampToVersion(info.getVersion(), parseDateTime(info.getUpdated()).getTime()),
-        artifactVersionTag);
-  }
-
-  /**
-   * Gets the Trisotech Configuration
-   *
-   * @return TTWEnvironmentConfiguration
-   */
   @Override
-  public TTWEnvironmentConfiguration getConfig() {
+  @Nonnull
+  public Map<String, Object> getConfigParameters() {
     if (logger.isDebugEnabled()) {
       logger.debug("The current Trisotech configuration is {}", cfg);
     }
-    return cfg;
+    return cfg.toMap();
   }
 
+  @Override
+  @Nullable
+  public Object getConfigParameter(
+      @Nonnull final TTWConfigParamsDef param) {
+    return cfg.getTyped(param, param.getType());
+  }
 
-  /**
-   * Returns the key Service Asset metadata, as per the TT KG, for a given BPM model carrier
-   * <p>
-   * (Assumption: one model may define 0..N inference services)
-   *
-   * @param modelUri The uri of the Trisotech model
-   * @return SemanticFileInfo
-   */
+  @Nonnull
   @Override
   public Stream<SemanticModelInfo> getServicesMetadataByModelId(
       @Nonnull final String modelUri) {
     return cacheManager.getServiceMetadataByModel(modelUri);
   }
 
-  /**
-   * methodName: getMetadataByAsset
-   * <p>description: returns asset metadata from the cache</p>
-   *
-   * @param assetId The id of the asset
-   * @return SemanticFileInfo if found
-   */
+
+  @Nonnull
   @Override
   public Stream<SemanticModelInfo> getMetadataByAssetId(
       @Nonnull final UUID assetId,
@@ -151,56 +145,56 @@ public class TTWrapper implements TTAPIAdapter {
     return cacheManager.getMetadataByAssetVersion(newKey(assetId, assetVersionTag));
   }
 
-
-  /**
-   * methodName: clearCache
-   * <p>description: Resets the internal cache, forcing a reload</p>
-   */
   @Override
-  public void rescan() {
+  public void invalidateAll() {
     cacheManager.invalidateCaches();
   }
 
-  /**
-   * @param placeId
-   */
   @Override
-  public void rescanPlace(
+  public void rescan() {
+    invalidateAll();
+    cacheManager.getAllCachedPlaces();
+  }
+
+  @Override
+  public void invalidatePlace(
       @Nonnull final String placeId) {
+    listModelsByPlace(placeId)
+        .map(TrisotechFileInfo::getId)
+        .forEach(cacheManager::invalidateModelCache);
     cacheManager.invalidatePlaceCache(placeId);
   }
 
-  /**
-   * @param modelUri
-   * @return
-   */
   @Override
-  public void rescanModel(
+  public void rescanPlace(
+      @Nonnull final String placeId) {
+    invalidatePlace(placeId);
+    cacheManager.getPlaceCache().refresh(TrisotechPlace.key(placeId));
+  }
+
+
+  @Override
+  public void invalidateModel(
       @Nonnull final String modelUri) {
     cacheManager.invalidateModelCache(modelUri);
   }
 
-  /**
-   * methodName: getModelById
-   * <p>description: Retrieves the LATEST version of the model for the fileId provided.</p>
-   *
-   * @param fileId The file ID to identify the model to retrieve
-   * @return XML Document for the model or Empty
-   */
   @Override
+  public void rescanModel(
+      @Nonnull final String modelUri) {
+    cacheManager.getModelCache().refresh(new SemanticModelInfo(modelUri));
+  }
+
+  @Override
+  @Nonnull
   public Optional<Document> getModelById(
       @Nonnull final String fileId) {
     return getMetadataByModelId(fileId)
         .flatMap(this::getModel);
   }
 
-  /**
-   * methodName: getModel
-   * <p>description: Retrieves the latest version of the model for the fileId provided.</p>
-   *
-   * @param trisotechFileInfo the trisotechFileInfo for the model. can be null
-   * @return the XML document
-   */
+
+  @Nonnull
   @Override
   public Optional<Document> getModel(
       @Nonnull final TrisotechFileInfo trisotechFileInfo) {
@@ -212,82 +206,37 @@ public class TTWrapper implements TTAPIAdapter {
     return Optional.empty();
   }
 
-
-  /**
-   * methodName: getModelsFileInfo
-   * <p>description: Get the FileInfo for all the (published) models from Trisotech of a given
-   * type</p>
-   *
-   * @param xmlMimeType MimeType from the XML
-   * @return List<TrisotechFileInfo>
-   */
   @Override
+  @Nonnull
   public Stream<SemanticModelInfo> listModels(
       @Nullable final String xmlMimeType) {
     return cacheManager.listAllModelsInfoByMimeClass(xmlMimeType);
   }
 
   @Override
+  @Nonnull
   public Stream<SemanticModelInfo> listModelsByPlace(
       @Nonnull final String placeId,
       @Nullable final String xmlMimeType) {
     return cacheManager.listAllModelsInfoByPlaceAndMimeClass(placeId, xmlMimeType);
   }
 
-
-  /**
-   * methodName: getFileInfoByIdAndVersion
-   * <p>description: Get the Trisotech fileInfo for the model and fileVersion provided. This will
-   * NOT return the latest. For the latest, use getLatestModelInfo.</p>
-   *
-   * @param fileId      id of the file
-   * @param fileVersion the fileVersion
-   * @return Optional<TrisotechFileInfo> object for the file/fileVersion requested
-   */
   @Override
+  @Nonnull
   public Optional<TrisotechFileInfo> getMetadataByModelIdAndVersion(
-      @Nonnull final String fileId,
-      @Nonnull final String fileVersion) {
-    return getMetadataByModelId(fileId)
+      @Nonnull final String modelUri,
+      @Nonnull final String modelVersion) {
+    return getMetadataByModelId(modelUri)
         .map(TrisotechFileInfo.class::cast)
-        .filter(trisotechFileInfo -> compareVersion(fileVersion, trisotechFileInfo))
+        .filter(trisotechFileInfo -> matchesVersion(trisotechFileInfo, modelVersion))
         .or(() ->
-            getVersionsMetadataByModelId(fileId).stream()
-                .filter(trisotechFileInfo -> compareVersion(fileVersion, trisotechFileInfo))
+            getVersionsMetadataByModelId(modelUri).stream()
+                .filter(trisotechFileInfo -> matchesVersion(trisotechFileInfo, modelVersion))
                 .findFirst());
   }
 
-  /**
-   * methodName: compareVersion
-   * <p>description: Compare the version to the Trisotech file info</p>
-   *
-   * @param fileVersion       the fileVersion
-   * @param trisotechFileInfo The info of the file being requested. Can be null.
-   * @return boolean
-   */
-  private boolean compareVersion(
-      @Nonnull final String fileVersion,
-      @Nonnull final TrisotechFileInfo trisotechFileInfo) {
-    if (fileVersion.equals(trisotechFileInfo.getVersion())) {
-      return true;
-    }
-    if (trisotechFileInfo.getVersion() == null && !Util.isEmpty(fileVersion)) {
-      return false;
-    }
-    Date artifactDate = Date.from(Instant.parse(trisotechFileInfo.getUpdated()));
-    String timeStampedVersion =
-        applyTimestampToVersion(toSemVer(trisotechFileInfo.getVersion()), artifactDate.getTime());
-    return fileVersion.equals(timeStampedVersion);
-  }
-
-  /**
-   * methodName: getLatestModelFileInfo
-   * <p>description: Get the Trisotech file info for the latest version of a model.</p>
-   *
-   * @param modelId id of the model interested in
-   * @return Optional<TrisotechFileInfo> for the model
-   */
   @Override
+  @Nonnull
   public Optional<SemanticModelInfo> getMetadataByModelId(
       @Nonnull final String modelId) {
     var info = cacheManager.getMetadataByArtifact(modelId);
@@ -298,49 +247,26 @@ public class TTWrapper implements TTAPIAdapter {
     return info;
   }
 
-  /**
-   * methodName: getModelByIdAndVersion
-   * <p>description: get the model for the modelUri and versionTag specified</p>
-   *
-   * @param modelUri   the file id for the model
-   * @param versionTag the versionTag for the model
-   * @return Optional<Document> the XML Document for the specified versionTag of the model or Empty
-   */
+
+  @Nonnull
   @Override
   public Optional<Document> getModelByIdAndVersion(
       @Nonnull final String modelUri,
-      @Nonnull final String versionTag) {
+      @Nonnull final String modelVersion) {
     var latest = cacheManager.getMetadataByArtifact(modelUri);
     if (latest.isEmpty()) {
       // not found
       return Optional.empty();
     }
-    return latest.filter(info -> matchesVersion(info, versionTag))
+    return latest.filter(info -> matchesVersion(info, modelVersion))
         // if versionTag matches latest, return from cache
         .flatMap(this::getModel)
         // else, will not be in cache - need to access the server
-        .or(() -> getOldVersion(modelUri, versionTag));
+        .or(() -> getOldVersion(modelUri, modelVersion));
   }
 
-  private Optional<? extends Document> getOldVersion(
-      String modelUri,
-      String versionTag) {
-
-    return getVersionsMetadataByModelId(modelUri).stream()
-        .filter(fi -> matchesVersion(fi, versionTag))
-        .findFirst()
-        .flatMap(tt -> webClient.downloadXmlModel(tt));
-  }
-
-
-  /**
-   * methodName: getModelVersions
-   * <p>returns all the file info for all the versions of the model for the default repository</p>
-   *
-   * @param modelUri The fileId for the model desired
-   * @return List<TrisotechFileInfo> for all the versions for that model
-   */
   @Override
+  @Nonnull
   public List<TrisotechFileInfo> getVersionsMetadataByModelId(
       @Nonnull final String modelUri) {
     var mostRecent = cacheManager.getMetadataByArtifact(modelUri);
@@ -354,14 +280,8 @@ public class TTWrapper implements TTAPIAdapter {
     return history;
   }
 
-
-  /**
-   * Lists the Places available on the DES Server that the client has access to, based on the
-   * token's grants
-   *
-   * @return a Map of place id / place name
-   */
   @Override
+  @Nonnull
   public Map<String, TrisotechPlace> listAccessiblePlaces() {
     return webClient.getPlaces().stream()
         .collect(Collectors.toMap(
@@ -370,12 +290,14 @@ public class TTWrapper implements TTAPIAdapter {
         ));
   }
 
-
   @Override
-  public Map<TrisotechPlace, Set<String>> getCachedPlaceScopes() {
+  @Nonnull
+  public Map<TrisotechPlace, Set<String>> getConfiguredPlacePathScopes() {
     return cacheManager.getConfiguredPlacePathScopes();
   }
 
+  @Override
+  @Nonnull
   public Map<String, TrisotechPlace> getCacheablePlaces() {
     return cacheManager.getCacheablePlaces().stream()
         .collect(Collectors.toMap(
@@ -384,21 +306,26 @@ public class TTWrapper implements TTAPIAdapter {
         ));
   }
 
-  /**
-   * Lists the TrisotechExecutionArtifact available on a given execution environment
-   *
-   * @param env the name of the execution environment
-   * @return the execution artifacts, indexed by name
-   */
   @Override
+  @Nonnull
+  public Map<String, TrisotechPlace> getCachedPlaces() {
+    return cacheManager.getCachedPlaces().stream()
+        .collect(Collectors.toMap(
+            TrisotechPlace::getId,
+            tp -> tp
+        ));
+  }
+
+  @Override
+  @Nonnull
   public Map<String, TrisotechExecutionArtifact> listExecutionArtifacts(
       @Nonnull final String env) {
     try {
       return webClient.getExecutionArtifacts(env).stream()
-              .collect(Collectors.toMap(
-                  TrisotechExecutionArtifact::getName,
-                  x -> x
-              ));
+          .collect(Collectors.toMap(
+              TrisotechExecutionArtifact::getName,
+              x -> x
+          ));
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       return Collections.emptyMap();
@@ -406,16 +333,8 @@ public class TTWrapper implements TTAPIAdapter {
   }
 
 
-  /**
-   * Determines whether a Service is deployed to an execution environment
-   * <p>
-   * Note that this implementation targets one specific execution environment, which is configurable
-   * but not at runtime. FUTURE?
-   *
-   * @param serviceName the internal name of the service
-   * @param manifest    the artifact metadata of the model exposed as a service
-   * @return a descriptor of the deployed artifact, if the service is deployed
-   */
+  @Override
+  @Nonnull
   public Optional<TrisotechExecutionArtifact> getExecutionArtifact(
       @Nonnull final String serviceName,
       @Nonnull final TrisotechFileInfo manifest) {
@@ -428,7 +347,77 @@ public class TTWrapper implements TTAPIAdapter {
   }
 
 
-  public Optional<CachingTTWKnowledgeStore> getCacheManager() {
-    return Optional.ofNullable(cacheManager);
+  @Override
+  @NonNull
+  public LoadingCache<TrisotechPlace, PlacePathIndex> getPlaceCache() {
+    return cacheManager.getPlaceCache();
+  }
+
+
+  @Override
+  @NonNull
+  public LoadingCache<SemanticModelInfo, Document> getModelCache() {
+    return cacheManager.getModelCache();
+  }
+
+
+  /**
+   * Retrieves the given version of the Model with the given ID, when the version is not the latest
+   * version
+   *
+   * @param modelUri     the ID of the model
+   * @param modelVersion the modelVersion for the model
+   * @return XML Document for the model version, if any
+   */
+  private Optional<? extends Document> getOldVersion(
+      String modelUri,
+      String modelVersion) {
+
+    return getVersionsMetadataByModelId(modelUri).stream()
+        .filter(fi -> matchesVersion(fi, modelVersion))
+        .findFirst()
+        .flatMap(tt -> webClient.downloadXmlModel(tt));
+  }
+
+
+  /**
+   * Combines a Model version Tag with a timestamp derived from the Model's last update. Assuming
+   * the model version follows the SemVer scheme, appends the timestamp as a pre-release tag
+   * <p>
+   * Note that TT allows to reuse version tags, effectively making versions not immutable, and
+   * causing "latest" versions to not always be the "greatest" (and vice-versa).
+   * <p>
+   * Attaching the timestamp, which should be necessary for non-published Models only, effectively
+   * treats Models as SNAPSHOTS.
+   *
+   * @param versionTag The version tag of Model
+   * @param timeStamp  The timestamp of the retrieved model
+   * @return a 'version-timestamp' tag
+   */
+  public static String applyTimestampToVersion(
+      @Nonnull final String versionTag,
+      long timeStamp) {
+    return versionTag + "-" + timeStamp;
+  }
+
+
+  /**
+   * Determines whether a given Manifest has a specific Model versionTag.
+   * <p>
+   * Compares the given version to the manifest's {@link TrisotechFileInfo#getVersion}, either with
+   * or without the timestamp implied by the {@link TrisotechFileInfo#getUpdated()}
+   *
+   * @param info         the Model manifest
+   * @param modelVersion the target version
+   * @return if the given modelVersion matches the version in the manifest, with or without the
+   * Model timestamp
+   */
+  public static boolean matchesVersion(
+      @Nonnull final TrisotechFileInfo info,
+      @Nonnull final String modelVersion) {
+    return Objects.equals(info.getVersion(), modelVersion)
+        || Objects.equals(
+        applyTimestampToVersion(info.getVersion(), parseDateTime(info.getUpdated()).getTime()),
+        modelVersion);
   }
 }

@@ -3,7 +3,6 @@ package edu.mayo.kmdp.trisotechwrapper;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.API_ENDPOINT;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.PUBLISHED_ONLY_FLAG;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.REPOSITORY_ID;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -12,7 +11,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import edu.mayo.kmdp.trisotechwrapper.TTWExampleModelsTest.PublishedOnlyTestConfig;
 import java.net.URI;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,12 +50,11 @@ class TTWExampleModelsTestWithUnpublished {
 
   @BeforeEach
   void setUp() {
-    var apiEndpoint = client.getConfig().tryGetTyped(API_ENDPOINT, URI.class);
-    assumeTrue(apiEndpoint.isPresent());
+    var apiEndpoint = (URI) client.getConfigParameter(API_ENDPOINT);
+    assumeTrue(apiEndpoint != null);
 
-    client.getConfig().get(REPOSITORY_ID)
-        .orElseGet(Assertions::fail);
-    assertFalse(client.getConfig().getTyped(PUBLISHED_ONLY_FLAG, Boolean.class));
+    assertNotNull(client.getConfigParameter(REPOSITORY_ID));
+    assertTrue((Boolean) client.getConfigParameter(PUBLISHED_ONLY_FLAG));
 
     assumeFalse(client.listAccessiblePlaces().isEmpty());
   }

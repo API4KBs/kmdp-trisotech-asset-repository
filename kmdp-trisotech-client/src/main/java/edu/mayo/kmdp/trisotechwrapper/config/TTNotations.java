@@ -8,9 +8,15 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.UNSUPPORTED;
 import static edu.mayo.kmdp.util.Util.isEmpty;
 
 import java.util.Optional;
+import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Enumeration of Trisotech's natively supported KRR Languages+Notations/Formats
+ * <p>
+ * Includes utility/helper methods to map Languages to the MIME types used in the DES
+ */
 public enum TTNotations {
   // return DMN files in XML format
   DMN_12_XML("application/dmn-1-2+xml"),
@@ -28,9 +34,15 @@ public enum TTNotations {
   LAND_JSON("application/vnd.triso-landscaping+json"),
   ACCEL_JSON("application/vnd.triso-discovery+json");
 
+  /**
+   * Logger
+   */
   public static final Logger logger = LoggerFactory.getLogger(TTNotations.class);
 
 
+  /**
+   * The canonical MIME type associated to a Language+Format
+   */
   private final String mimeType;
 
   TTNotations(String mime) {
@@ -42,6 +54,12 @@ public enum TTNotations {
   }
 
 
+  /**
+   * Decodes a MIME type code, to identify the core Language
+   *
+   * @param mimetype the MIME type
+   * @return the core {@link TTLanguages}
+   */
   public static TTLanguages detectTTLanguage(String mimetype) {
     if (isEmpty(mimetype)) {
       return UNSUPPORTED;
@@ -62,22 +80,30 @@ public enum TTNotations {
   }
 
   /**
-   * get the XML-specified mimeType for transferring XML files with Trisotech
+   * get the XML-specified mimeType for transferring XML files with Trisotech.
+   * <p>
+   * Maps across variant formats - usually native JSON vs standard XML - and returns the canonical,
+   * XML based standard type
    *
-   * @param mimetype the mimetype specified through file information
-   * @return the XML mimetype specfication to be used in API calls
-   * @throws IllegalArgumentException if a type other than "dmn" and "cmmn" is requested
+   * @param mimetype the mimetype
+   * @return the normalized-to-XML mimetype
    */
-  public static Optional<String> getXmlMimeType(String mimetype) {
+  public static Optional<String> getStandardXmlMimeType(String mimetype) {
     if (isEmpty(mimetype)) {
       return Optional.empty();
     }
     var lang = detectTTLanguage(mimetype);
-    var xmlMime = getXmlMimeType(lang);
+    var xmlMime = getStandardXmlMimeType(lang);
     return Optional.of(xmlMime != null ? xmlMime : mimetype);
   }
 
-  private static String getXmlMimeType(TTLanguages lang) {
+  /**
+   * get the canonical, standard, version of an XML-based mimeType for a given {@link TTLanguages}
+   *
+   * @param lang the language
+   * @return the canonical XML-based mimetype
+   */
+  private static String getStandardXmlMimeType(TTLanguages lang) {
     switch (lang) {
       case CMMN:
         return CMMN_11_XML.getMimeType();
@@ -93,7 +119,13 @@ public enum TTNotations {
     }
   }
 
-  public static TTNotations getCanonicalMimeType(String mimetype) {
+  /**
+   * get the native (TT internal) representation of a supported Language
+   *
+   * @param mimetype the mimeType of a Model's variant
+   * @return the native {@link TTNotations}
+   */
+  public static TTNotations getNativeNotationMimeType(String mimetype) {
     if (isEmpty(mimetype)) {
       return null;
     }
@@ -113,17 +145,30 @@ public enum TTNotations {
     }
   }
 
+  /**
+   * Compares two mimeTypes
+   * <p>
+   * Determines if they share the same language for, regardless of notation (version) and format
+   *
+   * @param mime1 the first mimeType of a Model's variant
+   * @param mime2 the second mimeType of a Model's variant
+   * @return true if both mimeTypes denote the same Language, regardless of version and format
+   */
   public static boolean mimeMatches(String mime1, String mime2) {
     return mime1 != null && mime2 != null
-        && getCanonicalMimeType(mime1) == getCanonicalMimeType(mime2);
+        && getNativeNotationMimeType(mime1) == getNativeNotationMimeType(mime2);
   }
 
   /**
-   * Maps the assetTypeTag used in the KARS API to the mime type used by the TT API The mapping is
-   * based on the assumption that BPM+ languages are used consistently for specific asset types.
+   * Maps an Asset Type (tag) used in the KARS API to the default representation (mimeType) for
+   * Artifacts carrying knowledge of that Asset Type.
+   * <p>
+   * The mapping is based on the assumption that BPM+ languages are used consistently for specific
+   * asset types.
    *
    * @param assetTypeTag a formal asset type tag
    * @return the (TT) mime type implied by the asset type
+   * @see KnowledgeAssetTypeSeries#resolve(String)
    */
   public static String getXmlMimeTypeByAssetType(String assetTypeTag) {
     if (assetTypeTag == null) {
@@ -132,14 +177,14 @@ public enum TTNotations {
     }
 
     if (assetTypeTag.contains("Decision") || assetTypeTag.contains("Rule")) {
-      return getXmlMimeType(DMN);
+      return getStandardXmlMimeType(DMN);
     } else if (assetTypeTag.contains("Case")) {
-      return getXmlMimeType(CMMN);
+      return getStandardXmlMimeType(CMMN);
     } else if (assetTypeTag.contains("Process")
         || assetTypeTag.contains("Pathway") || assetTypeTag.contains("Protocol")) {
-      return getXmlMimeType(BPMN);
+      return getStandardXmlMimeType(BPMN);
     } else if (assetTypeTag.contains("Lexicon")) {
-      return getXmlMimeType(KEM);
+      return getStandardXmlMimeType(KEM);
     } else {
       throw new IllegalArgumentException("Unexpected Asset Type " + assetTypeTag);
     }

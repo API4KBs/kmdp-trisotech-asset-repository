@@ -143,6 +143,16 @@ public class SemanticModelInfo extends TrisotechFileInfo {
   }
 
   /**
+   * Key Constructor
+   *
+   * @param modelUri the Model ID
+   */
+  public SemanticModelInfo(
+      @Nonnull final String modelUri) {
+    this.id = modelUri;
+  }
+
+  /**
    * Copy/Cast Constructor
    * <p>
    * Adapts a {@link TrisotechFileInfo} into a {@link SemanticModelInfo}
@@ -577,7 +587,7 @@ public class SemanticModelInfo extends TrisotechFileInfo {
   /**
    * Equals
    * <p>
-   * Uses {@link #id}, {@link #assetKey} and {@link #serviceKey}
+   * Uses {@link #id}
    *
    * @param o the other object to be compared
    */
@@ -590,21 +600,19 @@ public class SemanticModelInfo extends TrisotechFileInfo {
       return false;
     }
     SemanticModelInfo that = (SemanticModelInfo) o;
-    return Objects.equals(id, that.id)
-        && Objects.equals(assetKey, that.assetKey)
-        && Objects.equals(serviceKey, that.serviceKey);
+    return Objects.equals(id, that.id);
   }
 
   /**
    * Hashcode
    * <p>
-   * Uses {@link #id}, {@link #assetKey} and {@link #serviceKey}
+   * Uses {@link #id}
    *
    * @return the hashCode of this object
    */
   @Override
   public int hashCode() {
-    return Objects.hash(id, assetKey, serviceKey);
+    return Objects.hash(id);
   }
 
 

@@ -6,6 +6,9 @@ import edu.mayo.kmdp.registry.Registry;
 import java.net.URI;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 
+/**
+ * Configuration Parameters Definitions, for use with a {@link TTWEnvironmentConfiguration}
+ */
 public enum TTWConfigParamsDef implements
     Option<TTWConfigParamsDef> {
 

@@ -7,7 +7,7 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.REPOSITORY_PA
 import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.SPARQL_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.VERSIONS_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.KEM_JSON;
-import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getXmlMimeType;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getStandardXmlMimeType;
 import static edu.mayo.kmdp.util.Util.isEmpty;
 import static java.net.URLDecoder.decode;
 import static java.net.URLEncoder.encode;
@@ -354,7 +354,7 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
             s -> s[1]
         ));
     var mime = queryParams.getOrDefault("mimetype", from.getMimetype());
-    getXmlMimeType(mime).ifPresent(m ->
+    getStandardXmlMimeType(mime).ifPresent(m ->
         queryParams.put("mimetype", encode(m, UTF_8)));
     var query = queryParams.entrySet().stream()
         .map(e -> e.getKey() + "=" + e.getValue())
@@ -426,7 +426,7 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
     var state = manifest.getState();
 
     // first make sure mimetype is in correct format for API call
-    mimeType = getXmlMimeType(mimeType).orElse(mimeType);
+    mimeType = getStandardXmlMimeType(mimeType).orElse(mimeType);
     URI uri;
 
     // NOTE: MUST Use UriComponentBuilder to handle '+' in the MimeType, otherwise it will be

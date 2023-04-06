@@ -2,6 +2,9 @@ package edu.mayo.kmdp.trisotechwrapper;
 
 import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.CMMN;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.DMN;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.API_ENDPOINT;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.PUBLISHED_ONLY_FLAG;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.REPOSITORY_ID;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,8 +15,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.TTEURentModelsTest.EURentTestConfig;
-import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -58,11 +61,11 @@ class TTEURentModelsTest {
 
   @BeforeEach
   void setUp() {
-    var apiEndpoint = client.getConfig().get(TTWConfigParamsDef.API_ENDPOINT);
-    assumeTrue(apiEndpoint.isPresent());
+    var apiEndpoint = (URI) client.getConfigParameter(API_ENDPOINT);
+    assumeTrue(apiEndpoint != null);
 
-    client.getConfig().get(TTWConfigParamsDef.REPOSITORY_ID)
-        .orElseGet(Assertions::fail);
+    assertNotNull(client.getConfigParameter(REPOSITORY_ID));
+    assertTrue((Boolean) client.getConfigParameter(PUBLISHED_ONLY_FLAG));
 
     assumeFalse(client.listAccessiblePlaces().isEmpty());
   }

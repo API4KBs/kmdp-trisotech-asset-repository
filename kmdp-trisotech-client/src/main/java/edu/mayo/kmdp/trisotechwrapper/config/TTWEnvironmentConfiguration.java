@@ -30,7 +30,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to set the static context in the TrisotechWrapper.
+ * This class is used to bridge/set the environment parameters used to configure the TTW.
  */
 @Component
 public class TTWEnvironmentConfiguration extends
@@ -41,11 +41,12 @@ public class TTWEnvironmentConfiguration extends
   private static final Properties DEFAULTS = defaulted(TTWConfigParamsDef.class);
 
   @Autowired
-  private Environment env;
+  private transient Environment env;
 
   public TTWEnvironmentConfiguration() {
     super(DEFAULTS);
   }
+
   public TTWEnvironmentConfiguration(Environment env) {
     super(DEFAULTS);
     this.env = env;
@@ -87,7 +88,7 @@ public class TTWEnvironmentConfiguration extends
 
   /**
    * Infers any derived configuration variable value
-   *
+   * <p>
    * Sets the TT DES public API endpoint, given the base URL
    */
   public void ensureVariablesSet() {
@@ -132,7 +133,7 @@ public class TTWEnvironmentConfiguration extends
    * <p>
    * Obfuscates the secrets
    *
-   * @param param the config variable
+   * @param param    the config variable
    * @param sysValue the config variable value
    * @return the value, in a form suitable for printing
    */

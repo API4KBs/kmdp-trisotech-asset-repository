@@ -1,12 +1,11 @@
 package edu.mayo.kmdp.trisotechwrapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.TTEURentCacheTest.ModelCacheTestConfig;
-import edu.mayo.kmdp.trisotechwrapper.components.cache.CachingTTWKnowledgeStore;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,15 +30,14 @@ class TTEURentCacheTest {
 
   @BeforeEach
   void setUp() {
-    var apiEndpoint = client.getConfig().get(TTWConfigParamsDef.API_ENDPOINT);
-    assumeTrue(apiEndpoint.isPresent());
+    var apiEndpoint = client.getConfigParameter(TTWConfigParamsDef.API_ENDPOINT);
+    assertNotNull(apiEndpoint);
     assumeFalse(client.listAccessiblePlaces().isEmpty());
   }
 
   @Test
   void testModelCache() {
-    var cacheMgr = (CachingTTWKnowledgeStore) client.getCacheManager().orElseGet(Assertions::fail);
-    var modelCache = cacheMgr.getModelCache();
+    var modelCache = client.getModelCache();
 
     // model cache is fully lazy
     var stats = modelCache.stats();
@@ -80,17 +78,16 @@ class TTEURentCacheTest {
 
   @Test
   void testPlaceCache() {
-    var cacheMgr = (CachingTTWKnowledgeStore) client.getCacheManager().orElseGet(Assertions::fail);
-    var cache = cacheMgr.getPlaceCache();
+    var cache = client.getPlaceCache();
 
     assertEquals(1, cache.stats().loadCount());
-    cacheMgr.getCacheablePlaces();
+    client.getCacheablePlaces();
     assertEquals(1, cache.stats().loadCount());
 
-    cacheMgr.invalidateCaches();
+    client.invalidateAll();
     assertTrue(cache.asMap().isEmpty());
     assertEquals(1, cache.stats().loadCount());
-    cacheMgr.getAllCachedPlaces();
+    client.rescan();
     assertEquals(2, cache.stats().loadCount());
   }
 

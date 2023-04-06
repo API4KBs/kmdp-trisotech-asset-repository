@@ -1,5 +1,8 @@
 package edu.mayo.kmdp.trisotechwrapper.config;
 
+/**
+ * Enumeration of Trisotech's native KRR Languages that are also supported by the TTW
+ */
 public enum TTLanguages {
   CMMN("cmmn"),
   DMN("dmn"),

@@ -1,6 +1,6 @@
 package edu.mayo.kmdp.trisotechwrapper.components.cache;
 
-import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
 import edu.mayo.kmdp.trisotechwrapper.components.TTWKnowledgeStore;
 import edu.mayo.kmdp.trisotechwrapper.components.graph.PlacePathIndex;
@@ -20,12 +20,12 @@ public interface CachingTTWKnowledgeStore extends TTWKnowledgeStore {
   /**
    * @return the Place/Path cache used to index the TT DES graph
    */
-  @NonNull Cache<TrisotechPlace, PlacePathIndex> getPlaceCache();
+  @NonNull LoadingCache<TrisotechPlace, PlacePathIndex> getPlaceCache();
 
   /**
    * @return the Model cache
    */
-  @NonNull Cache<SemanticModelInfo, Document> getModelCache();
+  @NonNull LoadingCache<SemanticModelInfo, Document> getModelCache();
 
   /**
    * Invalidates the Place and Model Caches, for all Places and Models

@@ -11,8 +11,8 @@ import edu.mayo.kmdp.health.datatype.MiscProperties;
 import edu.mayo.kmdp.health.datatype.Status;
 import edu.mayo.kmdp.health.utils.MonitorUtil;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
+import edu.mayo.kmdp.trisotechwrapper.components.TTWKnowledgeStore;
 import edu.mayo.kmdp.trisotechwrapper.components.cache.CachingTTWKnowledgeStore;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -40,6 +40,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
  */
 @ComponentScan(basePackageClasses = {
     TTAPIAdapter.class,
+    TTWKnowledgeStore.class,
     HealthEndPoint.class,
     StateEndPoint.class,
     VersionEndPoint.class})
@@ -91,7 +92,7 @@ public class TTMonitoringConfig {
   Supplier<ApplicationComponent> placeCache(
       @Autowired @Nonnull final TTAPIAdapter client) {
     return () -> cacheComponent(client, "Place Cache",
-        c -> c.getCacheManager().map(CachingTTWKnowledgeStore::getPlaceCache));
+        TTAPIAdapter::getPlaceCache);
   }
 
   /**
@@ -105,7 +106,7 @@ public class TTMonitoringConfig {
   Supplier<ApplicationComponent> modelsCache(
       @Autowired @Nonnull final TTAPIAdapter client) {
     return () -> cacheComponent(client, "Models Cache",
-        c -> c.getCacheManager().map(CachingTTWKnowledgeStore::getModelCache));
+        TTAPIAdapter::getModelCache);
   }
 
 
@@ -148,18 +149,11 @@ public class TTMonitoringConfig {
   private ApplicationComponent cacheComponent(
       TTAPIAdapter client,
       String name,
-      Function<TTAPIAdapter, Optional<Cache<?, ?>>> mapper) {
+      Function<TTAPIAdapter, Cache<?, ?>> mapper) {
     ApplicationComponent c = new ApplicationComponent();
     c.setName(name);
 
-    return client.getCacheManager()
-        .flatMap(m -> mapper.apply(client))
-        .map(cache -> describeCache(cache, c))
-        .orElseGet(() -> {
-          c.status(Status.IMPAIRED);
-          c.setStatusMessage("Absent");
-          return c;
-        });
+    return describeCache(mapper.apply(client), c);
   }
 
   /**

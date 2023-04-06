@@ -16,7 +16,6 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,12 +56,11 @@ class TTWExampleModelsTest {
 
   @BeforeEach
   void setUp() {
-    var apiEndpoint = client.getConfig().tryGetTyped(API_ENDPOINT, URI.class);
-    assumeTrue(apiEndpoint.isPresent());
+    var apiEndpoint = (URI) client.getConfigParameter(API_ENDPOINT);
+    assumeTrue(apiEndpoint != null);
 
-    client.getConfig().get(REPOSITORY_ID)
-        .orElseGet(Assertions::fail);
-    assertTrue(client.getConfig().getTyped(PUBLISHED_ONLY_FLAG, Boolean.class));
+    assertNotNull(client.getConfigParameter(REPOSITORY_ID));
+    assertTrue((Boolean) client.getConfigParameter(PUBLISHED_ONLY_FLAG));
 
     assumeFalse(client.listAccessiblePlaces().isEmpty());
   }

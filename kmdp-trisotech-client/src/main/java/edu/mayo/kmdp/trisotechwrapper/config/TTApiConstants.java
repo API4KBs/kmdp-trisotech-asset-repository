@@ -13,31 +13,61 @@
  */
 package edu.mayo.kmdp.trisotechwrapper.config;
 
-public class TTApiConstants {
+
+/**
+ * TT DES public API paths
+ */
+public final class TTApiConstants {
 
   private TTApiConstants() {
     // static only
   }
 
-  // List of repositories
+  /**
+   * List of repositories
+   */
   public static final String REPOSITORY_PATH = "repository";
-  // content of specified repository; set up for URIComponentsBuilder; mimetype and path are optional
+
+  /**
+   * Content of Path endpoint
+   */
   public static final String CONTENT_PATH = "repositorycontent?repository={repo}&mimetype={mime}&path={path}";
+
+  /**
+   * Get Model file endpoint
+   */
   public static final String MODEL_PATH = "repositoryfilecontent?repository={repo}&mimetype={mime}&path={path}&sku={file}";
-  // path for POST to specified repository; mimetype is required; at this time version and state are not used
+
+
+  /**
+   * Content upload endpoint
+   */
   public static final String CONTENT_PATH_POST = "repositorycontent?repository={repo}&name={name}&mimetype={mime}&path={path}";
+
+  /**
+   * Content version upload endpoint
+   */
   public static final String CONTENT_PATH_POST_WITH_VERSION = "repositorycontent?repository={repo}&name={name}&mimetype={mime}&path={path}&version={version}&state={state}";
-  // versions of specific file within specified repository
+
+  /**
+   * Model file history endpoint
+   */
   public static final String VERSIONS_PATH = "repositoryfileversion?repository={repo}&id={fileId}";
 
+  /**
+   * Execution environment
+   */
   public static final String EXEC_ARTIFACTS_PATH = "executionrepositoryartifact?name={execEnv}";
 
+  /**
+   * SPARQL endpoint
+   */
   public static final String SPARQL_PATH = "/ds/query";
-
 
 
   /**
    * Derives the public API endpoint for a given DES server instance
+   *
    * @param baseURL the DES server base URL
    * @return the DES API endpoint
    */

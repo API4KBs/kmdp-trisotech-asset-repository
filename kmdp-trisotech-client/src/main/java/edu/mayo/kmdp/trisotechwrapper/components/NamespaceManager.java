@@ -28,44 +28,50 @@ public interface NamespaceManager {
    * @return the configured Asset base URI
    * @see TTWConfigParamsDef#ASSET_NAMESPACE
    */
+  @Nonnull
   URI getAssetNamespace();
 
   /**
    * @return the configured Artifact base URI
    * @see TTWConfigParamsDef#ASSET_NAMESPACE
    */
+  @Nonnull
   URI getArtifactNamespace();
 
 
   /**
    * @param assetKey the UUID/version pair that identifies the Asset
-   * @return the Asset Id for a given Asset Key
+   * @return the Asset ID for a given Asset Key
    */
+  @Nonnull
   ResourceIdentifier assetKeyToId(
       @Nonnull final KeyIdentifier assetKey);
 
   /**
-   * @param info the Model manifest, which may contain the Asset Id asserted at modeling time
-   * @return the Asset Id associated to a given Model, if any
+   * @param info the Model manifest, which may contain the Asset ID asserted at modeling time
+   * @return the Asset ID associated to a given Model, if any
    */
+  @Nonnull
   Optional<ResourceIdentifier> modelToAssetId(
       @Nonnull final SemanticModelInfo info);
 
   /**
-   * @param info the Model manifest, which contains the original Model (Artifact) Id
-   * @return the Artifact Id associated to a given Model, if any
+   * @param info the Model manifest, which contains the original Model (Artifact) ID
+   * @return the Artifact ID associated to a given Model, if any
    */
+  @Nonnull
   ResourceIdentifier modelToArtifactId(
       @Nonnull final TrisotechFileInfo info);
 
   /**
-   * Builds an Artifact Id from a model URI, a Model version, and a label
+   * Builds an Artifact ID from a model URI, a Model version, and a label
    *
-   * @param modelUri   the internal Id of the Model
+   * @param modelUri   the internal ID of the Model
    * @param versionTag the version of the Model
    * @param label      the name of the Model
-   * @return an artifact Id
+   * @return an artifact ID
    */
+  @Nonnull
   default ResourceIdentifier modelToArtifactId(
       @Nonnull String modelUri,
       @Nonnull String versionTag,
@@ -75,14 +81,15 @@ public interface NamespaceManager {
 
 
   /**
-   * Builds an Artifact Id from a model URI, a Model version, a label, and a last update Date
+   * Builds an Artifact ID from a model URI, a Model version, a label, and a last update Date
    *
-   * @param modelUri      the internal Id of the Model
+   * @param modelUri      the internal ID of the Model
    * @param versionTag    the version of the Model
    * @param label         the name of the Model
    * @param establishedOn the Date when this version was last touched
-   * @return an artifact Id
+   * @return an artifact ID
    */
+  @Nonnull
   default ResourceIdentifier modelToArtifactId(
       @Nonnull final String modelUri,
       @Nullable final String versionTag,
@@ -92,16 +99,17 @@ public interface NamespaceManager {
   }
 
   /**
-   * Builds an Artifact Id from a model URI, a Model version, a label, a publication state and a
+   * Builds an Artifact ID from a model URI, a Model version, a label, a publication state and a
    * last update Date
    *
-   * @param modelUri      the internal Id of the Model
+   * @param modelUri      the internal ID of the Model
    * @param versionTag    the version of the Model
    * @param label         the name of the Model
    * @param state         the publication state of the Model
    * @param establishedOn the Date when this version was last touched
-   * @return an artifact Id
+   * @return an artifact ID
    */
+  @Nonnull
   ResourceIdentifier modelToArtifactId(
       @Nonnull final String modelUri,
       @Nullable final String versionTag,
@@ -114,8 +122,9 @@ public interface NamespaceManager {
    * Inverse-maps an Artifact's UUID to an internal TT model URI
    *
    * @param artifactId the artifact UUID
-   * @return an internal model Id (URI)
+   * @return an internal model ID (URI)
    */
+  @Nonnull
   String artifactToModelId(UUID artifactId);
 
   /**

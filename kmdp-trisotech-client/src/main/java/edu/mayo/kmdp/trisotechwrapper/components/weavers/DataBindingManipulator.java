@@ -233,6 +233,7 @@ public class DataBindingManipulator {
    *                   succeeds, the entry node will be retained
    * @return a cloned copy of the input context, with only the entries that match the filter
    */
+  @Nonnull
   private static Element getScopedBindings(
       @Nonnull final Element dmnContext,
       @Nonnull final Predicate<Element> filter) {
@@ -250,7 +251,7 @@ public class DataBindingManipulator {
    * Note: this method is called once per (DMN) input x N for each entry in the shared input
    * Context
    *
-   * @param contextExtry each entry in the inputBinding context - originally shared across all
+   * @param contextEntry each entry in the inputBinding context - originally shared across all
    *                     inputs, but at this point cloned for a specific input
    * @param inputEl      the decision task input element to match, driven by the underlying DMN
    *                     input
@@ -258,12 +259,12 @@ public class DataBindingManipulator {
    * @param x            the XPath processor
    */
   private static void processInputContextEntry(
-      @Nonnull final Element contextExtry,
+      @Nonnull final Element contextEntry,
       @Nonnull final Element inputEl,
       @Nonnull final Document dox,
       @Nonnull final XPathUtil x) {
     // this is a clone of the shared inputBindings, specific to the inputNode
-    Element bindings = (Element) contextExtry.getParentNode();
+    Element bindings = (Element) contextEntry.getParentNode();
 
     // check if the entry references one specific CFI, and link it
     Optional.of(x.xString(bindings, ".//dmn:literalExpression/dmn:text/text()"))
@@ -278,6 +279,7 @@ public class DataBindingManipulator {
    * @param bindingElement The cmmn input/output binding
    * @return the DMN context that defines the I/O variable mappings
    */
+  @Nonnull
   protected static Optional<Element> findExogenousDMNElement(
       @Nonnull final Element bindingElement) {
     return asElementStream(bindingElement.getChildNodes())
@@ -292,9 +294,10 @@ public class DataBindingManipulator {
    * Ensures that a rootNode from a CMMN model has an 'extensionElements' child, adding it if not.
    *
    * @param dox      The root CMMN document
-   * @param rootNode The node that has, or will have, an cmmn:extensionElements child Element
+   * @param rootNode The node that has, or will have, a cmmn:extensionElements child Element
    * @return the extensionElements node
    */
+  @Nonnull
   protected static Element ensureCMMNExtensions(
       @Nonnull final Document dox,
       @Nonnull final Node rootNode,
@@ -419,7 +422,7 @@ public class DataBindingManipulator {
       // apply the bindings to the output
       asElementStream(bindings.getChildNodes())
           .forEach(
-              contextExtry -> processOutputContextEntry(contextExtry, outputEl, cfiEl, dox, x));
+              contextEntry -> processOutputContextEntry(contextEntry, outputEl, cfiEl, dox, x));
     }
   }
 
@@ -429,14 +432,14 @@ public class DataBindingManipulator {
    * If the output is already bound to a CFI, will clone the output (this scenario is undesirable,
    * but possible)
    *
-   * @param contextExtry the context entry that bounds the decision output to the CFI
+   * @param contextEntry the context entry that bounds the decision output to the CFI
    * @param outputEl     the decision task output
    * @param cfiEl        the bound CaseFileItem
    * @param dox          the scoping model
    * @param x            the XPath processor
    */
   private static void processOutputContextEntry(
-      @Nonnull final Element contextExtry,
+      @Nonnull final Element contextEntry,
       @Nonnull final Element outputEl,
       @Nonnull final Element cfiEl,
       @Nonnull final Document dox,
@@ -444,13 +447,13 @@ public class DataBindingManipulator {
     boolean isUnbound = Util.isEmpty(outputEl.getAttribute("bindingRef"));
 
     if (isUnbound) {
-      processUnboundOutputContextEntry(contextExtry, outputEl, cfiEl, dox, x);
+      processUnboundOutputContextEntry(contextEntry, outputEl, cfiEl, dox, x);
     } else {
       if (logger.isWarnEnabled()) {
         logger.warn("Detected 1:N mapping of DMN output '{}' to CMMN CaseFileItems",
             outputEl.getAttribute("name"));
       }
-      processBoundOutputContextEntry(contextExtry, outputEl, cfiEl, dox, x);
+      processBoundOutputContextEntry(contextEntry, outputEl, cfiEl, dox, x);
     }
   }
 
@@ -460,20 +463,20 @@ public class DataBindingManipulator {
    * <p>
    * Adds a reference to the CFI, and sets the dmn context as a child extension
    *
-   * @param contextExtry the context entry that bounds the decision output to the CFI
+   * @param contextEntry the context entry that bounds the decision output to the CFI
    * @param outputEl     the decision task output
    * @param cfiEl        the bound CaseFileItem
    * @param dox          the scoping model
    * @param x            the XPath processor
    */
   private static void processUnboundOutputContextEntry(
-      @Nonnull final Element contextExtry,
+      @Nonnull final Element contextEntry,
       @Nonnull final Element outputEl,
       @Nonnull final Element cfiEl,
       @Nonnull final Document dox,
       @Nonnull final XPathUtil x) {
     String cfiRef = cfiEl.getAttribute("id");
-    Element bindings = (Element) contextExtry.getParentNode();
+    Element bindings = (Element) contextEntry.getParentNode();
 
     outputEl.setAttribute("bindingRef", cfiRef);
     // adds the rewritten context entry to the task input
@@ -485,14 +488,14 @@ public class DataBindingManipulator {
    * Clones the output and removes the binding, so that the clone can be bound to the additional
    * context.
    *
-   * @param contextExtry the context entry that bounds the decision output to the CFI
+   * @param contextEntry the context entry that bounds the decision output to the CFI
    * @param outputEl     the decision task output
    * @param cfiEl        the bound CaseFileItem
    * @param dox          the scoping model
    * @param x            the XPath processor
    */
   private static void processBoundOutputContextEntry(
-      @Nonnull final Element contextExtry,
+      @Nonnull final Element contextEntry,
       @Nonnull final Element outputEl,
       @Nonnull final Element cfiEl,
       @Nonnull final Document dox,
@@ -509,7 +512,7 @@ public class DataBindingManipulator {
 
     outputEl.getParentNode().appendChild(clonedOut);
 
-    processUnboundOutputContextEntry(contextExtry, clonedOut, cfiEl, dox, x);
+    processUnboundOutputContextEntry(contextEntry, clonedOut, cfiEl, dox, x);
   }
 }
 

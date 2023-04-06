@@ -13,19 +13,19 @@ import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
-import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.Test;
 
@@ -81,25 +81,29 @@ class TTPlaceCacheTest {
       }
 
       @Override
-      public ResultSet askQuery(Query query) {
-        return QueryExecutionFactory.create(query, graph).execSelect();
+      @Nonnull
+      public ResultSet askQuery(@Nonnull final Query query) {
+        try (var fac = QueryExecutionFactory.create(query, graph)) {
+          return ResultSetFactory.copyResults(fac.execSelect());
+        }
       }
 
       @Override
-      public List<TrisotechFileInfo> getModelPreviousVersions(String repositoryId,
-          String fileId) {
+      @Nonnull
+      public List<TrisotechFileInfo> getModelPreviousVersions(
+          @Nonnull String repositoryId,
+          @Nonnull String modelUri) {
         var mockHxInfo = new TrisotechFileInfo();
-        mockHxInfo.setId(fileId);
+        mockHxInfo.setId(modelUri);
         mockHxInfo.setVersion("1.0.1");
         mockHxInfo.setState("Draft");
         return List.of(mockHxInfo);
       }
 
       @Override
-      public Optional<TrisotechPlaceData> getPlaces() throws IOException {
-        var places = new TrisotechPlaceData();
-        places.setData(List.of(new TrisotechPlace(TEST_PLACE_ID, "Mock")));
-        return Optional.of(places);
+      @Nonnull
+      public List<TrisotechPlace> getPlaces() {
+        return List.of(new TrisotechPlace(TEST_PLACE_ID, "Mock"));
       }
     };
   }
@@ -119,9 +123,7 @@ class TTPlaceCacheTest {
     }
 
     var webClient = new TTWebClient(cfg);
-    var accessible = webClient.getPlaces()
-        .map(pd -> pd.getData().stream().anyMatch(p -> p.getId().equals(TEST_PLACE_ID)))
-        .orElse(false);
+    var accessible = webClient.getPlaces().stream().anyMatch(p -> p.getId().equals(TEST_PLACE_ID));
     if (!accessible) {
       return;
     }

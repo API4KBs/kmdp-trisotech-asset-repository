@@ -2,6 +2,7 @@ package edu.mayo.kmdp.trisotechwrapper.components.weavers;
 
 import java.util.function.Function;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -33,6 +34,7 @@ public abstract class AbstractAnnotationHandler<T> {
    * @param klass A seed class from the java package that contains the target annotation classes
    * @return a Marshaller that can serialize instances of the target annotation class
    */
+  @Nullable
   protected static <X> Marshaller initMarshaller(
       @Nonnull final Class<X> klass) {
     try {
@@ -48,7 +50,7 @@ public abstract class AbstractAnnotationHandler<T> {
    *
    * @param obj    the object to be serialized
    * @param mapper a JaxB element converter
-   * @param parent the parent node to attach the sub-tree to
+   * @param parent the parent node to attach the subtree to
    * @param jxm    the Marshaller used to serialize obj
    */
   protected void toChildElement(

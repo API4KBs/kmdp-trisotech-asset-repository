@@ -22,12 +22,12 @@ import org.w3c.dom.Document;
  * <p>
  * All models have a unique modelId (a UUID-based URI) set by DES, and may have a user assigned
  * Asset (Series) Identifiers. If enabled via ({@link TTWConfigParamsDef#ANONYMOUS_ASSETS_FLAG)},
- * placeholder asset Ids will be assigned by the TTW. Either Id is mapped to an 'Info' manifest, *
+ * placeholder asset Ids will be assigned by the TTW. Either ID is mapped to an 'Info' manifest, *
  * which is based on a Shape view of the DES Knowledge Graph.
  * <p>
- * Some Models (Decision and/or Process) expose one ore more Services. Services are also treated as
+ * Some Models (Decision and/or Process) expose one or more Services. Services are also treated as
  * Assets, with an implicit manifestation as an OpenAPI spec document. The Service Assets are
- * accessed indirectly through the Id of the model that exposes them, or through their Asset Id.
+ * accessed indirectly through the ID of the model that exposes them, or through their Asset ID.
  * <p>
  * Info metadata is used to negotiate (via mimeType) and ultimately acquire a copy of a Model
  * Artifact, as an XML Document, sanitized of vendor-specific elements, to be replaced with
@@ -49,6 +49,7 @@ public interface TTWKnowledgeStore {
    *                 equivalent types
    * @return Manifests for all available Models, possibly filtered, as a Stream
    */
+  @Nonnull
   Stream<SemanticModelInfo> listAllModelsInfoByMimeClass(
       @Nullable final String mimeType);
 
@@ -57,42 +58,46 @@ public interface TTWKnowledgeStore {
    * <p>
    * If no mimeType is provided, no filtering should be applied.
    *
-   * @param placeid  the placeId
+   * @param placeId  the placeId
    * @param mimeType an optional mimeType filter, as the representative of a MIME class of
    *                 equivalent types
    * @return Manifests for all available Models in the Place, possibly filtered, as a Stream
    */
+  @Nonnull
   Stream<SemanticModelInfo> listAllModelsInfoByPlaceAndMimeClass(
-      @Nonnull final String placeid,
+      @Nonnull final String placeId,
       @Nullable final String mimeType);
 
   /**
-   * Retrieves the Manifest for the Model with a given model Id
+   * Retrieves the Manifest for the Model with a given model ID
    *
-   * @param modelUri the Id of the Model
-   * @return the metadta manifest for the model with the given Id, if any
+   * @param modelUri the ID of the Model
+   * @return the metadata manifest for the model with the given ID, if any
    */
+  @Nonnull
   Optional<SemanticModelInfo> getMetadataByArtifact(
       @Nonnull final String modelUri);
 
   /**
-   * Retrieves the Manifest for the Models with a given Asset Version Id.
+   * Retrieves the Manifest for the Models with a given Asset Version ID.
    * <p>
    * Note that a given Asset may be carried by multiple, distinct Models, all of which should be
    * returned.
    *
-   * @param assetId the Id of an Asset Version
-   * @return the metadta manifest for all the Models asserted to carry that Asset, as a Stream
+   * @param assetId the ID of an Asset Version
+   * @return the metadata manifest for all the Models asserted to carry that Asset, as a Stream
    */
+  @Nonnull
   Stream<SemanticModelInfo> getMetadataByAssetVersion(
       @Nonnull final KeyIdentifier assetId);
 
   /**
-   * Retrieves the Manifest of the Services exposed by the Model with a given id
+   * Retrieves the Manifest of the Services exposed by the Model with a given ID
    *
-   * @param modelUri the Id of the Model
-   * @return the metadta manifest for the Service(s) exposed by the model, if any
+   * @param modelUri the ID of the Model
+   * @return the metadata manifest for the Service(s) exposed by the model, if any
    */
+  @Nonnull
   Stream<SemanticModelInfo> getServiceMetadataByModel(
       @Nonnull final String modelUri);
 
@@ -111,6 +116,7 @@ public interface TTWKnowledgeStore {
    * @param mimeType an optional mimeType used to negotiate
    * @return the Model as a Document, if possible
    */
+  @Nonnull
   Optional<Document> downloadXmlModel(
       @Nonnull final TrisotechFileInfo info,
       @Nullable final String mimeType);
@@ -122,6 +128,7 @@ public interface TTWKnowledgeStore {
    * @return the Model as a Document, if possible
    * @see #downloadXmlModel(TrisotechFileInfo, String)
    */
+  @Nonnull
   default Optional<Document> downloadXmlModel(TrisotechFileInfo info) {
     return downloadXmlModel(info, null);
   }
@@ -134,6 +141,7 @@ public interface TTWKnowledgeStore {
    *
    * @return the Map of configured Path/Places
    */
+  @Nonnull
   Map<TrisotechPlace, Set<String>> getConfiguredPlacePathScopes();
 
 }

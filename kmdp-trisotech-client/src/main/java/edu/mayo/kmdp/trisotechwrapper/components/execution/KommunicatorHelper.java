@@ -48,23 +48,26 @@ public final class KommunicatorHelper {
    * @param cfg      the environment configuration
    * @return an Optional Kommunicator URL
    */
+  @Nonnull
   public static Optional<URI> getKommunicatorLink(
       @Nonnull final SemanticModelInfo manifest,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
     return getKommunicatorMetadata(manifest, cfg)
         .flatMap(JSonUtil::printJson)
-        .map(jstr -> Base64.getEncoder().encodeToString(jstr.getBytes(StandardCharsets.UTF_8)))
+        .map(jStr -> Base64.getEncoder().encodeToString(jStr.getBytes(StandardCharsets.UTF_8)))
         .map(x -> buildURI(x, cfg));
   }
 
   /**
-   * Constructs a Kommunicator URI (techically a URL, but in the form or URI for API compatibility),
-   * from the server's base URL, the Kommunicator path, and the encoded metadata object reference
+   * Constructs a Kommunicator URI (technically a URL, but in the form or URI for API
+   * compatibility), from the server's base URL, the Kommunicator path, and the encoded metadata
+   * object reference
    *
    * @param encodedRef the model-specific, Base64 encoded metadata reference
    * @param cfg        the Environment Configuration, providing the DES base URL
    * @return a Kommunicator URL
    */
+  @Nonnull
   private static URI buildURI(
       @Nonnull final String encodedRef,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
@@ -82,6 +85,7 @@ public final class KommunicatorHelper {
    * @param cfg      the Environment Configuration, providing the DES API endpoint
    * @return a {@link KommunicatorDescr} object, if all the necessary metadata is provided
    */
+  @Nonnull
   public static Optional<KommunicatorDescr> getKommunicatorMetadata(
       @Nonnull final SemanticModelInfo manifest,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
@@ -100,6 +104,7 @@ public final class KommunicatorHelper {
    * @param cfg      the Environment Configuration, providing the DES API endpoint
    * @return a {@link RepoDescr}, if all the necessary metadata is provided
    */
+  @Nonnull
   private static Optional<RepoDescr> getRepoDescr(
       @Nonnull final SemanticModelInfo manifest,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
@@ -123,6 +128,7 @@ public final class KommunicatorHelper {
    * @param manifest the internal manifest of the model to be referenced
    * @return a {@link FileDescr}, if all the necessary metadata is provided
    */
+  @Nonnull
   private static Optional<FileDescr> getFileDescr(
       @Nonnull final TrisotechFileInfo manifest) {
     var fd = new FileDescr(

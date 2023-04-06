@@ -9,11 +9,11 @@ import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetT
 public enum TTGraphTerms {
 
   /**
-   * Id of an Asset associated to a Model (URI)
+   * ID of an Asset associated to a Model (URI)
    */
   ASSET_ID( "?assetId" ),
   /**
-   * Id of an Asset associated to a Service (URI)
+   * IDd of an Asset associated to a Service (URI)
    */
   SERVICE_ID( "?serviceId" ),
   /**
@@ -53,7 +53,7 @@ public enum TTGraphTerms {
    */
   ARTIFACT_NAME( "?artifactName" ),
   /**
-   * Service Fragment Id (URI)
+   * Service Fragment ID (URI)
    */
   SERVICE_FRAGMENT( "?serviceNode" ),
   /**

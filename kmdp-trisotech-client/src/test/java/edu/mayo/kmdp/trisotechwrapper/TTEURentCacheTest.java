@@ -84,7 +84,7 @@ class TTEURentCacheTest {
     var cache = cacheMgr.getPlaceCache();
 
     assertEquals(1, cache.stats().loadCount());
-    cacheMgr.getCachablePlaces();
+    cacheMgr.getCacheablePlaces();
     assertEquals(1, cache.stats().loadCount());
 
     cacheMgr.invalidateCaches();

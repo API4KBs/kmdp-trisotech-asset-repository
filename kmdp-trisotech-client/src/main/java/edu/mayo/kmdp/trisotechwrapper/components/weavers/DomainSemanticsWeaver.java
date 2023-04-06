@@ -43,7 +43,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
+import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.Term;
@@ -80,15 +80,10 @@ public class DomainSemanticsWeaver implements Weaver {
   private static final Logger logger = LoggerFactory.getLogger(DomainSemanticsWeaver.class);
 
   /**
-   * The environment configuration
-   */
-  @Autowired(required = false)
-  private TTWEnvironmentConfiguration configuration;
-
-  /**
    * NamespaceManager helper - used to rewrite resource URIs
    */
-  private NamespaceManager names;
+  @Nonnull
+  private final NamespaceManager names;
 
   /**
    * Delegate
@@ -102,41 +97,32 @@ public class DomainSemanticsWeaver implements Weaver {
   /**
    * The custom attribute name used for Asset Ids
    */
-  private String assetIDKey;
+  private final String assetIDKey;
 
   /**
    * The custom attribute name used for Service Asset Ids
    */
-  private String serviceAssetIDKey;
+  private final String serviceAssetIDKey;
 
   /**
    * Default constructor
    */
-  public DomainSemanticsWeaver() {
-    //
-  }
+  public DomainSemanticsWeaver(@Autowired(required = false) TTWEnvironmentConfiguration cfg) {
+    var effectiveCfg =
+        cfg != null ? cfg : new TTWEnvironmentConfiguration();
+    this.names = new DefaultNamespaceManager(effectiveCfg);
 
-  @PostConstruct
-  public void init() {
-    this.names = new DefaultNamespaceManager(configuration);
-    assetIDKey = configuration.getTyped(TTWConfigParamsDef.ASSET_ID_ATTRIBUTE);
-    serviceAssetIDKey = configuration.getTyped(TTWConfigParamsDef.SERVICE_ASSET_ID_ATTRIBUTE);
+    this.assetIDKey = effectiveCfg.getTyped(TTWConfigParamsDef.ASSET_ID_ATTRIBUTE);
+    this.serviceAssetIDKey = effectiveCfg.getTyped(TTWConfigParamsDef.SERVICE_ASSET_ID_ATTRIBUTE);
+
     if (logger.isDebugEnabled()) {
       logger.debug("The Trisotech Weaver class is initialized");
     }
   }
 
-  /**
-   * Constructor
-   *
-   * @param names the namespace manager
-   */
-  public DomainSemanticsWeaver(NamespaceManager names) {
-    this.names = names;
-  }
-
 
   @Override
+  @Nonnull
   public Document weave(
       @Nonnull final Document dox) {
     // get metas
@@ -342,16 +328,17 @@ public class DomainSemanticsWeaver implements Weaver {
   }
 
   /**
-   * Determine the annotation relationship (the property of the annotation triple) based on the '
+   * Determine the annotation relationship (the property of the annotation triple) based on the
    * concept (the object of the triple), and the context of use of the annotation.
    * <p>
    * For example, Data-related elements imply In_Terms_Of; Tasks imply Captures; and Decisions imply
    * Defines.
    *
    * @param el the element holding the annotation information
-   * @return the {@link SemanticAnnotationRelTypeSeries} (proeprty) to be used in rewriting this
+   * @return the {@link SemanticAnnotationRelTypeSeries} (property) to be used in rewriting this
    * element
    */
+  @Nullable
   private SemanticAnnotationRelTypeSeries getSemanticAnnotationRelationship(
       @Nonnull final Element el) {
     String uri = el.getAttribute("uri");
@@ -361,7 +348,6 @@ public class DomainSemanticsWeaver implements Weaver {
     }
     if (KnowledgeAssetTypeSeries.resolveId(uri)
         .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(uri)).isPresent()) {
-      // TODO should we materialize api4kp:expresses?
       return null;
     }
 
@@ -402,7 +388,7 @@ public class DomainSemanticsWeaver implements Weaver {
    * <p>
    * Determines if the given URI denotes or evokes a domain-specific concept (e.g. clinical)
    *
-   * @param uriStr the concept or referent Id
+   * @param uriStr the concept or referent ID
    * @return true if uriStr resolves to a domain-specific concept
    */
   private boolean isDomainConcept(
@@ -509,6 +495,7 @@ public class DomainSemanticsWeaver implements Weaver {
    *
    * @param el the XML element that evokes a concept via its URI
    */
+  @Nonnull
   private Optional<ConceptIdentifier> getConceptIdentifier(
       @Nonnull final Element el) {
     // need to verify any URI values are valid -- no trisotech
@@ -536,6 +523,7 @@ public class DomainSemanticsWeaver implements Weaver {
    * @param surrNamespace the API4KP surrogate URI
    * @return a schemaLocation attribute value suitable for the dox Document
    */
+  @Nonnull
   private String getSchemaLocations(
       @Nonnull final Document dox,
       @Nonnull final String surrNamespace) {

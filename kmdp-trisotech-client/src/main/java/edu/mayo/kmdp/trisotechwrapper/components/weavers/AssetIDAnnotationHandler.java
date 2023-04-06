@@ -19,6 +19,7 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import edu.mayo.kmdp.trisotechwrapper.config.TTConstants;
 import java.net.URI;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.bind.Marshaller;
 import org.omg.spec.api4kp._20200801.id.ObjectFactory;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
@@ -34,7 +35,9 @@ public class AssetIDAnnotationHandler extends AbstractAnnotationHandler<Resource
 
   protected static final Logger logger = LoggerFactory.getLogger(AssetIDAnnotationHandler.class);
 
+  @Nonnull
   protected static ObjectFactory of;
+  @Nullable
   protected static Marshaller jxm;
 
   static {
@@ -43,13 +46,13 @@ public class AssetIDAnnotationHandler extends AbstractAnnotationHandler<Resource
   }
 
   /**
-   * Replaces a custom attribute extension carrying an Asset Id in URI form, with an element
+   * Replaces a custom attribute extension carrying an Asset ID in URI form, with an element
    * resulting from the XML serialization of a {@link ResourceIdentifier}
    * <p>
-   * Parses the Asset Id URI, serializes the ResourceIdentifier, and finally swaps the custom
+   * Parses the Asset ID URI, serializes the ResourceIdentifier, and finally swaps the custom
    * attribute element
    *
-   * @param el the TT custom attribute element holding the asset Id
+   * @param el the TT custom attribute element holding the asset ID
    */
   public void replaceProprietaryElement(
       @Nonnull final Element el) {

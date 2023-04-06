@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import jdk.jfr.Experimental;
 import org.omg.spec.mvf._20220702.mvf.MVFDictionary;
 import org.omg.spec.mvf._20220702.mvf.Vocabulary;
 
@@ -62,7 +61,7 @@ public final class KEMHelper {
   }
 
 
-  public static Optional<String > getSemanticAnnotation(KemConcept kc) {
+  public static Optional<String> getSemanticAnnotation(KemConcept kc) {
     return kc.getProperties().getExtensionElements().stream()
         .filter(x -> "semanticLink".equals(x.getSemanticType()))
         .filter(x -> "graph".equals(x.getType()))

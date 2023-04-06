@@ -53,6 +53,7 @@ public final class TTGraphQueryHelper {
    * @param cfg        the Environment configuration
    * @return a {@link PlacePathIndex} for the given Place
    */
+  @Nonnull
   public static PlacePathIndex reindexPlace(
       @Nonnull final TTDigitalEnterpriseServerClient webClient,
       @Nonnull final TrisotechPlace focusPlace,
@@ -88,6 +89,7 @@ public final class TTGraphQueryHelper {
    * @param placeId     the UUID of the place to apply the Query to
    * @return The ResultSet with the results from the query
    */
+  @Nonnull
   public static ResultSet query(
       @Nonnull final TTDigitalEnterpriseServerClient webClient,
       @Nonnull final String queryString,
@@ -109,6 +111,7 @@ public final class TTGraphQueryHelper {
    *
    * @return the SPARQL query string to query the relations between models
    */
+  @Nonnull
   public static String getQueryStringRelations() {
     return FileUtil.read(TTGraphQueryHelper.class
             .getResourceAsStream("/queryRelations.tt.sparql"))
@@ -120,6 +123,7 @@ public final class TTGraphQueryHelper {
    *
    * @return the SPARQL query string needed to query the models
    */
+  @Nonnull
   public static String getQueryStringModels() {
     return FileUtil.read(TTGraphQueryHelper.class
             .getResourceAsStream("/queryModels.tt.sparql"))
@@ -131,6 +135,7 @@ public final class TTGraphQueryHelper {
    *
    * @return the SPARQL query string needed to query the models / asset / service relationships
    */
+  @Nonnull
   public static String getQueryStringServices() {
     return FileUtil.read(TTGraphQueryHelper.class
             .getResourceAsStream("/queryServiceToModels.tt.sparql"))
@@ -144,6 +149,7 @@ public final class TTGraphQueryHelper {
    *
    * @return the SPARQL query string to get an entire place content
    */
+  @Nonnull
   public static String getQueryAll() {
     return FileUtil.read(TTGraphQueryHelper.class
             .getResourceAsStream("/queryEntirePlace.tt.sparql"))
@@ -160,6 +166,7 @@ public final class TTGraphQueryHelper {
    * @param focusPlaceId the Place to be exported
    * @return the Place content as an RDF graph
    */
+  @Nonnull
   public static Model exportPlace(
       @Nonnull final TTWebClient client,
       @Nonnull final String focusPlaceId) {

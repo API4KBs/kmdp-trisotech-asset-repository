@@ -57,8 +57,10 @@ public class TTRedactor implements Redactor {
    * @param dox the Document to be redacted
    * @return the redacted Document
    */
+  @Nonnull
   @Override
-  public Document redact(@Nonnull final Document dox) {
+  public Document redact(
+      @Nonnull final Document dox) {
 
     // ---- Remove traces of Trisotech  ---- //
     // remove spurious model elements
@@ -81,14 +83,15 @@ public class TTRedactor implements Redactor {
   /**
    * Model imports are lifted into Asset-Asset dependencies. However, Models may import resources
    * that are not treated as Assets For the time being, we remove the import, but this logic may be
-   * refined in FUTURE.
+   * refined in the FUTURE.
    * <p>
    * The current implementation removes imports to DMN/FEEL libraries, which are not yet accessible
    * via the TTW
    *
    * @param dox the Document to b processed
    */
-  private void removeUnsupportedImports(@Nonnull final Document dox) {
+  private void removeUnsupportedImports(
+      @Nonnull final Document dox) {
     asElementStream(dox.getElementsByTagNameNS(
         TTConstants.DMN_12_XMLNS, TTConstants.DMN_IMPORT))
         .filter(el -> TTConstants.TT_LIBRARIES.equals(el.getAttribute(TTConstants.DMN_IMPORTTYPE)))
@@ -105,7 +108,8 @@ public class TTRedactor implements Redactor {
    *
    * @param dox the Document to b processed
    */
-  private void removeTrisoElementsNotRetaining(@Nonnull final Document dox) {
+  private void removeTrisoElementsNotRetaining(
+      @Nonnull final Document dox) {
     asElementStream(dox.getElementsByTagNameNS("*", TTConstants.DMN_EL_DECISION_SERVICE))
         .filter(el -> el.hasAttributeNS(
             TTConstants.TT_METADATA_NS, TTConstants.TT_DYNAMIC_DECISION_SERVICE))
@@ -115,13 +119,14 @@ public class TTRedactor implements Redactor {
   }
 
   /**
-   * Legacy: the use of cmmn:CFI as 'datatypes' is ambiguous and evolving. CKE used the non standard
+   * Legacy: the use of cmmn:CFI as 'datatypes' is ambiguous and evolving. CKE used the non-standard
    * 'XSD' mode, but then TT enabled the use of DMN itemDefinitions on CFIs. This will likely
    * converge into the SDM(N) initiative
    *
    * @param dox the Document to b processed
    */
-  private void verifyAndRemoveInvalidCaseFileItemDefinition(@Nonnull final Document dox) {
+  private void verifyAndRemoveInvalidCaseFileItemDefinition(
+      @Nonnull final Document dox) {
     asElementStream(dox.getElementsByTagName("*"))
         .filter(el -> (el.getLocalName().equals("caseFileItemDefinition")))
         .forEach(element -> {
@@ -158,7 +163,8 @@ public class TTRedactor implements Redactor {
    *
    * @param dox the Document to be redacted
    */
-  private void removeTrisoTagsNotRetaining(@Nonnull final Document dox) {
+  private void removeTrisoTagsNotRetaining(
+      @Nonnull final Document dox) {
     asElementStream(dox.getElementsByTagNameNS(
         TTConstants.TT_METADATA_NS, TTConstants.TT_ATTACHMENT_ITEM))
         .forEach(element ->
@@ -218,7 +224,8 @@ public class TTRedactor implements Redactor {
    *
    * @param dox the Document to be redacted =
    */
-  private void removeProprietaryAttributesAndNS(@Nonnull final Document dox) {
+  private void removeProprietaryAttributesAndNS(
+      @Nonnull final Document dox) {
     NodeList elements = dox.getElementsByTagNameNS("*", "*");
     asElementStream(elements).forEach(
         el -> {

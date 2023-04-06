@@ -113,13 +113,13 @@ public class KEMtoMVFTranslator {
   }
 
   private IndexableMVFEntry toMVFConcept(KemConcept kc, MVFDictionary dict) {
-    var mvfe = toMVFConcept(kc);
-    dict.getEntry().add(mvfe);
+    var mvf = toMVFConcept(kc);
+    dict.getEntry().add(mvf);
 
     kc.getProperties().getCode()
         .forEach(cd -> mapCode(cd, kc, dict));
 
-    return mvfe;
+    return mvf;
   }
 
   protected IndexableMVFEntry toMVFConcept(KemConcept kc) {

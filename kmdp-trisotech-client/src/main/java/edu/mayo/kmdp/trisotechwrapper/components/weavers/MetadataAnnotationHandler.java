@@ -67,6 +67,7 @@ public class MetadataAnnotationHandler extends AbstractAnnotationHandler<Annotat
    * @param concept    the concept
    * @return an Annotation (rel,concept)
    */
+  @Nonnull
   protected Annotation getAnnotation(
       @Nullable final SemanticAnnotationRelType defaultRel,
       @Nonnull final ConceptIdentifier concept) {

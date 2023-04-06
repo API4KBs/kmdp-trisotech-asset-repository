@@ -17,7 +17,6 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifact;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import edu.mayo.kmdp.util.Util;
-import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -303,7 +302,7 @@ public class TTWrapper implements TTAPIAdapter {
    * methodName: getModelByIdAndVersion
    * <p>description: get the model for the modelUri and versionTag specified</p>
    *
-   * @param modelUri  the file id for the model
+   * @param modelUri   the file id for the model
    * @param versionTag the versionTag for the model
    * @return Optional<Document> the XML Document for the specified versionTag of the model or Empty
    */
@@ -364,18 +363,11 @@ public class TTWrapper implements TTAPIAdapter {
    */
   @Override
   public Map<String, TrisotechPlace> listAccessiblePlaces() {
-    try {
-      return webClient.getPlaces()
-          .map(tpd -> tpd.getData().stream()
-              .collect(Collectors.toMap(
-                  TrisotechPlace::getId,
-                  tp -> tp
-              )))
-          .orElse(Collections.emptyMap());
-    } catch (IOException e) {
-      logger.error(e.getMessage(), e);
-      return Collections.emptyMap();
-    }
+    return webClient.getPlaces().stream()
+        .collect(Collectors.toMap(
+            TrisotechPlace::getId,
+            tp -> tp
+        ));
   }
 
 
@@ -385,7 +377,7 @@ public class TTWrapper implements TTAPIAdapter {
   }
 
   public Map<String, TrisotechPlace> getCacheablePlaces() {
-    return cacheManager.getCachablePlaces().stream()
+    return cacheManager.getCacheablePlaces().stream()
         .collect(Collectors.toMap(
             TrisotechPlace::getId,
             tp -> tp
@@ -402,13 +394,11 @@ public class TTWrapper implements TTAPIAdapter {
   public Map<String, TrisotechExecutionArtifact> listExecutionArtifacts(
       @Nonnull final String env) {
     try {
-      return webClient.getExecutionArtifacts(env)
-          .map(txd -> txd.getData().stream()
+      return webClient.getExecutionArtifacts(env).stream()
               .collect(Collectors.toMap(
                   TrisotechExecutionArtifact::getName,
                   x -> x
-              )))
-          .orElse(Collections.emptyMap());
+              ));
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       return Collections.emptyMap();

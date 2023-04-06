@@ -20,12 +20,12 @@ public interface CachingTTWKnowledgeStore extends TTWKnowledgeStore {
   /**
    * @return the Place/Path cache used to index the TT DES graph
    */
-  Cache<TrisotechPlace, PlacePathIndex> getPlaceCache();
+  @NonNull Cache<TrisotechPlace, PlacePathIndex> getPlaceCache();
 
   /**
    * @return the Model cache
    */
-  Cache<SemanticModelInfo, Document> getModelCache();
+  @NonNull Cache<SemanticModelInfo, Document> getModelCache();
 
   /**
    * Invalidates the Place and Model Caches, for all Places and Models
@@ -33,17 +33,17 @@ public interface CachingTTWKnowledgeStore extends TTWKnowledgeStore {
   void invalidateCaches();
 
   /**
-   * Invalidates the Place Cache for a given Place Id
+   * Invalidates the Place Cache for a given Place ID
    *
-   * @param placeId the Id of the Place
+   * @param placeId the ID of the Place
    */
   void invalidatePlaceCache(
       @NonNull final String placeId);
 
   /**
-   * Invalidates the Model Cache for a given Model Id
+   * Invalidates the Model Cache for a given Model ID
    *
-   * @param modelUri the Id of the Model
+   * @param modelUri the ID of the Model
    */
   void invalidateModelCache(
       @NonNull final String modelUri);
@@ -55,7 +55,7 @@ public interface CachingTTWKnowledgeStore extends TTWKnowledgeStore {
    *
    * @return the Places configured to be Cached
    */
-  Set<TrisotechPlace> getCachablePlaces();
+  @NonNull Set<TrisotechPlace> getCacheablePlaces();
 
   /**
    * Returns all the Places configured for caching, and accessible according to the configured
@@ -63,7 +63,7 @@ public interface CachingTTWKnowledgeStore extends TTWKnowledgeStore {
    *
    * @return all the accessible Places actually Cached
    */
-  Set<TrisotechPlace> getAllCachedPlaces();
+  @NonNull Set<TrisotechPlace> getAllCachedPlaces();
 
   /**
    * Returns all the Places configured for caching, and accessible according to the configured
@@ -71,6 +71,6 @@ public interface CachingTTWKnowledgeStore extends TTWKnowledgeStore {
    *
    * @return the accessible Places currently in the Cache
    */
-  Set<TrisotechPlace> getCachedPlaces();
+  @NonNull Set<TrisotechPlace> getCachedPlaces();
 
 }

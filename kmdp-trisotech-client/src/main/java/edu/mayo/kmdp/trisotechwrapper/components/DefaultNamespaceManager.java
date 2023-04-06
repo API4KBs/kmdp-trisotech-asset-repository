@@ -42,17 +42,20 @@ public class DefaultNamespaceManager implements NamespaceManager {
 
 
   @Override
+  @Nonnull
   public URI getAssetNamespace() {
     return assetNamespace;
   }
 
   @Override
+  @Nonnull
   public URI getArtifactNamespace() {
     return artifactNamespace;
   }
 
 
   @Override
+  @Nonnull
   public Optional<ResourceIdentifier> modelToAssetId(
       @Nonnull final SemanticModelInfo info) {
     return Optional.ofNullable(info.getAssetKey())
@@ -60,12 +63,14 @@ public class DefaultNamespaceManager implements NamespaceManager {
   }
 
   @Override
+  @Nonnull
   public ResourceIdentifier assetKeyToId(
       @Nonnull final KeyIdentifier assetKey) {
     return newId(getAssetNamespace(), assetKey.getUuid(), assetKey.getVersionTag());
   }
 
   @Override
+  @Nonnull
   public ResourceIdentifier modelToArtifactId(
       @Nonnull final TrisotechFileInfo info) {
     return modelToArtifactId(
@@ -79,6 +84,7 @@ public class DefaultNamespaceManager implements NamespaceManager {
 
 
   @Override
+  @Nonnull
   public ResourceIdentifier modelToArtifactId(
       @Nonnull final String internalId,
       @Nullable final String versionTag,
@@ -101,7 +107,9 @@ public class DefaultNamespaceManager implements NamespaceManager {
   }
 
   @Override
-  public String artifactToModelId(UUID artifactId) {
+  @Nonnull
+  public String artifactToModelId(
+      @Nonnull UUID artifactId) {
     return TT_BASE_MODEL_URI + artifactId;
   }
 

@@ -9,7 +9,7 @@ import org.w3c.dom.Document;
  * <p>
  * Redactors should produce Models that are as much as possible standards compliant. Guidelines are
  * based on the notion of Relevance (would a client care about the element?), Necessity (would the
- * model interpretation be 'corrupted' without the element?) and Mappabilty (is there a
+ * model interpretation be 'corrupted' without the element?) and Mappability (is there a
  * standards-based equivalent for the element?).
  * <p>
  * Redactors are used in conjunction with {@link Weaver}s, which can rewrite the fragments,
@@ -36,6 +36,7 @@ public interface Redactor {
    * @param dox the original Document
    * @return the redacted Document
    */
+  @Nonnull
   Document redact(@Nonnull final Document dox);
 
   /**

@@ -6,16 +6,16 @@ import org.w3c.dom.Document;
 
 /**
  * Weavers are used to rewrite model fragments, and/or inject fragments from other models. As such,
- * weavers can be used to augment the information in a Model, or normalize some of the fragments
- * before a {@link Redactor} is used to remove them.
+ * weavers can be used to augment the information in a Model, or normalize some fragments before a
+ * {@link Redactor} is used to remove them.
  * <p>
  * The most common use case is to resolve references from one model to another, when the reference
  * does not require to import the entirety of the target model. A weaver would resolve the
  * reference, extract the fragment(s) that carry the minimum amount of necessary information, and
  * inject that information in the source model.
  * <p>
- * Example: resolve a person Id to add a name and an email contact, without pulling or referencing
- * the entire directory; resolve a concept (Id) to its preferred term, definition and parent.
+ * Example: resolve a person ID to add a name and an email contact, without pulling or referencing
+ * the entire directory; resolve a concept (ID) to its preferred term, definition and parent.
  */
 public interface Weaver {
 
@@ -31,6 +31,7 @@ public interface Weaver {
    * @param dox the original Document
    * @return the redacted Document
    */
+  @Nonnull
   Document weave(Document dox);
 
   /**

@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
  *   <li>Model (Knowledge Artifact) Id => Semantic Metadata (1:1)</li>
  * </ul>
  * <p>
- * Note that a Model Id maps to 1..1 Model Metadata Manifest; an Asset Id may map to 1..N Model
+ * Note that a Model ID maps to 1..1 Model Metadata Manifest; an Asset ID may map to 1..N Model
  * Metadata Manifests, since the same Asset can be realized by multiple models. A Model Manifest
  * contains the 0..N relations to the Service Assets exposed by that Model, which in turn have their
  * own Manifest. A Model Manifest also contains a reverse link to the 0..1 Asset it carries, and the
@@ -93,12 +93,12 @@ public class PlacePathIndex {
   private final Set<String> paths;
 
   /**
-   * Map of Asset Id to semantic metadata
+   * Map of Asset ID to semantic metadata
    */
   private final Map<KeyIdentifier, SortedSet<SemanticModelInfo>> modelInfoByAssetID;
 
   /**
-   * Map of Model Id to semantic metadata
+   * Map of Model ID to semantic metadata
    */
   private final Map<String, SemanticModelInfo> modelInfoByModelID;
 
@@ -134,6 +134,7 @@ public class PlacePathIndex {
    * @param cfg             the Environment configuration
    * @return a PlacePathIndex for the given Path, based on the query results
    */
+  @Nonnull
   public static PlacePathIndex index(
       @Nonnull final TrisotechPlace focusPlace,
       @Nonnull final Set<String> paths,
@@ -158,15 +159,17 @@ public class PlacePathIndex {
   }
 
   /**
-   * @return the Model Id to Model Manifest index, as an Immutable Map
+   * @return the Model ID to Model Manifest index, as an Immutable Map
    */
+  @Nonnull
   public Map<String, SemanticModelInfo> getModelToManifestMappings() {
     return Collections.unmodifiableMap(modelInfoByModelID);
   }
 
   /**
-   * @return the Asset Id to Model(s) Manifest index, as an Immutable Map
+   * @return the Asset ID to Model(s) Manifest index, as an Immutable Map
    */
+  @Nonnull
   public Map<KeyIdentifier, SortedSet<SemanticModelInfo>> getAssetToManifestMappings() {
     return Collections.unmodifiableMap(modelInfoByAssetID);
   }
@@ -197,8 +200,8 @@ public class PlacePathIndex {
    *  paths</li>
    *    <li>Filters on publication status: if PUBLISHED_ONLY_FLAG is set, and the latest version of
    *  a model is not published, indexes the latest published version instead</li>
-   * <li>Filters out models that do not have an asset Id, unless ANONYMOUS_ASSETS_FLAG is set, when
-   * a system asset Id is generated for models that do not assert on </li>
+   * <li>Filters out models that do not have an asset ID, unless ANONYMOUS_ASSETS_FLAG is set, when
+   * a system asset ID is generated for models that do not assert on </li>
    * </ul>
    * . .
    *
@@ -251,6 +254,7 @@ public class PlacePathIndex {
    *                        versions
    * @return the version of the Model manifest that meets the status criteria, if any
    */
+  @Nonnull
   protected Optional<SemanticModelInfo> applyStatus(
       @Nonnull final SemanticModelInfo metadata,
       final boolean publishedOnly,
@@ -329,7 +333,7 @@ public class PlacePathIndex {
   /**
    * Adds a Model to the Asset index
    *
-   * @param assetKey the Asset Id, as a {@link KeyIdentifier}
+   * @param assetKey the Asset ID, as a {@link KeyIdentifier}
    * @param metadata the Model manifest
    */
   protected void indexByAsset(
@@ -356,15 +360,15 @@ public class PlacePathIndex {
    */
   protected void indexRelationships(ResultSet relations) {
     while (relations.hasNext()) {
-      QuerySolution soln = relations.nextSolution();
-      var srcModel = soln.getResource("?fromModel").getURI();
-      var tgtModel = soln.getResource("?toModel").getURI();
-      modelInfoByModelID.computeIfPresent(srcModel, (k, sinfo) -> {
+      QuerySolution sol = relations.nextSolution();
+      var srcModel = sol.getResource("?fromModel").getURI();
+      var tgtModel = sol.getResource("?toModel").getURI();
+      modelInfoByModelID.computeIfPresent(srcModel, (k, info) -> {
         // apply only if srcAsset has not been filtered out
         if (modelInfoByModelID.containsKey(tgtModel)) {
-          sinfo.addModelDependency(tgtModel);
+          info.addModelDependency(tgtModel);
         }
-        return sinfo;
+        return info;
       });
     }
   }
@@ -379,8 +383,8 @@ public class PlacePathIndex {
    * Assuming the models are annotated with Service Asset Ids, and that one model can expose
    * multiple services, maps:
    * <ul>
-   *   <li>each Model Id to the Service Asset Ids exposed by that model</li>
-   *   <li>each Service Asset Id to its semantic metadata descriptor</li>
+   *   <li>each Model ID to the Service Asset Ids exposed by that model</li>
+   *   <li>each Service Asset ID to its semantic metadata descriptor</li>
    * </ul>
    * <p>
    * The semantic metadata descriptor of a service asset is partially inferred from the semantic
@@ -395,8 +399,8 @@ public class PlacePathIndex {
     var allowsAnonymous = cfg.getTyped(TTWConfigParamsDef.ANONYMOUS_ASSETS_FLAG, Boolean.class);
 
     while (services.hasNext()) {
-      QuerySolution soln = services.nextSolution();
-      indexService(soln, allowsAnonymous, cfg);
+      var sol = services.nextSolution();
+      indexService(sol, allowsAnonymous, cfg);
     }
   }
 
@@ -408,16 +412,16 @@ public class PlacePathIndex {
    * such. Services originate as Model fragments, and get manifested via their API spec in the
    * Service Library, which is not indexable from the TT DES graph
    *
-   * @param soln            the service asset semantic metadata, as queried from the DES KG
-   * @param allowsAnonymous if true, will mint an asset Id for services that do not have one
+   * @param sol            the service asset semantic metadata, as queried from the DES KG
+   * @param allowsAnonymous if true, will mint an asset ID for services that do not have one
    * @param cfg             the environment configuration
    */
   protected void indexService(
-      @Nonnull final QuerySolution soln,
+      @Nonnull final QuerySolution sol,
       final boolean allowsAnonymous,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
     // asset + service joint metadata
-    SemanticModelInfo serviceManifest = toServiceManifest(soln, allowsAnonymous, cfg);
+    SemanticModelInfo serviceManifest = toServiceManifest(sol, allowsAnonymous, cfg);
 
     if (!allowsAnonymous && !serviceManifest.hasAssetId()) {
       // skip - anonymous asset not allowed
@@ -464,35 +468,36 @@ public class PlacePathIndex {
    * Transforms the result of a model query to a model manifest
    * <p>
    * Uses the query bound variables to initialize the fields of the manifest object. Generates an
-   * asset Id if none is specified, and ANONYMOUS_ASSETS_FLAG is set.
+   * asset ID if none is specified, and ANONYMOUS_ASSETS_FLAG is set.
    *
-   * @param soln            the query result, as a set of Bindings
+   * @param sol            the query result, as a set of Bindings
    * @param focusPlace      the place where the model originated
-   * @param allowsAnonymous if true, will mint an asset Id for models that do not have one
+   * @param allowsAnonymous if true, will mint an asset ID for models that do not have one
    * @param cfg             the environment configuration
    * @return a manifest for the model described by the query results
    */
+  @Nonnull
   protected SemanticModelInfo toModelManifest(
-      @Nonnull final QuerySolution soln,
+      @Nonnull final QuerySolution sol,
       @Nonnull final TrisotechPlace focusPlace,
       boolean allowsAnonymous,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
 
     //?model ?assetId ?version ?state ?updated ?mimeType ?artifactName
     SemanticModelInfo manifest = new SemanticModelInfo();
-    manifest.addResource(MODEL, soln);
-    manifest.addLiteral(ASSET_ID, soln);
+    manifest.addResource(MODEL, sol);
+    manifest.addLiteral(ASSET_ID, sol);
 
-    manifest.addLiteral(ARTIFACT_NAME, soln);
-    manifest.addLiteral(MIME_TYPE, soln);
-    manifest.addLiteral(PATH, soln);
+    manifest.addLiteral(ARTIFACT_NAME, sol);
+    manifest.addLiteral(MIME_TYPE, sol);
+    manifest.addLiteral(PATH, sol);
 
-    manifest.addLiteral(VERSION, soln);
-    manifest.addLiteral(STATE, soln);
-    manifest.addLiteral(UPDATED, soln);
-    manifest.addLiteral(UPDATER, soln);
+    manifest.addLiteral(VERSION, sol);
+    manifest.addLiteral(STATE, sol);
+    manifest.addLiteral(UPDATED, sol);
+    manifest.addLiteral(UPDATER, sol);
 
-    manifest.addResource(ASSET_TYPE, soln);
+    manifest.addResource(ASSET_TYPE, sol);
 
     manifest.setPlaceId(focusPlace.getId());
     manifest.setPlaceName(focusPlace.getName());
@@ -515,26 +520,27 @@ public class PlacePathIndex {
    * Transforms the result of a model/service query to a service manifest
    * <p>
    * Uses the query bound variables to initialize the fields of the manifest object. Generates a
-   * service asset Id if none is specified, and ANONYMOUS_ASSETS_FLAG is set.
+   * service asset ID if none is specified, and ANONYMOUS_ASSETS_FLAG is set.
    *
-   * @param soln            the query result, as a set of Bindings
-   * @param allowsAnonymous if true, will mint an asset Id for models that do not have one
+   * @param sol            the query result, as a set of Bindings
+   * @param allowsAnonymous if true, will mint an asset ID for models that do not have one
    * @param cfg             the environment configuration
    * @return a manifest for the model described by the query results
    */
+  @Nonnull
   protected SemanticModelInfo toServiceManifest(
-      @Nonnull final QuerySolution soln,
+      @Nonnull final QuerySolution sol,
       boolean allowsAnonymous,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
 
     SemanticModelInfo manifest = new SemanticModelInfo();
-    manifest.addResource(MODEL, soln);
-    manifest.addLiteral(SERVICE_ID, soln);
-    manifest.addLiteral(SERVICE_NAME, soln);
-    manifest.addResource(SERVICE_FRAGMENT, soln);
+    manifest.addResource(MODEL, sol);
+    manifest.addLiteral(SERVICE_ID, sol);
+    manifest.addLiteral(SERVICE_NAME, sol);
+    manifest.addResource(SERVICE_FRAGMENT, sol);
 
-    manifest.addLiteral(ARTIFACT_NAME, soln);
-    manifest.addResource(ASSET_TYPE, soln);
+    manifest.addLiteral(ARTIFACT_NAME, sol);
+    manifest.addResource(ASSET_TYPE, sol);
 
     if (manifest.hasServiceFragmentId() && !manifest.hasAssetId() && allowsAnonymous) {
       var serviceAssetId =
@@ -558,10 +564,11 @@ public class PlacePathIndex {
    * based on the model last update date, approximated to the Year/Month - assuming models are
    * up-to-date, and updated around the time the knowledge is revised
    *
-   * @param elementId   A model Id, or a Decision Service ID, or a BPMN TODO?
+   * @param elementId   A model ID, or a Decision Service ID, or a BPMN TODO?
    * @param lastUpdated the date when the element's owner model was last updated
    * @return a candidate Asset ID
    */
+  @Nonnull
   public static ResourceIdentifier mintAssetIdForAnonymous(
       @Nonnull final URI baseUri,
       @Nonnull final String elementId,
@@ -590,13 +597,14 @@ public class PlacePathIndex {
   /**
    * Utility.
    * <p>
-   * Parses a (versioned) asset Id into a Resource Identifier
+   * Parses a (versioned) asset ID into a Resource Identifier
    * <p>
    * Supports pure UUIDs, or versioned URIs, in String form
    *
-   * @param id the asset Id, in String form
-   * @return the asset Id, as a KeyIdentifier
+   * @param id the asset ID, in String form
+   * @return the asset ID, as a KeyIdentifier
    */
+  @Nonnull
   private KeyIdentifier parseAssetKey(@Nonnull final String id) {
     return Util.isUUID(id)
         ? newId(id).asKey()
@@ -609,6 +617,7 @@ public class PlacePathIndex {
    *
    * @return a Manifest Set that sorts by 'latest', and then by 'greatest' versions
    */
+  @Nonnull
   private SortedSet<SemanticModelInfo> newSortedManifestSet() {
     return new TreeSet<>(comparing(this::getLastUpdateDateTime).thenComparing(this::getVersion));
   }
@@ -619,6 +628,7 @@ public class PlacePathIndex {
    * @param info a Model manifest
    * @return the last time the Model was updated, as a Date with time granularity
    */
+  @Nonnull
   private Date getLastUpdateDateTime(@Nonnull final SemanticModelInfo info) {
     return Optional.ofNullable(info.getUpdated())
         .map(DateTimeUtil::parseDateTime)
@@ -631,6 +641,7 @@ public class PlacePathIndex {
    * @param info a Model manifest
    * @return the Model (artifact) version, as a SemVer tag
    */
+  @Nonnull
   private Version getVersion(@Nonnull final SemanticModelInfo info) {
     return VersionIdentifier.semVerOf(
         Optional.ofNullable(info.getVersion())

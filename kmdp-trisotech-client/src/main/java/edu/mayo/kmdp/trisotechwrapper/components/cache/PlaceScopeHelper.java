@@ -5,12 +5,10 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.REPOSITOR
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.REPOSITORY_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.REPOSITORY_PATHS;
 import static edu.mayo.kmdp.util.Util.isEmpty;
-import static java.util.Collections.emptyList;
 
 import edu.mayo.kmdp.trisotechwrapper.components.TTDigitalEnterpriseServerClient;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
-import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlaceData;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,6 +55,7 @@ public final class PlaceScopeHelper {
    * @param webClient the DES API client
    * @return a Map that associates valid Places to the scoping Paths within that Place
    */
+  @Nonnull
   public static Map<TrisotechPlace, Set<String>> getScope(
       @Nonnull final TTWEnvironmentConfiguration cfg,
       @Nonnull final TTDigitalEnterpriseServerClient webClient) {
@@ -76,6 +75,7 @@ public final class PlaceScopeHelper {
    * @param webClient   the DES API client
    * @return a Map that associates valid Places to the scoping Paths within that Place
    */
+  @Nonnull
   public static Map<TrisotechPlace, Set<String>> reduceMultipleScopes(
       @Nonnull final String targetPaths,
       @Nonnull final TTDigitalEnterpriseServerClient webClient) {
@@ -103,6 +103,7 @@ public final class PlaceScopeHelper {
    * @deprecated use {@link #reduceMultipleScopes(String, TTDigitalEnterpriseServerClient)}, which
    * relies on a single configuration parameter, REPOSITORY_PATHS
    */
+  @Nonnull
   @Deprecated(since = "6.0.0", forRemoval = true)
   public static Map<TrisotechPlace, Set<String>> getSingleScope(
       @Nonnull final TTWEnvironmentConfiguration cfg,
@@ -125,13 +126,12 @@ public final class PlaceScopeHelper {
    * @return the descriptor of the Place with that name, if any
    * @see TTDigitalEnterpriseServerClient#getPlaces()
    */
+  @Nonnull
   public static Optional<TrisotechPlace> getRepositoryByName(
       @Nonnull final String repositoryName,
       @Nonnull final TTDigitalEnterpriseServerClient webClient) {
     try {
       return webClient.getPlaces()
-          .map(TrisotechPlaceData::getData)
-          .orElse(emptyList())
           .stream()
           .filter(tp -> tp.getName().equals(repositoryName))
           .findFirst();
@@ -150,13 +150,12 @@ public final class PlaceScopeHelper {
    * @return the descriptor of the Place with that ID, if any
    * @see TTDigitalEnterpriseServerClient#getPlaces()
    */
+  @Nonnull
   public static Optional<TrisotechPlace> getRepositoryById(
       @Nonnull final String repositoryId,
       @Nonnull final TTDigitalEnterpriseServerClient webClient) {
     try {
       return webClient.getPlaces()
-          .map(TrisotechPlaceData::getData)
-          .orElse(emptyList())
           .stream()
           .filter(tp -> tp.getId().equals(repositoryId))
           .findFirst();
@@ -170,12 +169,13 @@ public final class PlaceScopeHelper {
   /**
    * Splits a "place/path" String into its placeId and path components.
    * <p>
-   * Uses the first occurence of '/' as a separator. Expects a non-empty placeId. If unable to
+   * Uses the first occurrence of '/' as a separator. Expects a non-empty placeId. If unable to
    * detect a place path, uses the default root "/" to scope the entire place
    *
    * @param scope the place/path String to be parsed
    * @return an Array where the first element is the placeId, and the scoped path is the second
    */
+  @Nonnull
   private static String[] split(
       @Nullable final String scope) {
     if (scope == null) {

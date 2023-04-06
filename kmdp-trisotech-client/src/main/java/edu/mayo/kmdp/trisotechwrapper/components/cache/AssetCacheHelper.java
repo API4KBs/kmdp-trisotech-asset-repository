@@ -21,8 +21,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -80,10 +79,11 @@ public final class AssetCacheHelper {
    * @see PlaceScopeHelper
    * @see PlacePathIndex
    */
+  @Nonnull
   public static LoadingCache<TrisotechPlace, PlacePathIndex> newPlaceCache(
-      @NonNull final Map<TrisotechPlace, Set<String>> scopedPaths,
-      @NonNull final TTDigitalEnterpriseServerClient webClient,
-      @NonNull final TTWEnvironmentConfiguration cfg) {
+      @Nonnull final Map<TrisotechPlace, Set<String>> scopedPaths,
+      @Nonnull final TTDigitalEnterpriseServerClient webClient,
+      @Nonnull final TTWEnvironmentConfiguration cfg) {
     return Caffeine.newBuilder()
         .expireAfterWrite(cfg.getTyped(CACHE_EXPIRATION, Long.class), TimeUnit.MINUTES)
         .initialCapacity(PLACE_CACHE_INIT_SIZE)
@@ -96,13 +96,13 @@ public final class AssetCacheHelper {
         })
         .build(new CacheLoader<>() {
           @Override
-          public @NonNull PlacePathIndex load(@NonNull TrisotechPlace key) {
+          public @Nonnull PlacePathIndex load(@Nonnull TrisotechPlace key) {
             return reindexPlace(webClient, key, scopedPaths.get(key), cfg);
           }
 
           @Override
-          public @NonNull Map<@NonNull TrisotechPlace, @NonNull PlacePathIndex> loadAll(
-              @NonNull Iterable<? extends @NonNull TrisotechPlace> placeIds) {
+          public @Nonnull Map<TrisotechPlace, PlacePathIndex> loadAll(
+              @Nonnull Iterable<? extends TrisotechPlace> placeIds) {
             return reindexPlaces(placeIds, scopedPaths, webClient, cfg);
           }
         });
@@ -119,10 +119,11 @@ public final class AssetCacheHelper {
    * @see SemanticModelInfo
    * @see Document
    */
+  @Nonnull
   public static LoadingCache<SemanticModelInfo, Document> newModelCache(
-      @NonNull final TTDigitalEnterpriseServerClient webClient,
-      @NonNull final UnaryOperator<Document> preProcessor,
-      @NonNull final TTWEnvironmentConfiguration cfg) {
+      @Nonnull final TTDigitalEnterpriseServerClient webClient,
+      @Nonnull final UnaryOperator<Document> preProcessor,
+      @Nonnull final TTWEnvironmentConfiguration cfg) {
     return Caffeine.newBuilder()
         .expireAfterWrite(cfg.getTyped(CACHE_EXPIRATION, Long.class), TimeUnit.MINUTES)
         .initialCapacity(MODEL_CACHE_INIT_SIZE)
@@ -130,7 +131,7 @@ public final class AssetCacheHelper {
         .recordStats()
         .build(new CacheLoader<>() {
           @Override
-          public @Nullable Document load(@NonNull SemanticModelInfo key) {
+          public @Nullable Document load(@Nonnull SemanticModelInfo key) {
             return webClient.downloadXmlModel(key)
                 .map(preProcessor)
                 .orElse(null);
@@ -147,6 +148,7 @@ public final class AssetCacheHelper {
    * @param cfg         the Environment Configuration
    * @return A Place to Index Map, for the given Places to be (re)indexed
    */
+  @Nonnull
   public static Map<TrisotechPlace, PlacePathIndex> reindexPlaces(
       @Nonnull final Iterable<? extends TrisotechPlace> places,
       @Nonnull final Map<TrisotechPlace, Set<String>> scopedPaths,

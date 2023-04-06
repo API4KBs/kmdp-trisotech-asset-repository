@@ -30,6 +30,7 @@ public final class ServiceLibraryHelper {
    * @param cfg  the Environment configuration
    * @return a URL pointing to the Service's API UI, if the service is deployed
    */
+  @Nonnull
   public static Optional<URI> tryResolveOpenApiUI(
       @Nonnull final TrisotechExecutionArtifact exec,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
@@ -45,6 +46,7 @@ public final class ServiceLibraryHelper {
    * @param cfg  the Environment configuration
    * @return a URL pointing to the Service's OpenAPI spec, if the service is deployed
    */
+  @Nonnull
   public static Optional<URI> tryResolveOpenApiSpec(
       @Nonnull final TrisotechExecutionArtifact exec,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
@@ -61,6 +63,7 @@ public final class ServiceLibraryHelper {
    * @param cfg the Environment configuration
    * @return a (relative) path to where the execution artifact is exposed
    */
+  @Nonnull
   private static String getEndpointUrl(
       @Nonnull final TrisotechExecutionArtifact x,
       @Nonnull final TTWEnvironmentConfiguration cfg) {

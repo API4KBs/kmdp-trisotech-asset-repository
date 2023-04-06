@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 public class TrisotechArtifactRepository implements KnowledgeArtifactRepositoryApiInternal,
     KnowledgeArtifactSeriesApiInternal, KnowledgeArtifactApiInternal {
 
-  public static final String ALL_REPOS = "_";
+  public static final String ALL_REPOS = "default";
 
   @Autowired
   TTWEnvironmentConfiguration cfg;

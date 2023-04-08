@@ -148,6 +148,13 @@ public class TTWrapper implements TTAPIAdapter {
   }
 
   @Override
+  @Nonnull
+  public Stream<SemanticModelInfo> getMetadataByGreatestAssetId(
+      @Nonnull final UUID assetId) {
+    return cacheManager.getMetadataByGreatestAsset(assetId);
+  }
+
+  @Override
   public void invalidateAll() {
     cacheManager.invalidateCaches();
   }
@@ -417,8 +424,8 @@ public class TTWrapper implements TTAPIAdapter {
    *
    * @param info           the Model manifest
    * @param modelVersion   the target version
-   * @param defaultVersion a client-provided definition of the default version, used in the comparison of
-   *                       manifests of unpublished Models
+   * @param defaultVersion a client-provided definition of the default version, used in the
+   *                       comparison of manifests of unpublished Models
    * @return if the given modelVersion matches the version in the manifest, with or without the
    * Model timestamp
    */

@@ -267,6 +267,7 @@ public class TrisotechArtifactRepository implements KnowledgeArtifactRepositoryA
    * @return the Manifest of the model identified by artifactId, if it exists in the given
    * repository
    */
+  @Nonnull
   protected Optional<SemanticModelInfo> lookupArtifactInPlace(
       @Nonnull final String repositoryId,
       @Nonnull final UUID artifactId) {
@@ -281,6 +282,7 @@ public class TrisotechArtifactRepository implements KnowledgeArtifactRepositoryA
    * @param withVersion if true, points to the model version, else the artifact series
    * @return a Pointer referencing the Model
    */
+  @Nonnull
   protected Pointer toPointer(
       @Nonnull final SemanticModelInfo info,
       final boolean withVersion) {
@@ -304,6 +306,7 @@ public class TrisotechArtifactRepository implements KnowledgeArtifactRepositoryA
    * @param tp the Place descriptor
    * @return a KnowledgeArtifactRepository for the Place, as a repository
    */
+  @Nonnull
   protected KnowledgeArtifactRepository toRepositoryDescr(
       @Nonnull final TrisotechPlace tp) {
     var descr = new KnowledgeArtifactRepository()
@@ -315,6 +318,13 @@ public class TrisotechArtifactRepository implements KnowledgeArtifactRepositoryA
     return descr;
   }
 
+  /**
+   * Creates a KnowledgeArtifactRepository descriptor from a virtual repository that consists in the
+   * union of all other configured repositories
+   *
+   * @return a KnowledgeArtifactRepository for the global Repository
+   */
+  @Nonnull
   private KnowledgeArtifactRepository allPlacesDescr() {
     var descr = new KnowledgeArtifactRepository()
         .withId(SemanticIdentifier.newId(ALL_REPOS))

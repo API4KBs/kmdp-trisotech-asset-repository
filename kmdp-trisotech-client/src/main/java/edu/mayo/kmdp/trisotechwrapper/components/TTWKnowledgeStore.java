@@ -8,6 +8,8 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.UUID;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,11 +87,36 @@ public interface TTWKnowledgeStore {
    * returned.
    *
    * @param assetId the ID of an Asset Version
-   * @return the metadata manifest for all the Models asserted to carry that Asset, as a Stream
+   * @return the metadata manifest for all the Models which carry that Asset Version, as a Stream
    */
   @Nonnull
   Stream<SemanticModelInfo> getMetadataByAssetVersion(
       @Nonnull final KeyIdentifier assetId);
+
+  /**
+   * Retrieves the Manifests for the Models with a given Asset ID.
+   *
+   * @param assetId the ID of an Asset Series
+   * @return the metadata manifest for all the Models which carry that Asset, as a Map indexed by
+   * Asset version
+   */
+  @Nonnull
+  Map<KeyIdentifier, SortedSet<SemanticModelInfo>> getMetadataByAsset(
+      @Nonnull final UUID assetId);
+
+  /**
+   * Retrieves the Manifests for the Models with the GREATEST version a given Asset ID.
+   * <p>
+   * Assumes asset version tags to follow the SemVer/CalVer paradigm, sorts according to that, and
+   * returns the greatest
+   *
+   * @param assetId the ID of an Asset Series
+   * @return the metadata manifest for all the Models which carry the greatest version of a given
+   * Asset Series
+   */
+  @Nonnull
+  Stream<SemanticModelInfo> getMetadataByGreatestAsset(
+      @Nonnull final UUID assetId);
 
   /**
    * Retrieves the Manifest of the Services exposed by the Model with a given ID

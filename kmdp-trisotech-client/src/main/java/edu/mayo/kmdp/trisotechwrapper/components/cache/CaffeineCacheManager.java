@@ -12,10 +12,14 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.UUID;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,6 +144,32 @@ public class CaffeineCacheManager implements CachingTTWKnowledgeStore {
       @Nonnull KeyIdentifier assetId) {
     return forceAllPlaces().flatMap(ppi ->
         ppi.getAssetToManifestMappings().getOrDefault(assetId, emptySortedSet()).stream());
+  }
+
+  @Nonnull
+  @Override
+  public Map<KeyIdentifier, SortedSet<SemanticModelInfo>> getMetadataByAsset(
+      @Nonnull UUID assetId) {
+    return forceAllPlaces().flatMap(ppi ->
+        ppi.getAssetToManifestMappings().entrySet().stream())
+        .filter(e -> Objects.equals(e.getKey().getUuid(),assetId))
+        .collect(Collectors.toMap(
+            Entry::getKey,
+            Entry::getValue
+        ));
+  }
+
+  @Nonnull
+  @Override
+  public Stream<SemanticModelInfo> getMetadataByGreatestAsset(
+      @Nonnull UUID assetId) {
+    return forceAllPlaces().flatMap(ppi ->
+            ppi.getAssetToManifestMappings().keySet().stream())
+        .filter(key -> Objects.equals(key.getUuid(), assetId))
+        .sorted()
+        .findFirst()
+        .map(this::getMetadataByAssetVersion)
+        .orElseGet(Stream::empty);
   }
 
   @Nonnull

@@ -8,8 +8,10 @@ import edu.mayo.kmdp.trisotechwrapper.components.graph.TTGraphTerms;
 import edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
+import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -582,6 +584,18 @@ public class SemanticModelInfo extends TrisotechFileInfo {
     }
     // the path from the graph contains the file name
     return value.substring(0, value.lastIndexOf('/') + 1);
+  }
+
+  /**
+   * The DateTime the Model was last updated, as a {@link Date}
+   *
+   * @return the last update, parsed, or now() if unable to determine
+   */
+  @Nonnull
+  public Date lastUpdated() {
+    return Optional.ofNullable(getUpdated())
+        .map(DateTimeUtil::parseDateTime)
+        .orElseGet(Date::new);
   }
 
   /**

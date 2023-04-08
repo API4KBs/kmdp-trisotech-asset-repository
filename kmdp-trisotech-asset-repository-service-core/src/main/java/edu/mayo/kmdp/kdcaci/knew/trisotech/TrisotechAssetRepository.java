@@ -13,30 +13,28 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechArtifactRepository.ALL_REPOS;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DocumentHelper.extractAssetIdFromDocument;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper.negotiateHTML;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDeclaredAssetTypes;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultAssetType;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getRepLanguage;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DocumentHelper.extractAssetIdFromDocument;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.matchesVersion;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getXmlMimeTypeByAssetType;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.ASSET_ID_ATTRIBUTE;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.DEFAULT_VERSION_TAG;
-import static edu.mayo.kmdp.util.PropertiesUtil.serializeProps;
+import static edu.mayo.kmdp.util.Util.isEmpty;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofMixedAnonymousComposite;
 import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformAnonymousComposite;
 import static org.omg.spec.api4kp._20200801.Answer.failed;
-import static org.omg.spec.api4kp._20200801.Answer.notFound;
 import static org.omg.spec.api4kp._20200801.Answer.succeed;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newKey;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.timedSemverComparator;
-import static org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder.decodeAll;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Calculation_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
@@ -51,18 +49,17 @@ import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Computable_Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Formal_Ontology;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Lexicon;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Naturalistic_Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Protocol;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.ReSTful_Service_Specification;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Semantic_Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotFoundException;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.exception.NotLatestAssetVersionException;
-import edu.mayo.kmdp.language.translators.surrogate.v2.SurrogateV2toHTMLTranslator;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
@@ -73,21 +70,23 @@ import edu.mayo.kmdp.util.XMLUtil;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetCatalogApiInternal;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetRepositoryApiInternal;
-import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.TransxionApiInternal._applyTransrepresent;
 import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
 import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
@@ -104,6 +103,7 @@ import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
 import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,16 +111,22 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
 /**
- * A 'wrapper' class. This class implements the Knowledge Asset API and wraps that API around the
- * Trisotech API to return Trisotech data in a Knowledge Asset compatible way.
+ * This class implements the Knowledge Asset API and wraps that API around the Trisotech API to
+ * return Trisotech data in a Knowledge Asset compatible way.
  */
 @Component
 @KPServer
 public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInternal,
     KnowledgeAssetRepositoryApiInternal {
 
+  /**
+   * Logger
+   */
   private static final Logger logger = LoggerFactory.getLogger(TrisotechAssetRepository.class);
 
+  /**
+   * List of supported {@link KnowledgeAssetType}
+   */
   private static final List<KnowledgeAssetType> SUPPORTED_ASSET_TYPES = List.of(
       Naturalistic_Decision_Model,
       Computable_Decision_Model,
@@ -141,32 +147,62 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       Clinical_Inference_Rule,
       Clinical_Rule,
 
+      Lexicon,
+      Formal_Ontology,
+
       ReSTful_Service_Specification,
 
       Protocol
   );
 
+  /**
+   * The DES API facade used to interact with the DES server
+   */
   @Autowired
   private TTAPIAdapter client;
 
+  /**
+   * The Introspector used to generate {@link KnowledgeAsset} surrogates from the analysis of the
+   * BPM+ models artifacts in the DES server
+   */
   @Autowired
   private MetadataIntrospector extractor;
 
+  /**
+   * The {@link KARSHrefBuilder} used to map URIs to URLs relative to this server's deployment
+   */
+  @Nullable
   @Autowired(required = false)
   private KARSHrefBuilder hrefBuilder;
 
-  private final _applyTransrepresent htmlTranslator = new SurrogateV2toHTMLTranslator();
+  /**
+   * The helper used in content negotiation
+   */
+  @Autowired
+  private TTContentNegotiationHelper negotiator;
 
+  /**
+   * The environment configuration
+   */
   @Autowired(required = false)
   private TTWEnvironmentConfiguration configuration;
 
+  /**
+   * The namespace manager used to rewrite the Trisotech native URIs into platform URIs
+   */
   @Autowired
   private NamespaceManager names;
 
+  /**
+   * Empty Constructor
+   */
   public TrisotechAssetRepository() {
     //
   }
 
+  /**
+   * Setup.
+   */
   @PostConstruct
   void init() {
     if (configuration == null) {
@@ -178,6 +214,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     names = new DefaultNamespaceManager(configuration);
   }
 
+  /**
+   * @return A {@link KnowledgeAssetCatalog} that serves as a manifest of this server's capabilities
+   */
   @Override
   public Answer<KnowledgeAssetCatalog> getKnowledgeAssetCatalog() {
     return Answer.of(new KnowledgeAssetCatalog()
@@ -187,216 +226,122 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .withSupportedAssetTypes(SUPPORTED_ASSET_TYPES));
   }
 
-
   /**
-   * Of all the versions in the series, several criteria concur to determine the LATEST, including
-   * the time at which a version was created, the (partial) ordering of the version tags, and the
-   * association of that version of the Asset with an Artifact in a "published" state
+   * Lists all the KnowledgeAssets, collectively carried by the Models/Artfacts in the DES server
+   * <p>
+   * Can filter by asset type. Sorts by date. May paginate (best effort)
    *
-   * @param assetId The *Knowledge Asset* UUID There should be exactly one Artifact (Model)
-   *                annotated with this UUID
-   * @param xAccept content negotiation parameter that controls the manifestation of the returned
-   *                surrogate (not supported)
-   * @return The asset surrogate for a given Asset ID
-   */
-  @Override
-  public Answer<KnowledgeAsset> getKnowledgeAsset(UUID assetId, String xAccept) {
-    // need the modelId of the model in order to query for modelInfo
-    if (negotiateHTML(xAccept)) {
-      return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
-    }
-
-    var models = client.getMetadataByAssetId(assetId, xAccept).collect(toList());
-
-    if (models.isEmpty()) {
-      return Answer.ofTry(Optional.empty(), newId(assetId),
-          () -> "No Asset found for the given ID");
-    }
-    // get the modelInfo for the latest artifactVersion
-    return Answer.ofTry(getKnowledgeAssetForModels(assetId, models));
-  }
-
-
-  @Override
-  public Answer<KnowledgeAsset> getKnowledgeAssetVersion(UUID assetId,
-      String versionTag, String xAccept) {
-    // For assetId, find artifactId; For assetId/versionTag, is latest artifactId/version a match?
-    // if not, get versions of artifactId and weave each one to get assetId/version
-    if (negotiateHTML(xAccept)) {
-      return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
-    }
-
-    try {
-      var carrierInfo = client.getMetadataByAssetId(assetId, versionTag).collect(toList());
-
-      return Answer.ofTry(getKnowledgeAssetForModels(assetId, carrierInfo));
-    } catch (NotLatestAssetVersionException e) {
-      // this can happen, but is not good practice to have different versions
-      // of an asset on the same model - mostly because it's very inefficient
-      logger.debug(e.getMessage());
-      // check other versions of the model
-      try {
-        return Answer.of(findArtifactVersionForAsset(e.getModelUri(), assetId, versionTag));
-      } catch (NotFoundException nfe) {
-        return Answer.failed(nfe);
-      }
-    } catch (NotFoundException nfe) {
-      return Answer.failed(nfe);
-    }
-  }
-
-  /**
-   * When asset version cannot be found on current artifact, need to search all versions of the
-   * artifacts.
-   *
-   * @param internalId the internal trisotech URL for the model
-   * @param assetId    the assetId looking for
-   * @param versionTag the version of the asset looking for
-   * @return The KnowledgeAsset for the version found
-   */
-  private KnowledgeAsset findArtifactVersionForAsset(String internalId, UUID assetId,
-      String versionTag) throws NotFoundException {
-    var currentInfo = client.getMetadataByModelId(internalId).orElseThrow();
-    List<TrisotechFileInfo> modelVersions =
-        client.getVersionsMetadataByModelId(internalId);
-
-    // reverse the list so the most recent version that matches is selected
-    // there can be multiple versions of the artifact that map to one version of asset
-    Collections.reverse(modelVersions);
-    for (TrisotechFileInfo modelVersionInfo : modelVersions) {
-      // skip any that are not published
-      if (null == modelVersionInfo.getVersion() && null == modelVersionInfo.getState()) {
-        continue;
-      }
-
-      var versionInfo = new SemanticModelInfo(modelVersionInfo, currentInfo);
-      Optional<KnowledgeAsset> surr =
-          client.getModel(modelVersionInfo)
-              .flatMap(dox ->
-                  extractAssetIdFromDocument(dox, configuration.getTyped(ASSET_ID_ATTRIBUTE))
-                      .filter(axId -> versionTag.equals(axId.getVersionTag())
-                          && assetId.equals(axId.getUuid()))
-                      .flatMap(
-                          axId -> getKnowledgeAssetForModels(
-                              assetId, Map.of(versionInfo, Optional.of(dox))))
-              );
-
-      if (surr.isPresent()) {
-        return surr.get();
-      }
-    }
-    // have gone through all versions of the artifact and not found...
-    throw new NotFoundException("Artifact not found", "No model is associated to asset version",
-        newId(assetId, versionTag).getVersionId());
-  }
-
-  /**
-   * list of the all published assets. If assetTypeTag is available will return all published assets
-   * of that type.
-   *
-   * @param assetTypeTag           : the type of asset to retrieve; if null, will get ALL types;
-   * @param assetAnnotationTag     ignore
-   * @param assetAnnotationConcept ignore
-   * @param offset                 ignore -- needed if we have pagination
+   * @param assetTypeTag           the type of asset to retrieve; if null, will get ALL types;
+   * @param assetAnnotationTag     ignored
+   * @param assetAnnotationConcept ignored
+   * @param offset                 pagination, will skip
    * @param limit                  ignore -- needed if we have pagination
    * @return Pointers to available Assets
    */
   @Override
-  public Answer<List<Pointer>> listKnowledgeAssets(String assetTypeTag, String assetAnnotationTag,
-      String assetAnnotationConcept, Integer offset, Integer limit) {
-    var trisotechFileInfoList
-        = client.listModels(getXmlMimeTypeByAssetType(assetTypeTag));
-
-    var stream = trisotechFileInfoList
-        .skip((null == offset) ? 0 : offset)
-        .limit((null == limit || limit < 0) ? Integer.MAX_VALUE : limit)
-        .flatMap(this::getAssetPointersForModel)
-        .filter(ptr -> matchesType(ptr, assetTypeTag));
-
-    return Answer.of(aggregateVersions(stream));
-  }
-
-  private boolean matchesType(Pointer ptr, String assetTypeTag) {
-    if (assetTypeTag == null) {
-      return true;
-    }
-    var filterType = KnowledgeAssetTypeSeries.resolveTag(assetTypeTag)
-        .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveTag(assetTypeTag));
-    return filterType.isPresent() &&
-        filterType.get().getReferentId().equals(ptr.getType());
-  }
-
-  /**
-   * Retrieves Pointers to all Assets declared by a given Model
-   * <p>
-   * In general, a Model carries one Knowledge Asset, and referencs 0 to many Service Assets
-   *
-   * @param info the Model manifest
-   * @return the Asset Pointers, in a Stream
-   */
-  private Stream<Pointer> getAssetPointersForModel(SemanticModelInfo info) {
-    // getId from fileInfo is the fileID
+  public Answer<List<Pointer>> listKnowledgeAssets(
+      @Nullable final String assetTypeTag,
+      @Nullable final String assetAnnotationTag,
+      @Nullable final String assetAnnotationConcept,
+      @Nullable final Integer offset,
+      @Nullable final Integer limit) {
     try {
-      var assetId = names.modelToAssetId(info);
-      return assetId.map(aid ->
-              Stream.concat(toAssetPointer(aid, info), toServicePointer(info)))
-          .orElseGet(Stream::empty);
-    } catch (IllegalStateException ise) {
-      logger.error(ise.getMessage(), ise);
-      return Stream.empty();
+      var filterType = decodeTypeFilter(assetTypeTag);
+
+      var manifests
+          // get all models
+          = client.listModels(getXmlMimeTypeByAssetType(assetTypeTag))
+          // sort by date
+          .sorted(Comparator.comparing(SemanticModelInfo::lastUpdated))
+          // map models to assets, reduce
+          .flatMap(this::getAssetPointersForModel)
+          // filter by type
+          .filter(ptr -> filterType == null || Objects.equals(ptr.getType(), filterType))
+          // paginate, if requested
+          .skip((null == offset) ? 0 : offset)
+          .limit((null == limit || limit < 0) ? Integer.MAX_VALUE : limit);
+
+      return Answer.of(aggregateVersions(manifests));
+    } catch (Exception e) {
+      return Answer.failed(e);
     }
   }
 
-  private Stream<Pointer> toServicePointer(SemanticModelInfo info) {
-    return info.getExposedServices().stream()
-        .map(sid -> {
-              var id = names.assetKeyToId(sid);
-              return id.toPointer()
-                  .withType(getRepresentativeType(id, () -> ReSTful_Service_Specification))
-                  .withName(info.getName() + "API TODO")
-                  .withHref(hrefBuilder.getHref(id, HrefType.ASSET_VERSION));
-            }
-        );
-  }
-
-  private Stream<Pointer> toAssetPointer(ResourceIdentifier aid, SemanticModelInfo info) {
-    return Stream.of(aid.toPointer()
-        .withType(getRepresentativeType(aid,
-            () -> getDefaultAssetType(info.getMimetype())))
-        .withName(info.getName())
-        .withHref(hrefBuilder.getHref(aid, HrefType.ASSET_VERSION)));
-  }
 
   /**
-   * Chooses one Asset Type to use in an asset Pointer, even when the asset has multiple types, or
-   * no types at all.
+   * Returns the Surrogate for the GREATEST version of a given Knowledge Asset
    * <p>
-   * Selects one of the types, based on the ranked preference of {@link #SUPPORTED_ASSET_TYPES}
    *
-   * @param id          the asset Id (pointer)
-   * @param defaultType the type to be used if the asset does not declare a type explicitly
-   * @return the ontology URI of the chosen asset type
+   * @param assetId The *Knowledge Asset* UUID
+   * @param xAccept content negotiation parameter that controls the manifestation of the returned
+   *                surrogate. Supports HTML as a main variant for browser compatibility
+   * @return The asset surrogate for the greatest version of the given Asset ID
    */
-  private URI getRepresentativeType(ResourceIdentifier id,
-      Supplier<KnowledgeAssetType> defaultType) {
-    var types = client.getMetadataByAssetId(id.getUuid(), id.getVersionTag())
-        .flatMap(info -> getDeclaredAssetTypes(info, defaultType).stream())
-        .distinct()
-        .collect(toList());
+  @Override
+  public Answer<KnowledgeAsset> getKnowledgeAsset(
+      @Nonnull final UUID assetId,
+      @Nullable final String xAccept) {
+    try {
+      // need the modelId of the model in order to query for modelInfo
+      if (negotiateHTML(xAccept) && hrefBuilder != null) {
+        return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
+      }
 
-    if (types.size() == 1) {
-      return types.get(0).getReferentId();
+      // get all Models (manifests) that carry the same Asset
+      var models = client.getMetadataByGreatestAssetId(assetId)
+          .collect(toList());
+
+      if (models.isEmpty()) {
+        return Answer.ofTry(Optional.empty(), newId(assetId),
+            () -> "No Asset found for the given ID");
+      }
+      // get the Asset Surrogate, given the Carriers to introspect
+      return Answer.ofTry(getSurrogateFromManifests(assetId, models));
+    } catch (Exception e) {
+      return Answer.failed(e);
     }
-    // there should always be at least one type
-    var preferred = SUPPORTED_ASSET_TYPES.stream()
-        .filter(type -> type.isAnyOf(types))
-        .findFirst()
-        .orElseThrow(() ->
-            new IllegalStateException("Unsupported asset type(s) detected " + types));
-    return preferred.getReferentId();
   }
 
 
+  /**
+   * Returns the Surrogate for the given version of a given Knowledge Asset
+   * <p>
+   * Note that an Asset Version is indexed and cached only if it is still carried by the latest
+   * version of at least one Model. If not, this service will try to locate that version in the
+   * previous version of the associated Models, at a non-trivial computational cost that grows
+   * linearly with the length of the history of the Models.
+   *
+   * @param assetId    The *Knowledge Asset* UUID
+   * @param versionTag the version tag of the Knowledge Asset
+   * @param xAccept    content negotiation parameter that controls the manifestation of the returned
+   *                   surrogate. Supports HTML as a main variant for browser compatibility
+   * @return The asset surrogate for a given Asset ID
+   */
+  @Override
+  public Answer<KnowledgeAsset> getKnowledgeAssetVersion(
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nullable final String xAccept) {
+    try {
+      if (negotiateHTML(xAccept) && hrefBuilder != null) {
+        return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
+      }
+
+      var carrierInfo = client.getMetadataByAssetId(assetId, versionTag)
+          .collect(toList());
+      return Answer.ofTry(getSurrogateFromManifests(assetId, carrierInfo));
+    } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
+
+  /**
+   * Drops all the internal caches, and refreshes the Place/Path Index cache
+   *
+   * @return Success, unless Exception
+   * @see TTAPIAdapter#rescan()
+   */
   @Override
   public Answer<Void> clearKnowledgeAssetCatalog() {
     try {
@@ -407,9 +352,352 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     }
   }
 
-  private <T extends SemanticIdentifier> List<T> aggregateVersions(Stream<T> versionIdentifiers) {
-    return versionIdentifiers
-        .collect(groupingBy(SemanticIdentifier::getUuid))
+
+  /**
+   * Retrieves the Artifact with the canonical representation of a given Asset version
+   *
+   * @param assetId    assetId of the asset
+   * @param versionTag version of the asset
+   * @param extAccept  'accept' MIME type
+   * @return the canonical Artifact, at the binary level, wrapped in a {@link KnowledgeCarrier}
+   */
+  @Override
+  public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalCarrier(
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nullable final String extAccept) {
+    try {
+      var manifest = getLatestAndGreatestAssetManifest(assetId, versionTag);
+      var carrier = manifest.flatMap(info ->
+          buildCarrierFromManifest(assetId, versionTag, info));
+      return Answer.ofTry(carrier);
+    } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
+  /**
+   * Retrieves the Artifact with the canonical representation of a given Asset version, raw
+   * <p>
+   * Note: the behavior of this method is consistent with #getKnowledgeAssetVersionCanonicalCarrier
+   *
+   * @param assetId    assetId of the asset
+   * @param versionTag version of the asset
+   * @param xAccept    'accept' MIME type
+   * @return the canonical Artifact, at the binary level, wrapped in a {@link KnowledgeCarrier}
+   */
+  @Override
+  public Answer<byte[]> getKnowledgeAssetVersionCanonicalCarrierContent(
+      UUID assetId, String versionTag, String xAccept) {
+    try {
+      return getKnowledgeAssetVersionCanonicalCarrier(assetId, versionTag, xAccept)
+          .flatOpt(KnowledgeCarrier::asBinary);
+    } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
+  /**
+   * Retrieves (a copy of) a specific version of an Artifact/Model, as the carrier of a given
+   * version of a Knowledge Asset.
+   * <p>
+   * This method enforces the Asset/Carrier relationship. To retrieve a Model directly, clients
+   * should use the Knowledge Artifact Repository API.
+   * <p>
+   * Background: In TT, only the latest version of a model is indexed, and there is no guarantee
+   * that the latest model matches the requested artifact version, and/or still carries the
+   * requested version of the Asset. TT not being a long term repoository, this method makes a best
+   * effort attempt to honor the request, looking up the requested artifact version (if still
+   * existing), and returning content only if that version carries the desired asset version.
+   *
+   * @param assetId            the Asset ID
+   * @param versionTag         the Asset version
+   * @param artifactId         the Artifact ID
+   * @param artifactVersionTag the Artifact version
+   * @see TrisotechArtifactRepository#getKnowledgeArtifactVersion(String, UUID, String, Boolean)
+   */
+  @Override
+  public Answer<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nonnull final UUID artifactId,
+      @Nonnull final String artifactVersionTag,
+      @Nullable final String xAccept) {
+    try {
+      Optional<SemanticModelInfo> manifest = getCarrierInfo(assetId, versionTag, artifactId);
+      if (manifest.isPresent()) {
+        // The asset version is indexed: it is still 'current' in at least one latest artifact ...
+        var info = manifest.get();
+        if (matchesVersion(info, artifactVersionTag,
+            () -> configuration.getTyped(DEFAULT_VERSION_TAG))) {
+          // ... if that artfifact has the requested version, return the data
+          return Answer.ofTry(getCarrier(assetId, versionTag, artifactId));
+        }
+      }
+      // ... at this point, the asset version is not in a 'latest' model.
+      // Need to retrieve the historical version of the artifact,
+      // and see if contains the asset version
+      return getKnowledgeCarrierFromOtherVersion(
+          assetId, versionTag, artifactId, artifactVersionTag);
+    } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
+  /**
+   * Retrieves the canonical Surrogate for the greatest version of an Asset, in a KnowledgeCarrier
+   * <p>
+   * Supports minimal content negotiation between the default format, and its basic HTML
+   * counterpart
+   *
+   * @param assetId the Asset ID
+   * @param xAccept the generalized mime type
+   * @return the {@link KnowledgeAsset} Surrogate, in a {@link KnowledgeCarrier}
+   */
+  @Override
+  public Answer<KnowledgeCarrier> getKnowledgeAssetCanonicalSurrogate(
+      @Nonnull final UUID assetId,
+      @Nullable String xAccept) {
+    try {
+      var surr = getKnowledgeAsset(assetId, null)
+          .map(SurrogateHelper::carry);
+      return negotiateHTML(xAccept)
+          ? surr.flatMap(negotiator::toHtml)
+          : surr;
+    } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
+  /**
+   * Retrieves the canonical Surrogate for the given version of an Asset, in a KnowledgeCarrier
+   * <p>
+   * Supports minimal content negotiation between the default format, and its basic HTML
+   * counterpart
+   *
+   * @param assetId    the Asset ID
+   * @param versionTag the Asset version
+   * @param xAccept    the generalized mime type
+   * @return the {@link KnowledgeAsset} Surrogate, in a {@link KnowledgeCarrier}
+   */
+  @Override
+  public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalSurrogate(
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nullable final String xAccept) {
+    try {
+      var surr = getKnowledgeAssetVersion(assetId, versionTag, null)
+          .map(SurrogateHelper::carry);
+      return negotiateHTML(xAccept)
+          ? surr.flatMap(negotiator::toHtml)
+          : surr;
+    } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
+
+  /**
+   * Gathers a Composite Knowledge Artifact from (the Carrier of) a 'root' Knowledge Asset.
+   * <p>
+   * Traverses the Asset/Asset dependency relations, interprets their closure as the components of
+   * an anonymous composite, resolves each component Asset as a carrier Artifact, and returns the
+   * package thereof
+   *
+   * @param assetId    the Asset ID of the root Asset
+   * @param versionTag the version Tag of the root Asset
+   * @param xAccept    content negotiation header, to drive Artifact form preferences
+   * @return a Composite Artifact that manifests the implicit Composite rooted in the given Asset
+   */
+  @Override
+  public Answer<CompositeKnowledgeCarrier> getAnonymousCompositeKnowledgeAssetCarrier(
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nullable final String xAccept) {
+    try {
+      var rootId = newId(assetId, versionTag);
+      Set<KeyIdentifier> closure = getAssetClosure(rootId)
+          .collect(Collectors.toSet());
+
+      Answer<Set<KnowledgeCarrier>> componentArtifacts = closure.stream()
+          .map(comp -> getKnowledgeAssetVersionCanonicalCarrier(comp.getUuid(),
+              comp.getVersionTag(),
+              xAccept))
+          .collect(Answer.toSet());
+
+      return componentArtifacts
+          .map(comps -> ofMixedAnonymousComposite(rootId, comps));
+    } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
+  /**
+   * Gathers a Composite Knowledge Surrogate from (the Surrogates of) a 'root' Knowledge Asset.
+   * <p>
+   * Traverses the Asset/Asset dependency relations, interprets their closure as the components of
+   * an anonymous composite, resolves each component Asset its canonical Surrogate, and returns the
+   * package thereof
+   *
+   * @param assetId    the Asset ID of the root Asset
+   * @param versionTag the version Tag of the root Asset
+   * @param xAccept    content negotiation header, to drive Surrogate form preferences
+   * @return a Composite Surrogate that manifests the implicit Composite rooted in the given Asset
+   */
+  @Override
+  public Answer<CompositeKnowledgeCarrier> getAnonymousCompositeKnowledgeAssetSurrogate(
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nullable final String xAccept) {
+    try {
+      var rootId = newId(assetId, versionTag);
+      Set<KeyIdentifier> closure = getAssetClosure(rootId)
+          .collect(Collectors.toSet());
+
+      Answer<Set<KnowledgeCarrier>> componentSurrogates = closure.stream()
+          .map(comp -> getKnowledgeAssetVersion(comp.getUuid(),
+              comp.getVersionTag(),
+              xAccept)
+              .map(SurrogateHelper::carry))
+          .collect(Answer.toSet());
+
+      return componentSurrogates
+          .map(comps -> ofUniformAnonymousComposite(rootId, comps));
+    } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
+  /* ----------------------------------------------------------------------------------------- */
+
+
+  /**
+   * Decodes an assetTypeTag, used to filter Assets by formal type
+   * <p>
+   * The method recognizes types from the {@link KnowledgeAssetType} taxonomy, including formal and
+   * clinical types. Maps the Concept to the referent URI in the (C)KAO ontology
+   *
+   * @param assetTypeTag the filter tag, if any
+   * @return the URI of the type, as defined in the API4KP (C)KAO ontology, if any
+   */
+  @Nullable
+  private URI decodeTypeFilter(
+      @Nullable final String assetTypeTag) {
+    if (isEmpty(assetTypeTag)) {
+      return null;
+    }
+    return KnowledgeAssetTypeSeries.resolveTag(assetTypeTag)
+        .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveTag(assetTypeTag))
+        .map(ConceptTerm::getReferentId)
+        .orElse(null);
+  }
+
+
+  /**
+   * Retrieves Pointers to all Assets declared by a given Model
+   * <p>
+   * In general, a Model carries one Knowledge Asset, and references 0 to many Service Assets
+   *
+   * @param info the Model manifest
+   * @return the Asset Pointers, in a Stream
+   */
+  @Nonnull
+  private Stream<Pointer> getAssetPointersForModel(
+      @Nonnull final SemanticModelInfo info) {
+    return Stream.concat(toAssetPointer(info), toServicePointer(info));
+
+  }
+
+  /**
+   * Creates Pointers to the Service Assets exposed by a given Model
+   *
+   * @param info the Model manifest
+   * @return the Service Asset Pointers, in a Stream
+   */
+  @Nonnull
+  private Stream<Pointer> toServicePointer(
+      @Nonnull final SemanticModelInfo info) {
+    return info.getExposedServices().stream()
+        .map(key -> names.assetKeyToId(key))
+        .map(id -> id.toPointer()
+            .withType(getRepresentativeType(id, () -> ReSTful_Service_Specification))
+            .withName(info.getName())
+            .withHref(tryAddHref(id))
+        );
+  }
+
+  /**
+   * Creates Pointer to the Knowledge Asset exposed by a given Model
+   * <p>
+   * Note: a Model is currently assumed to carry up to one Asset
+   *
+   * @param info the Model manifest
+   * @return the Knowledge Asset Pointers, in a Stream
+   */
+  @Nonnull
+  private Stream<Pointer> toAssetPointer(
+      @Nonnull final SemanticModelInfo info) {
+    return names.modelToAssetId(info).stream()
+        .map(assetId -> assetId.toPointer()
+            .withType(
+                getRepresentativeType(
+                    assetId,
+                    () -> getDefaultAssetType(info.getMimetype())))
+            .withName(info.getName())
+            .withHref(tryAddHref(assetId))
+        );
+  }
+
+  /**
+   * Maps an Asset ID to an API URL for that Asset Version's Surrogate, if the Server is deployed
+   *
+   * @param assetId the Asset ID
+   * @return the URL for that Asset Version Surrogate, as a URI, if able
+   */
+  @Nullable
+  private URI tryAddHref(
+      @Nonnull ResourceIdentifier assetId) {
+    return hrefBuilder != null
+        ? hrefBuilder.getHref(assetId, HrefType.ASSET_VERSION)
+        : null;
+  }
+
+  /**
+   * Chooses one Asset Type to use in an asset Pointer, even when the asset has multiple types, or
+   * no types at all.
+   * <p>
+   * Selects one of the types, based on the ranked preference of {@link #SUPPORTED_ASSET_TYPES}
+   *
+   * @param assetId     the asset ID (pointer)
+   * @param defaultType the type to be used if the asset does not declare a type explicitly
+   * @return the ontology URI of the chosen asset type
+   */
+  @Nullable
+  private URI getRepresentativeType(
+      @Nonnull final ResourceIdentifier assetId,
+      @Nonnull final Supplier<KnowledgeAssetType> defaultType) {
+    return client.getMetadataByAssetId(assetId.getUuid(), assetId.getVersionTag())
+        .flatMap(info -> getDeclaredAssetTypes(info, defaultType).stream())
+        .distinct()
+        .filter(type -> type.isAnyOf(SUPPORTED_ASSET_TYPES))
+        .min(Comparator.comparingInt(SUPPORTED_ASSET_TYPES::indexOf))
+        .map(ConceptTerm::getReferentId)
+        .orElseGet(() -> {
+          logger.error("No supported asset type(s) detected for Asset {}", assetId.asKey());
+          return null;
+        });
+  }
+
+  /**
+   * Reduces a Stream of Pointers, grouping by Series UUID, then reducing to the LATEST and GREATEST
+   * version of each Series
+   *
+   * @param versionedPtrs the versioned Pointers
+   * @return a Reduced List for the input Stream
+   */
+  protected List<Pointer> aggregateVersions(Stream<Pointer> versionedPtrs) {
+    return versionedPtrs
+        .collect(groupingBy(SemanticIdentifier::asKey))
         .values().stream()
         .map(l -> {
           l.sort(timedSemverComparator());
@@ -417,234 +705,127 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         }).collect(toList());
   }
 
-  /**
-   * corresponds to this uri:  /cat/assets/{assetId}/versions/{versionTag}/carrier KnowledgeCarrier:
-   * A Resource that wraps a Serialized, Encoded Knowledge Artifact
-   *
-   * @param assetId    assetId of the asset
-   * @param versionTag version of the asset
-   * @param extAccept  'accept' MIME type
-   */
-  @Override
-  public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalCarrier(UUID assetId,
-      String versionTag, String extAccept) {
-    try {
-      return Answer.ofTry(getLatestAndGreatestCarrier(assetId, versionTag));
-    } catch (NotLatestAssetVersionException e) {
-      return getKnowledgeCarrierFromOtherVersion(assetId, versionTag, e.getModelUri(), null);
-    } catch (NotFoundException e) {
-      return Answer.failed(e);
-    }
-  }
+  /* ----------------------------------------------------------------------------------------- */
+
 
   /**
-   * Returns the raw BPM+ Model Artifact for the given Asset Id/Version
-   *
-   * @param assetId    the asset ID
-   * @param versionTag the version tag
-   * @param xAccept    content negotiation (not used)
-   * @return the binary artifact
-   */
-  @Override
-  public Answer<byte[]> getKnowledgeAssetVersionCanonicalCarrierContent(
-      UUID assetId, String versionTag, String xAccept) {
-    return getKnowledgeAssetVersionCanonicalCarrier(assetId, versionTag, xAccept)
-        .flatOpt(KnowledgeCarrier::asBinary);
-  }
-
-  /**
-   * Retrieves (a copy of) a specific version of an Artifact. That Artifact must be known to the
-   * client to carry at least one expression, in some language, of the given Knowledge Asset.
-   * corresponds to this uri:
-   * /cat/assets/{assetId}/versions/{versionTag}/carriers/{artifactId}/versions/{artifactVersionTag}
-   * only return if the assetId/version is associated with the artifactid/version provided
-   *
-   * @param assetId            enterprise asset ID
-   * @param versionTag         version for the asset
-   * @param artifactId         artifact ID
-   * @param artifactVersionTag version for the artifact
-   */
-  @Override
-  public Answer<KnowledgeCarrier> getKnowledgeAssetCarrierVersion(UUID assetId,
-      String versionTag, UUID artifactId, String artifactVersionTag, String xAccept) {
-
-    try {
-      Optional<SemanticModelInfo> manifest = getCarrierInfo(assetId, versionTag, artifactId);
-      if (manifest.isPresent()) {
-        var info = manifest.get();
-        if (matchesVersion(info, artifactVersionTag,
-            () -> configuration.getTyped(DEFAULT_VERSION_TAG))) {
-          return Answer.ofTry(getCarrier(assetId, versionTag, artifactId));
-        } else {
-          // artifactId matched, but not version; get other versions to see if one of them matches
-          return getKnowledgeCarrierFromOtherVersion(
-              assetId, versionTag, info.getId(), artifactVersionTag);
-        }
-      }
-    } catch (NotLatestAssetVersionException e) {
-      // something failed to be in the latest version of the artifact, so check all other artifact versions
-      // need to confirm the internalId returned in the exception message matches the artifactId requested
-      if (e.getModelUri().contains(artifactId.toString())) {
-        return getKnowledgeCarrierFromOtherVersion(
-            assetId, versionTag, e.getModelUri(), artifactVersionTag);
-      } else {
-        return notFound();
-      }
-    } catch (NotFoundException nfe) {
-      return Answer.failed(nfe);
-    }
-    return notFound();
-  }
-
-  /**
-   * Retrieves the canonical surrogate for the latest version of an asset, wrapped in a
-   * KnowledgeCarrier
+   * This method is invoked when the latest Artifact that carries an Asset, at a different version
+   * than what the client requested. Assuming that the same Artifact used to carry the requested
+   * Asset version at some point in its history, scans the previous versions of that Artifact
+   * looking for that version.
    * <p>
-   * Supports minimal content negotiation between the default format, and the basic HTML
-   * transrepresentation
+   * Note that this method is expensive: previous Model versions are not indexed for Asset Ids (or
+   * anything else), which requires to process the actual Models.
    *
-   * @param assetId the Asset Id
-   * @param xAccept the generalized mime type
-   * @return the Surrogate, in a KnowledgeCarrier
+   * @param modelUri        the internal trisotech URL for the model that carries a newer version of
+   *                        the Asset
+   * @param assetId         the assetId looking for
+   * @param assetVersionTag the version of the asset looking for
+   * @return The KnowledgeAsset for the version, if any
    */
-  @Override
-  public Answer<KnowledgeCarrier> getKnowledgeAssetCanonicalSurrogate(UUID assetId,
-      String xAccept) {
-    var surr = getKnowledgeAsset(assetId, null)
-        .map(SurrogateHelper::carry);
-    return negotiateHTML(xAccept)
-        ? surr.flatMap(this::toHtml)
-        : surr;
+  @Nonnull
+  private Optional<KnowledgeAsset> findArtifactVersionForAsset(
+      @Nonnull final String modelUri,
+      @Nonnull final UUID assetId,
+      @Nonnull final String assetVersionTag) {
+    var currentInfo = client.getMetadataByModelId(modelUri);
+    if (currentInfo.isEmpty()) {
+      return Optional.empty();
+    }
+
+    var modelVersions =
+        client.getVersionsMetadataByModelId(modelUri);
+    Collections.reverse(modelVersions);
+
+    for (var modelVersionInfo : modelVersions) {
+      var versionInfo = new SemanticModelInfo(modelVersionInfo, currentInfo.get());
+      Optional<KnowledgeAsset> surr =
+          client.getModel(modelVersionInfo)
+              .flatMap(dox ->
+                  extractAssetIdFromDocument(dox, configuration.getTyped(ASSET_ID_ATTRIBUTE))
+                      .filter(axId -> assetVersionTag.equals(axId.getVersionTag())
+                          && assetId.equals(axId.getUuid()))
+                      .flatMap(
+                          axId -> getSurrogateFromCarriers(
+                              assetId, Map.of(versionInfo, Optional.of(dox))))
+              );
+      if (surr.isPresent()) {
+        return surr;
+      }
+    }
+    if (logger.isWarnEnabled()) {
+      logger.warn("No model is associated to asset version {}",
+          newId(assetId, assetVersionTag).getVersionId());
+    }
+    return Optional.empty();
   }
 
+
   /**
-   * Retrieves the canonical surrogate for the given version of an asset, wrapped in a
-   * KnowledgeCarrier
+   * Looks up an Asset Version in a Model Version, when the Model Version is not a "latest", and
+   * thus not indexed. Finds the Artifact versions that share the given version tag, and looks for
+   * the Asset ID in the actual XML Model.
    * <p>
-   * Supports minimal content negotiation between the default format, and the basic HTML
-   * transrepresentation
-   *
-   * @param assetId    the Asset Id
-   * @param versionTag the Asset version tag
-   * @param xAccept    the generalized mime type
-   * @return the Surrogate, in a KnowledgeCarrier
-   */
-  @Override
-  public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalSurrogate(
-      UUID assetId, String versionTag, String xAccept) {
-    var surr = getKnowledgeAssetVersion(assetId, versionTag, null)
-        .map(SurrogateHelper::carry);
-    return negotiateHTML(xAccept)
-        ? surr.flatMap(this::toHtml)
-        : surr;
-  }
-
-
-  /**
-   * when asset version does not match for model (artifact) version given, need to search all
-   * versions of the artifacts for the assetID. NOTE: This should NOT happen in reality. New
-   * artifacts should be created if the assetID changes. This will only match if all ids and tags
-   * match.
+   * Note: this operation is fairly expensive, especially if the same version tag has been used with
+   * multiple artifact snapshots, and should be used with care.
    *
    * @param assetId         the assetId looking for
    * @param assetVersionTag the version of the asset looking for
-   * @param modelUri        the artifactID
-   * @param modelVersionTag the version of the artifactID
+   * @param artifactId      the artifactID
+   * @param modelVersionTag the version of the artifact
    * @return KnowledgeCarrier for the version of the artifact with the requested version of the
    * asset
    */
   private Answer<KnowledgeCarrier> getKnowledgeCarrierFromOtherVersion(
       UUID assetId,
       String assetVersionTag,
-      String modelUri,
+      UUID artifactId,
       String modelVersionTag) {
-    List<TrisotechFileInfo> modelVersions =
-        client.getVersionsMetadataByModelId(modelUri);
-    // reverse the list so the most recent version that matches is selected
-    // there can be multiple versions of the artifact that map to one version of asset
-    Collections.reverse(modelVersions);
-    for (TrisotechFileInfo model : modelVersions) {
-      // skip any that are not published
-      if (null == model.getVersion() && null == model.getState()) {
-        continue;
-      }
+    var assetKey = newKey(assetId, assetVersionTag);
 
-      Optional<Document> downloadXml = client.getModel(model);
-      if (downloadXml.isEmpty()) {
-        continue;
-      }
+    var carrier = client.getVersionsMetadataByModelId(names.artifactToModelId(artifactId))
+        .stream().filter(info -> Objects.equals(modelVersionTag, info.getVersion()))
+        .sorted()
+        // given any Model that matches the artifact ID/Version (could be more than one)
+        .filter(candidate -> {
+          var detectedId = client.getModel(candidate)
+              .flatMap(dox ->
+                  extractAssetIdFromDocument(dox, configuration.getTyped(ASSET_ID_ATTRIBUTE)));
+          // does the model assert the desired asset ID/version
+          return detectedId.map(id -> id.asKey().equals(assetKey)).orElse(false);
+        }).findFirst()
+        .flatMap(info -> buildCarrierFromManifest(assetId, assetVersionTag, info));
 
-      Document dox = downloadXml.get();
-      // check assetId for each version
-      Optional<ResourceIdentifier> assetOpt =
-          extractAssetIdFromDocument(dox, configuration.getTyped(ASSET_ID_ATTRIBUTE));
-      if (assetOpt.isEmpty()) {
-        continue;
-      }
-
-      var rep = getRepLanguage(model.getMimetype());
-      if (rep.isEmpty()) {
-        continue;
-      }
-
-      ResourceIdentifier resolvedAssetId = assetOpt.get();
-      if (assetId.equals(resolvedAssetId.getUuid())
-          && assetVersionTag.equals(resolvedAssetId.getVersionTag())
-          && (modelVersionTag == null || modelVersionTag.equals(model.getVersion()))) {
-
-        return Answer.of(
-            buildCarrierFromNativeModel(
-                assetId,
-                assetVersionTag,
-                names.modelToArtifactId(model),
-                rep.get(),
-                dox));
-      }
-    }
-    return notFound();
+    return Answer.ofTry(carrier);
   }
 
-  @Override
-  public Answer<CompositeKnowledgeCarrier> getAnonymousCompositeKnowledgeAssetCarrier(UUID assetId,
-      String versionTag, String xAccept) {
-    var rootId = newId(assetId, versionTag);
-    Set<KeyIdentifier> closure = getAssetClosure(rootId)
-        .collect(Collectors.toSet());
+  /* ----------------------------------------------------------------------------------------- */
 
-    Answer<Set<KnowledgeCarrier>> componentArtifacts = closure.stream()
-        .map(comp -> getKnowledgeAssetVersionCanonicalCarrier(comp.getUuid(),
-            comp.getVersionTag(),
-            xAccept))
-        .collect(Answer.toSet());
-
-    return componentArtifacts
-        .map(comps -> ofMixedAnonymousComposite(rootId, comps));
+  /**
+   * Traverses the Asset to Asset dependencies of a given Knowledge Asset, returning a Stream of the
+   * IDs of those dependencies
+   *
+   * @param rootAssetId the ID of the root Knowledge Asset
+   * @return A Stream of IDs of those Assets that the root depends on, directly or indirectly
+   */
+  @Nonnull
+  private Stream<KeyIdentifier> getAssetClosure(
+      @Nonnull final ResourceIdentifier rootAssetId) {
+    return client.getMetadataByAssetId(rootAssetId.getUuid(), rootAssetId.getVersionTag())
+        .flatMap(this::getAssetClosure)
+        .distinct();
   }
 
-  @Override
-  public Answer<CompositeKnowledgeCarrier> getAnonymousCompositeKnowledgeAssetSurrogate(
-      UUID assetId, String versionTag, String xAccept) {
-    var rootId = newId(assetId, versionTag);
-    Set<KeyIdentifier> closure = getAssetClosure(rootId)
-        .collect(Collectors.toSet());
-
-    Answer<Set<KnowledgeCarrier>> componentSurrogates = closure.stream()
-        .map(comp -> getKnowledgeAssetVersion(comp.getUuid(),
-            comp.getVersionTag(),
-            xAccept)
-            .map(SurrogateHelper::carry))
-        .collect(Answer.toSet());
-
-    return componentSurrogates
-        .map(comps -> ofUniformAnonymousComposite(rootId, comps));
-  }
-
-  private Stream<KeyIdentifier> getAssetClosure(ResourceIdentifier assetRoot) {
-    return client.getMetadataByAssetId(assetRoot.getUuid(), assetRoot.getVersionTag())
-        .flatMap(this::getAssetClosure);
-  }
-
-  private Stream<KeyIdentifier> getAssetClosure(SemanticModelInfo modelRoot) {
+  /**
+   * Recurses on the Asset to Asset dependencies of a given Knowledge Asset, returning a Stream of
+   * the IDs of those dependencies, using the internal index in the process
+   *
+   * @param modelRoot the manifest of the root Knowledge Asset
+   * @return A Stream of IDs of those Assets that the root depends on, directly or indirectly
+   */
+  @Nonnull
+  private Stream<KeyIdentifier> getAssetClosure(
+      SemanticModelInfo modelRoot) {
     return Stream.concat(
         Stream.ofNullable(modelRoot.getAssetKey()),
         modelRoot.getModelDependencies().stream()
@@ -652,51 +833,109 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             .flatMap(this::getAssetClosure));
   }
 
+  /* ----------------------------------------------------------------------------------------- */
 
+  /**
+   * Looks up the Manifest of a given Knowledge Asset Version, conditional to the fact that the
+   * Asset is carried by a Model with the given Artifact (Series) ID
+   *
+   * @param assetId    the ID of the Knowledge Asset
+   * @param versionTag the version of the Knowledge Asset
+   * @param artifactId the Artifact ID
+   * @return the Manifest of the Model version carrying that Asset Version
+   */
+  @Nonnull
   private Optional<SemanticModelInfo> getCarrierInfo(
-      UUID assetId, String versionTag, UUID artifactId) {
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nonnull final UUID artifactId) {
     return client.getMetadataByAssetId(assetId, versionTag)
         .filter(info -> info.getId().contains(artifactId.toString()))
         .findFirst();
   }
 
+  /**
+   * Looks up the Artifact for a given Knowledge Asset Version, conditional to the fact that the
+   * Asset is carried by a Model with the given Artifact (Series) ID
+   *
+   * @param assetId    the ID of the Knowledge Asset
+   * @param versionTag the version of the Knowledge Asset
+   * @param artifactId the Artifact ID
+   * @return the Manifest of the Model version carrying that Asset Version
+   */
+  @Nonnull
   private Optional<KnowledgeCarrier> getCarrier(
-      UUID assetId, String versionTag, UUID artifactId)
-      throws NotFoundException, NotLatestAssetVersionException {
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nonnull final UUID artifactId) {
     var manifest = getCarrierInfo(assetId, versionTag, artifactId);
-    return manifest.flatMap(info -> getCarrierByModel(assetId, versionTag, info));
+    return manifest.flatMap(info -> buildCarrierFromManifest(assetId, versionTag, info));
   }
 
 
-  private Optional<KnowledgeCarrier> getLatestAndGreatestCarrier(
-      UUID assetId, String versionTag)
-      throws NotFoundException, NotLatestAssetVersionException {
-    var manifest = client.getMetadataByAssetId(assetId, versionTag)
+  /**
+   * Retrieves the Latest (by date) and Greatest (by version) version of a Model that carries the
+   * given Asset version
+   * <p>
+   * Note: Both time and version need to be taken into account, because TT allows for the same
+   * version tag to be used with different version of a Model
+   *
+   * @param assetId    the Asset ID
+   * @param versionTag the Asset version ID
+   * @return the Manifest for the latest and greatest
+   */
+  @Nonnull
+  private Optional<SemanticModelInfo> getLatestAndGreatestAssetManifest(
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag) {
+    return client.getMetadataByAssetId(assetId, versionTag)
         .sorted()
         .findFirst();
-    return manifest.flatMap(info -> getCarrierByModel(assetId, versionTag, info));
   }
 
-  private Optional<KnowledgeCarrier> getCarrierByModel(
-      UUID assetId, String versionTag, SemanticModelInfo info)
-      throws NotFoundException, NotLatestAssetVersionException {
+  /**
+   * Creates a {@link KnowledgeCarrier} that wraps a Model, given that Model's manifest, assuming
+   * the Model to be the Carrier of a given Asset Version
+   *
+   * @param assetId    the Asset ID
+   * @param versionTag the Asset version ID
+   * @param info       the Model Manifest
+   * @return the Model for the given Manifest, as the Asset's {@link KnowledgeCarrier}
+   */
+  @Nonnull
+  private Optional<KnowledgeCarrier> buildCarrierFromManifest(
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nonnull final TrisotechFileInfo info) {
 
-    return
-        getRepLanguage(info).flatMap(lang ->
-            client.getModel(info).map(xml ->
-                buildCarrierFromNativeModel(
-                    assetId,
-                    versionTag,
-                    names.modelToArtifactId(info.getId(), info.getVersion(), info.getName()),
-                    lang,
-                    xml)));
+    return getRepLanguage(info).flatMap(lang ->
+        client.getModel(info).map(xml ->
+            buildCarrierFromNativeModel(
+                assetId,
+                versionTag,
+                names.modelToArtifactId(info.getId(), info.getVersion(), info.getName()),
+                lang,
+                xml)));
   }
 
+  /**
+   * Factory method
+   * <p>
+   * Builds a Knowledge Carrier for a given Artifact, with the given metadata
+   *
+   * @param assetId    the Asset ID
+   * @param versionTag the Asset version tag
+   * @param artifactId the full Artifact ID, with version and label
+   * @param rep        the Artifact's representation metadata
+   * @param dox        the Artifact, as an XML Document
+   * @return the Artifact, wrapped in a {@link KnowledgeCarrier}
+   */
   private KnowledgeCarrier buildCarrierFromNativeModel(
-      UUID assetId, String versionTag,
-      ResourceIdentifier artifactId,
-      SyntacticRepresentation rep,
-      Document dox) {
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nonnull final ResourceIdentifier artifactId,
+      @Nonnull final SyntacticRepresentation rep,
+      @Nonnull final Document dox) {
 
     return
         AbstractCarrier.of(XMLUtil.toByteArray(dox))
@@ -707,60 +946,46 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   }
 
-
-  private Optional<KnowledgeAsset> getKnowledgeAssetForModels(
-      UUID assetId,
-      Collection<SemanticModelInfo> modelInfos) {
-    var models = modelInfos.stream()
+  /**
+   * Builds a {@link KnowledgeAsset} Surrogate, given the Manifest(s) of the Models that carry
+   * representations of that Asset
+   * <p>
+   * Note: assumes that the manifests all refer to the same version of the Asset with the given ID,
+   * which may be the GREATEST, or a specific one provided by a client
+   * <p>
+   * Resolves the Manifests to the actual Models, then introspects the models to generate the
+   * canonical Surrogate
+   *
+   * @param assetId   the Asset ID
+   * @param manifests the Manifests for the Models that carry that Asset
+   * @return a {@link KnowledgeAsset} Surrogate for the Asset, given the carriers
+   */
+  @Nonnull
+  private Optional<KnowledgeAsset> getSurrogateFromManifests(
+      @Nonnull final UUID assetId,
+      @Nonnull final Collection<SemanticModelInfo> manifests) {
+    var models = manifests.stream()
         .collect(toMap(
             info -> info,
             info -> client.getModel(info)
         ));
-    return getKnowledgeAssetForModels(assetId, models);
+    return getSurrogateFromCarriers(assetId, models);
   }
 
-  private Optional<KnowledgeAsset> getKnowledgeAssetForModels(
-      UUID assetId,
-      Map<SemanticModelInfo, Optional<Document>> modelInfos) {
-
-    // extract data from Trisotech format to OMG format
-    return extractor.introspect(assetId, modelInfos);
-  }
-
-  private boolean negotiateHTML(String xAccept) {
-    return decodeAll(xAccept).stream().findFirst()
-        .filter(wr -> HTML.sameAs(wr.getRep().getLanguage()))
-        .isPresent();
-  }
 
   /**
-   * Converts a Surrogate, wrapped in a KnowledgeCarrier, to its HTML variant
-   * <p>
-   * Redirects the Asset namespace base URI to this server, making the links in the HTML more
-   * navigable. Note that this redirect is a best effort operation, which is not guaranteed.
+   * Builds a {@link KnowledgeAsset} Surrogate, from the given Model/Manifest pairs
    *
-   * @param surrogateCarrier the KnowledgeAsset, in a KnowledgeCarrier
-   * @return the KnowledgeAsset HTML variant, in a KnowledgeCarrier, wrapped by Answer
+   * @param assetId  the Asset ID
+   * @param carriers the Model/Manifest pairs
+   * @return a {@link KnowledgeAsset} Surrogate for the Asset, given the carriers
    */
-  private Answer<KnowledgeCarrier> toHtml(KnowledgeCarrier surrogateCarrier) {
-    String xCfg = null;
-    try {
-      Properties props = new Properties();
-      var host = URI.create(hrefBuilder.getHost());
-      var ns = names.getAssetNamespace();
-      var redirect = new URI(host.getScheme(), null, host.getHost(), host.getPort(),
-          host.getPath() + "/cat" + ns.getPath(), null, null);
-      props.put(ns.toString(), redirect.toString());
+  private Optional<KnowledgeAsset> getSurrogateFromCarriers(
+      @Nonnull final UUID assetId,
+      @Nonnull final Map<SemanticModelInfo, Optional<Document>> carriers) {
 
-      var ns2 = names.getArtifactNamespace();
-      var redirect2 = new URI(host.getScheme(), null, host.getHost(), host.getPort(),
-          host.getPath() + "/repos/" + ALL_REPOS + ns2.getPath(), null, null);
-      props.put(ns2.toString(), redirect2.toString());
-      xCfg = serializeProps(props);
-    } catch (Exception e) {
-      // fall back to not rewriting the URIs/URLs
-    }
-    return htmlTranslator.applyTransrepresent(surrogateCarrier, codedRep(HTML), xCfg);
+    // extract data from Trisotech format to OMG format
+    return extractor.introspect(assetId, carriers);
   }
 
 }

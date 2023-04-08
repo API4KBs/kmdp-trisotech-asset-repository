@@ -304,7 +304,7 @@ public class PlacePathIndex {
       @Nonnull final SemanticModelInfo metadata) {
     indexByModel(metadata);
 
-    if (metadata.hasAssetId()) {
+    if (metadata.getAssetId() != null) {
       indexByAsset(parseAssetKey(metadata.getAssetId()), metadata);
     } else {
       if (logger.isInfoEnabled()) {
@@ -446,8 +446,10 @@ public class PlacePathIndex {
   protected void mergeManifests(
       @Nonnull final SemanticModelInfo serviceInfo,
       @Nonnull final SemanticModelInfo modelInfo) {
-    var serviceId = parseAssetKey(serviceInfo.getServiceId());
-    modelInfo.addExposedService(serviceId);
+    if (serviceInfo.getServiceId() != null) {
+      var serviceId = parseAssetKey(serviceInfo.getServiceId());
+      modelInfo.addExposedService(serviceId);
+    }
 
     serviceInfo.setName(modelInfo.getName() + "::" + serviceInfo.getServiceFragmentName());
     serviceInfo.assertAssetId(modelInfo.getAssetId());
@@ -542,7 +544,7 @@ public class PlacePathIndex {
     manifest.addLiteral(ARTIFACT_NAME, sol);
     manifest.addResource(ASSET_TYPE, sol);
 
-    if (manifest.hasServiceFragmentId() && !manifest.hasAssetId() && allowsAnonymous) {
+    if (manifest.getServiceFragmentId() != null && !manifest.hasAssetId() && allowsAnonymous) {
       var serviceAssetId =
           mintAssetIdForAnonymous(cfg.getTyped(TTWConfigParamsDef.ASSET_NAMESPACE),
               manifest.getServiceFragmentId(),

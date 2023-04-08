@@ -26,6 +26,7 @@ import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTLanguages;
 import edu.mayo.kmdp.trisotechwrapper.config.TTNotations;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.StreamUtil;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -149,7 +150,7 @@ public class BPMMetadataHelper {
    *
    * @return the {@link SyntacticRepresentation} at the Encoded level
    */
-  public static Optional<SyntacticRepresentation> getRepLanguage(SemanticModelInfo info) {
+  public static Optional<SyntacticRepresentation> getRepLanguage(TrisotechFileInfo info) {
     if (info == null || info.getMimetype() == null) {
       return Optional.empty();
     }

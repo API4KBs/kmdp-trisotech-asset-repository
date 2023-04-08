@@ -27,6 +27,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.DeserializeApiInternal._applyLower;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
@@ -68,7 +69,8 @@ public class DefaultMetadataIntrospector implements MetadataIntrospector {
 
   @Override
   public Optional<KnowledgeAsset> introspect(
-      UUID assetId, Map<SemanticModelInfo, Optional<Document>> carriers) {
+      @Nonnull final UUID assetId,
+      @Nonnull final Map<SemanticModelInfo, Optional<Document>> carriers) {
 
     var resolveds = carriers.keySet().stream()
         .map(meta -> categorizeAsset(assetId, meta.getId()))
@@ -104,8 +106,10 @@ public class DefaultMetadataIntrospector implements MetadataIntrospector {
 
 
   @Override
-  public Optional<KnowledgeAsset> introspectAsService(ResourceIdentifier assetId, SemanticModelInfo manifest,
-      Document carrier) {
+  public Optional<KnowledgeAsset> introspectAsService(
+      @Nonnull final ResourceIdentifier assetId,
+      @Nonnull final SemanticModelInfo manifest,
+      @Nonnull final Document carrier) {
     return Optional.of(
         serviceStrategy.extractSurrogateFromDocument(carrier, manifest, assetId));
   }
@@ -130,8 +134,9 @@ public class DefaultMetadataIntrospector implements MetadataIntrospector {
   }
 
   @Override
-  public Optional<KnowledgeAsset> introspectAsModel(ResourceIdentifier assetId,
-      Map<SemanticModelInfo, Document> doxMap) {
+  public Optional<KnowledgeAsset> introspectAsModel(
+      @Nonnull final ResourceIdentifier assetId,
+      @Nonnull final Map<SemanticModelInfo, Document> doxMap) {
     return Optional.of(
         strategy.extractSurrogateFromDocument(doxMap, assetId));
   }

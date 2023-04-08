@@ -320,6 +320,21 @@ public interface TTAPIAdapter {
       @Nonnull final String assetVersionTag);
 
   /**
+   * Returns metadata for the Models that carry the GREATEST version of a given Knowledge Asset,
+   * according to the natural ordering of version tags that follow a SemVer/CalVer pattern
+   * <p>
+   * (Assumption: a given Asset version may be carried by 0..N Models)
+   *
+   * @param assetId         The ID of the Knowledge Asset
+   * @return the {@link SemanticModelInfo} descriptors of the Models that carry that version of the
+   * Asset, if any, as a Stream
+   */
+  @Nonnull
+  Stream<SemanticModelInfo> getMetadataByGreatestAssetId(
+      @Nonnull final UUID assetId);
+
+
+  /**
    * Retrieves the LATEST version of the Model with the given ID
    *
    * @param modelUri The model ID of the Model to retrieve

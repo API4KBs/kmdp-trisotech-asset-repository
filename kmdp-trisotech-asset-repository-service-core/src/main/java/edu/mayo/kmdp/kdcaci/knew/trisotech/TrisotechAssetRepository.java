@@ -605,7 +605,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   private Stream<Pointer> getAssetPointersForModel(
       @Nonnull final SemanticModelInfo info) {
     return Stream.concat(toAssetPointer(info), toServicePointer(info));
-
   }
 
   /**
@@ -618,11 +617,15 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   private Stream<Pointer> toServicePointer(
       @Nonnull final SemanticModelInfo info) {
     return info.getExposedServices().stream()
-        .map(key -> names.assetKeyToId(key))
-        .map(id -> id.toPointer()
-            .withType(getRepresentativeType(id, () -> ReSTful_Service_Specification))
-            .withName(info.getName())
-            .withHref(tryAddHref(id))
+        .flatMap(key -> client.getMetadataByAssetId(key.getUuid(), key.getVersionTag()))
+        .map(sInfo -> {
+          var id = names.assetKeyToId(sInfo.getServiceKey());
+          return id.toPointer()
+                  .withType(getRepresentativeType(
+                      sInfo.getServiceKey(), () -> ReSTful_Service_Specification))
+                  .withName(sInfo.getName())
+                  .withHref(tryAddHref(id));
+            }
         );
   }
 
@@ -641,7 +644,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .map(assetId -> assetId.toPointer()
             .withType(
                 getRepresentativeType(
-                    assetId,
+                    assetId.asKey(),
                     () -> getDefaultAssetType(info.getMimetype())))
             .withName(info.getName())
             .withHref(tryAddHref(assetId))
@@ -674,7 +677,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    */
   @Nullable
   private URI getRepresentativeType(
-      @Nonnull final ResourceIdentifier assetId,
+      @Nonnull final KeyIdentifier assetId,
       @Nonnull final Supplier<KnowledgeAssetType> defaultType) {
     return client.getMetadataByAssetId(assetId.getUuid(), assetId.getVersionTag())
         .flatMap(info -> getDeclaredAssetTypes(info, defaultType).stream())
@@ -683,7 +686,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .min(Comparator.comparingInt(SUPPORTED_ASSET_TYPES::indexOf))
         .map(ConceptTerm::getReferentId)
         .orElseGet(() -> {
-          logger.error("No supported asset type(s) detected for Asset {}", assetId.asKey());
+          logger.error("No supported asset type(s) detected for Asset {}", assetId);
           return null;
         });
   }

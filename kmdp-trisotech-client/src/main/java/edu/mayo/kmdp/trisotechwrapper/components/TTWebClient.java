@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -267,28 +268,43 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
   @Override
   @Nonnull
   public List<TrisotechExecutionArtifact> getExecutionArtifacts(
-      @Nonnull final String execEnv) {
+      @Nonnull final Set<String> execEnvs) {
     if (!online) {
       logger.warn("Client is offline - unable to get Execution Artifacts data");
       return Collections.emptyList();
     }
     try {
       URL url = new URL(apiEndpoint + EXEC_ARTIFACTS_PATH);
+      return execEnvs.stream()
+          .flatMap(env -> getExecutionArtifacts(url, env))
+          .collect(Collectors.toList());
 
-      HttpEntity<?> requestEntity = getHttpEntity();
-      RestTemplate restTemplate = new RestTemplate();
-
-      return Optional.ofNullable(restTemplate.exchange(
-                  url.toString(), HttpMethod.GET, requestEntity, TrisotechExecutionArtifactData.class,
-                  execEnv)
-              .getBody())
-          .map(TrisotechExecutionArtifactData::getData)
-          .orElseGet(Collections::emptyList);
     } catch (IOException ioe) {
       logger.error(ioe.getMessage(), ioe);
       return Collections.emptyList();
     }
+  }
 
+  /**
+   * Queries an execution environment within a Service Library, to discover the deployed services
+   *
+   * @param slUrl   the URL of the Service Library deployment
+   * @param execEnv the name of the Execution Environment within the Service Library
+   * @return the deployed {@link TrisotechExecutionArtifact}, streaming
+   */
+  @Nonnull
+  private Stream<TrisotechExecutionArtifact> getExecutionArtifacts(
+      @Nonnull final URL slUrl,
+      @Nonnull final String execEnv) {
+    HttpEntity<?> requestEntity = getHttpEntity();
+    RestTemplate restTemplate = new RestTemplate();
+
+    return Optional.ofNullable(
+            restTemplate.exchange(
+                    slUrl.toString(), HttpMethod.GET, requestEntity, TrisotechExecutionArtifactData.class,
+                    execEnv)
+                .getBody()).stream()
+        .flatMap(xc -> xc.getData().stream());
   }
 
   /**

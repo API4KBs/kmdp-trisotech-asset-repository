@@ -599,6 +599,26 @@ public class SemanticModelInfo extends TrisotechFileInfo {
   }
 
   /**
+   * @param name A scoped service name/fragment, to be used as the name of the service
+   */
+  public void assertServiceName(
+      @Nonnull final String name) {
+    setName(name + "::" + this.getServiceFragmentName());
+  }
+
+  /**
+   * @return for service asset manifests, returns the name of the scoping model
+   */
+  @Nullable
+  public String serviceOwnerModel() {
+    if (getServiceFragmentName() == null) {
+      return null;
+    }
+    int len = getName().length() - getServiceFragmentName().length() - 2;
+    return name.substring(0, len);
+  }
+
+  /**
    * Equals
    * <p>
    * Uses {@link #id}

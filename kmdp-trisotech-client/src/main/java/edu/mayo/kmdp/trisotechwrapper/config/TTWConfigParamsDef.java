@@ -65,7 +65,7 @@ public enum TTWConfigParamsDef implements
   SERVICE_LIBRARY_ENVIRONMENT(Opt.of(
       "edu.mayo.kmdp.trisotechwrapper.executionEnv",
       null,
-      "The name of the Execution Environment with deployed services",
+      "A comma-separated value of names of the Execution Environment with deployed services",
       String.class,
       true)),
 

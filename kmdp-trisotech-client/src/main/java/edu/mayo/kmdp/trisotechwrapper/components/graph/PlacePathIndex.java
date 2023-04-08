@@ -451,7 +451,7 @@ public class PlacePathIndex {
       modelInfo.addExposedService(serviceId);
     }
 
-    serviceInfo.setName(modelInfo.getName() + "::" + serviceInfo.getServiceFragmentName());
+    serviceInfo.assertServiceName(modelInfo.getName());
     serviceInfo.assertAssetId(modelInfo.getAssetId());
 
     serviceInfo.setPlaceId(modelInfo.getPlaceId());

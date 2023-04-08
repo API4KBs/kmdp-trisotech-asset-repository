@@ -39,8 +39,8 @@ class TTPlaceCacheTest {
         .get(new TrisotechPlace(TEST_PLACE_ID, "mock"));
 
     assertNotNull(ppi);
-    assertEquals(7, ppi.getModelToManifestMappings().size());
-    assertEquals(5, ppi.getAssetToManifestMappings().size());
+    assertEquals(10, ppi.getModelToManifestMappings().size());
+    assertEquals(11, ppi.getAssetToManifestMappings().size());
 
     var src = "http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4";
     var tgt = "http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc";
@@ -53,6 +53,11 @@ class TTPlaceCacheTest {
         .flatMap(x -> x.getExposedServices().stream())
         .forEach(k -> assertEquals(1, ppi.getAssetToManifestMappings()
             .getOrDefault(k, Collections.emptySortedSet()).size()));
+
+    assertEquals(3, ppi.getModelToManifestMappings().values().stream()
+        .filter(x -> ! x.getExposedServices().isEmpty())
+        .count());
+
   }
 
   CaffeineCacheManager mockCacheManager() {

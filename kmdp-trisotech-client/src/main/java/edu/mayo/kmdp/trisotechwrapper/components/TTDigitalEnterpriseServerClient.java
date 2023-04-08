@@ -6,6 +6,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.ResultSet;
@@ -68,17 +69,17 @@ public interface TTDigitalEnterpriseServerClient {
       @Nonnull final TrisotechFileInfo from);
 
   /**
-   * Acquires the descriptors of the decision / process services deployed in a given execution
-   * environment.
+   * Acquires the descriptors of the decision / process services deployed in a given set of
+   * execution environments.
    * <p>
-   * TODO: the ServiceLibrary(s) should be configurable, and more than one environment should be supported
+   * TODO: the ServiceLibrary(s) should be configurable
    *
    * @param execEnv the execution environment
    * @return metadata about the services deployed in that environment
    */
   @Nonnull
   List<TrisotechExecutionArtifact> getExecutionArtifacts(
-      @Nonnull final String execEnv);
+      @Nonnull final Set<String> execEnv);
 
   /**
    * Uploads a Model data to a given Place in the DES server

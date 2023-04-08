@@ -330,7 +330,7 @@ public class TTWrapper implements TTAPIAdapter {
   @Override
   @Nonnull
   public Map<String, TrisotechExecutionArtifact> listExecutionArtifacts(
-      @Nonnull final String env) {
+      @Nonnull final Set<String> env) {
     try {
       return webClient.getExecutionArtifacts(env).stream()
           .collect(Collectors.toMap(
@@ -348,11 +348,11 @@ public class TTWrapper implements TTAPIAdapter {
   @Nonnull
   public Optional<TrisotechExecutionArtifact> getExecutionArtifact(
       @Nonnull final String serviceName,
-      @Nonnull final TrisotechFileInfo manifest) {
-    var execs = listExecutionArtifacts(
-        cfg.getTyped(TTWConfigParamsDef.SERVICE_LIBRARY_ENVIRONMENT));
+      @Nonnull final SemanticModelInfo manifest) {
+    var execs = listExecutionArtifacts(getScopedExecEnvironments());
+
     // DMN executables - the whole model is mapped to a service
-    return Optional.ofNullable(execs.get(manifest.getName()))
+    return Optional.ofNullable(execs.get(manifest.serviceOwnerModel()))
         // BPMN executables - each process is mapped to a service
         .or(() -> Optional.ofNullable(execs.get(serviceName)));
   }
@@ -447,4 +447,17 @@ public class TTWrapper implements TTAPIAdapter {
   protected String defaultVersion() {
     return cfg.getTyped(DEFAULT_VERSION_TAG);
   }
+
+
+  /**
+   * @return the configured Excution environments
+   */
+  private Set<String> getScopedExecEnvironments() {
+    var env = cfg.getTyped(TTWConfigParamsDef.SERVICE_LIBRARY_ENVIRONMENT, String.class);
+    return Optional.ofNullable(env).stream()
+        .flatMap(e -> Arrays.stream(e.split(",")))
+        .map(String::trim)
+        .collect(Collectors.toSet());
+  }
+
 }

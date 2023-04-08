@@ -235,7 +235,7 @@ public interface TTAPIAdapter {
    */
   @Nonnull
   Map<String, TrisotechExecutionArtifact> listExecutionArtifacts(
-      @Nonnull final String env);
+      @Nonnull final Set<String> env);
 
   /**
    * Determines whether a Service is deployed to an execution environment
@@ -250,7 +250,7 @@ public interface TTAPIAdapter {
   @Nonnull
   Optional<TrisotechExecutionArtifact> getExecutionArtifact(
       @Nonnull final String serviceName,
-      @Nonnull final TrisotechFileInfo manifest);
+      @Nonnull final SemanticModelInfo manifest);
 
   /* ---------------------------------------------------------------------------------------- */
 

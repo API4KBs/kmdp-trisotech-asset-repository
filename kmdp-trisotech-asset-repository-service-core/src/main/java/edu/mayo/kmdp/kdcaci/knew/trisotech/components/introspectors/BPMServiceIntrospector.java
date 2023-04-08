@@ -42,7 +42,6 @@ import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifact;
-import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.nio.charset.Charset;
 import java.util.Optional;
@@ -157,7 +156,7 @@ public class BPMServiceIntrospector {
    */
   private KnowledgeArtifact buildSwaggerUICarrier(
       ResourceIdentifier assetId, Publication lifecycle,
-      String serviceName, TrisotechFileInfo manifest) {
+      String serviceName, SemanticModelInfo manifest) {
     var ka = new KnowledgeArtifact()
         .withArtifactId(defaultArtifactId(assetId, HTML))
         .withName(serviceName)
@@ -190,7 +189,7 @@ public class BPMServiceIntrospector {
    */
   private KnowledgeArtifact buildOpenAPICarrier(
       ResourceIdentifier assetId, Publication lifecycle, String serviceName,
-      TrisotechFileInfo manifest) {
+      SemanticModelInfo manifest) {
     //FIXME TT actually uses OAS3.x (3.0.1), but that needs to be registered first
     var synRep = rep(OpenAPI_2_X, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
 

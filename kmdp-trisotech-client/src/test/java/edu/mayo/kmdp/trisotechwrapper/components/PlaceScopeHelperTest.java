@@ -11,6 +11,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import org.apache.jena.query.Query;
@@ -86,24 +87,31 @@ class PlaceScopeHelperTest {
     }
 
     @Override
-    public List<TrisotechFileInfo> getModelPreviousVersions(String repositoryId, String modelUri) {
+    @Nonnull
+    public List<TrisotechFileInfo> getModelPreviousVersions(
+        @Nonnull String repositoryId,
+        @Nonnull String modelUri) {
       throw new UnsupportedOperationException();
     }
 
     @Override
+    @Nonnull
     public List<TrisotechPlace> getPlaces() {
       return List.of(
           new TrisotechPlace(place1, "Place 1"),
           new TrisotechPlace(place2, "Place 2"));
     }
 
+    @Nonnull
     @Override
-    public Optional<Document> downloadXmlModel(TrisotechFileInfo tt) {
+    public Optional<Document> downloadXmlModel(@Nonnull TrisotechFileInfo tt) {
       throw new UnsupportedOperationException();
     }
 
+    @Nonnull
     @Override
-    public List<TrisotechExecutionArtifact> getExecutionArtifacts(String execEnv) {
+    public List<TrisotechExecutionArtifact> getExecutionArtifacts(
+        @Nonnull Set<String> execEnv) {
       throw new UnsupportedOperationException();
     }
 
@@ -113,8 +121,9 @@ class PlaceScopeHelperTest {
       return false;
     }
 
+    @Nonnull
     @Override
-    public ResultSet askQuery(Query query) {
+    public ResultSet askQuery(@Nonnull Query query) {
       throw new UnsupportedOperationException();
     }
   }

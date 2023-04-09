@@ -22,7 +22,7 @@
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Class"/>
     </rdf:type>
   </rdfs:Datatype>
-  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#gYearMonth">
+  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#decimal">
     <rdf:type>
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     </rdf:type>
@@ -30,7 +30,7 @@
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Class"/>
     </rdf:type>
   </rdfs:Datatype>
-  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#decimal">
+  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#gYearMonth">
     <rdf:type>
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     </rdf:type>
@@ -118,7 +118,7 @@
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Class"/>
     </rdf:type>
   </rdfs:Datatype>
-  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#hexBinary">
+  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#nonPositiveInteger">
     <rdf:type>
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     </rdf:type>
@@ -126,7 +126,7 @@
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Class"/>
     </rdf:type>
   </rdfs:Datatype>
-  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#nonPositiveInteger">
+  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#hexBinary">
     <rdf:type>
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     </rdf:type>
@@ -222,7 +222,7 @@
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Class"/>
     </rdf:type>
   </rdfs:Datatype>
-  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#unsignedByte">
+  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#base64Binary">
     <rdf:type>
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     </rdf:type>
@@ -230,7 +230,7 @@
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Class"/>
     </rdf:type>
   </rdfs:Datatype>
-  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#base64Binary">
+  <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#unsignedByte">
     <rdf:type>
       <owl:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     </rdf:type>
@@ -844,16 +844,16 @@
     <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
     <owl:equivalentProperty rdf:resource="http://www.trisotech.com/graph/1.0/elementRel#informed"/>
   </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:about="http://www.w3.org/2002/07/owl#sameAs">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
-    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
-  </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="http://www.trisotech.com/graph/1.0/elementRel#where">
     <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
     <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://www.w3.org/2002/07/owl#sameAs">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </owl:ObjectProperty>
@@ -1043,13 +1043,21 @@
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
     <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
   </owl:TransitiveProperty>
-  <owl:FunctionalProperty rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#rest">
-    <rdfs:range>
+  <owl:FunctionalProperty rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#first">
+    <rdfs:domain>
       <rdfs:Resource rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#List">
         <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
         <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
       </rdfs:Resource>
-    </rdfs:range>
+    </rdfs:domain>
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#first"/>
+    <owl:equivalentProperty rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#first"/>
+  </owl:FunctionalProperty>
+  <owl:FunctionalProperty rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#rest">
+    <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
     <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
@@ -1058,28 +1066,13 @@
     <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"/>
     <owl:equivalentProperty rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"/>
   </owl:FunctionalProperty>
-  <owl:FunctionalProperty rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#first">
-    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
-    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#first"/>
-    <owl:equivalentProperty rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#first"/>
-  </owl:FunctionalProperty>
-  <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#incompatibleWith">
+  <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#backwardCompatibleWith">
     <rdfs:range>
       <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#Ontology">
         <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
         <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
       </rdfs:Resource>
     </rdfs:range>
-    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
-    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
-  </rdfs:Resource>
-  <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#backwardCompatibleWith">
-    <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
     <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
@@ -1094,9 +1087,6 @@
             <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
             <j.0:owner>
               <rdfs:Resource rdf:about="http://www.trisotech.com/definitions/_1bf6b664-0925-4992-8390-1b5d56504ae0">
-                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_1bf6b664-0925-4992-8390-1b5d56504ae0#_a172fc9a-6b1f-4874-997c-ea9a9004564a"/>
-                <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                <j.0:mimeType>application/vnd.triso-dmn+json</j.0:mimeType>
                 <j.0:orderedParentOf>
                   <rdf:List>
                     <rdf:rest>
@@ -1126,43 +1116,6 @@
                                                 <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
                                               </j.4:CustomAttribute>
                                             </j.0:customAttribute>
-                                            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_e6e7a187-ec25-434d-8a75-f79883b2df9b"/>
-                                            <j.0:fileId>http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b</j.0:fileId>
-                                            <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#BusinessEntityModel"/>
-                                            <j.0:parentOf>
-                                              <j.4:Term rdf:about="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_b6d5e2aa-c486-4f54-827d-fcc3a873eeaf">
-                                                <rdfs:label>Current Chronological Age</rdfs:label>
-                                                <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                                                <j.5:definition
-                                                >&lt;p&gt;the period between birth and now&lt;/p&gt;</j.5:definition>
-                                                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                                                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
-                                                <j.3:code>
-                                                  <j.3:Code rdf:about="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_4b91f1c7-31a9-4277-b547-c054a8a09e96">
-                                                    <j.3:codeValue
-                                                    >424144002</j.3:codeValue>
-                                                    <j.3:codingSystem
-                                                    >http://snomed.info/sct</j.3:codingSystem>
-                                                    <rdfs:label
-                                                    >Current chronological age (observable entity)</rdfs:label>
-                                                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
-                                                    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                                                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                                                  </j.3:Code>
-                                                </j.3:code>
-                                                <j.3:codeTransitive rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_4b91f1c7-31a9-4277-b547-c054a8a09e96"/>
-                                                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
-                                                <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
-                                              </j.4:Term>
-                                            </j.0:parentOf>
-                                            <j.0:path>/Mock Test KEM for MVF.be</j.0:path>
-                                            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                                            <rdfs:label>Mock Test KEM for MVF</rdfs:label>
-                                            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_e6e7a187-ec25-434d-8a75-f79883b2df9b"/>
-                                            <j.0:updated>2023-04-07T05:00:33Z</j.0:updated>
-                                            <j.0:mimeType>application/vnd.triso-businessentity+json</j.0:mimeType>
-                                            <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                                            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_b6d5e2aa-c486-4f54-827d-fcc3a873eeaf"/>
                                             <j.0:orderedParentOf>
                                               <rdf:List>
                                                 <rdf:rest>
@@ -1172,10 +1125,48 @@
                                                     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                                                   </rdf:List>
                                                 </rdf:rest>
-                                                <rdf:first rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_b6d5e2aa-c486-4f54-827d-fcc3a873eeaf"/>
+                                                <rdf:first>
+                                                  <j.4:Term rdf:about="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_b6d5e2aa-c486-4f54-827d-fcc3a873eeaf">
+                                                    <rdfs:label
+                                                    >Current Chronological Age</rdfs:label>
+                                                    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                                                    <j.5:definition
+                                                    >&lt;p&gt;the period between birth and now&lt;/p&gt;</j.5:definition>
+                                                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                                                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
+                                                    <j.3:code>
+                                                      <j.3:Code rdf:about="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_4b91f1c7-31a9-4277-b547-c054a8a09e96">
+                                                        <j.3:codeValue
+                                                        >424144002</j.3:codeValue>
+                                                        <j.3:codingSystem
+                                                        >http://snomed.info/sct</j.3:codingSystem>
+                                                        <rdfs:label
+                                                        >Current chronological age (observable entity)</rdfs:label>
+                                                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
+                                                        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                                                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                                                      </j.3:Code>
+                                                    </j.3:code>
+                                                    <j.3:codeTransitive rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_4b91f1c7-31a9-4277-b547-c054a8a09e96"/>
+                                                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
+                                                    <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
+                                                  </j.4:Term>
+                                                </rdf:first>
                                                 <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                                               </rdf:List>
                                             </j.0:orderedParentOf>
+                                            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_e6e7a187-ec25-434d-8a75-f79883b2df9b"/>
+                                            <j.0:fileId>http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b</j.0:fileId>
+                                            <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#BusinessEntityModel"/>
+                                            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_b6d5e2aa-c486-4f54-827d-fcc3a873eeaf"/>
+                                            <j.0:path>/Mock Test KEM for MVF.be</j.0:path>
+                                            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                                            <rdfs:label>Mock Test KEM for MVF</rdfs:label>
+                                            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_e6e7a187-ec25-434d-8a75-f79883b2df9b"/>
+                                            <j.0:updated>2023-04-07T05:00:33Z</j.0:updated>
+                                            <j.0:mimeType>application/vnd.triso-businessentity+json</j.0:mimeType>
+                                            <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                                            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_b6d5e2aa-c486-4f54-827d-fcc3a873eeaf"/>
                                           </j.4:Model>
                                         </j.0:owner>
                                         <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Annotation"/>
@@ -1293,6 +1284,9 @@
                     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                   </rdf:List>
                 </j.0:orderedParentOf>
+                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_1bf6b664-0925-4992-8390-1b5d56504ae0#_a172fc9a-6b1f-4874-997c-ea9a9004564a"/>
+                <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                <j.0:mimeType>application/vnd.triso-dmn+json</j.0:mimeType>
                 <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#DMNModel"/>
                 <j.0:updater>sottara.davide@mayo.edu</j.0:updater>
                 <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_e6e7a187-ec25-434d-8a75-f79883b2df9b"/>
@@ -1363,7 +1357,6 @@
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </owl:OntologyProperty>
-  <owl:AnnotationProperty rdf:about="http://www.w3.org/2002/07/owl#versionInfo"/>
   <j.4:Link rdf:about="http://www.trisotech.com/definitions/_d5547875-8d9f-4052-adb2-7a430753ee7c#_987aa9fd-ff23-4e94-aa0e-9d152ba7b382">
     <j.0:target>
       <rdfs:Resource rdf:about="http://www.trisotech.com/definitions/_d5547875-8d9f-4052-adb2-7a430753ee7c#_a6eee1f2-7896-4b3b-bf8e-c507be8fa33a">
@@ -1425,8 +1418,6 @@
                     <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_d5547875-8d9f-4052-adb2-7a430753ee7c"/>
                   </rdfs:Resource>
                 </j.0:parentOf>
-                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                <j.0:updater>sottara.davide@mayo.edu</j.0:updater>
                 <j.0:orderedParentOf>
                   <rdf:List>
                     <rdf:rest>
@@ -1524,6 +1515,8 @@
                     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                   </rdf:List>
                 </j.0:orderedParentOf>
+                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                <j.0:updater>sottara.davide@mayo.edu</j.0:updater>
                 <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_d5547875-8d9f-4052-adb2-7a430753ee7c#_07965f3e-fc71-4bd6-8ef7-f334efe5a65a"/>
                 <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_d5547875-8d9f-4052-adb2-7a430753ee7c#_a6eee1f2-7896-4b3b-bf8e-c507be8fa33a"/>
                 <rdfs:label>Asset 2 Artifact 2</rdfs:label>
@@ -1569,6 +1562,38 @@
     <j.0:source rdf:resource="http://www.trisotech.com/definitions/_d5547875-8d9f-4052-adb2-7a430753ee7c#_07965f3e-fc71-4bd6-8ef7-f334efe5a65a"/>
     <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#InformationRequirement"/>
   </j.4:Link>
+  <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#intersectionOf">
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdfs:Resource>
+  <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#priorVersion">
+    <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdfs:Resource>
+  <j.3:relatesTo rdf:about="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_154566dd-2d59-4d12-a45a-fddc453a50c6">
+    <rdfs:label>focus</rdfs:label>
+    <j.0:target rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_b6d5e2aa-c486-4f54-827d-fcc3a873eeaf"/>
+    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
+    <j.0:source rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_e6e7a187-ec25-434d-8a75-f79883b2df9b"/>
+    <rdf:type>
+      <rdfs:Resource rdf:about="http://www.trisotech.com/graph/1.0/element#Link">
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+      </rdfs:Resource>
+    </rdf:type>
+  </j.3:relatesTo>
+  <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#incompatibleWith">
+    <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdfs:Resource>
+  <owl:AnnotationProperty rdf:about="http://www.w3.org/2002/07/owl#versionInfo"/>
   <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#onProperty">
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
     <rdfs:range>
@@ -1591,12 +1616,6 @@
       </rdfs:Resource>
     </rdfs:range>
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
-  </rdfs:Resource>
-  <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#intersectionOf">
-    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
     <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdfs:Resource>
   <j.4:Link rdf:about="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_c4f71e58-2b68-471a-8be6-33fd2957fea1">
@@ -1693,45 +1712,6 @@
                 <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
               </rdfs:Resource>
             </j.0:parentOfTransitive>
-            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_bfbe8c15-2de5-4744-bd52-d113069194ae_DS"/>
-            <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_b3a37b48-2d54-4e05-8405-fd967965bf79"/>
-            <j.0:parentOfTransitive>
-              <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS">
-                <rdfs:label>Diagram Page 1</rdfs:label>
-                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
-                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
-                <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
-                <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionService"/>
-                <j.0:outcome>
-                  <j.4:Outcome rdf:about="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS-_b3a37b48-2d54-4e05-8405-fd967965bf79-outcome">
-                    <rdfs:label>Out</rdfs:label>
-                    <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
-                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
-                  </j.4:Outcome>
-                </j.0:outcome>
-                <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                <j.0:parameter>
-                  <j.4:Parameter rdf:about="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS-_b6243e69-afbe-4050-a706-342e649b2349-parameter">
-                    <rdfs:label>X</rdfs:label>
-                    <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
-                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
-                  </j.4:Parameter>
-                </j.0:parameter>
-                <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
-                <j.0:implementation>
-                  <j.4:Implementation rdf:about="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS-implementation">
-                    <j.6:outputDecision rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_b3a37b48-2d54-4e05-8405-fd967965bf79"/>
-                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
-                    <j.6:inputDataRel rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_b6243e69-afbe-4050-a706-342e649b2349"/>
-                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionServiceImplementation"/>
-                  </j.4:Implementation>
-                </j.0:implementation>
-              </j.4:Activity>
-            </j.0:parentOfTransitive>
-            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_b6243e69-afbe-4050-a706-342e649b2349"/>
-            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS"/>
             <j.0:orderedParentOf>
               <rdf:List>
                 <rdf:rest>
@@ -1759,10 +1739,49 @@
                     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                   </rdf:List>
                 </rdf:rest>
-                <rdf:first rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS"/>
+                <rdf:first>
+                  <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS">
+                    <rdfs:label>Diagram Page 1</rdfs:label>
+                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
+                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
+                    <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
+                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionService"/>
+                    <j.0:outcome>
+                      <j.4:Outcome rdf:about="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS-_b3a37b48-2d54-4e05-8405-fd967965bf79-outcome">
+                        <rdfs:label>Out</rdfs:label>
+                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
+                      </j.4:Outcome>
+                    </j.0:outcome>
+                    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                    <j.0:parameter>
+                      <j.4:Parameter rdf:about="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS-_b6243e69-afbe-4050-a706-342e649b2349-parameter">
+                        <rdfs:label>X</rdfs:label>
+                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
+                      </j.4:Parameter>
+                    </j.0:parameter>
+                    <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
+                    <j.0:implementation>
+                      <j.4:Implementation rdf:about="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS-implementation">
+                        <j.6:outputDecision rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_b3a37b48-2d54-4e05-8405-fd967965bf79"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae"/>
+                        <j.6:inputDataRel rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_b6243e69-afbe-4050-a706-342e649b2349"/>
+                        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionServiceImplementation"/>
+                      </j.4:Implementation>
+                    </j.0:implementation>
+                  </j.4:Activity>
+                </rdf:first>
                 <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
               </rdf:List>
             </j.0:orderedParentOf>
+            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_bfbe8c15-2de5-4744-bd52-d113069194ae_DS"/>
+            <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_b3a37b48-2d54-4e05-8405-fd967965bf79"/>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS"/>
+            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_b6243e69-afbe-4050-a706-342e649b2349"/>
+            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_f2305ca7-ef6d-46f8-a349-48a6176ad045_DS"/>
             <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_bfbe8c15-2de5-4744-bd52-d113069194ae#_b6243e69-afbe-4050-a706-342e649b2349"/>
           </j.4:Model>
         </j.0:childOf>
@@ -1800,50 +1819,265 @@
     <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
     <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
   </rdfs:Resource>
-  <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#priorVersion">
-    <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
-    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
-  </rdfs:Resource>
-  <j.3:relatesTo rdf:about="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_154566dd-2d59-4d12-a45a-fddc453a50c6">
-    <rdfs:label>focus</rdfs:label>
-    <j.0:target rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_b6d5e2aa-c486-4f54-827d-fcc3a873eeaf"/>
-    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b"/>
-    <j.0:source rdf:resource="http://www.trisotech.com/definitions/_e9fa1388-a258-4d35-8aea-2264eddbe99b#_e6e7a187-ec25-434d-8a75-f79883b2df9b"/>
-    <rdf:type>
-      <rdfs:Resource rdf:about="http://www.trisotech.com/graph/1.0/element#Link">
-        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
-      </rdfs:Resource>
-    </rdf:type>
-  </j.3:relatesTo>
-  <owl:class rdf:about="http://www.trisotech.com/graph/1.0/decision/element#OrganizationUnit">
-    <owl:equivalentClass rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#OrganizationUnit"/>
-    <rdfs:subClassOf rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#OrganizationUnit"/>
-    <rdfs:subClassOf rdf:resource="http://www.trisotech.com/graph/1.0/element#Actor"/>
-    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  <j.4:Event rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_decb9a35-ec2c-4b16-859d-b4bc759fb84f">
+    <j.0:childOf>
+      <j.1:Process rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4">
+        <j.0:parentOfTransitive>
+          <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_bc16aa81-5984-4f92-9f82-5f127a97b741">
+            <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4"/>
+            <rdfs:label>NestedP</rdfs:label>
+            <j.0:owner>
+              <j.4:Model rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541">
+                <j.0:parentOf>
+                  <owl:Thing rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d">
+                    <j.0:parentOfTransitive>
+                      <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_89279cc8-5b74-4d10-80b3-5ecdef7f6aab">
+                        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                        <rdfs:label>ZZZ</rdfs:label>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </j.4:Activity>
+                    </j.0:parentOfTransitive>
+                    <j.0:parameter>
+                      <j.4:Parameter rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7feefe48-fb02-4ba7-8fa7-8a92d8fdd12b-parameter">
+                        <rdfs:label>In</rdfs:label>
+                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                      </j.4:Parameter>
+                    </j.0:parameter>
+                    <j.0:outcome>
+                      <j.4:Outcome rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2d6bb846-5d5c-4a1e-a6b7-8ffe64912a86-outcome">
+                        <rdfs:label>Out</rdfs:label>
+                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                      </j.4:Outcome>
+                    </j.0:outcome>
+                    <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_89279cc8-5b74-4d10-80b3-5ecdef7f6aab"/>
+                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                    <j.0:parentOfTransitive>
+                      <owl:Thing rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2d6bb846-5d5c-4a1e-a6b7-8ffe64912a86">
+                        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                        <rdfs:label>Out</rdfs:label>
+                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Entity"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </owl:Thing>
+                    </j.0:parentOfTransitive>
+                    <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                    <rdfs:label>NestedP</rdfs:label>
+                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                    <j.0:parentOfTransitive>
+                      <owl:Thing rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7feefe48-fb02-4ba7-8fa7-8a92d8fdd12b">
+                        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                        <rdfs:label>In</rdfs:label>
+                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Entity"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </owl:Thing>
+                    </j.0:parentOfTransitive>
+                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                    <j.0:parentOf>
+                      <j.4:Event rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2014b2de-15a9-411e-9fd0-ec1c1d8ea192">
+                        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </j.4:Event>
+                    </j.0:parentOf>
+                    <j.0:parentOfTransitive>
+                      <j.4:Event rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_d5d46ba0-d3fa-4e6d-ba96-fcbf46746033">
+                        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </j.4:Event>
+                    </j.0:parentOfTransitive>
+                    <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7feefe48-fb02-4ba7-8fa7-8a92d8fdd12b"/>
+                    <j.0:orderedParentOf>
+                      <rdf:List>
+                        <rdf:rest>
+                          <rdf:List>
+                            <rdf:rest>
+                              <rdf:List>
+                                <rdf:rest>
+                                  <rdf:List>
+                                    <rdf:rest>
+                                      <rdf:List>
+                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                        <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2014b2de-15a9-411e-9fd0-ec1c1d8ea192"/>
+                                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                                      </rdf:List>
+                                    </rdf:rest>
+                                    <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_d5d46ba0-d3fa-4e6d-ba96-fcbf46746033"/>
+                                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                                  </rdf:List>
+                                </rdf:rest>
+                                <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_89279cc8-5b74-4d10-80b3-5ecdef7f6aab"/>
+                                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                              </rdf:List>
+                            </rdf:rest>
+                            <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2d6bb846-5d5c-4a1e-a6b7-8ffe64912a86"/>
+                            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                          </rdf:List>
+                        </rdf:rest>
+                        <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7feefe48-fb02-4ba7-8fa7-8a92d8fdd12b"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </rdf:List>
+                    </j.0:orderedParentOf>
+                    <rdf:type>
+                      <owl:class rdf:about="http://www.trisotech.com/graph/1.0/workflow/element#Process">
+                        <owl:equivalentClass rdf:resource="http://www.trisotech.com/graph/1.0/workflow/element#Process"/>
+                        <rdfs:subClassOf rdf:resource="http://www.trisotech.com/graph/1.0/workflow/element#Process"/>
+                        <rdfs:subClassOf rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
+                        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                        <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+                      </owl:class>
+                    </rdf:type>
+                    <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_d5d46ba0-d3fa-4e6d-ba96-fcbf46746033"/>
+                    <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2014b2de-15a9-411e-9fd0-ec1c1d8ea192"/>
+                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
+                    <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2d6bb846-5d5c-4a1e-a6b7-8ffe64912a86"/>
+                  </owl:Thing>
+                </j.0:parentOf>
+                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_89279cc8-5b74-4d10-80b3-5ecdef7f6aab"/>
+                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_d5d46ba0-d3fa-4e6d-ba96-fcbf46746033"/>
+                <rdfs:label>Deployables</rdfs:label>
+                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2d6bb846-5d5c-4a1e-a6b7-8ffe64912a86"/>
+                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7feefe48-fb02-4ba7-8fa7-8a92d8fdd12b"/>
+                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_bc16aa81-5984-4f92-9f82-5f127a97b741"/>
+                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_decb9a35-ec2c-4b16-859d-b4bc759fb84f"/>
+                <j.0:parentOfTransitive>
+                  <j.4:Event rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_d2bf9751-8c97-4051-bbc2-951f1d101c6e">
+                    <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4"/>
+                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4"/>
+                    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                  </j.4:Event>
+                </j.0:parentOfTransitive>
+                <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#BPMNModel"/>
+                <j.0:fileId>http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541</j.0:fileId>
+                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                <j.0:updater>sottara.davide@mayo.edu</j.0:updater>
+                <j.0:parentOfTransitive>
+                  <owl:Thing rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_45050c32-4eb7-4f5d-ab1f-5f5ca2dae9a4">
+                    <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4"/>
+                    <rdfs:label>X</rdfs:label>
+                    <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
+                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4"/>
+                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Entity"/>
+                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                  </owl:Thing>
+                </j.0:parentOfTransitive>
+                <j.0:updated>2023-04-08T17:36:54Z</j.0:updated>
+                <j.0:orderedParentOf>
+                  <rdf:List>
+                    <rdf:rest>
+                      <rdf:List>
+                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                        <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </rdf:List>
+                    </rdf:rest>
+                    <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_7c1b20c3-3189-4acb-b272-eac0bc578d5d"/>
+                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                  </rdf:List>
+                </j.0:orderedParentOf>
+                <j.0:path>/Deployables.bpmn</j.0:path>
+                <j.0:mimeType>application/bpmn-2-0+xml</j.0:mimeType>
+                <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4"/>
+                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2014b2de-15a9-411e-9fd0-ec1c1d8ea192"/>
+                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4"/>
+                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+              </j.4:Model>
+            </j.0:owner>
+            <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+            <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4"/>
+            <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+          </j.4:Activity>
+        </j.0:parentOfTransitive>
+        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_45050c32-4eb7-4f5d-ab1f-5f5ca2dae9a4"/>
+        <rdfs:label>Test Root</rdfs:label>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_45050c32-4eb7-4f5d-ab1f-5f5ca2dae9a4"/>
+        <j.0:orderedParentOf>
+          <rdf:List>
+            <rdf:rest>
+              <rdf:List>
+                <rdf:rest>
+                  <rdf:List>
+                    <rdf:rest>
+                      <rdf:List>
+                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                        <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_decb9a35-ec2c-4b16-859d-b4bc759fb84f"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </rdf:List>
+                    </rdf:rest>
+                    <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_d2bf9751-8c97-4051-bbc2-951f1d101c6e"/>
+                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                  </rdf:List>
+                </rdf:rest>
+                <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_45050c32-4eb7-4f5d-ab1f-5f5ca2dae9a4"/>
+                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+              </rdf:List>
+            </rdf:rest>
+            <rdf:first rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_bc16aa81-5984-4f92-9f82-5f127a97b741"/>
+            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+          </rdf:List>
+        </j.0:orderedParentOf>
+        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+        <j.0:parameter>
+          <j.4:Parameter rdf:about="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_45050c32-4eb7-4f5d-ab1f-5f5ca2dae9a4-parameter">
+            <rdfs:label>X</rdfs:label>
+            <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
+            <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+          </j.4:Parameter>
+        </j.0:parameter>
+        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_decb9a35-ec2c-4b16-859d-b4bc759fb84f"/>
+        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_d2bf9751-8c97-4051-bbc2-951f1d101c6e"/>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_d2bf9751-8c97-4051-bbc2-951f1d101c6e"/>
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_bc16aa81-5984-4f92-9f82-5f127a97b741"/>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_decb9a35-ec2c-4b16-859d-b4bc759fb84f"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+      </j.1:Process>
+    </j.0:childOf>
+    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541"/>
+    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_57b49f1c-e835-4c32-b954-6453cbdb6541#_2c710854-347a-454f-ba88-9690786d9cf4"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
-  </owl:class>
-  <rdfs:Resource rdf:about="http://www.trisotech.com/graph/1.0/elementRel#value">
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
-    <rdfs:subPropertyOf rdf:resource="http://www.trisotech.com/graph/1.0/elementRel#value"/>
-    <owl:equivalentProperty rdf:resource="http://www.trisotech.com/graph/1.0/elementRel#value"/>
-  </rdfs:Resource>
-  <rdfs:Resource rdf:about="http://www.w3.org/2000/01/rdf-schema#seeAlso">
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
-    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#seeAlso"/>
-    <owl:equivalentProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#seeAlso"/>
-  </rdfs:Resource>
-  <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_02d82887-114d-4ed3-8677-9438442d1bc3">
+  </j.4:Event>
+  <owl:Thing rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_48ff009f-9d86-4f96-b4dd-24f9c2107f90">
     <j.0:childOf>
       <owl:Thing rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_3acfc64b-0eda-43f9-ab13-98296b558bd1">
         <j.0:childOfTransitive>
           <rdfs:Resource rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa">
-            <j.0:updated>2023-04-08T03:12:22Z</j.0:updated>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_48ff009f-9d86-4f96-b4dd-24f9c2107f90"/>
+            <j.0:updated>2023-04-08T04:34:22Z</j.0:updated>
             <j.0:updater>sottara.davide@mayo.edu</j.0:updater>
             <j.0:parentOfTransitive>
               <j.4:Event rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_6eed86a8-5aad-4ecc-8eda-cef52b6ce377">
@@ -1863,7 +2097,7 @@
                       <owl:Thing rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_ea7c7795-2748-4995-a057-327dacd7e19a">
                         <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_597f0095-4383-4a63-80a3-8945d23425cf"/>
                         <rdfs:label>X</rdfs:label>
-                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#string"/>
+                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
                         <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
                         <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_597f0095-4383-4a63-80a3-8945d23425cf"/>
                         <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
@@ -1873,10 +2107,31 @@
                     </j.0:parentOfTransitive>
                     <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_6eed86a8-5aad-4ecc-8eda-cef52b6ce377"/>
                     <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
+                    <j.0:parameter>
+                      <j.4:Parameter rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_ea7c7795-2748-4995-a057-327dacd7e19a-parameter">
+                        <rdfs:label>X</rdfs:label>
+                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#number"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
+                      </j.4:Parameter>
+                    </j.0:parameter>
                     <rdfs:label>Svc1</rdfs:label>
                     <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
                     <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
                     <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_6eed86a8-5aad-4ecc-8eda-cef52b6ce377"/>
+                    <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_43c1c834-3aeb-4893-b346-5f7f30a5d887"/>
+                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/workflow/element#Process"/>
+                    <j.0:parentOfTransitive>
+                      <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_b683d95c-d809-402c-a294-97511a9e2cda">
+                        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_597f0095-4383-4a63-80a3-8945d23425cf"/>
+                        <rdfs:label>Do stuff</rdfs:label>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_597f0095-4383-4a63-80a3-8945d23425cf"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </j.4:Activity>
+                    </j.0:parentOfTransitive>
+                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
                     <j.0:orderedParentOf>
                       <rdf:List>
                         <rdf:rest>
@@ -1898,37 +2153,10 @@
                             <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                           </rdf:List>
                         </rdf:rest>
-                        <rdf:first>
-                          <rdfs:Resource rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_b683d95c-d809-402c-a294-97511a9e2cda">
-                            <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_597f0095-4383-4a63-80a3-8945d23425cf"/>
-                            <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
-                            <j.0:what rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_ea7c7795-2748-4995-a057-327dacd7e19a"/>
-                            <rdfs:label>Do stuff</rdfs:label>
-                            <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
-                            <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_597f0095-4383-4a63-80a3-8945d23425cf"/>
-                            <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
-                            <j.0:input rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_ea7c7795-2748-4995-a057-327dacd7e19a"/>
-                            <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                          </rdfs:Resource>
-                        </rdf:first>
+                        <rdf:first rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_b683d95c-d809-402c-a294-97511a9e2cda"/>
                         <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                       </rdf:List>
                     </j.0:orderedParentOf>
-                    <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_43c1c834-3aeb-4893-b346-5f7f30a5d887"/>
-                    <rdf:type>
-                      <owl:class rdf:about="http://www.trisotech.com/graph/1.0/workflow/element#Process">
-                        <owl:equivalentClass rdf:resource="http://www.trisotech.com/graph/1.0/workflow/element#Process"/>
-                        <rdfs:subClassOf rdf:resource="http://www.trisotech.com/graph/1.0/workflow/element#Process"/>
-                        <rdfs:subClassOf rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
-                        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                        <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
-                      </owl:class>
-                    </rdf:type>
-                    <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_b683d95c-d809-402c-a294-97511a9e2cda"/>
-                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
                     <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_ea7c7795-2748-4995-a057-327dacd7e19a"/>
                     <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_b683d95c-d809-402c-a294-97511a9e2cda"/>
                     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
@@ -1965,6 +2193,33 @@
             </j.0:parentOfTransitive>
             <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_43c1c834-3aeb-4893-b346-5f7f30a5d887"/>
             <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Model"/>
+            <j.0:customAttribute>
+              <j.4:CustomAttribute rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_37863061-b9e0-4312-8063-dd16c80877cb">
+                <j.0:value>urn:uuid:77ac7365-2001-4f13-bc6f-ffb8b0095be6:10.9.7</j.0:value>
+                <j.0:key>serviceAssetId</j.0:key>
+                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
+              </j.4:CustomAttribute>
+            </j.0:customAttribute>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_ea7c7795-2748-4995-a057-327dacd7e19a"/>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_597f0095-4383-4a63-80a3-8945d23425cf"/>
+            <rdfs:label>Process Ax1</rdfs:label>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_3acfc64b-0eda-43f9-ab13-98296b558bd1"/>
+            <j.0:parentOfTransitive>
+              <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_02d82887-114d-4ed3-8677-9438442d1bc3">
+                <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_3acfc64b-0eda-43f9-ab13-98296b558bd1"/>
+                <rdfs:label>Do Too</rdfs:label>
+                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
+                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_3acfc64b-0eda-43f9-ab13-98296b558bd1"/>
+                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
+                <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+              </j.4:Activity>
+            </j.0:parentOfTransitive>
+            <j.0:mimeType>application/bpmn-2-0+xml</j.0:mimeType>
+            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_597f0095-4383-4a63-80a3-8945d23425cf"/>
+            <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#BPMNModel"/>
+            <j.0:path>/Process Ax1.bpmn</j.0:path>
+            <j.0:fileId>http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa</j.0:fileId>
             <j.0:orderedParentOf>
               <rdf:List>
                 <rdf:rest>
@@ -1978,41 +2233,45 @@
                 <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
               </rdf:List>
             </j.0:orderedParentOf>
-            <j.0:customAttribute>
-              <j.4:CustomAttribute rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_37863061-b9e0-4312-8063-dd16c80877cb">
-                <j.0:value>urn:uuid:77ac7365-2001-4f13-bc6f-ffb8b0095be6:10.9.7</j.0:value>
-                <j.0:key>serviceAssetId</j.0:key>
-                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
-              </j.4:CustomAttribute>
-            </j.0:customAttribute>
-            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_ea7c7795-2748-4995-a057-327dacd7e19a"/>
-            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_597f0095-4383-4a63-80a3-8945d23425cf"/>
-            <rdfs:label>Process Ax1</rdfs:label>
-            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_3acfc64b-0eda-43f9-ab13-98296b558bd1"/>
-            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_02d82887-114d-4ed3-8677-9438442d1bc3"/>
-            <j.0:mimeType>application/bpmn-2-0+xml</j.0:mimeType>
-            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_597f0095-4383-4a63-80a3-8945d23425cf"/>
-            <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#BPMNModel"/>
-            <j.0:path>/Process Ax1.bpmn</j.0:path>
-            <j.0:fileId>http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa</j.0:fileId>
             <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_b683d95c-d809-402c-a294-97511a9e2cda"/>
           </rdfs:Resource>
         </j.0:childOfTransitive>
+        <j.0:parameter>
+          <j.4:Parameter rdf:about="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_48ff009f-9d86-4f96-b4dd-24f9c2107f90-parameter">
+            <rdfs:label>Y</rdfs:label>
+            <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#dateTime"/>
+            <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
+          </j.4:Parameter>
+        </j.0:parameter>
         <rdfs:label>Svc2</rdfs:label>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_48ff009f-9d86-4f96-b4dd-24f9c2107f90"/>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_48ff009f-9d86-4f96-b4dd-24f9c2107f90"/>
         <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/workflow/element#Process"/>
         <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_249634be-0d20-460a-a1ab-8eaa5c0a3461"/>
+        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
+        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_249634be-0d20-460a-a1ab-8eaa5c0a3461"/>
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_02d82887-114d-4ed3-8677-9438442d1bc3"/>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_e7bbba4a-2fab-44ab-b96f-92afc65ece36"/>
         <j.0:orderedParentOf>
           <rdf:List>
             <rdf:rest>
               <rdf:List>
                 <rdf:rest>
                   <rdf:List>
-                    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                    <rdf:first rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_249634be-0d20-460a-a1ab-8eaa5c0a3461"/>
+                    <rdf:rest>
+                      <rdf:List>
+                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                        <rdf:first rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_249634be-0d20-460a-a1ab-8eaa5c0a3461"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </rdf:List>
+                    </rdf:rest>
+                    <rdf:first rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_e7bbba4a-2fab-44ab-b96f-92afc65ece36"/>
                     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                   </rdf:List>
                 </rdf:rest>
-                <rdf:first rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_e7bbba4a-2fab-44ab-b96f-92afc65ece36"/>
+                <rdf:first rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_48ff009f-9d86-4f96-b4dd-24f9c2107f90"/>
                 <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
               </rdf:List>
             </rdf:rest>
@@ -2020,12 +2279,6 @@
             <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
           </rdf:List>
         </j.0:orderedParentOf>
-        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
-        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
-        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_249634be-0d20-460a-a1ab-8eaa5c0a3461"/>
-        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_02d82887-114d-4ed3-8677-9438442d1bc3"/>
-        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_e7bbba4a-2fab-44ab-b96f-92afc65ece36"/>
         <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_e7bbba4a-2fab-44ab-b96f-92afc65ece36"/>
         <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_02d82887-114d-4ed3-8677-9438442d1bc3"/>
         <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
@@ -2038,13 +2291,34 @@
         </j.0:customAttribute>
       </owl:Thing>
     </j.0:childOf>
-    <rdfs:label>Do Too</rdfs:label>
+    <rdfs:label>Y</rdfs:label>
+    <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#dateTime"/>
     <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
     <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa#_3acfc64b-0eda-43f9-ab13-98296b558bd1"/>
     <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_88548fd3-4db7-41be-bd03-9c99570ac5fa"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Entity"/>
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-  </j.4:Activity>
+  </owl:Thing>
+  <owl:class rdf:about="http://www.trisotech.com/graph/1.0/decision/element#OrganizationUnit">
+    <owl:equivalentClass rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#OrganizationUnit"/>
+    <rdfs:subClassOf rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#OrganizationUnit"/>
+    <rdfs:subClassOf rdf:resource="http://www.trisotech.com/graph/1.0/element#Actor"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  </owl:class>
+  <rdfs:Resource rdf:about="http://www.trisotech.com/graph/1.0/elementRel#value">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.trisotech.com/graph/1.0/elementRel#value"/>
+    <owl:equivalentProperty rdf:resource="http://www.trisotech.com/graph/1.0/elementRel#value"/>
+  </rdfs:Resource>
+  <rdfs:Resource rdf:about="http://www.w3.org/2000/01/rdf-schema#seeAlso">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#seeAlso"/>
+    <owl:equivalentProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#seeAlso"/>
+  </rdfs:Resource>
   <rdfs:Resource rdf:about="http://www.trisotech.com/graph/1.0/elementRel#orderedParentOf">
     <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
     <rdfs:subPropertyOf rdf:resource="http://www.trisotech.com/graph/1.0/elementRel#orderedParentOf"/>
@@ -2170,6 +2444,15 @@
                 <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
               </rdfs:Resource>
             </j.0:parentOf>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_90ba4d58-7d9f-4063-930f-beb5f32e57ef#_b620345c-f6fb-46fe-bc3f-eebaad61a734_DS"/>
+            <j.0:state>Draft</j.0:state>
+            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+            <j.0:updater>Sottara, Davide</j.0:updater>
+            <j.0:fileId>http://www.trisotech.com/definitions/_90ba4d58-7d9f-4063-930f-beb5f32e57ef</j.0:fileId>
+            <j.0:path>/Asset 1 Artifact 1.dmnj</j.0:path>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_90ba4d58-7d9f-4063-930f-beb5f32e57ef#_90ba4d58-7d9f-4063-930f-beb5f32e57ef_DS"/>
+            <rdfs:label>Asset 1 Artifact 1</rdfs:label>
+            <j.0:updated>2023-03-28T22:33:21Z</j.0:updated>
             <j.0:orderedParentOf>
               <rdf:List>
                 <rdf:rest>
@@ -2189,15 +2472,6 @@
                 <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
               </rdf:List>
             </j.0:orderedParentOf>
-            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_90ba4d58-7d9f-4063-930f-beb5f32e57ef#_b620345c-f6fb-46fe-bc3f-eebaad61a734_DS"/>
-            <j.0:state>Draft</j.0:state>
-            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-            <j.0:updater>Sottara, Davide</j.0:updater>
-            <j.0:fileId>http://www.trisotech.com/definitions/_90ba4d58-7d9f-4063-930f-beb5f32e57ef</j.0:fileId>
-            <j.0:path>/Asset 1 Artifact 1.dmnj</j.0:path>
-            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_90ba4d58-7d9f-4063-930f-beb5f32e57ef#_90ba4d58-7d9f-4063-930f-beb5f32e57ef_DS"/>
-            <rdfs:label>Asset 1 Artifact 1</rdfs:label>
-            <j.0:updated>2023-03-28T22:33:21Z</j.0:updated>
             <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
             <j.0:version>1.0.1</j.0:version>
             <j.0:mimeType>application/vnd.triso-dmn+json</j.0:mimeType>
@@ -2212,6 +2486,125 @@
     <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_90ba4d58-7d9f-4063-930f-beb5f32e57ef"/>
     <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_90ba4d58-7d9f-4063-930f-beb5f32e57ef"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  </j.4:Activity>
+  <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_a5845173-beed-432b-9359-6732f442f23c">
+    <j.0:childOf>
+      <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51">
+        <j.0:owner>
+          <j.4:BPMNModel rdf:about="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778">
+            <j.0:parentOfTransitive>
+              <j.4:Event rdf:about="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_4537f743-e07f-4365-9629-0468cb1acbbf">
+                <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51"/>
+                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51"/>
+                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+                <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+              </j.4:Event>
+            </j.0:parentOfTransitive>
+            <j.0:mimeType>application/bpmn-2-0+xml</j.0:mimeType>
+            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51"/>
+            <j.0:updater>sottara.davide@mayo.edu</j.0:updater>
+            <j.0:parentOfTransitive>
+              <j.4:Event rdf:about="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_f51ca292-5475-4680-a616-d83101101dcd">
+                <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51"/>
+                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51"/>
+                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+                <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+              </j.4:Event>
+            </j.0:parentOfTransitive>
+            <j.0:updated>2023-04-08T04:35:45Z</j.0:updated>
+            <j.0:orderedParentOf>
+              <rdf:List>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                <rdf:first rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51"/>
+                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+              </rdf:List>
+            </j.0:orderedParentOf>
+            <rdfs:label>Another process service</rdfs:label>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51"/>
+            <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+            <j.0:path>/Another process service.bpmn</j.0:path>
+            <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Model"/>
+            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_a5845173-beed-432b-9359-6732f442f23c"/>
+            <j.0:parentOfTransitive>
+              <owl:Thing rdf:about="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_7edfd26a-dcb8-415b-9b4f-4ebdb908266f">
+                <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51"/>
+                <rdfs:label>A</rdfs:label>
+                <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#string"/>
+                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51"/>
+                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+                <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Entity"/>
+                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+              </owl:Thing>
+            </j.0:parentOfTransitive>
+            <j.0:fileId>http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778</j.0:fileId>
+            <j.0:customAttribute>
+              <j.4:CustomAttribute rdf:about="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_ebd5ffc4-7afb-400a-b841-c06bb91fa08e">
+                <j.0:value>urn:uuid:c86a7cb8-40a9-4851-a35c-f9db1d10d94f:0.4.5</j.0:value>
+                <j.0:key>serviceAssetId</j.0:key>
+                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+              </j.4:CustomAttribute>
+            </j.0:customAttribute>
+          </j.4:BPMNModel>
+        </j.0:owner>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_4537f743-e07f-4365-9629-0468cb1acbbf"/>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_4537f743-e07f-4365-9629-0468cb1acbbf"/>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_f51ca292-5475-4680-a616-d83101101dcd"/>
+        <rdfs:label>Page 1</rdfs:label>
+        <j.0:orderedParentOf>
+          <rdf:List>
+            <rdf:rest>
+              <rdf:List>
+                <rdf:rest>
+                  <rdf:List>
+                    <rdf:rest>
+                      <rdf:List>
+                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                        <rdf:first rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_f51ca292-5475-4680-a616-d83101101dcd"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                      </rdf:List>
+                    </rdf:rest>
+                    <rdf:first rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_4537f743-e07f-4365-9629-0468cb1acbbf"/>
+                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                  </rdf:List>
+                </rdf:rest>
+                <rdf:first rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_a5845173-beed-432b-9359-6732f442f23c"/>
+                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+              </rdf:List>
+            </rdf:rest>
+            <rdf:first rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_7edfd26a-dcb8-415b-9b4f-4ebdb908266f"/>
+            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+          </rdf:List>
+        </j.0:orderedParentOf>
+        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_7edfd26a-dcb8-415b-9b4f-4ebdb908266f"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_f51ca292-5475-4680-a616-d83101101dcd"/>
+        <j.0:parameter>
+          <j.4:Parameter rdf:about="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_7edfd26a-dcb8-415b-9b4f-4ebdb908266f-parameter">
+            <rdfs:label>A</rdfs:label>
+            <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#string"/>
+            <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+          </j.4:Parameter>
+        </j.0:parameter>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_a5845173-beed-432b-9359-6732f442f23c"/>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_a5845173-beed-432b-9359-6732f442f23c"/>
+        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_7edfd26a-dcb8-415b-9b4f-4ebdb908266f"/>
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/workflow/element#Process"/>
+      </j.4:Activity>
+    </j.0:childOf>
+    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778#_488f94ab-6416-4f5c-81b2-a3e48bde8f51"/>
+    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_0a244e08-6406-44e8-b1eb-59859efca778"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
   </j.4:Activity>
   <owl:class rdf:about="http://www.trisotech.com/graph/1.0/case/element#CasePlanModel">
     <owl:equivalentClass rdf:resource="http://www.trisotech.com/graph/1.0/case/element#CasePlanModel"/>
@@ -2284,6 +2677,119 @@
         </j.0:customAttribute>
         <j.0:state>Draft</j.0:state>
         <j.0:updated>2023-03-28T17:51:41Z</j.0:updated>
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_871ae261-e0dd-4d9d-8939-e1fb9ebf088e_DS"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+        <j.0:version>2.0.0</j.0:version>
+        <j.0:updater>Sottara, Davide</j.0:updater>
+        <rdfs:label>Asset 1 Artifact 2</rdfs:label>
+        <j.0:parentOfTransitive>
+          <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_99302f65-b27b-4830-b7cb-a64c1578e0fc_DS">
+            <j.0:implementation>
+              <j.4:Implementation rdf:about="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_99302f65-b27b-4830-b7cb-a64c1578e0fc_DS-implementation">
+                <j.6:outputDecision>
+                  <j.6:Decision rdf:about="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878">
+                    <j.0:outcome>
+                      <j.4:Outcome rdf:about="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878-outcome">
+                        <rdfs:label>YY</rdfs:label>
+                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
+                      </j.4:Outcome>
+                    </j.0:outcome>
+                    <j.0:childOf>
+                      <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_68b02a37-54e8-472f-927e-35cec703d853">
+                        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/case/element#CasePlanModel"/>
+                        <j.0:childOf>
+                          <j.4:Model rdf:about="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4">
+                            <j.0:orderedParentOf>
+                              <rdf:List>
+                                <rdf:rest>
+                                  <rdf:List>
+                                    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                    <rdf:first rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_68b02a37-54e8-472f-927e-35cec703d853"/>
+                                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                                  </rdf:List>
+                                </rdf:rest>
+                                <rdf:first>
+                                  <j.2:CasePlanModel rdf:about="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_cc19b943-b03e-4258-ac8b-d1e91c931123">
+                                    <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
+                                    <rdfs:label>Page 1</rdfs:label>
+                                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
+                                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
+                                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
+                                    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                                  </j.2:CasePlanModel>
+                                </rdf:first>
+                                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                              </rdf:List>
+                            </j.0:orderedParentOf>
+                            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_68b02a37-54e8-472f-927e-35cec703d853"/>
+                            <j.0:path>/Asset Cas.cmmnj</j.0:path>
+                            <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                            <j.0:reuse rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
+                            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
+                            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_cc19b943-b03e-4258-ac8b-d1e91c931123"/>
+                            <j.0:mimeType>application/vnd.triso-cmmn+json</j.0:mimeType>
+                            <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#CMMNModel"/>
+                            <j.0:updater>Sottara, Davide</j.0:updater>
+                            <j.0:fileId>http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4</j.0:fileId>
+                            <rdfs:label>Asset Cas</rdfs:label>
+                            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_cc19b943-b03e-4258-ac8b-d1e91c931123"/>
+                            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                            <j.0:updated>2023-04-01T21:07:16Z</j.0:updated>
+                            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_68b02a37-54e8-472f-927e-35cec703d853"/>
+                          </j.4:Model>
+                        </j.0:childOf>
+                        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
+                        <j.0:orderedParentOf>
+                          <rdf:List>
+                            <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                            <rdf:first rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
+                            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                          </rdf:List>
+                        </j.0:orderedParentOf>
+                        <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
+                      </j.4:Activity>
+                    </j.0:childOf>
+                    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
+                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
+                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
+                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
+                    <rdfs:label>YY</rdfs:label>
+                    <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
+                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_68b02a37-54e8-472f-927e-35cec703d853"/>
+                  </j.6:Decision>
+                </j.6:outputDecision>
+                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
+                <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionServiceImplementation"/>
+              </j.4:Implementation>
+            </j.0:implementation>
+            <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
+            <j.0:outcome>
+              <j.4:Outcome rdf:about="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_99302f65-b27b-4830-b7cb-a64c1578e0fc_DS-_fb651e43-93d8-453d-9274-2ad76df6a878-outcome">
+                <rdfs:label>YY</rdfs:label>
+                <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
+                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
+              </j.4:Outcome>
+            </j.0:outcome>
+            <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
+            <rdfs:label>Whole Model Decision Service</rdfs:label>
+            <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
+            <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
+            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+            <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+            <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionService"/>
+          </j.4:Activity>
+        </j.0:parentOfTransitive>
+        <j.0:path>/Asset 1 Artifact 2.dmnj</j.0:path>
+        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
         <j.0:orderedParentOf>
           <rdf:List>
             <rdf:rest>
@@ -2291,115 +2797,11 @@
                 <rdf:rest>
                   <rdf:List>
                     <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                    <rdf:first>
-                      <j.6:Decision rdf:about="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878">
-                        <j.0:outcome>
-                          <j.4:Outcome rdf:about="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878-outcome">
-                            <rdfs:label>YY</rdfs:label>
-                            <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
-                            <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
-                          </j.4:Outcome>
-                        </j.0:outcome>
-                        <j.0:childOf>
-                          <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_68b02a37-54e8-472f-927e-35cec703d853">
-                            <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/case/element#CasePlanModel"/>
-                            <j.0:childOf>
-                              <j.4:Model rdf:about="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4">
-                                <j.0:orderedParentOf>
-                                  <rdf:List>
-                                    <rdf:rest>
-                                      <rdf:List>
-                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                                        <rdf:first rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_68b02a37-54e8-472f-927e-35cec703d853"/>
-                                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                                      </rdf:List>
-                                    </rdf:rest>
-                                    <rdf:first>
-                                      <j.2:CasePlanModel rdf:about="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_cc19b943-b03e-4258-ac8b-d1e91c931123">
-                                        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
-                                        <rdfs:label>Page 1</rdfs:label>
-                                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
-                                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
-                                        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
-                                        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                                      </j.2:CasePlanModel>
-                                    </rdf:first>
-                                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                                  </rdf:List>
-                                </j.0:orderedParentOf>
-                                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_68b02a37-54e8-472f-927e-35cec703d853"/>
-                                <j.0:path>/Asset Cas.cmmnj</j.0:path>
-                                <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                                <j.0:reuse rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
-                                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
-                                <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_cc19b943-b03e-4258-ac8b-d1e91c931123"/>
-                                <j.0:mimeType>application/vnd.triso-cmmn+json</j.0:mimeType>
-                                <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#CMMNModel"/>
-                                <j.0:updater>Sottara, Davide</j.0:updater>
-                                <j.0:fileId>http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4</j.0:fileId>
-                                <rdfs:label>Asset Cas</rdfs:label>
-                                <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_cc19b943-b03e-4258-ac8b-d1e91c931123"/>
-                                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                                <j.0:updated>2023-04-01T21:07:16Z</j.0:updated>
-                                <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_68b02a37-54e8-472f-927e-35cec703d853"/>
-                              </j.4:Model>
-                            </j.0:childOf>
-                            <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
-                            <j.0:orderedParentOf>
-                              <rdf:List>
-                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                                <rdf:first rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
-                                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                              </rdf:List>
-                            </j.0:orderedParentOf>
-                            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
-                            <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
-                            <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
-                          </j.4:Activity>
-                        </j.0:childOf>
-                        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
-                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4"/>
-                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
-                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
-                        <rdfs:label>YY</rdfs:label>
-                        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
-                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4#_68b02a37-54e8-472f-927e-35cec703d853"/>
-                      </j.6:Decision>
-                    </rdf:first>
+                    <rdf:first rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
                     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                   </rdf:List>
                 </rdf:rest>
-                <rdf:first>
-                  <j.4:Activity rdf:about="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_99302f65-b27b-4830-b7cb-a64c1578e0fc_DS">
-                    <j.0:implementation>
-                      <j.4:Implementation rdf:about="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_99302f65-b27b-4830-b7cb-a64c1578e0fc_DS-implementation">
-                        <j.6:outputDecision rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
-                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
-                        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionServiceImplementation"/>
-                      </j.4:Implementation>
-                    </j.0:implementation>
-                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
-                    <j.0:outcome>
-                      <j.4:Outcome rdf:about="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_99302f65-b27b-4830-b7cb-a64c1578e0fc_DS-_fb651e43-93d8-453d-9274-2ad76df6a878-outcome">
-                        <rdfs:label>YY</rdfs:label>
-                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
-                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
-                      </j.4:Outcome>
-                    </j.0:outcome>
-                    <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
-                    <rdfs:label>Whole Model Decision Service</rdfs:label>
-                    <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
-                    <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc"/>
-                    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionService"/>
-                  </j.4:Activity>
-                </rdf:first>
+                <rdf:first rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_99302f65-b27b-4830-b7cb-a64c1578e0fc_DS"/>
                 <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
               </rdf:List>
             </rdf:rest>
@@ -2407,15 +2809,6 @@
             <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
           </rdf:List>
         </j.0:orderedParentOf>
-        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_871ae261-e0dd-4d9d-8939-e1fb9ebf088e_DS"/>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-        <j.0:version>2.0.0</j.0:version>
-        <j.0:updater>Sottara, Davide</j.0:updater>
-        <rdfs:label>Asset 1 Artifact 2</rdfs:label>
-        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_99302f65-b27b-4830-b7cb-a64c1578e0fc_DS"/>
-        <j.0:path>/Asset 1 Artifact 2.dmnj</j.0:path>
-        <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_fb651e43-93d8-453d-9274-2ad76df6a878"/>
         <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc#_99302f65-b27b-4830-b7cb-a64c1578e0fc_DS"/>
         <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#DMNModel"/>
         <j.0:mimeType>application/vnd.triso-dmn+json</j.0:mimeType>
@@ -2499,32 +2892,6 @@
               </j.6:InputData>
             </j.0:parentOf>
             <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_d6b8fd36-d568-490a-8764-dd3ce135dd7b_DS"/>
-            <j.0:updated>2023-03-30T23:19:03Z</j.0:updated>
-            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_07965f3e-fc71-4bd6-8ef7-f334efe5a65a"/>
-            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_d6b8fd36-d568-490a-8764-dd3ce135dd7b_DS"/>
-            <rdfs:label>Asset 2 Artifact 1x</rdfs:label>
-            <j.0:parentOfTransitive>
-              <owl:Thing rdf:about="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_fd5cf85e-9049-4332-a2cc-a4f8cc516f2b_DS">
-                <rdfs:label>Diagram Page 1</rdfs:label>
-                <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b"/>
-                <j.0:implementation>
-                  <j.4:Implementation rdf:about="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_fd5cf85e-9049-4332-a2cc-a4f8cc516f2b_DS-implementation">
-                    <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b"/>
-                    <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionServiceImplementation"/>
-                  </j.4:Implementation>
-                </j.0:implementation>
-                <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
-                <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
-                <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b"/>
-                <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b"/>
-                <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-                <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionService"/>
-              </owl:Thing>
-            </j.0:parentOfTransitive>
-            <j.0:mimeType>application/vnd.triso-dmn+json</j.0:mimeType>
-            <j.0:updater>Sottara, Davide</j.0:updater>
-            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
-            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_fd5cf85e-9049-4332-a2cc-a4f8cc516f2b_DS"/>
             <j.0:orderedParentOf>
               <rdf:List>
                 <rdf:rest>
@@ -2536,7 +2903,24 @@
                         <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                       </rdf:List>
                     </rdf:rest>
-                    <rdf:first rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_fd5cf85e-9049-4332-a2cc-a4f8cc516f2b_DS"/>
+                    <rdf:first>
+                      <owl:Thing rdf:about="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_fd5cf85e-9049-4332-a2cc-a4f8cc516f2b_DS">
+                        <rdfs:label>Diagram Page 1</rdfs:label>
+                        <j.0:childOfTransitive rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b"/>
+                        <j.0:implementation>
+                          <j.4:Implementation rdf:about="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_fd5cf85e-9049-4332-a2cc-a4f8cc516f2b_DS-implementation">
+                            <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b"/>
+                            <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionServiceImplementation"/>
+                          </j.4:Implementation>
+                        </j.0:implementation>
+                        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/element#Activity"/>
+                        <j.0:typeRef rdf:resource="http://www.trisotech.com/graph/1.0/feel#Any"/>
+                        <j.0:childOf rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b"/>
+                        <j.0:owner rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b"/>
+                        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+                        <rdf:type rdf:resource="http://www.trisotech.com/graph/1.0/decision/element#DecisionService"/>
+                      </owl:Thing>
+                    </rdf:first>
                     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
                   </rdf:List>
                 </rdf:rest>
@@ -2544,6 +2928,15 @@
                 <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
               </rdf:List>
             </j.0:orderedParentOf>
+            <j.0:updated>2023-03-30T23:19:03Z</j.0:updated>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_07965f3e-fc71-4bd6-8ef7-f334efe5a65a"/>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_d6b8fd36-d568-490a-8764-dd3ce135dd7b_DS"/>
+            <rdfs:label>Asset 2 Artifact 1x</rdfs:label>
+            <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_fd5cf85e-9049-4332-a2cc-a4f8cc516f2b_DS"/>
+            <j.0:mimeType>application/vnd.triso-dmn+json</j.0:mimeType>
+            <j.0:updater>Sottara, Davide</j.0:updater>
+            <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+            <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_fd5cf85e-9049-4332-a2cc-a4f8cc516f2b_DS"/>
             <j.0:customAttribute>
               <j.4:CustomAttribute rdf:about="http://www.trisotech.com/definitions/_d6b8fd36-d568-490a-8764-dd3ce135dd7b#_bbecde7a-73a2-48e7-9015-05db19e7aeff">
                 <j.0:value>urn:uuid:c6ba19ab-f042-47c7-b29e-af744a0aa592:2023.4.1</j.0:value>
@@ -2726,8 +3119,6 @@
         <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_4dc4cc2d-946e-4387-9bff-e4c8fec60fa6#_4dc4cc2d-946e-4387-9bff-e4c8fec60fa6_DS"/>
         <j.0:version>5.0.0</j.0:version>
         <j.0:parentOf rdf:resource="http://www.trisotech.com/definitions/_4dc4cc2d-946e-4387-9bff-e4c8fec60fa6#_4e84305c-c16e-40d9-b0b7-56928a14ca5c_DS"/>
-        <j.0:state>Draft</j.0:state>
-        <j.0:mimeType>application/vnd.triso-dmn+json</j.0:mimeType>
         <j.0:orderedParentOf>
           <rdf:List>
             <rdf:rest>
@@ -2747,6 +3138,8 @@
             <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
           </rdf:List>
         </j.0:orderedParentOf>
+        <j.0:state>Draft</j.0:state>
+        <j.0:mimeType>application/vnd.triso-dmn+json</j.0:mimeType>
         <j.0:fileId>http://www.trisotech.com/definitions/_4dc4cc2d-946e-4387-9bff-e4c8fec60fa6</j.0:fileId>
         <j.0:parentOfTransitive rdf:resource="http://www.trisotech.com/definitions/_4dc4cc2d-946e-4387-9bff-e4c8fec60fa6#_f1cb458a-fb23-41b3-b9b9-4a982b77954a"/>
         <j.0:path>/Asset 1c Artifact 5.dmnj</j.0:path>
@@ -3027,9 +3420,6 @@
   <rdfs:Resource rdf:about="http://www.trisotech.com/graph/1.0/businessentity/element#relatesTo">
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdfs:Resource>
-  <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#AnnotationProperty">
-    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
-  </rdfs:Resource>
   <rdfs:Resource rdf:about="http://www.trisotech.com/graph/1.0/element#Term">
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdfs:Resource>
@@ -3037,6 +3427,9 @@
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdfs:Resource>
   <rdfs:Resource rdf:about="http://www.trisotech.com/graph/1.0/element#Parameter">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  </rdfs:Resource>
+  <rdfs:Resource rdf:about="http://www.w3.org/2002/07/owl#AnnotationProperty">
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdfs:Resource>
 </rdf:RDF>

@@ -27,11 +27,14 @@ dependencies on the DES proprietary extensions to the standards.
     - Knowledge 'at rest' + Knowledge 'in motion'
 
 ### Upcoming
+
 - Content Negotiation: support for DMN 1.3 and later versions
 - Configurability of Service Library runtimes
 - KEM-annotated decision models
+- Cloud Event support for DES webhooks
 
 ### Experimental
+
 - KEM to SCG to OWL integration
 
 ## User Instructions
@@ -58,14 +61,40 @@ The following properties need to be configured as (Spring) application propertie
   instance, obtainable from the DES instance itself.
 * `edu.mayo.kmdp.trisotechwrapper.place.paths` - a comma-separated list of {placeId}/{placePath}
   pointing to the Places/Folders that will be exposed through the TTW API
+* `edu.mayo.kmdp.trisotechwrapper.executionEnv` - a comma-separated list of (names of) execution
+  environments, in the ServiceLibrary associated to the DES base URL (TODO!), used to look up
+  deployed services
 
 * DEPRECATED `edu.mayo.kmdp.trisotechwrapper.repositoryId` - the UUID of the target Place to pull
   Assets from
 * DEPRECATED `edu.mayo.kmdp.trisotechwrapper.repositoryName` - the name of the target Place to pull
   Assets from
 * DEPRECATED `edu.mayo.kmdp.trisotechwrapper.repositoryPath` - the path of the folder within the
-  Place to pull
-  Assets from
+  Place to pull Assets from
+
+### Assets and Service Assets
+
+- Each model (version) will be available as a Knowledge Artifact through the Artifact APIs
+- Each model (version) will be considered the carrier of an Anonymous Knowledge Asset, and become
+  available through the Asset APIs, if the feature
+  flag `edu.mayo.kmdp.application.flag.allowAnonymous` is set to TRUE
+    - Models can be associated to _Named_ assets, asserting a Custom Attribute "knowledgeAssetId" at
+      the Model level
+        - Named Asset IDs must be URIs, which follow the patterns:
+            - urn:uuid:{uuid}:{versionTag}
+            - {base}/assets/{uuid}/versions/{versionTag}
+                - {base} defaults to "http://clinicalknowledgemanagement.mayo.edu/assets" and can be
+                  overwritten setting the environment
+                  variable `edu.mayo.kmdp.trisotechwrapper.assetNamespace`
+- Decision Services in DMN Decision Models will be exposed as Service Assets (0..N per Model)
+    - Auto-generated Decision Services for whole models and diagrams are excluded
+    - _Named_ Service Assets are obtained adding the Custom Attribute "serviceAssetId" at the level
+      of the Decision Service
+      - Same rules for Named Asset IDs apply
+- BPMN Process can only be exposed as Named Service Assets (0..1 per Model)
+    - _Named_ Service Assets are obtained adding the Custom Attribute "serviceAssetId" at the level
+      of the Process (Page) that contains the root Process to be executed
+      - Same rules for Named Asset IDs apply
 
 
 

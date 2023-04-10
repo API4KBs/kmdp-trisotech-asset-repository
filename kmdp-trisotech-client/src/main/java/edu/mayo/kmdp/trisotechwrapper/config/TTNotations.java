@@ -8,12 +8,14 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.UNSUPPORTED;
 import static edu.mayo.kmdp.util.Util.isEmpty;
 
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Enumeration of Trisotech's natively supported KRR Languages+Notations/Formats
+ * Enumeration of Trisotech natively supported KRR Languages+Notations/Formats
  * <p>
  * Includes utility/helper methods to map Languages to the MIME types used in the DES
  */
@@ -60,8 +62,10 @@ public enum TTNotations {
    * @param mimetype the MIME type
    * @return the core {@link TTLanguages}
    */
-  public static TTLanguages detectTTLanguage(String mimetype) {
-    if (isEmpty(mimetype)) {
+  @Nonnull
+  public static TTLanguages detectTTLanguage(
+      @Nullable String mimetype) {
+    if (mimetype == null) {
       return UNSUPPORTED;
     }
     String mime = mimetype.toLowerCase();
@@ -88,7 +92,9 @@ public enum TTNotations {
    * @param mimetype the mimetype
    * @return the normalized-to-XML mimetype
    */
-  public static Optional<String> getStandardXmlMimeType(String mimetype) {
+  @Nonnull
+  public static Optional<String> getStandardXmlMimeType(
+      @Nullable String mimetype) {
     if (isEmpty(mimetype)) {
       return Optional.empty();
     }
@@ -103,7 +109,8 @@ public enum TTNotations {
    * @param lang the language
    * @return the canonical XML-based mimetype
    */
-  private static String getStandardXmlMimeType(TTLanguages lang) {
+  private static String getStandardXmlMimeType(
+      @Nonnull TTLanguages lang) {
     switch (lang) {
       case CMMN:
         return CMMN_11_XML.getMimeType();
@@ -125,7 +132,9 @@ public enum TTNotations {
    * @param mimetype the mimeType of a Model's variant
    * @return the native {@link TTNotations}
    */
-  public static TTNotations getNativeNotationMimeType(String mimetype) {
+  @Nullable
+  public static TTNotations getNativeNotationMimeType(
+      @Nullable String mimetype) {
     if (isEmpty(mimetype)) {
       return null;
     }
@@ -154,7 +163,9 @@ public enum TTNotations {
    * @param mime2 the second mimeType of a Model's variant
    * @return true if both mimeTypes denote the same Language, regardless of version and format
    */
-  public static boolean mimeMatches(String mime1, String mime2) {
+  public static boolean mimeMatches(
+      @Nullable String mime1,
+      @Nullable String mime2) {
     return mime1 != null && mime2 != null
         && getNativeNotationMimeType(mime1) == getNativeNotationMimeType(mime2);
   }
@@ -170,7 +181,9 @@ public enum TTNotations {
    * @return the (TT) mime type implied by the asset type
    * @see KnowledgeAssetTypeSeries#resolve(String)
    */
-  public static String getXmlMimeTypeByAssetType(String assetTypeTag) {
+  @Nullable
+  public static String getXmlMimeTypeByAssetType(
+      @Nullable String assetTypeTag) {
     if (assetTypeTag == null) {
       // no filter
       return null;

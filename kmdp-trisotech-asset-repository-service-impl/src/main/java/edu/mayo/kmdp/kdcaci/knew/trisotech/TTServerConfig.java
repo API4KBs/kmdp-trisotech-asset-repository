@@ -17,6 +17,9 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.components.HTMLAdapter;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTRepoContextAwareHrefBuilder;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTServerContextAwareHrefBuilder;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
+import edu.mayo.kmdp.trisotechwrapper.TTWrapper;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.util.ws.ContentNegotiationFilter;
 import edu.mayo.kmdp.util.ws.PointerHTMLAdapter;
@@ -42,6 +45,28 @@ import org.springframework.http.converter.HttpMessageConverter;
 public class TTServerConfig {
 
   /**
+   * The core provider of business logic for the Asset and Artifact repository servers
+   *
+   * @param cfg the environment configuration
+   * @return a servlet context-aware {@link TTServerContextAwareHrefBuilder}
+   */
+  @Bean
+  public TTAPIAdapter ttAdapter(@Autowired TTWEnvironmentConfiguration cfg) {
+    return new TTWrapper(cfg, new DomainSemanticsWeaver(cfg), new TTRedactor());
+  }
+
+  /**
+   * Negotation filter consolidates Accept with X-Accept headers
+   *
+   * @return a {@link ContentNegotiationFilter}
+   */
+  @Bean
+  @Order(1)
+  public ContentNegotiationFilter negotiationFilter() {
+    return new ContentNegotiationFilter();
+  }
+
+  /**
    * HrefBuilder use to map Asset Repository API endpoints
    *
    * @param cfg the environment configuration
@@ -61,17 +86,6 @@ public class TTServerConfig {
   @Bean
   public TTRepoContextAwareHrefBuilder artfHrefBuilder(@Autowired TTWEnvironmentConfiguration cfg) {
     return new TTRepoContextAwareHrefBuilder(cfg);
-  }
-
-  /**
-   * {@link ContentNegotiationFilter} used to normalize Accept/X-Accept headers
-   *
-   * @return a {@link ContentNegotiationFilter}
-   */
-  @Bean
-  @Order(1)
-  public ContentNegotiationFilter negotiationFilter() {
-    return new ContentNegotiationFilter();
   }
 
   /**

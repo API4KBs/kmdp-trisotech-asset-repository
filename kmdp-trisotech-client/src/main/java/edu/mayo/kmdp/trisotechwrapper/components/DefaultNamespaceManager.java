@@ -17,22 +17,23 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Default implementation of {@link NamespaceManager}
  */
-@Component
 public class DefaultNamespaceManager implements NamespaceManager {
 
+  @Nonnull
   private final Pattern domainConceptPattern;
+  @Nonnull
   private final URI artifactNamespace;
+  @Nonnull
   private final URI assetNamespace;
 
   private final String defaultVersion;
 
-  public DefaultNamespaceManager(@Autowired TTWEnvironmentConfiguration config) {
+  public DefaultNamespaceManager(
+      @Nonnull TTWEnvironmentConfiguration config) {
     defaultVersion = config.getTyped(TTWConfigParamsDef.DEFAULT_VERSION_TAG);
     domainConceptPattern =
         Pattern.compile(config.getTyped(TTWConfigParamsDef.DOMAIN_TERMS_NAMESPACE_PATTERN));

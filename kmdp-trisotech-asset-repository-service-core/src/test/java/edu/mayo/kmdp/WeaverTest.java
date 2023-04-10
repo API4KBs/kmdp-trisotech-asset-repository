@@ -46,12 +46,15 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Abstract_Knowledge_Expression;
 
-import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
-import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.language.LanguageDeSerializer;
 import edu.mayo.kmdp.language.common.cmmn.CMMN11Utils;
 import edu.mayo.kmdp.language.parsers.cmmn.v1_1.CMMN11Parser;
 import edu.mayo.kmdp.language.parsers.dmn.v1_2.DMN12Parser;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -65,6 +68,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.xml.bind.JAXBElement;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
@@ -76,9 +80,6 @@ import org.omg.spec.dmn._20180521.model.TContext;
 import org.omg.spec.dmn._20180521.model.TLiteralExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -87,21 +88,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
-@SpringBootTest
-@ContextConfiguration(classes = {TrisotechAssetRepositoryTestConfig.class})
 class WeaverTest {
 
   Logger logger = LoggerFactory.getLogger(WeaverTest.class);
 
-  @Autowired
-  private Weaver weaver;
+  private static Weaver weaver;
 
-  @Autowired
-  private Redactor redactor;
+  private static Redactor redactor;
 
-  @Test
-  void testInit() {
-    assertNotNull(weaver);
+  @BeforeAll
+  static void init() {
+    weaver = new DomainSemanticsWeaver(new TTWEnvironmentConfiguration());
+    redactor = new TTRedactor();
   }
 
 

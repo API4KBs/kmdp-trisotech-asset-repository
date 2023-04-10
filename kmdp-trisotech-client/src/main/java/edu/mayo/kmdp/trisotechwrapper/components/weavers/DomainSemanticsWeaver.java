@@ -41,7 +41,6 @@ import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnot
 import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
@@ -55,8 +54,6 @@ import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetT
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -71,7 +68,6 @@ import org.w3c.dom.NodeList;
  * TODO: this implementation supports DMN 1.2 and CMMN 1.1, and should be refactored/modularized
  * to support other BPM+ languages/versions
  */
-@Component
 public class DomainSemanticsWeaver implements Weaver {
 
   /**
@@ -104,10 +100,14 @@ public class DomainSemanticsWeaver implements Weaver {
    */
   private final String serviceAssetIDKey;
 
+  public DomainSemanticsWeaver() {
+    this(new TTWEnvironmentConfiguration());
+  }
+
   /**
    * Default constructor
    */
-  public DomainSemanticsWeaver(@Autowired(required = false) TTWEnvironmentConfiguration cfg) {
+  public DomainSemanticsWeaver(@Nullable TTWEnvironmentConfiguration cfg) {
     var effectiveCfg =
         cfg != null ? cfg : new TTWEnvironmentConfiguration();
     this.names = new DefaultNamespaceManager(effectiveCfg);
@@ -125,10 +125,10 @@ public class DomainSemanticsWeaver implements Weaver {
   @Nonnull
   public Document weave(
       @Nonnull final Document dox) {
-    // get metas
-    weaveAcceleratorSemanticLinks(dox);
+    // manual annotations
+    weaveSemanticLinks(dox);
 
-    // copyLink
+    // accelerators, KEMs and other model/model reuse
     weaveReuseLinks(dox);
 
     // rewrite custom attribute 'asset ID'
@@ -161,11 +161,12 @@ public class DomainSemanticsWeaver implements Weaver {
    *
    * @param dox the Document to be woven
    */
-  private void weaveAcceleratorSemanticLinks(
+  private void weaveSemanticLinks(
       @Nonnull final Document dox) {
     NodeList metas = dox.getElementsByTagNameNS(
         TTConstants.TT_METADATA_NS, TTConstants.TT_SEMANTICLINK);
-    weaveMetadata(asElementStream(metas));
+    asElementStream(metas)
+        .forEach(this::weaveElementMetadata);
   }
 
   /**
@@ -180,37 +181,42 @@ public class DomainSemanticsWeaver implements Weaver {
       @Nonnull final Document dox) {
     NodeList copies = dox.getElementsByTagNameNS(
         TTConstants.TT_METADATA_NS, TTConstants.TT_COPYOFLINK);
-    weaveMetadata(asElementStream(copies)
-        .filter(this::isAcceleratorReuse));
     asElementStream(copies)
-        .filter(reuse -> !this.isAcceleratorReuse(reuse))
-        .forEach(reuse -> rewriteReuseLinks(reuse, dox));
+        .forEach(reuseByCopy -> weaveReuse(reuseByCopy, dox));
 
-    // reuseLink
     NodeList reuses = dox.getElementsByTagNameNS(
         TTConstants.TT_METADATA_NS, TTConstants.TT_REUSELINK);
-    weaveMetadata(asElementStream(reuses)
-        .filter(this::isAcceleratorReuse));
     asElementStream(reuses)
-        .filter(reuse -> !this.isAcceleratorReuse(reuse))
-        .forEach(reuse -> rewriteReuseLinks(reuse, dox));
+        .forEach(reuseByRef -> weaveReuse(reuseByRef, dox));
   }
 
   /**
-   * Rewrites each annotation Element as an {@link Annotation} - a structured (subject, property,
+
+   */
+  private void weaveReuse(
+      @Nonnull final Element reuse, Document dox) {
+    boolean isAccelerator = isAcceleratorReuse(reuse);
+    boolean isKem = isKEMTerm(reuse);
+    if (isAccelerator || isKem) {
+      weaveElementMetadata(reuse);
+    } else {
+      rewriteReuseLinks(reuse, dox);
+    }
+  }
+
+  /**
+   * Rewrites an annotation Element as an {@link Annotation} - a structured (subject, property,
    * object) where the subject is the asset, the object is the annotation concept, and the property
    * is an (optional) relationship that connects the asset to the concept.
    *
-   * @param metas a stream of annotation Elements to be rewritten
+   * @param el an annotation Element to be rewritten
    */
-  private void weaveMetadata(
-      @Nonnull final Stream<Element> metas) {
-    metas.forEach(
-        el -> metaHandler.replaceProprietaryElement(
+  private void weaveElementMetadata(
+      @Nonnull final Element el) {
+    metaHandler.replaceProprietaryElement(
             el,
             getSemanticAnnotationRelationship(el),
-            getConceptIdentifier(el).orElse(null))
-    );
+            getConceptIdentifier(el).orElse(null));
   }
 
 
@@ -282,8 +288,21 @@ public class DomainSemanticsWeaver implements Weaver {
    */
   private boolean isAcceleratorReuse(
       @Nonnull final Element element) {
-    return TTConstants.TT_ACCELERATOR_MODEL.equals(element.getAttribute("modelType"))
+    return TTConstants.TT_ACCELERATOR_META_CLASS.equals(element.getAttribute("modelType"))
         && TTConstants.TT_ACCELERATOR_ENTTIY.equals(element.getAttribute("graphType"));
+  }
+
+  /**
+   * Predicate
+   * <p>
+   * Determines whether a copy/reuse element points to an entity in a KEM Model
+   *
+   * @param element the Element to be tested
+   */
+  private boolean isKEMTerm(
+      @Nonnull final Element element) {
+    return TTConstants.TT_KEM_META_CLASS.equals(element.getAttribute("modelType"))
+        && TTConstants.TT_KEM_TERM.equals(element.getAttribute("graphType"));
   }
 
   /**

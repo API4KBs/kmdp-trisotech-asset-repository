@@ -20,10 +20,7 @@ import org.omg.spec.api4kp._20200801.services.repository.asset.KARSHrefBuilder;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class TTContentNegotiationHelper {
 
   /**
@@ -34,15 +31,12 @@ public class TTContentNegotiationHelper {
   /**
    * The {@link KARSHrefBuilder} used to map URIs to URLs relative to this server's deployment
    */
-  @Autowired(required = false)
-  @Nullable
-  private KARSHrefBuilder hrefBuilder;
+  protected final KARSHrefBuilder hrefBuilder;
 
   /**
    * The namespace manager used to rewrite the Trisotech native URIs into platform URIs
    */
-  @Autowired
-  private NamespaceManager names;
+  protected final NamespaceManager names;
 
   /**
    * The translator used to provide a basic HTML rendering of the {@link KnowledgeAsset} surrogates,
@@ -50,6 +44,13 @@ public class TTContentNegotiationHelper {
    */
   private final _applyTransrepresent htmlTranslator = new SurrogateV2toHTMLTranslator();
 
+
+  public TTContentNegotiationHelper(
+      @Nonnull NamespaceManager names,
+      @Nullable KARSHrefBuilder hrefBuilder) {
+    this.names = names;
+    this.hrefBuilder = hrefBuilder;
+  }
 
   /**
    * Predicate

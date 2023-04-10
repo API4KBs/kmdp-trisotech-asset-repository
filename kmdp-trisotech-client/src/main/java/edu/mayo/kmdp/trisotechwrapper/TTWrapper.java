@@ -32,20 +32,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
 /**
  * {@inheritDoc}
  * <p>
- * Primary implemntation of the {@link TTAPIAdapter}
+ * Primary implementation of the {@link TTAPIAdapter}
  */
-@Component
 public class TTWrapper implements TTAPIAdapter {
 
   /**
@@ -56,36 +52,45 @@ public class TTWrapper implements TTAPIAdapter {
   /**
    * Environment Configuration
    */
-  @Autowired
-  private TTWEnvironmentConfiguration cfg;
+  @Nonnull
+  private final TTWEnvironmentConfiguration cfg;
 
   /**
    * {@link Weaver}, to annotate and rewrite proprietary elements in Models
    */
-  @Autowired
-  protected Weaver weaver;
+  @Nonnull
+  protected final Weaver weaver;
 
   /**
-   * {@link Redactor}, to remove unncessary fragments
+   * {@link Redactor}, to remove unnecessary fragments
    */
-  @Autowired
-  protected Redactor redactor;
+  @Nonnull
+  protected final Redactor redactor;
 
   /**
    * Web Client, to interact with the DES web API
    */
+  @Nonnull
   TTDigitalEnterpriseServerClient webClient;
 
   /**
-   * Cache Maager, to Index Place/Paths and Cache Models
+   * Cache Manager, to Index Place/Paths and Cache Models
    */
+  @Nonnull
   CachingTTWKnowledgeStore cacheManager;
 
-  @PostConstruct
-  void init() {
+  public TTWrapper(
+      @Nonnull final TTWEnvironmentConfiguration cfg,
+      @Nonnull final Weaver weaver,
+      @Nonnull final Redactor redactor) {
+    this.cfg = cfg;
+    this.weaver = weaver;
+    this.redactor = redactor;
+
     this.webClient = initWebClient(cfg);
     this.cacheManager = initCacheManager(webClient, cfg);
   }
+
 
   /**
    * Initializes the {@link CachingTTWKnowledgeStore}
@@ -450,7 +455,7 @@ public class TTWrapper implements TTAPIAdapter {
 
 
   /**
-   * @return the configured Excution environments
+   * @return the configured Execution environments
    */
   private Set<String> getScopedExecEnvironments() {
     var env = cfg.getTyped(TTWConfigParamsDef.SERVICE_LIBRARY_ENVIRONMENT, String.class);

@@ -36,6 +36,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
@@ -59,7 +61,7 @@ public class BPMMetadataHelper {
   private static final String EXTENSION_ELEMENTS = "extensionElements";
 
 
-  protected BPMMetadataHelper() {
+  private BPMMetadataHelper() {
     // functions only
   }
 
@@ -71,7 +73,9 @@ public class BPMMetadataHelper {
    * @param surr        the Surrogate to be augmented
    * @param annotations the List of {@link Annotation} to inject
    */
-  public static void addSemanticAnnotations(KnowledgeAsset surr, List<Annotation> annotations) {
+  public static void addSemanticAnnotations(
+      @Nonnull final KnowledgeAsset surr,
+      @Nonnull final List<Annotation> annotations) {
     List<Annotation> annos = annotations.stream()
         .filter(ann -> Captures.sameTermAs(ann.getRel())
             || Defines.sameTermAs(ann.getRel())
@@ -107,7 +111,9 @@ public class BPMMetadataHelper {
    * @param serviceNode the annotated service
    * @return the List of {@link Annotation} in the service
    */
-  public static Stream<Annotation> extractAnnotations(Element serviceNode) {
+  @Nonnull
+  public static Stream<Annotation> extractAnnotations(
+      @Nonnull final Element serviceNode) {
     return asElementStream(
         serviceNode.getElementsByTagName(SEMANTIC_EXTENSION_ELEMENTS))
         .filter(Objects::nonNull)
@@ -126,7 +132,9 @@ public class BPMMetadataHelper {
    * @param mime the (Trisotech) mime type that encodes the model's representation
    * @return the default {@link KnowledgeAssetType}
    */
-  public static KnowledgeAssetType getDefaultAssetType(String mime) {
+  @Nonnull
+  public static KnowledgeAssetType getDefaultAssetType(
+      @Nullable final String mime) {
     var lang = TTNotations.detectTTLanguage(mime);
     switch (lang) {
       case DMN:
@@ -150,19 +158,38 @@ public class BPMMetadataHelper {
    *
    * @return the {@link SyntacticRepresentation} at the Encoded level
    */
-  public static Optional<SyntacticRepresentation> getRepLanguage(TrisotechFileInfo info) {
+  @Nonnull
+  public static Optional<SyntacticRepresentation> getDefaultRepresentation(
+      @Nullable final TrisotechFileInfo info) {
     if (info == null || info.getMimetype() == null) {
       return Optional.empty();
     }
-    return getRepLanguage(info.getMimetype());
+    return getDefaultRepresentation(info.getMimetype());
   }
 
-  public static Optional<SyntacticRepresentation> getRepLanguage(String mimeType) {
+  /**
+   * Maps a mimeType to the default {@link SyntacticRepresentation} for the language implies by the
+   * mimeType
+   *
+   * @param mimeType the mimeType
+   * @return the default representation for the given mimeType
+   */
+  public static Optional<SyntacticRepresentation> getDefaultRepresentation(
+      @Nonnull final String mimeType) {
     var lang = TTNotations.detectTTLanguage(mimeType);
-    return getRepLanguage(lang);
+    return getDefaultRepresentation(lang);
   }
 
-  public static Optional<SyntacticRepresentation> getRepLanguage(TTLanguages lang) {
+  /**
+   * Maps a representation language to the default {@link SyntacticRepresentation} for artifacts in
+   * that language
+   *
+   * @param lang the language
+   * @return the default representation for the given mimeType
+   */
+  @Nonnull
+  public static Optional<SyntacticRepresentation> getDefaultRepresentation(
+      @Nonnull final TTLanguages lang) {
     switch (lang) {
       case BPMN:
         return Optional.of(rep(BPMN_2_0, XML_1_1, defaultCharset(), Encodings.DEFAULT));
@@ -183,15 +210,23 @@ public class BPMMetadataHelper {
    *
    * @return the {@link KnowledgeRepresentationLanguage}
    */
+  @Nonnull
   public static Optional<KnowledgeRepresentationLanguage> detectRepLanguage(
-      SemanticModelInfo manifest) {
+      @Nullable SemanticModelInfo manifest) {
     if (manifest == null) {
       return Optional.empty();
     }
     return detectLanguage(manifest.getMimetype());
   }
 
-  public static Optional<KnowledgeRepresentationLanguage> detectLanguage(String mimeType) {
+  /**
+   * Detects the {@link KnowledgeRepresentationLanguage} implied by a mimeType.
+   *
+   * @return the {@link KnowledgeRepresentationLanguage}
+   */
+  @Nonnull
+  public static Optional<KnowledgeRepresentationLanguage> detectLanguage(
+      @Nullable String mimeType) {
     var lang = TTNotations.detectTTLanguage(mimeType);
     switch (lang) {
       case BPMN:
@@ -213,16 +248,17 @@ public class BPMMetadataHelper {
    * If possible, adds an optional KnowledgeCarrier that references the Kommunicator version of a
    * BPM+ model: an interactive, read-only, animatable variant of the model
    *
-   * @param artifactId
+   * @param artifactId the artifact ID
    * @param manifest   the internal manifest of the model to be referenced
-   * @param status
-   * @param config
+   * @param status     the publication Status
+   * @param config     the environment configuration
    */
-  public static Optional<KnowledgeArtifact> tryAddKommunicatorLink(
-      ResourceIdentifier artifactId,
-      SemanticModelInfo manifest,
-      PublicationStatus status,
-      TTWEnvironmentConfiguration config) {
+  @Nonnull
+  public static Optional<KnowledgeArtifact> tryAddKommunicatorArtifact(
+      @Nonnull final ResourceIdentifier artifactId,
+      @Nonnull final SemanticModelInfo manifest,
+      @Nonnull final PublicationStatus status,
+      @Nonnull final TTWEnvironmentConfiguration config) {
 
     return getKommunicatorLink(manifest, config)
         .flatMap(link ->
@@ -241,19 +277,21 @@ public class BPMMetadataHelper {
   }
 
 
-
   /**
-   * Retrieves the {@link KnowledgeAssetType} for a given asset Id.
+   * Retrieves the {@link KnowledgeAssetType} for a given asset ID.
    * <p>
    * Supports both Knowledge Assets and Service Assets, using the semantic metadata annotated on the
    * model, and queried via Knowledge Graph
    *
+   * @param manifest    the Model manifest
+   * @param defaultType the default Asset type, if none other can be detected
    * @return the KnowledgeAssetType associated to the asset according to the carrier model's
    * annotations, if any
    */
+  @Nonnull
   public static List<KnowledgeAssetType> getDeclaredAssetTypes(
-      SemanticModelInfo manifest,
-      Supplier<KnowledgeAssetType> defaultType) {
+      @Nonnull final SemanticModelInfo manifest,
+      @Nonnull final Supplier<KnowledgeAssetType> defaultType) {
     var declared = manifest.getAssetTypes().stream()
         .map(type -> KnowledgeAssetTypeSeries.resolveId(type)
             .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(type)))

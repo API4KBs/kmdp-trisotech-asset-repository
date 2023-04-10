@@ -40,20 +40,20 @@ public class TTWEnvironmentConfiguration extends
 
   private static final Properties DEFAULTS = defaulted(TTWConfigParamsDef.class);
 
-  @Autowired
   private transient Environment env;
 
   public TTWEnvironmentConfiguration() {
     super(DEFAULTS);
   }
 
-  public TTWEnvironmentConfiguration(Environment env) {
-    super(DEFAULTS);
-    this.env = env;
-  }
-
   public TTWEnvironmentConfiguration(Properties defaults) {
     super(defaults);
+  }
+
+  @Autowired
+  public TTWEnvironmentConfiguration(Environment env) {
+    this();
+    this.env = env;
   }
 
   @Override

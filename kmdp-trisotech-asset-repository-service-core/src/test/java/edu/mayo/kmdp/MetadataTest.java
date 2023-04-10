@@ -13,6 +13,8 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.components.TestMetadataHelper.carryBinary;
+import static edu.mayo.kmdp.components.TestMetadataHelper.extractMetadata;
 import static edu.mayo.kmdp.registry.Registry.MAYO_ARTIFACTS_BASE_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.applyTimestampToVersion;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
@@ -25,51 +27,71 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 
-import edu.mayo.kmdp.components.TestMetadataIntrospector;
+import edu.mayo.kmdp.components.TestMetadataHelper;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
+import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
 import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 import javax.xml.transform.stream.StreamSource;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 
-@SpringBootTest
-@ContextConfiguration(classes = {TrisotechAssetRepositoryTestConfig.class})
 class MetadataTest {
 
-  // FYI: IDE may complain about
-  // the following two not being able to be autowired, but the code works.
-  @Autowired
-  private TestMetadataIntrospector extractor;
+  static TTWEnvironmentConfiguration cfg;
+  static MetadataIntrospector extractor;
 
-  @Autowired
-  NamespaceManager names;
+  static Weaver weaver;
 
-  @Autowired
-  private Weaver weaver;
+  static Redactor redactor;
 
-  @Autowired
-  private Redactor redactor;
+  static NamespaceManager names;
+
+  @BeforeAll
+  static void init() {
+    cfg = new TTWEnvironmentConfiguration();
+    names = new DefaultNamespaceManager(cfg);
+    weaver = new DomainSemanticsWeaver(cfg);
+    redactor = new TTRedactor();
+    extractor = TestMetadataHelper.newIntrospector(cfg);
+
+    Optional<byte[]> dmn = XMLUtil
+        .loadXMLDocument(MetadataTest.class.getResourceAsStream(dmnPath))
+        .map(weaver::weave)
+        .map(redactor::redact)
+        .map(XMLUtil::toByteArray);
+    assertTrue(dmn.isPresent());
+    annotatedDMN = dmn.get();
+
+    Optional<byte[]> cmmn = XMLUtil
+        .loadXMLDocument(MetadataTest.class.getResourceAsStream(cmmnPath))
+        .map(weaver::weave)
+        .map(redactor::redact)
+        .map(XMLUtil::toByteArray);
+    assertTrue(cmmn.isPresent());
+    annotatedCMMN = cmmn.get();
+
+  }
 
   private static final String dmnPath = "/Weaver Test 1.dmn.xml";
   private static final String metaPath = "/Weaver Test 1.meta.json";
   private static final String cmmnPath = "/Weave Test 1.cmmn.xml";
   private static final String cmmnMetaPath = "/Weave Test 1.meta.json";
-  private static boolean constructed = false;
 
   private static byte[] annotatedDMN;
   private static byte[] annotatedCMMN;
@@ -80,44 +102,14 @@ class MetadataTest {
       Knowledge_Asset_Surrogate_2_0, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
 
 
-  /**
-   * Need to use @PostConstruct instead of @BeforeAll because @BeforeAll requires the method be
-   * static, and cannot @Autowired on static variables which would be needed for the static method.
-   * Have the check for constructed as otherwise @PostConstruct will be run before EVERY @Test. It
-   * still will but now the processing won't happen after the first time.
-   */
-  @PostConstruct
-  public void init() {
-
-    if (!constructed) {
-
-      Optional<byte[]> dmn = XMLUtil
-          .loadXMLDocument(MetadataTest.class.getResourceAsStream(dmnPath))
-          .map(weaver::weave)
-          .map(redactor::redact)
-          .map(XMLUtil::toByteArray);
-      assertTrue(dmn.isPresent());
-      annotatedDMN = dmn.get();
-
-      Optional<byte[]> cmmn = XMLUtil
-          .loadXMLDocument(MetadataTest.class.getResourceAsStream(cmmnPath))
-          .map(weaver::weave)
-          .map(redactor::redact)
-          .map(XMLUtil::toByteArray);
-      assertTrue(cmmn.isPresent());
-      annotatedCMMN = cmmn.get();
-
-      constructed = true;
-    }
-
-  }
-
   @Test
   void testExtraction() {
     try {
-      Optional<KnowledgeAsset> res = extractor.extractMetadata(
+      Optional<KnowledgeAsset> res = extractMetadata(
           new ByteArrayInputStream(annotatedDMN),
-          MetadataTest.class.getResourceAsStream(metaPath));
+          MetadataTest.class.getResourceAsStream(metaPath),
+          extractor,
+          cfg);
       if (res.isEmpty()) {
         fail("Unable to instantiate metadata object");
       }
@@ -138,10 +130,12 @@ class MetadataTest {
 
   @Test
   void testXMLValidate() {
-    Optional<byte[]> baos = extractor
-        .extractBinary(new ByteArrayInputStream(annotatedDMN),
-            MetadataTest.class.getResourceAsStream(metaPath),
-            xmlCodedRep);
+    Optional<byte[]> baos = extractMetadata(
+        new ByteArrayInputStream(annotatedDMN),
+        MetadataTest.class.getResourceAsStream(metaPath),
+        extractor,
+        cfg)
+        .flatMap(ka -> carryBinary(ka, xmlCodedRep));
 
     if (baos.isEmpty()) {
       fail("Unable to create metadata");
@@ -158,30 +152,41 @@ class MetadataTest {
 
   @Test
   void testToXML() {
-    assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedDMN),
+    TestMetadataHelper.extractMetadata(
+            new ByteArrayInputStream(annotatedDMN),
             MetadataTest.class.getResourceAsStream(metaPath),
-            xmlCodedRep)
+            extractor,
+            cfg)
+        .flatMap(ka -> carryBinary(ka, xmlCodedRep))
 //        .map(String::new).map(Util::printOut)
-        .isPresent());
-    assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedCMMN),
+        .orElseGet(Assertions::fail);
+    TestMetadataHelper.extractMetadata(new ByteArrayInputStream(annotatedCMMN),
             MetadataTest.class.getResourceAsStream(cmmnMetaPath),
-            xmlCodedRep)
+            extractor,
+            cfg)
+        .flatMap(ka -> carryBinary(ka, xmlCodedRep))
 //        .map(String::new).map(Util::printOut)
-        .isPresent());
+        .orElseGet(Assertions::fail);
   }
 
   @Test
   void testToJson() {
-    assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedDMN),
-            MetadataTest.class.getResourceAsStream(metaPath),
-            jsonCodedRep)
+    extractMetadata(
+        new ByteArrayInputStream(annotatedDMN),
+        MetadataTest.class.getResourceAsStream(metaPath),
+        extractor,
+        cfg)
+        .flatMap(ka -> carryBinary(ka, jsonCodedRep))
 //        .map(String::new).map(Util::printOut)
-        .isPresent());
-    assertTrue(extractor.extractBinary(new ByteArrayInputStream(annotatedCMMN),
+        .orElseGet(Assertions::fail);
+    TestMetadataHelper.extractMetadata(
+            new ByteArrayInputStream(annotatedCMMN),
             MetadataTest.class.getResourceAsStream(cmmnMetaPath),
-            jsonCodedRep)
+            extractor,
+            cfg)
+        .flatMap(ka -> carryBinary(ka, jsonCodedRep))
 //        .map(String::new).map(Util::printOut)
-        .isPresent());
+        .orElseGet(Assertions::fail);
   }
 
   @Test

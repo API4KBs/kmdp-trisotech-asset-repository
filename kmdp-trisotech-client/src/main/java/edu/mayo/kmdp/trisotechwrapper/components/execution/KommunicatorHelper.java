@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.springframework.stereotype.Component;
 
 /**
  * Helper class to build links to the Kommunicator pre/view of a TT BPM+ model
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Component;
  * opened. Note that the payload may contain the API key (excluded in this implementation because it
  * is not needed with SSO), which makes the links potentially sensitive
  */
-@Component
 public final class KommunicatorHelper {
 
   private static final String KOMM_BASE = "/kommunicator/#";

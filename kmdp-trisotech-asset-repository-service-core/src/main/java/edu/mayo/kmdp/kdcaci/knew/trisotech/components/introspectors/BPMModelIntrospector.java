@@ -18,9 +18,9 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMe
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.extractAnnotations;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDeclaredAssetTypes;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultAssetType;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getRepLanguage;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.tryAddKommunicatorLink;
-import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultRepresentation;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.tryAddKommunicatorArtifact;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.ASSETS_PREFIX;
 import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
 import static edu.mayo.kmdp.util.Util.isNotEmpty;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
@@ -80,9 +80,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
@@ -101,71 +103,80 @@ import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetT
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * Extract the data from the woven (by the Weaver) document to create KnowledgeAsset from model
- * data.
+ * Default implementation of @{@link ModelIntrospector}
  */
-@Component
-public class BPMModelIntrospector {
+public class BPMModelIntrospector implements ModelIntrospector {
 
+  /**
+   * Logger
+   */
   private static final Logger logger = LoggerFactory
       .getLogger(BPMModelIntrospector.class);
 
-  @Autowired
-  TTAPIAdapter client;
+  /**
+   * {@link TTAPIAdapter}, used to resolve model/model dependencies
+   */
+  @Nonnull
+  protected final TTAPIAdapter client;
 
-  @Autowired
-  NamespaceManager names;
+  /**
+   * {@link NamespaceManager}, used to map internal IDs to enterprise IDs
+   */
+  @Nonnull
+  protected final NamespaceManager names;
 
-  @Autowired(required = false)
-  TTWEnvironmentConfiguration config;
+  /**
+   * Environment configuration
+   */
+  @Nonnull
+  protected final TTWEnvironmentConfiguration config;
 
-  @Autowired(required = false)
-  KARSHrefBuilder hrefBuilder;
+  /**
+   * Optional HrefBuilder, used for {@link KnowledgeArtifact#setLocator(URI)} URLs
+   */
+  @Nullable
+  protected final KARSHrefBuilder hrefBuilder;
 
+  /**
+   * Utility used to extract elements from a Model document
+   */
+  @Nonnull
   private final XPathUtil xPathUtil = new XPathUtil();
 
-  public BPMModelIntrospector() {
-    //
-  }
-
-  public BPMModelIntrospector(TTAPIAdapter client, NamespaceManager names) {
+  public BPMModelIntrospector(
+      @Nonnull TTWEnvironmentConfiguration config,
+      @Nonnull NamespaceManager names,
+      @Nonnull TTAPIAdapter client,
+      @Nullable KARSHrefBuilder hrefBuilder) {
+    this.config = config;
     this.client = client;
     this.names = names;
-  }
-
-  @PostConstruct
-  void init() {
-    if (config == null) {
-      config = new TTWEnvironmentConfiguration();
-    }
+    this.hrefBuilder = hrefBuilder;
   }
 
 
   /**
    * Generates a {@link KnowledgeAsset} Surrogate from the introspection of a BPM+ model, combined
-   * with the information in its corresponding Trisotech's internal manifest, assuming that the
-   * model is a manifestation of the Asset with the given ID.
-   * <p>
-   * FUTURE: Currently supports DMN and CMMN models, but not BPMN
+   * with the information in its corresponding Trisotech internal manifest, assuming that the model
+   * is a manifestation of the Asset with the given ID.
    * <p>
    * Note that, at this point, the model document has already been standardized using the
    * {@link Redactor}, and (re)annotated using the {@link Weaver}
    *
    * @return a KnowledgeAsset surrogate with metadata for that model
    */
-  public KnowledgeAsset extractSurrogateFromDocument(
-      Map<SemanticModelInfo, Document> carriers,
-      ResourceIdentifier assetId) {
+  @Nonnull
+  public Optional<KnowledgeAsset> introspectAsModel(
+      @Nonnull ResourceIdentifier assetId,
+      @Nonnull Map<SemanticModelInfo, Document> carriers) {
 
-    var carrierMetadata = buildCarrierMetadata(carriers, assetId);
+    var carrierMetadata = buildCarrierMetadata(assetId, carriers);
 
     var formalTypes = gatherFormalTypes(carriers);
     var formalCategory = inferFormalCategory(assetId, formalTypes);
@@ -186,11 +197,11 @@ public class BPMModelIntrospector {
         .withName(name)
         .withFormalCategory(formalCategory)
         .withFormalType(formalTypes)
-        .withLifecycle(getAssestPublicationStatus(carrierMetadata))
+        .withLifecycle(getAssetPublicationStatus(carrierMetadata))
         .withLinks(mergeSortedLinks(
             mergeSortedLinks(
-                getRelatedAssets(linkedAssets),
-                getRelatedServices(carriers.keySet())),
+                toAssetRelationships(linkedAssets),
+                gatherRelatedServices(carriers.keySet())),
             getOtherDependencies(carriers)))
         // carriers
         .withCarriers(carrierMetadata)
@@ -204,12 +215,21 @@ public class BPMModelIntrospector {
           "surrogate in JSON format: {} ", writeJsonAsString(surr).orElse("n/a"));
     }
 
-    return surr;
+    return Optional.of(surr);
   }
 
 
-  private Collection<Link> getOtherDependencies(Map<SemanticModelInfo, Document> artifacts) {
-    return artifacts.entrySet().stream()
+  /**
+   * Infers the Asset/Asset dependencies implied by specific uses of the modeling elements in an Asset's carriers
+   *
+   * @param carriers the Manifest/Model Map of the Asset's carriers
+   * @return a Collection of Asset/Asset dependencies
+   * @see #getOtherDependencies(Document, KnowledgeRepresentationLanguage) 
+   */
+  @Nonnull
+  protected Collection<Link> getOtherDependencies(
+      @Nonnull final Map<SemanticModelInfo, Document> carriers) {
+    return carriers.entrySet().stream()
         .flatMap(e -> detectRepLanguage(e.getKey())
             .map(lang -> getOtherDependencies(e.getValue(), lang).stream())
             .orElseGet(Stream::empty))
@@ -217,7 +237,16 @@ public class BPMModelIntrospector {
         .collect(toList());
   }
 
-  private Publication getAssestPublicationStatus(List<KnowledgeArtifact> carrierMetadata) {
+  /**
+   * Aggregates the Publication Statuses of an Asset's Carriers, to infer the Asset's publication
+   * status. Considers the Asset Published, unless all Carriers are Unpublished
+   *
+   * @param carrierMetadata the metadata for the Carriers
+   * @return Unpublished if all Artifacts are Unpublished, Published otherwise
+   */
+  @Nonnull
+  protected Publication getAssetPublicationStatus(
+      @Nonnull final List<KnowledgeArtifact> carrierMetadata) {
     var allUnpublished = carrierMetadata.stream()
         .map(KnowledgeArtifact::getLifecycle)
         .allMatch(s -> Unpublished.sameAs(s.getPublicationStatus()));
@@ -225,14 +254,31 @@ public class BPMModelIntrospector {
         .withPublicationStatus(allUnpublished ? Unpublished : Published);
   }
 
-  private List<Annotation> gatherAnnotations(Map<SemanticModelInfo, Document> carriers) {
+  /**
+   * Extracts all the semantic Annotations from an Asset's Carriers
+   *
+   * @param carriers the Manifest/Model Map of the Asset's carriers
+   * @return the Annotations on the Models
+   * @see BPMMetadataHelper#extractAnnotations(Element) 
+   */
+  @Nonnull
+  protected List<Annotation> gatherAnnotations(
+      @Nonnull final Map<SemanticModelInfo, Document> carriers) {
     return carriers.values().stream()
         .flatMap(dox -> extractAnnotations(dox.getDocumentElement()))
         .distinct()
         .collect(Collectors.toCollection(LinkedList::new));
   }
 
-  private KnowledgeArtifact buildSurrogateSelf(ResourceIdentifier assetId) {
+  /**
+   * Builds the {@link KnowledgeArtifact} descriptor for the {@link KnowledgeAsset} Surrogate
+   * created by this introspector
+   *
+   * @param assetId the ID of the Asset
+   * @return the {@link KnowledgeArtifact} that describes this Surrogate ('self')
+   */
+  protected KnowledgeArtifact buildSurrogateSelf(
+      ResourceIdentifier assetId) {
     return new KnowledgeArtifact()
         .withArtifactId(newId(
             names.getArtifactNamespace(),
@@ -242,7 +288,16 @@ public class BPMModelIntrospector {
         .withMimeType(codedRep(Knowledge_Asset_Surrogate_2_0, JSON));
   }
 
-  private List<KnowledgeAssetType> gatherFormalTypes(Map<SemanticModelInfo, Document> carriers) {
+  /**
+   * Gathers all of an Asset's types, as inferred from or asserted in that Asset's Carriers
+   *
+   * @param carriers the Manifest/Model Map of the Asset's carriers
+   * @return the distinct {@link KnowledgeAssetType} from all the Carriers
+   * @see BPMMetadataHelper#getDeclaredAssetTypes(SemanticModelInfo, Supplier) 
+   */
+  @Nonnull
+  protected List<KnowledgeAssetType> gatherFormalTypes(
+      @Nonnull final Map<SemanticModelInfo, Document> carriers) {
     return carriers.keySet().stream()
         .flatMap(manifest -> getDeclaredAssetTypes(manifest,
             () -> getDefaultAssetType(manifest.getMimetype())).stream())
@@ -250,27 +305,49 @@ public class BPMModelIntrospector {
         .collect(toList());
   }
 
-  private List<KnowledgeArtifact> buildCarrierMetadata(Map<SemanticModelInfo, Document> carriers,
-      ResourceIdentifier assetID) {
+  /**
+   * Builds the {@link KnowledgeArtifact} metadata for all of an Asset's Carrier
+   *
+   * @param assetID  the ID of the Asset
+   * @param carriers the Manifest/Model Map of the Asset's carriers
+   * @return the {@link KnowledgeArtifact} metadata for all the Carrier variants
+   * @see #buildArtifact(ResourceIdentifier, SemanticModelInfo) 
+   */
+  @Nonnull
+  protected List<KnowledgeArtifact> buildCarrierMetadata(
+      @Nonnull final ResourceIdentifier assetID,
+      @Nonnull final Map<SemanticModelInfo, Document> carriers) {
     return carriers.entrySet().stream()
         .flatMap(e -> buildArtifact(assetID, e.getKey()))
         .collect(toList());
   }
 
-  private Stream<KnowledgeArtifact> buildArtifact(
-      ResourceIdentifier assetID, SemanticModelInfo manifest) {
+  /**
+   * Builds {@link KnowledgeArtifact} metadata for an Asset's Carrier
+   * <p>
+   * Creates a {@link KnowledgeArtifact} for the Model, as well as its Kommunicator variant
+   *
+   * @param assetID  the ID of the Asset
+   * @param manifest the Manifest of the carrier model, plus the Kommunicator variant, if
+   *                 detectable
+   * @return the Carrier variants
+   */
+  @Nonnull
+  protected Stream<KnowledgeArtifact> buildArtifact(
+      @Nonnull final ResourceIdentifier assetID,
+      @Nonnull final SemanticModelInfo manifest) {
     // Publication Status
     var lifecycle = getArtifactPublicationStatus(manifest);
     // Identifiers
-    var artifactId = extractArtifactId(manifest);
+    var artifactId = names.modelToArtifactId(manifest);
 
     // get the language for the document to set the appropriate values
-    var synRep = getRepLanguage(manifest)
+    var synRep = getDefaultRepresentation(manifest)
         .orElseThrow(() -> new IllegalStateException("Invalid language detected"));
 
     var artifactDependencies = Stream.concat(
-        getRelatedArtifacts(getArtifactImports(manifest)).stream(),
-        getRelatedServices(Set.of(manifest)).stream())
+            toArtifactRelationships(gatherArtifactImports(manifest)).stream(),
+            gatherRelatedServices(Set.of(manifest)).stream())
         .collect(Collectors.toList());
 
     var model = buildDefaultCarrierMetadata(
@@ -281,7 +358,7 @@ public class BPMModelIntrospector {
         synRep,
         artifactDependencies);
 
-    var preview = tryAddKommunicatorLink(
+    var preview = tryAddKommunicatorArtifact(
         artifactId, manifest, lifecycle.getPublicationStatus(), config);
 
     return Stream.concat(Stream.of(model), preview.stream());
@@ -300,13 +377,14 @@ public class BPMModelIntrospector {
    * @param artifactRelationships the artifact dependencies
    * @return a {@link KnowledgeArtifact} carrier metadata object
    */
-  private KnowledgeArtifact buildDefaultCarrierMetadata(
-      ResourceIdentifier assetId,
-      ResourceIdentifier artifactId,
-      String name,
-      Publication lifecycle,
-      SyntacticRepresentation synRep,
-      List<Link> artifactRelationships) {
+  @Nonnull
+  protected KnowledgeArtifact buildDefaultCarrierMetadata(
+      @Nonnull final ResourceIdentifier assetId,
+      @Nonnull final ResourceIdentifier artifactId,
+      @Nonnull final String name,
+      @Nonnull final Publication lifecycle,
+      @Nonnull final SyntacticRepresentation synRep,
+      @Nonnull final List<Link> artifactRelationships) {
     var carrier = new KnowledgeArtifact()
         .withArtifactId(artifactId)
         .withName(name)
@@ -330,8 +408,9 @@ public class BPMModelIntrospector {
    * @param assetID the asset ID.
    * @return the URL, as a URI, if able to determine
    */
-  private Optional<URI> tryLocateDefaultArtifact(
-      ResourceIdentifier assetID) {
+  @Nonnull
+  protected Optional<URI> tryLocateDefaultArtifact(
+      @Nonnull final ResourceIdentifier assetID) {
     if (hrefBuilder == null) {
       return Optional.empty();
     }
@@ -345,39 +424,23 @@ public class BPMModelIntrospector {
     }
   }
 
+
   /* ----------------------------------------------------------------------------------------- */
 
   /**
-   * Creates an Artifact Id for the given model.
-   * <p>
-   * The Artifact Id is derived from the Trisotech native model Id. At this point, the namespace has
-   * already been rewritten. This method further parses the Id, combining it with the version (tag)
-   * and a time stamp.
+   * Determines the {@link KnowledgeAssetCategory} for a set of {@link KnowledgeAssetType}s, based
+   * on the hierarchies defined in the API4KP ontology.
    *
-   * @param manifest the Trisotech metadata
-   * @return the structured Artifact Id, as a {@link ResourceIdentifier}
+   * @param assetId     the Asset for which to infer the category
+   * @param formalTypes the {@link KnowledgeAssetType}s
+   * @return the broader, parent {@link KnowledgeAssetCategory}
    */
-  public ResourceIdentifier extractArtifactId(SemanticModelInfo manifest) {
-    String docId = manifest.getId();
-    if (docId == null) {
-      // error out. Can't proceed w/o Artifact -- How did we get this far?
-      throw new IllegalStateException("Failed to find artifactId in Manifest");
-    }
-
-    return names.modelToArtifactId(
-        docId,
-        manifest.getVersion(),
-        manifest.getName(),
-        parseDateTime(manifest.getUpdated()));
-  }
-
-
-
-  /* ----------------------------------------------------------------------------------------- */
-
-  private KnowledgeAssetCategorySeries inferFormalCategory(
-      ResourceIdentifier assetId, List<KnowledgeAssetType> formalTypes) {
+  @Nullable
+  protected KnowledgeAssetCategorySeries inferFormalCategory(
+      @Nonnull final ResourceIdentifier assetId,
+      @Nonnull final List<KnowledgeAssetType> formalTypes) {
     var categories = formalTypes.stream()
+        .distinct()
         .map(this::inferFormalCategory)
         .collect(Collectors.toSet());
     if (categories.size() > 1) {
@@ -399,7 +462,9 @@ public class BPMModelIntrospector {
    * @param formalType the {@link KnowledgeAssetType}
    * @return the broader, parent {@link KnowledgeAssetCategory}
    */
-  private KnowledgeAssetCategorySeries inferFormalCategory(KnowledgeAssetType formalType) {
+  @Nonnull
+  protected KnowledgeAssetCategorySeries inferFormalCategory(
+      @Nonnull final KnowledgeAssetType formalType) {
     if (isA(formalType, Clinical_Rule)) {
       return Rules_Policies_And_Guidelines;
     }
@@ -426,16 +491,26 @@ public class BPMModelIntrospector {
    * @param superType the candidate broader concept
    * @return true if subType is narrower or equal to superType
    */
-  private boolean isA(KnowledgeAssetType subType, KnowledgeAssetType superType) {
+  protected boolean isA(
+      @Nonnull final KnowledgeAssetType subType,
+      @Nonnull final KnowledgeAssetType superType) {
     return subType.sameTermAs(superType)
         || Arrays.stream(subType.getAncestors()).anyMatch(t -> t.sameTermAs(superType));
   }
 
   /* ----------------------------------------------------------------------------------------- */
 
-
-  private Collection<Link> getRelatedServices(Set<SemanticModelInfo> manifest) {
-    return manifest.stream()
+  /**
+   * Gathers the Asset/Service Asset relationships for a given Model, across the Carriers of an
+   * Asset
+   *
+   * @param manifests the Manifest of the source Model
+   * @return the IDs of the Service Assets that the Models expose
+   */
+  @Nonnull
+  protected Collection<Link> gatherRelatedServices(
+      @Nonnull final Set<SemanticModelInfo> manifests) {
+    return manifests.stream()
         .flatMap(info -> info.getExposedServices().stream())
         .flatMap(svcKey -> client.getMetadataByAssetId(svcKey.getUuid(), svcKey.getVersionTag()))
         .map(info -> names.assetKeyToId(info.getServiceKey())
@@ -446,9 +521,115 @@ public class BPMModelIntrospector {
         .collect(toList());
   }
 
-  private List<Link> getOtherDependencies(
-      Document woven,
-      KnowledgeRepresentationLanguage language) {
+  /**
+   * Gathers the Artifact/Artifact import relationships for a given model
+   *
+   * @param manifest the Manifest of the source Model
+   * @return the IDs of the Artifacts that the Model depends on
+   */
+  @Nonnull
+  protected List<ResourceIdentifier> gatherArtifactImports(
+      @Nonnull final SemanticModelInfo manifest) {
+    return manifest.getModelDependencies().stream()
+        .flatMap(modelUri -> client.getMetadataByModelId(modelUri).stream())
+        .map(names::modelToArtifactId)
+        .collect(toList());
+  }
+
+
+  /**
+   * Gathers the Asset/Asset dependency relationships for a given model, as inferred from the
+   * Carriers of the source Asset
+   *
+   * @param carriers the Manifests of the Models that carry the given Asset
+   * @return the IDs of the Assets that the source Asset depends on
+   */
+  @Nonnull
+  protected List<ResourceIdentifier> gatherAssetImports(
+      @Nonnull final Set<SemanticModelInfo> carriers) {
+    return carriers.stream()
+        .flatMap(info -> info.getModelDependencies().stream()
+            .flatMap(modelRef -> client.getMetadataByModelId(modelRef)
+                .filter(ref -> ref.getAssetKey() != null)
+                .map(ref ->
+                    names.assetKeyToId(ref.getAssetKey()).withName(ref.getName()))
+                .stream()))
+        .distinct()
+        .collect(toList());
+  }
+
+  /**
+   * Creates a collection of Dependency {@link Link} for a set of Artifact/Artifact dependencies
+   *
+   * @param importedArtifacts The list of artifact IDs for the imports to the current version of the
+   *                          model being processed
+   * @return Links to the given Artifacts, as Imports
+   */
+  @Nonnull
+  protected Collection<Link> toArtifactRelationships(
+      @Nonnull final List<ResourceIdentifier> importedArtifacts) {
+    return importedArtifacts.stream()
+        .filter(Objects::nonNull)
+        .map(resourceIdentifier -> new Dependency().withRel(Imports)
+            .withHref(resourceIdentifier))
+        .collect(toList());
+  }
+
+  /**
+   * Creates a collection of Dependency {@link Link} for a set of Asset/Asset dependencies
+   * <p>
+   * Similar to the relatedArtifacts, related Assets are the asset identifiers for the artifacts
+   * that are imported or used (dependency) of the current processed artifact. Want to retain the
+   * identifiers.
+   *
+   * @param importedAssets the list of assets this a Model depends on
+   * @return Links to the given Assets, as Imports
+   */
+  @Nonnull
+  protected Collection<Link> toAssetRelationships(
+      @Nonnull final List<ResourceIdentifier> importedAssets) {
+    return importedAssets.stream()
+        .map(resourceIdentifier ->
+            new Dependency()
+                .withRel(Imports)
+                .withHref(resourceIdentifier))
+        .collect(toList());
+  }
+
+
+  /**
+   * Combines two collections of related links, sorting by relationship type
+   *
+   * @param first  the first collection
+   * @param second the second collection
+   * @return a merged, sorted collection
+   */
+  @Nonnull
+  protected Collection<Link> mergeSortedLinks(
+      @Nonnull final Collection<Link> first,
+      @Nonnull final Collection<Link> second) {
+    return Stream.concat(
+            first.stream(),
+            second.stream())
+        .sorted(comparing(l -> l.getHref().getTag()))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * Detects Asset/Asset dependencies that are not implied by the modeling language, but rather by
+   * the ad-hoc use of modeling elements.
+   * <p>
+   * Supports Assets linked through dmn:KnowledgeSource#locationURI (semi-standard) and
+   * cmmn:CaseFileItems with CMIS type (non-standard)
+   *
+   * @param woven    the Model Document (after processing by the {@link Weaver})
+   * @param language the Model Language (supports DMN 1.2 and CMMN 1.1)
+   * @return any Asset dependencies detected in the Model elements
+   */
+  @Nonnull
+  protected List<Link> getOtherDependencies(
+      @Nonnull final Document woven,
+      @Nonnull final KnowledgeRepresentationLanguage language) {
     Stream<Attr> assetURIs;
     switch (asEnum(language)) {
       case DMN_1_2:
@@ -469,7 +650,7 @@ public class BPMModelIntrospector {
         // only supported URIs
         .filter(str -> str.startsWith("urn:")
             || str.startsWith(names.getAssetNamespace().toString())
-            || str.startsWith("assets:"))
+            || str.startsWith(ASSETS_PREFIX))
         .map(this::normalizeQualifiedName)
         .map(URI::create)
         .map(SemanticIdentifier::newVersionId)
@@ -500,6 +681,8 @@ public class BPMModelIntrospector {
         linkElements = asElementStream(xPathUtil.xList(woven,
             "//cmmn:processTask/cmmn:processRefExpression"));
         break;
+      case DMN_1_2:
+      case BPMN_2_0:
       default:
         linkElements = Stream.empty();
     }
@@ -507,16 +690,26 @@ public class BPMModelIntrospector {
         .map(n -> n.getTextContent().trim().split(" "))
         .filter(s -> DependencyTypeSeries.resolveTag(s[0]).isPresent())
         .map(s -> new Dependency()
-            .withRel(DependencyTypeSeries.resolveTag(s[0]).get())
+            .withRel(DependencyTypeSeries.resolveTag(s[0]).orElse(Depends_On))
             .withHref(SemanticIdentifier.newVersionId(URI.create(s[1]))))
         .forEach(links::add);
 
     return links;
   }
 
-  private String normalizeQualifiedName(String id) {
-    if (id.startsWith("assets:")) {
-      String str = id.replace("assets:", names.getAssetNamespace().toString());
+  /**
+   * Rewrites non-standard Asset IDs into versioned URIs
+   * <p>
+   * Replace namespace prefixes, and adds a default version if absent
+   *
+   * @param id the ID to be rewritten
+   * @return the ID, as a normalized and versioned URI string
+   */
+  @Nonnull
+  protected String normalizeQualifiedName(
+      @Nonnull final String id) {
+    if (id.startsWith(ASSETS_PREFIX)) {
+      String str = id.replace(ASSETS_PREFIX, names.getAssetNamespace().toString());
       if (str.contains(":")) {
         str = str.replace(":", IdentifierConstants.VERSIONS);
       }
@@ -524,71 +717,6 @@ public class BPMModelIntrospector {
     } else {
       return id;
     }
-  }
-
-  private List<ResourceIdentifier> getArtifactImports(SemanticModelInfo manifest) {
-    return manifest.getModelDependencies().stream()
-        .flatMap(modelUri -> client.getMetadataByModelId(modelUri).stream())
-        .map(info -> names.modelToArtifactId(info))
-        .collect(toList());
-  }
-
-
-  private List<ResourceIdentifier> gatherAssetImports(Set<SemanticModelInfo> carriers) {
-    return carriers.stream()
-        .flatMap(info -> info.getModelDependencies().stream()
-            .flatMap(modelRef -> client.getMetadataByModelId(modelRef)
-                .map(ref ->
-                    names.assetKeyToId(ref.getAssetKey()).withName(ref.getName()))
-                .stream()))
-        .distinct()
-        .collect(toList());
-  }
-
-
-  /**
-   * create the information to be returned identifying the artifacts that are imported by the
-   * artifact being processed.
-   *
-   * @param theTargetArtifactId The list of artifact IDs for the imports to the current version of
-   *                            the model being processed
-   * @return The Link information for the imports; only keeping the identifier
-   */
-  private Collection<Link> getRelatedArtifacts(List<ResourceIdentifier> theTargetArtifactId) {
-    return theTargetArtifactId.stream()
-        // TODO: Do something different for null id? means related artifact was not published
-        //  log warning was already noted in gathering of related artifacts CAO
-        .filter(Objects::nonNull)
-        .map(resourceIdentifier -> new Dependency().withRel(Imports)
-            .withHref(resourceIdentifier))
-        .collect(toList());
-
-  }
-
-  /**
-   * Similar to the relatedArtifacts, related Assets are the asset identifiers for the artifacts
-   * that are imported or used (dependency) of the current processed artifact. Want to retain the
-   * identifiers.
-   *
-   * @param theTargetAssetId the list of assets this model depends on
-   * @return the link information for the assets; only keeping the identifier
-   */
-  private Collection<Link> getRelatedAssets(List<ResourceIdentifier> theTargetAssetId) {
-    return theTargetAssetId.stream()
-        .map(resourceIdentifier ->
-            new Dependency()
-                .withRel(Imports)
-                .withHref(resourceIdentifier))
-        .collect(toList());
-  }
-
-
-  private Collection<Link> mergeSortedLinks(Collection<Link> link1, Collection<Link> link2) {
-    return Stream.concat(
-            link1.stream(),
-            link2.stream())
-        .sorted(comparing(l -> l.getHref().getTag()))
-        .collect(Collectors.toList());
   }
 
   /* ----------------------------------------------------------------------------------------- */
@@ -602,7 +730,9 @@ public class BPMModelIntrospector {
    * @param manifest the internal model manifest.
    * @return a {@link Publication} object, to be used as a {@link KnowledgeAsset} surrogate fragment
    */
-  private Publication getArtifactPublicationStatus(TrisotechFileInfo manifest) {
+  @Nonnull
+  protected Publication getArtifactPublicationStatus(
+      @Nonnull final TrisotechFileInfo manifest) {
     Publication lifecycle = new Publication();
     if (isNotEmpty(manifest.getState())) {
       switch (manifest.getState()) {

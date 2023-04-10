@@ -81,7 +81,6 @@
         <host>${splunk-host}</host>
         <token>${splunk-token}</token>
         <index>${splunk-index-name}</index>
-        <!-- <source>${splunk-source}</source> -->
         <sourcetype>${splunk-source-type}</sourcetype>
         <batch_size_count>${splunk-batch-size-count}</batch_size_count>
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -89,22 +88,6 @@
         </layout>
         <disableCertificateValidation>${splunk-disable-certification-validation}</disableCertificateValidation>
     </appender>
-
-    <!--
-      <if condition='isDefined("SMTP")'>
-        <then>
-          <appender name="SMTP" class="ch.qos.logback.classic.net.SMTPAppender">
-            <smtpHost>ADDRESS-OF-YOUR-SMTP-HOST</smtpHost>
-            <to>EMAIL-DESTINATION</to>
-            <from>SENDER-EMAIL</from>
-            <subject>TESTING: %logger{20} - %m</subject>
-            <layout class="ch.qos.logback.classic.PatternLayout">
-              <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %logger{100} - %msg%n</pattern>
-            </layout>
-          </appender>
-        </then>
-      </if>
-    -->
 
     <!-- Specify the log level for all (ie: root) appenders: file, console-->
     <if condition='!isDefined("splunk-token")'>

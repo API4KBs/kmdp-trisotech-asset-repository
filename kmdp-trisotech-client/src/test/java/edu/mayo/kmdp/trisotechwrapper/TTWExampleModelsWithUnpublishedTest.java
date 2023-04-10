@@ -3,16 +3,21 @@ package edu.mayo.kmdp.trisotechwrapper;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.API_ENDPOINT;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.PUBLISHED_ONLY_FLAG;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.REPOSITORY_ID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.TTWExampleModelsTest.PublishedOnlyTestConfig;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import java.net.URI;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -35,7 +40,8 @@ import org.w3c.dom.Document;
     "edu.mayo.kmdp.application.flag.publishedOnly=false",
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=Trisotech Examples Working Space",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=4f5f5508-2137-4004-aef9-3ebef74f177d"})
-class TTWExampleModelsTestWithUnpublished {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class TTWExampleModelsWithUnpublishedTest {
 
   public static final String EXAMPLE_REPO = "4f5f5508-2137-4004-aef9-3ebef74f177d";
 
@@ -45,16 +51,18 @@ class TTWExampleModelsTestWithUnpublished {
 
 
   @Autowired
-  TTWrapper client;
+  TTWEnvironmentConfiguration cfg;
 
+  TTAPIAdapter client;
 
-  @BeforeEach
+  @BeforeAll
   void setUp() {
+    client = new TTWrapper(cfg, new DomainSemanticsWeaver(cfg), new TTRedactor());
     var apiEndpoint = (URI) client.getConfigParameter(API_ENDPOINT);
     assumeTrue(apiEndpoint != null);
 
     assertNotNull(client.getConfigParameter(REPOSITORY_ID));
-    assertTrue((Boolean) client.getConfigParameter(PUBLISHED_ONLY_FLAG));
+    assertEquals(Boolean.FALSE, client.getConfigParameter(PUBLISHED_ONLY_FLAG));
 
     assumeFalse(client.listAccessiblePlaces().isEmpty());
   }
@@ -76,7 +84,7 @@ class TTWExampleModelsTestWithUnpublished {
 
   @Configuration
   @ComponentScan(
-      basePackageClasses = {TTWrapper.class})
+      basePackageClasses = {TTWEnvironmentConfiguration.class})
   public static class PubUnpubTestConfig {
 
   }

@@ -1,11 +1,11 @@
 /**
  * Copyright © 2018 Mayo Clinic (RSTKNOWLEDGEMGMT@mayo.edu)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DefaultMetadataIntrospector;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMModelIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DefaultMetadataIntrospector;
 import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
+import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.util.JSonUtil;
@@ -38,7 +38,8 @@ import org.w3c.dom.Document;
 
 class TrisotechExtractionStrategyTest {
 
-  BPMModelIntrospector tes;
+  NamespaceManager names;
+
   String dmnPath = "/Weaver Test 1.dmn.xml";
   String dmnMeta = "/Weaver Test 1.meta.json";
   String cmmnPath = "/Weave Test 1.cmmn.xml";
@@ -60,11 +61,13 @@ class TrisotechExtractionStrategyTest {
 
   @BeforeEach
   void setUp() {
-    this.tes = new BPMModelIntrospector(null,
-        new DefaultNamespaceManager(new TTWEnvironmentConfiguration()));
+    var cfg = new TTWEnvironmentConfiguration();
+    names = new DefaultNamespaceManager(cfg);
+
     InputStream dmnStream = DefaultMetadataIntrospector.class.getResourceAsStream(dmnMeta);
     InputStream cmmnStream = DefaultMetadataIntrospector.class.getResourceAsStream(cmmnMeta);
-    InputStream baseCaseStream = DefaultMetadataIntrospector.class.getResourceAsStream(basicCaseMeta);
+    InputStream baseCaseStream = DefaultMetadataIntrospector.class.getResourceAsStream(
+        basicCaseMeta);
     InputStream basicDecisionStream = DefaultMetadataIntrospector.class
         .getResourceAsStream(basicDecisionMeta);
 
@@ -89,7 +92,6 @@ class TrisotechExtractionStrategyTest {
 
   @AfterEach
   void tearDown() {
-    this.tes = null;
     dmnDox = null;
     cmmnDox = null;
     badDox = null;
@@ -102,26 +104,26 @@ class TrisotechExtractionStrategyTest {
   void getArtifactID() {
 
     String expectedDMNId = "https://clinicalknowledgemanagement.mayo.edu/artifacts/5682fa26-b064-43c8-9475-1e4281e74068";
-    var value = this.tes.extractArtifactId(dmnFile);
+    var value = names.modelToArtifactId(dmnFile);
     assertEquals(expectedDMNId, value.getResourceId().toString());
 
     String expectedCMMNId = "https://clinicalknowledgemanagement.mayo.edu/artifacts/f59708b6-96c0-4aa3-be4a-31e075d76ec9";
-    value = this.tes.extractArtifactId(cmmnFile);
+    value = names.modelToArtifactId(cmmnFile);
     assertEquals(expectedCMMNId, value.getResourceId().toString());
 
     assertThrows(Exception.class,
-        () -> this.tes.extractArtifactId(new SemanticModelInfo()));
+        () -> this.names.modelToArtifactId(new SemanticModelInfo()));
   }
 
   @Test
   void getRepLanguage() {
-    var dmnRep = BPMMetadataHelper.getRepLanguage(dmnFile);
+    var dmnRep = BPMMetadataHelper.getDefaultRepresentation(dmnFile);
     assertEquals("DMN_1_2", dmnRep.orElseGet(Assertions::fail).getLanguage().toString());
 
-    var cmmnRep = BPMMetadataHelper.getRepLanguage(cmmnFile);
+    var cmmnRep = BPMMetadataHelper.getDefaultRepresentation(cmmnFile);
     assertEquals("CMMN_1_1", cmmnRep.orElseGet(Assertions::fail).getLanguage().toString());
 
-    var badRep = BPMMetadataHelper.getRepLanguage(new SemanticModelInfo());
+    var badRep = BPMMetadataHelper.getDefaultRepresentation(new SemanticModelInfo());
     assertEquals(Optional.empty(), badRep);
   }
 
@@ -133,7 +135,8 @@ class TrisotechExtractionStrategyTest {
 
     var cmmnRep = BPMMetadataHelper.detectRepLanguage(cmmnFile);
     assertEquals("CMMN 1.1", cmmnRep.orElseGet(Assertions::fail).getLabel());
-    assertEquals(KnowledgeRepresentationLanguageSeries.CMMN_1_1, cmmnRep.orElseGet(Assertions::fail));
+    assertEquals(KnowledgeRepresentationLanguageSeries.CMMN_1_1,
+        cmmnRep.orElseGet(Assertions::fail));
 
     var badRep = BPMMetadataHelper.detectRepLanguage(new SemanticModelInfo());
     assertEquals(Optional.empty(), badRep);

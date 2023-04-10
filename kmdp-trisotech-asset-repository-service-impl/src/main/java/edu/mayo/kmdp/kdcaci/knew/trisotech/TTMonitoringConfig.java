@@ -11,7 +11,6 @@ import edu.mayo.kmdp.health.datatype.MiscProperties;
 import edu.mayo.kmdp.health.datatype.Status;
 import edu.mayo.kmdp.health.utils.MonitorUtil;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
-import edu.mayo.kmdp.trisotechwrapper.components.TTWKnowledgeStore;
 import edu.mayo.kmdp.trisotechwrapper.components.cache.CachingTTWKnowledgeStore;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -40,7 +39,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
  */
 @ComponentScan(basePackageClasses = {
     TTAPIAdapter.class,
-    TTWKnowledgeStore.class,
+    TTMonitoringConfig.class,
     HealthEndPoint.class,
     StateEndPoint.class,
     VersionEndPoint.class})

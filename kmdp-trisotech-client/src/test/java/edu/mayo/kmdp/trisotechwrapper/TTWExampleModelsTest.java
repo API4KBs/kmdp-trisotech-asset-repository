@@ -11,13 +11,17 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.TTWExampleModelsTest.PublishedOnlyTestConfig;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -39,6 +43,7 @@ import org.w3c.dom.Document;
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=Trisotech Examples Working Space",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=4f5f5508-2137-4004-aef9-3ebef74f177d"})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TTWExampleModelsTest {
 
   public static final String EXAMPLE_REPO = "4f5f5508-2137-4004-aef9-3ebef74f177d";
@@ -51,16 +56,20 @@ class TTWExampleModelsTest {
 
 
   @Autowired
-  TTWrapper client;
+  TTWEnvironmentConfiguration cfg;
+
+  TTAPIAdapter client;
 
 
-  @BeforeEach
+  @BeforeAll
   void setUp() {
+    client = new TTWrapper(cfg, new DomainSemanticsWeaver(cfg), new TTRedactor());
+
     var apiEndpoint = (URI) client.getConfigParameter(API_ENDPOINT);
     assumeTrue(apiEndpoint != null);
 
     assertNotNull(client.getConfigParameter(REPOSITORY_ID));
-    assertTrue((Boolean) client.getConfigParameter(PUBLISHED_ONLY_FLAG));
+    assertEquals(Boolean.TRUE, client.getConfigParameter(PUBLISHED_ONLY_FLAG));
 
     assumeFalse(client.listAccessiblePlaces().isEmpty());
   }
@@ -161,7 +170,7 @@ class TTWExampleModelsTest {
 
   @Configuration
   @ComponentScan(
-      basePackageClasses = {TTWrapper.class})
+      basePackageClasses = {TTWEnvironmentConfiguration.class})
   public static class PublishedOnlyTestConfig {
 
   }

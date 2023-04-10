@@ -13,6 +13,7 @@
  */
 package edu.mayo.kmdp;
 
+import static edu.mayo.kmdp.components.TestMetadataHelper.extractMetadata;
 import static edu.mayo.kmdp.util.FileUtil.read;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.Captures;
 import static edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries.In_Terms_Of;
@@ -20,38 +21,47 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import edu.mayo.kmdp.components.TestMetadataIntrospector;
+import edu.mayo.kmdp.components.TestMetadataHelper;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
+import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
 import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
 import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
+import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Annotation;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.w3c.dom.Document;
 
-@SpringBootTest
-@ContextConfiguration(classes = TrisotechAssetRepositoryTestConfig.class)
 class SemanticAnnotationTest {
 
-  @Autowired
-  TestMetadataIntrospector extractor;
+  static TTWEnvironmentConfiguration cfg;
+  static MetadataIntrospector extractor;
 
-  @Autowired
-  Weaver dmnWeaver;
+  static Weaver dmnWeaver;
 
-  @Autowired
-  Redactor redactor;
+  static Redactor redactor;
+
+  @BeforeAll
+  static void init() {
+    cfg = new TTWEnvironmentConfiguration();
+    dmnWeaver = new DomainSemanticsWeaver(new TTWEnvironmentConfiguration());
+    redactor = new TTRedactor();
+    extractor = TestMetadataHelper.newIntrospector(cfg);
+  }
 
 
   @Test
@@ -68,9 +78,11 @@ class SemanticAnnotationTest {
     assertTrue(dmn.isPresent());
 
     try {
-      Optional<KnowledgeAsset> res = extractor.extractMetadata(
+      Optional<KnowledgeAsset> res = extractMetadata(
           new ByteArrayInputStream(dmn.get()),
-          SemanticAnnotationTest.class.getResourceAsStream(metaPath));
+          SemanticAnnotationTest.class.getResourceAsStream(metaPath),
+          extractor,
+          cfg);
       if (res.isEmpty()) {
         fail("Unable to instantiate metadata object");
       }
@@ -121,9 +133,11 @@ class SemanticAnnotationTest {
     //XMLUtil.streamXMLDocument(dox.get(), System.out);
 
     try {
-      Optional<KnowledgeAsset> res = extractor.extractMetadata(
+      Optional<KnowledgeAsset> res = extractMetadata(
           new ByteArrayInputStream(dmn.get()),
-          SemanticAnnotationTest.class.getResourceAsStream(metaPath));
+          SemanticAnnotationTest.class.getResourceAsStream(metaPath),
+          extractor,
+          cfg);
       if (res.isEmpty()) {
         fail("Unable to instantiate metadata object");
       }
@@ -159,8 +173,9 @@ class SemanticAnnotationTest {
         .flatMap(str -> JSonUtil.parseJson(str, TrisotechFileInfo.class))
         .orElseGet(Assertions::fail);
 
-    var asset = extractor.extractMetadata(cmmn.get(), info)
-        .orElseGet(Assertions::fail);
+    var asset = extractor.introspect(
+        SemanticIdentifier.randomId(),
+        Map.of(SemanticModelInfo.testNewInfo(info), cmmn));
 
     System.out.println(XMLUtil.toString(cmmn.get()));
     JSonUtil.printJson(asset).ifPresent(System.out::println);

@@ -37,53 +37,76 @@ import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
 import edu.mayo.kmdp.trisotechwrapper.components.execution.ServiceLibraryHelper;
+import edu.mayo.kmdp.trisotechwrapper.components.graph.PlacePathIndex;
 import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
 import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifact;
 import edu.mayo.kmdp.util.XPathUtil;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.Dependency;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * Extract the data from the woven (by the Weaver) document to create KnowledgeAsset from model
- * data.
+ * Default implementation of @{@link ServiceIntrospector}
  */
-@Component
-public class BPMServiceIntrospector {
+public class BPMServiceIntrospector implements ServiceIntrospector {
 
-  @Autowired
-  TTAPIAdapter client;
+  /**
+   * Logger
+   */
+  private static final Logger logger = LoggerFactory
+      .getLogger(BPMServiceIntrospector.class);
 
-  @Autowired
-  NamespaceManager names;
+  /**
+   * {@link TTAPIAdapter}, used to resolve model/model dependencies
+   */
+  @Nonnull
+  protected final TTAPIAdapter client;
 
-  @Autowired
-  TTWEnvironmentConfiguration cfg;
+  /**
+   * {@link NamespaceManager}, used to map internal IDs to enterprise IDs
+   */
+  @Nonnull
+  protected final NamespaceManager names;
 
+  /**
+   * Environment configuration
+   */
+  @Nonnull
+  protected final TTWEnvironmentConfiguration config;
 
+  /**
+   * Utility used to extract elements from a Model document
+   */
   private final XPathUtil xPathUtil = new XPathUtil();
 
-  public BPMServiceIntrospector() {
-    //
+  public BPMServiceIntrospector(
+      @Nonnull TTWEnvironmentConfiguration config,
+      @Nonnull NamespaceManager names,
+      @Nonnull TTAPIAdapter client) {
+    this.config = config;
+    this.client = client;
+    this.names = names;
   }
 
   /**
    * Generates a {@link KnowledgeAsset} Surrogate from the introspection of a BPM+ model, combined
-   * with the information in its corresponding Trisotech's internal manifest. In particular, the
+   * with the information in its corresponding Trisotech internal manifest. In particular, the
    * Surrogate is the surrogate of a technical Knowledge Asset for a Service scoped, defined and/or
    * referenced by the BPM+ model
    * <p>
@@ -92,16 +115,23 @@ public class BPMServiceIntrospector {
    * Note that, at this point, the model document has already been standardized using the
    * {@link Redactor}, and (re)annotated using the {@link Weaver}
    *
-   * @param dox      the BPM+ model artifact to extract metadata from
    * @param manifest the model's internal manifest
+   * @param dox      the BPM+ model artifact to extract metadata from
    * @return a KnowledgeAsset surrogate with metadata for a Service defined within that model
    */
-  public KnowledgeAsset extractSurrogateFromDocument(
-      Document dox,
-      SemanticModelInfo manifest,
-      ResourceIdentifier serviceAssetId) {
+  @Nonnull
+  public Optional<KnowledgeAsset> introspectAsService(
+      @Nonnull final ResourceIdentifier serviceAssetId,
+      @Nonnull final SemanticModelInfo manifest,
+      @Nonnull final Document dox) {
 
-    var serviceName = manifest.getServiceFragmentName();
+    if (isIncomplete(manifest)) {
+      logger.warn("Incomplete manifest - unable to create Surrogate for {}", serviceAssetId);
+      return Optional.empty();
+    }
+
+    var serviceName = Optional.ofNullable(manifest.getServiceFragmentName())
+        .orElse("N/A");
 
     // Publication Status
     var lifecycle = getArtifactPublicationStatus();
@@ -135,7 +165,22 @@ public class BPMServiceIntrospector {
                 .withHref(x)
                 .withRel(Depends_On)));
 
-    return surrogate;
+    return Optional.of(surrogate);
+  }
+
+  /**
+   * Predicate
+   *
+   * @param manifest a Service Asset Manifest
+   * @return true if and only if the Manifest does NOT contain enough information to generate a
+   * {@link KnowledgeAsset}
+   */
+  private boolean isIncomplete(
+      @Nonnull final SemanticModelInfo manifest) {
+    return manifest.getServiceId() == null
+        || manifest.getServiceKey() == null
+        || manifest.getServiceFragmentId() == null
+        || manifest.getServiceFragmentName() == null;
   }
 
   /**
@@ -147,16 +192,19 @@ public class BPMServiceIntrospector {
    * the service is deployed, and a manifestation of the artifact can be acquired at a given URL.
    *
    * @param assetId     The Service Asset ID
-   * @param lifecycle   the publication status (FIXME - needs improvement)
+   * @param lifecycle   the publication status (FIXME - may need improvement)
    * @param serviceName the formal name of the Service (matches the Service Library)
    * @param manifest    the manifest of the model from which the service is built
    * @return the metadata for the service OpenAPI spec
    * @see ServiceLibraryHelper#tryResolveOpenApiUI(TrisotechExecutionArtifact,
    * TTWEnvironmentConfiguration)
    */
+  @Nonnull
   private KnowledgeArtifact buildSwaggerUICarrier(
-      ResourceIdentifier assetId, Publication lifecycle,
-      String serviceName, SemanticModelInfo manifest) {
+      @Nonnull final ResourceIdentifier assetId,
+      @Nonnull final Publication lifecycle,
+      @Nonnull final String serviceName,
+      @Nonnull final SemanticModelInfo manifest) {
     var ka = new KnowledgeArtifact()
         .withArtifactId(defaultArtifactId(assetId, HTML))
         .withName(serviceName)
@@ -166,7 +214,7 @@ public class BPMServiceIntrospector {
         .withRepresentation(rep(HTML))
         .withMimeType(codedRep(HTML));
     client.getExecutionArtifact(serviceName, manifest)
-        .flatMap(exec -> ServiceLibraryHelper.tryResolveOpenApiUI(exec, cfg))
+        .flatMap(exec -> ServiceLibraryHelper.tryResolveOpenApiUI(exec, config))
         .ifPresent(ka::withLocator);
     return ka;
   }
@@ -187,9 +235,12 @@ public class BPMServiceIntrospector {
    * @see ServiceLibraryHelper#tryResolveOpenApiSpec(TrisotechExecutionArtifact,
    * TTWEnvironmentConfiguration)
    */
+  @Nonnull
   private KnowledgeArtifact buildOpenAPICarrier(
-      ResourceIdentifier assetId, Publication lifecycle, String serviceName,
-      SemanticModelInfo manifest) {
+      @Nonnull final ResourceIdentifier assetId,
+      @Nonnull final Publication lifecycle,
+      @Nonnull final String serviceName,
+      @Nonnull final SemanticModelInfo manifest) {
     //FIXME TT actually uses OAS3.x (3.0.1), but that needs to be registered first
     var synRep = rep(OpenAPI_2_X, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
 
@@ -202,19 +253,21 @@ public class BPMServiceIntrospector {
         .withRepresentation(synRep)
         .withMimeType(codedRep(synRep));
     client.getExecutionArtifact(serviceName, manifest)
-        .flatMap(exec -> ServiceLibraryHelper.tryResolveOpenApiSpec(exec, cfg))
+        .flatMap(exec -> ServiceLibraryHelper.tryResolveOpenApiSpec(exec, config))
         .ifPresent(ka::withLocator);
     return ka;
   }
 
   /**
-   * Determines the Asset Id of the Model that provides the logic for the Service Asset under
+   * Determines the Asset ID of the Model that provides the logic for the Service Asset under
    * consideration, which happens to be the same Model defining the Service itself
    *
    * @param manifest the Artifact metadata of the model
-   * @return the Asset Id of the Model, if any
+   * @return the Asset ID of the Model, if any
    */
-  private Optional<ResourceIdentifier> getServiceModelDependency(SemanticModelInfo manifest) {
+  @Nonnull
+  private Optional<ResourceIdentifier> getServiceModelDependency(
+      @Nonnull final SemanticModelInfo manifest) {
     return names.modelToAssetId(manifest);
   }
 
@@ -233,7 +286,10 @@ public class BPMServiceIntrospector {
    * @param serviceAssetId the serviceAssetId
    * @return the XML Element that represents the part of the model exposed as a service
    */
-  private Element selectNode(Document dox, ResourceIdentifier serviceAssetId) {
+  @Nonnull
+  private Element selectNode(
+      @Nonnull final Document dox,
+      @Nonnull final ResourceIdentifier serviceAssetId) {
     return selectDecisionServiceNode(dox, serviceAssetId)
         .or(() -> selectProcessNode(dox, serviceAssetId))
         .or(() -> selectAnyNode(dox, serviceAssetId))
@@ -244,28 +300,82 @@ public class BPMServiceIntrospector {
         ));
   }
 
-  private Optional<Node> selectDecisionServiceNode(Document dox, ResourceIdentifier assetId) {
+  /**
+   * Looks up the {@link Node} annotated with a given Service Asset ID in a DMN Document, or, tries
+   * to establish a match with the Node whose ID was used to generate an the anonymous Asset ID
+   * <p>
+   * Looks for a dmn:decisionService Node
+   *
+   * @param dox     the Document expected to match the Asset ID (which could be 'anonymous')
+   * @param assetId the ID to look up
+   * @return the Node, if found
+   * @see #findAnonymousMatch(String, Document, ResourceIdentifier)
+   */
+  @Nonnull
+  private Optional<Node> selectDecisionServiceNode(
+      @Nonnull final Document dox,
+      @Nonnull final ResourceIdentifier assetId) {
     return Optional.ofNullable(xPathUtil.xNode(dox,
             "//dmn:decisionService[.//@resourceId='" + assetId.getResourceId() + "']"))
         .or(() -> findAnonymousMatch("//dmn:decisionService", dox, assetId));
   }
 
-  private Optional<Node> selectProcessNode(Document dox, ResourceIdentifier assetId) {
+  /**
+   * Looks up the {@link Node} annotated with a given Service Asset ID in a BPMN Document, or, tries
+   * to establish a match with the Node whose ID was used to generate an the anonymous Asset ID
+   * <p>
+   * Looks for a bpmn:Process Node
+   *
+   * @param dox     the Document expected to match the Asset ID (which could be 'anonymous')
+   * @param assetId the ID to look up
+   * @return the Node, if found
+   * @see #findAnonymousMatch(String, Document, ResourceIdentifier)
+   */
+  @Nonnull
+  private Optional<Node> selectProcessNode(
+      @Nonnull final Document dox,
+      @Nonnull final ResourceIdentifier assetId) {
     return Optional.ofNullable(xPathUtil.xNode(dox,
             "//bpmn:process[.//@resourceId='" + assetId.getResourceId() + "']"))
         .or(() -> findAnonymousMatch("//bpmn:process", dox, assetId));
   }
 
-  private Optional<Element> findAnonymousMatch(String xpath, Document dox,
-      ResourceIdentifier assetId) {
+  /**
+   * Matches the node(s) selected by an XPath expression against a Service Asset ID. Assumes that
+   * the Node id was used to generate an anonymous Service Asset ID, and compares the anonymous ID
+   * to the given one, to see if the given Asset ID matches the node
+   *
+   * @param xpath   the Node selector
+   * @param dox     the Document to apply the selector to
+   * @param assetId the target Asset ID
+   * @return an Element, if the Element's ID, when used to generate an anonymous Service Asset ID,
+   * matches the given assetId
+   * @see PlacePathIndex#mintAssetIdForAnonymous(URI, String, String)
+   */
+  @Nonnull
+  private Optional<Element> findAnonymousMatch(
+      @Nonnull final String xpath,
+      @Nonnull final Document dox,
+      @Nonnull final ResourceIdentifier assetId) {
     return asElementStream(xPathUtil.xList(dox, xpath))
-        .filter(e -> mintAssetIdForAnonymous(
-            cfg.getTyped(TTWConfigParamsDef.ASSET_NAMESPACE), e.getAttribute("id"), null)
-            .getUuid().equals(assetId.getUuid()))
-        .findFirst();
+        .filter(e -> {
+          var anon = mintAssetIdForAnonymous(
+              config.getTyped(TTWConfigParamsDef.ASSET_NAMESPACE), e.getAttribute("id"), null);
+          return anon.getUuid().equals(assetId.getUuid());
+        }).findFirst();
   }
 
-  private Optional<? extends Node> selectAnyNode(Document dox, ResourceIdentifier assetId) {
+  /**
+   * Looks up the {@link Node} annotated with a given Service Asset ID in a XML Document, anywhere
+   *
+   * @param dox     the Document expected to contain the Asset ID
+   * @param assetId the ID to look up
+   * @return the Node, if found
+   */
+  @Nonnull
+  private Optional<? extends Node> selectAnyNode(
+      @Nonnull final Document dox,
+      @Nonnull final ResourceIdentifier assetId) {
     return Optional.ofNullable(xPathUtil.xNode(dox,
         "//*[descendant::*/@resourceId='" + assetId.getResourceId() + "']"));
   }

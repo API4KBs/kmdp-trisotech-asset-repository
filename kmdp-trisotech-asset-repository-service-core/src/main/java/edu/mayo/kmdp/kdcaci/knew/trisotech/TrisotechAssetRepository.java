@@ -16,7 +16,7 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper.negotiateHTML;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDeclaredAssetTypes;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultAssetType;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getRepLanguage;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultRepresentation;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DocumentHelper.extractAssetIdFromDocument;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.matchesVersion;
@@ -59,17 +59,20 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DefaultMetadataIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
+import edu.mayo.kmdp.trisotechwrapper.TTWrapper;
 import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XMLUtil;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +85,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetCatalogApiInternal;
@@ -158,60 +160,71 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   /**
    * The DES API facade used to interact with the DES server
    */
-  @Autowired
-  private TTAPIAdapter client;
+  @Nonnull
+  protected final TTAPIAdapter client;
 
   /**
    * The Introspector used to generate {@link KnowledgeAsset} surrogates from the analysis of the
    * BPM+ models artifacts in the DES server
    */
-  @Autowired
-  private MetadataIntrospector extractor;
+  @Nonnull
+  protected final MetadataIntrospector extractor;
 
   /**
    * The {@link KARSHrefBuilder} used to map URIs to URLs relative to this server's deployment
    */
   @Nullable
-  @Autowired(required = false)
-  private KARSHrefBuilder hrefBuilder;
+  protected final KARSHrefBuilder hrefBuilder;
 
   /**
    * The helper used in content negotiation
    */
-  @Autowired
-  private TTContentNegotiationHelper negotiator;
+  @Nullable
+  protected final TTContentNegotiationHelper negotiator;
 
   /**
    * The environment configuration
    */
-  @Autowired(required = false)
-  private TTWEnvironmentConfiguration configuration;
+  @Nonnull
+  protected final TTWEnvironmentConfiguration cfg;
 
   /**
    * The namespace manager used to rewrite the Trisotech native URIs into platform URIs
    */
+  @Nonnull
+  protected final NamespaceManager names;
+
+
   @Autowired
-  private NamespaceManager names;
-
-  /**
-   * Empty Constructor
-   */
-  public TrisotechAssetRepository() {
+  public TrisotechAssetRepository(
+      @Nonnull TTWEnvironmentConfiguration cfg,
+      @Nullable TTAPIAdapter client,
+      @Nullable MetadataIntrospector extractor,
+      @Nullable KARSHrefBuilder hrefBuilder,
+      @Nullable TTContentNegotiationHelper negotiator,
+      @Nullable NamespaceManager names) {
     //
-  }
+    this.cfg = cfg;
 
-  /**
-   * Setup.
-   */
-  @PostConstruct
-  void init() {
-    if (configuration == null) {
-      configuration = new TTWEnvironmentConfiguration();
-    }
-    if (hrefBuilder == null) {
-      hrefBuilder = new KARSHrefBuilder(configuration);
-    }
-    names = new DefaultNamespaceManager(configuration);
+    this.client = client != null
+        ? client
+        : new TTWrapper(cfg, new DomainSemanticsWeaver(this.cfg), new TTRedactor());
+
+    this.hrefBuilder = hrefBuilder != null
+        ? hrefBuilder
+        : new KARSHrefBuilder(cfg);
+
+    this.names = names != null
+        ? names
+        : new DefaultNamespaceManager(this.cfg);
+
+    this.negotiator = negotiator != null
+        ? negotiator
+        : new TTContentNegotiationHelper(this.names, this.hrefBuilder);
+
+    this.extractor = extractor != null
+        ? extractor
+        : new DefaultMetadataIntrospector(this.cfg, this.client, this.names, this.hrefBuilder);
   }
 
   /**
@@ -227,7 +240,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
   /**
-   * Lists all the KnowledgeAssets, collectively carried by the Models/Artfacts in the DES server
+   * Lists all the KnowledgeAssets, collectively carried by the Models/Artifacts in the DES server
    * <p>
    * Can filter by asset type. Sorts by date. May paginate (best effort)
    *
@@ -290,13 +303,16 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       // get all Models (manifests) that carry the same Asset
       var models = client.getMetadataByGreatestAssetId(assetId)
           .collect(toList());
-
       if (models.isEmpty()) {
         return Answer.ofTry(Optional.empty(), newId(assetId),
             () -> "No Asset found for the given ID");
       }
-      // get the Asset Surrogate, given the Carriers to introspect
-      return Answer.ofTry(getSurrogateFromManifests(assetId, models));
+
+      var greatestAssetId = names.modelToAssetId(models.get(0))
+          .orElseGet(() -> newId(assetId, cfg.getTyped(DEFAULT_VERSION_TAG, String.class)));
+      return Answer.ofTry(getSurrogateFromManifests(
+          greatestAssetId,
+          models));
     } catch (Exception e) {
       return Answer.failed(e);
     }
@@ -329,7 +345,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
       var carrierInfo = client.getMetadataByAssetId(assetId, versionTag)
           .collect(toList());
-      return Answer.ofTry(getSurrogateFromManifests(assetId, carrierInfo));
+      return Answer.ofTry(
+          getSurrogateFromManifests(newId(assetId, versionTag), carrierInfo));
     } catch (Exception e) {
       return Answer.failed(e);
     }
@@ -406,8 +423,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    * <p>
    * Background: In TT, only the latest version of a model is indexed, and there is no guarantee
    * that the latest model matches the requested artifact version, and/or still carries the
-   * requested version of the Asset. TT not being a long term repoository, this method makes a best
-   * effort attempt to honor the request, looking up the requested artifact version (if still
+   * requested version of the Asset. TT not being a long term repository, this method makes a
+   * best-effort attempt to honor the request, looking up the requested artifact version (if still
    * existing), and returning content only if that version carries the desired asset version.
    *
    * @param assetId            the Asset ID
@@ -429,8 +446,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         // The asset version is indexed: it is still 'current' in at least one latest artifact ...
         var info = manifest.get();
         if (matchesVersion(info, artifactVersionTag,
-            () -> configuration.getTyped(DEFAULT_VERSION_TAG))) {
-          // ... if that artfifact has the requested version, return the data
+            () -> cfg.getTyped(DEFAULT_VERSION_TAG))) {
+          // ... if that artifact has the requested version, return the data
           return Answer.ofTry(getCarrier(assetId, versionTag, artifactId));
         }
       }
@@ -461,7 +478,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     try {
       var surr = getKnowledgeAsset(assetId, null)
           .map(SurrogateHelper::carry);
-      return negotiateHTML(xAccept)
+      return negotiateHTML(xAccept) && negotiator != null
           ? surr.flatMap(negotiator::toHtml)
           : surr;
     } catch (Exception e) {
@@ -488,7 +505,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     try {
       var surr = getKnowledgeAssetVersion(assetId, versionTag, null)
           .map(SurrogateHelper::carry);
-      return negotiateHTML(xAccept)
+      return negotiateHTML(xAccept) && negotiator != null
           ? surr.flatMap(negotiator::toHtml)
           : surr;
     } catch (Exception e) {
@@ -619,8 +636,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     return info.getExposedServices().stream()
         .flatMap(key -> client.getMetadataByAssetId(key.getUuid(), key.getVersionTag()))
         .map(sInfo -> {
-          var id = names.assetKeyToId(sInfo.getServiceKey());
-          return id.toPointer()
+              var id = names.assetKeyToId(sInfo.getServiceKey());
+              return id.toPointer()
                   .withType(getRepresentativeType(
                       sInfo.getServiceKey(), () -> ReSTful_Service_Specification))
                   .withName(sInfo.getName())
@@ -710,60 +727,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   /* ----------------------------------------------------------------------------------------- */
 
-
-  /**
-   * This method is invoked when the latest Artifact that carries an Asset, at a different version
-   * than what the client requested. Assuming that the same Artifact used to carry the requested
-   * Asset version at some point in its history, scans the previous versions of that Artifact
-   * looking for that version.
-   * <p>
-   * Note that this method is expensive: previous Model versions are not indexed for Asset Ids (or
-   * anything else), which requires to process the actual Models.
-   *
-   * @param modelUri        the internal trisotech URL for the model that carries a newer version of
-   *                        the Asset
-   * @param assetId         the assetId looking for
-   * @param assetVersionTag the version of the asset looking for
-   * @return The KnowledgeAsset for the version, if any
-   */
-  @Nonnull
-  private Optional<KnowledgeAsset> findArtifactVersionForAsset(
-      @Nonnull final String modelUri,
-      @Nonnull final UUID assetId,
-      @Nonnull final String assetVersionTag) {
-    var currentInfo = client.getMetadataByModelId(modelUri);
-    if (currentInfo.isEmpty()) {
-      return Optional.empty();
-    }
-
-    var modelVersions =
-        client.getVersionsMetadataByModelId(modelUri);
-    Collections.reverse(modelVersions);
-
-    for (var modelVersionInfo : modelVersions) {
-      var versionInfo = new SemanticModelInfo(modelVersionInfo, currentInfo.get());
-      Optional<KnowledgeAsset> surr =
-          client.getModel(modelVersionInfo)
-              .flatMap(dox ->
-                  extractAssetIdFromDocument(dox, configuration.getTyped(ASSET_ID_ATTRIBUTE))
-                      .filter(axId -> assetVersionTag.equals(axId.getVersionTag())
-                          && assetId.equals(axId.getUuid()))
-                      .flatMap(
-                          axId -> getSurrogateFromCarriers(
-                              assetId, Map.of(versionInfo, Optional.of(dox))))
-              );
-      if (surr.isPresent()) {
-        return surr;
-      }
-    }
-    if (logger.isWarnEnabled()) {
-      logger.warn("No model is associated to asset version {}",
-          newId(assetId, assetVersionTag).getVersionId());
-    }
-    return Optional.empty();
-  }
-
-
   /**
    * Looks up an Asset Version in a Model Version, when the Model Version is not a "latest", and
    * thus not indexed. Finds the Artifact versions that share the given version tag, and looks for
@@ -793,7 +756,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         .filter(candidate -> {
           var detectedId = client.getModel(candidate)
               .flatMap(dox ->
-                  extractAssetIdFromDocument(dox, configuration.getTyped(ASSET_ID_ATTRIBUTE)));
+                  extractAssetIdFromDocument(dox, cfg.getTyped(ASSET_ID_ATTRIBUTE)));
           // does the model assert the desired asset ID/version
           return detectedId.map(id -> id.asKey().equals(assetKey)).orElse(false);
         }).findFirst()
@@ -911,7 +874,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       @Nonnull final String versionTag,
       @Nonnull final TrisotechFileInfo info) {
 
-    return getRepLanguage(info).flatMap(lang ->
+    return getDefaultRepresentation(info).flatMap(lang ->
         client.getModel(info).map(xml ->
             buildCarrierFromNativeModel(
                 assetId,
@@ -965,12 +928,12 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    */
   @Nonnull
   private Optional<KnowledgeAsset> getSurrogateFromManifests(
-      @Nonnull final UUID assetId,
+      @Nonnull final ResourceIdentifier assetId,
       @Nonnull final Collection<SemanticModelInfo> manifests) {
     var models = manifests.stream()
         .collect(toMap(
             info -> info,
-            info -> client.getModel(info)
+            client::getModel
         ));
     return getSurrogateFromCarriers(assetId, models);
   }
@@ -984,7 +947,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    * @return a {@link KnowledgeAsset} Surrogate for the Asset, given the carriers
    */
   private Optional<KnowledgeAsset> getSurrogateFromCarriers(
-      @Nonnull final UUID assetId,
+      @Nonnull final ResourceIdentifier assetId,
       @Nonnull final Map<SemanticModelInfo, Optional<Document>> carriers) {
 
     // extract data from Trisotech format to OMG format

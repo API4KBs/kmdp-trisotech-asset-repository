@@ -19,13 +19,22 @@ public class TTConstants {
   public static final String TT_BASE_MODEL_URI = "http://www.trisotech.com/definitions/_";
 
   /**
-   * TT's Graph URI for the 'Accelerator' class
+   * TT's Graph URI for the 'Accelerator' Graph/Model meta-classifier
    */
-  public static final String TT_ACCELERATOR_MODEL = "http://www.trisotech.com/graph/1.0/element#Framework";
+  public static final String TT_ACCELERATOR_META_CLASS = "http://www.trisotech.com/graph/1.0/element#Framework";
   /**
    * TT's Graph URI for the 'Entity' class
    */
   public static final String TT_ACCELERATOR_ENTTIY = "http://www.trisotech.com/graph/1.0/element#Entity";
+
+  /**
+   * TT's Graph URI for the 'KEM' model Graph/Model meta-classifier
+   */
+  public static final String TT_KEM_META_CLASS = "http://www.trisotech.com/graph/1.0/element#BusinessEntityModel";
+  /**
+   * TT's Graph URI for the 'Entity' class
+   */
+  public static final String TT_KEM_TERM = "http://www.trisotech.com/graph/1.0/element#Term";
 
   /**
    * TT's base URI for named RDF graphs (mapped to TT Places)
@@ -36,6 +45,11 @@ public class TTConstants {
    * Standard prefix associated to W3C's XML Namespaces namespace
    */
   public static final String XMLNS_PREFIX = "xmlns:";
+
+  /**
+   * Standard prefix associated to API4KP Assets namespace
+   */
+  public static final String ASSETS_PREFIX = "assets:";
 
   /**
    * W3C's XML Namespaces namespace

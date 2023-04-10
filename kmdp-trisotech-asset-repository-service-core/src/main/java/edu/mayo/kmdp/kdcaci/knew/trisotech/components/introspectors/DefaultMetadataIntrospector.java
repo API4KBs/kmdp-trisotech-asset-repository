@@ -15,61 +15,78 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
 import static java.util.stream.Collectors.joining;
 
-import edu.mayo.kmdp.language.parsers.surrogate.v2.Surrogate2Parser;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
+import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.StreamUtil;
-import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
-import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.DeserializeApiInternal._applyLower;
+import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
-import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
+import org.omg.spec.api4kp._20200801.services.repository.asset.KARSHrefBuilder;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
 /**
- * MetadataExtractor takes the output of the Weaver and the information of the artifact to create a
- * KnowledgeAsset surrogate.
+ * Default implementation of {@link MetadataIntrospector}
  */
-@Component
 public class DefaultMetadataIntrospector implements MetadataIntrospector {
 
+  /**
+   * Logger
+   */
   private static final Logger logger = LoggerFactory.getLogger(DefaultMetadataIntrospector.class);
 
+  /**
+   * Category of Asset to extract metadata for
+   */
   public enum AssetCategory {
     DOMAIN_ASSET,
-    UNKNOWN, SERVICE_ASSET
+    UNKNOWN,
+    SERVICE_ASSET
   }
 
-  @Autowired
-  protected BPMModelIntrospector strategy;
+  /**
+   * The delegate introspector used for Model Assets
+   */
+  @Nonnull
+  protected final ModelIntrospector modelDelegate;
+  /**
+   * The delegate introspector used for Service Assets
+   */
+  @Nonnull
+  protected final ServiceIntrospector serviceDelegate;
 
-  @Autowired
-  protected TTAPIAdapter client;
+  /**
+   * The Trisotech adapter
+   */
+  @Nonnull
+  protected final TTAPIAdapter client;
 
-  @Autowired
-  protected BPMServiceIntrospector serviceStrategy;
 
-  protected final _applyLower serializer = new Surrogate2Parser();
-
-  public DefaultMetadataIntrospector(BPMModelIntrospector delegate) {
-    this.strategy = delegate;
+  public DefaultMetadataIntrospector(
+      @Nonnull TTWEnvironmentConfiguration cfg,
+      @Nonnull TTAPIAdapter client,
+      @Nonnull NamespaceManager names,
+      @Nullable KARSHrefBuilder hrefBuilder) {
+    this.client = client;
+    this.modelDelegate = new BPMModelIntrospector(cfg, names, client, hrefBuilder);
+    this.serviceDelegate = new BPMServiceIntrospector(cfg, names, client);
   }
+
 
   @Override
+  @Nonnull
   public Optional<KnowledgeAsset> introspect(
-      @Nonnull final UUID assetId,
+      @Nonnull final ResourceIdentifier assetId,
       @Nonnull final Map<SemanticModelInfo, Optional<Document>> carriers) {
 
     var resolveds = carriers.keySet().stream()
@@ -78,7 +95,7 @@ public class DefaultMetadataIntrospector implements MetadataIntrospector {
         .collect(Collectors.toSet());
 
     if (resolveds.size() != 1) {
-      if (logger.isErrorEnabled() && ! resolveds.isEmpty()) {
+      if (logger.isErrorEnabled() && !resolveds.isEmpty()) {
         logger.error("Carrier set is inconsistent : {}",
             resolveds.stream().map(Objects::toString).collect(joining(",")));
       }
@@ -95,7 +112,7 @@ public class DefaultMetadataIntrospector implements MetadataIntrospector {
 
     switch (resolved.category) {
       case DOMAIN_ASSET:
-        return introspectAsModel(resolved.assetId, doxMap);
+        return modelDelegate.introspectAsModel(resolved.assetId, doxMap);
       case SERVICE_ASSET:
         return introspectAsService(resolved.assetId, doxMap);
       case UNKNOWN:
@@ -105,41 +122,38 @@ public class DefaultMetadataIntrospector implements MetadataIntrospector {
   }
 
 
-  @Override
-  public Optional<KnowledgeAsset> introspectAsService(
+  /**
+   * Bridge method
+   * <p>
+   * As of version 6.0.0, Service Assets can be carried by one and one model. Before the
+   * {@link ServiceIntrospector} is invoked, ensures that the carriers Map contains one and only one
+   * entry, using that entry to invoke the delegate
+   *
+   * @param assetId  the Asset ID
+   * @param carriers the Manifest/Model map, expected to contain only one entry
+   * @return the Surrogate returned by the {@link ServiceIntrospector} delegate
+   */
+  @Nonnull
+  protected Optional<KnowledgeAsset> introspectAsService(
       @Nonnull final ResourceIdentifier assetId,
-      @Nonnull final SemanticModelInfo manifest,
-      @Nonnull final Document carrier) {
-    return Optional.of(
-        serviceStrategy.extractSurrogateFromDocument(carrier, manifest, assetId));
-  }
-
-  protected Optional<KnowledgeAsset> introspectAsService(ResourceIdentifier assetId,
-      Map<SemanticModelInfo, Document> doxMap) {
-    if (doxMap.size() > 1) {
+      @Nonnull final Map<SemanticModelInfo, Document> carriers) {
+    if (carriers.size() > 1) {
       if (DefaultMetadataIntrospector.logger.isErrorEnabled()) {
         DefaultMetadataIntrospector.logger.error(
             "Unable to support Service Asset {} distributed across multiple models [{}]",
             assetId,
-            doxMap.keySet().stream()
+            carriers.keySet().stream()
                 .map(TrisotechFileInfo::getId).collect(joining(",")));
       }
       return Optional.empty();
     }
-    if (doxMap.isEmpty()) {
+    if (carriers.isEmpty()) {
       return Optional.empty();
     }
-    var entry = doxMap.entrySet().iterator().next();
-    return introspectAsService(assetId, entry.getKey(), entry.getValue());
+    var entry = carriers.entrySet().iterator().next();
+    return serviceDelegate.introspectAsService(assetId, entry.getKey(), entry.getValue());
   }
 
-  @Override
-  public Optional<KnowledgeAsset> introspectAsModel(
-      @Nonnull final ResourceIdentifier assetId,
-      @Nonnull final Map<SemanticModelInfo, Document> doxMap) {
-    return Optional.of(
-        strategy.extractSurrogateFromDocument(doxMap, assetId));
-  }
 
   /**
    * Determines whether the given assetId refers to the model's domain knowledge asset, or to a
@@ -150,33 +164,30 @@ public class DefaultMetadataIntrospector implements MetadataIntrospector {
    * than providing an assetId that does not correspond to any model.
    *
    * @param assetId the assetId to be categorized
-   * @param modelId the id of the model which scopes and categorizes the assetId
+   * @param modelUri the id of the model which scopes and categorizes the assetId
    * @return the category, if able to determine.
    */
-  private Optional<ResolvedAssetId> categorizeAsset(UUID assetId, String modelId) {
-    var idStr = assetId.toString();
+  protected Optional<ResolvedAssetId> categorizeAsset(
+      @Nonnull final ResourceIdentifier assetId,
+      @Nonnull final String modelUri) {
 
-    var isModel = client.getMetadataByModelId(modelId)
-        .map(SemanticModelInfo::getAssetId)
-        .filter(id -> id.contains(idStr))
-        .map(id -> SemanticIdentifier.newVersionId(URI.create(id)));
+    var isModel = client.getMetadataByModelId(modelUri)
+        .map(SemanticModelInfo::getAssetKey)
+        .filter(id -> Objects.equals(id.getUuid(), assetId.getUuid()))
+        .isPresent();
 
-    if (isModel.isPresent()) {
-      return Optional.of(new ResolvedAssetId(AssetCategory.DOMAIN_ASSET, isModel.get()));
+    if (isModel) {
+      return Optional.of(new ResolvedAssetId(AssetCategory.DOMAIN_ASSET, assetId));
     }
 
-    var isService = client.getServicesMetadataByModelId(modelId)
-        .map(SemanticModelInfo::getServiceId)
-        .filter(id -> id != null && id.contains(idStr))
-        .findFirst()
-        .map(id -> SemanticIdentifier.newVersionId(URI.create(id)));
+    var isService = client.getServicesMetadataByModelId(modelUri)
+        .map(SemanticModelInfo::getServiceKey)
+        .anyMatch(id -> Objects.equals(id.getUuid(), assetId.getUuid()));
 
-    return isService.map(
-            resourceIdentifier ->
-                new ResolvedAssetId(AssetCategory.SERVICE_ASSET, resourceIdentifier));
+    return isService
+        ? Optional.of(new ResolvedAssetId(AssetCategory.SERVICE_ASSET, assetId))
+        : Optional.empty();
   }
-
-
 
 
   protected static final class ResolvedAssetId {

@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.TTEURentModelsTest.EURentTestConfig;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import java.net.URI;
 import java.util.Date;
@@ -22,8 +25,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -39,6 +43,7 @@ import org.w3c.dom.Document;
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryName=EU-Rent",
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=9b6b13d5-00e5-42fe-a844-51a1a4c78106"})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TTEURentModelsTest {
 
   public static final String EU_RENT_REPO = "9b6b13d5-00e5-42fe-a844-51a1a4c78106";
@@ -56,16 +61,19 @@ class TTEURentModelsTest {
 
 
   @Autowired
+  TTWEnvironmentConfiguration cfg;
+
   TTAPIAdapter client;
 
 
-  @BeforeEach
+  @BeforeAll
   void setUp() {
+    client = new TTWrapper(cfg, new DomainSemanticsWeaver(cfg), new TTRedactor());
     var apiEndpoint = (URI) client.getConfigParameter(API_ENDPOINT);
     assumeTrue(apiEndpoint != null);
 
     assertNotNull(client.getConfigParameter(REPOSITORY_ID));
-    assertTrue((Boolean) client.getConfigParameter(PUBLISHED_ONLY_FLAG));
+    assertEquals(Boolean.TRUE, client.getConfigParameter(PUBLISHED_ONLY_FLAG));
 
     assumeFalse(client.listAccessiblePlaces().isEmpty());
   }
@@ -415,7 +423,7 @@ class TTEURentModelsTest {
 
   @Configuration
   @ComponentScan(
-      basePackageClasses = {TTWrapper.class})
+      basePackageClasses = {TTWEnvironmentConfiguration.class})
   public static class EURentTestConfig {
 
   }

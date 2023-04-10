@@ -21,7 +21,7 @@ public enum TTWConfigParamsDef implements
   ANONYMOUS_ASSETS_FLAG(Opt.of(
       "edu.mayo.kmdp.application.flag.allowAnonymous",
       Boolean.TRUE.toString(),
-      "If true, allows models without an explict Asset Id to be treated as Assets",
+      "If true, allows models without an explicit Asset Id to be treated as Assets",
       Boolean.class,
       true)),
 

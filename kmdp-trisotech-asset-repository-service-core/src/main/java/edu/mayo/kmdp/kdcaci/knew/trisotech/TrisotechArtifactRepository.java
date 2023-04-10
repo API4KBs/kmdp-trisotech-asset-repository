@@ -1,8 +1,12 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
+import edu.mayo.kmdp.trisotechwrapper.TTWrapper;
+import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -37,17 +41,38 @@ public class TrisotechArtifactRepository implements KnowledgeArtifactRepositoryA
 
   public static final String ALL_REPOS = "default";
 
-  @Autowired
-  TTWEnvironmentConfiguration cfg;
+  @Nonnull
+  protected final TTWEnvironmentConfiguration cfg;
 
-  @Autowired(required = false)
-  KArtfHrefBuilder hrfefBuilder;
+  @Nullable
+  protected final KArtfHrefBuilder hrfefBuilder;
+
+  @Nonnull
+  protected final TTAPIAdapter client;
+
+  @Nonnull
+  protected final NamespaceManager names;
 
   @Autowired
-  TTAPIAdapter client;
+  public TrisotechArtifactRepository(
+      @Nonnull final TTWEnvironmentConfiguration cfg,
+      @Nullable final KArtfHrefBuilder hrfefBuilder,
+      @Nullable final TTAPIAdapter client,
+      @Nullable final NamespaceManager names) {
+    this.cfg = cfg;
 
-  @Autowired
-  NamespaceManager names;
+    this.hrfefBuilder = hrfefBuilder != null
+        ? hrfefBuilder
+        : new KArtfHrefBuilder(cfg);
+
+    this.client = client != null
+        ? client
+        : new TTWrapper(cfg, new DomainSemanticsWeaver(this.cfg), new TTRedactor());
+
+    this.names = names != null
+        ? names
+        : new DefaultNamespaceManager(this.cfg);
+  }
 
   /**
    * @return a list of {@link KnowledgeArtifactRepository} descriptors, one per configured Place

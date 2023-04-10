@@ -19,7 +19,6 @@ import edu.mayo.kmdp.trisotechwrapper.config.TTConstants;
 import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -36,7 +35,6 @@ import org.w3c.dom.NodeList;
  * TODO: this implementation supports DMN 1.2 and CMMN 1.1, and should be refactored/modularized
  * to support other BPM+ languages/versions
  */
-@Component
 public class TTRedactor implements Redactor {
 
   /**

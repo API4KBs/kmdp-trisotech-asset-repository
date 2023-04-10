@@ -6,10 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import edu.mayo.kmdp.trisotechwrapper.TTEURentCacheTest.ModelCacheTestConfig;
+import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
+import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,13 +27,17 @@ import org.springframework.test.context.TestPropertySource;
 @ContextConfiguration(classes = {ModelCacheTestConfig.class})
 @TestPropertySource(properties = {
     "edu.mayo.kmdp.trisotechwrapper.repositoryId=9b6b13d5-00e5-42fe-a844-51a1a4c78106"})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TTEURentCacheTest {
 
   @Autowired
+  TTWEnvironmentConfiguration cfg;
+
   TTAPIAdapter client;
 
-  @BeforeEach
+  @BeforeAll
   void setUp() {
+    client = new TTWrapper(cfg, new DomainSemanticsWeaver(cfg), new TTRedactor());
     var apiEndpoint = client.getConfigParameter(TTWConfigParamsDef.API_ENDPOINT);
     assertNotNull(apiEndpoint);
     assumeFalse(client.listAccessiblePlaces().isEmpty());
@@ -93,7 +101,7 @@ class TTEURentCacheTest {
 
   @Configuration
   @ComponentScan(
-      basePackageClasses = {TTWrapper.class})
+      basePackageClasses = {TTWEnvironmentConfiguration.class})
   public static class ModelCacheTestConfig {
 
   }

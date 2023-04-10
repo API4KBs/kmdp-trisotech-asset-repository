@@ -63,10 +63,11 @@ public class TTMonitoringConfig {
       @Autowired @Nonnull final ConfigurableEnvironment env,
       @Autowired @Nonnull final TTAPIAdapter client) {
     MiscProperties mp = new MiscProperties();
-    MonitorUtil.getAppProperties(env).forEach((prop, value) -> {
+    client.getConfigParameters().forEach((prop, value) -> {
+      var valueStr = value != null ? value.toString() : "";
       var safeVal = MonitorUtil.defaultIsSecret(prop)
-          ? MonitorUtil.obfuscate(value, 4)
-          : value;
+          ? MonitorUtil.obfuscate(valueStr, 4)
+          : valueStr;
       mp.put(prop, safeVal);
     });
 

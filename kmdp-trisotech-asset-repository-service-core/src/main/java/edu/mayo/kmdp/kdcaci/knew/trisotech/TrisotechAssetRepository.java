@@ -68,6 +68,7 @@ import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
 import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
 import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
+import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.XMLUtil;
@@ -98,6 +99,7 @@ import org.omg.spec.api4kp._20200801.services.KPServer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.services.repository.KnowledgeAssetCatalog;
+import org.omg.spec.api4kp._20200801.services.repository.asset.ConfigurableKnowledgeAssetCatalog;
 import org.omg.spec.api4kp._20200801.services.repository.asset.KARSHrefBuilder;
 import org.omg.spec.api4kp._20200801.services.repository.asset.KARSHrefBuilder.HrefType;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
@@ -232,7 +234,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    */
   @Override
   public Answer<KnowledgeAssetCatalog> getKnowledgeAssetCatalog() {
-    return Answer.of(new KnowledgeAssetCatalog()
+    return Answer.of(new ConfigurableKnowledgeAssetCatalog(TTWConfigParamsDef.values())
         .withName("KMDP Trisotech DES Wrapper")
         .withId(newId(BASE_UUID_URN_URI, "TTW"))
         .withSurrogateModels(rep(Knowledge_Asset_Surrogate_2_0, XML_1_1))

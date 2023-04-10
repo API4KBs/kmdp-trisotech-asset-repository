@@ -11,6 +11,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import edu.mayo.kmdp.util.DateTimeUtil;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -46,7 +47,16 @@ import org.slf4j.LoggerFactory;
  *
  * @see TTGraphTerms
  */
-public class SemanticModelInfo extends TrisotechFileInfo {
+public class SemanticModelInfo extends TrisotechFileInfo implements Comparable<SemanticModelInfo> {
+
+  /**
+   * Comparator. Sorts by version and update date, with latest and greatest first
+   */
+  public static final Comparator<SemanticModelInfo> latestAndGreatestComparator =
+      Comparator
+          .comparing(SemanticModelInfo::nonNullVersion)
+          .thenComparing(SemanticModelInfo::lastUpdated)
+          .reversed();
 
   /**
    * Logger
@@ -598,6 +608,16 @@ public class SemanticModelInfo extends TrisotechFileInfo {
         .orElseGet(Date::new);
   }
 
+
+  /**
+   * Returns a null-safe version.
+   *
+   * @return getVersion, or "" if null
+   */
+  private String nonNullVersion() {
+    return hasVersion() ? getVersion() : "";
+  }
+
   /**
    * @param name A scoped service name/fragment, to be used as the name of the service
    */
@@ -675,6 +695,17 @@ public class SemanticModelInfo extends TrisotechFileInfo {
       throw new UnsupportedOperationException(
           "Unable to merge conflicting values : " + x1 + " and " + x2);
     }
+  }
+
+  /**
+   * Compares two Manifests by greatness and lateness
+   *
+   * @param other the other Manifest.
+   * @return the comparison of this and other
+   */
+  @Override
+  public int compareTo(@Nonnull SemanticModelInfo other) {
+    return latestAndGreatestComparator.compare(this, other);
   }
 
 }

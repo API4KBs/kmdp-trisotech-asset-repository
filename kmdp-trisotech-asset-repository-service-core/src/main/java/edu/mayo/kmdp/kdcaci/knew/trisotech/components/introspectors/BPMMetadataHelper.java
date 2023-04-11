@@ -1,6 +1,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
 import static edu.mayo.kmdp.trisotechwrapper.components.execution.KommunicatorHelper.getKommunicatorLink;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.detectTTLanguage;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.JaxbUtil.unmarshall;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
@@ -13,6 +14,9 @@ import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Comparator.comparing;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultArtifactId;
+import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Imports;
+import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Is_Complemented_By;
+import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Is_Supplemented_By;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory.KnowledgeArtifactCategorySeries.Interactive_Resource;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
@@ -46,6 +50,7 @@ import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.Publication;
 import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
@@ -304,4 +309,27 @@ public class BPMMetadataHelper {
   }
 
 
+  /**
+   * Infers the dependency relationship type for an Asset/Artifct dependency, based on the MIME type
+   * of the target Asset (Carrier)
+   * <p>
+   * Core BPM+ models (DMN/CMMN/BPMN) Import each other; OPENAPI specs Supplement core models;
+   * KEM/MVF Dictionaries Complement core models
+   *
+   * @param mimeType the mimeType of the target model
+   * @return the {@link DependencyType} relationship type
+   */
+  @Nonnull
+  public static DependencyType dependencyRel(
+      @Nullable String mimeType) {
+    var lang = detectTTLanguage(mimeType);
+    switch (lang) {
+      case OPENAPI:
+        return Is_Supplemented_By;
+      case KEM:
+        return Is_Complemented_By;
+      default:
+        return Imports;
+    }
+  }
 }

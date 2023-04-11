@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.addSemanticAnnotations;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.dependencyRel;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.detectRepLanguage;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.extractAnnotations;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDeclaredAssetTypes;
@@ -21,6 +22,7 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMe
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultRepresentation;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.tryAddKommunicatorArtifact;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.ASSETS_PREFIX;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.OPENAPI_YML;
 import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
 import static edu.mayo.kmdp.util.Util.isNotEmpty;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
@@ -40,7 +42,6 @@ import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
-import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Imports;
 import static org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode._20190201.Language.English;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory._2020_01_20.KnowledgeArtifactCategory.Software;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models;
@@ -86,6 +87,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.id.IdentifierConstants;
+import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
@@ -517,7 +519,7 @@ public class BPMModelIntrospector implements ModelIntrospector {
             .withName(info.getName()))
         .map(svc -> new Dependency()
             .withHref(svc)
-            .withRel(DependencyTypeSeries.Is_Supplemented_By))
+            .withRel(dependencyRel(OPENAPI_YML.getMimeType())))
         .collect(toList());
   }
 
@@ -528,11 +530,13 @@ public class BPMModelIntrospector implements ModelIntrospector {
    * @return the IDs of the Artifacts that the Model depends on
    */
   @Nonnull
-  protected List<ResourceIdentifier> gatherArtifactImports(
+  protected List<Pointer> gatherArtifactImports(
       @Nonnull final SemanticModelInfo manifest) {
     return manifest.getModelDependencies().stream()
         .flatMap(modelUri -> client.getMetadataByModelId(modelUri).stream())
-        .map(names::modelToArtifactId)
+        .map(mf -> names.modelToArtifactId(mf)
+            .toPointer()
+            .withMimeType(mf.getMimetype()))
         .collect(toList());
   }
 
@@ -545,14 +549,17 @@ public class BPMModelIntrospector implements ModelIntrospector {
    * @return the IDs of the Assets that the source Asset depends on
    */
   @Nonnull
-  protected List<ResourceIdentifier> gatherAssetImports(
+  protected List<Pointer> gatherAssetImports(
       @Nonnull final Set<SemanticModelInfo> carriers) {
     return carriers.stream()
         .flatMap(info -> info.getModelDependencies().stream()
             .flatMap(modelRef -> client.getMetadataByModelId(modelRef)
                 .filter(ref -> ref.getAssetKey() != null)
                 .map(ref ->
-                    names.assetKeyToId(ref.getAssetKey()).withName(ref.getName()))
+                    names.assetKeyToId(ref.getAssetKey())
+                        .toPointer()
+                        .withName(ref.getName())
+                        .withMimeType(ref.getMimetype()))
                 .stream()))
         .distinct()
         .collect(toList());
@@ -567,11 +574,12 @@ public class BPMModelIntrospector implements ModelIntrospector {
    */
   @Nonnull
   protected Collection<Link> toArtifactRelationships(
-      @Nonnull final List<ResourceIdentifier> importedArtifacts) {
+      @Nonnull final List<Pointer> importedArtifacts) {
     return importedArtifacts.stream()
         .filter(Objects::nonNull)
-        .map(resourceIdentifier -> new Dependency().withRel(Imports)
-            .withHref(resourceIdentifier))
+        .map(ptr -> new Dependency()
+            .withRel(dependencyRel(ptr.getMimeType()))
+            .withHref(ptr))
         .collect(toList());
   }
 
@@ -587,12 +595,12 @@ public class BPMModelIntrospector implements ModelIntrospector {
    */
   @Nonnull
   protected Collection<Link> toAssetRelationships(
-      @Nonnull final List<ResourceIdentifier> importedAssets) {
+      @Nonnull final List<Pointer> importedAssets) {
     return importedAssets.stream()
-        .map(resourceIdentifier ->
+        .map(ptr ->
             new Dependency()
-                .withRel(Imports)
-                .withHref(resourceIdentifier))
+                .withRel(dependencyRel(ptr.getMimeType()))
+                .withHref(ptr))
         .collect(toList());
   }
 

@@ -4,6 +4,7 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.BPMN;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.CMMN;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.DMN;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.KEM;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.OPENAPI;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.UNSUPPORTED;
 import static edu.mayo.kmdp.util.Util.isEmpty;
 
@@ -32,6 +33,7 @@ public enum TTNotations {
   // return BPMN files in XML format
   BPMN2_XML("application/bpmn-2-0+xml"),
   KEM_JSON("application/vnd.triso-businessentity+json"),
+  OPENAPI_YML("application/openapi+yaml"),
   CAP_JSON("application/vnd.triso-capability+json"),
   LAND_JSON("application/vnd.triso-landscaping+json"),
   ACCEL_JSON("application/vnd.triso-discovery+json");
@@ -77,6 +79,8 @@ public enum TTNotations {
       return KEM;
     } else if (mime.contains(BPMN.getTag())) {
       return BPMN;
+    } else if (mime.contains(OPENAPI.getTag())) {
+      return OPENAPI;
     } else {
       logger.warn("Unexpected MIME type {}", mimetype);
       return UNSUPPORTED;
@@ -120,6 +124,8 @@ public enum TTNotations {
         return KEM_JSON.getMimeType();
       case BPMN:
         return BPMN2_XML.getMimeType();
+      case OPENAPI:
+        return OPENAPI_YML.getMimeType();
       case UNSUPPORTED:
       default:
         return null;
@@ -148,6 +154,8 @@ public enum TTNotations {
         return KEM_JSON;
       case BPMN:
         return BPMN2_XML;
+      case OPENAPI:
+        return OPENAPI_YML;
       case UNSUPPORTED:
       default:
         return null;
@@ -198,6 +206,8 @@ public enum TTNotations {
       return getStandardXmlMimeType(BPMN);
     } else if (assetTypeTag.contains("Lexicon")) {
       return getStandardXmlMimeType(KEM);
+    } else if (assetTypeTag.contains("Service")) {
+      return getStandardXmlMimeType(OPENAPI);
     } else {
       throw new IllegalArgumentException("Unexpected Asset Type " + assetTypeTag);
     }

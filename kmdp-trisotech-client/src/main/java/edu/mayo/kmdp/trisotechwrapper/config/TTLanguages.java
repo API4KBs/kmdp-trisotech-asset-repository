@@ -8,6 +8,7 @@ public enum TTLanguages {
   DMN("dmn"),
   BPMN("bpmn"),
   KEM("businessentity"),
+  OPENAPI("openapi"),
   UNSUPPORTED(null);
 
   private final String tag;

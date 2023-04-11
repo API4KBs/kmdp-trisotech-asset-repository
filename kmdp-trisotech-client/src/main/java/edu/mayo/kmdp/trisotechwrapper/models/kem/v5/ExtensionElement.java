@@ -15,6 +15,7 @@ import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+    "key",
     "namespace",
     "semanticType",
     "content",
@@ -32,6 +33,10 @@ import java.util.Objects;
 
 public class ExtensionElement {
 
+  @JsonProperty("value")
+  private String value;
+  @JsonProperty("key")
+  private String key;
   @JsonProperty("namespace")
   private String namespace;
   @JsonProperty("semanticType")
@@ -67,39 +72,6 @@ public class ExtensionElement {
   public ExtensionElement() {
   }
 
-  /**
-   * @param graphType
-   * @param modelType
-   * @param type
-   * @param uri
-   * @param content
-   * @param modelName
-   * @param itemName
-   * @param semanticType
-   * @param namespace
-   * @param modelURI
-   * @param tag
-   * @param id
-   * @param graphURI
-   */
-  public ExtensionElement(String namespace, String semanticType, String content, List<Tag> tag,
-      String id, String uri, String itemName, String modelName, String modelURI, String graphURI,
-      String graphType, String modelType, String type) {
-    super();
-    this.namespace = namespace;
-    this.semanticType = semanticType;
-    this.content = content;
-    this.tag = tag;
-    this.id = id;
-    this.uri = uri;
-    this.itemName = itemName;
-    this.modelName = modelName;
-    this.modelURI = modelURI;
-    this.graphURI = graphURI;
-    this.graphType = graphType;
-    this.modelType = modelType;
-    this.type = type;
-  }
 
   @JsonProperty("namespace")
   public String getNamespace() {
@@ -308,6 +280,36 @@ public class ExtensionElement {
 
   public ExtensionElement withAdditionalProperty(String name, Object value) {
     this.additionalProperties.put(name, value);
+    return this;
+  }
+
+  @JsonProperty("key")
+  public String getKey() {
+    return key;
+  }
+
+  @JsonProperty("key")
+  public void setKey(String key) {
+    this.key = key;
+  }
+
+  public ExtensionElement withKey(String key) {
+    this.key = key;
+    return this;
+  }
+
+  @JsonProperty("value")
+  public String getValue() {
+    return value;
+  }
+
+  @JsonProperty("value")
+  public void setValue(String value) {
+    this.value = value;
+  }
+
+  public ExtensionElement withValue(String value) {
+    this.value = value;
     return this;
   }
 

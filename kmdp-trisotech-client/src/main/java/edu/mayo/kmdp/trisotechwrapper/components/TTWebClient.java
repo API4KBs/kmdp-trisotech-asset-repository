@@ -102,6 +102,9 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
    */
   private final boolean online;
 
+
+  private final KEMtoMVFTranslator keMtoMVFTranslator;
+
   /**
    * Constructor.
    * <p>
@@ -113,6 +116,7 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
     apiEndpoint = cfg.getTyped(TTWConfigParamsDef.API_ENDPOINT);
     sparqlEndpoint = cfg.getTyped(TTWConfigParamsDef.BASE_URL) + SPARQL_PATH;
     token = cfg.getTyped(TTWConfigParamsDef.API_TOKEN);
+    keMtoMVFTranslator = new KEMtoMVFTranslator(cfg);
   }
 
   @Nonnull
@@ -253,7 +257,7 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
     try {
       return tryDownloadNativeModel(fromUrl)
           .flatMap(j -> JSonUtil.parseJson(j, KemModel.class))
-          .map(k -> new KEMtoMVFTranslator().translate(k))
+          .map(k -> keMtoMVFTranslator.translate(k))
           .flatMap(mvg -> JaxbUtil.marshallDox(
               List.of(MVFDictionary.class),
               mvg,

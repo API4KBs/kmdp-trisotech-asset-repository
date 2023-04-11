@@ -30,7 +30,7 @@ public class KemModelProperties {
   @JsonProperty("defaultLanguage")
   private String defaultLanguage;
   @JsonProperty("extensionElements")
-  private List<Object> extensionElements = new ArrayList<Object>();
+  private List<ExtensionElement> extensionElements = new ArrayList<ExtensionElement>();
   @JsonIgnore
   private final Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -47,7 +47,7 @@ public class KemModelProperties {
    * @param name
    */
   public KemModelProperties(String name, String targetNamespace, String defaultLanguage,
-      List<Object> extensionElements) {
+      List<ExtensionElement> extensionElements) {
     super();
     this.name = name;
     this.targetNamespace = targetNamespace;
@@ -101,16 +101,16 @@ public class KemModelProperties {
   }
 
   @JsonProperty("extensionElements")
-  public List<Object> getExtensionElements() {
+  public List<ExtensionElement> getExtensionElements() {
     return extensionElements;
   }
 
   @JsonProperty("extensionElements")
-  public void setExtensionElements(List<Object> extensionElements) {
+  public void setExtensionElements(List<ExtensionElement> extensionElements) {
     this.extensionElements = extensionElements;
   }
 
-  public KemModelProperties withExtensionElements(List<Object> extensionElements) {
+  public KemModelProperties withExtensionElements(List<ExtensionElement> extensionElements) {
     this.extensionElements = extensionElements;
     return this;
   }

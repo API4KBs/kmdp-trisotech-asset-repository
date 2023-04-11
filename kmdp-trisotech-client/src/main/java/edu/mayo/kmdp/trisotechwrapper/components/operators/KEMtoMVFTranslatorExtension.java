@@ -40,4 +40,13 @@ public interface KEMtoMVFTranslatorExtension {
         .orElse(ref);
   }
 
+
+  default void apply(MVFDictionary dict, Map<UUID, KemConcept> kemConcepts, KemModel kem) {
+    preProcess(dict, kemConcepts, kem);
+    kemConcepts.values().stream()
+        .filter(this::appliesTo)
+        .forEach(kc -> this.process(kc, dict, kem));
+
+  }
+
 }

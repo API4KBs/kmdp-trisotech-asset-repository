@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemModel;
 import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.JaxbUtil;
@@ -50,7 +51,8 @@ class KEMtoMVFTranslatorTest {
     try (var is = KEMtoMVFTranslatorTest.class.getResourceAsStream("/kem-test-example.json")) {
       var km = JSonUtil.readJson(is)
           .flatMap(j -> JSonUtil.parseJson(j, KemModel.class));
-      var mvf = km.map(k -> new KEMtoMVFTranslator().translate(k))
+      var mvf = km.map(k -> new KEMtoMVFTranslator(new TTWEnvironmentConfiguration())
+              .translate(k))
           .orElseGet(Assertions::fail);
       var str = JaxbUtil.marshallToString(
           List.of(mvf.getClass()),
@@ -67,7 +69,8 @@ class KEMtoMVFTranslatorTest {
     try (var is = KEMtoMVFTranslatorTest.class.getResourceAsStream(src)) {
       var km = JSonUtil.readJson(is)
           .flatMap(j -> JSonUtil.parseJson(j, KemModel.class));
-      var mvf = km.map(k -> new KEMtoMVFTranslator(List.of()).translate(k))
+      var mvf = km.map(k -> new KEMtoMVFTranslator(List.of(), new TTWEnvironmentConfiguration())
+              .translate(k))
           .orElseGet(Assertions::fail);
       assertNotNull(mvf);
       return mvf;

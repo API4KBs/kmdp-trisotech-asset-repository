@@ -104,7 +104,7 @@ public class TTWrapper implements TTAPIAdapter {
       @Nonnull final TTWEnvironmentConfiguration cfg) {
     return new CaffeineCacheManager(
         webClient,
-        dox -> redactor.redact(weaver.weave(dox)),
+        dox -> redactor.redact(weaver.weave(dox, this::getModelById)),
         cfg);
   }
 

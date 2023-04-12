@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jsoup.Jsoup;
 import org.omg.spec.mvf._20220702.mvf.MVFDictionary;
 import org.omg.spec.mvf._20220702.mvf.Vocabulary;
@@ -38,9 +39,10 @@ public final class KEMHelper {
    * @param assetIdAttribute the name of the custom attribute whose value is the Asset ID
    * @return the asserted Asset ID, if any
    */
+  @Nonnull
   public static Optional<String> getAssetId(
-      KemModel kem,
-      String assetIdAttribute) {
+      @Nonnull final KemModel kem,
+      @Nonnull final String assetIdAttribute) {
     return kem.getProperties().getExtensionElements().stream()
         .filter(m -> "semanticType".equals(m.getSemanticType()))
         .filter(m -> assetIdAttribute.equals(m.getKey()))
@@ -58,7 +60,10 @@ public final class KEMHelper {
    * @param cfg the environment configuration, providing the enterprise namespaces
    * @return the Enterprise Artifact ID (preserves the UUID)
    */
-  public static String getArtifactId(KemModel kem, TTWEnvironmentConfiguration cfg) {
+  @Nonnull
+  public static String getArtifactId(
+      @Nonnull final KemModel kem,
+      @Nonnull final TTWEnvironmentConfiguration cfg) {
     var internal = getModelUri(kem);
     var ns = cfg.getTyped(TTWConfigParamsDef.ARTIFACT_NAMESPACE, String.class);
     return internal.replace(TTConstants.TT_BASE_MODEL_URI, ns);
@@ -70,7 +75,9 @@ public final class KEMHelper {
    * @param kem the Model
    * @return the Trisotech Model URI
    */
-  public static String getModelUri(KemModel kem) {
+  @Nonnull
+  public static String getModelUri(
+      @Nonnull final KemModel kem) {
     return kem.getProperties().getTargetNamespace();
   }
 
@@ -80,7 +87,9 @@ public final class KEMHelper {
    * @param kem the Model
    * @return the Model name
    */
-  public static String getVocabName(KemModel kem) {
+  @Nonnull
+  public static String getVocabName(
+      @Nonnull final KemModel kem) {
     return kem.getProperties().getName();
   }
 
@@ -91,7 +100,9 @@ public final class KEMHelper {
    * @param kem the Model
    * @return the KEM Concepts, as a Map
    */
-  public static Map<UUID, KemConcept> getKEMConcepts(KemModel kem) {
+  @Nonnull
+  public static Map<UUID, KemConcept> getKEMConcepts(
+      @Nonnull final KemModel kem) {
     return kem.getNodeModelElements().stream()
         .filter(n -> "term".equals(n.getStencil().getId()))
         .collect(Collectors.toMap(
@@ -106,7 +117,9 @@ public final class KEMHelper {
    * @param kc the KEM Concept
    * @return the KEM Tags on that concept, as a unique List
    */
-  public static List<String> getTags(KemConcept kc) {
+  @Nonnull
+  public static List<String> getTags(
+      @Nonnull final KemConcept kc) {
     return kc.getProperties().getExtensionElements().stream()
         .filter(x -> "tags".equals(x.getSemanticType()))
         .flatMap(x -> x.getTag().stream())
@@ -121,7 +134,9 @@ public final class KEMHelper {
    * @param kc the KEM Concept
    * @return the Concept UUID, parsed
    */
-  public static UUID toConceptUUID(KemConcept kc) {
+  @Nonnull
+  public static UUID toConceptUUID(
+      @Nonnull final KemConcept kc) {
     return toConceptUUID(kc.getResourceId());
   }
 
@@ -131,7 +146,9 @@ public final class KEMHelper {
    * @param conceptId the KEM Concept ID
    * @return the Concept UUID, parsed
    */
-  public static UUID toConceptUUID(String conceptId) {
+  @Nonnull
+  public static UUID toConceptUUID(
+      @Nonnull final String conceptId) {
     return UUID.fromString(conceptId.substring(1));
   }
 
@@ -141,7 +158,9 @@ public final class KEMHelper {
    * @param kc the KEM Concept
    * @return the SemanticLink (accelerator IDs/URIs), as a unique list
    */
-  public static List<String> getSemanticAnnotation(KemConcept kc) {
+  @Nonnull
+  public static List<String> getSemanticAnnotation(
+      @Nonnull final KemConcept kc) {
     return kc.getProperties().getExtensionElements().stream()
         .filter(x -> "semanticLink".equals(x.getSemanticType()))
         .filter(x -> "graph".equals(x.getType()))
@@ -159,10 +178,11 @@ public final class KEMHelper {
    * @param codingSystemDisplay the MVF vocabulary Name
    * @return the Vocabulary
    */
+  @Nonnull
   public static Vocabulary ensureVocabulary(
-      MVFDictionary dict,
-      String codingSystem,
-      String codingSystemDisplay) {
+      @Nonnull final MVFDictionary dict,
+      @Nonnull final String codingSystem,
+      @Nonnull final String codingSystemDisplay) {
     return dict.getVocabulary().stream()
         .filter(v -> codingSystem.equals(v.getLanguageCode()))
         .findFirst()
@@ -187,7 +207,9 @@ public final class KEMHelper {
    * @param kem the KEM model
    * @return the prefixes, in a {prefix}/{namespace} map
    */
-  public static Map<String, String> getPrefixes(KemModel kem) {
+  @Nonnull
+  public static Map<String, String> getPrefixes(
+      @Nonnull final KemModel kem) {
     return kem.getProperties().getExtensionElements().stream()
         .filter(x -> "customAttribute".equals(x.getSemanticType().trim()))
         .filter(x -> "prefix".equals(x.getKey().trim()))
@@ -215,11 +237,11 @@ public final class KEMHelper {
    * @param namespaceMap the prefix/namespace map configured on the model
    * @return the namespace the concept has been tagged to, {@link Registry#BASE_UUID_URN} otherwise
    */
-  public static String resolveNamespace(KemConcept kc, Map<String, String> namespaceMap) {
-    return kc.getProperties().getExtensionElements().stream()
-        .filter(x -> "tags".equalsIgnoreCase(x.getSemanticType()))
-        .flatMap(x -> x.getTag().stream())
-        .map(Tag::getContent)
+  @Nonnull
+  public static String resolveNamespace(
+      @Nonnull final KemConcept kc,
+      @Nonnull final Map<String, String> namespaceMap) {
+    return getTags(kc).stream()
         .filter(namespaceMap::containsKey)
         .findFirst()
         .map(namespaceMap::get)
@@ -230,9 +252,11 @@ public final class KEMHelper {
    * Extracts the Documentation of a KEM Concept
    *
    * @param kc the KEM Concept
-   * @return the Documentation text
+   * @return the Documentation text, if any
    */
-  public static Optional<String> getDocumentation(KemConcept kc) {
+  @Nonnull
+  public static Optional<String> getDocumentation(
+      @Nonnull final KemConcept kc) {
     return sanitizeHTML(kc.getProperties().getDocumentation());
   }
 
@@ -240,9 +264,11 @@ public final class KEMHelper {
    * Extracts the Examples of a KEM Concept
    *
    * @param kc the KEM Concept
-   * @return the Examples text
+   * @return the Examples text, if any
    */
-  public static Optional<String> getExamples(KemConcept kc) {
+  @Nonnull
+  public static Optional<String> getExamples(
+      @Nonnull final KemConcept kc) {
     return sanitizeHTML(kc.getProperties().getExamples());
   }
 
@@ -250,9 +276,11 @@ public final class KEMHelper {
    * Extracts the Notes of a KEM Concept
    *
    * @param kc the KEM Concept
-   * @return the Notes text
+   * @return the Notes text, if any
    */
-  public static Optional<String> getNotes(KemConcept kc) {
+  @Nonnull
+  public static Optional<String> getNotes(
+      @Nonnull final KemConcept kc) {
     return kc.getProperties().getExtensionElements().stream()
         .filter(x -> "notes".equals(x.getSemanticType()))
         .map(ExtensionElement::getContent)
@@ -267,22 +295,40 @@ public final class KEMHelper {
    * @param kc the Concept
    * @return the Concept name
    */
-  public static String getConceptName(KemConcept kc) {
+  @Nonnull
+  public static String getConceptName(
+      @Nonnull final KemConcept kc) {
     return kc.getProperties().getName();
   }
 
 
   /**
-   * Rmoves the HTML markup from the text, if any
+   * The URI of a KEM Concept, as {modelUri}#_{concept UUID}
    *
-   * @return the text, without the HTML markup
+   * @param kem the KEM Model
+   * @param guid the unique UUID of the Concept
+   * @return the Concept URI, as a KEM Model scoped fragment
    */
   @Nonnull
-  private static Optional<String> sanitizeHTML(String html) {
+  public static String getInternalConceptUri(
+      @Nonnull final KemModel kem,
+      @Nonnull final UUID guid) {
+    return getModelUri(kem) + "#_" + guid;
+  }
+
+  /**
+   * Rmoves the HTML markup from the text, if any
+   *
+   * @return the text, without the HTML markup, if not empty
+   */
+  @Nonnull
+  private static Optional<String> sanitizeHTML(
+      @Nullable String html) {
     return Util.isEmpty(html)
         ? Optional.empty()
         : Optional.of(html)
-            .map(s -> Jsoup.parse(s).text());
+            .map(s -> Jsoup.parse(s).text())
+            .filter(Util::isNotEmpty);
   }
 
 }

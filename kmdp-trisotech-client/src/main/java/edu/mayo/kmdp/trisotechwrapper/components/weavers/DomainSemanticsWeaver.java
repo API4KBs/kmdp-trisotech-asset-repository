@@ -31,6 +31,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRe
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
+import edu.mayo.kmdp.trisotechwrapper.components.operators.KEMSelectorHelper;
 import edu.mayo.kmdp.trisotechwrapper.config.TTConstants;
 import edu.mayo.kmdp.trisotechwrapper.config.TTLanguages;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
@@ -41,6 +42,8 @@ import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnot
 import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.id.ConceptIdentifier;
@@ -105,9 +108,10 @@ public class DomainSemanticsWeaver implements Weaver {
   }
 
   /**
-   * Default constructor
+   * Constructor
    */
-  public DomainSemanticsWeaver(@Nullable TTWEnvironmentConfiguration cfg) {
+  public DomainSemanticsWeaver(
+      @Nullable TTWEnvironmentConfiguration cfg) {
     var effectiveCfg =
         cfg != null ? cfg : new TTWEnvironmentConfiguration();
     this.names = new DefaultNamespaceManager(effectiveCfg);
@@ -124,12 +128,13 @@ public class DomainSemanticsWeaver implements Weaver {
   @Override
   @Nonnull
   public Document weave(
-      @Nonnull final Document dox) {
+      @Nonnull final Document dox,
+      @Nonnull Function<String, Optional<Document>> resolver) {
     // manual annotations
     weaveSemanticLinks(dox);
 
     // accelerators, KEMs and other model/model reuse
-    weaveReuseLinks(dox);
+    weaveReuseLinks(dox, resolver);
 
     // rewrite custom attribute 'asset ID'
     // necessary in case the asset ID has to be extracted from the file
@@ -175,30 +180,37 @@ public class DomainSemanticsWeaver implements Weaver {
    * <p>
    * Covers the scenario where an Accelerator/Graph element is dragged&dropped into a BPM model
    *
-   * @param dox the Document to be woven
+   * @param dox      the Document to be woven
+   * @param resolver the URI (string) to Document mapper used to pull referenced models, or
+   *                 fragments thereof, containing the fragments to be woven
    */
   private void weaveReuseLinks(
-      @Nonnull final Document dox) {
+      @Nonnull final Document dox,
+      @Nonnull final Function<String, Optional<Document>> resolver) {
     NodeList copies = dox.getElementsByTagNameNS(
         TTConstants.TT_METADATA_NS, TTConstants.TT_COPYOFLINK);
     asElementStream(copies)
-        .forEach(reuseByCopy -> weaveReuse(reuseByCopy, dox));
+        .forEach(reuseByCopy -> weaveReuse(reuseByCopy, dox, resolver));
 
     NodeList reuses = dox.getElementsByTagNameNS(
         TTConstants.TT_METADATA_NS, TTConstants.TT_REUSELINK);
     asElementStream(reuses)
-        .forEach(reuseByRef -> weaveReuse(reuseByRef, dox));
+        .forEach(reuseByRef -> weaveReuse(reuseByRef, dox, resolver));
   }
 
   /**
-
+   *
    */
   private void weaveReuse(
-      @Nonnull final Element reuse, Document dox) {
+      @Nonnull final Element reuse,
+      @Nonnull final Document dox,
+      Function<String, Optional<Document>> resolver) {
     boolean isAccelerator = isAcceleratorReuse(reuse);
     boolean isKem = isKEMTerm(reuse);
-    if (isAccelerator || isKem) {
+    if (isAccelerator) {
       weaveElementMetadata(reuse);
+    } else if (isKem) {
+      weaveElementMetadata(reuse, resolver, KEMSelectorHelper::lookupMVFEntryURI);
     } else {
       rewriteReuseLinks(reuse, dox);
     }
@@ -213,10 +225,34 @@ public class DomainSemanticsWeaver implements Weaver {
    */
   private void weaveElementMetadata(
       @Nonnull final Element el) {
+    weaveElementMetadata(
+        el,
+        s -> Optional.empty(),
+        (d, u) -> Optional.of(u));
+  }
+
+  /**
+   * Rewrites an annotation Element as an {@link Annotation} - a structured (subject, property,
+   * object) where the subject is the asset, the object is the annotation concept, and the property
+   * is an (optional) relationship that connects the asset to the concept.
+   *
+   * @param el an annotation Element to be rewritten
+   */
+  private void weaveElementMetadata(
+      @Nonnull final Element el,
+      @Nonnull final Function<String, Optional<Document>> resolver,
+      @Nonnull final BiFunction<Document, URI, Optional<URI>> mapper) {
+
+    var concept = getConceptIdentifier(
+        el,
+        resolver,
+        mapper);
+
     metaHandler.replaceProprietaryElement(
-            el,
-            getSemanticAnnotationRelationship(el),
-            getConceptIdentifier(el).orElse(null));
+        el,
+        concept.map(c -> getSemanticAnnotationRelationship(el, c.getConceptId()))
+            .orElse(null),
+        concept.orElse(null));
   }
 
 
@@ -353,25 +389,26 @@ public class DomainSemanticsWeaver implements Weaver {
    * For example, Data-related elements imply In_Terms_Of; Tasks imply Captures; and Decisions imply
    * Defines.
    *
-   * @param el the element holding the annotation information
+   * @param el     the element holding the annotation information
+   * @param tgtUri the URI of the entity to be related
    * @return the {@link SemanticAnnotationRelTypeSeries} (property) to be used in rewriting this
    * element
    */
   @Nullable
   private SemanticAnnotationRelTypeSeries getSemanticAnnotationRelationship(
-      @Nonnull final Element el) {
-    String uri = el.getAttribute("uri");
+      @Nonnull final Element el,
+      @Nonnull final URI tgtUri) {
 
-    if (DecisionTypeSeries.resolveId(uri).isPresent()) {
+    if (DecisionTypeSeries.resolveId(tgtUri).isPresent()) {
       return Captures;
     }
-    if (KnowledgeAssetTypeSeries.resolveId(uri)
-        .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(uri)).isPresent()) {
+    if (KnowledgeAssetTypeSeries.resolveId(tgtUri)
+        .or(() -> ClinicalKnowledgeAssetTypeSeries.resolveId(tgtUri)).isPresent()) {
       return null;
     }
 
     String grandparent = el.getParentNode().getParentNode().getNodeName();
-    if (isDomainConcept(uri)) {
+    if (isDomainConcept(tgtUri)) {
       switch (grandparent) {
         case "semantic:decision":
         case "semantic:dataOutput":
@@ -397,7 +434,7 @@ public class DomainSemanticsWeaver implements Weaver {
       }
     }
     logger.warn("Unable to establish asset-concept relationship for concept {} on element type {}",
-        uri, grandparent);
+        tgtUri, grandparent);
     return null;
   }
 
@@ -407,12 +444,12 @@ public class DomainSemanticsWeaver implements Weaver {
    * <p>
    * Determines if the given URI denotes or evokes a domain-specific concept (e.g. clinical)
    *
-   * @param uriStr the concept or referent ID
+   * @param uri the concept or referent ID
    * @return true if uriStr resolves to a domain-specific concept
    */
   private boolean isDomainConcept(
-      @Nonnull final String uriStr) {
-    return names.isDomainConcept(Term.newTerm(URI.create(uriStr)).getNamespaceUri());
+      @Nonnull final URI uri) {
+    return names.isDomainConcept(Term.newTerm(uri).getNamespaceUri());
   }
 
 
@@ -434,7 +471,7 @@ public class DomainSemanticsWeaver implements Weaver {
             && el.hasAttribute("href"))
         .forEach(element -> {
           Attr attr = element.getAttributeNode("href");
-          rewriteValue(attr);
+          rewriteModelReference(attr);
         });
   }
 
@@ -453,7 +490,7 @@ public class DomainSemanticsWeaver implements Weaver {
         .filter(el -> !TTConstants.TT_LIBRARIES.equals(el.getAttribute(TTConstants.DMN_IMPORTTYPE)))
         .forEach(el -> {
               Attr attr = el.getAttributeNode("namespace");
-              rewriteValue(attr);
+              rewriteModelReference(attr);
             }
         );
   }
@@ -478,7 +515,7 @@ public class DomainSemanticsWeaver implements Weaver {
           || (localName.contains("include"))
           || (localName.contains("ns"))
       ) {
-        rewriteValue(attr);
+        rewriteModelReference(attr);
       }
 
     }
@@ -494,17 +531,15 @@ public class DomainSemanticsWeaver implements Weaver {
    * Also remove leading underscore of identifier.
    *
    * @param attr the attribute of a Document tag
+   * @return the rewritten value, as set on the XML Attribute node
    */
-  private void rewriteValue(
+  private String rewriteModelReference(
       @Nonnull final Attr attr) {
-    String value = attr.getValue();
-    if (value.lastIndexOf('/') != -1) {
-      // get the ids after the last '/'
-      // and replace the '_' in the ids
-      String id = value.substring(value.lastIndexOf('/') + 1).replace("_", "");
-      // reset the value to the KMDP URI
-      attr.setValue(names.getArtifactNamespace() + id);
-    }
+    var value = attr.getValue();
+    var rewritten =
+        value.replace(TTConstants.TT_BASE_MODEL_URI, names.getArtifactNamespace().toString());
+    attr.setValue(rewritten);
+    return rewritten;
   }
 
 
@@ -512,19 +547,24 @@ public class DomainSemanticsWeaver implements Weaver {
    * Extracts the ConceptIdentifier from the uri attribute of an element, expected to represent a
    * semantic term
    *
-   * @param el the XML element that evokes a concept via its URI
+   * @param el       the XML element that evokes a concept via its URI
+   * @param resolver the URI (string) to Document mapper used to pull referenced models, or
+   *                 fragments thereof, containing the fragments to be woven
    */
   @Nonnull
   private Optional<ConceptIdentifier> getConceptIdentifier(
-      @Nonnull final Element el) {
+      @Nonnull final Element el,
+      Function<String, Optional<Document>> resolver,
+      BiFunction<Document, URI, Optional<URI>> mapper) {
     // need to verify any URI values are valid -- no trisotech
-    Attr uriAttr = el.getAttributeNode("uri");
-    if (uriAttr.getValue().contains(TTConstants.TRISOTECH_COM)) {
-      rewriteValue(uriAttr);
-    }
+    var fragmentUri = URI.create(el.getAttribute("uri"));
+    var modelURI = el.getAttribute("modelURI");
+    var rewritten = resolver.apply(modelURI)
+        .flatMap(dox -> mapper.apply(dox, fragmentUri))
+        .orElse(fragmentUri);
 
     try {
-      var concept = Term.newTerm(URI.create(el.getAttribute("uri")))
+      var concept = Term.newTerm(rewritten)
           .asConceptIdentifier()
           .withName(el.getAttribute("itemName"));
       return Optional.of(concept);

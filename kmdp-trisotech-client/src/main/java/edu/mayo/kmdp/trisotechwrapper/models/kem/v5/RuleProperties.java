@@ -38,7 +38,7 @@ public class RuleProperties {
   @JsonProperty("termRefs")
   private List<String> termRefs;
   @JsonProperty("localName")
-  private int localName;
+  private String localName;
   @JsonIgnore
   private final Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -133,16 +133,16 @@ public class RuleProperties {
   }
 
   @JsonProperty("localName")
-  public int getLocalName() {
+  public String getLocalName() {
     return localName;
   }
 
   @JsonProperty("localName")
-  public void setLocalName(int localName) {
+  public void setLocalName(String localName) {
     this.localName = localName;
   }
 
-  public RuleProperties withLocalName(int localName) {
+  public RuleProperties withLocalName(String localName) {
     this.localName = localName;
     return this;
   }

@@ -12,10 +12,13 @@ import edu.mayo.kmdp.health.datatype.Status;
 import edu.mayo.kmdp.health.utils.MonitorUtil;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.components.cache.CachingTTWKnowledgeStore;
+import edu.mayo.kmdp.trisotechwrapper.components.hooks.DefaultTTHooksHandler;
+import edu.mayo.kmdp.trisotechwrapper.components.hooks.TTHooksHandler;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -174,4 +177,32 @@ public class TTMonitoringConfig {
     return c;
   }
 
+  /**
+   * Creates a representation of the TT DES Hook Handler as a health-monitored
+   * {@link ApplicationComponent}
+   *
+   * @param handler the {@link DefaultTTHooksHandler}
+   * @return the handler health status, as an {@link ApplicationComponent}
+   */
+  @Bean
+  Supplier<ApplicationComponent> hooksListener(
+      @Autowired(required = false) @Nullable final TTHooksHandler handler) {
+    return () -> {
+      ApplicationComponent c = new ApplicationComponent();
+      c.setName("TT DES Hooks Listener");
+
+      if (handler != null) {
+        c.status(Status.UP);
+        c.setStatusMessage("Present");
+        MiscProperties p = new MiscProperties();
+        p.put("supportedTypes",
+            String.join(",", handler.getSupportedEventTypes()));
+        c.setDetails(p);
+      } else {
+        c.status(Status.IMPAIRED);
+        c.setStatusMessage("Missing");
+      }
+      return c;
+    };
+  }
 }

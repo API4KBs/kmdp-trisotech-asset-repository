@@ -18,11 +18,15 @@ import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTRepoContextAwareHrefBuil
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTServerContextAwareHrefBuilder;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.TTWrapper;
+import edu.mayo.kmdp.trisotechwrapper.components.hooks.DefaultTTHooksHandler;
+import edu.mayo.kmdp.trisotechwrapper.components.hooks.TTHooksHandler;
 import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
 import edu.mayo.kmdp.trisotechwrapper.components.weavers.DomainSemanticsWeaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.util.ws.ContentNegotiationFilter;
 import edu.mayo.kmdp.util.ws.PointerHTMLAdapter;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.spring.mvc.CloudEventHttpMessageConverter;
 import java.util.List;
 import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
@@ -107,6 +111,25 @@ public class TTServerConfig {
   @Bean
   HttpMessageConverter<List<Pointer>> pointerToHTMLAdapter() {
     return new PointerHTMLAdapter();
+  }
+
+
+  /**
+   * Adapter used to parse incoming Cloud Events
+   * @return a {@link CloudEventHttpMessageConverter}
+   */
+  @Bean
+  HttpMessageConverter<CloudEvent> eventConverter() {
+    return new CloudEventHttpMessageConverter();
+  }
+
+  /**
+   * WebHooks handler - will delegate to the internal components
+   * @return a {@link DefaultTTHooksHandler} to handle the webhooks incoming from the TT DES Server
+   */
+  @Bean
+  TTHooksHandler hooksHandler() {
+    return new DefaultTTHooksHandler();
   }
 
 }

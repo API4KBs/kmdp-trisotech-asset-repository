@@ -25,17 +25,25 @@ dependencies on the DES proprietary extensions to the standards.
     - exported as OMG's Meta Vocabulary Facility (MVF) models
 - (NEW 6.0!) Support for Decision/Process services as Knowledge Assets
     - Knowledge 'at rest' + Knowledge 'in motion'
+- (NEW 6.0!) KEM-annotated decision models
+  - Build CSV Concepts directly in KEM
+- (NEW 6.0!) Cloud Event support for DES webhooks
+  - Sync TTW and DES
 
 ### Upcoming
 
 - Content Negotiation: support for DMN 1.3 and later versions
 - Configurability of Service Library runtimes
-- KEM-annotated decision models
-- Cloud Event support for DES webhooks
 
 ### Experimental
 
 - KEM to SCG to OWL integration
+  - Build CSO definitions, build in the OWL to SKOS to FHIR pipeline, to integrate with SPE
+- cCPM PlanDefinition preview endpoint (/ccpms)
+  - Relies on CMMN case models with asset type "Clinical Case Management Model"
+  - SME to Screen is back !
+- cCPM Validation rules (/validate/ccpms)
+  - CKE "method & style" for cCPMs
 
 ## User Instructions
 
@@ -96,5 +104,14 @@ The following properties need to be configured as (Spring) application propertie
       of the Process (Page) that contains the root Process to be executed
       - Same rules for Named Asset IDs apply
 
+### KEM as an Ontology Tool
 
+- Create a KEM model
+  - (optional) assign a knowledgeAssetId
+  - Define ontology prefixes as customAttribute
+    - name : "prefix"
+    - value : "{prefix}: <{namespace}>" 
+      - Example value "CSV: <https://ontology.mayo.edu/taxonomies/clinicalsituations#>"
+  - Create a KEM Term
+    - Add a tag that matches the ontology prefix, e.g. "CSV"
 

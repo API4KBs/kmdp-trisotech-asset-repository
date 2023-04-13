@@ -30,8 +30,7 @@ public final class KEMSelectorHelper {
   public static Optional<URI> lookupMVFEntryURI(
       @Nonnull final Document dox,
       @Nonnull final URI kemURI) {
-    var conceptInternalId = kemURI.getFragment();
-    var cid = xPath.xString(dox, String.format(CONCEPT_REF_PATH, conceptInternalId));
+    var cid = xPath.xString(dox, String.format(CONCEPT_REF_PATH, kemURI));
     return Optional.of(URI.create(cid));
   }
 

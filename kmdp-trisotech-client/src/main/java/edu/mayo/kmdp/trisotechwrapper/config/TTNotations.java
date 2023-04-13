@@ -33,7 +33,7 @@ public enum TTNotations {
   // return BPMN files in XML format
   BPMN2_XML("application/bpmn-2-0+xml"),
   KEM_JSON("application/vnd.triso-businessentity+json"),
-  OPENAPI_YML("application/openapi+yaml"),
+  OPENAPI_JSON("application/openapi+json"),
   CAP_JSON("application/vnd.triso-capability+json"),
   LAND_JSON("application/vnd.triso-landscaping+json"),
   ACCEL_JSON("application/vnd.triso-discovery+json");
@@ -125,7 +125,7 @@ public enum TTNotations {
       case BPMN:
         return BPMN2_XML.getMimeType();
       case OPENAPI:
-        return OPENAPI_YML.getMimeType();
+        return OPENAPI_JSON.getMimeType();
       case UNSUPPORTED:
       default:
         return null;
@@ -155,7 +155,7 @@ public enum TTNotations {
       case BPMN:
         return BPMN2_XML;
       case OPENAPI:
-        return OPENAPI_YML;
+        return OPENAPI_JSON;
       case UNSUPPORTED:
       default:
         return null;

@@ -16,7 +16,7 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.addSemanticAnnotations;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.extractAnnotations;
 import static edu.mayo.kmdp.trisotechwrapper.components.graph.PlacePathIndex.mintAssetIdForAnonymous;
-import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.OPENAPI_YML;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.OPENAPI_JSON;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
@@ -29,7 +29,6 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory._
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Plans_Processes_Pathways_And_Protocol_Definitions;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.ReSTful_Service_Specification;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
-import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.YAML_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OpenAPI_2_X;
@@ -244,7 +243,7 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
       @Nonnull final String serviceName,
       @Nonnull final SemanticModelInfo manifest) {
     //FIXME TT actually uses OAS3.x (3.0.1), but that needs to be registered first
-    var synRep = rep(OpenAPI_2_X, YAML_1_2, Charset.defaultCharset(), Encodings.DEFAULT);
+    var synRep = rep(OpenAPI_2_X, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
 
     var ka = new KnowledgeArtifact()
         .withArtifactId(defaultArtifactId(assetId, OpenAPI_2_X))
@@ -253,7 +252,7 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
         .withLocalization(English)
         .withExpressionCategory(Software)
         .withRepresentation(synRep)
-        .withMimeType(OPENAPI_YML.getMimeType());
+        .withMimeType(OPENAPI_JSON.getMimeType());
     client.getExecutionArtifact(serviceName, manifest)
         .flatMap(exec -> ServiceLibraryHelper.tryResolveOpenApiSpec(exec, config))
         .ifPresent(ka::withLocator);

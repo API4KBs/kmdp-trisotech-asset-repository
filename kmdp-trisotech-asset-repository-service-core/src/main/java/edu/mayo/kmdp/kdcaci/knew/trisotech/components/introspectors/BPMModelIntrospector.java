@@ -22,7 +22,7 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMe
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultRepresentation;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.tryAddKommunicatorArtifact;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.ASSETS_PREFIX;
-import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.OPENAPI_YML;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.OPENAPI_JSON;
 import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
 import static edu.mayo.kmdp.util.Util.isNotEmpty;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
@@ -519,7 +519,7 @@ public class BPMModelIntrospector implements ModelIntrospector {
             .withName(info.getName()))
         .map(svc -> new Dependency()
             .withHref(svc)
-            .withRel(dependencyRel(OPENAPI_YML.getMimeType())))
+            .withRel(dependencyRel(OPENAPI_JSON.getMimeType())))
         .collect(toList());
   }
 

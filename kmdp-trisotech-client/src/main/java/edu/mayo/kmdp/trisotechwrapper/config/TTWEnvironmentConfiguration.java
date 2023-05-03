@@ -103,6 +103,9 @@ public class TTWEnvironmentConfiguration extends
    * Acquires the configuration values set in the environment
    */
   private void scanEnvironment() {
+    if (env == null) {
+      return;
+    }
     for (var param : TTWConfigParamsDef.values()) {
       var sysValue = sanitize(env.getProperty(param.getName()));
       if (sysValue != null) {

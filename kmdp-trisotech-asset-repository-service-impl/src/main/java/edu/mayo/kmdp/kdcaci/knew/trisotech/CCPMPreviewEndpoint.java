@@ -1,20 +1,14 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
-import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
-import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Cognitive_Care_Process_Model;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTServerContextAwareHrefBuilder;
-import edu.mayo.kmdp.ops.tranx.bpm.KarsAnonymousCcpmToPlanDefPipeline;
 import edu.mayo.kmdp.util.ws.ResponseHelper;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
-import org.omg.spec.api4kp._20200801.Answer;
-import org.omg.spec.api4kp._20200801.api.repository.asset.v4.KnowledgeAssetCatalogApi;
-import org.omg.spec.api4kp._20200801.api.repository.asset.v4.KnowledgeAssetRepositoryApi;
-import org.omg.spec.api4kp._20200801.datatypes.Bindings;
 import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +28,6 @@ public class CCPMPreviewEndpoint {
   protected final
   TTServerContextAwareHrefBuilder hrefBuilder;
 
-  protected final KarsAnonymousCcpmToPlanDefPipeline pipeline;
 
   @Autowired
   public CCPMPreviewEndpoint(
@@ -42,12 +35,6 @@ public class CCPMPreviewEndpoint {
       TTServerContextAwareHrefBuilder hrefBuilder) {
     this.triso = triso;
     this.hrefBuilder = hrefBuilder;
-
-    this.pipeline = new KarsAnonymousCcpmToPlanDefPipeline(
-        KnowledgeAssetCatalogApi.newInstance(triso),
-        KnowledgeAssetRepositoryApi.newInstance(triso),
-        (modelId, versionTag1, query, xParams) -> Answer.of(List.of(new Bindings())),
-        URI.create("https://ontology.mayo.edu/taxonomies/clinicalsituations"));
   }
 
   @GetMapping(value = "/ccpms",
@@ -55,7 +42,7 @@ public class CCPMPreviewEndpoint {
   public ResponseEntity<List<Pointer>> listCCPMs() {
 
     var cases = triso.listKnowledgeAssets(
-        Clinical_Case_Management_Model.getTag(), null, null, 0, -1);
+        Cognitive_Care_Process_Model.getTag(), null, null, 0, -1);
     cases.ifSuccess(ptrs -> ptrs.forEach(this::rewriteUrl));
 
     return ResponseHelper.asResponse(cases);
@@ -75,7 +62,8 @@ public class CCPMPreviewEndpoint {
       @PathVariable String versionTag) {
     var rootId = newId(assetId, versionTag);
 
-    var ans = pipeline.trigger(rootId, Encoded_Knowledge_Expression)
+    var ans = triso.getKnowledgeAssetCanonicalCarrier(
+        rootId.getUuid(), rootId.getVersionTag())
         .flatOpt(AbstractCarrier::asBinary);
 
     return ResponseHelper.asResponse(ans);

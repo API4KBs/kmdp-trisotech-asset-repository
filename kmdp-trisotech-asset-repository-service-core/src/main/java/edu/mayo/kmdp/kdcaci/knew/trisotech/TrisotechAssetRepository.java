@@ -58,6 +58,8 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.EphemeralAssetFabricator;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.PlanDefinitionEphemeralAssetFabricator;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DefaultMetadataIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
@@ -88,6 +90,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
 import org.omg.spec.api4kp._20200801.Answer;
+import org.omg.spec.api4kp._20200801.api.repository.asset.v4.KnowledgeAssetCatalogApi;
+import org.omg.spec.api4kp._20200801.api.repository.asset.v4.KnowledgeAssetRepositoryApi;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetCatalogApiInternal;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetRepositoryApiInternal;
 import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
@@ -196,6 +200,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   @Nonnull
   protected final NamespaceManager names;
 
+  @Nullable
+  protected final EphemeralAssetFabricator fabricator;
+
 
   @Autowired
   public TrisotechAssetRepository(
@@ -204,7 +211,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       @Nullable MetadataIntrospector extractor,
       @Nullable KARSHrefBuilder hrefBuilder,
       @Nullable TTContentNegotiationHelper negotiator,
-      @Nullable NamespaceManager names) {
+      @Nullable NamespaceManager names,
+      @Nullable EphemeralAssetFabricator fabricator) {
     //
     this.cfg = cfg;
 
@@ -227,6 +235,13 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     this.extractor = extractor != null
         ? extractor
         : new DefaultMetadataIntrospector(this.cfg, this.client, this.names, this.hrefBuilder);
+
+    this.fabricator = fabricator != null
+        ? fabricator
+        : new PlanDefinitionEphemeralAssetFabricator(
+            KnowledgeAssetCatalogApi.newInstance(this),
+            KnowledgeAssetRepositoryApi.newInstance(this)
+        );
   }
 
   /**
@@ -270,6 +285,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .sorted(Comparator.comparing(SemanticModelInfo::lastUpdated))
           // map models to assets, reduce
           .flatMap(this::getAssetPointersForModel)
+          .flatMap(ptr -> {
+            assert fabricator != null;
+            return fabricator.promise(ptr);
+          })
           // filter by type
           .filter(ptr -> filterType == null || Objects.equals(ptr.getType(), filterType))
           // paginate, if requested
@@ -377,19 +396,24 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    *
    * @param assetId    assetId of the asset
    * @param versionTag version of the asset
-   * @param extAccept  'accept' MIME type
+   * @param xAccept    'accept' MIME type
    * @return the canonical Artifact, at the binary level, wrapped in a {@link KnowledgeCarrier}
    */
   @Override
   public Answer<KnowledgeCarrier> getKnowledgeAssetVersionCanonicalCarrier(
       @Nonnull final UUID assetId,
       @Nonnull final String versionTag,
-      @Nullable final String extAccept) {
+      @Nullable final String xAccept) {
     try {
       var manifest = getLatestAndGreatestAssetManifest(assetId, versionTag);
-      var carrier = manifest.flatMap(info ->
-          buildCarrierFromManifest(assetId, versionTag, info));
-      return Answer.ofTry(carrier);
+      var carrier = Answer.ofTry(manifest.flatMap(info ->
+          buildCarrierFromManifest(assetId, versionTag, info)));
+
+      if (carrier.isFailure() && fabricator != null) {
+        carrier = fabricator.fabricate(assetId, versionTag);
+      }
+
+      return carrier;
     } catch (Exception e) {
       return Answer.failed(e);
     }
@@ -487,6 +511,35 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       return Answer.failed(e);
     }
   }
+
+  /**
+   * Retrieves the canonical Carrier Artifact for the greatest version of an Asset
+   *
+   * @param assetId the Asset ID
+   * @param xAccept the generalized mime type
+   * @return the {@link KnowledgeAsset} Asset Carrier, wrapped in a {@link KnowledgeCarrier}
+   */
+  @Override
+  public Answer<KnowledgeCarrier> getKnowledgeAssetCanonicalCarrier(
+      @Nonnull final UUID assetId,
+      @Nullable String xAccept) {
+    try {
+      var carrier = client.getMetadataByGreatestAssetId(assetId)
+          .findFirst()
+          .flatMap(names::modelToAssetId)
+          .map(vid ->
+              getKnowledgeAssetVersionCanonicalCarrier(vid.getUuid(), vid.getVersionTag(),
+                  xAccept));
+      if (carrier.map(Answer::isFailure).orElse(true) && fabricator != null) {
+        carrier = fabricator.getFabricatableVersion(assetId)
+            .map(vtag -> getKnowledgeAssetVersionCanonicalCarrier(assetId, vtag, xAccept));
+      }
+      return carrier.orElseGet(Answer::notFound);
+    } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
 
   /**
    * Retrieves the canonical Surrogate for the given version of an Asset, in a KnowledgeCarrier

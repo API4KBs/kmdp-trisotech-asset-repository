@@ -210,7 +210,7 @@ public class DomainSemanticsWeaver implements Weaver {
     if (isAccelerator) {
       weaveElementMetadata(reuse);
     } else if (isKem) {
-      weaveElementMetadata(reuse, resolver, KEMSelectorHelper::lookupMVFEntryURI);
+      weaveElementMetadata(reuse, resolver, KEMSelectorHelper::lookupMVFEntryURI, true);
     } else {
       rewriteReuseLinks(reuse, dox);
     }
@@ -228,7 +228,8 @@ public class DomainSemanticsWeaver implements Weaver {
     weaveElementMetadata(
         el,
         s -> Optional.empty(),
-        (d, u) -> Optional.of(u));
+        (d, u) -> Optional.of(u),
+        false);
   }
 
   /**
@@ -237,22 +238,31 @@ public class DomainSemanticsWeaver implements Weaver {
    * is an (optional) relationship that connects the asset to the concept.
    *
    * @param el an annotation Element to be rewritten
+   * @param resolver function used to look up the externally referenced document
+   * @param mapper function to look up the concept ID (fragment) to be woven
+   * @param needsRelationship if true, will only weave a concept if an explicit relationship can be determined
    */
   private void weaveElementMetadata(
       @Nonnull final Element el,
       @Nonnull final Function<String, Optional<Document>> resolver,
-      @Nonnull final BiFunction<Document, URI, Optional<URI>> mapper) {
+      @Nonnull final BiFunction<Document, URI, Optional<URI>> mapper,
+      boolean needsRelationship) {
 
     var concept = getConceptIdentifier(
         el,
         resolver,
         mapper);
 
-    metaHandler.replaceProprietaryElement(
-        el,
-        concept.map(c -> getSemanticAnnotationRelationship(el, c.getConceptId()))
-            .orElse(null),
-        concept.orElse(null));
+    var rel = concept.map(c -> getSemanticAnnotationRelationship(el, c.getConceptId()));
+    if (needsRelationship && rel.isEmpty()) {
+      el.getParentNode().removeChild(el);
+    } else {
+      metaHandler.replaceProprietaryElement(
+          el,
+          rel.orElse(null),
+          concept.orElse(null));
+    }
+
   }
 
 

@@ -7,6 +7,7 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.KEM;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.OPENAPI;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTLanguages.UNSUPPORTED;
 import static edu.mayo.kmdp.util.Util.isEmpty;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Cognitive_Care_Process_Model;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -199,7 +200,8 @@ public enum TTNotations {
 
     if (assetTypeTag.contains("Decision") || assetTypeTag.contains("Rule")) {
       return getStandardXmlMimeType(DMN);
-    } else if (assetTypeTag.contains("Case")) {
+    } else if (assetTypeTag.contains("Case") ||
+        Cognitive_Care_Process_Model.getTag().equals(assetTypeTag)) {
       return getStandardXmlMimeType(CMMN);
     } else if (assetTypeTag.contains("Process")
         || assetTypeTag.contains("Pathway") || assetTypeTag.contains("Protocol")) {

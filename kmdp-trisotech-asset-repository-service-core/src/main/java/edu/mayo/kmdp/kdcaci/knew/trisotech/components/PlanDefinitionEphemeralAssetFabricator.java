@@ -6,6 +6,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationForma
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.FHIR_STU3;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
 
+import edu.mayo.kmdp.knowledgebase.introspectors.fhir.stu3.PlanDefinitionMetadataIntrospector;
 import edu.mayo.kmdp.ops.tranx.bpm.KarsAnonymousCcpmToPlanDefPipeline;
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
+import javax.annotation.Nonnull;
 import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.KnowledgeAssetCatalogApi;
@@ -25,18 +26,19 @@ import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
 
-public class PlanDefinitionEphemeralAssetFabricator implements EphemeralAssetFabricator {
+public class PlanDefinitionEphemeralAssetFabricator
+    implements EphemeralAssetFabricator {
 
-  private final KnowledgeAssetRepositoryApi repo;
   private final KnowledgeAssetCatalogApi cat;
 
   private final KarsAnonymousCcpmToPlanDefPipeline pipeline;
 
+  private final PlanDefinitionMetadataIntrospector introspector;
+
   public PlanDefinitionEphemeralAssetFabricator(
-      KnowledgeAssetCatalogApi cat,
-      KnowledgeAssetRepositoryApi repo) {
+      @Nonnull final KnowledgeAssetCatalogApi cat,
+      @Nonnull final KnowledgeAssetRepositoryApi repo) {
     this.cat = cat;
-    this.repo = repo;
 
     this.pipeline = new KarsAnonymousCcpmToPlanDefPipeline(
         cat,
@@ -44,35 +46,48 @@ public class PlanDefinitionEphemeralAssetFabricator implements EphemeralAssetFab
         (modelId, vt, query, xParams) -> Answer.of(
             List.of(new Bindings())),
         URI.create("https://ontology.mayo.edu/taxonomies/clinicalsituations"));
+
+    this.introspector = new PlanDefinitionMetadataIntrospector();
   }
 
   @Override
-  public Answer<KnowledgeCarrier> fabricate(UUID assetId, String versionTag) {
+  public Answer<KnowledgeCarrier> fabricate(
+      @Nonnull final UUID sourceAssetId,
+      @Nonnull final String sourceVersionTag) {
     var root = newId(
-        UUIDEncrypter.decrypt(assetId, FHIR_STU3.getUuid()),
-        versionTag);
+        UUIDEncrypter.decrypt(sourceAssetId, FHIR_STU3.getUuid()),
+        sourceVersionTag);
     return pipeline.trigger(root, Encoded_Knowledge_Expression);
   }
 
   @Override
-  public Optional<String> getFabricatableVersion(UUID assetId) {
-    var rootId = UUIDEncrypter.decrypt(assetId, FHIR_STU3.getUuid());
+  public Answer<KnowledgeCarrier> fabricateSurrogate(
+      @Nonnull final UUID sourceAssetId,
+      @Nonnull final String sourceVersionTag) {
+    return fabricate(sourceAssetId, sourceVersionTag)
+        .flatMap(kc -> introspector.applyNamedIntrospectDirect(
+            PlanDefinitionMetadataIntrospector.id,
+            kc,
+            null));
+  }
+
+  @Override
+  public Optional<String> getFabricatableVersion(
+      @Nonnull final UUID sourceAssetId) {
+    var rootId = UUIDEncrypter.decrypt(sourceAssetId, FHIR_STU3.getUuid());
     return cat.getKnowledgeAsset(rootId)
         // need the (latest) version
         .map(ka -> ka.getAssetId().getVersionTag())
         .getOptionalValue();
   }
 
-  @Override
-  public Stream<Pointer> promise(Pointer source) {
-    if (canFabricate(source)) {
-      return Stream.of(source, toPromise(source));
-    } else {
-      return Stream.of(source);
-    }
-  }
 
-  private Pointer toPromise(Pointer source) {
+  @Override
+  public Optional<Pointer> pledge(
+      @Nonnull final Pointer source) {
+    if (!canFabricate(source)) {
+      return Optional.empty();
+    }
     var ptr = SemanticIdentifier.newIdAsPointer(
             UUIDEncrypter.encrypt(source.getUuid(), FHIR_STU3.getUuid()),
             source.getVersionTag()
@@ -83,18 +98,29 @@ public class PlanDefinitionEphemeralAssetFabricator implements EphemeralAssetFab
       var url = source.getHref().toString().replace(source.getTag(), ptr.getTag());
       ptr.withHref(URI.create(url));
     }
-    return ptr;
+    return Optional.of(ptr);
   }
 
   @Override
-  public boolean canFabricate(Pointer ptr) {
+  public boolean canFabricate(
+      @Nonnull Pointer source) {
     return Objects.equals(
         ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model.getReferentId(),
-        ptr.getType());
+        source.getType());
+  }
+
+  @Override
+  public Answer<KnowledgeCarrier> applyNamedTransform(UUID operatorId, UUID kbaseId,
+      String versionTag, String xParams) {
+    return pipeline.applyNamedTransform(operatorId, kbaseId, versionTag, xParams);
   }
 
 
   public static class UUIDEncrypter {
+
+    private UUIDEncrypter() {
+      // functions only
+    }
 
     public static UUID encrypt(UUID original, UUID key) {
       var secretKey = convertUUIDToBytes(key);

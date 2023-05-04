@@ -36,6 +36,7 @@ import edu.mayo.kmdp.trisotechwrapper.config.TTConstants;
 import edu.mayo.kmdp.trisotechwrapper.config.TTLanguages;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.util.URIUtil;
 import edu.mayo.kmdp.util.XMLUtil;
 import edu.mayo.ontology.taxonomies.kao.decisiontype.DecisionTypeSeries;
 import edu.mayo.ontology.taxonomies.kmdo.semanticannotationreltype.SemanticAnnotationRelTypeSeries;
@@ -577,6 +578,7 @@ public class DomainSemanticsWeaver implements Weaver {
       var concept = Term.newTerm(rewritten)
           .asConceptIdentifier()
           .withName(el.getAttribute("itemName"));
+      concept.withNamespaceUri(URIUtil.normalizeURI(concept.getNamespaceUri()));
       return Optional.of(concept);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

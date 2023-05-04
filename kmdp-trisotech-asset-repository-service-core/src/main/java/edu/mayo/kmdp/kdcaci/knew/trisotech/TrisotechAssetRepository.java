@@ -287,7 +287,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .flatMap(this::getAssetPointersForModel)
           .flatMap(ptr -> {
             assert fabricator != null;
-            return fabricator.promise(ptr);
+            return fabricator.join(ptr);
           })
           // filter by type
           .filter(ptr -> filterType == null || Objects.equals(ptr.getType(), filterType))
@@ -504,6 +504,11 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     try {
       var surr = getKnowledgeAsset(assetId, null)
           .map(SurrogateHelper::carry);
+      if (surr.isFailure() && fabricator != null) {
+        surr = fabricator.getFabricatableVersion(assetId)
+            .map(vtag -> getKnowledgeAssetVersionCanonicalSurrogate(assetId, vtag, xAccept))
+            .orElseGet(Answer::notFound);
+      }
       return negotiateHTML(xAccept) && negotiator != null
           ? surr.flatMap(negotiator::toHtml)
           : surr;
@@ -560,6 +565,9 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     try {
       var surr = getKnowledgeAssetVersion(assetId, versionTag, null)
           .map(SurrogateHelper::carry);
+      if (surr.isFailure() && fabricator != null) {
+        surr = fabricator.fabricateSurrogate(assetId, versionTag);
+      }
       return negotiateHTML(xAccept) && negotiator != null
           ? surr.flatMap(negotiator::toHtml)
           : surr;

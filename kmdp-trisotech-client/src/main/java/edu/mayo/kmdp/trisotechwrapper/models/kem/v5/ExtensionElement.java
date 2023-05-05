@@ -63,6 +63,10 @@ public class ExtensionElement {
   private String modelType;
   @JsonProperty("type")
   private String type;
+  @JsonProperty("display")
+  private String display;
+  @JsonProperty("codingSystem")
+  private String codingSystem;
   @JsonIgnore
   private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -266,6 +270,27 @@ public class ExtensionElement {
   public ExtensionElement withType(String type) {
     this.type = type;
     return this;
+  }
+
+  @JsonProperty("display")
+  public String getDisplay() {
+    return display;
+  }
+
+  @JsonProperty("display")
+  public void setDisplay(String display) {
+    this.display = display;
+  }
+
+  @JsonProperty("codingSystem")
+  public String getCodingSystem() {
+    return codingSystem;
+  }
+
+  @JsonProperty("codingSystem")
+
+  public void setCodingSystem(String codingSystem) {
+    this.codingSystem = codingSystem;
   }
 
   @JsonAnyGetter

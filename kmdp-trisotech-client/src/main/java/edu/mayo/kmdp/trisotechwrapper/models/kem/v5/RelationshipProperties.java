@@ -1,6 +1,8 @@
 
 package edu.mayo.kmdp.trisotechwrapper.models.kem.v5;
 
+import static java.lang.String.format;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,6 +36,11 @@ public class RelationshipProperties {
   private List<Object> alternatives = new ArrayList<Object>();
   @JsonProperty("deprecatedAlternatives")
   private List<Object> deprecatedAlternatives = new ArrayList<Object>();
+  @JsonProperty("triso:name-html")
+  private String nameHtml;
+  @JsonProperty("triso:linkedTermsId")
+  private List<String> linkedTerms = new ArrayList<>();
+
   @JsonIgnore
   private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -147,6 +154,39 @@ public class RelationshipProperties {
 
   public RelationshipProperties withAdditionalProperty(String name, Object value) {
     this.additionalProperties.put(name, value);
+    return this;
+  }
+
+  @JsonProperty("triso:name-html")
+  public String getNameHtml() {
+    return nameHtml;
+  }
+
+  @JsonProperty("triso:name-html")
+  public void setNameHtml(String nameHtml) {
+    this.nameHtml = nameHtml;
+  }
+
+  public RelationshipProperties withNameHtml(String name, String termId) {
+    var span = format("<span class=\"linked-term\" data-termid=\"%s\">%s</span>", name, termId);
+    setNameHtml(span);
+    return this;
+  }
+
+    //
+
+  @JsonProperty("triso:linkedTermsId")
+  public List<String> getLinkedTerms() {
+    return linkedTerms;
+  }
+
+  @JsonProperty("triso:linkedTermsId")
+  public void setLinkedTerms(List<String> linkedTerms) {
+    this.linkedTerms = linkedTerms;
+  }
+
+  public RelationshipProperties withLinkedTerm(String termId) {
+    getLinkedTerms().add(termId);
     return this;
   }
 

@@ -133,6 +133,13 @@ public enum TTWConfigParamsDef implements
       String.class,
       false)),
 
+  HEALTHCARE_ONTOLOGY(Opt.of(
+      "edu.mayo.kmdp.application.flag.healthOntology",
+      "true",
+      "Enables KEM support for healthcare ontologies (UMLS, SNOMED CT, LOINC, etc.)",
+      Boolean.class,
+      false)),
+
   ;
 
   private final Opt<TTWConfigParamsDef> opt;

@@ -1,0 +1,972 @@
+{
+  "diagramId": "_fe59e134-914d-49b2-984c-9b26a5d14eb0",
+  "modelVersion": 5.07,
+  "properties": {
+    "name": "Drawing 1",
+    "targetNamespace": "http://www.trisotech.com/definitions/_fe59e134-914d-49b2-984c-9b26a5d14eb0",
+    "defaultLanguage": "en",
+    "extensionElements": []
+  },
+  "extendedProperties": {
+    "selectedTabId": "_bb6dc081-0ec1-4a36-b140-caa53eff4960",
+    "selectedTabTypeId": "diagram",
+    "logoChoice": "Default",
+    "customLogo": null
+  },
+  "itemModelElements": {
+    "bottomTab": [
+      {
+        "resourceId": "_1e423efb-cc0a-4432-a2d2-3c78d5def63f",
+        "properties": {
+          "ref": "_bb6dc081-0ec1-4a36-b140-caa53eff4960",
+          "tabType": "diagram",
+          "isSelected": true
+        },
+        "stencil": {
+          "id": "bottomTab"
+        },
+        "itemModelElements": {}
+      }
+    ],
+    "graphTerm": [
+      {
+        "resourceId": "_d118d3a6-984c-4a81-9366-a7db82209334",
+        "properties": {
+          "name": "Due to",
+          "extensionElements": [
+            {
+              "id": "_19986046-e67e-4762-8905-192345a05952",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "SCT Upper Vocabulary (2023)",
+              "itemName": "Due to",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#BusinessEntityModel",
+              "modelURI": "http://www.trisotech.com/definitions/_d67e2180-4b1e-4fc0-99ed-f0d2cb2191ed",
+              "mimeType": "application/vnd.triso-businessentity+json",
+              "uri": "http://www.trisotech.com/definitions/_d67e2180-4b1e-4fc0-99ed-f0d2cb2191ed#_9f6f725e-b14c-3c4c-b275-f689e09692be",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#Term",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#8773e388-75b7-4061-a489-b788222022d3"
+            },
+            {
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "semanticType": "tags",
+              "tag": [
+                {
+                  "namespace": "http://www.trisotech.com/2015/triso/modeling",
+                  "semanticType": "tag",
+                  "content": "attribute"
+                }
+              ]
+            },
+            {
+              "id": "_3520eb25-1c8f-3173-9a1e-40c5cb49ee8d",
+              "value": "42752001",
+              "codingSystem": "http://snomed.info/sct",
+              "display": "Due to",
+              "semanticType": "code",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling"
+            }
+          ],
+          "sources": [],
+          "typeRef": "feel:Any",
+          "alternatives": []
+        },
+        "stencil": {
+          "id": "graphTerm"
+        },
+        "itemModelElements": {}
+      },
+      {
+        "resourceId": "_a989473a-1018-4f96-bb8b-2d4104ed979d",
+        "properties": {
+          "name": "After",
+          "extensionElements": [
+            {
+              "id": "_a6515ea5-4067-49e7-ae24-718d3042bfdd",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "SCT Upper Vocabulary (2023)",
+              "itemName": "After",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#BusinessEntityModel",
+              "modelURI": "http://www.trisotech.com/definitions/_d67e2180-4b1e-4fc0-99ed-f0d2cb2191ed",
+              "mimeType": "application/vnd.triso-businessentity+json",
+              "uri": "http://www.trisotech.com/definitions/_d67e2180-4b1e-4fc0-99ed-f0d2cb2191ed#_d92ed450-709c-34b7-bccc-2530b833250c",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#Term",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#8773e388-75b7-4061-a489-b788222022d3"
+            },
+            {
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "semanticType": "tags",
+              "tag": [
+                {
+                  "namespace": "http://www.trisotech.com/2015/triso/modeling",
+                  "semanticType": "tag",
+                  "content": "attribute"
+                }
+              ]
+            },
+            {
+              "id": "_73115418-33b8-3743-8948-9c216eed9048",
+              "value": "255234002",
+              "codingSystem": "http://snomed.info/sct",
+              "display": "After",
+              "semanticType": "code",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling"
+            }
+          ],
+          "sources": [],
+          "typeRef": "feel:Any",
+          "alternatives": []
+        },
+        "stencil": {
+          "id": "graphTerm"
+        },
+        "itemModelElements": {}
+      }
+    ]
+  },
+  "nodeModelElements": [
+    {
+      "resourceId": "_def47675-5acc-4ea8-ac16-ae069825fa3c",
+      "properties": {
+        "name": "Page 1",
+        "extensionElements": []
+      },
+      "stencil": {
+        "id": "businessEntityDiagram"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_178f9d5b-a611-41b0-8ceb-a8997388a818",
+      "properties": {
+        "name": "Fracture",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "tag": [],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [
+          {
+            "id": "_1689a7d0-60cc-4b14-840f-1c8b114d32d7",
+            "value": "125605004",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Fracture of bone (disorder)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_e66c7c56-18b8-4d62-950c-9e8e5dfbd2c2",
+      "properties": {
+        "name": "Bone Graft",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "tag": [],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [
+          {
+            "id": "_6212db43-e192-4936-bda2-95fe260773ff",
+            "value": "80983001",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Bone graft (procedure)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_3041021a-fb82-4475-b725-e784abb574a6",
+      "properties": {
+        "name": "Grafture",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "sct:disorder"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_b214a53d-48aa-4d5c-8d8c-8518aa515863",
+      "properties": {
+        "name": "Spleeding",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "sct:disorder"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_5479cc97-81cb-4bfb-860b-cd9cf8b43dd2",
+      "properties": {
+        "name": "Systemic Disease",
+        "documentation": "",
+        "extensionElements": [],
+        "sources": [],
+        "code": [
+          {
+            "id": "_eabf2f8b-701f-4089-bcf9-47f4b681a3f3",
+            "value": "56019007",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Systemic disease (disorder)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    }
+  ],
+  "edgeModelElements": [
+    {
+      "resourceId": "_8bf2c46b-d727-412c-a7c0-f738f2d05bcf",
+      "properties": {
+        "name": "due to",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:name-html": "<span id=\"_cbe5ee35-a150-47e1-87c1-f68c67271208\" class=\"linked-term\" data-termid=\"_d118d3a6-984c-4a81-9366-a7db82209334\">due to</span>",
+        "triso:linkedTermsId": [
+          "_d118d3a6-984c-4a81-9366-a7db82209334"
+        ]
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_3041021a-fb82-4475-b725-e784abb574a6",
+      "targetRef": "_e66c7c56-18b8-4d62-950c-9e8e5dfbd2c2"
+    },
+    {
+      "resourceId": "_9148d22b-cb12-43e6-9201-aae83fbec61f",
+      "properties": {
+        "name": "",
+        "documentation": "",
+        "extensionElements": []
+      },
+      "stencil": {
+        "id": "isA"
+      },
+      "sourceRef": "_3041021a-fb82-4475-b725-e784abb574a6",
+      "targetRef": "_178f9d5b-a611-41b0-8ceb-a8997388a818"
+    },
+    {
+      "resourceId": "_ddd999f1-ded4-4553-8988-372f92ac2fe4",
+      "properties": {
+        "name": "after",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:linkedTermsId": [
+          "_a989473a-1018-4f96-bb8b-2d4104ed979d"
+        ],
+        "triso:name-html": "<span id=\"_26f3fb44-fca9-47f1-ad48-48361c6b60cb\" class=\"linked-term\" data-termid=\"_a989473a-1018-4f96-bb8b-2d4104ed979d\">after</span>"
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_b214a53d-48aa-4d5c-8d8c-8518aa515863",
+      "targetRef": "_3041021a-fb82-4475-b725-e784abb574a6"
+    },
+    {
+      "resourceId": "_5e1c9019-d85f-4eef-8a07-44b9ed141b9b",
+      "properties": {
+        "name": "",
+        "documentation": "",
+        "extensionElements": []
+      },
+      "stencil": {
+        "id": "isA"
+      },
+      "sourceRef": "_b214a53d-48aa-4d5c-8d8c-8518aa515863",
+      "targetRef": "_5479cc97-81cb-4bfb-860b-cd9cf8b43dd2"
+    }
+  ],
+  "pages": [
+    {
+      "resourceId": "_bb6dc081-0ec1-4a36-b140-caa53eff4960",
+      "properties": {
+        "fontcolor": ""
+      },
+      "stencil": {
+        "id": "businessEntityDiagram"
+      },
+      "outgoingRefs": [],
+      "modelElementRef": "_def47675-5acc-4ea8-ac16-ae069825fa3c",
+      "bounds": {
+        "upperLeft": {
+          "x": 0,
+          "y": 0
+        },
+        "lowerRight": {
+          "x": 1485,
+          "y": 1050
+        }
+      },
+      "extendedProperties": {
+        "collaborationId": "_e154233a-3949-4ff9-b673-344de5680f16",
+        "contentId": "_2add7579-ec2f-4315-8a6f-ff153506d1c6"
+      },
+      "childShapes": [
+        {
+          "resourceId": "_471cb1ef-c108-4f33-abe3-07292da3450b",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_178f9d5b-a611-41b0-8ceb-a8997388a818",
+          "bounds": {
+            "upperLeft": {
+              "x": 624,
+              "y": 488
+            },
+            "lowerRight": {
+              "x": 720,
+              "y": 548
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_220578c7-abd6-4101-8b61-900e4852b864"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 27.5,
+              "y": 22,
+              "width": 41,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_1ec9be57-0c65-41a5-970f-7dd5329f2b88",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_e66c7c56-18b8-4d62-950c-9e8e5dfbd2c2",
+          "bounds": {
+            "upperLeft": {
+              "x": 848,
+              "y": 432
+            },
+            "lowerRight": {
+              "x": 944,
+              "y": 492
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_d0e2b5f4-7e54-49db-91a1-cfea24e10557"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 21,
+              "y": 22,
+              "width": 54,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_7b8de9df-b4db-4914-a964-a20c435cbeef",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_d0e2b5f4-7e54-49db-91a1-cfea24e10557",
+            "_220578c7-abd6-4101-8b61-900e4852b864"
+          ],
+          "modelElementRef": "_3041021a-fb82-4475-b725-e784abb574a6",
+          "bounds": {
+            "upperLeft": {
+              "x": 624,
+              "y": 320
+            },
+            "lowerRight": {
+              "x": 720,
+              "y": 380
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_9618b92e-6f85-4d26-bedf-350055511bc4"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 27.5,
+              "y": 22,
+              "width": 41,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_18b006e6-8969-46c6-8ce4-32d84f0871f6",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_9618b92e-6f85-4d26-bedf-350055511bc4",
+            "_fa951c92-855b-406f-b063-11a9d55a4eb1"
+          ],
+          "modelElementRef": "_b214a53d-48aa-4d5c-8d8c-8518aa515863",
+          "bounds": {
+            "upperLeft": {
+              "x": 372,
+              "y": 320
+            },
+            "lowerRight": {
+              "x": 468,
+              "y": 380
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 23.5,
+              "y": 22,
+              "width": 49,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_7d82548d-1f24-46ad-bf98-ed69fa049e81",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_5479cc97-81cb-4bfb-860b-cd9cf8b43dd2",
+          "bounds": {
+            "upperLeft": {
+              "x": 372,
+              "y": 194
+            },
+            "lowerRight": {
+              "x": 468,
+              "y": 254
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_fa951c92-855b-406f-b063-11a9d55a4eb1"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 4,
+              "y": 22,
+              "width": 88,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_d0e2b5f4-7e54-49db-91a1-cfea24e10557",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_1ec9be57-0c65-41a5-970f-7dd5329f2b88"
+          ],
+          "modelElementRef": "_8bf2c46b-d727-412c-a7c0-f738f2d05bcf",
+          "bounds": {
+            "upperLeft": {
+              "x": 720.7525766947069,
+              "y": 350.6585046078685
+            },
+            "lowerRight": {
+              "x": 847.2474233052931,
+              "y": 461.3414953921315
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_7b8de9df-b4db-4914-a964-a20c435cbeef"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {
+              "x": 732.7525634765625,
+              "y": 355.65850830078125,
+              "width": 31,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 732.7525766947069,
+              "y": 355.6585046078685,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 732.7525766947069,
+              "y": 355.6585046078685
+            }
+          },
+          "dockers": [
+            {
+              "x": 96,
+              "y": 30
+            },
+            {
+              "x": 0,
+              "y": 30
+            }
+          ],
+          "sourceRef": "_7b8de9df-b4db-4914-a964-a20c435cbeef",
+          "targetRef": "_1ec9be57-0c65-41a5-970f-7dd5329f2b88"
+        },
+        {
+          "resourceId": "_220578c7-abd6-4101-8b61-900e4852b864",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "isA"
+          },
+          "outgoingRefs": [
+            "_471cb1ef-c108-4f33-abe3-07292da3450b"
+          ],
+          "modelElementRef": "_9148d22b-cb12-43e6-9201-aae83fbec61f",
+          "bounds": {
+            "upperLeft": {
+              "x": 671,
+              "y": 381
+            },
+            "lowerRight": {
+              "x": 673,
+              "y": 487
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_7b8de9df-b4db-4914-a964-a20c435cbeef"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "right",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {},
+            "webbounds": {},
+            "anchorPoint": {
+              "x": 660,
+              "y": 393
+            }
+          },
+          "dockers": [
+            {
+              "x": 48,
+              "y": 60
+            },
+            {
+              "x": 48,
+              "y": 0
+            }
+          ],
+          "sourceRef": "_7b8de9df-b4db-4914-a964-a20c435cbeef",
+          "targetRef": "_471cb1ef-c108-4f33-abe3-07292da3450b"
+        },
+        {
+          "resourceId": "_9618b92e-6f85-4d26-bedf-350055511bc4",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_7b8de9df-b4db-4914-a964-a20c435cbeef"
+          ],
+          "modelElementRef": "_ddd999f1-ded4-4553-8988-372f92ac2fe4",
+          "bounds": {
+            "upperLeft": {
+              "x": 468.0528910602193,
+              "y": 333.3482288687525
+            },
+            "lowerRight": {
+              "x": 623.7127339397807,
+              "y": 368.9955211312475
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_18b006e6-8969-46c6-8ce4-32d84f0871f6"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {
+              "x": 480.0528869628906,
+              "y": 373.9955139160156,
+              "width": 23,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 480.0528910602193,
+              "y": 373.9955211312475,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 480.0528910602193,
+              "y": 373.9955211312475
+            }
+          },
+          "dockers": [
+            {
+              "x": 48,
+              "y": 60
+            },
+            {
+              "x": 58,
+              "y": 0
+            }
+          ],
+          "sourceRef": "_18b006e6-8969-46c6-8ce4-32d84f0871f6",
+          "targetRef": "_7b8de9df-b4db-4914-a964-a20c435cbeef"
+        },
+        {
+          "resourceId": "_fa951c92-855b-406f-b063-11a9d55a4eb1",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "isA"
+          },
+          "outgoingRefs": [
+            "_7d82548d-1f24-46ad-bf98-ed69fa049e81"
+          ],
+          "modelElementRef": "_5e1c9019-d85f-4eef-8a07-44b9ed141b9b",
+          "bounds": {
+            "upperLeft": {
+              "x": 420,
+              "y": 255
+            },
+            "lowerRight": {
+              "x": 420,
+              "y": 319
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_18b006e6-8969-46c6-8ce4-32d84f0871f6"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "bottom",
+            "rotation": 0,
+            "bounds": {},
+            "webbounds": {},
+            "anchorPoint": {
+              "x": 432,
+              "y": 314
+            }
+          },
+          "dockers": [
+            {
+              "x": 48,
+              "y": 0
+            },
+            {
+              "x": 48,
+              "y": 60
+            }
+          ],
+          "sourceRef": "_18b006e6-8969-46c6-8ce4-32d84f0871f6",
+          "targetRef": "_7d82548d-1f24-46ad-bf98-ed69fa049e81"
+        }
+      ]
+    }
+  ]
+}

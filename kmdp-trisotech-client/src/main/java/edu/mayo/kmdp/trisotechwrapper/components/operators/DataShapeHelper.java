@@ -1,6 +1,7 @@
 package edu.mayo.kmdp.trisotechwrapper.components.operators;
 
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemConcept;
+import edu.mayo.kmdp.util.Util;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
@@ -32,15 +33,16 @@ public final class DataShapeHelper {
    * @return the datatype fof the URI
    */
   @Nonnull
-  public static String getDataDefinition(
+  public static Optional<String> getDataDefinition(
       @Nonnull final KemConcept kc) {
     var ref = kc.getProperties().getTypeRef();
 
     if (hasFHIRDatatype(kc)) {
-      return getFHIRProfile(kc);
+      return Optional.ofNullable(getFHIRProfile(kc));
     }
 
-    return ref;
+    return Optional.ofNullable(ref)
+        .filter(Util::isNotEmpty);
   }
 
   /**

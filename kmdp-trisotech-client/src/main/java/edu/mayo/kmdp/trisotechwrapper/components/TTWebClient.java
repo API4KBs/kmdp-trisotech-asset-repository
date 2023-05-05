@@ -21,6 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.mayo.kmdp.trisotechwrapper.components.operators.ClinicalFocusKEMtoMVFTranslatorAddOn;
 import edu.mayo.kmdp.trisotechwrapper.components.operators.KEMtoMVFTranslator;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
@@ -116,7 +117,9 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
     apiEndpoint = cfg.getTyped(TTWConfigParamsDef.API_ENDPOINT);
     sparqlEndpoint = cfg.getTyped(TTWConfigParamsDef.BASE_URL) + SPARQL_PATH;
     token = cfg.getTyped(TTWConfigParamsDef.API_TOKEN);
-    keMtoMVFTranslator = new KEMtoMVFTranslator(cfg);
+    keMtoMVFTranslator = cfg.getTyped(TTWConfigParamsDef.HEALTHCARE_ONTOLOGY)
+        ? new KEMtoMVFTranslator(List.of(new ClinicalFocusKEMtoMVFTranslatorAddOn()), cfg)
+        : new KEMtoMVFTranslator(cfg);
   }
 
   @Nonnull

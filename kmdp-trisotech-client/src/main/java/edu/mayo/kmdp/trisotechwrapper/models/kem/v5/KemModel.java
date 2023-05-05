@@ -63,7 +63,7 @@ public class KemModel {
       List<EdgeModelElement> edgeModelElements) {
     super();
     this.diagramId = diagramId;
-    this.modelVersion = 5.07;
+    this.modelVersion = KemVersionManifest.VERSION;
     this.properties = properties;
     this.itemModelElements = itemModelElements;
     this.nodeModelElements = nodeModelElements;

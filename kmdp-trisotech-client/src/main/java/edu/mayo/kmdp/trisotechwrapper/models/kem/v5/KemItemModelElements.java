@@ -21,6 +21,10 @@ public class KemItemModelElements {
 
   @JsonProperty("businessRulesCategory")
   private List<BusinessRulesCategory> businessRulesCategory = new ArrayList<>();
+
+  @JsonProperty("graphTerm")
+  private List<GraphTerm> graphTerms = new ArrayList<>();
+
   @JsonIgnore
   private final Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -55,6 +59,15 @@ public class KemItemModelElements {
     return this;
   }
 
+  @JsonProperty("graphTerm")
 
+  public List<GraphTerm> getGraphTerms() {
+    return graphTerms;
+  }
 
+  @JsonProperty("graphTerm")
+
+  public void setGraphTerms(List<GraphTerm> graphTerms) {
+    this.graphTerms = graphTerms;
+  }
 }

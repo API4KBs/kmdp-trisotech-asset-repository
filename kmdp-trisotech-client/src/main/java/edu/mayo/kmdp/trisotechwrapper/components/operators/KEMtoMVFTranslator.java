@@ -23,8 +23,8 @@ import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.EdgeModelElement;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemConcept;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemModel;
 import edu.mayo.kmdp.util.StreamUtil;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -63,7 +63,7 @@ public class KEMtoMVFTranslator {
    * Optional extensible transformations
    */
   @Nonnull
-  protected final Map<String, KEMtoMVFTranslatorExtension> addOns = new LinkedHashMap<>();
+  protected final List<KEMtoMVFTranslatorExtension> addOns = new ArrayList<>();
 
   /**
    * Constructor
@@ -76,9 +76,7 @@ public class KEMtoMVFTranslator {
       @Nonnull final List<KEMtoMVFTranslatorExtension> extensions,
       @Nonnull final TTWEnvironmentConfiguration cfg) {
     this.cfg = cfg;
-    for (var addOn : extensions) {
-      addOns.put(addOn.getApplicableTag(), addOn);
-    }
+    addOns.addAll(extensions);
   }
 
   /**
@@ -118,7 +116,7 @@ public class KEMtoMVFTranslator {
     // Apply core mapping
     var kemConcepts = mapToConcepts(dict, kem, getPrefixes(kem));
     // Apply Extensions
-    addOns.values().forEach(on -> on.apply(dict, kemConcepts, kem));
+    addOns.forEach(on -> on.apply(dict, kemConcepts, kem));
 
     return dict;
   }
@@ -214,8 +212,9 @@ public class KEMtoMVFTranslator {
     entry.withUri(resolveNamespace(kc, namespaceMap) + guid);
 
     entry.withReference(
-        getInternalConceptUri(kem, guid),
-        getDataDefinition(kc));
+        getInternalConceptUri(kem, guid));
+    getDataDefinition(kc)
+        .ifPresent(entry::withReference);
 
     entry.withVocabularyEntry(toVocabularyEntry(kc));
 
@@ -318,28 +317,25 @@ public class KEMtoMVFTranslator {
     var tgt = dictIndex.get(toConceptUUID(edg.getTargetRef()));
     var tgtRef = toRef(tgt);
 
-    var links = edg.getProperties().getAdditionalProperties()
-        .getOrDefault("triso:linkedTermsId", Collections.emptyList());
+    if ("isA".equals(edg.getStencil().getId())) {
+      src.getBroader().add(tgtRef);
+    } else if ("relation".equals(edg.getStencil().getId())) {
+      var links = edg.getProperties().getLinkedTerms();
+      if (! links.isEmpty()) {
+        var relConcepts = links.stream()
+            .flatMap(StreamUtil.filterAs(String.class))
+            .flatMap(ref -> resolveTerm(ref, kem).stream())
+            .collect(Collectors.toList());
 
-    if (links instanceof List<?>) {
-      var relConcepts = ((List<?>) links).stream()
-          .flatMap(StreamUtil.filterAs(String.class))
-          .flatMap(ref -> resolveTerm(ref, kem).stream())
-          .collect(Collectors.toList());
-
-      var coll = "isA".equals(edg.getStencil().getId())
-          ? src.getBroader()
-          : src.getContext();
-
-      for (int j = relConcepts.size() - 1; j >= 0; j--) {
-        var link = relConcepts.get(j);
-        var mvfLink = toRef(link, namespaceMap);
-        mvfLink.getContext().add(tgtRef);
-        tgtRef = mvfLink;
+        for (int j = relConcepts.size() - 1; j >= 0; j--) {
+          var link = relConcepts.get(j);
+          var mvfLink = toRef(link, namespaceMap);
+          mvfLink.getContext().add(tgtRef);
+          tgtRef = mvfLink;
+        }
+        src.getContext().add(tgtRef);
       }
-      coll.add(tgtRef);
     }
-
   }
 
 
@@ -358,7 +354,11 @@ public class KEMtoMVFTranslator {
       @Nonnull final KemModel kem) {
     return kem.getNodeModelElements().stream()
         .filter(c -> ref.equals(c.getResourceId()))
-        .findFirst();
+        .findFirst()
+        .or(() -> kem.getItemModelElements().getGraphTerms().stream()
+            .filter(gt -> ref.equals(gt.getResourceId()))
+            .map(KEMHelper::graphTermToKemConcept)
+            .findFirst());
   }
 
 

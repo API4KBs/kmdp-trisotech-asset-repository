@@ -6,9 +6,13 @@ import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.trisotechwrapper.config.TTConstants;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
+import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.Code;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.ExtensionElement;
+import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.GraphTerm;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemConcept;
+import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemConceptProperties;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemModel;
+import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.Stencil;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.Tag;
 import edu.mayo.kmdp.util.Util;
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jsoup.Jsoup;
@@ -103,12 +108,60 @@ public final class KEMHelper {
   @Nonnull
   public static Map<UUID, KemConcept> getKEMConcepts(
       @Nonnull final KemModel kem) {
-    return kem.getNodeModelElements().stream()
-        .filter(n -> "term".equals(n.getStencil().getId()))
+    var localConcepts = kem.getNodeModelElements().stream()
+        .filter(n -> "term".equals(n.getStencil().getId()));
+    var externalConcepts = kem.getItemModelElements().getGraphTerms().stream()
+        .map(KEMHelper::graphTermToKemConcept);
+    return Stream.concat(localConcepts, externalConcepts)
         .collect(Collectors.toMap(
             KEMHelper::toConceptUUID,
             kc -> kc
         ));
+  }
+
+  /**
+   * Rewrites a GraphTerm into a KemConcept
+   * <p>
+   * GraphTerm is used as a foreign KEM Concept reuse, so that Concept 1 defined in model A can be
+   * linked from Concept 2 in model B, even if (at this time) model B cannot import model A.
+   * GraphTerm has the majority of the necessary information from the referenced Concept, but does
+   * not have the same shape - hence the need to normalize
+   * <p>
+   * Note that this method does not need to resolve the reference, and actually load the referenced
+   * model.
+   *
+   * @param graphTerm the (reference to) the reused Concept
+   * @return a KemConcept that mimics the foreign Concept
+   */
+  public static KemConcept graphTermToKemConcept(
+      @Nonnull final GraphTerm graphTerm) {
+    var kc = new KemConcept();
+    var tgtProperties = new KemConceptProperties()
+        .withName(graphTerm.getProperties().getName());
+
+    graphTerm.getProperties().getExtensionElements().stream()
+        .filter(x -> "tags".equals(x.getSemanticType()))
+        .forEach(tgtProperties.getExtensionElements()::add);
+
+    graphTerm.getProperties().getExtensionElements().stream()
+        .filter(x -> "code".equals(x.getSemanticType()))
+        .map(x -> new Code()
+            .withId(x.getId())
+            .withCodingSystem(x.getCodingSystem())
+            .withDisplay(x.getDisplay())
+            .withValue(x.getValue())
+            .withSemanticType("code"))
+        .forEach(tgtProperties.getCode()::add);
+
+    graphTerm.getProperties().getExtensionElements().stream()
+        .filter(x -> "reuseLink".equals(x.getSemanticType()))
+        .map(x -> x.getUri().substring(x.getUri().lastIndexOf('#') + 1))
+        .findFirst()
+        .ifPresent(kc::withResourceId);
+
+    return kc.withStencil(new Stencil()
+            .withId("term"))
+        .withProperties(tgtProperties);
   }
 
   /**
@@ -305,7 +358,7 @@ public final class KEMHelper {
   /**
    * The URI of a KEM Concept, as {modelUri}#_{concept UUID}
    *
-   * @param kem the KEM Model
+   * @param kem  the KEM Model
    * @param guid the unique UUID of the Concept
    * @return the Concept URI, as a KEM Model scoped fragment
    */

@@ -1,5 +1,6 @@
 package edu.mayo.kmdp.trisotechwrapper.components.operators;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.mvf._20220702.mvf.MVFDictionary;
 import org.omg.spec.mvf._20220702.mvf.ObjectFactory;
+import org.snomed.languages.scg.SCGExpressionParser;
 
 class KEMtoMVFTranslatorTest {
 
@@ -65,11 +67,39 @@ class KEMtoMVFTranslatorTest {
     }
   }
 
+  @Test
+  void testKemWithSnomedPostCoordination() {
+    var dict = load("/kem-basic-sct.json", List.of(new ClinicalFocusKEMtoMVFTranslatorAddOn()));
+
+    assertNotNull(dict);
+    assertFalse(dict.getVocabulary().isEmpty());
+
+    var voc = dict.getVocabulary().get(0);
+    assertEquals("http://snomed.info/sct", voc.getUri());
+    assertEquals(7, voc.getEntry().size());
+
+    var parser = new SCGExpressionParser();
+    voc.getEntry().forEach(t -> {
+      assertNotNull(t.getName());
+      assertNotNull(t.getTerm());
+      if (Util.isUUID(t.getTerm())) {
+        assertNotNull(t.getDefinition());
+        assertDoesNotThrow(() ->
+            parser.abstractExpression(t.getDefinition()));
+      }
+      ;
+    });
+  }
+
   private MVFDictionary load(String src) {
+    return load(src, List.of());
+  }
+
+  private MVFDictionary load(String src, List<KEMtoMVFTranslatorExtension> exts) {
     try (var is = KEMtoMVFTranslatorTest.class.getResourceAsStream(src)) {
       var km = JSonUtil.readJson(is)
           .flatMap(j -> JSonUtil.parseJson(j, KemModel.class));
-      var mvf = km.map(k -> new KEMtoMVFTranslator(List.of(), new TTWEnvironmentConfiguration())
+      var mvf = km.map(k -> new KEMtoMVFTranslator(exts, new TTWEnvironmentConfiguration())
               .translate(k))
           .orElseGet(Assertions::fail);
       assertNotNull(mvf);

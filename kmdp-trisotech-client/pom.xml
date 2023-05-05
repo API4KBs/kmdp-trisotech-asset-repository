@@ -44,6 +44,11 @@
       <artifactId>omg-mvf-10b</artifactId>
       <version>${kmdp.impl.version}</version>
     </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>ihtsdo-scg</artifactId>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -118,6 +123,13 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <!-- CLI tooling only -->
+    <dependency>
+      <groupId>net.sourceforge.owlapi</groupId>
+      <artifactId>owlapi-apibinding</artifactId>
+      <scope>provided</scope>
     </dependency>
 
   </dependencies>

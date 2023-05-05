@@ -1,9 +1,9 @@
 package edu.mayo.kmdp.trisotechwrapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import edu.mayo.kmdp.trisotechwrapper.TTEURentCacheTest.ModelCacheTestConfig;
 import edu.mayo.kmdp.trisotechwrapper.components.redactors.TTRedactor;
@@ -39,7 +39,7 @@ class TTEURentCacheTest {
   void setUp() {
     client = new TTWrapper(cfg, new DomainSemanticsWeaver(cfg), new TTRedactor());
     var apiEndpoint = client.getConfigParameter(TTWConfigParamsDef.API_ENDPOINT);
-    assertNotNull(apiEndpoint);
+    assumeTrue(apiEndpoint != null);
     assumeFalse(client.listAccessiblePlaces().isEmpty());
   }
 

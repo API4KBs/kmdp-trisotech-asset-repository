@@ -152,16 +152,6 @@ steps:
     env:
       PROJECT_SLM_VERSION: $(projectSlmVersionFinal)
 
-  # Maven project clean package using refresh profile
-  - task: PowerShell@2
-    displayName: "Maven Clean Package"
-    inputs:
-      targetType: "inline"
-      script: |
-        mvn clean package "-Dmaven.test.skip" "-Dspring.profiles.active=dev" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
-    env:
-      TRISO_DEV_TOKEN: $(trisoDevToken)
-      TRISO_SPLUNK_TOKEN: $(splunkToken)
 
   # Deploy maven using trisotech tokens
   - task: PowerShell@2
@@ -169,7 +159,7 @@ steps:
     inputs:
       targetType: "inline"
       script: |
-        mvn deploy "-Dmaven.test.skip" "-Dspring.profiles.active=dev" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" "-DaltDeploymentRepository=$env:DEPLOY_REPO::default::$env:DEPLOY_REPO_PATH"  "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
+        mvn clean deploy "-Dspring.profiles.active=dev" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" "-DaltDeploymentRepository=$env:DEPLOY_REPO::default::$env:DEPLOY_REPO_PATH"  "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" -ntp
     env:
       TRISO_DEV_TOKEN: $(trisoDevToken)
       TRISO_SPLUNK_TOKEN: $(splunkToken)

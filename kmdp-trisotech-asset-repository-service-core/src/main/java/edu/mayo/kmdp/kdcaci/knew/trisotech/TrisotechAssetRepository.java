@@ -546,6 +546,26 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
 
+
+  /**
+   * Retrieves the canonical Carrier Artifact for the greatest version of an Asset
+   *
+   * @param assetId the Asset ID
+   * @param xAccept the generalized mime type
+   * @return the {@link KnowledgeAsset} Asset Carrier, in binary form
+   */
+  @Override
+  public Answer<byte[]> getKnowledgeAssetCanonicalCarrierContent(
+      @Nonnull final UUID assetId,
+      @Nullable String xAccept) {
+    try {
+      return getKnowledgeAssetCanonicalCarrier(assetId, xAccept)
+          .flatOpt(AbstractCarrier::asBinary);
+    } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
   /**
    * Retrieves the canonical Surrogate for the given version of an Asset, in a KnowledgeCarrier
    * <p>

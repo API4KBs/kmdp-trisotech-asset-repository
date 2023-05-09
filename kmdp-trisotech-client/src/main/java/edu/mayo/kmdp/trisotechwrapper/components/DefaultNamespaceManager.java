@@ -1,9 +1,9 @@
 package edu.mayo.kmdp.trisotechwrapper.components;
 
+import static edu.mayo.kmdp.trisotechwrapper.components.TTVersioningStrategyHelper.ensureArtifactVersionSemVerStyle;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.TT_BASE_MODEL_URI;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
-import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
 
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
@@ -99,9 +99,7 @@ public class DefaultNamespaceManager implements NamespaceManager {
     String vTag = versionTag != null ? versionTag : defaultVersion;
     Date timestamp = establishedOn != null ? establishedOn : new Date();
 
-    String stampedVersionTag = Published.getTag().equalsIgnoreCase(state)
-        ? vTag
-        : vTag + "-" + timestamp.getTime();
+    String stampedVersionTag = ensureArtifactVersionSemVerStyle(vTag, state, timestamp);
     return newId(getArtifactNamespace(), artifactUUID, stampedVersionTag)
         .withName(label)
         .withEstablishedOn(timestamp);

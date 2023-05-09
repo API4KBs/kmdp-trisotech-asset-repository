@@ -24,7 +24,6 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMe
 import static edu.mayo.kmdp.trisotechwrapper.config.TTConstants.ASSETS_PREFIX;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.OPENAPI_JSON;
 import static edu.mayo.kmdp.util.JSonUtil.writeJsonAsString;
-import static edu.mayo.kmdp.util.Util.isNotEmpty;
 import static edu.mayo.kmdp.util.XMLUtil.asAttributeStream;
 import static edu.mayo.kmdp.util.XMLUtil.asElementStream;
 import static java.util.Comparator.comparing;
@@ -68,6 +67,7 @@ import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
 import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
+import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPublicationStates;
 import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
@@ -222,11 +222,12 @@ public class BPMModelIntrospector implements ModelIntrospector {
 
 
   /**
-   * Infers the Asset/Asset dependencies implied by specific uses of the modeling elements in an Asset's carriers
+   * Infers the Asset/Asset dependencies implied by specific uses of the modeling elements in an
+   * Asset's carriers
    *
    * @param carriers the Manifest/Model Map of the Asset's carriers
    * @return a Collection of Asset/Asset dependencies
-   * @see #getOtherDependencies(Document, KnowledgeRepresentationLanguage) 
+   * @see #getOtherDependencies(Document, KnowledgeRepresentationLanguage)
    */
   @Nonnull
   protected Collection<Link> getOtherDependencies(
@@ -261,7 +262,7 @@ public class BPMModelIntrospector implements ModelIntrospector {
    *
    * @param carriers the Manifest/Model Map of the Asset's carriers
    * @return the Annotations on the Models
-   * @see BPMMetadataHelper#extractAnnotations(Element) 
+   * @see BPMMetadataHelper#extractAnnotations(Element)
    */
   @Nonnull
   protected List<Annotation> gatherAnnotations(
@@ -295,7 +296,7 @@ public class BPMModelIntrospector implements ModelIntrospector {
    *
    * @param carriers the Manifest/Model Map of the Asset's carriers
    * @return the distinct {@link KnowledgeAssetType} from all the Carriers
-   * @see BPMMetadataHelper#getDeclaredAssetTypes(SemanticModelInfo, Supplier) 
+   * @see BPMMetadataHelper#getDeclaredAssetTypes(SemanticModelInfo, Supplier)
    */
   @Nonnull
   protected List<KnowledgeAssetType> gatherFormalTypes(
@@ -313,7 +314,7 @@ public class BPMModelIntrospector implements ModelIntrospector {
    * @param assetID  the ID of the Asset
    * @param carriers the Manifest/Model Map of the Asset's carriers
    * @return the {@link KnowledgeArtifact} metadata for all the Carrier variants
-   * @see #buildArtifact(ResourceIdentifier, SemanticModelInfo) 
+   * @see #buildArtifact(ResourceIdentifier, SemanticModelInfo)
    */
   @Nonnull
   protected List<KnowledgeArtifact> buildCarrierMetadata(
@@ -742,22 +743,22 @@ public class BPMModelIntrospector implements ModelIntrospector {
   protected Publication getArtifactPublicationStatus(
       @Nonnull final TrisotechFileInfo manifest) {
     Publication lifecycle = new Publication();
-    if (isNotEmpty(manifest.getState())) {
-      switch (manifest.getState()) {
-        case "Published":
-          lifecycle.withPublicationStatus(Published);
-          break;
-        case "Draft":
-          lifecycle.withPublicationStatus(Draft);
-          break;
-        case "Pending Approval":
-          lifecycle.withPublicationStatus(Final_Draft);
-          break;
-        default:
-          throw new IllegalStateException("Unrecognized state " + manifest.getState());
-      }
-    } else {
-      lifecycle.withPublicationStatus(Unpublished);
+    var state = TrisotechPublicationStates.parse(manifest.getState());
+    switch (state) {
+      case PUBLISHED:
+        lifecycle.withPublicationStatus(Published);
+        break;
+      case DRAFT:
+        lifecycle.withPublicationStatus(Draft);
+        break;
+      case PENDING_APPROVAL:
+        lifecycle.withPublicationStatus(Final_Draft);
+        break;
+      case UNPUBLISHED:
+        lifecycle.withPublicationStatus(Unpublished);
+        break;
+      default:
+        throw new IllegalStateException("Unrecognized state " + manifest.getState());
     }
     logger.trace("lifecycle = {}", lifecycle.getPublicationStatus());
 

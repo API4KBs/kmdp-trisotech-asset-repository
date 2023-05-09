@@ -255,6 +255,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     this.fabricator = fabricator != null
         ? fabricator
         : new PlanDefinitionEphemeralAssetFabricator(
+            this.names,
             KnowledgeAssetCatalogApi.newInstance(this),
             KnowledgeAssetRepositoryApi.newInstance(this)
         );
@@ -1027,7 +1028,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             buildCarrierFromNativeModel(
                 assetId,
                 versionTag,
-                names.modelToArtifactId(info.getId(), info.getVersion(), info.getName()),
+                names.modelToArtifactId(info),
                 lang,
                 xml)));
   }

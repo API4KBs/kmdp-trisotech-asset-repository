@@ -63,40 +63,6 @@ public interface NamespaceManager {
   ResourceIdentifier modelToArtifactId(
       @Nonnull final TrisotechFileInfo info);
 
-  /**
-   * Builds an Artifact ID from a model URI, a Model version, and a label
-   *
-   * @param modelUri   the internal ID of the Model
-   * @param versionTag the version of the Model
-   * @param label      the name of the Model
-   * @return an artifact ID
-   */
-  @Nonnull
-  default ResourceIdentifier modelToArtifactId(
-      @Nonnull String modelUri,
-      @Nonnull String versionTag,
-      @Nonnull String label) {
-    return modelToArtifactId(modelUri, versionTag, label, new Date());
-  }
-
-
-  /**
-   * Builds an Artifact ID from a model URI, a Model version, a label, and a last update Date
-   *
-   * @param modelUri      the internal ID of the Model
-   * @param versionTag    the version of the Model
-   * @param label         the name of the Model
-   * @param establishedOn the Date when this version was last touched
-   * @return an artifact ID
-   */
-  @Nonnull
-  default ResourceIdentifier modelToArtifactId(
-      @Nonnull final String modelUri,
-      @Nullable final String versionTag,
-      @Nullable final String label,
-      @Nullable final Date establishedOn) {
-    return modelToArtifactId(modelUri, versionTag, label, null, establishedOn);
-  }
 
   /**
    * Builds an Artifact ID from a model URI, a Model version, a label, a publication state and a

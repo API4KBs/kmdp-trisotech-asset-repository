@@ -8,6 +8,7 @@ import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPublicationStates;
 import java.util.Date;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Helper class that implement the version/status alignment for BPM+ models
@@ -49,7 +50,7 @@ public class TTVersioningStrategyHelper {
   @Nonnull
   public static String ensureArtifactVersionSemVerStyle(
       @Nonnull final String artifactVersionTag,
-      @Nonnull final String artifactPublicationState,
+      @Nullable final String artifactPublicationState,
       @Nonnull final Date artifactPublicationDate) {
     var semver = Version.valueOf(artifactVersionTag);
     switch (TrisotechPublicationStates.parse(artifactPublicationState)) {
@@ -68,50 +69,53 @@ public class TTVersioningStrategyHelper {
   private static String normalizeSnapshotVersion(
       @Nonnull final Version semver,
       @Nonnull final Date artifactPublicationDate) {
-    if (isNotEmpty(semver.getBuildMetadata())) {
+    Version normSemver = semver;
+    if (isNotEmpty(normSemver.getBuildMetadata())) {
       logger.warn("Removing build info from draft/unpublished artifact version: {}", semver);
-      semver.setBuildMetadata(null);
+      normSemver = normSemver.setBuildMetadata(null);
     }
-    if (isNotEmpty(semver.getPreReleaseVersion())) {
+    if (isNotEmpty(normSemver.getPreReleaseVersion())) {
       logger.warn("Adding artifactPublicationDate to draft/unpublished artifact version: {}",
           semver);
-      semver.setPreReleaseVersion(
-          semver.getPreReleaseVersion() + "." + artifactPublicationDate.getTime());
+      normSemver = normSemver.setPreReleaseVersion(
+          normSemver.getPreReleaseVersion() + "." + artifactPublicationDate.getTime());
     } else {
-      semver.setPreReleaseVersion(Long.toString(artifactPublicationDate.getTime()));
+      normSemver = normSemver.setPreReleaseVersion(Long.toString(artifactPublicationDate.getTime()));
     }
-    return semver.toString();
+    return normSemver.toString();
   }
 
   @Nonnull
   private static String normalizeRCVersion(
       @Nonnull final Version semver,
       @Nonnull final Date artifactPublicationDate) {
-    if (isNotEmpty(semver.getBuildMetadata())) {
+    Version normSemver = semver;
+    if (isNotEmpty(normSemver.getBuildMetadata())) {
       logger.warn("Removing build info from pre-published artifact version: {}", semver);
-      semver.setBuildMetadata(null);
+      normSemver = normSemver.setBuildMetadata(null);
     }
-    if (isEmpty(semver.getPreReleaseVersion())) {
+    if (isEmpty(normSemver.getPreReleaseVersion())) {
       logger.warn("Adding RC infor to pre-published artifact version: {}", semver);
-      semver.setPreReleaseVersion("RC");
+      normSemver = semver.setPreReleaseVersion("RC");
     }
-    semver.setPreReleaseVersion(
-        semver.getPreReleaseVersion() + "." + +artifactPublicationDate.getTime());
-    return semver.toString();
+    normSemver = normSemver.setPreReleaseVersion(
+        normSemver.getPreReleaseVersion() + "." + artifactPublicationDate.getTime());
+    return normSemver.toString();
   }
 
   @Nonnull
   private static String normalizePublishedVersion(
       @Nonnull final Version semver) {
-    if (isNotEmpty(semver.getBuildMetadata())) {
+    Version normSemver = semver;
+    if (isNotEmpty(normSemver.getBuildMetadata())) {
       logger.warn("Published artifact versions should not have build info: {}", semver);
-      semver.setBuildMetadata(null);
+      normSemver = normSemver.setBuildMetadata(null);
     }
-    if (isNotEmpty(semver.getPreReleaseVersion())) {
+    if (isNotEmpty(normSemver.getPreReleaseVersion())) {
       logger.warn("Published artifact versions should not have pre-release info: {}", semver);
-      semver.setPreReleaseVersion(null);
+      normSemver = normSemver.setPreReleaseVersion(null);
     }
-    return semver.toString();
+    return normSemver.toString();
   }
 
 }

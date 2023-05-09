@@ -47,7 +47,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
-import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
 
@@ -201,14 +200,9 @@ class MetadataTest {
         expectedFileId + "/versions/" + applyTimestampToVersion(versionTag, modelDate.getTime());
     String expectedVersionTag = applyTimestampToVersion(versionTag, modelDate.getTime());
 
-    // test w/o a version
-    ResourceIdentifier fileId = names.modelToArtifactId(internalId, null, "Test model");
-    assertNotNull(fileId);
-    assertEquals(id, fileId.getTag());
-    assertEquals(expectedFileId, fileId.getResourceId().toString());
-
     // test w/version
-    fileId = names.modelToArtifactId(internalId, versionTag, null, parseDateTime(updated));
+    var fileId = names.modelToArtifactId(
+        internalId, versionTag, "Mock Label", "Draft", parseDateTime(updated));
     assertNotNull(fileId);
     assertEquals(id, fileId.getTag());
     assertEquals(expectedVersionTag, fileId.getVersionTag());

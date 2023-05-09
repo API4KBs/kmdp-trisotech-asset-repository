@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper.negotiateHTML;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.dependencyRel;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDeclaredAssetTypes;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultAssetType;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultRepresentation;
@@ -23,10 +24,14 @@ import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.matchesVersion;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getXmlMimeTypeByAssetType;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.ASSET_ID_ATTRIBUTE;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.DEFAULT_VERSION_TAG;
+import static edu.mayo.kmdp.util.JenaUtil.objA;
 import static edu.mayo.kmdp.util.Util.isEmpty;
+import static java.nio.charset.Charset.defaultCharset;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.ofAst;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofMixedAnonymousComposite;
 import static org.omg.spec.api4kp._20200801.AbstractCompositeCarrier.ofUniformAnonymousComposite;
@@ -34,7 +39,9 @@ import static org.omg.spec.api4kp._20200801.Answer.failed;
 import static org.omg.spec.api4kp._20200801.Answer.succeed;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newKey;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.timedSemverComparator;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultArtifactId;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Calculation_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
@@ -55,14 +62,19 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Protocol;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.ReSTful_Service_Specification;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Semantic_Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
+import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.EphemeralAssetFabricator;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.PlanDefinitionEphemeralAssetFabricator;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DefaultMetadataIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
+import edu.mayo.kmdp.language.parsers.rdf.JenaRdfParser;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.TTWrapper;
 import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
@@ -79,6 +91,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -88,7 +101,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.omg.spec.api4kp._20200801.AbstractCarrier;
+import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.KnowledgeAssetCatalogApi;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.KnowledgeAssetRepositoryApi;
@@ -109,6 +125,7 @@ import org.omg.spec.api4kp._20200801.services.repository.asset.KARSHrefBuilder.H
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
 import org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper;
 import org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries;
+import org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetType;
 import org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries;
 import org.omg.spec.api4kp._20200801.terms.ConceptTerm;
@@ -202,7 +219,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   @Nullable
   protected final EphemeralAssetFabricator fabricator;
-
 
   @Autowired
   public TrisotechAssetRepository(
@@ -546,7 +562,6 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   }
 
 
-
   /**
    * Retrieves the canonical Carrier Artifact for the greatest version of an Asset
    *
@@ -617,6 +632,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     try {
       var rootId = newId(assetId, versionTag);
       Set<KeyIdentifier> closure = getAssetClosure(rootId)
+          .map(Entry::getKey)
           .collect(Collectors.toSet());
 
       Answer<Set<KnowledgeCarrier>> componentArtifacts = closure.stream()
@@ -652,6 +668,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     try {
       var rootId = newId(assetId, versionTag);
       Set<KeyIdentifier> closure = getAssetClosure(rootId)
+          .map(Entry::getKey)
           .collect(Collectors.toSet());
 
       Answer<Set<KnowledgeCarrier>> componentSurrogates = closure.stream()
@@ -664,6 +681,49 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       return componentSurrogates
           .map(comps -> ofUniformAnonymousComposite(rootId, comps));
     } catch (Exception e) {
+      return Answer.failed(e);
+    }
+  }
+
+  /**
+   * Infers the structure of an anonymous Composite Knowledge Asset, from (the ID of) a root Asset
+   * and the transitive closure of that Asset's dependencies.
+   *
+   * @param assetId    the Asset ID of the root Asset
+   * @param versionTag the version Tag of the root Asset
+   * @param xAccept    content negotiation header, to drive Surrogate form preferences
+   * @return a Composite Surrogate that manifests the implicit Composite rooted in the given Asset
+   */
+  @Override
+  public Answer<KnowledgeCarrier> getAnonymousCompositeKnowledgeAssetStructure(
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nullable final String xAccept) {
+    try {
+      var root = newId(assetId, versionTag);
+
+      Model struct = ModelFactory.createDefaultModel();
+      getAssetClosure(root)
+          .forEach(dep -> struct.add(objA(
+              names.assetKeyToId(root.asKey()).getVersionId(),
+              dep.getValue().getReferentId(),
+              names.assetKeyToId(dep.getKey()).getVersionId())));
+
+      var structId = struct.listSubjects().toSet().stream()
+          .map(s -> newVersionId(URI.create(s.getURI())))
+          .reduce(SemanticIdentifier::hashIdentifiers)
+          .orElse(null);
+
+      return new JenaRdfParser().applyLower(
+          ofAst(struct)
+              .withAssetId(structId)
+              .withArtifactId(defaultArtifactId(BASE_UUID_URN_URI, structId, OWL_2))
+              .withRepresentation(rep(OWL_2)),
+          Encoded_Knowledge_Expression,
+          codedRep(OWL_2, Turtle, TXT, defaultCharset(), Encodings.DEFAULT),
+          null);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
       return Answer.failed(e);
     }
   }
@@ -858,7 +918,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
    * @return A Stream of IDs of those Assets that the root depends on, directly or indirectly
    */
   @Nonnull
-  private Stream<KeyIdentifier> getAssetClosure(
+  protected Stream<Map.Entry<KeyIdentifier, DependencyType>> getAssetClosure(
       @Nonnull final ResourceIdentifier rootAssetId) {
     return client.getMetadataByAssetId(rootAssetId.getUuid(), rootAssetId.getVersionTag())
         .flatMap(this::getAssetClosure)
@@ -867,20 +927,25 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
   /**
    * Recurses on the Asset to Asset dependencies of a given Knowledge Asset, returning a Stream of
-   * the IDs of those dependencies, using the internal index in the process
+   * the IDs of those dependencies, using the internal index in the process.
+   * <p>
+   * The IDs are mapped to the specific dependency relationship type, assumning that the same Asset
+   * will only play one type of role
    *
    * @param modelRoot the manifest of the root Knowledge Asset
    * @return A Stream of IDs of those Assets that the root depends on, directly or indirectly
    */
   @Nonnull
-  private Stream<KeyIdentifier> getAssetClosure(
-      SemanticModelInfo modelRoot) {
+  protected Stream<Map.Entry<KeyIdentifier, DependencyType>> getAssetClosure(
+      @Nonnull final SemanticModelInfo modelRoot) {
     return Stream.concat(
-        Stream.ofNullable(modelRoot.getAssetKey()),
+        Stream.ofNullable(modelRoot.getAssetKey())
+            .map(key -> Map.entry(key, dependencyRel(modelRoot.getMimetype()))),
         modelRoot.getModelDependencies().stream()
             .flatMap(depId -> client.getMetadataByModelId(depId).stream())
             .flatMap(this::getAssetClosure));
   }
+
 
   /* ----------------------------------------------------------------------------------------- */
 

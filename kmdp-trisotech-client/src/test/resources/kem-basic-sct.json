@@ -1,11 +1,20 @@
 {
-  "diagramId": "_fe59e134-914d-49b2-984c-9b26a5d14eb0",
+  "diagramId": "_808c8eb7-29e8-4b29-9d72-938a6e4e15b6",
   "modelVersion": 5.07,
   "properties": {
-    "name": "Drawing 1",
-    "targetNamespace": "http://www.trisotech.com/definitions/_fe59e134-914d-49b2-984c-9b26a5d14eb0",
+    "name": "Another CSO SCG Test",
+    "targetNamespace": "http://www.trisotech.com/definitions/_808c8eb7-29e8-4b29-9d72-938a6e4e15b6",
     "defaultLanguage": "en",
-    "extensionElements": []
+    "extensionElements": [
+      {
+        "key": "prefix",
+        "value": "csv: <https://ontology.mayo.edu/taxonomies/clinicalsituations#>",
+        "type": "string",
+        "namespace": "http://www.trisotech.com/2015/triso/modeling",
+        "id": "_28560ecc-9bf3-4709-9088-f8fd25ab9363",
+        "semanticType": "customAttribute"
+      }
+    ]
   },
   "extendedProperties": {
     "selectedTabId": "_bb6dc081-0ec1-4a36-b140-caa53eff4960",
@@ -308,6 +317,104 @@
       },
       "nodeModelElements": [],
       "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_399a3427-8e37-44c1-9470-8d0ec435ff7f",
+      "properties": {
+        "name": "Most Recent Spleeding",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "tag": [],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          },
+          {
+            "id": "_94ea627a-a5ed-435f-9d7b-297959389dc6",
+            "uri": "https://ontology.mayo.edu/taxonomies/clinicalsituationpatterns#84ec1519-cadc-3390-b7e8-2004edd0255c",
+            "itemName": "Patient Having Condition Now",
+            "modelName": "Clinical Situations Patterns",
+            "modelURI": "http://ontology.mayo.edu/ontologies/clinicalsituationontology/",
+            "graphURI": "http://trisotech.com/graph/1.0/graph#framework",
+            "graphType": "http://www.trisotech.com/graph/1.0/element#Entity",
+            "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+            "type": "graph",
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "semanticLink"
+          },
+          {
+            "key": "conceptId",
+            "value": "csv:2995c8f1-9b79-4115-af7b-660c9bc95d24",
+            "type": "string",
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "id": "_f865331d-17f9-4b4a-ab9d-1b8522c9f788",
+            "semanticType": "customAttribute"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_2857c770-2a4f-4bd1-9579-619796d7f516",
+      "properties": {
+        "name": "Prior Spleeding",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "tag": [],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          },
+          {
+            "id": "_f8bb1970-2924-4256-9002-4dfc7a1cd290",
+            "uri": "https://ontology.mayo.edu/taxonomies/clinicalsituationpatterns#cbc9ae37-0f0c-3388-b7ab-fd7c56cafe35",
+            "itemName": "Patient Having Condition Ever",
+            "modelName": "Clinical Situations Patterns",
+            "modelURI": "http://ontology.mayo.edu/ontologies/clinicalsituationontology/",
+            "graphURI": "http://trisotech.com/graph/1.0/graph#framework",
+            "graphType": "http://www.trisotech.com/graph/1.0/element#Entity",
+            "modelType": "http://www.trisotech.com/graph/1.0/element#Framework",
+            "type": "graph",
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "semanticLink"
+          },
+          {
+            "key": "conceptId",
+            "value": "csv:49541c1f-b42e-461f-a78a-22eae96578f2",
+            "type": "string",
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "id": "_ccab2f28-1412-47ca-ad45-aa430eabb8e9",
+            "semanticType": "customAttribute"
+          }
+        ],
+        "sources": [],
+        "code": [],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
     }
   ],
   "edgeModelElements": [
@@ -374,6 +481,36 @@
       },
       "sourceRef": "_b214a53d-48aa-4d5c-8d8c-8518aa515863",
       "targetRef": "_5479cc97-81cb-4bfb-860b-cd9cf8b43dd2"
+    },
+    {
+      "resourceId": "_05dbfd04-0c92-42ad-9d94-2a51318f07ba",
+      "properties": {
+        "name": "",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_399a3427-8e37-44c1-9470-8d0ec435ff7f",
+      "targetRef": "_b214a53d-48aa-4d5c-8d8c-8518aa515863"
+    },
+    {
+      "resourceId": "_45554348-5f05-405c-8399-251d61029f68",
+      "properties": {
+        "name": "",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_2857c770-2a4f-4bd1-9579-619796d7f516",
+      "targetRef": "_b214a53d-48aa-4d5c-8d8c-8518aa515863"
     }
   ],
   "pages": [
@@ -399,7 +536,9 @@
       },
       "extendedProperties": {
         "collaborationId": "_e154233a-3949-4ff9-b673-344de5680f16",
-        "contentId": "_2add7579-ec2f-4315-8a6f-ff153506d1c6"
+        "contentId": "_2add7579-ec2f-4315-8a6f-ff153506d1c6",
+        "scrollTop": 147,
+        "scrollLeft": 0
       },
       "childShapes": [
         {
@@ -424,12 +563,12 @@
           "modelElementRef": "_178f9d5b-a611-41b0-8ceb-a8997388a818",
           "bounds": {
             "upperLeft": {
-              "x": 624,
-              "y": 488
+              "x": 869,
+              "y": 523
             },
             "lowerRight": {
-              "x": 720,
-              "y": 548
+              "x": 965,
+              "y": 583
             }
           },
           "extendedProperties": {},
@@ -484,12 +623,12 @@
           "modelElementRef": "_e66c7c56-18b8-4d62-950c-9e8e5dfbd2c2",
           "bounds": {
             "upperLeft": {
-              "x": 848,
-              "y": 432
+              "x": 1093,
+              "y": 467
             },
             "lowerRight": {
-              "x": 944,
-              "y": 492
+              "x": 1189,
+              "y": 527
             }
           },
           "extendedProperties": {},
@@ -547,12 +686,12 @@
           "modelElementRef": "_3041021a-fb82-4475-b725-e784abb574a6",
           "bounds": {
             "upperLeft": {
-              "x": 624,
-              "y": 320
+              "x": 869,
+              "y": 355
             },
             "lowerRight": {
-              "x": 720,
-              "y": 380
+              "x": 965,
+              "y": 415
             }
           },
           "extendedProperties": {},
@@ -610,16 +749,19 @@
           "modelElementRef": "_b214a53d-48aa-4d5c-8d8c-8518aa515863",
           "bounds": {
             "upperLeft": {
-              "x": 372,
-              "y": 320
+              "x": 617,
+              "y": 355
             },
             "lowerRight": {
-              "x": 468,
-              "y": 380
+              "x": 713,
+              "y": 415
             }
           },
           "extendedProperties": {},
-          "incomingRefs": [],
+          "incomingRefs": [
+            "_2bd6e8e4-ad5c-4646-8186-f1e1f3866906",
+            "_50433439-c6ba-43f7-a4e7-768daba0bd42"
+          ],
           "label": {
             "usedefaultlabelposition": true,
             "labelposition": null,
@@ -668,12 +810,12 @@
           "modelElementRef": "_5479cc97-81cb-4bfb-860b-cd9cf8b43dd2",
           "bounds": {
             "upperLeft": {
-              "x": 372,
-              "y": 194
+              "x": 617,
+              "y": 229
             },
             "lowerRight": {
-              "x": 468,
-              "y": 254
+              "x": 713,
+              "y": 289
             }
           },
           "extendedProperties": {},
@@ -690,6 +832,126 @@
               "x": 4,
               "y": 22,
               "width": 88,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_95f38206-cd55-4df9-abaa-82503fc7ea27",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_2bd6e8e4-ad5c-4646-8186-f1e1f3866906"
+          ],
+          "modelElementRef": "_399a3427-8e37-44c1-9470-8d0ec435ff7f",
+          "bounds": {
+            "upperLeft": {
+              "x": 358,
+              "y": 264
+            },
+            "lowerRight": {
+              "x": 454,
+              "y": 324
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_e414721e-76f4-4ccc-9522-24fcb287f3b4",
+          "properties": {
+            "bgcolor": "#ffffff",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_50433439-c6ba-43f7-a4e7-768daba0bd42"
+          ],
+          "modelElementRef": "_2857c770-2a4f-4bd1-9579-619796d7f516",
+          "bounds": {
+            "upperLeft": {
+              "x": 379,
+              "y": 495
+            },
+            "lowerRight": {
+              "x": 475,
+              "y": 555
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 10,
+              "y": 22,
+              "width": 76,
               "height": 16
             },
             "webbounds": {
@@ -728,12 +990,12 @@
           "modelElementRef": "_8bf2c46b-d727-412c-a7c0-f738f2d05bcf",
           "bounds": {
             "upperLeft": {
-              "x": 720.7525766947069,
-              "y": 350.6585046078685
+              "x": 965.7525766947069,
+              "y": 385.6585046078685
             },
             "lowerRight": {
-              "x": 847.2474233052931,
-              "y": 461.3414953921315
+              "x": 1092.247423305293,
+              "y": 496.3414953921315
             }
           },
           "extendedProperties": {},
@@ -747,20 +1009,20 @@
             "verticalAlign": "top",
             "rotation": 0,
             "bounds": {
-              "x": 732.7525634765625,
-              "y": 355.65850830078125,
+              "x": 977.7525634765625,
+              "y": 390.65850830078125,
               "width": 31,
               "height": 16
             },
             "webbounds": {
-              "x": 732.7525766947069,
-              "y": 355.6585046078685,
+              "x": 977.7525766947069,
+              "y": 390.6585046078685,
               "width": 110,
               "height": 16
             },
             "anchorPoint": {
-              "x": 732.7525766947069,
-              "y": 355.6585046078685
+              "x": 977.7525766947069,
+              "y": 390.6585046078685
             }
           },
           "dockers": [
@@ -798,12 +1060,12 @@
           "modelElementRef": "_9148d22b-cb12-43e6-9201-aae83fbec61f",
           "bounds": {
             "upperLeft": {
-              "x": 671,
-              "y": 381
+              "x": 916,
+              "y": 416
             },
             "lowerRight": {
-              "x": 673,
-              "y": 487
+              "x": 918,
+              "y": 522
             }
           },
           "extendedProperties": {},
@@ -819,8 +1081,8 @@
             "bounds": {},
             "webbounds": {},
             "anchorPoint": {
-              "x": 660,
-              "y": 393
+              "x": 905,
+              "y": 428
             }
           },
           "dockers": [
@@ -858,12 +1120,12 @@
           "modelElementRef": "_ddd999f1-ded4-4553-8988-372f92ac2fe4",
           "bounds": {
             "upperLeft": {
-              "x": 468.0528910602193,
-              "y": 333.3482288687525
+              "x": 713.0528910602193,
+              "y": 368.3482288687525
             },
             "lowerRight": {
-              "x": 623.7127339397807,
-              "y": 368.9955211312475
+              "x": 868.7127339397807,
+              "y": 403.9955211312475
             }
           },
           "extendedProperties": {},
@@ -877,20 +1139,20 @@
             "verticalAlign": "top",
             "rotation": 0,
             "bounds": {
-              "x": 480.0528869628906,
-              "y": 373.9955139160156,
+              "x": 725.0529174804688,
+              "y": 408.9955139160156,
               "width": 23,
               "height": 16
             },
             "webbounds": {
-              "x": 480.0528910602193,
-              "y": 373.9955211312475,
+              "x": 725.0528910602193,
+              "y": 408.9955211312475,
               "width": 110,
               "height": 16
             },
             "anchorPoint": {
-              "x": 480.0528910602193,
-              "y": 373.9955211312475
+              "x": 725.0528910602193,
+              "y": 408.9955211312475
             }
           },
           "dockers": [
@@ -928,12 +1190,12 @@
           "modelElementRef": "_5e1c9019-d85f-4eef-8a07-44b9ed141b9b",
           "bounds": {
             "upperLeft": {
-              "x": 420,
-              "y": 255
+              "x": 664,
+              "y": 290
             },
             "lowerRight": {
-              "x": 420,
-              "y": 319
+              "x": 666,
+              "y": 354
             }
           },
           "extendedProperties": {},
@@ -949,8 +1211,8 @@
             "bounds": {},
             "webbounds": {},
             "anchorPoint": {
-              "x": 432,
-              "y": 314
+              "x": 677,
+              "y": 349
             }
           },
           "dockers": [
@@ -965,6 +1227,126 @@
           ],
           "sourceRef": "_18b006e6-8969-46c6-8ce4-32d84f0871f6",
           "targetRef": "_7d82548d-1f24-46ad-bf98-ed69fa049e81"
+        },
+        {
+          "resourceId": "_2bd6e8e4-ad5c-4646-8186-f1e1f3866906",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_18b006e6-8969-46c6-8ce4-32d84f0871f6"
+          ],
+          "modelElementRef": "_05dbfd04-0c92-42ad-9d94-2a51318f07ba",
+          "bounds": {
+            "upperLeft": {
+              "x": 454.8731446819291,
+              "y": 294.48746114144507
+            },
+            "lowerRight": {
+              "x": 616.1268553180709,
+              "y": 384.51253885855493
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_95f38206-cd55-4df9-abaa-82503fc7ea27"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {},
+            "webbounds": {},
+            "anchorPoint": {
+              "x": 466.8731446819291,
+              "y": 299.48746114144507
+            }
+          },
+          "dockers": [
+            {
+              "x": 96,
+              "y": 30
+            },
+            {
+              "x": 0,
+              "y": 30
+            }
+          ],
+          "sourceRef": "_95f38206-cd55-4df9-abaa-82503fc7ea27",
+          "targetRef": "_18b006e6-8969-46c6-8ce4-32d84f0871f6"
+        },
+        {
+          "resourceId": "_50433439-c6ba-43f7-a4e7-768daba0bd42",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_18b006e6-8969-46c6-8ce4-32d84f0871f6"
+          ],
+          "modelElementRef": "_45554348-5f05-405c-8399-251d61029f68",
+          "bounds": {
+            "upperLeft": {
+              "x": 475.737585211853,
+              "y": 395.67525406718937
+            },
+            "lowerRight": {
+              "x": 616.262414788147,
+              "y": 524.3247459328106
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_e414721e-76f4-4ccc-9522-24fcb287f3b4"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {},
+            "webbounds": {},
+            "anchorPoint": {
+              "x": 487.737585211853,
+              "y": 529.3247459328106
+            }
+          },
+          "dockers": [
+            {
+              "x": 96,
+              "y": 30
+            },
+            {
+              "x": 0,
+              "y": 40
+            }
+          ],
+          "sourceRef": "_e414721e-76f4-4ccc-9522-24fcb287f3b4",
+          "targetRef": "_18b006e6-8969-46c6-8ce4-32d84f0871f6"
         }
       ]
     }

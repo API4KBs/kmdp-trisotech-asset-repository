@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
@@ -13,6 +14,7 @@ import edu.mayo.kmdp.util.JaxbUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.mvf._20220702.mvf.MVFDictionary;
@@ -76,6 +78,7 @@ class KEMtoMVFTranslatorTest {
 
     var voc = dict.getVocabulary().get(0);
     assertEquals("http://snomed.info/sct", voc.getUri());
+    // 5 concepts + 2 rels
     assertEquals(7, voc.getEntry().size());
 
     var parser = new SCGExpressionParser();
@@ -88,6 +91,29 @@ class KEMtoMVFTranslatorTest {
             parser.abstractExpression(t.getDefinition()));
       }
       ;
+    });
+  }
+
+  @Test
+  void testKemWithClinicalSituations() {
+    var dict = load("/kem-basic-sct.json", List.of(
+        new ClinicalSituationKEMtoMVFTranslatorAddOn(),
+        new ClinicalFocusKEMtoMVFTranslatorAddOn()));
+
+    assertNotNull(dict);
+    assertFalse(dict.getVocabulary().isEmpty());
+
+    var sits = dict.getEntry().stream()
+        .filter(x -> x.getExternalReference() != null
+            && x.getExternalReference().contains("/taxonomies/clinicalsituations"))
+        .collect(Collectors.toList());
+    assertEquals(2, sits.size());
+
+    sits.forEach(s -> {
+      assertNotNull(s.getBroader());
+      assertFalse(s.getBroader().isEmpty());
+      assertTrue(s.getBroader().get(0).getExternalReference().contains("situationpatterns"));
+      assertFalse(s.getContext().isEmpty());
     });
   }
 

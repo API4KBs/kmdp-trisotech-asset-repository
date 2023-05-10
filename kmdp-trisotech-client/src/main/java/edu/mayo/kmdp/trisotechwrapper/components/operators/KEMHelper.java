@@ -114,7 +114,7 @@ public final class KEMHelper {
         .map(KEMHelper::graphTermToKemConcept);
     return Stream.concat(localConcepts, externalConcepts)
         .collect(Collectors.toMap(
-            KEMHelper::toConceptUUID,
+            KEMHelper::getInternalUUID,
             kc -> kc
         ));
   }
@@ -181,6 +181,35 @@ public final class KEMHelper {
         .collect(Collectors.toList());
   }
 
+
+  /**
+   * Extracts the standard Concept URI for a KEM Concept
+   * <p>
+   * Looks for a custom attribute 'conceptId' whose value has the form 'prefix:ID', if any
+   *
+   * @param kc the KEM Concept
+   * @param namespaceMap the prefix/namespace map configured on the model
+   * @return the Concept URI, if any
+   */
+  @Nonnull
+  public static Optional<String> getExternalConceptURI(
+      @Nonnull final KemConcept kc,
+      @Nonnull final Map<String, String> namespaceMap) {
+    var fqn = kc.getProperties().getExtensionElements().stream()
+        .filter(x -> "customAttribute".equals(x.getSemanticType()))
+        .filter(x -> "conceptId".equals(x.getKey()))
+        .map(ExtensionElement::getValue)
+        .filter(Util::isNotEmpty)
+        .findFirst();
+    return fqn.map(n -> {
+      int i = n.indexOf(':');
+      var ns = namespaceMap.getOrDefault(n.substring(0, i), BASE_UUID_URN);
+      var id = n.substring(i + 1).trim();
+      return ns + id;
+    });
+  }
+
+
   /**
    * Extracts the native UUID associated to a KEM Concept
    *
@@ -188,9 +217,9 @@ public final class KEMHelper {
    * @return the Concept UUID, parsed
    */
   @Nonnull
-  public static UUID toConceptUUID(
+  public static UUID getInternalUUID(
       @Nonnull final KemConcept kc) {
-    return toConceptUUID(kc.getResourceId());
+    return getInternalUUID(kc.getResourceId());
   }
 
   /**
@@ -200,7 +229,7 @@ public final class KEMHelper {
    * @return the Concept UUID, parsed
    */
   @Nonnull
-  public static UUID toConceptUUID(
+  public static UUID getInternalUUID(
       @Nonnull final String conceptId) {
     return UUID.fromString(conceptId.substring(1));
   }

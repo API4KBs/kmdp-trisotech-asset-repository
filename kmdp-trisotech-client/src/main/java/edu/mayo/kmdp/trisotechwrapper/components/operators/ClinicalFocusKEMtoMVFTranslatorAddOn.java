@@ -9,7 +9,6 @@ import edu.mayo.kmdp.util.NameUtils;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -38,22 +37,6 @@ public class ClinicalFocusKEMtoMVFTranslatorAddOn
   private static final String SNOMED_NS = "http://snomed.info/id/";
   private static final String SNOMED_NAME = "SNOMEDCT";
 
-  private static final Set<String> SCTTags;
-
-  static {
-    SCTTags = Arrays.stream(SCTCategories.values())
-        .map(ct -> "sct:" + ct.getValue())
-        .collect(Collectors.toSet());
-  }
-
-
-  /**
-   * @return All the SNOMED CT semantic tags
-   */
-  @Nonnull
-  public Set<String> getApplicableTags() {
-    return SCTTags;
-  }
 
   /**
    * @param dict        the generated MVF model
@@ -100,8 +83,14 @@ public class ClinicalFocusKEMtoMVFTranslatorAddOn
   @Override
   public boolean appliesTo(
       @Nonnull final KemConcept kc) {
-    return getTags(kc).stream().anyMatch(t -> getApplicableTags().contains(t))
-        && kc.getProperties().getCode().isEmpty();
+    return kc.getProperties().getCode().isEmpty()
+        && getTags(kc).stream()
+        .filter(tag -> tag.startsWith("sct:"))
+        .map(tag -> tag.substring(4))
+        .anyMatch(t ->
+            Arrays.stream(SCTCategories.values())
+                .map(SCTCategories::getValue)
+                .anyMatch(ct -> ct.equals(t)));
   }
 
   /**

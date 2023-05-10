@@ -13,8 +13,9 @@ import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getN
 import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getPrefixes;
 import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getSemanticAnnotation;
 import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getVocabName;
+import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getExternalConceptURI;
+import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.getInternalUUID;
 import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.resolveNamespace;
-import static edu.mayo.kmdp.trisotechwrapper.components.operators.KEMHelper.toConceptUUID;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.ASSET_ID_ATTRIBUTE;
 
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
@@ -202,14 +203,16 @@ public class KEMtoMVFTranslator {
       @Nonnull final KemModel kem,
       @Nonnull final KemConcept kc,
       @Nonnull final Map<String, String> namespaceMap) {
-    var guid = toConceptUUID(kc);
+    var guid = KEMHelper.getInternalUUID(kc);
     var entry = new IndexableMVFEntry(guid);
 
     entry.withName(getConceptName(kc));
+    entry.withUri(resolveNamespace(kc,namespaceMap) + guid);
 
     getSemanticAnnotation(kc).stream().findFirst()
         .ifPresent(entry::withExternalReference);
-    entry.withUri(resolveNamespace(kc, namespaceMap) + guid);
+    getExternalConceptURI(kc, namespaceMap)
+        .ifPresent(entry::withExternalReference);
 
     entry.withReference(
         getInternalConceptUri(kem, guid));
@@ -313,8 +316,8 @@ public class KEMtoMVFTranslator {
       @Nonnull final Map<UUID, MVFEntry> dictIndex,
       @Nonnull final KemModel kem,
       @Nonnull final Map<String, String> namespaceMap) {
-    var src = dictIndex.get(toConceptUUID(edg.getSourceRef()));
-    var tgt = dictIndex.get(toConceptUUID(edg.getTargetRef()));
+    var src = dictIndex.get(getInternalUUID(edg.getSourceRef()));
+    var tgt = dictIndex.get(getInternalUUID(edg.getTargetRef()));
     var tgtRef = toRef(tgt);
 
     if ("isA".equals(edg.getStencil().getId())) {
@@ -388,7 +391,7 @@ public class KEMtoMVFTranslator {
       @Nonnull final KemConcept kc,
       @Nonnull final Map<String, String> namespaceMap) {
     return new MVFEntry()
-        .withUri(resolveNamespace(kc, namespaceMap) + toConceptUUID(kc));
+        .withUri(resolveNamespace(kc, namespaceMap) + getInternalUUID(kc));
   }
 
 

@@ -4,10 +4,12 @@ import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.EdgeModelElement;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.ExtensionElement;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemConcept;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemModel;
+import edu.mayo.kmdp.util.StreamUtil;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.omg.spec.mvf._20220702.mvf.MVFDictionary;
+import org.omg.spec.mvf._20220702.mvf.MVFElement;
 import org.omg.spec.mvf._20220702.mvf.MVFEntry;
 
 /**
@@ -66,7 +68,7 @@ public class ClinicalSituationKEMtoMVFTranslatorAddOn
             .withExternalReference(uri))
         .ifPresent(entry::withBroader);
 
-    detectFocalConcept(kc, kem)
+    detectFocalConcept(kc, dict, kem)
         .map(uri -> new MVFEntry()
             .withUri(uri))
         .ifPresent(entry::withContext);
@@ -75,17 +77,22 @@ public class ClinicalSituationKEMtoMVFTranslatorAddOn
   /**
    * Relates a KEM situation concept to its focal concept
    *
-   * @param kc  the KEM concept to be processed
-   * @param kem the original KEM model, for context
+   * @param kc   the KEM concept to be processed
+   * @param dict the generated MVF model
+   * @param kem  the original KEM model, for context
    * @return the internal URI of the focus concept, if any
    */
   @Nonnull
   private Optional<String> detectFocalConcept(
       @Nonnull final KemConcept kc,
+      @Nonnull final MVFDictionary dict,
       @Nonnull final KemModel kem) {
     return kem.getEdgeModelElements().stream()
         .filter(e -> Objects.equals(e.getSourceRef(), kc.getResourceId()))
         .map(EdgeModelElement::getTargetRef)
+        .map(x -> KEMHelper.resolveReference(x, dict))
+        .flatMap(StreamUtil::trimStream)
+        .map(MVFElement::getUri)
         .findFirst();
   }
 

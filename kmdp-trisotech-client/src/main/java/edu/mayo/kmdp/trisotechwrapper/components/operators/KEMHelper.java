@@ -3,6 +3,7 @@ package edu.mayo.kmdp.trisotechwrapper.components.operators;
 import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
 
 import edu.mayo.kmdp.registry.Registry;
+import edu.mayo.kmdp.trisotechwrapper.components.operators.KEMtoMVFTranslator.IndexableMVFEntry;
 import edu.mayo.kmdp.trisotechwrapper.config.TTConstants;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
@@ -14,6 +15,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemConceptProperties;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemModel;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.Stencil;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.Tag;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.Util;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jsoup.Jsoup;
 import org.omg.spec.mvf._20220702.mvf.MVFDictionary;
+import org.omg.spec.mvf._20220702.mvf.MVFEntry;
 import org.omg.spec.mvf._20220702.mvf.Vocabulary;
 
 /**
@@ -187,7 +190,7 @@ public final class KEMHelper {
    * <p>
    * Looks for a custom attribute 'conceptId' whose value has the form 'prefix:ID', if any
    *
-   * @param kc the KEM Concept
+   * @param kc           the KEM Concept
    * @param namespaceMap the prefix/namespace map configured on the model
    * @return the Concept URI, if any
    */
@@ -413,4 +416,23 @@ public final class KEMHelper {
             .filter(Util::isNotEmpty);
   }
 
+  /**
+   * Resolves a KEM concept reference, as usually found in a KEM edge, to the {@link MVFEntry}
+   * mapped from the KEM concept that the reference is pointing to
+   *
+   * @param ref  the KEM element UUID
+   * @param dict the MVF dictionary
+   * @return the referenced MVFEntry, if any
+   */
+  public static Optional<MVFEntry> resolveReference(String ref, MVFDictionary dict) {
+    UUID guid = getInternalUUID(ref);
+    return dict.getEntry().stream()
+        .flatMap(StreamUtil.filterAs(IndexableMVFEntry.class))
+        .filter(e -> e.getGuid().equals(guid))
+        .map(MVFEntry.class::cast)
+        .findFirst()
+        .or(() -> dict.getEntry().stream()
+            .filter(x -> x.getReference().stream().anyMatch(r -> r.contains(ref)))
+            .findFirst());
+  }
 }

@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.omg.spec.mvf._20220702.mvf.MVFDictionary;
 import org.omg.spec.mvf._20220702.mvf.ObjectFactory;
+import org.omg.spec.mvf._20220702.mvf.VocabularyEntry;
 import org.snomed.languages.scg.SCGExpressionParser;
 
 class KEMtoMVFTranslatorTest {
@@ -110,11 +111,54 @@ class KEMtoMVFTranslatorTest {
     assertEquals(2, sits.size());
 
     sits.forEach(s -> {
-      assertNotNull(s.getBroader());
       assertFalse(s.getBroader().isEmpty());
       assertTrue(s.getBroader().get(0).getExternalReference().contains("situationpatterns"));
       assertFalse(s.getContext().isEmpty());
     });
+  }
+
+  @Test
+  void testKemWithClinicalSituationsInMixedModel() {
+    var dict = load("/kem-mixed-sct.json", List.of(
+        new ClinicalSituationKEMtoMVFTranslatorAddOn(),
+        new ClinicalFocusKEMtoMVFTranslatorAddOn()));
+
+    assertNotNull(dict);
+
+    var sits = dict.getEntry().stream()
+        .filter(x -> x.getExternalReference() != null
+            && x.getExternalReference().contains("/taxonomies/clinicalsituations"))
+        .collect(Collectors.toList());
+    assertEquals(14, sits.size());
+
+    var newSits = sits.stream()
+        .filter(s -> !s.getBroader().isEmpty())
+        .collect(Collectors.toList());
+    assertEquals(4, newSits.size());
+
+    newSits.forEach(s -> {
+      assertTrue(s.getBroader().get(0).getExternalReference().contains("situationpatterns"));
+    });
+
+    var postcoord = newSits.stream()
+        .filter(e -> e.getName().equals("Most Recent Infectious Disease Labs"))
+        .findFirst().orElseGet(Assertions::fail);
+    assertTrue(postcoord.getExternalReference().contains("5fee73fb-78a0-42b7-9cf2-b5c19e9a5559"));
+    var ctx = postcoord.getContext().get(0).getUri();
+    var focus = dict.getEntry().stream()
+        .filter(e -> e.getUri().equals(ctx))
+        .findFirst().orElseGet(Assertions::fail);
+    assertEquals("Infectious Disease Labs", focus.getName());
+    var def = dict.getVocabulary().get(0).getEntry()
+        .stream()
+        .filter(v -> v.getMVFEntry().getUri().equals(focus.getUri()))
+        .map(VocabularyEntry::getDefinition)
+        .findFirst()
+        .orElseGet(Assertions::fail);
+    assertEquals(
+        "15220000 | Lab Test | : 363702006 | Has focus | = 40733004 | Infectious Disease |",
+        def);
+
   }
 
   private MVFDictionary load(String src) {

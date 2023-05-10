@@ -7165,6 +7165,53 @@
           "id": "graphTerm"
         },
         "itemModelElements": {}
+      },
+      {
+        "resourceId": "_c2bafa64-532f-4057-959a-69f9a8f61b7f",
+        "properties": {
+          "name": "Interprets",
+          "extensionElements": [
+            {
+              "id": "_e5dd6c1e-98a0-4e2f-8a19-ecc9364a2a5c",
+              "semanticType": "reuseLink",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "modelName": "SCT Upper Vocabulary (2023)",
+              "itemName": "Interprets",
+              "modelType": "http://www.trisotech.com/graph/1.0/element#BusinessEntityModel",
+              "modelURI": "http://www.trisotech.com/definitions/_d67e2180-4b1e-4fc0-99ed-f0d2cb2191ed",
+              "mimeType": "application/vnd.triso-businessentity+json",
+              "uri": "http://www.trisotech.com/definitions/_d67e2180-4b1e-4fc0-99ed-f0d2cb2191ed#_2eb1d239-46b7-3e51-88e4-d77c3f4e5497",
+              "graphType": "http://www.trisotech.com/graph/1.0/element#Term",
+              "graphURI": "http://trisotech.com/graph/1.0/graph#8773e388-75b7-4061-a489-b788222022d3"
+            },
+            {
+              "namespace": "http://www.trisotech.com/2015/triso/modeling",
+              "semanticType": "tags",
+              "tag": [
+                {
+                  "namespace": "http://www.trisotech.com/2015/triso/modeling",
+                  "semanticType": "tag",
+                  "content": "attribute"
+                }
+              ]
+            },
+            {
+              "id": "_ce1066c5-0ca2-3591-9571-4d8832406456",
+              "value": "363714003",
+              "codingSystem": "http://snomed.info/sct",
+              "display": "Interprets",
+              "semanticType": "code",
+              "namespace": "http://www.trisotech.com/2015/triso/modeling"
+            }
+          ],
+          "sources": [],
+          "typeRef": "feel:Any",
+          "alternatives": []
+        },
+        "stencil": {
+          "id": "graphTerm"
+        },
+        "itemModelElements": {}
       }
     ]
   },
@@ -7519,9 +7566,29 @@
       "properties": {
         "name": "Kidney Function",
         "documentation": "<p>The ability of the kidney to filter out waste from the bloodstream</p>",
-        "extensionElements": [],
+        "extensionElements": [
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "sct:observable entity"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
         "sources": [],
-        "code": [],
+        "code": [
+          {
+            "id": "_0711634a-0612-4689-a2d6-899e9a94ec02",
+            "value": "11953005",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Renal function (observable entity)",
+            "semanticType": "code"
+          }
+        ],
         "valueset": [],
         "resource": "",
         "typeRef": "",
@@ -7634,6 +7701,16 @@
             "namespace": "http://www.trisotech.com/2015/triso/modeling",
             "semanticType": "notes",
             "content": "<p>Includes Albumin, serum; BUN; BUN:creatinine ratio; calcium, serum; carbon dioxide, total; chloride, serum; creatinine, serum; glucose, serum; phosphorus, serum; potassium, serum; sodium, serum</p>"
+          },
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "sct:procedure"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
           }
         ],
         "sources": [],
@@ -7682,7 +7759,16 @@
         "documentation": "<p>Test performed on a Blood Sample</p>",
         "extensionElements": [],
         "sources": [],
-        "code": [],
+        "code": [
+          {
+            "id": "_16f84fc7-acb2-4a31-b684-12bf365b8090",
+            "value": "396550006",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Blood test (procedure)",
+            "semanticType": "code"
+          }
+        ],
         "valueset": [],
         "resource": "",
         "typeRef": "",
@@ -8569,6 +8655,48 @@
       },
       "nodeModelElements": [],
       "attachedNodeRefs": []
+    },
+    {
+      "resourceId": "_8af982c3-c416-4bcf-8021-d5ad80e39a59",
+      "properties": {
+        "name": "Renal Function Finding",
+        "documentation": "",
+        "extensionElements": [
+          {
+            "tag": [
+              {
+                "semanticType": "tag",
+                "content": "sct:finding"
+              }
+            ],
+            "namespace": "http://www.trisotech.com/2015/triso/modeling",
+            "semanticType": "tags"
+          }
+        ],
+        "sources": [],
+        "code": [
+          {
+            "id": "_59494c92-67c8-488b-8db9-c981aabbf892",
+            "value": "1148582006",
+            "codingSystem": "http://snomed.info/sct",
+            "codingSystemDisplay": "SNOMEDCT",
+            "display": "Finding of renal function (finding)",
+            "semanticType": "code"
+          }
+        ],
+        "valueset": [],
+        "resource": "",
+        "typeRef": "",
+        "hasDataType": "",
+        "examples": "",
+        "alternatives": [],
+        "deprecatedAlternatives": []
+      },
+      "stencil": {
+        "id": "term"
+      },
+      "nodeModelElements": [],
+      "attachedNodeRefs": []
     }
   ],
   "edgeModelElements": [
@@ -8650,17 +8778,21 @@
     {
       "resourceId": "_8203fd6c-fc17-4baa-9c9a-f0a899b3b57b",
       "properties": {
-        "name": "assesses",
+        "name": "Has focus",
         "documentation": "",
         "extensionElements": [],
         "alternatives": [],
-        "deprecatedAlternatives": []
+        "deprecatedAlternatives": [],
+        "triso:linkedTermsId": [
+          "_76a2eacd-75b4-4307-968b-fcdb4508f6cb"
+        ],
+        "triso:name-html": "<span id=\"_0c194ad0-9706-4cc9-8432-c8408fd1f68c\" class=\"linked-term\" data-termid=\"_76a2eacd-75b4-4307-968b-fcdb4508f6cb\">Has focus</span>"
       },
       "stencil": {
         "id": "relation"
       },
       "sourceRef": "_7b166eda-f5fa-4eb3-9497-42a0fbc4772d",
-      "targetRef": "_a194a7f8-7708-4f07-98d7-6f51bdab7b51"
+      "targetRef": "_8af982c3-c416-4bcf-8021-d5ad80e39a59"
     },
     {
       "resourceId": "_a67317eb-0feb-4141-b5d9-663cc932a360",
@@ -9267,6 +9399,38 @@
       },
       "sourceRef": "_d8a20534-a20e-4df9-bfc5-a3b99dc95106",
       "targetRef": "_94ea76af-f5af-4970-80c2-7aeb1649a0a3"
+    },
+    {
+      "resourceId": "_337a185f-2d46-447c-bade-a552060cf74c",
+      "properties": {
+        "name": "",
+        "documentation": "",
+        "extensionElements": []
+      },
+      "stencil": {
+        "id": "isA"
+      },
+      "sourceRef": "_f40fd84b-6f8c-4cb3-83e1-2f44c954333d",
+      "targetRef": "_94ea76af-f5af-4970-80c2-7aeb1649a0a3"
+    },
+    {
+      "resourceId": "_ab849acb-aa63-4f1d-91a6-266088f3f720",
+      "properties": {
+        "name": "Interprets",
+        "documentation": "",
+        "extensionElements": [],
+        "alternatives": [],
+        "deprecatedAlternatives": [],
+        "triso:linkedTermsId": [
+          "_c2bafa64-532f-4057-959a-69f9a8f61b7f"
+        ],
+        "triso:name-html": "<span id=\"_27462929-ef40-4201-aeb0-0ec2c2d88eb4\" class=\"linked-term\" data-termid=\"_c2bafa64-532f-4057-959a-69f9a8f61b7f\">Interprets</span>"
+      },
+      "stencil": {
+        "id": "relation"
+      },
+      "sourceRef": "_8af982c3-c416-4bcf-8021-d5ad80e39a59",
+      "targetRef": "_a194a7f8-7708-4f07-98d7-6f51bdab7b51"
     }
   ],
   "pages": [
@@ -9293,7 +9457,7 @@
       "extendedProperties": {
         "collaborationId": "_41640592-3888-4d35-a173-c84d57fb7b30",
         "contentId": "_ab057775-ff48-47f6-9c53-84096c2b5176",
-        "scrollTop": 58,
+        "scrollTop": 248,
         "scrollLeft": 0
       },
       "childShapes": [
@@ -9720,7 +9884,7 @@
         {
           "resourceId": "_6fd48351-f568-4527-900a-d327205953aa",
           "properties": {
-            "bgcolor": "#ffffff",
+            "bgcolor": "#CCFFCC",
             "linecolor": "#000000",
             "fontcolor": "#000000",
             "fontSize": "11px",
@@ -9751,8 +9915,8 @@
           "incomingRefs": [
             "_10531910-8aa3-44dd-9f76-dcf459b084b2",
             "_e6ec231d-1680-42a1-b79d-7dbaced8c91b",
-            "_4a120f8e-8f4c-44c1-ae28-d7eaaec5f18d",
-            "_1ef443bd-f3c1-4b2f-9cc3-b2687003d3f3"
+            "_1ef443bd-f3c1-4b2f-9cc3-b2687003d3f3",
+            "_88819ca1-282a-41e0-bab4-531550bcf44f"
           ],
           "label": {
             "usedefaultlabelposition": true,
@@ -9972,7 +10136,7 @@
         {
           "resourceId": "_1251550d-bea9-4e15-a4a0-6fd6071fff93",
           "properties": {
-            "bgcolor": "#ffffff",
+            "bgcolor": "#CCFFCC",
             "linecolor": "#000000",
             "fontcolor": "#000000",
             "fontSize": "11px",
@@ -10101,7 +10265,7 @@
         {
           "resourceId": "_a0e54b52-7e86-4b58-b829-7cc5bb1b4c49",
           "properties": {
-            "bgcolor": "#ffffff",
+            "bgcolor": "#CCFFCC",
             "linecolor": "#000000",
             "fontcolor": "#000000",
             "fontSize": "11px",
@@ -10116,7 +10280,9 @@
           "stencil": {
             "id": "term"
           },
-          "outgoingRefs": [],
+          "outgoingRefs": [
+            "_3be8d2fb-cd48-4e29-92e1-566854cbeb50"
+          ],
           "modelElementRef": "_f40fd84b-6f8c-4cb3-83e1-2f44c954333d",
           "bounds": {
             "upperLeft": {
@@ -11148,6 +11314,128 @@
           "childShapes": []
         },
         {
+          "resourceId": "_39b931d4-ea00-40c8-9310-8984ddb0ad3d",
+          "properties": {
+            "bgcolor": "#CCFFCC",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [],
+          "modelElementRef": "_94ea76af-f5af-4970-80c2-7aeb1649a0a3",
+          "bounds": {
+            "upperLeft": {
+              "x": 951.25000000624,
+              "y": 348
+            },
+            "lowerRight": {
+              "x": 1047.25000000624,
+              "y": 408
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_3be8d2fb-cd48-4e29-92e1-566854cbeb50"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 27,
+              "y": 22,
+              "width": 42,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
+          "resourceId": "_889ebaac-f933-48db-89d7-bc4a42d1b19b",
+          "properties": {
+            "bgcolor": "#CCFFCC",
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": false,
+            "isStrikethrough": false,
+            "isUnderline": false,
+            "identificator": "",
+            "showEllipsis": ""
+          },
+          "stencil": {
+            "id": "term"
+          },
+          "outgoingRefs": [
+            "_88819ca1-282a-41e0-bab4-531550bcf44f"
+          ],
+          "modelElementRef": "_8af982c3-c416-4bcf-8021-d5ad80e39a59",
+          "bounds": {
+            "upperLeft": {
+              "x": 750,
+              "y": 616.4999985871492
+            },
+            "lowerRight": {
+              "x": 846,
+              "y": 676.4999985871492
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_4a120f8e-8f4c-44c1-ae28-d7eaaec5f18d"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": null,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+            "rotation": 0,
+            "bounds": {
+              "x": 3,
+              "y": 14.5,
+              "width": 90,
+              "height": 31
+            },
+            "webbounds": {
+              "x": 48,
+              "y": 30,
+              "width": 90,
+              "height": 31
+            },
+            "anchorPoint": {
+              "x": 48,
+              "y": 30
+            }
+          },
+          "dockers": [],
+          "childShapes": []
+        },
+        {
           "resourceId": "_0fa987ed-a4e9-4ec9-9452-8c28695a5913",
           "properties": {
             "linecolor": "#000000",
@@ -11494,17 +11782,17 @@
             "id": "relation"
           },
           "outgoingRefs": [
-            "_6fd48351-f568-4527-900a-d327205953aa"
+            "_889ebaac-f933-48db-89d7-bc4a42d1b19b"
           ],
           "modelElementRef": "_8203fd6c-fc17-4baa-9c9a-f0a899b3b57b",
           "bounds": {
             "upperLeft": {
-              "x": 497.9277152105664,
-              "y": 643.0999392246599
+              "x": 847,
+              "y": 645.4999985871492
             },
             "lowerRight": {
-              "x": 950.3222847831937,
-              "y": 645.9000593624892
+              "x": 950.3417968782662,
+              "y": 647.4999985871492
             }
           },
           "extendedProperties": {},
@@ -11518,20 +11806,20 @@
             "verticalAlign": "top",
             "rotation": 0,
             "bounds": {
-              "x": 892.322265625,
-              "y": 657.9000854492188,
-              "width": 46,
+              "x": 889.341796875,
+              "y": 658.5,
+              "width": 49,
               "height": 16
             },
             "webbounds": {
-              "x": 938.3222847831937,
-              "y": 657.9000593624892,
+              "x": 938.3417968782662,
+              "y": 658.4999985871492,
               "width": 110,
               "height": 16
             },
             "anchorPoint": {
-              "x": 938.3222847831937,
-              "y": 657.9000593624892
+              "x": 938.3417968782662,
+              "y": 658.4999985871492
             }
           },
           "dockers": [
@@ -11540,12 +11828,12 @@
               "y": 30
             },
             {
-              "x": 0,
+              "x": 96,
               "y": 30
             }
           ],
           "sourceRef": "_1251550d-bea9-4e15-a4a0-6fd6071fff93",
-          "targetRef": "_6fd48351-f568-4527-900a-d327205953aa"
+          "targetRef": "_889ebaac-f933-48db-89d7-bc4a42d1b19b"
         },
         {
           "resourceId": "_129bb280-07cc-40e0-9695-e0fc6bedabd1",
@@ -13439,11 +13727,11 @@
           "modelElementRef": "_6835ed0e-2669-4697-89e4-047e9cdd36f6",
           "bounds": {
             "upperLeft": {
-              "x": 266,
+              "x": 265,
               "y": 157
             },
             "lowerRight": {
-              "x": 266,
+              "x": 267,
               "y": 221
             }
           },
@@ -13476,6 +13764,136 @@
           ],
           "sourceRef": "_46162491-72c0-46a1-9c95-dc2b7032cd0f",
           "targetRef": "_64538390-10ec-424b-97a7-93005d86f598"
+        },
+        {
+          "resourceId": "_3be8d2fb-cd48-4e29-92e1-566854cbeb50",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "isA"
+          },
+          "outgoingRefs": [
+            "_39b931d4-ea00-40c8-9310-8984ddb0ad3d"
+          ],
+          "modelElementRef": "_337a185f-2d46-447c-bade-a552060cf74c",
+          "bounds": {
+            "upperLeft": {
+              "x": 998.25000000624,
+              "y": 409
+            },
+            "lowerRight": {
+              "x": 1000.25000000624,
+              "y": 478.9999985871492
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_a0e54b52-7e86-4b58-b829-7cc5bb1b4c49"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "left",
+            "verticalAlign": "bottom",
+            "rotation": 0,
+            "bounds": {},
+            "webbounds": {},
+            "anchorPoint": {
+              "x": 1011.25000000624,
+              "y": 473.9999985871492
+            }
+          },
+          "dockers": [
+            {
+              "x": 48,
+              "y": 0
+            },
+            {
+              "x": 48,
+              "y": 60
+            }
+          ],
+          "sourceRef": "_a0e54b52-7e86-4b58-b829-7cc5bb1b4c49",
+          "targetRef": "_39b931d4-ea00-40c8-9310-8984ddb0ad3d"
+        },
+        {
+          "resourceId": "_88819ca1-282a-41e0-bab4-531550bcf44f",
+          "properties": {
+            "linecolor": "#000000",
+            "fontcolor": "#000000",
+            "triso:userConstraints": false,
+            "fontSize": "11px",
+            "fontFamily": "arial,helvetica,sans-serif",
+            "isBold": false,
+            "isItalic": true,
+            "isStrikethrough": false,
+            "isUnderline": false
+          },
+          "stencil": {
+            "id": "relation"
+          },
+          "outgoingRefs": [
+            "_6fd48351-f568-4527-900a-d327205953aa"
+          ],
+          "modelElementRef": "_ab849acb-aa63-4f1d-91a6-266088f3f720",
+          "bounds": {
+            "upperLeft": {
+              "x": 497.9999096967954,
+              "y": 643.1133769810572
+            },
+            "lowerRight": {
+              "x": 749.0000902907248,
+              "y": 646.486560830752
+            }
+          },
+          "extendedProperties": {},
+          "incomingRefs": [
+            "_889ebaac-f933-48db-89d7-bc4a42d1b19b"
+          ],
+          "label": {
+            "usedefaultlabelposition": true,
+            "labelposition": "startbottom",
+            "horizontalAlign": "right",
+            "verticalAlign": "top",
+            "rotation": 0,
+            "bounds": {
+              "x": 690.0000610351562,
+              "y": 658.486572265625,
+              "width": 47,
+              "height": 16
+            },
+            "webbounds": {
+              "x": 737.0000902907248,
+              "y": 658.486560830752,
+              "width": 110,
+              "height": 16
+            },
+            "anchorPoint": {
+              "x": 737.0000902907248,
+              "y": 658.486560830752
+            }
+          },
+          "dockers": [
+            {
+              "x": 0,
+              "y": 30
+            },
+            {
+              "x": 96,
+              "y": 30.59993922465992
+            }
+          ],
+          "sourceRef": "_889ebaac-f933-48db-89d7-bc4a42d1b19b",
+          "targetRef": "_6fd48351-f568-4527-900a-d327205953aa"
         }
       ]
     },

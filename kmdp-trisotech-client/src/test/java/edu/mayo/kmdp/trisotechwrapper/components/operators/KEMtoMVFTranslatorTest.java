@@ -1,5 +1,6 @@
 package edu.mayo.kmdp.trisotechwrapper.components.operators;
 
+import static edu.mayo.kmdp.trisotechwrapper.components.operators.MVFTestHelper.loadMVFTestData;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,16 +18,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.omg.spec.mvf._20220702.mvf.MVFDictionary;
 import org.omg.spec.mvf._20220702.mvf.ObjectFactory;
-import org.omg.spec.mvf._20220702.mvf.VocabularyEntry;
 import org.snomed.languages.scg.SCGExpressionParser;
 
 class KEMtoMVFTranslatorTest {
 
   @Test
   void testBasicTranslate() {
-    var dict = load("/kem-basic-test.json");
+    var dict = loadMVFTestData("/kem-basic-test.json");
     assertEquals(2, dict.getEntry().size());
 
     dict.getEntry().forEach(e -> {
@@ -72,7 +71,7 @@ class KEMtoMVFTranslatorTest {
 
   @Test
   void testKemWithSnomedPostCoordination() {
-    var dict = load("/kem-basic-sct.json", List.of(new ClinicalFocusKEMtoMVFTranslatorAddOn()));
+    var dict = loadMVFTestData("/kem-basic-sct.json", List.of(new ClinicalFocusKEMtoMVFTranslatorAddOn()));
 
     assertNotNull(dict);
     assertFalse(dict.getVocabulary().isEmpty());
@@ -97,7 +96,7 @@ class KEMtoMVFTranslatorTest {
 
   @Test
   void testKemWithClinicalSituations() {
-    var dict = load("/kem-basic-sct.json", List.of(
+    var dict = loadMVFTestData("/kem-basic-sct.json", List.of(
         new ClinicalSituationKEMtoMVFTranslatorAddOn(),
         new ClinicalFocusKEMtoMVFTranslatorAddOn()));
 
@@ -117,66 +116,5 @@ class KEMtoMVFTranslatorTest {
     });
   }
 
-  @Test
-  void testKemWithClinicalSituationsInMixedModel() {
-    var dict = load("/kem-mixed-sct.json", List.of(
-        new ClinicalSituationKEMtoMVFTranslatorAddOn(),
-        new ClinicalFocusKEMtoMVFTranslatorAddOn()));
-
-    assertNotNull(dict);
-
-    var sits = dict.getEntry().stream()
-        .filter(x -> x.getExternalReference() != null
-            && x.getExternalReference().contains("/taxonomies/clinicalsituations"))
-        .collect(Collectors.toList());
-    assertEquals(14, sits.size());
-
-    var newSits = sits.stream()
-        .filter(s -> !s.getBroader().isEmpty())
-        .collect(Collectors.toList());
-    assertEquals(4, newSits.size());
-
-    newSits.forEach(s -> {
-      assertTrue(s.getBroader().get(0).getExternalReference().contains("situationpatterns"));
-    });
-
-    var postcoord = newSits.stream()
-        .filter(e -> e.getName().equals("Most Recent Infectious Disease Labs"))
-        .findFirst().orElseGet(Assertions::fail);
-    assertTrue(postcoord.getExternalReference().contains("5fee73fb-78a0-42b7-9cf2-b5c19e9a5559"));
-    var ctx = postcoord.getContext().get(0).getUri();
-    var focus = dict.getEntry().stream()
-        .filter(e -> e.getUri().equals(ctx))
-        .findFirst().orElseGet(Assertions::fail);
-    assertEquals("Infectious Disease Labs", focus.getName());
-    var def = dict.getVocabulary().get(0).getEntry()
-        .stream()
-        .filter(v -> v.getMVFEntry().getUri().equals(focus.getUri()))
-        .map(VocabularyEntry::getDefinition)
-        .findFirst()
-        .orElseGet(Assertions::fail);
-    assertEquals(
-        "15220000 | Lab Test | : 363702006 | Has focus | = 40733004 | Infectious Disease |",
-        def);
-
-  }
-
-  private MVFDictionary load(String src) {
-    return load(src, List.of());
-  }
-
-  private MVFDictionary load(String src, List<KEMtoMVFTranslatorExtension> exts) {
-    try (var is = KEMtoMVFTranslatorTest.class.getResourceAsStream(src)) {
-      var km = JSonUtil.readJson(is)
-          .flatMap(j -> JSonUtil.parseJson(j, KemModel.class));
-      var mvf = km.map(k -> new KEMtoMVFTranslator(exts, new TTWEnvironmentConfiguration())
-              .translate(k))
-          .orElseGet(Assertions::fail);
-      assertNotNull(mvf);
-      return mvf;
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
 
 }

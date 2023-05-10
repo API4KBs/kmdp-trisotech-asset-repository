@@ -147,11 +147,15 @@ public class ClinicalFocusKEMtoMVFTranslatorAddOn
   private String toSCGExpr(MVFEntry mvfConcept, MVFDictionary dict) {
     StringBuilder sb = new StringBuilder();
 
-    var sups = mvfConcept.getBroader().stream()
-        .map(ref -> lookupRef(ref, dict))
-        .map(this::toSCGTerm)
-        .collect(Collectors.joining(" + "));
-    sb.append(sups);
+    if (isSnomed(mvfConcept)) {
+      sb.append(toSCGTerm(mvfConcept));
+    } else {
+      var sups = mvfConcept.getBroader().stream()
+          .map(ref -> lookupRef(ref, dict))
+          .map(this::toSCGTerm)
+          .collect(Collectors.joining(" + "));
+      sb.append(sups);
+    }
 
     if (!mvfConcept.getContext().isEmpty()) {
       sb.append(" : ");
@@ -162,6 +166,12 @@ public class ClinicalFocusKEMtoMVFTranslatorAddOn
     }
 
     return sb.toString();
+  }
+
+  private boolean isSnomed(MVFEntry mvfConcept) {
+    return Optional.ofNullable(mvfConcept.getExternalReference())
+        .filter(ref -> ref.startsWith(SNOMED_NS))
+        .isPresent();
   }
 
   /**

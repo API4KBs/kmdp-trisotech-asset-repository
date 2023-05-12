@@ -76,6 +76,16 @@
       <artifactId>omg-cmmn-11</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>ihtsdo-scg</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.mayo.kmdp</groupId>
+      <artifactId>omg-mvf-10b</artifactId>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>

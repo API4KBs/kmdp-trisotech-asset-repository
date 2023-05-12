@@ -263,7 +263,7 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
     try {
       return tryDownloadNativeModel(fromUrl)
           .flatMap(j -> JSonUtil.parseJson(j, KemModel.class))
-          .map(k -> keMtoMVFTranslator.translate(k))
+          .map(keMtoMVFTranslator::translate)
           .flatMap(mvg -> JaxbUtil.marshallDox(
               List.of(MVFDictionary.class),
               mvg,

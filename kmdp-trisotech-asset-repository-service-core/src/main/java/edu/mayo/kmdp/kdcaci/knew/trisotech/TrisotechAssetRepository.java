@@ -110,6 +110,7 @@ import org.omg.spec.api4kp._20200801.api.repository.asset.v4.KnowledgeAssetCatal
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.KnowledgeAssetRepositoryApi;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetCatalogApiInternal;
 import org.omg.spec.api4kp._20200801.api.repository.asset.v4.server.KnowledgeAssetRepositoryApiInternal;
+import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.TransxionApiInternal;
 import org.omg.spec.api4kp._20200801.id.KeyIdentifier;
 import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
@@ -228,7 +229,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       @Nullable KARSHrefBuilder hrefBuilder,
       @Nullable TTContentNegotiationHelper negotiator,
       @Nullable NamespaceManager names,
-      @Nullable EphemeralAssetFabricator fabricator) {
+      @Nullable EphemeralAssetFabricator fabricator,
+      @Nullable TransxionApiInternal translator) {
     //
     this.cfg = cfg;
 
@@ -246,7 +248,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
     this.negotiator = negotiator != null
         ? negotiator
-        : new TTContentNegotiationHelper(this.names, this.hrefBuilder);
+        : new TTContentNegotiationHelper(
+            this.names, this.hrefBuilder, translator);
 
     this.extractor = extractor != null
         ? extractor
@@ -430,7 +433,13 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
         carrier = fabricator.fabricate(assetId, versionTag);
       }
 
-      return carrier;
+      if (negotiator != null
+          && carrier.map(kc -> negotiator.needsVariant(kc, xAccept)).orElse(false)) {
+        return carrier
+            .flatMap(kc -> negotiator.negotiate(kc, xAccept));
+      } else {
+        return carrier;
+      }
     } catch (Exception e) {
       return Answer.failed(e);
     }
@@ -552,6 +561,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .map(vid ->
               getKnowledgeAssetVersionCanonicalCarrier(vid.getUuid(), vid.getVersionTag(),
                   xAccept));
+
       if (carrier.map(Answer::isFailure).orElse(true) && fabricator != null) {
         carrier = fabricator.getFabricatableVersion(assetId)
             .map(vtag -> getKnowledgeAssetVersionCanonicalCarrier(assetId, vtag, xAccept));

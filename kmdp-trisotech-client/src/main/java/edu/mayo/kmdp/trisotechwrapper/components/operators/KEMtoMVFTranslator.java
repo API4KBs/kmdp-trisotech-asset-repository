@@ -215,7 +215,7 @@ public class KEMtoMVFTranslator {
         .ifPresent(entry::withExternalReference);
 
     entry.withReference(
-        getInternalConceptUri(kem, guid));
+        getInternalConceptUri(kem, guid, cfg));
     getDataDefinition(kc)
         .ifPresent(entry::withReference);
 
@@ -318,7 +318,7 @@ public class KEMtoMVFTranslator {
       @Nonnull final Map<String, String> namespaceMap) {
     var src = dictIndex.get(getInternalUUID(edg.getSourceRef()));
     var tgt = dictIndex.get(getInternalUUID(edg.getTargetRef()));
-    var tgtRef = toRef(tgt);
+    var tgtRef = KEMHelper.toRef(tgt);
 
     if ("isA".equals(edg.getStencil().getId())) {
       src.getBroader().add(tgtRef);
@@ -364,19 +364,6 @@ public class KEMtoMVFTranslator {
             .findFirst());
   }
 
-
-  /**
-   * Creates an MVFEntry reference from another MVFEntry
-   *
-   * @param entry the source MVFEntry
-   * @return a 'reference' to the source entry
-   */
-  @Nonnull
-  public static MVFEntry toRef(
-      @Nonnull final MVFEntry entry) {
-    return new MVFEntry()
-        .withUri(entry.getUri());
-  }
 
   /**
    * Maps a KEM Concept to a MVFEntry reference - MVF Entry that only holds the URI of another

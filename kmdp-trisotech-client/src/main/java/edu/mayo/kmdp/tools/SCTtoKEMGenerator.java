@@ -16,7 +16,6 @@ import edu.mayo.kmdp.util.JSonUtil;
 import edu.mayo.kmdp.util.Util;
 import java.io.ByteArrayOutputStream;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snomed.SCTCategories;
+import org.snomed.SCTHelper;
 
 public class SCTtoKEMGenerator {
 
@@ -212,9 +211,7 @@ public class SCTtoKEMGenerator {
     var label = getAnnotation(iriable, RDFS.label.getURI(), onto);
     try {
       var tag = label.substring(label.lastIndexOf('(') + 1, label.lastIndexOf(')'));
-      if (Arrays.stream(SCTCategories.values())
-          .map(SCTCategories::getValue)
-          .noneMatch(tag::equals)) {
+      if (!SCTHelper.isTag(tag)) {
         throw new IllegalStateException("Unrecognized tag " + tag);
       }
       return tag;

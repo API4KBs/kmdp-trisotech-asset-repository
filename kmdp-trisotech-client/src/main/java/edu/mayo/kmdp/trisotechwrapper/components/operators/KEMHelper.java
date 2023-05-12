@@ -269,12 +269,11 @@ public final class KEMHelper {
       @Nonnull final String codingSystem,
       @Nonnull final String codingSystemDisplay) {
     return dict.getVocabulary().stream()
-        .filter(v -> codingSystem.equals(v.getLanguageCode()))
+        .filter(v -> codingSystem.equals(v.getUri()))
         .findFirst()
         .orElseGet(() -> {
           var newVoc = new Vocabulary()
               .withUri(codingSystem)
-              .withLanguageCode(codingSystem)
               .withName(codingSystemDisplay);
           dict.withVocabulary(newVoc);
           return newVoc;
@@ -388,7 +387,7 @@ public final class KEMHelper {
 
 
   /**
-   * The URI of a KEM Concept, as {modelUri}#_{concept UUID}
+   * The URI of a KEM Concept, as {artifactId}#{concept UUID}
    *
    * @param kem  the KEM Model
    * @param guid the unique UUID of the Concept
@@ -397,8 +396,9 @@ public final class KEMHelper {
   @Nonnull
   public static String getInternalConceptUri(
       @Nonnull final KemModel kem,
-      @Nonnull final UUID guid) {
-    return getModelUri(kem) + "#_" + guid;
+      @Nonnull final UUID guid,
+      @Nonnull final TTWEnvironmentConfiguration cfg) {
+    return getArtifactId(kem, cfg) + "#" + guid;
   }
 
   /**
@@ -434,5 +434,19 @@ public final class KEMHelper {
         .or(() -> dict.getEntry().stream()
             .filter(x -> x.getReference().stream().anyMatch(r -> r.contains(ref)))
             .findFirst());
+  }
+
+
+  /**
+   * Creates an MVFEntry reference from another MVFEntry
+   *
+   * @param entry the source MVFEntry
+   * @return a 'reference' to the source entry
+   */
+  @Nonnull
+  public static MVFEntry toRef(
+      @Nonnull final MVFEntry entry) {
+    return new MVFEntry()
+        .withUri(entry.getUri());
   }
 }

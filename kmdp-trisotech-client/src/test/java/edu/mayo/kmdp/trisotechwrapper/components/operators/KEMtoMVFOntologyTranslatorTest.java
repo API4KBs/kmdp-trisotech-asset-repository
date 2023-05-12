@@ -35,6 +35,12 @@ class KEMtoMVFOntologyTranslatorTest {
     newSits.forEach(s -> {
       assertTrue(s.getBroader().get(0).getExternalReference().contains("situationpatterns"));
     });
+
+    assertEquals(14,
+        dict.getVocabulary().stream()
+            .filter(v -> "https://ontology.mayo.edu/taxonomies/clinicalsituations".equals(v.getUri()))
+            .mapToLong(v -> v.getEntry().size())
+            .sum());
   }
 
   @Test
@@ -57,6 +63,13 @@ class KEMtoMVFOntologyTranslatorTest {
     assertEquals(
         "15220000 | Lab Test | : 363702006 | Has focus | = 40733004 | Infectious Disease |",
         def);
+  }
+
+  @Test
+  void testKemReferences() {
+    assertTrue(dict.getEntry().stream()
+        .allMatch(mvfe -> mvfe.getReference().stream()
+            .anyMatch(ref -> ref.startsWith(dict.getUri()))));
   }
 
   @Test

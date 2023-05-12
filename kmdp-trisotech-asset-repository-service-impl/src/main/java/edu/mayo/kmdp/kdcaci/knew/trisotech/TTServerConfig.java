@@ -16,6 +16,8 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.HTMLAdapter;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTRepoContextAwareHrefBuilder;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTServerContextAwareHrefBuilder;
+import edu.mayo.kmdp.language.TransrepresentationExecutor;
+import edu.mayo.kmdp.language.translators.mvf.fhir.stu3.MVFToFHIRTermsTranslator;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.TTWrapper;
 import edu.mayo.kmdp.trisotechwrapper.components.hooks.DefaultTTHooksHandler;
@@ -28,6 +30,7 @@ import edu.mayo.kmdp.util.ws.PointerHTMLAdapter;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.spring.mvc.CloudEventHttpMessageConverter;
 import java.util.List;
+import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.TransxionApiInternal;
 import org.omg.spec.api4kp._20200801.id.Pointer;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,5 +134,11 @@ public class TTServerConfig {
   TTHooksHandler hooksHandler() {
     return new DefaultTTHooksHandler();
   }
+
+  @Bean
+  TransxionApiInternal translator() {
+    return new TransrepresentationExecutor(List.of(new MVFToFHIRTermsTranslator()));
+  }
+
 
 }

@@ -2,18 +2,23 @@ package edu.mayo.kmdp.kdcaci.knew.trisotech.components;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechArtifactRepository.ALL_REPOS;
 import static edu.mayo.kmdp.util.PropertiesUtil.serializeProps;
+import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.NotAcceptable;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
+import static org.omg.spec.api4kp._20200801.Answer.failed;
+import static org.omg.spec.api4kp._20200801.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
 import static org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder.decodeAll;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 
 import edu.mayo.kmdp.language.translators.surrogate.v2.SurrogateV2toHTMLTranslator;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
+import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.omg.spec.api4kp._20200801.Answer;
+import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.TransxionApiInternal;
 import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.TransxionApiInternal._applyTransrepresent;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.repository.asset.KARSHrefBuilder;
@@ -44,12 +49,16 @@ public class TTContentNegotiationHelper {
    */
   private final _applyTransrepresent htmlTranslator = new SurrogateV2toHTMLTranslator();
 
+  private final TransxionApiInternal translator;
+
 
   public TTContentNegotiationHelper(
       @Nonnull NamespaceManager names,
-      @Nullable KARSHrefBuilder hrefBuilder) {
+      @Nullable KARSHrefBuilder hrefBuilder,
+      @Nullable TransxionApiInternal translator) {
     this.names = names;
     this.hrefBuilder = hrefBuilder;
+    this.translator = translator;
   }
 
   /**
@@ -141,6 +150,46 @@ public class TTContentNegotiationHelper {
     var redirect = new URI(hostUri.getScheme(), null, hostUri.getHost(), hostUri.getPort(),
         hostUri.getPath() + "/repos/" + ALL_REPOS + namespace.getPath(), null, null);
     props.put(namespace.toString(), redirect.toString());
+  }
+
+
+  /**
+   * Determines whether content negotiation is necessary for a given Artifact to be returned.
+   * <p>
+   * Negotiation is necessary if the client has a preference, and none of the preferences match the
+   * current form of the Artifact
+   *
+   * @param kc      the Artifact in the current form
+   * @param xAccept the client preferences
+   * @return true if the current form does not match the preferences, if preferences are stated
+   */
+  public boolean needsVariant(
+      @Nonnull final KnowledgeCarrier kc,
+      @Nullable final String xAccept) {
+    if (Util.isEmpty(xAccept)) {
+      return false;
+    }
+    var preferences = decodeAll(xAccept);
+    return preferences.stream().noneMatch(
+        rep -> theRepContrastor.isBroaderOrEqual(rep.getRep(), kc.getRepresentation()));
+  }
+
+  /**
+   * Tries to translate a given Artifact into the requested variant form. Delegates to a Translator,
+   * which should have been loaded with the operators that provide the supported language mappings
+   *
+   * @param kc      the Artifact in the current form
+   * @param xAccept the client preferences
+   * @return the translated Artifact, or NotAcceptable if unable to honor the request
+   */
+  public Answer<KnowledgeCarrier> negotiate(
+      @Nonnull final KnowledgeCarrier kc,
+      @Nonnull final String xAccept) {
+    if (translator == null) {
+      return failed(NotAcceptable);
+    }
+    return translator.applyTransrepresent(kc, xAccept, null)
+        .or(() -> failed(NotAcceptable));
   }
 
 }

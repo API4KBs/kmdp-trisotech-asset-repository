@@ -184,9 +184,12 @@ public class TTContentNegotiationHelper {
    */
   public Answer<KnowledgeCarrier> negotiate(
       @Nonnull final KnowledgeCarrier kc,
-      @Nonnull final String xAccept) {
+      @Nullable final String xAccept) {
     if (translator == null) {
       return failed(NotAcceptable);
+    }
+    if (xAccept == null) {
+      return Answer.of(kc);
     }
     return translator.applyTransrepresent(kc, xAccept, null)
         .or(() -> failed(NotAcceptable));

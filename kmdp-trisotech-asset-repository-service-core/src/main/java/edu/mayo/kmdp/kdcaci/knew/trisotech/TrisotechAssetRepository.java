@@ -23,6 +23,7 @@ import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.matchesVersion;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getXmlMimeTypeByAssetType;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.ASSET_ID_ATTRIBUTE;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.CSO_SOURCE;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.DEFAULT_VERSION_TAG;
 import static edu.mayo.kmdp.util.JenaUtil.objA;
 import static edu.mayo.kmdp.util.Util.isEmpty;
@@ -69,12 +70,15 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeReprese
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.EphemeralAssetFabricator;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.PlanDefinitionEphemeralAssetFabricator;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DefaultMetadataIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
 import edu.mayo.kmdp.language.parsers.rdf.JenaRdfParser;
+import edu.mayo.kmdp.ops.CompositeFabricator;
+import edu.mayo.kmdp.ops.EphemeralAssetFabricator;
+import edu.mayo.kmdp.ops.tranx.bpm.PlanDefinitionEphemeralAssetFabricator;
+import edu.mayo.kmdp.ops.tranx.mvf.owl2.cso.CSOFabricator;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.TTWrapper;
 import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
@@ -218,7 +222,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   @Nonnull
   protected final NamespaceManager names;
 
-  @Nullable
+  @Nonnull
   protected final EphemeralAssetFabricator fabricator;
 
   @Autowired
@@ -257,11 +261,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
     this.fabricator = fabricator != null
         ? fabricator
-        : new PlanDefinitionEphemeralAssetFabricator(
-            this.names,
-            KnowledgeAssetCatalogApi.newInstance(this),
-            KnowledgeAssetRepositoryApi.newInstance(this)
-        );
+        : defaultFabricators(this.names, this);
   }
 
   /**
@@ -305,10 +305,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .sorted(Comparator.comparing(SemanticModelInfo::lastUpdated))
           // map models to assets, reduce
           .flatMap(this::getAssetPointersForModel)
-          .flatMap(ptr -> {
-            assert fabricator != null;
-            return fabricator.join(ptr);
-          })
+          .flatMap(fabricator::join)
           // filter by type
           .filter(ptr -> filterType == null || Objects.equals(ptr.getType(), filterType))
           // paginate, if requested
@@ -429,7 +426,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       var carrier = Answer.ofTry(manifest.flatMap(info ->
           buildCarrierFromManifest(assetId, versionTag, info)));
 
-      if (carrier.isFailure() && fabricator != null) {
+      if (carrier.isFailure()) {
         carrier = fabricator.fabricate(assetId, versionTag);
       }
 
@@ -530,7 +527,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     try {
       var surr = getKnowledgeAsset(assetId, null)
           .map(SurrogateHelper::carry);
-      if (surr.isFailure() && fabricator != null) {
+      if (surr.isFailure()) {
         surr = fabricator.getFabricatableVersion(assetId)
             .map(vtag -> getKnowledgeAssetVersionCanonicalSurrogate(assetId, vtag, xAccept))
             .orElseGet(Answer::notFound);
@@ -560,13 +557,14 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .flatMap(names::modelToAssetId)
           .map(vid ->
               getKnowledgeAssetVersionCanonicalCarrier(vid.getUuid(), vid.getVersionTag(),
-                  xAccept));
+                  xAccept))
+          .orElseGet(Answer::notFound);
 
-      if (carrier.map(Answer::isFailure).orElse(true) && fabricator != null) {
+      if (carrier.isFailure()) {
         carrier = fabricator.getFabricatableVersion(assetId)
-            .map(vtag -> getKnowledgeAssetVersionCanonicalCarrier(assetId, vtag, xAccept));
+            .flatMap(vtag -> getKnowledgeAssetVersionCanonicalCarrier(assetId, vtag, xAccept));
       }
-      return carrier.orElseGet(Answer::notFound);
+      return carrier;
     } catch (Exception e) {
       return Answer.failed(e);
     }
@@ -611,7 +609,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     try {
       var surr = getKnowledgeAssetVersion(assetId, versionTag, null)
           .map(SurrogateHelper::carry);
-      if (surr.isFailure() && fabricator != null) {
+      if (surr.isFailure()) {
         surr = fabricator.fabricateSurrogate(assetId, versionTag);
       }
       return negotiateHTML(xAccept) && negotiator != null
@@ -620,6 +618,16 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     } catch (Exception e) {
       return Answer.failed(e);
     }
+  }
+
+
+  URI getAssetType(UUID assetId) {
+    Supplier<KnowledgeAssetType> supplier = () -> Decision_Model;
+    return client.getMetadataByGreatestAssetId(assetId)
+        .flatMap(info -> BPMMetadataHelper.getDeclaredAssetTypes(info, supplier).stream())
+        .findFirst()
+        .orElseGet(supplier)
+        .getReferentId();
   }
 
 
@@ -1111,6 +1119,21 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
     // extract data from Trisotech format to OMG format
     return extractor.introspect(assetId, carriers);
+  }
+
+
+  protected CompositeFabricator defaultFabricators(
+      NamespaceManager names,
+      TrisotechAssetRepository ttw) {
+    var cat = KnowledgeAssetCatalogApi.newInstance(ttw);
+    var repo = KnowledgeAssetRepositoryApi.newInstance(ttw);
+    return new CompositeFabricator(List.of(
+        new PlanDefinitionEphemeralAssetFabricator(
+            names.getAssetNamespace(),
+            cat,
+            repo),
+        new CSOFabricator(cat, repo, cfg.getTyped(CSO_SOURCE))
+    ));
   }
 
 }

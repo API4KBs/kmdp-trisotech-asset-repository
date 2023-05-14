@@ -109,12 +109,13 @@ public class ClinicalFocusKEMtoMVFTranslatorAddOn
       @Nonnull final KemModel kem) {
     var mvfConcept = lookup(kc, dict);
 
+    var formalTerm = formalize(mvfConcept, dict);
+
     getTags(kc).stream()
         .filter(tag -> tag.startsWith("sct:"))
         .flatMap(t -> SCTHelper.mapTag(t).stream())
-        .forEach(mvfConcept::withReference);
+        .forEach(formalTerm::withReference);
 
-    var formalTerm = formalize(mvfConcept, dict);
     ensureVocabulary(dict, SNOMED, SNOMED_NAME)
         .getEntry().add(formalTerm);
   }

@@ -140,6 +140,13 @@ public enum TTWConfigParamsDef implements
       Boolean.class,
       false)),
 
+  CSO_SOURCE(Opt.of(
+      "edu.mayo.kmdp.trisotechwrapper.csoSource",
+      "https://kmdp-dev-kasrs.mayo.edu/cat/assets/c4aa4f82-42cf-317d-98f1-cce4ca234de2/carrier/content",
+      "URL of the CSO (upper) ontology",
+      String.class,
+      false)),
+
   ;
 
   private final Opt<TTWConfigParamsDef> opt;

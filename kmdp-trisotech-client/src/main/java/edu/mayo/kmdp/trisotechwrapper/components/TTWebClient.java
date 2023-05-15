@@ -6,6 +6,7 @@ import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.EXEC_ARTIFACT
 import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.REPOSITORY_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.SPARQL_PATH;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.VERSIONS_PATH;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.toApiEndpoint;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.KEM_JSON;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getStandardXmlMimeType;
 import static edu.mayo.kmdp.util.Util.isEmpty;
@@ -278,17 +279,18 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
   @Override
   @Nonnull
   public List<TrisotechExecutionArtifact> getExecutionArtifacts(
+      @Nonnull final String baseUrl,
       @Nonnull final Set<String> execEnvs) {
     if (!online) {
       logger.warn("Client is offline - unable to get Execution Artifacts data");
       return Collections.emptyList();
     }
     try {
-      URL url = new URL(apiEndpoint + EXEC_ARTIFACTS_PATH);
+      URL url = new URL(toApiEndpoint(baseUrl) + EXEC_ARTIFACTS_PATH);
       return execEnvs.stream()
-          .flatMap(env -> getExecutionArtifacts(url, env))
+          .flatMap(env -> getExecutionArtifacts(url, env)
+              .map(xc -> ensureContainerInfo(xc, baseUrl, env)))
           .collect(Collectors.toList());
-
     } catch (IOException ioe) {
       logger.error(ioe.getMessage(), ioe);
       return Collections.emptyList();
@@ -315,6 +317,34 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
                     execEnv)
                 .getBody()).stream()
         .flatMap(xc -> xc.getData().stream());
+  }
+
+  /**
+   * Ensures that a {@link TrisotechExecutionArtifact} describing a service deployed in a Service
+   * Library's execution environment contains information about the server/container hosting that
+   * deployment
+   *
+   * @param exec      the {@link TrisotechExecutionArtifact} metadata
+   * @param slBaseUrl the base URL of the Service Library hosting that deployment
+   * @param env       the Execution environment
+   * @return exec, enriched and/or normalized with deployment information
+   */
+  @Nonnull
+  private TrisotechExecutionArtifact ensureContainerInfo(
+      @Nonnull final TrisotechExecutionArtifact exec,
+      @Nonnull final String slBaseUrl,
+      @Nonnull final String env) {
+    if (exec.getContainer() != null) {
+      if (!exec.getContainer().startsWith("https")) {
+        exec.setContainer("https://" + exec.getContainer());
+      }
+    } else {
+      var addr = slBaseUrl + "/" + env + "/" + exec.getArtifactId() + ":" + exec.getVersion();
+      exec.setContainer(addr);
+    }
+    exec.setEnvironment(env);
+    return exec;
+
   }
 
   /**

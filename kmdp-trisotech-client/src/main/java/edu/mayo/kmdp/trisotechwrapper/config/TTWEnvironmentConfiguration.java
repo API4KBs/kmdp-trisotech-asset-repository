@@ -13,7 +13,7 @@
  */
 package edu.mayo.kmdp.trisotechwrapper.config;
 
-import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.apiEndpoint;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.toApiEndpoint;
 
 import edu.mayo.kmdp.ConfigProperties;
 import edu.mayo.kmdp.util.PropertiesUtil;
@@ -95,7 +95,7 @@ public class TTWEnvironmentConfiguration extends
     Optional<String> baseURL = tryGetTyped(TTWConfigParamsDef.BASE_URL);
     Optional<String> apiEndpoint = tryGetTyped(TTWConfigParamsDef.API_ENDPOINT);
     if (apiEndpoint.isEmpty() && baseURL.isPresent()) {
-      setTyped(TTWConfigParamsDef.API_ENDPOINT, apiEndpoint(baseURL.get()));
+      setTyped(TTWConfigParamsDef.API_ENDPOINT, toApiEndpoint(baseURL.get()));
     }
   }
 

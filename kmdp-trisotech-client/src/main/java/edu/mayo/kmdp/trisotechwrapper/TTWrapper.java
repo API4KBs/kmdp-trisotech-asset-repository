@@ -21,6 +21,8 @@ import edu.mayo.kmdp.trisotechwrapper.models.TrisotechPlace;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -334,14 +336,12 @@ public class TTWrapper implements TTAPIAdapter {
 
   @Override
   @Nonnull
-  public Map<String, TrisotechExecutionArtifact> listExecutionArtifacts(
+  public Map<String, List<TrisotechExecutionArtifact>> listExecutionArtifacts(
+      @Nonnull final String slBaseUrl,
       @Nonnull final Set<String> env) {
     try {
-      return webClient.getExecutionArtifacts(env).stream()
-          .collect(Collectors.toMap(
-              TrisotechExecutionArtifact::getName,
-              x -> x
-          ));
+      return webClient.getExecutionArtifacts(slBaseUrl, env).stream()
+          .collect(Collectors.groupingBy(TrisotechExecutionArtifact::getName));
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       return Collections.emptyMap();
@@ -351,15 +351,37 @@ public class TTWrapper implements TTAPIAdapter {
 
   @Override
   @Nonnull
-  public Optional<TrisotechExecutionArtifact> getExecutionArtifact(
+  public Stream<TrisotechExecutionArtifact> getExecutionArtifacts(
       @Nonnull final String serviceName,
       @Nonnull final SemanticModelInfo manifest) {
-    var execs = listExecutionArtifacts(getScopedExecEnvironments());
+    var slEnvMap = getScopedExecEnvironments();
+    return slEnvMap.entrySet().stream()
+        .flatMap(sl ->
+            getExecutionArtifacts(serviceName, manifest, sl.getKey(), sl.getValue()));
+  }
 
+  /**
+   * Retrieves the deployments of a given Service, across the configured environments of a given
+   * Service Library.
+   *
+   * @param serviceName the internal name of the service
+   * @param manifest    the artifact metadata of the model exposed as a service
+   * @param slBaseUrl the base URL of the Service Library (container)
+   * @param execEnvs the configured environments in that Service Library
+   * @return descriptors of the artifact deployments, if the service is deployed
+   */
+  private Stream<TrisotechExecutionArtifact> getExecutionArtifacts(
+      String serviceName,
+      SemanticModelInfo manifest,
+      String slBaseUrl,
+      Set<String> execEnvs) {
+    var execs = listExecutionArtifacts(slBaseUrl, execEnvs);
     // DMN executables - the whole model is mapped to a service
     return Optional.ofNullable(execs.get(manifest.serviceOwnerModel()))
         // BPMN executables - each process is mapped to a service
-        .or(() -> Optional.ofNullable(execs.get(serviceName)));
+        .or(() -> Optional.ofNullable(execs.get(serviceName)))
+        .orElseGet(Collections::emptyList)
+        .stream();
   }
 
 
@@ -457,12 +479,16 @@ public class TTWrapper implements TTAPIAdapter {
   /**
    * @return the configured Execution environments
    */
-  private Set<String> getScopedExecEnvironments() {
+  private Map<String, Set<String>> getScopedExecEnvironments() {
     var env = cfg.getTyped(TTWConfigParamsDef.SERVICE_LIBRARY_ENVIRONMENT, String.class);
-    return Optional.ofNullable(env).stream()
+    Map<String, Set<String>> envMap = new HashMap<>();
+    Optional.ofNullable(env).stream()
         .flatMap(e -> Arrays.stream(e.split(",")))
         .map(String::trim)
-        .collect(Collectors.toSet());
+        .map(s -> s.split("#"))
+        .forEach(ss -> envMap.computeIfAbsent(ss[0], k -> new HashSet<>())
+            .add(ss[1]));
+    return envMap;
   }
 
 }

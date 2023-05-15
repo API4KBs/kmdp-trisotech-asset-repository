@@ -25,6 +25,10 @@ public class TrisotechExecutionArtifact {
 
   private String version;
 
+  private String container;
+
+  private String environment;
+
   public String getName() {
     return name;
   }
@@ -103,5 +107,21 @@ public class TrisotechExecutionArtifact {
 
   public void setVersion(String version) {
     this.version = version;
+  }
+
+  public String getContainer() {
+    return container;
+  }
+
+  public void setContainer(String container) {
+    this.container = container;
+  }
+
+  public String getEnvironment() {
+    return environment;
+  }
+
+  public void setEnvironment(String environment) {
+    this.environment = environment;
   }
 }

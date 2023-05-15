@@ -43,12 +43,14 @@ import edu.mayo.kmdp.trisotechwrapper.components.redactors.Redactor;
 import edu.mayo.kmdp.trisotechwrapper.components.weavers.Weaver;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
-import edu.mayo.kmdp.trisotechwrapper.models.TrisotechExecutionArtifact;
+import edu.mayo.kmdp.util.StreamUtil;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
@@ -116,6 +118,7 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
    * Note that, at this point, the model document has already been standardized using the
    * {@link Redactor}, and (re)annotated using the {@link Weaver}
    *
+   * @param serviceAssetId the Asset ID of the Service
    * @param manifest the model's internal manifest
    * @param dox      the BPM+ model artifact to extract metadata from
    * @return a KnowledgeAsset surrogate with metadata for a Service defined within that model
@@ -145,9 +148,7 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
         .withFormalType(ReSTful_Service_Specification)
         .withLifecycle(lifecycle)
         // carriers
-        .withCarriers(
-            buildOpenAPICarrier(serviceAssetId, lifecycle, serviceName, manifest),
-            buildSwaggerUICarrier(serviceAssetId, lifecycle, serviceName, manifest))
+        .withCarriers(buildCarriers(serviceAssetId, lifecycle, serviceName, manifest))
         .withSurrogate(
             new KnowledgeArtifact()
                 .withArtifactId(defaultSurrogateId(serviceAssetId, Knowledge_Asset_Surrogate_2_0))
@@ -167,6 +168,41 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
                 .withRel(Depends_On)));
 
     return Optional.of(surrogate);
+  }
+
+  /**
+   * Builds the {@link KnowledgeArtifact} metadata records for the various forms of Service
+   * Artifacts. Supports OpenAPI specs and TT's native interactive forms.
+   * <p>
+   * Records are built only if the Service Artifacts can be located, after a Service has been
+   * deployed
+   *
+   * @param serviceAssetId the Asset ID of the Service
+   * @param lifecycle the Publication status of the Service
+   * @param serviceName the Name of the Service
+   * @param manifest the internal Asset metadata
+   * @return KnowledgeArtifact carrier metadata for the Service deployments
+   */
+  @Nonnull
+  private Collection<KnowledgeArtifact> buildCarriers(
+      @Nonnull final ResourceIdentifier serviceAssetId,
+      @Nonnull final Publication lifecycle,
+      @Nonnull final String serviceName,
+      @Nonnull final SemanticModelInfo manifest) {
+    return client.getExecutionArtifacts(serviceName, manifest)
+        .flatMap(exec -> {
+          var oas = ServiceLibraryHelper.tryResolveOpenApiSpec(exec)
+              .map(loc ->
+                  buildOpenAPICarrier(serviceAssetId, lifecycle, serviceName, manifest)
+                      .withLocator(loc));
+          var swg = ServiceLibraryHelper.tryResolveOpenApiUI(exec)
+              .map(loc ->
+                  buildSwaggerUICarrier(serviceAssetId, lifecycle, serviceName, manifest)
+                      .withLocator(loc));
+          return Stream.of(oas, swg);
+        })
+        .flatMap(StreamUtil::trimStream)
+        .collect(Collectors.toList());
   }
 
   /**
@@ -197,8 +233,6 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
    * @param serviceName the formal name of the Service (matches the Service Library)
    * @param manifest    the manifest of the model from which the service is built
    * @return the metadata for the service OpenAPI spec
-   * @see ServiceLibraryHelper#tryResolveOpenApiUI(TrisotechExecutionArtifact,
-   * TTWEnvironmentConfiguration)
    */
   @Nonnull
   private KnowledgeArtifact buildSwaggerUICarrier(
@@ -206,7 +240,7 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
       @Nonnull final Publication lifecycle,
       @Nonnull final String serviceName,
       @Nonnull final SemanticModelInfo manifest) {
-    var ka = new KnowledgeArtifact()
+    return new KnowledgeArtifact()
         .withArtifactId(defaultArtifactId(assetId, HTML))
         .withName(serviceName)
         .withLifecycle(lifecycle)
@@ -214,10 +248,6 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
         .withExpressionCategory(Interactive_Resource)
         .withRepresentation(rep(HTML))
         .withMimeType(codedRep(HTML));
-    client.getExecutionArtifact(serviceName, manifest)
-        .flatMap(exec -> ServiceLibraryHelper.tryResolveOpenApiUI(exec, config))
-        .ifPresent(ka::withLocator);
-    return ka;
   }
 
   /**
@@ -233,8 +263,6 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
    * @param serviceName the formal name of the Service (matches the Service Library)
    * @param manifest    the manifest of the model from which the service is built
    * @return the metadata for the service OpenAPI spec
-   * @see ServiceLibraryHelper#tryResolveOpenApiSpec(TrisotechExecutionArtifact,
-   * TTWEnvironmentConfiguration)
    */
   @Nonnull
   private KnowledgeArtifact buildOpenAPICarrier(
@@ -244,8 +272,7 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
       @Nonnull final SemanticModelInfo manifest) {
     //FIXME TT actually uses OAS3.x (3.0.1), but that needs to be registered first
     var synRep = rep(OpenAPI_2_X, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
-
-    var ka = new KnowledgeArtifact()
+    return new KnowledgeArtifact()
         .withArtifactId(defaultArtifactId(assetId, OpenAPI_2_X))
         .withName(serviceName)
         .withLifecycle(lifecycle)
@@ -253,10 +280,6 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
         .withExpressionCategory(Software)
         .withRepresentation(synRep)
         .withMimeType(OPENAPI_JSON.getMimeType());
-    client.getExecutionArtifact(serviceName, manifest)
-        .flatMap(exec -> ServiceLibraryHelper.tryResolveOpenApiSpec(exec, config))
-        .ifPresent(ka::withLocator);
-    return ka;
   }
 
   /**

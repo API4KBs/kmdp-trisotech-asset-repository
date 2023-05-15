@@ -13,6 +13,7 @@ import static edu.mayo.kmdp.trisotechwrapper.components.graph.TTGraphTerms.STATE
 import static edu.mayo.kmdp.trisotechwrapper.components.graph.TTGraphTerms.UPDATED;
 import static edu.mayo.kmdp.trisotechwrapper.components.graph.TTGraphTerms.UPDATER;
 import static edu.mayo.kmdp.trisotechwrapper.components.graph.TTGraphTerms.VERSION;
+import static edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants.toApiEndpoint;
 import static edu.mayo.kmdp.util.DateTimeUtil.parseDateTime;
 import static edu.mayo.kmdp.util.DateTimeUtil.toLocalDate;
 import static java.lang.String.format;
@@ -24,7 +25,6 @@ import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 
 import com.github.zafarkhaja.semver.Version;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
-import edu.mayo.kmdp.trisotechwrapper.config.TTApiConstants;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
@@ -504,7 +504,7 @@ public class PlacePathIndex {
     manifest.setPlaceId(focusPlace.getId());
     manifest.setPlaceName(focusPlace.getName());
 
-    manifest.initUrl(TTApiConstants.apiEndpoint(cfg.getTyped(TTWConfigParamsDef.BASE_URL)));
+    manifest.initUrl(toApiEndpoint(cfg.getTyped(TTWConfigParamsDef.BASE_URL)));
 
     if (!manifest.hasAssetId() && allowsAnonymous) {
       var assetId =

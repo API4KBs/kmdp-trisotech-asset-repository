@@ -74,12 +74,14 @@ public interface TTDigitalEnterpriseServerClient {
    * <p>
    * TODO: the ServiceLibrary(s) should be configurable
    *
-   * @param execEnv the execution environment
-   * @return metadata about the services deployed in that environment
+   * @param baseUrl the base URL of the Service Library hosting the environments
+   * @param execEnvs the execution environments
+   * @return metadata about the services deployed in that Service Library's environments
    */
   @Nonnull
   List<TrisotechExecutionArtifact> getExecutionArtifacts(
-      @Nonnull final Set<String> execEnv);
+      @Nonnull final String baseUrl,
+      @Nonnull final Set<String> execEnvs);
 
   /**
    * Uploads a Model data to a given Place in the DES server

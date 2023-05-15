@@ -230,25 +230,25 @@ public interface TTAPIAdapter {
    * Returns a collection of the Execution artifacts (Decision / Process Services) deployed in the
    * give execution environment
    *
+   * @param slBaseUrl the base URL of the Service Library hosting the exec environment
    * @param env the ID of the execution environment
    * @return a collection of {@link TrisotechExecutionArtifact}, indexed by ID
    */
   @Nonnull
-  Map<String, TrisotechExecutionArtifact> listExecutionArtifacts(
+  Map<String, List<TrisotechExecutionArtifact>> listExecutionArtifacts(
+      @Nonnull final String slBaseUrl,
       @Nonnull final Set<String> env);
 
   /**
-   * Determines whether a Service is deployed to an execution environment
-   * <p>
-   * Note that this implementation targets one specific execution environment, which is configurable
-   * but not at runtime. FUTURE?
+   * Retrieves the deployments of a given Service, across the configured Service Libraries
    *
    * @param serviceName the internal name of the service
    * @param manifest    the artifact metadata of the model exposed as a service
-   * @return a descriptor of the deployed artifact, if the service is deployed
+   * @return descriptors of the artifact deployments, if the service is deployed
+   * @see TTWConfigParamsDef#SERVICE_LIBRARY_ENVIRONMENT
    */
   @Nonnull
-  Optional<TrisotechExecutionArtifact> getExecutionArtifact(
+  Stream<TrisotechExecutionArtifact> getExecutionArtifacts(
       @Nonnull final String serviceName,
       @Nonnull final SemanticModelInfo manifest);
 

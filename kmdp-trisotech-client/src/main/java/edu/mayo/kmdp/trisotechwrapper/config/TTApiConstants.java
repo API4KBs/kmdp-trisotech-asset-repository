@@ -71,7 +71,7 @@ public final class TTApiConstants {
    * @param baseURL the DES server base URL
    * @return the DES API endpoint
    */
-  public static String apiEndpoint(String baseURL) {
+  public static String toApiEndpoint(String baseURL) {
     return baseURL
         + (baseURL.endsWith("/") ? "" : "/")
         + "publicapi/";

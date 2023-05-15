@@ -111,6 +111,7 @@ class PlaceScopeHelperTest {
     @Nonnull
     @Override
     public List<TrisotechExecutionArtifact> getExecutionArtifacts(
+        @Nonnull String baseUrl,
         @Nonnull Set<String> execEnv) {
       throw new UnsupportedOperationException();
     }

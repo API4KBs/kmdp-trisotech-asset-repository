@@ -1,5 +1,6 @@
 package edu.mayo.kmdp.trisotechwrapper.components.operators;
 
+import edu.mayo.kmdp.util.Util;
 import edu.mayo.kmdp.util.XPathUtil;
 import java.net.URI;
 import java.util.Optional;
@@ -13,7 +14,7 @@ import org.w3c.dom.Document;
 public final class KEMSelectorHelper {
 
   private static final XPathUtil xPath = new XPathUtil();
-  private static final String CONCEPT_REF_PATH = "//mvf:entry[mvf:reference = '%s']/mvf:uri/text()";
+  private static final String CONCEPT_REF_PATH = "//mvf:entry[mvf:reference = '%s']/mvf:externalReference/text()";
 
   private KEMSelectorHelper() {
     // functions only
@@ -31,7 +32,9 @@ public final class KEMSelectorHelper {
       @Nonnull final Document dox,
       @Nonnull final URI kemURI) {
     var cid = xPath.xString(dox, String.format(CONCEPT_REF_PATH, kemURI));
-    return Optional.of(URI.create(cid));
+    return Optional.ofNullable(cid)
+        .filter(Util::isNotEmpty)
+        .map(URI::create);
   }
 
 }

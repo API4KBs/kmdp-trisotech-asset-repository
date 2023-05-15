@@ -215,6 +215,12 @@ public class TTRedactor implements Redactor {
             element.getParentNode().removeChild(element)
         );
 
+    asElementStream(dox.getElementsByTagNameNS(
+        TTConstants.TT_METADATA_NS, TTConstants.TT_GRAPH_TERM))
+        .forEach(element ->
+            element.getParentNode().removeChild(element)
+        );
+
   }
 
   /**

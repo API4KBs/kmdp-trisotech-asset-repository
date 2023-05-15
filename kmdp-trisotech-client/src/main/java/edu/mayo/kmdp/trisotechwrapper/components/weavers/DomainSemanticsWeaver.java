@@ -238,10 +238,11 @@ public class DomainSemanticsWeaver implements Weaver {
    * object) where the subject is the asset, the object is the annotation concept, and the property
    * is an (optional) relationship that connects the asset to the concept.
    *
-   * @param el an annotation Element to be rewritten
-   * @param resolver function used to look up the externally referenced document
-   * @param mapper function to look up the concept ID (fragment) to be woven
-   * @param needsRelationship if true, will only weave a concept if an explicit relationship can be determined
+   * @param el                an annotation Element to be rewritten
+   * @param resolver          function used to look up the externally referenced document
+   * @param mapper            function to look up the concept ID (fragment) to be woven
+   * @param needsRelationship if true, will only weave a concept if an explicit relationship can be
+   *                          determined
    */
   private void weaveElementMetadata(
       @Nonnull final Element el,
@@ -441,6 +442,8 @@ public class DomainSemanticsWeaver implements Weaver {
           return Captures;
         case "semantic:milestone":
           return Is_About;
+        case "triso:graphTerm":
+          return null;
         default:
       }
     }
@@ -568,7 +571,9 @@ public class DomainSemanticsWeaver implements Weaver {
       Function<String, Optional<Document>> resolver,
       BiFunction<Document, URI, Optional<URI>> mapper) {
     // need to verify any URI values are valid -- no trisotech
-    var fragmentUri = URI.create(el.getAttribute("uri"));
+    var fragmentUri = URI.create(el.getAttribute("uri")
+        .replace(TTConstants.TT_BASE_MODEL_URI, names.getArtifactNamespace().toString())
+        .replace("#_", "#"));
     var modelURI = el.getAttribute("modelURI");
     var rewritten = resolver.apply(modelURI)
         .flatMap(dox -> mapper.apply(dox, fragmentUri))

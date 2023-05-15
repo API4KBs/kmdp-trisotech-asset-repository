@@ -129,6 +129,11 @@ public class TTConstants {
   public static final String TT_COMMENTS = "comments";
 
   /**
+   * TT's link to KEM Terms
+   */
+  public static final String TT_GRAPH_TERM = "graphTerm";
+
+  /**
    * CMMN XML extension element for input data bindings
    */
   public static final String TT_INPUT_BINDINGS = "dataInputBindings";

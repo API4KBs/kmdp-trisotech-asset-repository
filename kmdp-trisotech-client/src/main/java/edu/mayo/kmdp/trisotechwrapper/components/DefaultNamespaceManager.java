@@ -58,9 +58,14 @@ public class DefaultNamespaceManager implements NamespaceManager {
   @Override
   @Nonnull
   public Optional<ResourceIdentifier> modelToAssetId(
-      @Nonnull final SemanticModelInfo info) {
+      @Nonnull final SemanticModelInfo info,
+      @Nullable final UUID seriesId) {
     return Optional.ofNullable(info.getAssetKey())
-        .map(this::assetKeyToId);
+        .filter(id -> seriesId == null || id.getUuid().equals(seriesId) )
+        .map(this::assetKeyToId)
+        .or(() -> Optional.ofNullable(info.getServiceKey())
+            .filter(id -> seriesId == null || id.getUuid().equals(seriesId) )
+            .map(this::assetKeyToId));
   }
 
   @Override

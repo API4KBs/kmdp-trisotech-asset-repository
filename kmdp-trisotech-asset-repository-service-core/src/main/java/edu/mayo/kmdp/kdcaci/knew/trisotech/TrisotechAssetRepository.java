@@ -346,7 +346,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             () -> "No Asset found for the given ID");
       }
 
-      var greatestAssetId = names.modelToAssetId(models.get(0))
+      var greatestAssetId = names.modelToAssetId(models.get(0), assetId)
           .orElseGet(() -> newId(assetId, cfg.getTyped(DEFAULT_VERSION_TAG, String.class)));
       return Answer.ofTry(getSurrogateFromManifests(
           greatestAssetId,
@@ -554,7 +554,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     try {
       var carrier = client.getMetadataByGreatestAssetId(assetId)
           .findFirst()
-          .flatMap(names::modelToAssetId)
+          .flatMap(info -> names.modelToAssetId(info, assetId))
           .map(vid ->
               getKnowledgeAssetVersionCanonicalCarrier(vid.getUuid(), vid.getVersionTag(),
                   xAccept))
@@ -819,7 +819,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   @Nonnull
   private Stream<Pointer> toAssetPointer(
       @Nonnull final SemanticModelInfo info) {
-    return names.modelToAssetId(info).stream()
+    return names.modelToAssetId(info, null).stream()
         .map(assetId -> assetId.toPointer()
             .withType(
                 getRepresentativeType(

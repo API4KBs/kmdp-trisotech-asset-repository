@@ -48,12 +48,18 @@ public interface NamespaceManager {
       @Nonnull final KeyIdentifier assetKey);
 
   /**
+   * Gets a versioned Asset ID from a manifest
+   *
+   * Uses an optional series ID to distinguish between model assets and service assets
+   *
    * @param info the Model manifest, which may contain the Asset ID asserted at modeling time
+   * @param seriesId the UUID of the resource series
    * @return the Asset ID associated to a given Model, if any
    */
   @Nonnull
   Optional<ResourceIdentifier> modelToAssetId(
-      @Nonnull final SemanticModelInfo info);
+      @Nonnull final SemanticModelInfo info,
+      @Nullable final UUID seriesId);
 
   /**
    * @param info the Model manifest, which contains the original Model (Artifact) ID

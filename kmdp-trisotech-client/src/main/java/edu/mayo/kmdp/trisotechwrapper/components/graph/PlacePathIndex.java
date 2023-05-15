@@ -412,7 +412,7 @@ public class PlacePathIndex {
    * such. Services originate as Model fragments, and get manifested via their API spec in the
    * Service Library, which is not indexable from the TT DES graph
    *
-   * @param sol            the service asset semantic metadata, as queried from the DES KG
+   * @param sol             the service asset semantic metadata, as queried from the DES KG
    * @param allowsAnonymous if true, will mint an asset ID for services that do not have one
    * @param cfg             the environment configuration
    */
@@ -472,7 +472,7 @@ public class PlacePathIndex {
    * Uses the query bound variables to initialize the fields of the manifest object. Generates an
    * asset ID if none is specified, and ANONYMOUS_ASSETS_FLAG is set.
    *
-   * @param sol            the query result, as a set of Bindings
+   * @param sol             the query result, as a set of Bindings
    * @param focusPlace      the place where the model originated
    * @param allowsAnonymous if true, will mint an asset ID for models that do not have one
    * @param cfg             the environment configuration
@@ -508,8 +508,10 @@ public class PlacePathIndex {
 
     if (!manifest.hasAssetId() && allowsAnonymous) {
       var assetId =
-          mintAssetIdForAnonymous(cfg.getTyped(TTWConfigParamsDef.ASSET_NAMESPACE),
+          mintAssetIdForAnonymous(
+              cfg.getTyped(TTWConfigParamsDef.ASSET_NAMESPACE),
               manifest.getId(),
+              manifest.getState(),
               manifest.getUpdated());
       logger.trace("Assigned asset ID {} to model {}", assetId, manifest.getId());
       manifest.assertAssetId(assetId.getVersionId().toString());
@@ -524,7 +526,7 @@ public class PlacePathIndex {
    * Uses the query bound variables to initialize the fields of the manifest object. Generates a
    * service asset ID if none is specified, and ANONYMOUS_ASSETS_FLAG is set.
    *
-   * @param sol            the query result, as a set of Bindings
+   * @param sol             the query result, as a set of Bindings
    * @param allowsAnonymous if true, will mint an asset ID for models that do not have one
    * @param cfg             the environment configuration
    * @return a manifest for the model described by the query results
@@ -537,6 +539,7 @@ public class PlacePathIndex {
 
     SemanticModelInfo manifest = new SemanticModelInfo();
     manifest.addResource(MODEL, sol);
+    manifest.addLiteral(VERSION, sol);
     manifest.addLiteral(SERVICE_ID, sol);
     manifest.addLiteral(SERVICE_NAME, sol);
     manifest.addResource(SERVICE_FRAGMENT, sol);
@@ -546,8 +549,10 @@ public class PlacePathIndex {
 
     if (manifest.getServiceFragmentId() != null && !manifest.hasAssetId() && allowsAnonymous) {
       var serviceAssetId =
-          mintAssetIdForAnonymous(cfg.getTyped(TTWConfigParamsDef.ASSET_NAMESPACE),
+          mintAssetIdForAnonymous(
+              cfg.getTyped(TTWConfigParamsDef.ASSET_NAMESPACE),
               manifest.getServiceFragmentId(),
+              manifest.getState(),
               manifest.getUpdated());
       logger.trace("Assigned Service asset ID {} to service {} in model {}",
           serviceAssetId, manifest.getServiceFragmentId(), manifest.getId());
@@ -562,18 +567,22 @@ public class PlacePathIndex {
    * Generates a predictable asset ID for the knowledge Asset implicitly carried by a model, as a
    * knowledge artifact.
    * <p>
-   * Re-hashes the UUID of the model to obtain an asset UUID Uses a CalVer SNAPSHOT version tag,
-   * based on the model last update date, approximated to the Year/Month - assuming models are
-   * up-to-date, and updated around the time the knowledge is revised
+   * Anonymous Model Assets are versioned as follows: re-hashes the UUID of the model to obtain an
+   * asset UUID Uses a CalVer version tag, based on the model last update date, approximated to the
+   * Year/Month - assuming models are up-to-date, and updated around the time the knowledge is
+   * revised. Adds a SNAPSHOT tag if the model has never been published, even as a draft.
    *
-   * @param elementId   A model ID, or a Decision Service ID, or a BPMN TODO?
-   * @param lastUpdated the date when the element's owner model was last updated
+   * @param assetNamespace the Asset Namespace
+   * @param elementId      A model ID, or a Decision Service ID, or a BPMN TODO?
+   * @param state          the publication state
+   * @param lastUpdated    the date when the element's owner model was last updated
    * @return a candidate Asset ID
    */
   @Nonnull
   public static ResourceIdentifier mintAssetIdForAnonymous(
-      @Nonnull final URI baseUri,
+      @Nonnull final URI assetNamespace,
       @Nonnull final String elementId,
+      @Nullable final String state,
       @Nullable final String lastUpdated) {
     var localId = NameUtils.getTrailingPart(elementId);
     if (Util.isEmpty(localId)) {
@@ -585,13 +594,17 @@ public class PlacePathIndex {
     String versionTag;
     if (lastUpdated != null) {
       var lastUpdate = toLocalDate(parseDateTime(lastUpdated)).atStartOfDay();
-      versionTag = format("%04d.%02d.0-SNAPSHOT", lastUpdate.getYear(),
+      versionTag = format("%d.%d.0",
+          lastUpdate.getYear(),
           lastUpdate.getMonthValue());
+      if (state == null) {
+        versionTag = versionTag + "-SNAPSHOT";
+      }
     } else {
       versionTag = IdentifierConstants.VERSION_ZERO_SNAPSHOT;
     }
 
-    return SemanticIdentifier.newId(baseUri, guid, versionTag);
+    return SemanticIdentifier.newId(assetNamespace, guid, versionTag);
   }
 
   /* ---------------------------------------------------------------------------------------- */

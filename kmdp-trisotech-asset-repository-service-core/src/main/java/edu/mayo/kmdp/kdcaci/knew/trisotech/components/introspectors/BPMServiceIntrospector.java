@@ -241,7 +241,7 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
       @Nonnull final String serviceName,
       @Nonnull final SemanticModelInfo manifest) {
     return new KnowledgeArtifact()
-        .withArtifactId(defaultArtifactId(assetId, HTML))
+        .withArtifactId(defaultArtifactId(assetId, HTML, manifest.getVersion()))
         .withName(serviceName)
         .withLifecycle(lifecycle)
         .withLocalization(English)
@@ -273,7 +273,7 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
     //FIXME TT actually uses OAS3.x (3.0.1), but that needs to be registered first
     var synRep = rep(OpenAPI_2_X, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
     return new KnowledgeArtifact()
-        .withArtifactId(defaultArtifactId(assetId, OpenAPI_2_X))
+        .withArtifactId(defaultArtifactId(assetId, OpenAPI_2_X, manifest.getVersion()))
         .withName(serviceName)
         .withLifecycle(lifecycle)
         .withLocalization(English)
@@ -374,7 +374,7 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
    * @param assetId the target Asset ID
    * @return an Element, if the Element's ID, when used to generate an anonymous Service Asset ID,
    * matches the given assetId
-   * @see PlacePathIndex#mintAssetIdForAnonymous(URI, String, String)
+   * @see PlacePathIndex#mintAssetIdForAnonymous(URI, String, String, String)
    */
   @Nonnull
   private Optional<Element> findAnonymousMatch(
@@ -384,7 +384,10 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
     return asElementStream(xPathUtil.xList(dox, xpath))
         .filter(e -> {
           var anon = mintAssetIdForAnonymous(
-              config.getTyped(TTWConfigParamsDef.ASSET_NAMESPACE), e.getAttribute("id"), null);
+              config.getTyped(TTWConfigParamsDef.ASSET_NAMESPACE),
+              e.getAttribute("id"),
+              null,
+              null);
           return anon.getUuid().equals(assetId.getUuid());
         }).findFirst();
   }

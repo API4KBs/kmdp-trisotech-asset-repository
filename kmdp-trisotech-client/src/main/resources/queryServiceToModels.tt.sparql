@@ -10,7 +10,7 @@ PREFIX dmn:       <http://www.trisotech.com/graph/1.0/decision/element#>
 PREFIX bpmn:      <http://www.trisotech.com/graph/1.0/workflow/element#>
 PREFIX assetType: <https://www.omg.org/spec/API4KP/20200801/taxonomy/KnowledgeAssetType#>
 
-SELECT ?model ?serviceId ?assetType ?artifactName ?serviceName ?serviceNode
+SELECT ?model ?version ?serviceId ?assetType ?artifactName ?serviceName ?serviceNode
 FROM NAMED ?
 WHERE {
 GRAPH ? {
@@ -37,6 +37,8 @@ GRAPH ? {
         ?serviceNode graphrel:customAttribute ?customAttribute2 .
     }
 
+    OPTIONAL { ?model graphrel:version ?version } .
+
     BIND ( assetType:15cac118-853d-32f1-b70a-3d99328eeda2 AS ?assetType ) .
     }
 UNION
@@ -57,8 +59,10 @@ UNION
     ?serviceNode graphrel:owner* ?model .
     ?serviceNode rdfs:label ?serviceName .
 
+    OPTIONAL { ?model graphrel:version ?version } .
+
     BIND ( assetType:15cac118-853d-32f1-b70a-3d99328eeda2 AS ?assetType ) .
    }
  }
 }
-GROUP BY ?model ?serviceId ?assetType ?artifactName ?serviceName ?serviceNode
+GROUP BY ?model ?version ?serviceId ?assetType ?artifactName ?serviceName ?serviceNode

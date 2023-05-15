@@ -52,6 +52,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Formal_Ontology;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Lexicon;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Protocol;
+import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.ReSTful_Service_Specification;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.asEnum;
@@ -482,6 +483,9 @@ public class BPMModelIntrospector implements ModelIntrospector {
     }
     if (isA(formalType, Lexicon) || isA(formalType, Formal_Ontology)) {
       return Terminology_Ontology_And_Assertional_KBs;
+    }
+    if (isA(formalType, ReSTful_Service_Specification)) {
+      return Rules_Policies_And_Guidelines;
     }
     throw new UnsupportedOperationException(
         "Unable to infer category for asset type " + formalType.getName());

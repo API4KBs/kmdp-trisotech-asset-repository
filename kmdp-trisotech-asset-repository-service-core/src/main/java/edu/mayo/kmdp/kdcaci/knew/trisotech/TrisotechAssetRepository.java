@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper.negotiateHTML;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper.negotiateRDF;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.dependencyRel;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDeclaredAssetTypes;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultAssetType;
@@ -63,6 +64,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Protocol;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.ReSTful_Service_Specification;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.KnowledgeAssetTypeSeries.Semantic_Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
@@ -71,10 +73,10 @@ import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRe
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
 
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper;
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DefaultMetadataIntrospector;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.MetadataIntrospector;
 import edu.mayo.kmdp.language.parsers.rdf.JenaRdfParser;
+import edu.mayo.kmdp.language.parsers.surrogate.v2.Surrogate2Parser;
 import edu.mayo.kmdp.ops.CompositeFabricator;
 import edu.mayo.kmdp.ops.EphemeralAssetFabricator;
 import edu.mayo.kmdp.ops.tranx.bpm.PlanDefinitionEphemeralAssetFabricator;
@@ -222,8 +224,18 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   @Nonnull
   protected final NamespaceManager names;
 
+  /**
+   * The fabricator that builds Artifacts by trans-representation of other Artifacts, on demand
+   */
   @Nonnull
   protected final EphemeralAssetFabricator fabricator;
+
+
+  /**
+   * The par/serializer used to handle {@link KnowledgeAsset} records
+   */
+  @Nonnull
+  protected final Surrogate2Parser surrogateParser;
 
   @Autowired
   public TrisotechAssetRepository(
@@ -262,6 +274,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     this.fabricator = fabricator != null
         ? fabricator
         : defaultFabricators(this.names, this);
+
+    this.surrogateParser = new Surrogate2Parser();
   }
 
   /**
@@ -334,7 +348,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       @Nullable final String xAccept) {
     try {
       // need the modelId of the model in order to query for modelInfo
-      if (negotiateHTML(xAccept) && hrefBuilder != null) {
+      if ((negotiateHTML(xAccept) || negotiateRDF(xAccept)) && hrefBuilder != null) {
         return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
       }
 
@@ -377,7 +391,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       @Nonnull final String versionTag,
       @Nullable final String xAccept) {
     try {
-      if (negotiateHTML(xAccept) && hrefBuilder != null) {
+      if ((negotiateHTML(xAccept) || negotiateRDF(xAccept)) && hrefBuilder != null) {
         return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
       }
 
@@ -532,13 +546,40 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
             .map(vtag -> getKnowledgeAssetVersionCanonicalSurrogate(assetId, vtag, xAccept))
             .orElseGet(Answer::notFound);
       }
-      return negotiateHTML(xAccept) && negotiator != null
-          ? surr.flatMap(negotiator::toHtml)
-          : surr;
+
+      Answer<KnowledgeCarrier> ans;
+      if (negotiateHTML(xAccept) && negotiator != null) {
+        ans = surr.flatMap(negotiator::toHtml);
+      } else if (negotiateRDF(xAccept) && negotiator != null) {
+        ans = surr.flatMap(s -> negotiator.toRdf(s,xAccept));
+      } else {
+        ans = surr.flatMap(this::encodeCanonicalSurrogate);
+      }
+      return ans;
     } catch (Exception e) {
       return Answer.failed(e);
     }
   }
+
+
+  /**
+   * Retrieves the canonical Surrogate for the greatest version of an Asset, raw
+   * <p>
+   * Supports minimal content negotiation between the default format, and its basic HTML
+   * counterpart
+   *
+   * @param assetId the Asset ID
+   * @param xAccept the generalized mime type
+   * @return the {@link KnowledgeAsset} Surrogate, as a byte array
+   */
+  @Override
+  public Answer<byte[]> getKnowledgeAssetCanonicalSurrogateContent(
+      @Nonnull final UUID assetId,
+      @Nullable String xAccept) {
+    return getKnowledgeAssetCanonicalSurrogate(assetId, xAccept)
+        .flatOpt(AbstractCarrier::asBinary);
+  }
+
 
   /**
    * Retrieves the canonical Carrier Artifact for the greatest version of an Asset
@@ -612,22 +653,40 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       if (surr.isFailure()) {
         surr = fabricator.fabricateSurrogate(assetId, versionTag);
       }
-      return negotiateHTML(xAccept) && negotiator != null
-          ? surr.flatMap(negotiator::toHtml)
-          : surr;
+
+      Answer<KnowledgeCarrier> ans;
+      if (negotiateHTML(xAccept) && negotiator != null) {
+        ans = surr.flatMap(negotiator::toHtml);
+      } else if (negotiateRDF(xAccept) && negotiator != null) {
+        ans = surr.flatMap(s -> negotiator.toRdf(s,xAccept));
+      } else {
+        ans = surr.flatMap(this::encodeCanonicalSurrogate);
+      }
+      return ans;
     } catch (Exception e) {
       return Answer.failed(e);
     }
   }
 
 
-  URI getAssetType(UUID assetId) {
-    Supplier<KnowledgeAssetType> supplier = () -> Decision_Model;
-    return client.getMetadataByGreatestAssetId(assetId)
-        .flatMap(info -> BPMMetadataHelper.getDeclaredAssetTypes(info, supplier).stream())
-        .findFirst()
-        .orElseGet(supplier)
-        .getReferentId();
+  /**
+   * Retrieves the canonical Surrogate for the given version of an Asset, raw
+   * <p>
+   * Supports minimal content negotiation between the default format, and its basic HTML
+   * counterpart
+   *
+   * @param assetId    the Asset ID
+   * @param versionTag the Asset version
+   * @param xAccept    the generalized mime type
+   * @return the {@link KnowledgeAsset} Surrogate, as a byte arary
+   */
+  @Override
+  public Answer<byte[]> getKnowledgeAssetVersionCanonicalSurrogateContent(
+      @Nonnull final UUID assetId,
+      @Nonnull final String versionTag,
+      @Nullable String xAccept) {
+    return getKnowledgeAssetVersionCanonicalSurrogate(assetId, versionTag, xAccept)
+        .flatOpt(AbstractCarrier::asBinary);
   }
 
 
@@ -694,7 +753,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
           .map(comp -> getKnowledgeAssetVersion(comp.getUuid(),
               comp.getVersionTag(),
               xAccept)
-              .map(SurrogateHelper::carry))
+              .map(SurrogateHelper::carry)
+              .flatMap(this::encodeCanonicalSurrogate))
           .collect(Answer.toSet());
 
       return componentSurrogates
@@ -1119,6 +1179,25 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
 
     // extract data from Trisotech format to OMG format
     return extractor.introspect(assetId, carriers);
+  }
+
+  /**
+   * Serializes a canonical Knowledge Asset Surrogate into binary form, and returns it wrapped in a
+   * KnowledgeCarrier
+   *
+   * @param assetSurrogate A KnowledgeAsset surrogate, wrapped
+   * @return A KnowledgeCarrier that wraps the binary encoding of that surrogate
+   */
+  @Nonnull
+  protected Answer<KnowledgeCarrier> encodeCanonicalSurrogate(
+      @Nonnull final KnowledgeCarrier assetSurrogate) {
+
+    return surrogateParser.applyLower(
+        assetSurrogate,
+        Encoded_Knowledge_Expression,
+        codedRep(Knowledge_Asset_Surrogate_2_0, JSON, defaultCharset(), Encodings.DEFAULT),
+        null
+    );
   }
 
 

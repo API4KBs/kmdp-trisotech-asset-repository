@@ -7,13 +7,20 @@ import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
 import static org.omg.spec.api4kp._20200801.Answer.failed;
 import static org.omg.spec.api4kp._20200801.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
 import static org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder.decodeAll;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.RDF_XML_Syntax;
+import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
 
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.translators.MCBKSurrogateV2ToRDFTranslator;
 import edu.mayo.kmdp.language.translators.surrogate.v2.SurrogateV2toHTMLTranslator;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.Properties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,6 +56,8 @@ public class TTContentNegotiationHelper {
    */
   private final _applyTransrepresent htmlTranslator = new SurrogateV2toHTMLTranslator();
 
+  private final _applyTransrepresent rdfTranslator = new MCBKSurrogateV2ToRDFTranslator();
+
   private final TransxionApiInternal translator;
 
 
@@ -75,6 +84,22 @@ public class TTContentNegotiationHelper {
         .isPresent();
   }
 
+  /**
+   * Predicate
+   * <p>
+   * Determines whether an X-Accept's first representation preference is RDF+XML
+   *
+   * @param xAccept a negotiation preference, usually client-provided
+   * @return true if RDF+XML is the first preference
+   */
+  public static boolean negotiateRDF(String xAccept) {
+    return "application/rdf+xml".equals(xAccept)
+        || "text/turtle".equals(xAccept)
+        || decodeAll(xAccept).stream().findFirst()
+        .filter(wr -> OWL_2.sameAs(wr.getRep().getLanguage()))
+        .isPresent();
+  }
+
 
   /**
    * Converts a Surrogate, wrapped in a KnowledgeCarrier, to its HTML variant
@@ -90,6 +115,29 @@ public class TTContentNegotiationHelper {
     return htmlTranslator.applyTransrepresent(
         surrogateCarrier,
         codedRep(HTML),
+        configureRedirects());
+  }
+
+  /**
+   * Converts a Surrogate, wrapped in a KnowledgeCarrier, to its RDF variant
+   *
+   * @param surrogateCarrier the KnowledgeAsset, in a KnowledgeCarrier
+   * @return the KnowledgeAsset RDF variant, in a KnowledgeCarrier, wrapped by Answer
+   */
+  public Answer<KnowledgeCarrier> toRdf(
+      @Nonnull final KnowledgeCarrier surrogateCarrier,
+      @Nullable final String xAccept) {
+    String codedRep;
+    if ("application/rdf+xml".equals(xAccept)) {
+      codedRep = codedRep(OWL_2, RDF_XML_Syntax, XML_1_1, Charset.defaultCharset());
+    } else if ("text/turtle".equals(xAccept)) {
+      codedRep = codedRep(OWL_2, Turtle, TXT, Charset.defaultCharset());
+    } else {
+      throw new IllegalStateException("Not possible");
+    }
+    return rdfTranslator.applyTransrepresent(
+        surrogateCarrier,
+        codedRep,
         configureRedirects());
   }
 

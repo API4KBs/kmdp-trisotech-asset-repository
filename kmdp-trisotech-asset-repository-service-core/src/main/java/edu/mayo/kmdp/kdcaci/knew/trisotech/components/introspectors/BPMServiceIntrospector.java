@@ -292,7 +292,7 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
   @Nonnull
   private Optional<ResourceIdentifier> getServiceModelDependency(
       @Nonnull final SemanticModelInfo manifest) {
-    return names.modelToAssetId(manifest, manifest.getServiceKey().getUuid());
+    return names.modelToAssetId(manifest, manifest.getAssetKey().getUuid());
   }
 
 

@@ -31,7 +31,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
-import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OpenAPI_2_X;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OpenAPI_3_X;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Draft;
 
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
@@ -270,10 +270,9 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
       @Nonnull final Publication lifecycle,
       @Nonnull final String serviceName,
       @Nonnull final SemanticModelInfo manifest) {
-    //FIXME TT actually uses OAS3.x (3.0.1), but that needs to be registered first
-    var synRep = rep(OpenAPI_2_X, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
+    var synRep = rep(OpenAPI_3_X, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
     return new KnowledgeArtifact()
-        .withArtifactId(defaultArtifactId(assetId, OpenAPI_2_X, manifest.getVersion()))
+        .withArtifactId(defaultArtifactId(assetId, OpenAPI_3_X, manifest.getVersion()))
         .withName(serviceName)
         .withLifecycle(lifecycle)
         .withLocalization(English)
@@ -292,7 +291,8 @@ public class BPMServiceIntrospector implements ServiceIntrospector {
   @Nonnull
   private Optional<ResourceIdentifier> getServiceModelDependency(
       @Nonnull final SemanticModelInfo manifest) {
-    return names.modelToAssetId(manifest, manifest.getAssetKey().getUuid());
+    return Optional.ofNullable(manifest.getAssetKey())
+        .flatMap(key -> names.modelToAssetId(manifest, key.getUuid()));
   }
 
 

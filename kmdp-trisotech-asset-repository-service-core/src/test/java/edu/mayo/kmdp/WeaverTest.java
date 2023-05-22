@@ -563,7 +563,7 @@ class WeaverTest {
       var parser = new LanguageDeSerializer(List.of(new CMMN11Parser(List.of(new DMN12Parser()))));
       var cmmn = parser.applyLift(
           AbstractCarrier.of(dox, rep(CMMN_1_1, XML_1_1)),
-              Abstract_Knowledge_Expression,
+              Abstract_Knowledge_Expression.getTag(),
               codedRep(CMMN_1_1),
               null)
           .flatOpt(kc -> kc.as(TDefinitions.class))
@@ -674,7 +674,7 @@ class WeaverTest {
       var parser = new LanguageDeSerializer(List.of(new CMMN11Parser(List.of(new DMN12Parser()))));
       var cmmn = parser.applyLift(
               AbstractCarrier.of(dox, rep(CMMN_1_1, XML_1_1)),
-              Abstract_Knowledge_Expression,
+              Abstract_Knowledge_Expression.getTag(),
               codedRep(CMMN_1_1),
               null)
           .flatOpt(kc -> kc.as(TDefinitions.class))

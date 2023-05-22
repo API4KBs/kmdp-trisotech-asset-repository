@@ -486,6 +486,7 @@ public class TTWrapper implements TTAPIAdapter {
         .flatMap(e -> Arrays.stream(e.split(",")))
         .map(String::trim)
         .map(s -> s.split("#"))
+        .filter(ss -> ss.length == 2)
         .forEach(ss -> envMap.computeIfAbsent(ss[0], k -> new HashSet<>())
             .add(ss[1]));
     return envMap;

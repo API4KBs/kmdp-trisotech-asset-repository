@@ -49,7 +49,7 @@ public class HooksReceiverEndpoint {
    *
    * @param event the Cloud Event delivered via WebHook
    */
-  @PostMapping("/hookListener")
+  @PostMapping(value = "/hookListener", consumes = "application/cloudevents+json")
   public void handleEvent(@RequestBody CloudEvent event) {
     if (handler != null) {
       handler.handleEvent(event, ttw);

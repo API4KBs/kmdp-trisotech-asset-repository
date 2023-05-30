@@ -41,6 +41,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
+import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Is_Supplemented_By;
 import static org.omg.spec.api4kp._20200801.taxonomy.iso639_2_languagecode._20190201.Language.English;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeartifactcategory._2020_01_20.KnowledgeArtifactCategory.Software;
 import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassetcategory.KnowledgeAssetCategorySeries.Assessment_Predictive_And_Inferential_Models;
@@ -75,6 +76,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +84,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -548,16 +551,38 @@ public class BPMModelIntrospector implements ModelIntrospector {
 
   /**
    * Gathers the Asset/Asset dependency relationships for a given model, as inferred from the
-   * Carriers of the source Asset
+   * Carriers of the source Asset. Considers both direct and reverse relationships
    *
    * @param carriers the Manifests of the Models that carry the given Asset
+   * @return the IDs of the Assets that the source Asset depends on, grouped by a flag that denotes
+   * direct dependencies (true) vs reverse dependencies (false)
+   */
+  @Nonnull
+  protected Map<Boolean, List<Pointer>> gatherAssetImports(
+      @Nonnull final Set<SemanticModelInfo> carriers) {
+    var direct = gatherAssetImports(carriers, SemanticModelInfo::getModelDependencies);
+    var reverse = gatherAssetImports(carriers, SemanticModelInfo::getReverseModelDependencies);
+    return Map.of(
+        Boolean.TRUE, direct,
+        Boolean.FALSE, reverse);
+  }
+
+
+  /**
+   * Gathers the Asset/Asset dependency relationships for a given model, as inferred from the
+   * Carriers of the source Asset, for a given mapping between the model manifest and its
+   * dependencies
+   *
+   * @param carriers the Manifests of the Models that carry the given Asset
+   * @param dependencySelector the mapping between a Model manifest and its asset dependencies
    * @return the IDs of the Assets that the source Asset depends on
    */
   @Nonnull
-  protected List<Pointer> gatherAssetImports(
-      @Nonnull final Set<SemanticModelInfo> carriers) {
+  private List<Pointer> gatherAssetImports(
+      @Nonnull final Set<SemanticModelInfo> carriers,
+      @Nonnull final Function<SemanticModelInfo, Set<String>> dependencySelector) {
     return carriers.stream()
-        .flatMap(info -> info.getModelDependencies().stream()
+        .flatMap(info -> dependencySelector.apply(info).stream()
             .flatMap(modelRef -> client.getMetadataByModelId(modelRef)
                 .filter(ref -> ref.getAssetKey() != null)
                 .map(ref ->
@@ -600,13 +625,18 @@ public class BPMModelIntrospector implements ModelIntrospector {
    */
   @Nonnull
   protected Collection<Link> toAssetRelationships(
-      @Nonnull final List<Pointer> importedAssets) {
-    return importedAssets.stream()
+      @Nonnull final Map<Boolean, List<Pointer>> importedAssets) {
+    var direct = importedAssets.getOrDefault(Boolean.TRUE, Collections.emptyList()).stream()
         .map(ptr ->
             new Dependency()
                 .withRel(dependencyRel(ptr.getMimeType()))
-                .withHref(ptr))
-        .collect(toList());
+                .withHref(ptr));
+    var reverse = importedAssets.getOrDefault(Boolean.FALSE, Collections.emptyList()).stream()
+        .map(ptr ->
+            new Dependency()
+                .withRel(Is_Supplemented_By)
+                .withHref(ptr));
+    return Stream.concat(direct, reverse).collect(toList());
   }
 
 

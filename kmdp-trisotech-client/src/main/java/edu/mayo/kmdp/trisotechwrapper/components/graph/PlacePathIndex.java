@@ -354,7 +354,8 @@ public class PlacePathIndex {
 
   /**
    * Indexes Model/Model dependencies between BPM+ models, from the source model that 'depends on' a
-   * target model. Both models must be indexed before the relationship between the two is.
+   * target model. Both models must be indexed before the relationship between the two is. Adds a
+   * reverese relationship link if the direct one can be established.
    *
    * @param relations the dependencies, as queried from the DES KG
    */
@@ -367,6 +368,8 @@ public class PlacePathIndex {
         // apply only if srcAsset has not been filtered out
         if (modelInfoByModelID.containsKey(tgtModel)) {
           info.addModelDependency(tgtModel);
+          modelInfoByModelID.get(tgtModel)
+              .addReverseModelDependency(srcModel);
         }
         return info;
       });

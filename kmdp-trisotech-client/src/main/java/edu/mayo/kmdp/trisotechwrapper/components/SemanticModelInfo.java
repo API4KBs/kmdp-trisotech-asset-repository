@@ -123,6 +123,12 @@ public class SemanticModelInfo extends TrisotechFileInfo implements Comparable<S
    * List of Model IDs ({@link TrisotechFileInfo#id}) of Models that this Model depends on
    */
   protected final Set<String> modelDependencies = new LinkedHashSet<>(3);
+
+  /**
+   * List of Model IDs ({@link TrisotechFileInfo#id}) of Models that this Model is a dependency of
+   */
+  protected final Set<String> reverseModelDependencies = new LinkedHashSet<>(3);
+
   /**
    * List of IDs ({@link #serviceKey}) of Service Assets that this Model exposes.
    * <p>
@@ -252,6 +258,7 @@ public class SemanticModelInfo extends TrisotechFileInfo implements Comparable<S
 
     this.assetTypes.addAll(other.getAssetTypes());
     this.modelDependencies.addAll(other.getModelDependencies());
+    this.reverseModelDependencies.addAll(other.getReverseModelDependencies());
     this.exposedServices.addAll(other.getExposedServices());
   }
 
@@ -496,6 +503,16 @@ public class SemanticModelInfo extends TrisotechFileInfo implements Comparable<S
   public void addModelDependency(
       @Nonnull final String dependencyModelId) {
     this.modelDependencies.add(dependencyModelId);
+  }
+
+  @Nonnull
+  public Set<String> getReverseModelDependencies() {
+    return Collections.unmodifiableSet(reverseModelDependencies);
+  }
+
+  public void addReverseModelDependency(
+      @Nonnull final String dependencyModelId) {
+    this.reverseModelDependencies.add(dependencyModelId);
   }
 
   @Nonnull

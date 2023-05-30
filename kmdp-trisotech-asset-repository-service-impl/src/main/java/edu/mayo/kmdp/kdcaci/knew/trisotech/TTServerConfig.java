@@ -13,11 +13,20 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.MVF_1_0;
+
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.HTMLAdapter;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTRepoContextAwareHrefBuilder;
 import edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTServerContextAwareHrefBuilder;
+import edu.mayo.kmdp.kdcaci.knew.trisotech.components.translators.MCBKSurrogateV2ToRDFTranslator;
 import edu.mayo.kmdp.language.TransrepresentationExecutor;
 import edu.mayo.kmdp.language.translators.mvf.fhir.stu3.MVFToFHIRTermsTranslator;
+import edu.mayo.kmdp.language.translators.surrogate.v2.SurrogateV2toHTMLTranslator;
+import edu.mayo.kmdp.language.translators.surrogate.v2.SurrogateV2toLibraryTranslator;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.TTWrapper;
 import edu.mayo.kmdp.trisotechwrapper.components.hooks.DefaultTTHooksHandler;
@@ -32,6 +41,7 @@ import io.cloudevents.spring.mvc.CloudEventHttpMessageConverter;
 import java.util.List;
 import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.TransxionApiInternal;
 import org.omg.spec.api4kp._20200801.id.Pointer;
+import org.omg.spec.api4kp._20200801.services.KPSupport;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -135,9 +145,27 @@ public class TTServerConfig {
     return new DefaultTTHooksHandler();
   }
 
+  /**
+   * Modular translator for Artifacts
+   * @return a {@link TransxionApiInternal}
+   */
   @Bean
+  @KPSupport({BPMN_2_0, CMMN_1_1, DMN_1_2, MVF_1_0})
   TransxionApiInternal translator() {
     return new TransrepresentationExecutor(List.of(new MVFToFHIRTermsTranslator()));
+  }
+
+  /**
+   * Modular translator for Surrogates
+   * @return a {@link TransxionApiInternal}
+   */
+  @Bean
+  @KPSupport(Knowledge_Asset_Surrogate_2_0)
+  TransxionApiInternal surrogateTranslator() {
+    return new TransrepresentationExecutor(List.of(
+        new SurrogateV2toHTMLTranslator(),
+        new MCBKSurrogateV2ToRDFTranslator(),
+        new SurrogateV2toLibraryTranslator()));
   }
 
 

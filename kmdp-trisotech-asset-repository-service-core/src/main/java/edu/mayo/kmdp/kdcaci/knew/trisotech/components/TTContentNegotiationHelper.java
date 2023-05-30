@@ -4,32 +4,41 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.TrisotechArtifactRepository.AL
 import static edu.mayo.kmdp.util.PropertiesUtil.serializeProps;
 import static edu.mayo.ontology.taxonomies.ws.responsecodes.ResponseCodeSeries.NotAcceptable;
 import static org.omg.spec.api4kp._20200801.AbstractCarrier.codedRep;
+import static org.omg.spec.api4kp._20200801.AbstractCarrier.rep;
 import static org.omg.spec.api4kp._20200801.Answer.failed;
 import static org.omg.spec.api4kp._20200801.contrastors.SyntacticRepresentationContrastor.theRepContrastor;
 import static org.omg.spec.api4kp._20200801.services.transrepresentation.ModelMIMECoder.decodeAll;
+import static org.omg.spec.api4kp._20200801.surrogate.SurrogateHelper.getSurrogateMetadata;
+import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.FHIR_STU3;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.HTML;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.RDF_XML_Syntax;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
 
-import edu.mayo.kmdp.kdcaci.knew.trisotech.components.translators.MCBKSurrogateV2ToRDFTranslator;
-import edu.mayo.kmdp.language.translators.surrogate.v2.SurrogateV2toHTMLTranslator;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
 import edu.mayo.kmdp.util.Util;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.util.Optional;
 import java.util.Properties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.omg.spec.api4kp._20200801.AbstractCarrier.Encodings;
 import org.omg.spec.api4kp._20200801.Answer;
 import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.TransxionApiInternal;
-import org.omg.spec.api4kp._20200801.api.transrepresentation.v4.server.TransxionApiInternal._applyTransrepresent;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
+import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.services.repository.asset.KARSHrefBuilder;
+import org.omg.spec.api4kp._20200801.surrogate.KnowledgeArtifact;
 import org.omg.spec.api4kp._20200801.surrogate.KnowledgeAsset;
+import org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder;
+import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguage;
+import org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +47,7 @@ public class TTContentNegotiationHelper {
   /**
    * Logger
    */
-  private static final Logger logger = LoggerFactory.getLogger(TTContentNegotiationHelper.class);
+  protected static final Logger logger = LoggerFactory.getLogger(TTContentNegotiationHelper.class);
 
   /**
    * The {@link KARSHrefBuilder} used to map URIs to URLs relative to this server's deployment
@@ -51,23 +60,39 @@ public class TTContentNegotiationHelper {
   protected final NamespaceManager names;
 
   /**
-   * The translator used to provide a basic HTML rendering of the {@link KnowledgeAsset} surrogates,
-   * with navigable linked data
+   * Translator used to generate artifact/model variants
    */
-  private final _applyTransrepresent htmlTranslator = new SurrogateV2toHTMLTranslator();
+  protected final TransxionApiInternal translator;
 
-  private final _applyTransrepresent rdfTranslator = new MCBKSurrogateV2ToRDFTranslator();
-
-  private final TransxionApiInternal translator;
+  /**
+   * Translator used to generate surrogate variants
+   */
+  protected final TransxionApiInternal surrogateTranslator;
 
 
   public TTContentNegotiationHelper(
       @Nonnull NamespaceManager names,
       @Nullable KARSHrefBuilder hrefBuilder,
-      @Nullable TransxionApiInternal translator) {
+      @Nullable TransxionApiInternal translator,
+      @Nullable TransxionApiInternal surrogateTranslator) {
     this.names = names;
     this.hrefBuilder = hrefBuilder;
     this.translator = translator;
+    this.surrogateTranslator = surrogateTranslator;
+  }
+
+
+  /**
+   * Predicate
+   * <p>
+   * Determines whether an X-Accept's code designates a supported Surrogate variant
+   *
+   * @param xAccept a negotiation preference, usually client-provided
+   * @return true if HTML, RDF or FHIR
+   */
+  public static boolean needsSurrogateVariant(
+      @Nullable final String xAccept) {
+    return negotiateHTML(xAccept) || negotiateRDF(xAccept) || negotiateFHIR(xAccept);
   }
 
   /**
@@ -78,9 +103,25 @@ public class TTContentNegotiationHelper {
    * @param xAccept a negotiation preference, usually client-provided
    * @return true if HTML is the first preference
    */
-  public static boolean negotiateHTML(String xAccept) {
+  public static boolean negotiateHTML(
+      @Nullable final String xAccept) {
     return decodeAll(xAccept).stream().findFirst()
         .filter(wr -> HTML.sameAs(wr.getRep().getLanguage()))
+        .isPresent();
+  }
+
+  /**
+   * Predicate
+   * <p>
+   * Determines whether an X-Accept's first representation preference is FHIR
+   *
+   * @param xAccept a negotiation preference, usually client-provided
+   * @return true if FHIR is the first preference
+   */
+  public static boolean negotiateFHIR(
+      @Nullable final String xAccept) {
+    return decodeAll(xAccept).stream().findFirst()
+        .filter(wr -> FHIR_STU3.sameAs(wr.getRep().getLanguage()))
         .isPresent();
   }
 
@@ -92,7 +133,8 @@ public class TTContentNegotiationHelper {
    * @param xAccept a negotiation preference, usually client-provided
    * @return true if RDF+XML is the first preference
    */
-  public static boolean negotiateRDF(String xAccept) {
+  public static boolean negotiateRDF(
+      @Nullable final String xAccept) {
     return "application/rdf+xml".equals(xAccept)
         || "text/turtle".equals(xAccept)
         || decodeAll(xAccept).stream().findFirst()
@@ -100,49 +142,182 @@ public class TTContentNegotiationHelper {
         .isPresent();
   }
 
-
   /**
-   * Converts a Surrogate, wrapped in a KnowledgeCarrier, to its HTML variant
-   * <p>
-   * Redirects the Asset namespace base URI to this server, making the links in the HTML more
-   * navigable. Note that this redirect is a best effort operation, which is not guaranteed.
+   * Converts a Surrogate, wrapped in a KnowledgeCarrier, to a negotiated variant
    *
    * @param surrogateCarrier the KnowledgeAsset, in a KnowledgeCarrier
-   * @return the KnowledgeAsset HTML variant, in a KnowledgeCarrier, wrapped by Answer
-   */
-  public Answer<KnowledgeCarrier> toHtml(
-      @Nonnull final KnowledgeCarrier surrogateCarrier) {
-    return htmlTranslator.applyTransrepresent(
-        surrogateCarrier,
-        codedRep(HTML),
-        configureRedirects());
-  }
-
-  /**
-   * Converts a Surrogate, wrapped in a KnowledgeCarrier, to its RDF variant
-   *
-   * @param surrogateCarrier the KnowledgeAsset, in a KnowledgeCarrier
+   * @param xAccept          the client's preferences, as a MIME code
    * @return the KnowledgeAsset RDF variant, in a KnowledgeCarrier, wrapped by Answer
    */
-  public Answer<KnowledgeCarrier> toRdf(
+  @Nonnull
+  public Answer<KnowledgeCarrier> negotiateSurrogate(
       @Nonnull final KnowledgeCarrier surrogateCarrier,
       @Nullable final String xAccept) {
-    String codedRep;
-    if ("application/rdf+xml".equals(xAccept)) {
-      codedRep = codedRep(OWL_2, RDF_XML_Syntax, XML_1_1, Charset.defaultCharset());
-    } else if ("text/turtle".equals(xAccept)) {
-      codedRep = codedRep(OWL_2, Turtle, TXT, Charset.defaultCharset());
-    } else {
-      throw new IllegalStateException("Not possible");
+    // xAccept should not be null at this point
+    if (surrogateTranslator == null || xAccept == null) {
+      return failed(NotAcceptable);
     }
-    return rdfTranslator.applyTransrepresent(
-        surrogateCarrier,
-        codedRep,
-        configureRedirects());
+    return surrogateTranslator.applyTransrepresent(
+            surrogateCarrier,
+            adjustSurrogateVariantMimeCode(xAccept),
+            configureRedirects())
+        .or(() -> failed(NotAcceptable));
   }
 
+  /**
+   * Normalizes the (client) provided MIME code to match the requirements of the Surrogate
+   * translators.
+   * <p>
+   * This method should be eventually removed once more standardization around the use of MIME codes
+   * can be enforced, and as the experimental translators become more mature and robust
+   *
+   * @param xAccept a negotiation preference, usually client-provided
+   * @return the adjusted xAccept
+   */
   @Nullable
-  private String configureRedirects() {
+  protected String adjustSurrogateVariantMimeCode(
+      @Nullable final String xAccept) {
+    if (negotiateHTML(xAccept)) {
+      return codedRep(HTML);
+    }
+    if ("application/rdf+xml".equals(xAccept)) {
+      return codedRep(OWL_2, RDF_XML_Syntax, XML_1_1, Charset.defaultCharset());
+    } else if ("text/turtle".equals(xAccept)) {
+      return codedRep(OWL_2, Turtle, TXT, Charset.defaultCharset());
+    }
+    if (negotiateFHIR(xAccept)) {
+      return codedRep(FHIR_STU3, JSON, Charset.defaultCharset());
+    }
+    return null;
+  }
+
+  /**
+   * For a given Surrogate variant language, returns a client-friendly, standard but informal MIME
+   * code that can be used to designate that surrogate variant.
+   * <p>
+   * The result of this method is meant to be offered to the client, for them to construct URLs or
+   * headers. The code will then be re-normalized on a client's request.
+   *
+   * @param lang the representation Language used in the denoted Surrogate variant
+   * @return a standard but informal MIME code matching that variant's form
+   * @see #adjustSurrogateVariantMimeCode(String)
+   */
+  @Nonnull
+  protected String getFriendlySurrogateVariantMimeCode(
+      @Nonnull final KnowledgeRepresentationLanguage lang) {
+    switch (KnowledgeRepresentationLanguageSeries.asEnum(lang)) {
+      case HTML:
+        return "text/html";
+      case FHIR_STU3:
+        return "model/fhir-v3";
+      case OWL_2:
+        return "text/turtle";
+      default:
+        return "";
+    }
+  }
+
+
+  /**
+   * For a given Surrogate variant language, returns the canonical {@link SyntacticRepresentation},
+   * such that can be encoded as a formal MIME code.
+   * <p>
+   * In contrast to {@link #getFriendlySurrogateVariantMimeCode(KnowledgeRepresentationLanguage)},
+   * this method is intended for use in the canonical metadata graph
+   *
+   * @param lang the representation Language used in the denoted Surrogate variant
+   * @return the {@link SyntacticRepresentation} of the default variant form of the Surrogate in
+   * that language
+   */
+  protected Optional<SyntacticRepresentation> getSurrogateVariantRep(
+      KnowledgeRepresentationLanguage lang) {
+    SyntacticRepresentation rep = null;
+    switch (KnowledgeRepresentationLanguageSeries.asEnum(lang)) {
+      case HTML:
+        rep = rep(HTML, TXT, Charset.defaultCharset(), Encodings.DEFAULT);
+        break;
+      case FHIR_STU3:
+        rep = rep(FHIR_STU3, JSON, Charset.defaultCharset(), Encodings.DEFAULT);
+        break;
+      case OWL_2:
+        rep = rep(OWL_2, Turtle, TXT, Charset.defaultCharset(), Encodings.DEFAULT);
+        break;
+      default:
+    }
+    return Optional.ofNullable(rep);
+  }
+
+  /**
+   * Adds {@link KnowledgeArtifact} records for the Surrogate variants of a KnowledgeAsset
+   *
+   * @param surr the canonical Surrogate for a given Asset
+   * @return the canonical Surrogate, with added records for the variants of that canonical
+   * surrogate
+   */
+  @Nonnull
+  public KnowledgeAsset addEmphemeralSurrogates(
+      @Nonnull final KnowledgeAsset surr) {
+    var self = getSurrogateMetadata(surr, Knowledge_Asset_Surrogate_2_0, null);
+    self.ifPresent(ka -> {
+      ensureEmphemeralSurrogateVariantRecord(surr, ka, OWL_2);
+      ensureEmphemeralSurrogateVariantRecord(surr, ka, HTML);
+      ensureEmphemeralSurrogateVariantRecord(surr, ka, FHIR_STU3);
+    });
+    return surr;
+  }
+
+  /**
+   * Adds the {@link KnowledgeArtifact} record for a specific Surrogate variant of a KnowledgeAsset,
+   * if not already present
+   *
+   * @param surrogate the canonical Surrogate for a given Asset
+   * @param self      the {@link KnowledgeArtifact} record for the canonical surrogate itself
+   * @param variant   the representation language of the surrogate variant to be recorded
+   * @see #addEmphemeralSurrogateVariantRecord(KnowledgeAsset, KnowledgeArtifact,
+   * KnowledgeRepresentationLanguage)
+   */
+  protected void ensureEmphemeralSurrogateVariantRecord(
+      @Nonnull final KnowledgeAsset surrogate,
+      @Nonnull final KnowledgeArtifact self,
+      @Nonnull final KnowledgeRepresentationLanguage variant) {
+    getSurrogateMetadata(surrogate, variant, null)
+        .ifPresentOrElse(
+            x -> {
+            },
+            () -> addEmphemeralSurrogateVariantRecord(surrogate, self, variant));
+  }
+
+  /**
+   * Adds the {@link KnowledgeArtifact} record for a specific Surrogate variant of a KnowledgeAsset,
+   * if not already present
+   *
+   * @param surrogate the canonical Surrogate for a given Asset
+   * @param self      the {@link KnowledgeArtifact} record for the canonical surrogate itself
+   * @param lang      the representation language of the surrogate variant to be recorded
+   */
+  protected void addEmphemeralSurrogateVariantRecord(
+      KnowledgeAsset surrogate,
+      KnowledgeArtifact self,
+      KnowledgeRepresentationLanguage lang) {
+    var repOpt = getSurrogateVariantRep(lang);
+    if (repOpt.isEmpty()) {
+      return;
+    }
+    var rep = repOpt.get();
+    var codedRep = codedRep(rep);
+    var other = new KnowledgeArtifact()
+        .withArtifactId(SurrogateBuilder.defaultSurrogateId(surrogate.getAssetId(), lang))
+        .withName(surrogate.getName() + " - " + lang + " Metadata Variant")
+        .withLocator(
+            URI.create(self.getLocator() + "?qAccept=" + getFriendlySurrogateVariantMimeCode(lang)))
+        .withMimeType(codedRep)
+        .withRepresentation(rep);
+    surrogate.withSurrogate(other);
+  }
+
+
+  @Nullable
+  protected String configureRedirects() {
     try {
       if (hrefBuilder != null) {
         Properties props = new Properties();

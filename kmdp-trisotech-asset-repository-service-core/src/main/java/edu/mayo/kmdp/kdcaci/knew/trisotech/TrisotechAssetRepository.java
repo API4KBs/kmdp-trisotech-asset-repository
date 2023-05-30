@@ -13,8 +13,7 @@
  */
 package edu.mayo.kmdp.kdcaci.knew.trisotech;
 
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper.negotiateHTML;
-import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper.negotiateRDF;
+import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.TTContentNegotiationHelper.needsSurrogateVariant;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.dependencyRel;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDeclaredAssetTypes;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultAssetType;
@@ -67,7 +66,11 @@ import static org.omg.spec.api4kp._20200801.taxonomy.knowledgeassettype.Knowledg
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.JSON;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.TXT;
 import static org.omg.spec.api4kp._20200801.taxonomy.krformat.SerializationFormatSeries.XML_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.BPMN_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.CMMN_1_1;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.DMN_1_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.Knowledge_Asset_Surrogate_2_0;
+import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.MVF_1_0;
 import static org.omg.spec.api4kp._20200801.taxonomy.krlanguage.KnowledgeRepresentationLanguageSeries.OWL_2;
 import static org.omg.spec.api4kp._20200801.taxonomy.krserialization.KnowledgeRepresentationLanguageSerializationSeries.Turtle;
 import static org.omg.spec.api4kp._20200801.taxonomy.parsinglevel.ParsingLevelSeries.Encoded_Knowledge_Expression;
@@ -123,6 +126,7 @@ import org.omg.spec.api4kp._20200801.id.ResourceIdentifier;
 import org.omg.spec.api4kp._20200801.id.SemanticIdentifier;
 import org.omg.spec.api4kp._20200801.services.CompositeKnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.KPServer;
+import org.omg.spec.api4kp._20200801.services.KPSupport;
 import org.omg.spec.api4kp._20200801.services.KnowledgeCarrier;
 import org.omg.spec.api4kp._20200801.services.SyntacticRepresentation;
 import org.omg.spec.api4kp._20200801.services.repository.KnowledgeAssetCatalog;
@@ -246,7 +250,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       @Nullable TTContentNegotiationHelper negotiator,
       @Nullable NamespaceManager names,
       @Nullable EphemeralAssetFabricator fabricator,
-      @Nullable TransxionApiInternal translator) {
+      @Nullable @KPSupport({BPMN_2_0, CMMN_1_1, DMN_1_2, MVF_1_0})
+      TransxionApiInternal translator,
+      @Nullable @KPSupport(Knowledge_Asset_Surrogate_2_0)
+      TransxionApiInternal surrogateTranslator) {
     //
     this.cfg = cfg;
 
@@ -265,7 +272,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
     this.negotiator = negotiator != null
         ? negotiator
         : new TTContentNegotiationHelper(
-            this.names, this.hrefBuilder, translator);
+            this.names, this.hrefBuilder, translator, surrogateTranslator);
 
     this.extractor = extractor != null
         ? extractor
@@ -348,7 +355,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       @Nullable final String xAccept) {
     try {
       // need the modelId of the model in order to query for modelInfo
-      if ((negotiateHTML(xAccept) || negotiateRDF(xAccept)) && hrefBuilder != null) {
+      if (hrefBuilder != null && needsSurrogateVariant(xAccept)) {
         return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
       }
 
@@ -391,7 +398,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       @Nonnull final String versionTag,
       @Nullable final String xAccept) {
     try {
-      if ((negotiateHTML(xAccept) || negotiateRDF(xAccept)) && hrefBuilder != null) {
+      if (hrefBuilder != null && needsSurrogateVariant(xAccept)) {
         return Answer.referTo(hrefBuilder.getRelativeURL("/surrogate"), false);
       }
 
@@ -548,10 +555,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       }
 
       Answer<KnowledgeCarrier> ans;
-      if (negotiateHTML(xAccept) && negotiator != null) {
-        ans = surr.flatMap(negotiator::toHtml);
-      } else if (negotiateRDF(xAccept) && negotiator != null) {
-        ans = surr.flatMap(s -> negotiator.toRdf(s,xAccept));
+      if (negotiator != null && needsSurrogateVariant(xAccept)) {
+        ans = surr.flatMap(s -> negotiator.negotiateSurrogate(s, xAccept));
       } else {
         ans = surr.flatMap(this::encodeCanonicalSurrogate);
       }
@@ -655,10 +660,8 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       }
 
       Answer<KnowledgeCarrier> ans;
-      if (negotiateHTML(xAccept) && negotiator != null) {
-        ans = surr.flatMap(negotiator::toHtml);
-      } else if (negotiateRDF(xAccept) && negotiator != null) {
-        ans = surr.flatMap(s -> negotiator.toRdf(s,xAccept));
+      if (negotiator != null && needsSurrogateVariant(xAccept)) {
+        ans = surr.flatMap(s -> negotiator.negotiateSurrogate(s, xAccept));
       } else {
         ans = surr.flatMap(this::encodeCanonicalSurrogate);
       }
@@ -1178,7 +1181,10 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       @Nonnull final Map<SemanticModelInfo, Optional<Document>> carriers) {
 
     // extract data from Trisotech format to OMG format
-    return extractor.introspect(assetId, carriers);
+    return extractor.introspect(assetId, carriers)
+        .map(ka -> negotiator != null
+            ? negotiator.addEmphemeralSurrogates(ka)
+            : ka);
   }
 
   /**

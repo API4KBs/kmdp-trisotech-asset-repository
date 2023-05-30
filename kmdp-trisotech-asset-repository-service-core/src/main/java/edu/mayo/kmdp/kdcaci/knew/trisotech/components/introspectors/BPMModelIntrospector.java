@@ -286,13 +286,17 @@ public class BPMModelIntrospector implements ModelIntrospector {
    */
   protected KnowledgeArtifact buildSurrogateSelf(
       ResourceIdentifier assetId) {
-    return new KnowledgeArtifact()
+    var surr = new KnowledgeArtifact()
         .withArtifactId(newId(
             names.getArtifactNamespace(),
             defaultSurrogateUUID(assetId, Knowledge_Asset_Surrogate_2_0),
             toSemVer(assetId.getVersionTag())))
+        .withName("(( Metadata Record - Self ))")
         .withRepresentation(rep(Knowledge_Asset_Surrogate_2_0, JSON))
         .withMimeType(codedRep(Knowledge_Asset_Surrogate_2_0, JSON));
+    tryLocateDefaultSurrogate(assetId)
+        .ifPresent(surr::withLocator);
+    return surr;
   }
 
   /**
@@ -430,6 +434,27 @@ public class BPMModelIntrospector implements ModelIntrospector {
       return Optional.empty();
     }
   }
+
+  /**
+   * Maps the asset ID to the default location of the canonical Surrogate (ie the one built by this
+   * component) on this Asset Repository server, if deployed as a web service.
+   * <p>
+   * Maps to [base URL]/cat/assets/{assetId}/versions/{assetVersion}/surrogate/content
+   * <p>
+   * FIXME: there is no surrogate-oriented counterpart of hrefBuilder#getAssetDefaultContent yet
+   *
+   * @param assetID the asset ID.
+   * @return the URL, as a URI, if able to determine
+   */
+  @Nonnull
+  protected Optional<URI> tryLocateDefaultSurrogate(
+      @Nonnull final ResourceIdentifier assetID) {
+    return tryLocateDefaultArtifact(assetID)
+        .map(URI::toString)
+        .map(s -> s.replace("/carrier/", "/surrogate/"))
+        .map(URI::create);
+  }
+
 
 
   /* ----------------------------------------------------------------------------------------- */
@@ -573,7 +598,7 @@ public class BPMModelIntrospector implements ModelIntrospector {
    * Carriers of the source Asset, for a given mapping between the model manifest and its
    * dependencies
    *
-   * @param carriers the Manifests of the Models that carry the given Asset
+   * @param carriers           the Manifests of the Models that carry the given Asset
    * @param dependencySelector the mapping between a Model manifest and its asset dependencies
    * @return the IDs of the Assets that the source Asset depends on
    */

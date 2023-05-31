@@ -14,6 +14,7 @@
 package edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors;
 
 import static java.util.stream.Collectors.joining;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
@@ -21,6 +22,7 @@ import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
 import edu.mayo.kmdp.trisotechwrapper.config.TTWEnvironmentConfiguration;
 import edu.mayo.kmdp.trisotechwrapper.models.TrisotechFileInfo;
 import edu.mayo.kmdp.util.StreamUtil;
+import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -171,22 +173,22 @@ public class DefaultMetadataIntrospector implements MetadataIntrospector {
       @Nonnull final ResourceIdentifier assetId,
       @Nonnull final String modelUri) {
 
-    var isModel = client.getMetadataByModelId(modelUri)
-        .map(SemanticModelInfo::getAssetKey)
-        .filter(id -> Objects.equals(id.getUuid(), assetId.getUuid()))
-        .isPresent();
-
-    if (isModel) {
-      return Optional.of(new ResolvedAssetId(AssetCategory.DOMAIN_ASSET, assetId));
+    var asModel = client.getMetadataByModelId(modelUri)
+        .filter(x -> x.getAssetKey() != null)
+        .filter(x -> Objects.equals(x.getAssetKey().getUuid(), assetId.getUuid()));
+    if (asModel.isPresent()) {
+      return Optional.ofNullable(asModel.get().getAssetId())
+          .map(URI::create)
+          .map(x -> new ResolvedAssetId(AssetCategory.DOMAIN_ASSET, newVersionId(x)));
     }
 
-    var isService = client.getServicesMetadataByModelId(modelUri)
-        .map(SemanticModelInfo::getServiceKey)
-        .anyMatch(id -> Objects.equals(id.getUuid(), assetId.getUuid()));
-
-    return isService
-        ? Optional.of(new ResolvedAssetId(AssetCategory.SERVICE_ASSET, assetId))
-        : Optional.empty();
+    var asService = client.getServicesMetadataByModelId(modelUri)
+        .filter(x -> x.getAssetKey() != null)
+        .filter(x -> Objects.equals(x.getServiceKey().getUuid(), assetId.getUuid()))
+        .findFirst();
+    return asService.flatMap(info -> Optional.ofNullable(info.getServiceId())
+        .map(URI::create)
+        .map(x -> new ResolvedAssetId(AssetCategory.SERVICE_ASSET, newVersionId(x))));
   }
 
 

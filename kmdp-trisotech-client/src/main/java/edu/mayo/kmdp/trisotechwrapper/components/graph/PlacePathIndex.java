@@ -550,7 +550,7 @@ public class PlacePathIndex {
     manifest.addLiteral(ARTIFACT_NAME, sol);
     manifest.addResource(ASSET_TYPE, sol);
 
-    if (manifest.getServiceFragmentId() != null && !manifest.hasAssetId() && allowsAnonymous) {
+    if (manifest.getServiceFragmentId() != null && !manifest.hasServiceId() && allowsAnonymous) {
       var serviceAssetId =
           mintAssetIdForAnonymous(
               cfg.getTyped(TTWConfigParamsDef.ASSET_NAMESPACE),

@@ -568,7 +568,7 @@ public class BPMModelIntrospector implements ModelIntrospector {
     return manifest.getModelDependencies().stream()
         .flatMap(modelUri -> client.getMetadataByModelId(modelUri).stream())
         .map(mf -> names.modelToArtifactId(mf)
-            .toPointer()
+            .toInnerPointer()
             .withMimeType(mf.getMimetype()))
         .collect(toList());
   }
@@ -612,7 +612,7 @@ public class BPMModelIntrospector implements ModelIntrospector {
                 .filter(ref -> ref.getAssetKey() != null)
                 .map(ref ->
                     names.assetKeyToId(ref.getAssetKey())
-                        .toPointer()
+                        .toInnerPointer()
                         .withName(ref.getName())
                         .withMimeType(ref.getMimetype()))
                 .stream()))

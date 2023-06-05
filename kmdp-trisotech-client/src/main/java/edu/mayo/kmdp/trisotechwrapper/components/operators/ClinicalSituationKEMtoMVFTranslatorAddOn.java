@@ -7,6 +7,7 @@ import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.EdgeModelElement;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.ExtensionElement;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemConcept;
 import edu.mayo.kmdp.trisotechwrapper.models.kem.v5.KemModel;
+import edu.mayo.kmdp.util.NameUtils;
 import edu.mayo.kmdp.util.StreamUtil;
 import java.net.URI;
 import java.util.Objects;
@@ -90,6 +91,7 @@ public class ClinicalSituationKEMtoMVFTranslatorAddOn
       var vocab = ensureVocabulary(dict, CSV, "Clinical Situation Vocabulary");
       var vocabEntry = new VocabularyEntry()
           .withMVFEntry(toRef(entry))
+          .withTerm(NameUtils.getTrailingPart(entry.getExternalReference()))
           .withName(entry.getName())
           .withDefinition(formalize(entry))
           .withUri(entry.getExternalReference());

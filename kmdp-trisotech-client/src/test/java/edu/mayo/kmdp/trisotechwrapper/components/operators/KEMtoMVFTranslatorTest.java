@@ -114,6 +114,10 @@ class KEMtoMVFTranslatorTest {
       assertTrue(s.getBroader().get(0).getExternalReference().contains("situationpatterns"));
       assertFalse(s.getContext().isEmpty());
     });
+
+    dict.getVocabulary().stream()
+        .flatMap(v -> v.getEntry().stream())
+        .forEach(e -> assertNotNull(e.getTerm()));
   }
 
 

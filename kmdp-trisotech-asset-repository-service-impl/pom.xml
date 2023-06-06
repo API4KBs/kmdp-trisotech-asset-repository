@@ -96,7 +96,7 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-spring-monitoring</artifactId>
-      <version>${kmdp.servers.version}</version>
+      <version>${kmdp.impl.version}</version>
     </dependency>
 
     <dependency>

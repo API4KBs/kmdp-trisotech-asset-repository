@@ -62,6 +62,7 @@ import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.Publicati
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Published;
 import static org.omg.spec.api4kp._20200801.taxonomy.publicationstatus.PublicationStatusSeries.Unpublished;
 
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.components.NamespaceManager;
 import edu.mayo.kmdp.trisotechwrapper.components.SemanticModelInfo;
@@ -716,7 +717,7 @@ public class BPMModelIntrospector implements ModelIntrospector {
         .map(Attr::getValue)
         .filter(Util::isNotEmpty)
         // only supported URIs
-        .filter(str -> str.startsWith("urn:")
+        .filter(str -> Registry.isGlobalIdentifier(str)
             || str.startsWith(names.getAssetNamespace().toString())
             || str.startsWith(ASSETS_PREFIX))
         .map(this::normalizeQualifiedName)
@@ -724,7 +725,7 @@ public class BPMModelIntrospector implements ModelIntrospector {
         .map(SemanticIdentifier::newVersionId)
         .map(id -> {
           if (id.getVersionId() == null) {
-            String separator = id.getResourceId().toString().startsWith("urn") ? ":" : "/";
+            String separator = Registry.isGlobalIdentifier(id.getResourceId()) ? ":" : "/";
             return newVersionId(
                 URI.create(
                     id.getNamespaceUri().toString() + separator + UUID.fromString(id.getTag())),
@@ -777,11 +778,11 @@ public class BPMModelIntrospector implements ModelIntrospector {
   protected String normalizeQualifiedName(
       @Nonnull final String id) {
     if (id.startsWith(ASSETS_PREFIX)) {
-      String str = id.replace(ASSETS_PREFIX, names.getAssetNamespace().toString());
-      if (str.contains(":")) {
+      String str = id.substring(ASSETS_PREFIX.length());
+      if (Registry.isHttpIdentifier(names.getAssetNamespace()) && str.indexOf(':') >= 0) {
         str = str.replace(":", IdentifierConstants.VERSIONS);
       }
-      return str;
+      return names.getAssetNamespace() + str;
     } else {
       return id;
     }

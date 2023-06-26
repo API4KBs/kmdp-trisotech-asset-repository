@@ -19,7 +19,7 @@ import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMe
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultAssetType;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.BPMMetadataHelper.getDefaultRepresentation;
 import static edu.mayo.kmdp.kdcaci.knew.trisotech.components.introspectors.DocumentHelper.extractAssetIdFromDocument;
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN_URI;
+import static edu.mayo.kmdp.registry.Registry.DID_URN_URI;
 import static edu.mayo.kmdp.trisotechwrapper.TTWrapper.matchesVersion;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTNotations.getXmlMimeTypeByAssetType;
 import static edu.mayo.kmdp.trisotechwrapper.config.TTWConfigParamsDef.ASSET_ID_ATTRIBUTE;
@@ -40,6 +40,7 @@ import static org.omg.spec.api4kp._20200801.Answer.failed;
 import static org.omg.spec.api4kp._20200801.Answer.succeed;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newKey;
+import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newName;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.newVersionId;
 import static org.omg.spec.api4kp._20200801.id.SemanticIdentifier.timedSemverComparator;
 import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultArtifactId;
@@ -84,6 +85,7 @@ import edu.mayo.kmdp.ops.CompositeFabricator;
 import edu.mayo.kmdp.ops.EphemeralAssetFabricator;
 import edu.mayo.kmdp.ops.tranx.bpm.PlanDefinitionEphemeralAssetFabricator;
 import edu.mayo.kmdp.ops.tranx.mvf.owl2.cso.CSOFabricator;
+import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.trisotechwrapper.TTAPIAdapter;
 import edu.mayo.kmdp.trisotechwrapper.TTWrapper;
 import edu.mayo.kmdp.trisotechwrapper.components.DefaultNamespaceManager;
@@ -292,7 +294,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
   public Answer<KnowledgeAssetCatalog> getKnowledgeAssetCatalog() {
     return Answer.of(new ConfigurableKnowledgeAssetCatalog(TTWConfigParamsDef.values())
         .withName("KMDP Trisotech DES Wrapper")
-        .withId(newId(BASE_UUID_URN_URI, "TTW"))
+        .withId(newName("TTW"))
         .withSurrogateModels(rep(Knowledge_Asset_Surrogate_2_0, XML_1_1))
         .withSupportedAssetTypes(SUPPORTED_ASSET_TYPES));
   }
@@ -799,7 +801,7 @@ public class TrisotechAssetRepository implements KnowledgeAssetCatalogApiInterna
       return new JenaRdfParser().applyLower(
           ofAst(struct)
               .withAssetId(structId)
-              .withArtifactId(defaultArtifactId(BASE_UUID_URN_URI, structId, OWL_2))
+              .withArtifactId(defaultArtifactId(DID_URN_URI, structId, OWL_2))
               .withRepresentation(rep(OWL_2)),
           Encoded_Knowledge_Expression,
           codedRep(OWL_2, Turtle, TXT, defaultCharset(), Encodings.DEFAULT),

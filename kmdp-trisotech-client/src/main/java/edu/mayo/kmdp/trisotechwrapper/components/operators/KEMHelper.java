@@ -1,6 +1,6 @@
 package edu.mayo.kmdp.trisotechwrapper.components.operators;
 
-import static edu.mayo.kmdp.registry.Registry.BASE_UUID_URN;
+import static edu.mayo.kmdp.registry.Registry.UUID_URN;
 
 import edu.mayo.kmdp.registry.Registry;
 import edu.mayo.kmdp.trisotechwrapper.components.operators.KEMtoMVFTranslator.IndexableMVFEntry;
@@ -206,7 +206,7 @@ public final class KEMHelper {
         .findFirst();
     return fqn.map(n -> {
       int i = n.indexOf(':');
-      var ns = namespaceMap.getOrDefault(n.substring(0, i), BASE_UUID_URN);
+      var ns = namespaceMap.getOrDefault(n.substring(0, i), UUID_URN);
       var id = n.substring(i + 1).trim();
       return ns + id;
     });
@@ -319,7 +319,7 @@ public final class KEMHelper {
    *
    * @param kc           the KEM Concept
    * @param namespaceMap the prefix/namespace map configured on the model
-   * @return the namespace the concept has been tagged to, {@link Registry#BASE_UUID_URN} otherwise
+   * @return the namespace the concept has been tagged to, {@link Registry#UUID_URN} otherwise
    */
   @Nonnull
   public static String resolveNamespace(
@@ -329,7 +329,7 @@ public final class KEMHelper {
         .filter(namespaceMap::containsKey)
         .findFirst()
         .map(namespaceMap::get)
-        .orElse(BASE_UUID_URN);
+        .orElse(UUID_URN);
   }
 
   /**

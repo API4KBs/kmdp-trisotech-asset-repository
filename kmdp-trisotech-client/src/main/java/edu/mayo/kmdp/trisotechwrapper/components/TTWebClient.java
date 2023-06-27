@@ -13,7 +13,6 @@ import static edu.mayo.kmdp.util.Util.isEmpty;
 import static java.net.URLDecoder.decode;
 import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.apache.jena.query.QueryExecutionFactory.sparqlService;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -54,13 +53,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.apache.http.Header;
 import org.apache.http.HttpException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
 import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.sparql.resultset.ResultSetMem;
@@ -594,15 +590,11 @@ public class TTWebClient implements TTDigitalEnterpriseServerClient {
       return new ResultSetMem();
     }
 
-    Header header = new BasicHeader(
-        org.apache.http.HttpHeaders.AUTHORIZATION,
-        getBearerTokenHeader());
-
-    HttpClient httpClient = HttpClientBuilder.create()
-        .setDefaultHeaders(Collections.singleton(header))
-        .build();
-
-    try (var exec = sparqlService(sparqlEndpoint, query, httpClient)) {
+    try (var exec =
+        QueryExecution.service(sparqlEndpoint)
+            .httpHeader("Authorization", getBearerTokenHeader())
+            .query(query)
+            .build()) {
       return ResultSetFactory.copyResults(exec.execSelect());
     }
   }

@@ -62,7 +62,7 @@ public class CCPMPreviewEndpoint {
       @PathVariable String versionTag) {
     var rootId = newId(assetId, versionTag);
 
-    var ans = triso.getKnowledgeAssetCanonicalCarrier(
+    var ans = triso.getKnowledgeAssetVersionCanonicalCarrier(
         rootId.getUuid(), rootId.getVersionTag())
         .flatOpt(AbstractCarrier::asBinary);
 

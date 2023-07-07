@@ -40,6 +40,11 @@ GRAPH ? {
       ?customAttribute graphrel:value ?assetId .
       ?node graphrel:customAttribute ?customAttribute .
       ?node graphrel:owner* ?model .
+
+      # gets the asset type from an annotation on the same element that carries the assetId
+      ?node graphrel:semantic ?ann.
+      ?ann graphrel:ref ?assetType.
+      FILTER regex(str(?assetType), '^.+(Clinical)?KnowledgeAssetType#.+') .
     }
 
     # gets the state - only latest state is returned; there will only be a state if the model is published
@@ -50,11 +55,6 @@ GRAPH ? {
     OPTIONAL { ?model graphrel:updater ?updater } .
     # gets the version - only latest version is returned; there will only be a version if the model is published
     OPTIONAL { ?model graphrel:version ?version } .
-    # gets the asset type from an annotation on the same element that carries the assetId
-    OPTIONAL { ?tnode graphrel:semantic ?ann.
-               ?ann graphrel:ref ?assetType.
-               FILTER regex(str(?assetType), '^.+(Clinical)?KnowledgeAssetType#.+') .
-               ?tnode graphrel:owner* ?model  } .
   }
 }
 GROUP BY ?model ?assetId ?assetType ?version ?state ?updated ?updater ?mimeType ?artifactName ?path

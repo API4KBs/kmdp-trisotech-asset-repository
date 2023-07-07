@@ -344,7 +344,7 @@ public class PlacePathIndex {
           "Cache indexing {} - {} as asset {}",
           metadata.getName(),
           metadata.getId(),
-          metadata.getAssetId());
+          assetKey);
     }
     modelInfoByAssetID.computeIfAbsent(assetKey, k -> newSortedManifestSet()).add(metadata);
   }

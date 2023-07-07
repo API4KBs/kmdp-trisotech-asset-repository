@@ -42,7 +42,7 @@ class TTPlaceCacheTest {
 
     assertEquals(12, ppi.getModelToManifestMappings().size());
 
-    assertEquals(13, ppi.getAssetToManifestMappings().size());
+    assertEquals(15, ppi.getAssetToManifestMappings().size());
 
     var src = "http://www.trisotech.com/definitions/_ed4a5a45-3304-4117-b09f-865673219ef4";
     var tgt = "http://www.trisotech.com/definitions/_99302f65-b27b-4830-b7cb-a64c1578e0fc";

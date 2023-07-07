@@ -39,6 +39,7 @@ import static org.omg.spec.api4kp._20200801.surrogate.SurrogateBuilder.defaultSu
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Care_Process_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Case_Management_Model;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Decision_Model;
+import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Inference_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.clinicalknowledgeassettype.ClinicalKnowledgeAssetTypeSeries.Clinical_Rule;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Depends_On;
 import static org.omg.spec.api4kp._20200801.taxonomy.dependencyreltype.DependencyTypeSeries.Is_Supplemented_By;
@@ -504,7 +505,8 @@ public class BPMModelIntrospector implements ModelIntrospector {
     if (isA(formalType, Case_Management_Model) || isA(formalType, Clinical_Case_Management_Model)) {
       return Plans_Processes_Pathways_And_Protocol_Definitions;
     }
-    if (isA(formalType, Decision_Model) || isA(formalType, Clinical_Decision_Model)) {
+    if (isA(formalType, Decision_Model) || isA(formalType, Clinical_Decision_Model)
+        || isA(formalType, Clinical_Inference_Rule)) {
       return Assessment_Predictive_And_Inferential_Models;
     }
     if (isA(formalType, Protocol) || isA(formalType, Care_Process_Model)) {

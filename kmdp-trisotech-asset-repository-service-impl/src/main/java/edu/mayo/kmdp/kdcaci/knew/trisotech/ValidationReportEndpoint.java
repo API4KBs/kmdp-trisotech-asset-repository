@@ -176,6 +176,8 @@ public class ValidationReportEndpoint {
       return Answer.failed(s);
     }
     var assets = s.get().components()
+        .map(kc -> parser.applyLift(kc, Abstract_Knowledge_Expression.getTag()))
+        .flatMap(Answer::trimStream)
         .sorted(Comparator.comparing(kc -> kc.getAssetId().asKey()))
         .collect(Collectors.toList());
 

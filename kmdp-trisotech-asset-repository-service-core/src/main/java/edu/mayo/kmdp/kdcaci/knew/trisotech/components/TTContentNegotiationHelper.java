@@ -394,7 +394,8 @@ public class TTContentNegotiationHelper {
     }
     var preferences = decodeAll(xAccept);
     return preferences.stream().noneMatch(
-        rep -> theRepContrastor.isBroaderOrEqual(rep.getRep(), kc.getRepresentation()));
+        rep -> rep.getRep().getLanguage() == null ||
+            theRepContrastor.isBroaderOrEqual(rep.getRep(), kc.getRepresentation()));
   }
 
   /**

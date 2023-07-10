@@ -106,16 +106,17 @@ public class TTVersioningStrategyHelper {
   @Nonnull
   private static String normalizePublishedVersion(
       @Nonnull final Version semver) {
-    Version normSemver = semver;
-    if (isNotEmpty(normSemver.getBuildMetadata())) {
+    if (isNotEmpty(semver.getBuildMetadata())) {
       logger.warn("Published artifact versions should not have build info: {}", semver);
-      normSemver = normSemver.setBuildMetadata(null);
     }
-    if (isNotEmpty(normSemver.getPreReleaseVersion())) {
+    if (isNotEmpty(semver.getPreReleaseVersion())) {
       logger.warn("Published artifact versions should not have pre-release info: {}", semver);
-      normSemver = normSemver.setPreReleaseVersion(null);
     }
-    return normSemver.toString();
+    return Version.forIntegers(
+            semver.getMajorVersion(),
+            semver.getMinorVersion(),
+            semver.getPatchVersion())
+        .toString();
   }
 
 }

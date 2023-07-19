@@ -41,7 +41,7 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-complex-ops-impl</artifactId>
-      <version>${kmdp.servers.version}</version>
+      <version>${kmdp.impl.version}</version>
     </dependency>
 
     <!-- internal -->
@@ -82,7 +82,7 @@
     <dependency>
       <groupId>edu.mayo.kmdp</groupId>
       <artifactId>kmdp-knowledge-transrepresentation-core</artifactId>
-      <version>${kmdp.servers.version}</version>
+      <version>${kmdp.impl.version}</version>
     </dependency>
 
     <dependency>

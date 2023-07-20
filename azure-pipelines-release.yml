@@ -81,10 +81,7 @@ steps:
         git checkout -b "release-$env:TRISO_RELEASE_VERSION"
         # mvn set version of release branch root pom and then clean install
         mvn versions:set "-DnewVersion=$env:TRISO_RELEASE_VERSION" -DprocessAllModules -ntp
-        mvn versions:set-property "-Dproperty=kmdp.servers.version" "-DnewVersion=$env:TIER2_RELEASE_VERSION" -ntp
-        mvn versions:set-property "-Dproperty=clinical.terms.version" "-DnewVersion=$env:TERM_CONTENT_RELEASE_VERSION" -ntp
         mvn versions:update-parent "-DparentVersion=$env:TIER1_RELEASE_VERSION" -ntp
-        mvn clean package "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
         type pom.xml
         mvn clean install -Prelease "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
         Write-Host ------ Ending Checkout ------
@@ -92,8 +89,6 @@ steps:
       TRISO_RELEASE_VERSION: $(trisoReleaseVersion)
       TRISO_DEV_TOKEN: $(trisoDevToken)
       TIER1_RELEASE_VERSION: $(tier1ReleaseVersion)
-      TIER2_RELEASE_VERSION: $(tier2ReleaseVersion)
-      TERM_CONTENT_RELEASE_VERSION: $(termsContentReleaseVersion)
 
   ## Check New Develop Version
   - task: PowerShell@2
@@ -109,10 +104,7 @@ steps:
         git checkout develop
         git rebase "release-$env:TRISO_RELEASE_VERSION"
         mvn versions:set "-DnewVersion=$env:TRISO_DEVELOP_VERSION" -DprocessAllModules -DallowSnapshots=true -ntp
-        mvn versions:set-property "-Dproperty=kmdp.servers.version" "-DnewVersion=$env:TIER2_DEVELOP_VERSION" -DallowSnapshots=true -ntp
-        mvn versions:set-property "-Dproperty=clinical.terms.version" "-DnewVersion=$env:TERM_CONTENT_DEVELOP_VERSION" -DallowSnapshots=true -ntp
         mvn versions:update-parent "-DparentVersion=$env:TIER1_DEVELOP_VERSION" -DallowSnapshots=true  -ntp
-        mvn clean package "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
         type pom.xml
         mvn clean install "-Dspring.profiles.active=dev" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
         Write-Host ------ Ending Checkout ------
@@ -122,8 +114,6 @@ steps:
       TRISO_SPLUNK_TOKEN: $(splunkToken)
       TRISO_DEV_TOKEN: $(trisoDevToken)
       TIER1_DEVELOP_VERSION: $(tier1NewDevelopVersion)
-      TIER2_DEVELOP_VERSION: $(tier2NewDevelopVersion)
-      TERM_CONTENT_DEVELOP_VERSION: $(termsContentNewDevelopVersion)
 
   # Push to develop branches/release candidate branches
   - task: PowerShell@2

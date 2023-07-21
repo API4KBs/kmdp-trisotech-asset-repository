@@ -321,8 +321,8 @@ public class TTContentNegotiationHelper {
     try {
       if (hrefBuilder != null) {
         Properties props = new Properties();
-        setAssetRedirect(hrefBuilder.getHost(), names.getAssetNamespace(), props);
-        setArtifactRedirect(hrefBuilder.getHost(), names.getArtifactNamespace(), props);
+        setAssetRedirect(hrefBuilder.getBaseUrl(), names.getAssetNamespace(), props);
+        setArtifactRedirect(hrefBuilder.getBaseUrl(), names.getArtifactNamespace(), props);
         return serializeProps(props);
       }
     } catch (Exception e) {

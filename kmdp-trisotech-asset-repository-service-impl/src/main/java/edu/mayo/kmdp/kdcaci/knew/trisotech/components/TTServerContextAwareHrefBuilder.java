@@ -38,7 +38,7 @@ public class TTServerContextAwareHrefBuilder extends KARSHrefBuilder {
    * @return the base URL of the Host (server) processing a request
    */
   @Override
-  public String getHost() {
+  public String getBaseUrl() {
     try {
       return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
     } catch (Exception e) {

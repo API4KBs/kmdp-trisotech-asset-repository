@@ -110,9 +110,7 @@ steps:
       script: |
         Write-Host ------ Starting Checkout ------
         # maven clean install
-        mvn clean package "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
-        mvn clean install -Prelease "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
-        mvn deploy "-DaltDeploymentRepository=KMD::default::https://pkgs.dev.azure.com/mclm/_packaging/KMD/maven/v1" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
+        mvn clean deploy "-DaltDeploymentRepository=KMD::default::https://pkgs.dev.azure.com/mclm/_packaging/KMD/maven/v1" "-Dedu.mayo.kmdp.trisotechwrapper.trisotechToken=$env:TRISO_DEV_TOKEN" "-DsplunkToken=$env:TRISO_SPLUNK_TOKEN" -ntp
         git push "https://kmd:$env:SYSTEM_ACCESSTOKEN@dev.azure.com/mclm/KMD/_git/kmdp-trisotech-asset-repository-service"
         git push "https://kmd:$env:SYSTEM_ACCESSTOKEN@dev.azure.com/mclm/KMD/_git/kmdp-trisotech-asset-repository-service" -d "release-$env:TRISO_RELEASE_VERSION"
         Write-Host ------ Ending Checkout ------
